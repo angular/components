@@ -84,6 +84,7 @@ export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
 
 // @public
 export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterContentInit, OnDestroy {
+    protected _allItems: QueryList<CdkMenuItem>;
     protected closeOpenMenu(menu: MenuStackItem, options?: {
         focusParentTrigger?: boolean;
     }): void;
@@ -110,7 +111,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     setActiveMenuItem(item: number | CdkMenuItem): void;
     protected triggerItem?: CdkMenuItem;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["items"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["_allItems"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuBase, never>;
 }
@@ -146,6 +147,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     // (undocumented)
     protected _ngZone: NgZone;
     _onKeydown(event: KeyboardEvent): void;
+    readonly _parentMenu: Menu | null;
     _resetTabIndex(): void;
     _setTabIndex(event?: MouseEvent): void;
     _tabindex: 0 | -1;

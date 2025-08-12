@@ -499,6 +499,16 @@ describe('Menu', () => {
       expect(document.activeElement).toEqual(nativeMenuItems[2]);
     });
   });
+
+  it('should not pick up items from nested menu', () => {
+    const getItemsText = (menu: CdkMenu) =>
+      menu.items.map(i => i._elementRef.nativeElement.textContent?.trim());
+    const fixture = TestBed.createComponent(NestedMenuDefinition);
+    fixture.detectChanges();
+
+    expect(getItemsText(fixture.componentInstance.root)).toEqual(['One', 'Two']);
+    expect(getItemsText(fixture.componentInstance.inner)).toEqual(['Three', 'Four', 'Five']);
+  });
 });
 
 @Component({
@@ -666,4 +676,24 @@ class WithComplexNestedMenusOnBottom {
 })
 class MenuWithActiveItem {
   @ViewChild(CdkMenu) menu: CdkMenu;
+}
+
+@Component({
+  template: `
+    <div cdkMenu #root>
+      <button cdkMenuItem>One</button>
+      <button cdkMenuItem>Two</button>
+
+      <div cdkMenu #inner>
+        <button cdkMenuItem>Three</button>
+        <button cdkMenuItem>Four</button>
+        <button cdkMenuItem>Five</button>
+      </div>
+    </div>
+  `,
+  imports: [CdkMenuModule],
+})
+class NestedMenuDefinition {
+  @ViewChild('root', {read: CdkMenu}) root: CdkMenu;
+  @ViewChild('inner', {read: CdkMenu}) inner: CdkMenu;
 }
