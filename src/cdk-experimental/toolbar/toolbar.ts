@@ -95,7 +95,7 @@ export class CdkToolbar<V> {
   orientation = input<'vertical' | 'horizontal'>('horizontal');
 
   /** Whether disabled items in the group should be skipped when navigating. */
-  skipDisabled = input(true, {transform: booleanAttribute});
+  skipDisabled = input(false, {transform: booleanAttribute});
 
   /** Whether the toolbar is disabled. */
   disabled = input(false, {transform: booleanAttribute});

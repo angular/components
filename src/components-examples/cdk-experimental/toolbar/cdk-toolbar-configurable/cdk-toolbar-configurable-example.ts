@@ -26,7 +26,7 @@ import {CdkToolbar, CdkToolbarWidget} from '@angular/cdk-experimental/toolbar';
   ],
 })
 export class CdkToolbarConfigurableExample {
-  skipDisabled = new FormControl(true, {nonNullable: true});
+  skipDisabled = new FormControl(false, {nonNullable: true});
   wrap = new FormControl(true, {nonNullable: true});
   toolbarDisabled = new FormControl(false, {nonNullable: true});
   orientation: 'vertical' | 'horizontal' = 'horizontal';
