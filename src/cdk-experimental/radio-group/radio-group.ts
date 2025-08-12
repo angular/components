@@ -170,7 +170,7 @@ export class CdkRadioGroup<V> {
         // If the group is disabled and the toolbar is set to skip disabled items,
         // the radio buttons should not be part of the toolbar's navigation.
         if (this.disabled() && this.toolbar.skipDisabled()) {
-          radioButtons.forEach(radio => this.toolbar!.deregister(radio));
+          radioButtons.forEach(radio => this.toolbar!.unregister(radio));
         } else {
           radioButtons.forEach(radio => this.toolbar!.register(radio));
         }
@@ -182,9 +182,9 @@ export class CdkRadioGroup<V> {
     this._hasFocused.set(true);
   }
 
-  toolbarButtonDeregister(radio: CdkRadioButton<V>) {
+  toolbarButtonUnregister(radio: CdkRadioButton<V>) {
     if (this.toolbar) {
-      this.toolbar.deregister(radio);
+      this.toolbar.unregister(radio);
     }
   }
 }
@@ -239,7 +239,7 @@ export class CdkRadioButton<V> implements OnDestroy {
 
   ngOnDestroy() {
     if (this._cdkRadioGroup.toolbar) {
-      this._cdkRadioGroup.toolbarButtonDeregister(this);
+      this._cdkRadioGroup.toolbarButtonUnregister(this);
     }
   }
 }

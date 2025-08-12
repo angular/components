@@ -143,7 +143,7 @@ export class CdkToolbar<V> {
     }
   }
 
-  deregister(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
+  unregister(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
     const widgets = this._cdkWidgets();
     if (widgets.delete(widget)) {
       this._cdkWidgets.set(new Set(widgets));
@@ -210,6 +210,6 @@ export class CdkToolbarWidget implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._cdkToolbar.deregister(this);
+    this._cdkToolbar.unregister(this);
   }
 }
