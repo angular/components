@@ -1,5 +1,145 @@
-# TODO: Investigate bzlmod and use it where possible.
+"""Rules/toolchains for components with Bazel."""
 
 module(
-    name = "angular_material",
+    name = "components",
 )
+
+bazel_dep(name = "yq.bzl", version = "0.2.0")
+bazel_dep(name = "rules_nodejs", version = "6.5.0")
+bazel_dep(name = "aspect_rules_js", version = "2.4.2")
+bazel_dep(name = "rules_pkg", version = "1.1.0")
+bazel_dep(name = "tar.bzl", version = "0.5.1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.19.3")
+bazel_dep(name = "aspect_rules_esbuild", version = "0.22.1")
+bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "aspect_rules_ts", version = "3.6.3")
+bazel_dep(name = "bazel_skylib", version = "1.8.1")
+bazel_dep(name = "rules_browsers")
+git_override(
+    module_name = "rules_browsers",
+    commit = "93467ec31f55d87d50b59928a6461cd6cbf241c2",
+    remote = "https://github.com/devversion/rules_browsers.git",
+)
+
+bazel_dep(name = "rules_sass")
+git_override(
+    module_name = "rules_sass",
+    commit = "76078d5e9776a0080dcee496e90b88d8a6179c19",
+    remote = "https://github.com/devversion/rules_sass.git",
+)
+
+bazel_dep(name = "rules_angular")
+git_override(
+    module_name = "rules_angular",
+    commit = "a957283cdef0ade1fc6d1d7404f14577cebd3642",
+    remote = "https://github.com/devversion/rules_angular.git",
+)
+
+bazel_dep(name = "devinfra")
+git_override(
+    module_name = "devinfra",
+    commit = "f27fc330e9ebdd07ca713aff3c25a553cb824e37",
+    remote = "https://github.com/angular/dev-infra.git",
+)
+
+yq = use_extension("@yq.bzl//yq:extensions.bzl", "yq")
+use_repo(yq, "yq_toolchains")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(
+    name = "components_npm_typescript",
+    # Obtained by: curl --silent https://registry.npmjs.org/typescript/5.9.2 | jq -r '.dist.integrity'
+    ts_integrity = "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
+    ts_version_from = "//:package.json",
+)
+use_repo(rules_ts_ext, **{"npm_typescript": "components_npm_typescript"})
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(node_version = "22.12.0")
+use_repo(node, "nodejs_toolchains")
+
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "npm",
+    custom_postinstalls = {
+        "@angular/animations": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/common": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/forms": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/localize": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/platform-browser": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/platform-server": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/router": "node ../../@nginfra/angular-linking/index.mjs",
+    },
+    data = [
+        "//:package.json",
+        "//:pnpm-workspace.yaml",
+        "//integration:package.json",
+        "//src/cdk:package.json",
+        "//src/cdk-experimental:package.json",
+        "//src/components-examples:package.json",
+        "//src/dev-app:package.json",
+        "//src/e2e-app:package.json",
+        "//src/google-maps:package.json",
+        "//src/material:package.json",
+        "//src/material-date-fns-adapter:package.json",
+        "//src/material-experimental:package.json",
+        "//src/material-luxon-adapter:package.json",
+        "//src/material-moment-adapter:package.json",
+        "//src/universal-app:package.json",
+        "//src/youtube-player:package.json",
+    ],
+    npmrc = "//:.npmrc",
+    package_visibility = {
+        "@angular/cdk": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/cdk-experimental": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-experimental": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/google-maps": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/youtube-player": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-moment-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-date-fns-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-luxon-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+    },
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "npm")
+
+rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_angular")
+rules_angular.setup(
+    name = "components_rules_angular_configurable_deps",
+    angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
+    typescript = "//:node_modules/typescript",
+)
+use_repo(rules_angular, **{"rules_angular_configurable_deps": "components_rules_angular_configurable_deps"})
