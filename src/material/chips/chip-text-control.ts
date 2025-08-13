@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/** Interface for a text control that is used to drive interaction with a mat-chip-list. */
+/** Interface for a text control that is used to drive interaction with a mat-chip-grid. */
 export interface MatChipTextControl {
   /** Unique identifier for the text control. */
   id: string;
