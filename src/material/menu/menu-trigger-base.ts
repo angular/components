@@ -300,7 +300,14 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
     if (menu instanceof MatMenu && this._ownsMenu(menu)) {
       this._pendingRemoval = menu._animationDone.pipe(take(1)).subscribe(() => {
         overlayRef.detach();
-        menu.lazyContent?.detach();
+
+        // Only detach the lazy content if no other trigger took over the menu, otherwise we may
+        // detach something we no longer own. Note that we don't use `this._ownsMenu` here,
+        // because the current trigger relinquishes ownership as soon as the closing sequence
+        // is kicked off whereas the animation takes some time to play out.
+        if (!PANELS_TO_TRIGGERS.has(menu)) {
+          menu.lazyContent?.detach();
+        }
       });
       menu._setIsOpen(false);
     } else {
