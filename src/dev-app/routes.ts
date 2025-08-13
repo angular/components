@@ -75,6 +75,11 @@ export const DEV_APP_ROUTES: Routes = [
       import('./cdk-experimental-tree/cdk-tree-demo').then(m => m.CdkExperimentalTreeDemo),
   },
   {
+    path: 'cdk-experimental-toolbar',
+    loadComponent: () =>
+      import('./cdk-experimental-toolbar/cdk-toolbar-demo').then(m => m.CdkExperimentalToolbarDemo),
+  },
+  {
     path: 'cdk-dialog',
     loadComponent: () => import('./cdk-dialog/dialog-demo').then(m => m.DialogDemo),
   },

@@ -1,0 +1,111 @@
+<div class="example-container">
+  <h4 class="example-heading">Toolbar Controls</h4>
+  <div class="example-toolbar-controls">
+    <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+    <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+    <mat-checkbox [formControl]="toolbarDisabled">Disabled</mat-checkbox>
+    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+      <mat-label>Orientation</mat-label>
+      <mat-select [(value)]="orientation">
+        <mat-option value="vertical">Vertical</mat-option>
+        <mat-option value="horizontal">Horizontal</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <h4 class="example-heading">Radio Group Controls</h4>
+  <div class="example-toolbar-controls">
+    <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+    <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
+    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+      <mat-label>Disabled Radio Options</mat-label>
+      <mat-select [(value)]="disabledOptions" multiple>
+        @for (fruit of fruits; track fruit) {
+          <mat-option [value]="fruit">{{fruit}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <h4 class="example-heading">Button</h4>
+  <div class="example-toolbar-controls">
+    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+      <mat-label>Disabled Buttons</mat-label>
+      <mat-select [(value)]="disabledButtonOptions" multiple>
+        @for (fruit of buttonFruits; track fruit) {
+          <mat-option [value]="fruit">{{fruit}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<!-- #docregion toolbar -->
+<div
+  cdkToolbar
+  [orientation]="orientation"
+  [skipDisabled]="skipDisabled.value"
+  [wrap]="wrap.value"
+  [disabled]="toolbarDisabled.value"
+  class="example-toolbar"
+>
+  <button
+    cdkToolbarWidget
+    class="example-radio-button"
+    (click)="test('Pear')"
+    [disabled]="disabledButtonOptions.includes('Pear')"
+  >
+    Pear
+  </button>
+  <ul
+    cdkRadioGroup
+    [disabled]="disabled.value"
+    [readonly]="readonly.value"
+    class="example-radio-group"
+    aria-label="Select your favorite fruit"
+  >
+    @for (fruit of fruits; track fruit) {
+      @let optionDisabled = disabledOptions.includes(fruit);
+      <li cdkRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
+        <span class="example-radio-indicator"></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+  <ul
+    cdkRadioGroup
+    class="example-radio-group"
+    aria-label="Select your favorite fruit"
+  >
+    @for (fruit of fruits; track fruit) {
+      @let optionDisabled = disabledOptions.includes(fruit);
+      <li cdkRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
+        <span class="example-radio-indicator"></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+  <button
+    cdkToolbarWidget
+    class="example-radio-button"
+    (click)="test('Blueberry')"
+    [disabled]="disabledButtonOptions.includes('Blueberry')"
+  >
+    Blueberry
+  </button>
+  <button
+    cdkToolbarWidget
+    class="example-radio-button"
+    (click)="test('Cherry')"
+    [disabled]="disabledButtonOptions.includes('Cherry')"
+  >
+    Cherry
+  </button>
+  <button
+    cdkToolbarWidget
+    class="example-radio-button"
+    (click)="test('Date')"
+    [disabled]="disabledButtonOptions.includes('Date')"
+  >
+    Date
+  </button>
+</div>
+<!-- #enddocregion toolbar -->
