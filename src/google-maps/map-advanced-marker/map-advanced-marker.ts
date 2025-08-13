@@ -225,9 +225,56 @@ export class MapAdvancedMarker
       this.advancedMarker = new advancedMarkerConstructor(this._combineOptions());
       this._assertInitialized();
       this.advancedMarker.map = map;
+      this._addRightClickSupport();
       this._eventManager.setTarget(this.advancedMarker);
       this.markerInitialized.next(this.advancedMarker);
     });
+  }
+
+  private _addRightClickSupport() {
+    if (!this.advancedMarker?.element) return;
+
+    // Enhance the AdvancedMarkerElement prototype to natively support rightclick events
+    const markerProto = Object.getPrototypeOf(this.advancedMarker);
+
+    if (!markerProto._rightClickEnhanced) {
+      const originalAddListener = markerProto.addListener;
+
+      markerProto.addListener = function (eventName: string, handler: Function) {
+        if (eventName === 'rightclick') {
+          // Handle rightclick using mousedown event with right mouse button check
+          const listener = (event: MouseEvent) => {
+            // Only handle right mouse button clicks (button 2)
+            if (event.button === 2) {
+              const mapMouseEvent = {
+                domEvent: event,
+                latLng: null,
+                stop: () => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                },
+              } as google.maps.MapMouseEvent;
+
+              handler(mapMouseEvent);
+            }
+          };
+
+          this.element.addEventListener('mousedown', listener);
+
+          return {
+            remove: () => {
+              this.element.removeEventListener('mousedown', listener);
+            },
+          };
+        } else {
+          // Use original method for other events
+          return originalAddListener.call(this, eventName, handler);
+        }
+      };
+
+      // Mark prototype as enhanced to avoid multiple enhancements
+      markerProto._rightClickEnhanced = true;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
