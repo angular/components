@@ -1,5 +1,5 @@
-load("//:packages.bzl", "ANGULAR_COMPONENTS_SCOPED_PACKAGES")
 load("@devinfra//bazel/integration:index.bzl", _integration_test = "integration_test")
+load("//:packages.bzl", "ANGULAR_COMPONENTS_SCOPED_PACKAGES")
 
 LOCAL_NPM_PACKAGES = {
     "//src/%s:npm_package_archive" % (pkg[len("@angular/"):]): pkg
@@ -18,8 +18,8 @@ def integration_test(
 
     # Expose pnpm and Node as hermetic tools.
     test_tool_mappings = dict({
-        "@pnpm//:pnpm": "pnpm",
         "@%s_toolchains//:resolved_toolchain" % node_repository: "node",
+        "@pnpm//:pnpm": "pnpm",
     }, **tool_mappings)
     test_data = data + []
     test_toolchains = toolchains + []
