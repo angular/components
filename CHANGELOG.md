@@ -1,3 +1,16 @@
+<a name="20.1.6"></a>
+# 20.1.6 "plastic-moose" (2025-08-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [011fb785ae](https://github.com/angular/components/commit/011fb785ae2a327ef206f0c0f764db762c4da845) | fix | **menu:** picking up items from child menu ([#31684](https://github.com/angular/components/pull/31684)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [60952f4ddb](https://github.com/angular/components/commit/60952f4ddbcd81dd6f14d2e6a93d5a891dc44239) | fix | **stepper:** handle empty label in horizontal stepper ([#31665](https://github.com/angular/components/pull/31665)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0-next.3"></a>
 # 20.2.0-next.3 "metal-monkey" (2025-08-06)
 ### material
