@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "cdk-experimental-toolbar",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "cdk-toolbar-demo.html",
+        ":cdk-toolbar-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/toolbar",
+    ],
+)

@@ -38,6 +38,7 @@ ng_project(
         "//src/dev-app/cdk-experimental-listbox",
         "//src/dev-app/cdk-experimental-radio-group",
         "//src/dev-app/cdk-experimental-tabs",
+        "//src/dev-app/cdk-experimental-toolbar",
         "//src/dev-app/cdk-experimental-tree",
         "//src/dev-app/cdk-listbox",
         "//src/dev-app/cdk-menu",
@@ -170,7 +171,7 @@ http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     enable_dev_ui = True,
     # List of environment variables that will be made available as `window.<NAME>` in the

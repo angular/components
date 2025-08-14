@@ -8,7 +8,7 @@ import {MIGRATION_PATH} from '../../paths';
 describe('Material upgrade test cases', () => {
   const versionNames = getAllVersionNames().map(versionName => versionName.toLowerCase());
   const testCasesMap = findBazelVersionTestCases(
-    'angular_material/src/material/schematics/ng-update/test-cases',
+    '_main/src/material/schematics/ng-update/test-cases',
   );
 
   // Setup the test cases for each target version. The test cases will be automatically

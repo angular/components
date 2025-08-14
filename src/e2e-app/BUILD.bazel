@@ -84,7 +84,7 @@ http_server(
     testonly = True,
     srcs = devserverIndexHtmlDependencies,
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     tags = ["manual"],
     deps = [
