@@ -122,6 +122,7 @@ export class DevAppLayout {
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'},
+    {name: 'Utility', route: '/utility'},
     {name: 'Virtual Scrolling', route: '/virtual-scroll'},
     {name: 'YouTube Player', route: '/youtube-player'},
   ];

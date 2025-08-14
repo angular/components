@@ -52,6 +52,8 @@ html {
       density: 0,
     ));
   }
+
+  @include mat.utility-classes();
 }
 
 @include mat.typography-hierarchy($light-theme);
