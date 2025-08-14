@@ -14,7 +14,7 @@ for more information about Material's color design.
 
 For more customization, custom colors can be also be provided for the
 secondary, tertiary, neutral, neutral variant, and error palette colors. It is recommended to choose
-colors that are contrastful. Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/accessible-design/patterns).
+colors that are contrastful. Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/designing/color-contrast).
 
 ## Options
 
