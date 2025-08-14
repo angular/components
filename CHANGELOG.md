@@ -1,3 +1,25 @@
+<a name="20.2.0-rc.0"></a>
+# 20.2.0-rc.0 "plastic-mice" (2025-08-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cd532b2b06](https://github.com/angular/components/commit/cd532b2b06dc1289f5e8f1a938a4a2fabc0cd618) | fix | **menu:** picking up items from child menu ([#31684](https://github.com/angular/components/pull/31684)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [54d514df66](https://github.com/angular/components/commit/54d514df66b9a1ea544df0aacc7069defcd78dcd) | feat | **testing:** Add 'type' attribute filter and getter to Mat… ([#31657](https://github.com/angular/components/pull/31657)) |
+| [8da079d34b](https://github.com/angular/components/commit/8da079d34bd3e112a1c46beb435b8592ba4f9e6d) | fix | **chips:** remove extra span for aria-description ([#31609](https://github.com/angular/components/pull/31609)) |
+| [37648cf875](https://github.com/angular/components/commit/37648cf875fa0c427e426a12377a517dcfaa31dd) | fix | **chips:** static chips should disable ripple ([#31652](https://github.com/angular/components/pull/31652)) |
+| [24e191a301](https://github.com/angular/components/commit/24e191a301104600c40b4911d3f1921bea53f446) | fix | **stepper:** handle empty label in horizontal stepper ([#31665](https://github.com/angular/components/pull/31665)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [048de42545](https://github.com/angular/components/commit/048de42545676c662ed26d6256cc61fa64a909be) | feat | **toolbar:** add toolbar directive and demo ([#31676](https://github.com/angular/components/pull/31676)) |
+| [82812760ef](https://github.com/angular/components/commit/82812760efc0a69a6546f459bb6eb531ed930bd7) | feat | **ui-patterns:** toolbar and toolbar widget ([#31670](https://github.com/angular/components/pull/31670)) |
+| [fa909116c1](https://github.com/angular/components/commit/fa909116c165896f64fce4c7a81939726a499f52) | feat | **ui-patterns:** toolbar ui pattern tests ([#31688](https://github.com/angular/components/pull/31688)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.6"></a>
 # 20.1.6 "plastic-moose" (2025-08-14)
 ### cdk
