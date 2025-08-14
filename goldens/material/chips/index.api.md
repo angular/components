@@ -189,7 +189,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
     get chipBlurChanges(): Observable<MatChipEvent>;
-    protected _chipInput: MatChipTextControl;
+    protected _chipInput?: MatChipTextControl;
     // (undocumented)
     _chips: QueryList<MatChipRow>;
     readonly controlType: string;
@@ -215,8 +215,6 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngControl: NgControl;
     // (undocumented)
