@@ -10,6 +10,7 @@ CDK_EXPERIMENTAL_ENTRYPOINTS = [
     "scrolling",
     "selection",
     "tabs",
+    "toolbar",
     "tree",
     "table-scroll-container",
     "ui-patterns",

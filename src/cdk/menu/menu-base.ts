@@ -67,12 +67,15 @@ export abstract class CdkMenuBase
   /** The directionality (text direction) of the current page. */
   protected readonly dir = inject(Directionality, {optional: true});
 
+  /** All items inside the menu, including ones that belong to other menus. */
+  @ContentChildren(CdkMenuItem, {descendants: true})
+  protected _allItems: QueryList<CdkMenuItem>;
+
   /** The id of the menu's host element. */
   @Input() id: string = inject(_IdGenerator).getId('cdk-menu-');
 
-  /** All child MenuItem elements nested in this Menu. */
-  @ContentChildren(CdkMenuItem, {descendants: true})
-  readonly items: QueryList<CdkMenuItem>;
+  /** All child MenuItem elements belonging to this Menu. */
+  readonly items: QueryList<CdkMenuItem> = new QueryList();
 
   /** The direction items in the menu flow. */
   orientation: 'horizontal' | 'vertical' = 'vertical';
@@ -107,6 +110,7 @@ export abstract class CdkMenuBase
     if (!this.isInline) {
       this.menuStack.push(this);
     }
+    this._setItems();
     this._setKeyManager();
     this._handleFocus();
     this._subscribeToMenuStackHasFocus();
@@ -176,6 +180,18 @@ export abstract class CdkMenuBase
         }
       }
     }
+  }
+
+  /** Sets up the subscription that keeps the items list in sync. */
+  private _setItems() {
+    // Since the items query has `descendants: true`, we need
+    // to filter out items belonging to a different menu.
+    this._allItems.changes
+      .pipe(startWith(this._allItems), takeUntil(this.destroyed))
+      .subscribe((items: QueryList<CdkMenuItem>) => {
+        this.items.reset(items.filter(item => item._parentMenu === this));
+        this.items.notifyOnChanges();
+      });
   }
 
   /** Setup the FocusKeyManager with the correct orientation for the menu. */
