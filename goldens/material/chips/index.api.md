@@ -189,7 +189,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
     get chipBlurChanges(): Observable<MatChipEvent>;
-    protected _chipInput: MatChipTextControl;
+    protected _chipInput?: MatChipTextControl;
     // (undocumented)
     _chips: QueryList<MatChipRow>;
     readonly controlType: string;
@@ -209,14 +209,15 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     _focusLastChip(): void;
     _handleKeydown(event: KeyboardEvent): void;
     get id(): string;
+    set id(value: string);
+    // (undocumented)
+    protected _id: string;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngControl: NgControl;
     // (undocumented)
@@ -241,6 +242,8 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
+    // (undocumented)
+    protected _uid: string;
     updateErrorState(): void;
     get value(): any;
     set value(value: any);
@@ -249,7 +252,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipGrid, "mat-chip-grid", never, { "disabled": { "alias": "disabled"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["_chips"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatChipGrid, "mat-chip-grid", never, { "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "change": "change"; "valueChange": "valueChange"; }, ["_chips"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipGrid, never>;
 }
