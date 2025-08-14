@@ -119,7 +119,6 @@ describe('CdkTree', () => {
           if (config.label !== undefined) node.label = config.label;
           if (config.children !== undefined) node.children = config.children;
           if (config.disabled !== undefined) node.disabled = config.disabled;
-          if (config.preserveContent !== undefined) node.preserveContent = config.preserveContent;
           updateTree({nodes: newNodes});
           return;
         }
@@ -151,6 +150,16 @@ describe('CdkTree', () => {
     return item?.getAttribute('data-value') ?? undefined;
   }
 
+  function expandAll() {
+    const fruitsEl = getTreeItemElementByValue('fruits')!;
+    click(fruitsEl);
+    const berriesEl = getTreeItemElementByValue('berries')!;
+    click(berriesEl);
+    const vegetablesEl = getTreeItemElementByValue('vegetables')!;
+    click(vegetablesEl);
+    updateTree({value: []});
+  }
+
   afterEach(async () => {
     fixture.detectChanges();
     await runAccessibilityChecks(fixture.nativeElement);
@@ -160,10 +169,6 @@ describe('CdkTree', () => {
     describe('default configuration', () => {
       beforeEach(() => {
         setupTestTree();
-        // Preserve collapsed children nodes for checking attributes.
-        updateTreeItemByValue('fruits', {preserveContent: true});
-        updateTreeItemByValue('berries', {preserveContent: true});
-        updateTreeItemByValue('vegetables', {preserveContent: true});
       });
 
       it('should correctly set the role attribute to "tree" for CdkTree', () => {
@@ -171,6 +176,8 @@ describe('CdkTree', () => {
       });
 
       it('should correctly set the role attribute to "treeitem" for CdkTreeItem', () => {
+        expandAll();
+
         expect(getTreeItemElementByValue('fruits')!.getAttribute('role')).toBe('treeitem');
         expect(getTreeItemElementByValue('vegetables')!.getAttribute('role')).toBe('treeitem');
         expect(getTreeItemElementByValue('grains')!.getAttribute('role')).toBe('treeitem');
@@ -183,6 +190,8 @@ describe('CdkTree', () => {
       });
 
       it('should correctly set the role attribute to "group" for CdkTreeItemGroup', () => {
+        expandAll();
+
         expect(getTreeItemGroupElementByValue('fruits')!.getAttribute('role')).toBe('group');
         expect(getTreeItemGroupElementByValue('vegetables')!.getAttribute('role')).toBe('group');
         expect(getTreeItemGroupElementByValue('berries')!.getAttribute('role')).toBe('group');
@@ -215,17 +224,19 @@ describe('CdkTree', () => {
       });
 
       it('should set aria-level, aria-setsize, and aria-posinset correctly', () => {
+        expandAll();
+
         const fruits = getTreeItemElementByValue('fruits')!;
         expect(fruits.getAttribute('aria-level')).toBe('1');
         expect(fruits.getAttribute('aria-setsize')).toBe('4');
         expect(fruits.getAttribute('aria-posinset')).toBe('1');
-        expect(fruits.getAttribute('aria-expanded')).toBe('false');
+        expect(fruits.getAttribute('aria-expanded')).toBe('true');
 
         const vegetables = getTreeItemElementByValue('vegetables')!;
         expect(vegetables.getAttribute('aria-level')).toBe('1');
         expect(vegetables.getAttribute('aria-setsize')).toBe('4');
         expect(vegetables.getAttribute('aria-posinset')).toBe('2');
-        expect(vegetables.getAttribute('aria-expanded')).toBe('false');
+        expect(vegetables.getAttribute('aria-expanded')).toBe('true');
 
         const grains = getTreeItemElementByValue('grains')!;
         expect(grains.getAttribute('aria-level')).toBe('1');
@@ -246,7 +257,7 @@ describe('CdkTree', () => {
         expect(berries.getAttribute('aria-level')).toBe('2');
         expect(berries.getAttribute('aria-setsize')).toBe('3');
         expect(berries.getAttribute('aria-posinset')).toBe('3');
-        expect(berries.getAttribute('aria-expanded')).toBe('false');
+        expect(berries.getAttribute('aria-expanded')).toBe('true');
 
         const strawberry = getTreeItemElementByValue('strawberry')!;
         expect(strawberry.getAttribute('aria-level')).toBe('3');
@@ -264,10 +275,6 @@ describe('CdkTree', () => {
     describe('custom configuration', () => {
       beforeEach(() => {
         setupTestTree();
-        // Preserve collapsed children nodes for checking attributes.
-        updateTreeItemByValue('fruits', {preserveContent: true});
-        updateTreeItemByValue('berries', {preserveContent: true});
-        updateTreeItemByValue('vegetables', {preserveContent: true});
       });
 
       it('should set aria-orientation to "horizontal"', () => {
@@ -296,6 +303,7 @@ describe('CdkTree', () => {
       });
 
       it('should set aria-selected to "true" for selected items', () => {
+        expandAll();
         updateTree({value: ['apple']});
 
         const appleItem = getTreeItemElementByValue('apple')!;
@@ -306,11 +314,13 @@ describe('CdkTree', () => {
 
       it('should set aria-expanded to "true" for expanded items', () => {
         right();
+
         const fruitsItem = getTreeItemElementByValue('fruits')!;
         expect(fruitsItem.getAttribute('aria-expanded')).toBe('true');
       });
 
       it('should set aria-current to specific current type when nav="true"', () => {
+        expandAll();
         updateTree({nav: true, value: ['apple']});
 
         const appleItem = getTreeItemElementByValue('apple')!;
@@ -323,6 +333,8 @@ describe('CdkTree', () => {
       });
 
       it('should not set aria-selected when nav="true"', () => {
+        expandAll();
+
         updateTree({value: ['apple'], nav: true});
         const appleItem = getTreeItemElementByValue('apple')!;
         expect(appleItem.hasAttribute('aria-selected')).toBe(false);
@@ -402,10 +414,7 @@ describe('CdkTree', () => {
       });
 
       it('should set tabindex="-1" for all items', () => {
-        // Preserve collapsed children nodes for checking attributes.
-        updateTreeItemByValue('fruits', {preserveContent: true});
-        updateTreeItemByValue('berries', {preserveContent: true});
-        updateTreeItemByValue('vegetables', {preserveContent: true});
+        expandAll();
 
         expect(getTreeItemElementByValue('fruits')!.getAttribute('tabindex')).toBe('-1');
         expect(getTreeItemElementByValue('apple')!.getAttribute('tabindex')).toBe('-1');
@@ -425,10 +434,7 @@ describe('CdkTree', () => {
   describe('value and selection', () => {
     it('should select items based on the initial value input', () => {
       setupTestTree();
-      // Preserve collapsed children nodes for checking attributes.
-      updateTreeItemByValue('fruits', {preserveContent: true});
-      updateTreeItemByValue('berries', {preserveContent: true});
-      updateTreeItemByValue('vegetables', {preserveContent: true});
+      expandAll();
       updateTree({value: ['apple', 'strawberry', 'carrot']});
 
       expect(getTreeItemElementByValue('apple')!.getAttribute('aria-selected')).toBe('true');
@@ -1320,7 +1326,6 @@ interface TestTreeNode<V = string> {
   label: string;
   disabled?: boolean;
   children?: TestTreeNode<V>[];
-  preserveContent?: boolean;
 }
 
 @Component({
@@ -1359,7 +1364,6 @@ interface TestTreeNode<V = string> {
           <ul
             cdkTreeItemGroup
             [ownedBy]="treeItem"
-            [preserveContent]="!!node.preserveContent"
             [attr.data-group-for]="node.value"
             #group="cdkTreeItemGroup">
             <ng-template cdkTreeItemGroupContent>
