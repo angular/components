@@ -1,0 +1,20 @@
+load("//tools:defaults.bzl", "ng_project", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "utility-classes-demo",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "utility-classes-demo.html",
+        ":utility_classes_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)
+
+sass_binary(
+    name = "utility_classes_demo_scss",
+    src = "utility-classes-demo.scss",
+)

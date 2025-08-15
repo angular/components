@@ -303,6 +303,11 @@ export const DEV_APP_ROUTES: Routes = [
       import('./youtube-player/youtube-player-demo').then(m => m.YouTubePlayerDemo),
   },
   {
+    path: 'utility',
+    loadComponent: () =>
+      import('./utility-classes-demo/utility-classes-demo').then(m => m.UtilityClassesDemo),
+  },
+  {
     path: 'selection',
     loadComponent: () => import('./selection/selection-demo').then(m => m.SelectionDemo),
   },

@@ -94,6 +94,7 @@ ng_project(
         "//src/dev-app/tooltip",
         "//src/dev-app/tree",
         "//src/dev-app/typography",
+        "//src/dev-app/utility-classes-demo",
         "//src/dev-app/virtual-scroll",
         "//src/dev-app/youtube-player",
         "//src/material/core",
