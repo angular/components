@@ -17,6 +17,7 @@
       checkbox-unselected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
       checkbox-unselected-pressed-state-layer-opacity:
           map.get($system, pressed-state-layer-opacity),
+      checkbox-touch-target-size: 48px,
     ),
     color: private-get-color-palette-color-tokens($theme, secondary),
     typography: (
