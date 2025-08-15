@@ -16,11 +16,13 @@
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+  $touch-target-size: 48px;
 
   @return (
     base: (
       fab-container-elevation-shadow: elevation.get-box-shadow(6),
       fab-container-shape: 50%,
+      fab-touch-target-size: $touch-target-size,
       fab-extended-container-elevation-shadow: elevation.get-box-shadow(6),
       fab-extended-container-height: 48px,
       fab-extended-container-shape: 24px,
@@ -32,6 +34,7 @@
       fab-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
       fab-small-container-elevation-shadow: elevation.get-box-shadow(6),
       fab-small-container-shape: 50%,
+      fab-small-touch-target-size: $touch-target-size,
       fab-small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
       fab-small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
       fab-small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
