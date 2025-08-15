@@ -20,6 +20,7 @@
       checkbox-unselected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
       checkbox-unselected-pressed-state-layer-opacity:
           map.get($system, pressed-state-layer-opacity),
+      checkbox-touch-target-size: 48px,
     ),
     color: (
       checkbox-disabled-label-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
