@@ -548,7 +548,7 @@ $fallbacks: m3-slide-toggle.get-tokens();
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 48px;
+  height: token-utils.slot(slide-toggle-touch-target-size, $fallbacks);
   width: 100%;
   transform: translate(-50%, -50%);
   display: token-utils.slot(slide-toggle-touch-target-display, $fallbacks);
