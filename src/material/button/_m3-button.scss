@@ -9,6 +9,7 @@
 /// Generates custom tokens for the button.
 @function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
+  $touch-target-size: 48px;
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
     $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
@@ -21,28 +22,33 @@
       button-filled-icon-offset: -8px,
       button-filled-icon-spacing: 8px,
       button-filled-label-text-transform: null,
+      button-filled-touch-target-size: $touch-target-size,
       button-outlined-container-shape: map.get($system, corner-full),
       button-outlined-horizontal-padding: 24px,
       button-outlined-icon-offset: -8px,
       button-outlined-icon-spacing: 8px,
       button-outlined-outline-width: 1px,
       button-outlined-label-text-transform: null,
+      button-outlined-touch-target-size: $touch-target-size,
       button-protected-container-shape: map.get($system, corner-full),
       button-protected-horizontal-padding: 24px,
       button-protected-icon-offset: -8px,
       button-protected-icon-spacing: 8px,
       button-protected-label-text-transform: null,
+      button-protected-touch-target-size: $touch-target-size,
       button-text-container-shape: map.get($system, corner-full),
       button-text-horizontal-padding: 12px,
       button-text-icon-offset: -4px,
       button-text-icon-spacing: 8px,
       button-text-with-icon-horizontal-padding: 16px,
       button-text-label-text-transform: null,
+      button-text-touch-target-size: $touch-target-size,
       button-tonal-container-shape: map.get($system, corner-full),
       button-tonal-horizontal-padding: 24px,
       button-tonal-icon-offset: -8px,
       button-tonal-icon-spacing: 8px,
       button-tonal-label-text-transform: null,
+      button-tonal-touch-target-size: $touch-target-size,
     ),
     color: (
       button-filled-container-color: map.get($system, primary),

@@ -118,7 +118,8 @@ $fallbacks: m3-fab.get-tokens();
     background-color: token-utils.slot(fab-disabled-state-container-color, $fallbacks);
   }
 
-  @include button-base.mat-private-button-touch-target(true, fab-touch-target-display, $fallbacks);
+  @include button-base.mat-private-button-touch-target(true, fab-touch-target-size,
+    fab-touch-target-display, $fallbacks);
   @include button-base.mat-private-button-ripple(fab-ripple-color, fab-state-layer-color,
     fab-disabled-state-layer-color, fab-hover-state-layer-opacity, fab-focus-state-layer-opacity,
     fab-pressed-state-layer-opacity, $fallbacks);
@@ -150,7 +151,7 @@ $fallbacks: m3-fab.get-tokens();
   }
 
   @include button-base.mat-private-button-touch-target(true,
-    fab-small-touch-target-display, $fallbacks);
+    fab-small-touch-target-size, fab-small-touch-target-display, $fallbacks);
   @include button-base.mat-private-button-ripple(fab-small-ripple-color,
     fab-small-state-layer-color,
     fab-small-disabled-state-layer-color, fab-small-hover-state-layer-opacity,
