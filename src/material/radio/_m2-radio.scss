@@ -15,6 +15,7 @@
       // determines the size of the radio button itself and there are internal
       // tests who don't configure the theme correctly.
       radio-state-layer-size: 40px,
+      radio-touch-target-size: 48px,
     ),
     color: private-get-color-palette-color-tokens($theme, secondary),
     typography: (
