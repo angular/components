@@ -230,6 +230,31 @@
         <mat-checkbox name="addOnBlur" [(ngModel)]="addOnBlur">Add on Blur</mat-checkbox>
       </p>
 
+      <h4>Chip grid with no Input</h4>
+
+      <mat-form-field class="demo-has-chip-list">
+        <mat-chip-grid #chipGrid3 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
+          @for (person of people; track person) {
+            <mat-chip-row
+              [editable]="editable"
+              (removed)="remove(person)"
+              (edited)="edit(person, $event)">
+              @if (showEditIcon) {
+                <button matChipEdit aria-label="Edit contributor">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (peopleWithAvatar && person.avatar) {
+                <mat-chip-avatar>{{person.avatar}}</mat-chip-avatar>
+              }
+              {{person.name}}
+              <button matChipRemove aria-label="Remove contributor">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+        </mat-chip-grid>
+      </mat-form-field>      
     </mat-card-content>
   </mat-card>
 
