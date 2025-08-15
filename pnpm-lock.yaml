@@ -219,8 +219,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.9
       firebase-tools:
-        specifier: 14.12.0
-        version: 14.12.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.12.1
+        version: 14.12.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.1
@@ -5004,6 +5004,11 @@ packages:
 
   firebase-tools@14.12.0:
     resolution: {integrity: sha512-uXyard+oJgnzYXOOt0asPHuLa8rTYhMJyxyXY7xjaY6RF3Oy3fJRq+c0axT5LaXrUzunkfDE6P6giBpuBTPIsA==}
+    engines: {node: '>=20.0.0 || >=22.0.0'}
+    hasBin: true
+
+  firebase-tools@14.12.1:
+    resolution: {integrity: sha512-F4wZ/oXPVHfciLZh/Leq6uEh3LRrp9TsGPwcOFmMafO8c1HSXO25bOKxT7gHfvC2/3ftJt97+eSLTTgtGz4Zbw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -14354,6 +14359,90 @@ snapshots:
       path-exists: 4.0.0
 
   firebase-tools@14.12.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
+    dependencies:
+      '@electric-sql/pglite': 0.3.7
+      '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
+      '@google-cloud/cloud-sql-connector': 1.8.3
+      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
+      '@inquirer/prompts': 7.8.1(@types/node@22.17.1)
+      '@modelcontextprotocol/sdk': 1.17.2
+      abort-controller: 3.0.0
+      ajv: 8.17.1
+      ajv-formats: 3.0.1
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      body-parser: 1.20.3
+      chokidar: 3.6.0
+      cjson: 0.3.3
+      cli-table3: 0.6.5
+      colorette: 2.0.20
+      commander: 5.1.0
+      configstore: 5.0.1
+      cors: 2.8.5
+      cross-env: 7.0.3
+      cross-spawn: 7.0.6
+      csv-parse: 5.6.0
+      deep-equal-in-any-order: 2.0.6
+      exegesis: 4.3.0
+      exegesis-express: 4.0.0
+      express: 4.21.2
+      filesize: 6.4.0
+      form-data: 4.0.4
+      fs-extra: 10.1.0
+      fuzzy: 0.1.3
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.1.0)
+      glob: 10.4.5
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.1.0)
+      ignore: 7.0.5
+      js-yaml: 3.14.1
+      jsonwebtoken: 9.0.2
+      leven: 3.1.0
+      libsodium-wrappers: 0.7.15
+      lodash: 4.17.21
+      lsofi: 1.0.0
+      marked: 13.0.3
+      marked-terminal: 7.3.0(marked@13.0.3)
+      mime: 2.6.0
+      minimatch: 3.1.2
+      morgan: 1.10.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      open: 6.4.0
+      ora: 5.4.1
+      p-limit: 3.1.0
+      pg: 8.16.3
+      pg-gateway: 0.3.0-beta.4
+      pglite-2: '@electric-sql/pglite@0.2.17'
+      portfinder: 1.0.37
+      progress: 2.0.3
+      proxy-agent: 6.5.0
+      retry: 0.13.1
+      semver: 7.7.2
+      sql-formatter: 15.6.6
+      stream-chain: 2.2.5
+      stream-json: 1.9.1
+      superstatic: 9.2.0(encoding@0.1.13)
+      tar: 6.2.1
+      tcp-port-used: 1.0.2
+      tmp: 0.2.5
+      triple-beam: 1.4.1
+      universal-analytics: 0.5.3
+      update-notifier-cjs: 5.1.7(encoding@0.1.13)
+      uuid: 8.3.2
+      winston: 3.17.0
+      winston-transport: 4.9.0
+      ws: 7.5.10(bufferutil@4.0.9)
+      yaml: 2.8.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  firebase-tools@14.12.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
