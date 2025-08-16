@@ -17,6 +17,7 @@
     -3: 24px,
   ), $scale);
   $touch-target-display: if($scale < -1, none, block);
+  $touch-target-size: 48px;
 
   @return (
     base: (
@@ -24,12 +25,14 @@
       button-filled-horizontal-padding: 16px,
       button-filled-icon-offset: -4px,
       button-filled-icon-spacing: 8px,
+      button-filled-touch-target-size: $touch-target-size,
       button-outlined-container-shape: 4px,
       button-outlined-horizontal-padding: 15px, // Normally it's 16px, but -1px for the outline.
       button-outlined-icon-offset: -4px,
       button-outlined-icon-spacing: 8px,
       button-outlined-keep-touch-target: false,
       button-outlined-outline-width: 1px,
+      button-outlined-touch-target-size: $touch-target-size,
       button-protected-container-elevation-shadow: elevation.get-box-shadow(2),
       button-protected-container-shape: 4px,
       button-protected-disabled-container-elevation-shadow: elevation.get-box-shadow(0),
@@ -39,15 +42,18 @@
       button-protected-icon-offset: -4px,
       button-protected-icon-spacing: 8px,
       button-protected-pressed-container-elevation-shadow: elevation.get-box-shadow(8),
+      button-protected-touch-target-size: $touch-target-size,
       button-text-container-shape: 4px,
       button-text-horizontal-padding: 8px,
       button-text-icon-offset: 0,
       button-text-icon-spacing: 8px,
       button-text-with-icon-horizontal-padding: 8px,
+      button-text-touch-target-size: $touch-target-size,
       button-tonal-container-shape: 4px,
       button-tonal-horizontal-padding: 16px,
       button-tonal-icon-offset: -4px,
       button-tonal-icon-spacing: 8px,
+      button-tonal-touch-target-size: $touch-target-size,
     ),
     color: (
       button-filled-container-color: map.get($system, surface),

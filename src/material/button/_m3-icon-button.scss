@@ -20,6 +20,7 @@
     base: (
       icon-button-icon-size: 24px,
       icon-button-container-shape: map.get($system, corner-full),
+      icon-button-touch-target-size: 48px,
     ),
     color: (
       icon-button-disabled-icon-color:

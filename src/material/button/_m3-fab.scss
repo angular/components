@@ -8,6 +8,7 @@
 /// Generates custom tokens for the mat-fab.
 @function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
+  $touch-target-size: 48px;
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   }
@@ -19,6 +20,8 @@
       fab-extended-container-shape: map.get($system, corner-large),
       fab-small-container-shape: map.get($system, corner-medium),
       fab-touch-target-display: null,
+      fab-touch-target-size: $touch-target-size,
+      fab-small-touch-target-size: $touch-target-size,
     ),
     color: (
       fab-container-color: map.get($system, primary-container),

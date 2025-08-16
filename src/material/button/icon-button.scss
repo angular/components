@@ -53,7 +53,7 @@ $fallbacks: m3-icon-button.get-tokens();
       icon-button-hover-state-layer-opacity, icon-button-focus-state-layer-opacity,
       icon-button-pressed-state-layer-opacity, $fallbacks);
   @include button-base.mat-private-button-touch-target(true,
-    icon-button-touch-target-display, $fallbacks);
+      icon-button-touch-target-size, icon-button-touch-target-display, $fallbacks);
   @include private.private-animation-noop();
 
   @include button-base.mat-private-button-disabled {

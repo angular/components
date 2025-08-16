@@ -60,6 +60,7 @@
       slide-toggle-visible-track-opacity: 1,
       slide-toggle-visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
       slide-toggle-with-icon-handle-size: 20px,
+      slide-toggle-touch-target-size: 48px,
     ),
     color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       slide-toggle-disabled-label-text-color:

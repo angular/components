@@ -88,8 +88,8 @@ $fallbacks: m3-radio.get-tokens();
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 48px;
-  width: 48px;
+  height: token-utils.slot(radio-touch-target-size, $fallbacks);
+  width: token-utils.slot(radio-touch-target-size, $fallbacks);
   transform: translate(-50%, -50%);
   display: token-utils.slot(radio-touch-target-display, $fallbacks);
 

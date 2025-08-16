@@ -119,16 +119,20 @@
   }
 }
 
-@mixin mat-private-button-touch-target($is-square, $touch-target-display-token, $fallbacks) {
+@mixin mat-private-button-touch-target(
+  $is-square,
+  $touch-target-size-token,
+  $touch-target-display-token,
+  $fallbacks) {
   .mat-mdc-button-touch-target {
     position: absolute;
     top: 50%;
-    height: 48px;
+    height: token-utils.slot($touch-target-size-token, $fallbacks);
     display: token-utils.slot($touch-target-display-token, $fallbacks);
 
     @if $is-square {
       left: 50%;
-      width: 48px;
+      width: token-utils.slot($touch-target-size-token, $fallbacks);
       transform: translate(-50%, -50%);
     } @else {
       left: 0;

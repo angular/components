@@ -16,6 +16,7 @@
     base: (
       radio-disabled-unselected-icon-opacity: 0.38,
       radio-disabled-selected-icon-opacity: 0.38,
+      radio-touch-target-size: 48px,
     ),
     color: (
       radio-checked-ripple-color: map.get($system, primary),
