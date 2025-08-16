@@ -26,7 +26,7 @@ import {
 import {Observable, Subject, merge} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
-import {MatChipAction} from './chip-action';
+import {MatChipAction, MatChipContent} from './chip-action';
 
 /**
  * Basic container component for the MatChip component.
@@ -266,10 +266,9 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
    * Determines if key manager should avoid putting a given chip action in the tab index. Skip
    * non-interactive and disabled actions since the user can't do anything with them.
    */
-  protected _skipPredicate(action: MatChipAction): boolean {
-    // Skip chips that the user cannot interact with. `mat-chip-set` does not permit focusing disabled
-    // chips.
-    return !action.isInteractive || action.disabled;
+  protected _skipPredicate(action: MatChipContent): boolean {
+    // `mat-chip-set` does not permit focusing disabled chips.
+    return action.disabled;
   }
 
   /** Listens to changes in the chip set and syncs up the state of the individual chips. */
