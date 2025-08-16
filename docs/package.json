@@ -58,7 +58,7 @@
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
     "@bazel/bazelisk": "^1.12.1",
-    "@types/jasmine": "5.1.8",
+    "@types/jasmine": "5.1.9",
     "@types/node": "^22.14.1",
     "@types/shelljs": "0.8.17",
     "firebase-tools": "^14.0.0",
