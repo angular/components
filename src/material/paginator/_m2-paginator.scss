@@ -18,7 +18,10 @@
   ), if($density-scale > -4, -4, $density-scale));
 
   @return (
-    base: (),
+    base: (
+      paginator-page-size-select-width: 84px,
+      paginator-page-size-select-touch-target-height: 48px,
+    ),
     color: (
       paginator-container-text-color: map.get($system, on-surface),
       paginator-container-background-color: map.get($system, surface),
