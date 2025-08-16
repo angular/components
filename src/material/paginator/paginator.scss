@@ -8,8 +8,6 @@ $page-size-margin-right: 8px;
 
 $items-per-page-label-margin: 0 4px;
 $selector-margin: 0 4px;
-$selector-trigger-width: 84px;
-$touch-target-height: 48px;
 
 $range-label-margin: 0 32px 0 24px;
 $button-icon-size: 28px;
@@ -84,7 +82,7 @@ $fallbacks: m3-paginator.get-tokens();
 
 .mat-mdc-paginator-page-size-select {
   margin: $selector-margin;
-  width: $selector-trigger-width;
+  width: token-utils.slot(paginator-page-size-select-width, $fallbacks);
 }
 
 .mat-mdc-paginator-range-label {
@@ -131,8 +129,8 @@ $fallbacks: m3-paginator.get-tokens();
   position: absolute;
   top: 50%;
   left: 50%;
-  width: $selector-trigger-width;
-  height: $touch-target-height;
+  width: token-utils.slot(paginator-page-size-select-width, $fallbacks);
+  height: token-utils.slot(paginator-page-size-select-touch-target-height, $fallbacks);
   background-color: transparent;
   transform: translate(-50%, -50%);
   cursor: pointer;
