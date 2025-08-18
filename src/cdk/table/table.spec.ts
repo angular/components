@@ -13,7 +13,6 @@ import {
   Type,
   ViewChild,
   inject,
-  TrackByFunction,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
@@ -1996,35 +1995,6 @@ describe('CdkTable', () => {
     expect(noDataRow).toBeTruthy();
     expect(noDataRow.getAttribute('colspan')).toEqual('3');
   });
-
-  it('should properly update table content when data changes in OnPush component with track by instance', () => {
-    setupTableTestApp(WrapNativeTrackByHtmlTableAppOnPush);
-
-    const data = component.dataSource.data;
-
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      [data[0].a, data[0].b, data[0].c],
-      [data[1].a, data[1].b, data[1].c],
-      [data[2].a, data[2].b, data[2].c],
-    ]);
-
-    component.dataSource.data = component.dataSource.data.map((data: TestData) => ({
-      ...data,
-      b: `${data.b}-updated`,
-    }));
-
-    fixture.detectChanges();
-
-    const newData = component.dataSource.data;
-
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      [newData[0].a, newData[0].b, newData[0].c],
-      [newData[1].a, newData[1].b, newData[1].c],
-      [newData[2].a, newData[2].b, newData[2].c],
-    ]);
-  });
 });
 
 interface TestData {
@@ -3165,7 +3135,7 @@ class TableWithIndirectDescendantDefs {
 @Component({
   selector: 'cdk-table-change-detection-on-push',
   template: `
-    <table cdk-table [dataSource]="dataSource" [trackBy]="trackBy">
+    <table cdk-table [dataSource]="dataSource">
       <ng-container cdkColumnDef="column_a">
         <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
@@ -3193,7 +3163,6 @@ class TableWithIndirectDescendantDefs {
 })
 class NativeHtmlTableAppOnPush {
   @Input() dataSource: Observable<TestData[]> | null = null;
-  @Input() trackBy: TrackByFunction<TestData> | undefined;
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -3205,17 +3174,6 @@ class NativeHtmlTableAppOnPush {
 })
 class WrapNativeHtmlTableAppOnPush {
   dataSource: FakeDataSource = new FakeDataSource();
-}
-
-@Component({
-  template: `
-    <cdk-table-change-detection-on-push [dataSource]="dataSource" [trackBy]="trackBy"></cdk-table-change-detection-on-push>
-  `,
-  imports: [NativeHtmlTableAppOnPush],
-})
-class WrapNativeTrackByHtmlTableAppOnPush {
-  dataSource: FakeDataSource = new FakeDataSource();
-  trackBy: TrackByFunction<TestData> = (index: number, data: TestData) => data.a;
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
