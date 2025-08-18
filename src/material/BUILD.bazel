@@ -65,6 +65,7 @@ sass_library(
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_palettes",
         "//src/material/core/theming:core_all_theme",
+        "//src/material/core/tokens:classes",
         "//src/material/core/tokens:system",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
