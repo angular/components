@@ -1,6 +1,6 @@
 import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '../testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../testing/private';
 import {By} from '@angular/platform-browser';
 import {ENTER} from '../keycodes';
 import {CdkMenuModule} from './menu-module';
@@ -42,6 +42,33 @@ describe('MenuItem', () => {
       fixture.detectChanges();
 
       expect(nativeButton.hasAttribute('aria-disabled')).toBeFalse();
+    });
+
+    it('should toggle a class when the item is disabled', () => {
+      expect(nativeButton.classList).not.toContain('cdk-menu-item-disabled');
+
+      menuItem.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(nativeButton.classList).toContain('cdk-menu-item-disabled');
+
+      menuItem.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(nativeButton.classList).not.toContain('cdk-menu-item-disabled');
+    });
+
+    it('should prevent the default click action when clicking on a disabled button', () => {
+      menuItem.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const event = dispatchFakeEvent(nativeButton, 'click');
+      fixture.detectChanges();
+
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should not have a menu', () => {
