@@ -20,16 +20,32 @@
 
 .example-tree-item {
   cursor: pointer;
-  user-select: none;
   list-style: none;
-}
-
-.example-tree-item-content {
+  text-decoration: none;
   display: flex;
   align-items: center;
-  padding: 2px 0; /* Minimal padding for item itself */
+  gap: 1rem;
+  padding: 0.3rem 1rem;
 }
 
-.example-tree-item-icon {
-  margin-right: 8px;
+.example-icon {
+  margin: 0;
+  width: 24px;
+}
+
+.example-parent-icon {
+  transition: transform 0.2s ease;
+}
+
+.example-tree-item[aria-expanded='true'] .example-parent-icon {
+  transform: rotate(90deg);
+}
+
+.example-selected-icon {
+  visibility: hidden;
+  margin-left: auto;
+}
+
+.example-tree-item[aria-selected='true'] .example-selected-icon {
+  visibility: visible;
 }

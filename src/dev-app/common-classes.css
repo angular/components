@@ -9,10 +9,11 @@
 
 [aria-disabled='true'] .example-stateful,
 .example-stateful[aria-disabled='true'] {
-  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
 }
 
-.example-stateful:focus {
+.example-stateful:focus,
+[aria-activedescendant]:focus-within .example-stateful.cdk-active {
   background: color-mix(
     in srgb,
     var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
@@ -35,20 +36,28 @@
   background: var(--mat-sys-surface);
 }
 
+.example-selectable {
+  color: var(--mat-sys-on-surface);
+  outline: transparent solid 2px;
+}
+
 .example-selectable[aria-selected='true'],
 .example-selectable[aria-checked='true'],
-.example-selectable[aria-current] {
+.example-selectable[aria-current],
+[aria-activedescendant]:focus-within .example-selectable[aria-selected='true'],
+[aria-activedescendant]:focus-within .example-selectable[aria-checked='true'],
+[aria-activedescendant]:focus-within .example-selectable[aria-current] {
   background: color-mix(
     in srgb,
     var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
     transparent
   );
+  color: var(--mat-sys-primary);
 }
 
-.example-selectable[aria-selected='true']:focus-within,
-.example-selectable[aria-checked='true']:focus-within,
-.example-selectable[aria-current]:focus-within {
+.example-selectable:focus-within {
   outline: var(--mat-sys-primary) solid 2px;
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 [aria-disabled='true'] .example-selectable[aria-selected='true'],
@@ -57,5 +66,14 @@
 .example-selectable[aria-disabled='true'][aria-checked='true'],
 [aria-disabled='true'] .example-selectable[aria-current],
 .example-selectable[aria-disabled='true'][aria-current] {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
   background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+.example-selectable[aria-selected='true'] .example-icon {
+  color: var(--mat-sys-primary);
+}
+
+[aria-disabled='true'] .example-selectable[aria-selected='true'] .example-icon {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 70%, transparent);
 }

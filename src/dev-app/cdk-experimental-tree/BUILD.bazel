@@ -5,6 +5,9 @@ package(default_visibility = ["//visibility:public"])
 ng_project(
     name = "cdk-experimental-tree",
     srcs = glob(["**/*.ts"]),
-    assets = ["cdk-tree-demo.html"],
+    assets = [
+        "cdk-tree-demo.html",
+        "cdk-tree-demo.css",
+    ],
     deps = ["//src/components-examples/cdk-experimental/tree"],
 )

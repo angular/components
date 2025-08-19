@@ -1,0 +1,76 @@
+<div class="example-tree-controls">
+  <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="nav">Nav Mode</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection Strategy</mat-label>
+    <mat-select [(value)]="selectionMode">
+      <mat-option value="explicit">Explicit</mat-option>
+      <mat-option value="follow">Follow</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus Strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-tree-output">
+  <strong>Selected Values:</strong> {{ selectedValues().join(', ') || 'None' }}
+</div>
+
+<ul
+  cdkTree
+  class="example-tree"
+  [multi]="multi.value"
+  [disabled]="disabled.value"
+  [selectionMode]="selectionMode"
+  [focusMode]="focusMode"
+  [wrap]="wrap.value"
+  [skipDisabled]="skipDisabled.value"
+  [nav]="nav.value"
+  [(value)]="selectedValues"
+  #tree="cdkTree"
+>
+  <ng-template
+    [ngTemplateOutlet]="treeNodes"
+    [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"
+  />
+</ul>
+
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.value) {
+  <li
+    cdkTreeItem
+    [parent]="parent"
+    [value]="node.value"
+    [label]="node.name"
+    [disabled]="node.disabled"
+    #treeItem="cdkTreeItem"
+    class="example-tree-item example-selectable example-stateful"
+  >
+    <span aria-hidden="true" class="material-symbols-outlined example-parent-icon example-icon">{{node.children ? 'chevron_right' : ''}}</span>
+    <span aria-hidden="true" class="material-symbols-outlined example-icon">{{node.children ? 'folder' : 'docs'}}</span>
+    {{ node.name }}
+    <span aria-hidden="true" class="material-symbols-outlined example-selected-icon example-icon">check</span>
+  </li>
+
+  @if (node.children) {
+  <ul cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
+    <ng-template cdkTreeItemGroupContent>
+      <ng-template
+        [ngTemplateOutlet]="treeNodes"
+        [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
+      />
+    </ng-template>
+  </ul>
+  }
+  }
+</ng-template>
