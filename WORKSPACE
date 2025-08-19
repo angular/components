@@ -8,17 +8,17 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Add NodeJS rules
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "709cc0dcb51cf9028dd57c268066e5bc8f03a119ded410a13b5c3925d6e43c48",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.4/rules_nodejs-5.8.4.tar.gz"],
+    sha256 = "a1295b168f183218bc88117cf00674bcd102498f294086ff58318f830dd9d9d1",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.5/rules_nodejs-5.8.5.tar.gz"],
 )
 
 # Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
-    sha256 = "4f7e2b6bafa9a88ac1b0ee0c3ad69850282419aa51f6bd5b45cde8d0c945d18c",
-    strip_prefix = "bazel-skylib-454b25912a8ddf3d90eb47f25260befd5ee274a8",
+    sha256 = "bed16a10c419c59825b8453404bbb311258caaf154e6fe91a78ad9470fe57893",
+    strip_prefix = "bazel-skylib-471f368fc95a7323078f69d569a164ee5bc07f8b",
     urls = [
-        "https://github.com/bazelbuild/bazel-skylib/archive/454b25912a8ddf3d90eb47f25260befd5ee274a8.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/archive/471f368fc95a7323078f69d569a164ee5bc07f8b.tar.gz",
     ],
 )
 
@@ -45,9 +45,9 @@ build_bazel_rules_nodejs_dependencies()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "83e5af4d17385d1c3268c31ae217dbfc8525aa7bcf52508dc6864baffc8b9501",
-    strip_prefix = "rules_js-2.3.7",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.7/rules_js-v2.3.7.tar.gz",
+    sha256 = "b71565da7a811964e30cccb405544d551561e4b56c65f0c0aeabe85638920bd6",
+    strip_prefix = "rules_js-2.4.2",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.4.2/rules_js-v2.4.2.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -150,9 +150,9 @@ npm_repositories()
 
 http_archive(
     name = "aspect_rules_ts",
-    sha256 = "6b15ac1c69f2c0f1282e41ab469fd63cd40eb2e2d83075e19b68a6a76669773f",
-    strip_prefix = "rules_ts-3.6.0",
-    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.6.0/rules_ts-v3.6.0.tar.gz",
+    sha256 = "6fd16aa24c2e8547b72561ece1c7d307b77a5f98f0402934396f6eefbac59aa2",
+    strip_prefix = "rules_ts-3.7.0",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.7.0/rules_ts-v3.7.0.tar.gz",
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
@@ -206,7 +206,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "8bf9ae3fa3017ec12877908533001daed9c6ce83",
+    commit = "17eac47ea99057f7473a7d93292e76327c894ed9",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
@@ -245,7 +245,7 @@ esbuild_register_toolchains(
 
 git_repository(
     name = "rules_browsers",
-    commit = "0952071cdc67acf1124c20c32a9b7e2e85da0aa3",
+    commit = "8ee9ae3216ef26516c8ef20537c89857343cdc3a",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
@@ -259,7 +259,7 @@ rules_browsers_setup_2()
 
 git_repository(
     name = "rules_sass",
-    commit = "3cd198e291caf21ba8f7105d53963dd3df62ef6d",
+    commit = "76078d5e9776a0080dcee496e90b88d8a6179c19",
     remote = "https://github.com/devversion/rules_sass.git",
 )
 
