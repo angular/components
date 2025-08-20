@@ -1,3 +1,16 @@
+<a name="21.0.0-next.0"></a>
+# 21.0.0-next.0 "neodymium-fountain" (2025-08-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5b45df30c](https://github.com/angular/components/commit/5b45df30ca60b75b27313d3b1b52c42ac037eb4f) | fix | **table:** ensure CdkTable updates view with OnPush and trackBy ([#31451](https://github.com/angular/components/pull/31451)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dea603b88](https://github.com/angular/components/commit/dea603b88cf35d310674964b8b25514d5fe26772) | feat | **core:** add experimental utility classes ([#31702](https://github.com/angular/components/pull/31702)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0"></a>
 # 20.2.0 "neodymium-statue" (2025-08-20)
 ### material
