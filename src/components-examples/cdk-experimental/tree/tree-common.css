@@ -49,6 +49,7 @@
   margin-left: auto;
 }
 
+.example-tree-item[aria-current] .example-selected-icon,
 .example-tree-item[aria-selected='true'] .example-selected-icon {
   visibility: visible;
 }
