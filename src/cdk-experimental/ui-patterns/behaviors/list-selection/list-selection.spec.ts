@@ -168,6 +168,13 @@ describe('List Selection', () => {
       selection.deselectAll(); // []
       expect(selection.inputs.value().length).toBe(0);
     });
+
+    it('should deselect items that are not in the list', () => {
+      const selection = getSelection({multi: signal(true)});
+      selection.inputs.value.update(() => [5]);
+      selection.deselectAll();
+      expect(selection.inputs.value().length).toBe(0);
+    });
   });
 
   describe('#toggleAll', () => {

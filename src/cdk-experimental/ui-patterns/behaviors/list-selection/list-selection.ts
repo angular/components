@@ -102,8 +102,25 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Deselects all items in the list. */
   deselectAll() {
-    for (const item of this.inputs.items()) {
-      this.deselect(item);
+    // If an item is not in the list, it forcefully gets deselected.
+    // This actually creates a bug for the following edge case:
+    //
+    // Setup: An item is not in the list (maybe it's lazily loaded), and it is disabled & selected.
+    // Expected: If deselectAll() is called, it should NOT get deselected (because it is disabled).
+    // Actual: Calling deselectAll() will still deselect the item.
+    //
+    // Why? Because we can't check if the item is disabled if it's not in the list.
+    //
+    // Alternatively, we could NOT deselect items that are not in the list, but this has the
+    // inverse (and more common) effect of keeping enabled items selected when they aren't in the
+    // list.
+
+    for (const value of this.inputs.value()) {
+      const item = this.inputs.items().find(i => i.value() === value);
+
+      item
+        ? this.deselect(item)
+        : this.inputs.value.update(values => values.filter(v => v !== value));
     }
   }
 
