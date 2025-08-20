@@ -1,22 +1,42 @@
-<a name="20.2.0-rc.0"></a>
-# 20.2.0-rc.0 "plastic-mice" (2025-08-14)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cd532b2b06](https://github.com/angular/components/commit/cd532b2b06dc1289f5e8f1a938a4a2fabc0cd618) | fix | **menu:** picking up items from child menu ([#31684](https://github.com/angular/components/pull/31684)) |
+<a name="20.2.0"></a>
+# 20.2.0 "neodymium-statue" (2025-08-20)
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [54d514df66](https://github.com/angular/components/commit/54d514df66b9a1ea544df0aacc7069defcd78dcd) | feat | **testing:** Add 'type' attribute filter and getter to Mat… ([#31657](https://github.com/angular/components/pull/31657)) |
-| [8da079d34b](https://github.com/angular/components/commit/8da079d34bd3e112a1c46beb435b8592ba4f9e6d) | fix | **chips:** remove extra span for aria-description ([#31609](https://github.com/angular/components/pull/31609)) |
-| [37648cf875](https://github.com/angular/components/commit/37648cf875fa0c427e426a12377a517dcfaa31dd) | fix | **chips:** static chips should disable ripple ([#31652](https://github.com/angular/components/pull/31652)) |
-| [24e191a301](https://github.com/angular/components/commit/24e191a301104600c40b4911d3f1921bea53f446) | fix | **stepper:** handle empty label in horizontal stepper ([#31665](https://github.com/angular/components/pull/31665)) |
+| [20e6e92c0](https://github.com/angular/components/commit/20e6e92c06c74487793713d0323c2aa997a70035) | feat | **core:** add an m2-theme API to define system vars ([#31616](https://github.com/angular/components/pull/31616)) |
+| [9627c2933](https://github.com/angular/components/commit/9627c293346738fdf0e3c7284ac055a86e64d99d) | feat | **table:** accept undefined sort and paginator ([#31269](https://github.com/angular/components/pull/31269)) |
+| [54d514df6](https://github.com/angular/components/commit/54d514df66b9a1ea544df0aacc7069defcd78dcd) | feat | **testing:** Add 'type' attribute filter and getter to Mat… ([#31657](https://github.com/angular/components/pull/31657)) |
+| [11ad09ff3](https://github.com/angular/components/commit/11ad09ff3e67d1825e2c6ce3d211d5192cf8e354) | fix | **button-toggle:** skip keyboard navigation when modifier key is pressed ([#31651](https://github.com/angular/components/pull/31651)) |
+| [3f2000113](https://github.com/angular/components/commit/3f20001130cdc6e8d9d8f31c3cb399648dab5a4c) | fix | **button:** allow touch target size to be customized |
+| [2d8f56eb6](https://github.com/angular/components/commit/2d8f56eb65f32a9d75b47fee8995fb3fe441f363) | fix | **checkbox:** allow touch target size to be customized |
+| [8da079d34](https://github.com/angular/components/commit/8da079d34bd3e112a1c46beb435b8592ba4f9e6d) | fix | **chips:** remove extra span for aria-description ([#31609](https://github.com/angular/components/pull/31609)) |
+| [37648cf87](https://github.com/angular/components/commit/37648cf875fa0c427e426a12377a517dcfaa31dd) | fix | **chips:** static chips should disable ripple ([#31652](https://github.com/angular/components/pull/31652)) |
+| [b2c7abfba](https://github.com/angular/components/commit/b2c7abfbadb5d12900c4bf9705b871183d4b2af7) | fix | **core:** add key validation to m2-theme ([#31631](https://github.com/angular/components/pull/31631)) |
+| [839aa3e37](https://github.com/angular/components/commit/839aa3e37521e7b8739a47ea7a4b54845cf62731) | fix | **core:** fix m2 system color values ([#31632](https://github.com/angular/components/pull/31632)) |
+| [7674e5872](https://github.com/angular/components/commit/7674e5872c627998bd093994e8ef3f94427417c8) | fix | **core:** special-case icon button color token ([#31625](https://github.com/angular/components/pull/31625)) |
+| [5d681219f](https://github.com/angular/components/commit/5d681219f29c350378ebaec32c64b3fbce10fcd4) | fix | **core:** use different prefix for m2-theme ([#31621](https://github.com/angular/components/pull/31621)) |
+| [700f5bbb2](https://github.com/angular/components/commit/700f5bbb2acc6c649be7df8e93dff5383fcd4b53) | fix | **paginator:** allow touch target size to be customized |
+| [1d7ea6822](https://github.com/angular/components/commit/1d7ea6822971a471c91781ebf7b18775bbe86e4f) | fix | **radio:** allow touch target size to be customized |
+| [4f96ef3e6](https://github.com/angular/components/commit/4f96ef3e64fd4d420bcfc2c5e4841b53fa299a76) | fix | **slide-toggle:** add larger touch target ([#31486](https://github.com/angular/components/pull/31486)) |
+| [b9c7b2723](https://github.com/angular/components/commit/b9c7b27231dedcb4897644df87f67f447e083d6e) | fix | **slide-toggle:** allow touch target size to be customized |
+| [9e25efb6f](https://github.com/angular/components/commit/9e25efb6f0d1e02e79e537b2252c38ce7f5e34ed) | fix | **table:** return undefined sort and paginator ([#31593](https://github.com/angular/components/pull/31593)) |
 ### cdk-experimental
 | Commit | Type | Description |
 | -- | -- | -- |
-| [048de42545](https://github.com/angular/components/commit/048de42545676c662ed26d6256cc61fa64a909be) | feat | **toolbar:** add toolbar directive and demo ([#31676](https://github.com/angular/components/pull/31676)) |
-| [82812760ef](https://github.com/angular/components/commit/82812760efc0a69a6546f459bb6eb531ed930bd7) | feat | **ui-patterns:** toolbar and toolbar widget ([#31670](https://github.com/angular/components/pull/31670)) |
-| [fa909116c1](https://github.com/angular/components/commit/fa909116c165896f64fce4c7a81939726a499f52) | feat | **ui-patterns:** toolbar ui pattern tests ([#31688](https://github.com/angular/components/pull/31688)) |
+| [048de4254](https://github.com/angular/components/commit/048de42545676c662ed26d6256cc61fa64a909be) | feat | **toolbar:** add toolbar directive and demo ([#31676](https://github.com/angular/components/pull/31676)) |
+| [2dbb045bc](https://github.com/angular/components/commit/2dbb045bc203358172be0b324a05d74e8526ce38) | feat | **tree:** add nav mode ([#31460](https://github.com/angular/components/pull/31460)) |
+| [6716f5024](https://github.com/angular/components/commit/6716f50249a638f62ea01358a91e0869d818c070) | feat | **tree:** use shared example classes ([#31494](https://github.com/angular/components/pull/31494)) |
+| [50a6d6c4c](https://github.com/angular/components/commit/50a6d6c4c9f73c68b50faf3bffc76692d9b579b3) | feat | **ui-patterns:** add label control ([#31459](https://github.com/angular/components/pull/31459)) |
+| [4ce794ca7](https://github.com/angular/components/commit/4ce794ca70a84bc0ade5758bd81292c46a8e93db) | feat | **ui-patterns:** add popup behavior ([#31550](https://github.com/angular/components/pull/31550)) |
+| [228aaf1fa](https://github.com/angular/components/commit/228aaf1fa395e805d7b581b9d02102d65f0a1562) | feat | **ui-patterns:** create List behavior ([#31601](https://github.com/angular/components/pull/31601)) |
+| [82812760e](https://github.com/angular/components/commit/82812760efc0a69a6546f459bb6eb531ed930bd7) | feat | **ui-patterns:** toolbar and toolbar widget ([#31670](https://github.com/angular/components/pull/31670)) |
+| [fa909116c](https://github.com/angular/components/commit/fa909116c165896f64fce4c7a81939726a499f52) | feat | **ui-patterns:** toolbar ui pattern tests ([#31688](https://github.com/angular/components/pull/31688)) |
+| [647616e2e](https://github.com/angular/components/commit/647616e2eb5b60050c827f5ba3cb1560b6867547) | fix | **listbox:** make CdkOption  public ([#31588](https://github.com/angular/components/pull/31588)) |
+| [e525a412a](https://github.com/angular/components/commit/e525a412a1bcdbf38c51faf6a786d980437aad1c) | fix | **radio-group:** fix activedescendant example ([#31499](https://github.com/angular/components/pull/31499)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ad4d5b471](https://github.com/angular/components/commit/ad4d5b471e7dd673bb6a5f85b840d02632614be0) | fix | fix broken rtl examples ([#31527](https://github.com/angular/components/pull/31527)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -33,25 +53,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="20.2.0-next.3"></a>
-# 20.2.0-next.3 "metal-monkey" (2025-08-06)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [845a6910a6](https://github.com/angular/components/commit/845a6910a60a652dd7d171ee026ee8a8887a2459) | fix | **autocomplete:** default to transparent backdrop ([#31647](https://github.com/angular/components/pull/31647)) |
-| [11ad09ff3e](https://github.com/angular/components/commit/11ad09ff3e67d1825e2c6ce3d211d5192cf8e354) | fix | **button-toggle:** skip keyboard navigation when modifier key is pressed ([#31651](https://github.com/angular/components/pull/31651)) |
-| [4bf8ebf5f3](https://github.com/angular/components/commit/4bf8ebf5f3b874ae2f512dc684506f017f022f69) | fix | **chips:** focus not moved on destroy ([#31653](https://github.com/angular/components/pull/31653)) |
-| [b2c7abfbad](https://github.com/angular/components/commit/b2c7abfbadb5d12900c4bf9705b871183d4b2af7) | fix | **core:** add key validation to m2-theme ([#31631](https://github.com/angular/components/pull/31631)) |
-| [839aa3e375](https://github.com/angular/components/commit/839aa3e37521e7b8739a47ea7a4b54845cf62731) | fix | **core:** fix m2 system color values ([#31632](https://github.com/angular/components/pull/31632)) |
-| [7674e5872c](https://github.com/angular/components/commit/7674e5872c627998bd093994e8ef3f94427417c8) | fix | **core:** special-case icon button color token ([#31625](https://github.com/angular/components/pull/31625)) |
-| [96117bceda](https://github.com/angular/components/commit/96117bcedad66f21257e043f83e90a77dc56deef) | fix | **form-field:** resolve memory leak ([#31643](https://github.com/angular/components/pull/31643)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [228aaf1fa3](https://github.com/angular/components/commit/228aaf1fa395e805d7b581b9d02102d65f0a1562) | feat | **ui-patterns:** create List behavior ([#31601](https://github.com/angular/components/pull/31601)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="20.1.5"></a>
 # 20.1.5 "plastic-car" (2025-08-06)
 ### material
@@ -60,32 +61,6 @@
 | [dbdcc7dcb7](https://github.com/angular/components/commit/dbdcc7dcb77a1f86446e8ced2359717d3af00e1f) | fix | **autocomplete:** default to transparent backdrop ([#31647](https://github.com/angular/components/pull/31647)) |
 | [ae9e8d2f84](https://github.com/angular/components/commit/ae9e8d2f846f605dc77154e7f3d7df75cc22ae06) | fix | **chips:** focus not moved on destroy ([#31653](https://github.com/angular/components/pull/31653)) |
 | [24ae377723](https://github.com/angular/components/commit/24ae3777233f63da35ba9106bf554d6dba20bb88) | fix | **form-field:** resolve memory leak ([#31643](https://github.com/angular/components/pull/31643)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="20.2.0-next.2"></a>
-# 20.2.0-next.2 "archerite-asparagus" (2025-07-30)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [88d4ffda6](https://github.com/angular/components/commit/88d4ffda6904661a49b9de973ba640a1cde24ee8) | fix | **drag-drop:** incorrect index when returning item in mixed list ([#31592](https://github.com/angular/components/pull/31592)) |
-| [c386d0ee1](https://github.com/angular/components/commit/c386d0ee146a6b29479f2d4761d8a06df942524d) | fix | **listbox:** coerce tabindex value ([#31597](https://github.com/angular/components/pull/31597)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [20e6e92c0](https://github.com/angular/components/commit/20e6e92c06c74487793713d0323c2aa997a70035) | feat | **core:** add an m2-theme API to define system vars ([#31616](https://github.com/angular/components/pull/31616)) |
-| [3dfe50aef](https://github.com/angular/components/commit/3dfe50aefeb3561b1992d186302db9af380aab07) | fix | **core:** align gm3 colors ([#31485](https://github.com/angular/components/pull/31485)) |
-| [993a9a393](https://github.com/angular/components/commit/993a9a39301f757b78a97641f5863b8fa1f83f8c) | fix | **core:** fill in m2 system token values ([#31615](https://github.com/angular/components/pull/31615)) |
-| [5d681219f](https://github.com/angular/components/commit/5d681219f29c350378ebaec32c64b3fbce10fcd4) | fix | **core:** use different prefix for m2-theme ([#31621](https://github.com/angular/components/pull/31621)) |
-| [471d3237e](https://github.com/angular/components/commit/471d3237e247a2cac939624adf4ef757bcaf214d) | fix | **radio:** rendering artifacts at some zoom levels ([#31612](https://github.com/angular/components/pull/31612)) |
-| [8576ccf1d](https://github.com/angular/components/commit/8576ccf1df6f1c898044d8587e51469c7c27ba31) | fix | **schematics:** set generated font family on body ([#31618](https://github.com/angular/components/pull/31618)) |
-| [9e14c5566](https://github.com/angular/components/commit/9e14c5566535601620c9bfa29786c828ddf3dc2d) | fix | **slider:** tick marks not showing dynamically ([#31608](https://github.com/angular/components/pull/31608)) |
-| [9e25efb6f](https://github.com/angular/components/commit/9e25efb6f0d1e02e79e537b2252c38ce7f5e34ed) | fix | **table:** return undefined sort and paginator ([#31593](https://github.com/angular/components/pull/31593)) |
-| [092c0f73d](https://github.com/angular/components/commit/092c0f73d8838ac23daeb1772b4a40fa68bebb98) | fix | **testing:** Modify input filtering to more broadly search for ([#31596](https://github.com/angular/components/pull/31596)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [647616e2e](https://github.com/angular/components/commit/647616e2eb5b60050c827f5ba3cb1560b6867547) | fix | **listbox:** make CdkOption  public ([#31588](https://github.com/angular/components/pull/31588)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -105,35 +80,6 @@
 | [25d12df5b](https://github.com/angular/components/commit/25d12df5b6af747c560dbd678a999ae96e3c7b13) | fix | **schematics:** set generated font family on body ([#31618](https://github.com/angular/components/pull/31618)) |
 | [4ae4fe22d](https://github.com/angular/components/commit/4ae4fe22d54f139dcd606b71d489f9678acf5ce0) | fix | **slider:** tick marks not showing dynamically ([#31608](https://github.com/angular/components/pull/31608)) |
 | [6e252739b](https://github.com/angular/components/commit/6e252739b0dd0d6990bdf6c08545e2df6c9949e2) | fix | **testing:** Modify input filtering to more broadly search for ([#31596](https://github.com/angular/components/pull/31596)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="20.2.0-next.1"></a>
-# 20.2.0-next.1 "tantalum-tomato" (2025-07-23)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cea7989a9](https://github.com/angular/components/commit/cea7989a96ad6031ab383e2e33a69b9400556e1c) | fix | **scrolling:** Prevent virtual scroll 'flickering' with zoneless ([#31316](https://github.com/angular/components/pull/31316)) |
-| [27dae25a4](https://github.com/angular/components/commit/27dae25a420e76817a1209f373326084ae6dd11c) | fix | **table:** improve error message ([#31545](https://github.com/angular/components/pull/31545)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [9627c2933](https://github.com/angular/components/commit/9627c293346738fdf0e3c7284ac055a86e64d99d) | feat | **table:** accept undefined sort and paginator ([#31269](https://github.com/angular/components/pull/31269)) |
-| [e8b28fa6b](https://github.com/angular/components/commit/e8b28fa6ba15f536e72d13c0b22765924efaf1f6) | fix | **datepicker:** focus lost when hitting the end of calendar ([#31572](https://github.com/angular/components/pull/31572)) |
-| [5bd42eaed](https://github.com/angular/components/commit/5bd42eaed46444b372f8db2f3a7d2da036cd5abf) | fix | **datepicker:** toggle button active color not showing up in M3 ([#31565](https://github.com/angular/components/pull/31565)) |
-| [8eae1621b](https://github.com/angular/components/commit/8eae1621b8eb389bac4d702c85a8620d4e3d12ff) | fix | **form-field:** ensure that focused classes are in sync ([#31568](https://github.com/angular/components/pull/31568)) |
-| [950790057](https://github.com/angular/components/commit/9507900574159279e15e4c00cbec20826f42fadd) | fix | **progress-bar:** slow down animations instead of fully stopping them |
-| [062c5eb9d](https://github.com/angular/components/commit/062c5eb9d3521b25f3e519e7fe160c3a949b73c2) | fix | **progress-spinner:** slow down animations instead of fully stopping them |
-| [f0accd1ff](https://github.com/angular/components/commit/f0accd1ff0e9121ac6f9dd756399b4dfa8116814) | fix | **schematics:** access custom as a theme palette ([#31555](https://github.com/angular/components/pull/31555)) |
-| [307ad0c8a](https://github.com/angular/components/commit/307ad0c8abf346232796e17ca7b05e4673ef9ac5) | fix | **table:** add missing sort tests ([#30876](https://github.com/angular/components/pull/30876)) |
-### youtube-player
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cab171045](https://github.com/angular/components/commit/cab17104523884421ff81dcead93e97d01390452) | fix | update to latest types and fix error ([#31546](https://github.com/angular/components/pull/31546)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4ce794ca7](https://github.com/angular/components/commit/4ce794ca70a84bc0ade5758bd81292c46a8e93db) | feat | **ui-patterns:** add popup behavior ([#31550](https://github.com/angular/components/pull/31550)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -166,26 +112,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [af6cb6d041](https://github.com/angular/components/commit/af6cb6d041babf4c3accca50b8177ec3d9029a44) | fix | update to latest types and fix error ([#31546](https://github.com/angular/components/pull/31546)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="20.2.0-next.0"></a>
-# 20.2.0-next.0 "neoprene-narwhal" (2025-07-16)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4f96ef3e64](https://github.com/angular/components/commit/4f96ef3e64fd4d420bcfc2c5e4841b53fa299a76) | fix | **slide-toggle:** add larger touch target ([#31486](https://github.com/angular/components/pull/31486)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2dbb045bc2](https://github.com/angular/components/commit/2dbb045bc203358172be0b324a05d74e8526ce38) | feat | **tree:** add nav mode ([#31460](https://github.com/angular/components/pull/31460)) |
-| [6716f50249](https://github.com/angular/components/commit/6716f50249a638f62ea01358a91e0869d818c070) | feat | **tree:** use shared example classes ([#31494](https://github.com/angular/components/pull/31494)) |
-| [50a6d6c4c9](https://github.com/angular/components/commit/50a6d6c4c9f73c68b50faf3bffc76692d9b579b3) | feat | **ui-patterns:** add label control ([#31459](https://github.com/angular/components/pull/31459)) |
-| [e525a412a1](https://github.com/angular/components/commit/e525a412a1bcdbf38c51faf6a786d980437aad1c) | fix | **radio-group:** fix activedescendant example ([#31499](https://github.com/angular/components/pull/31499)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ad4d5b471e](https://github.com/angular/components/commit/ad4d5b471e7dd673bb6a5f85b840d02632614be0) | fix | fix broken rtl examples ([#31527](https://github.com/angular/components/pull/31527)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
