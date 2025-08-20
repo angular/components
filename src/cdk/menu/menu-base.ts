@@ -196,7 +196,11 @@ export abstract class CdkMenuBase
 
   /** Setup the FocusKeyManager with the correct orientation for the menu. */
   private _setKeyManager() {
-    this.keyManager = new FocusKeyManager(this.items).withWrap().withTypeAhead().withHomeAndEnd();
+    this.keyManager = new FocusKeyManager(this.items)
+      .withWrap()
+      .withTypeAhead()
+      .withHomeAndEnd()
+      .skipPredicate(() => false);
 
     if (this.orientation === 'horizontal') {
       this.keyManager.withHorizontalOrientation(this.dir?.value || 'ltr');
