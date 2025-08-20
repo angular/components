@@ -8,7 +8,7 @@
 
 import {Rule} from '@angular-devkit/schematics';
 
-/** Entry point for the migration schematics with target of Angular Material v20 */
-export function updateToV20(): Rule {
+/** Entry point for the migration schematics with target of Angular Material v21 */
+export function updateToV21(): Rule {
   return () => {};
 }
