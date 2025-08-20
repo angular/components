@@ -207,23 +207,15 @@ export class TreePattern<V> {
     const manager = new KeyboardEventManager();
     const list = this.listBehavior;
 
-    if (!this.followFocus()) {
-      manager
-        .on(this.prevKey, () => list.prev())
-        .on(this.nextKey, () => list.next())
-        .on('Home', () => list.first())
-        .on('End', () => list.last())
-        .on(this.typeaheadRegexp, e => list.search(e.key));
-    }
-
-    if (this.followFocus()) {
-      manager
-        .on(this.prevKey, () => list.prev({selectOne: true}))
-        .on(this.nextKey, () => list.next({selectOne: true}))
-        .on('Home', () => list.first({selectOne: true}))
-        .on('End', () => list.last({selectOne: true}))
-        .on(this.typeaheadRegexp, e => list.search(e.key, {selectOne: true}));
-    }
+    manager
+      .on(this.prevKey, () => list.prev({selectOne: this.followFocus()}))
+      .on(this.nextKey, () => list.next({selectOne: this.followFocus()}))
+      .on('Home', () => list.first({selectOne: this.followFocus()}))
+      .on('End', () => list.last({selectOne: this.followFocus()}))
+      .on(this.typeaheadRegexp, e => list.search(e.key, {selectOne: this.followFocus()}))
+      .on(this.expandKey, () => this.expand({selectOne: this.followFocus()}))
+      .on(this.collapseKey, () => this.collapse({selectOne: this.followFocus()}))
+      .on(Modifier.Shift, '*', () => this.expandSiblings());
 
     if (this.inputs.multi()) {
       manager
@@ -260,6 +252,8 @@ export class TreePattern<V> {
       manager
         .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => list.prev())
         .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => list.next())
+        .on([Modifier.Ctrl, Modifier.Meta], this.expandKey, () => this.expand())
+        .on([Modifier.Ctrl, Modifier.Meta], this.collapseKey, () => this.collapse())
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => list.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => list.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => list.first())
@@ -269,11 +263,6 @@ export class TreePattern<V> {
           list.select(); // Ensure the currect item remains selected.
         });
     }
-
-    manager
-      .on(this.expandKey, () => this.expand())
-      .on(this.collapseKey, () => this.collapse())
-      .on(Modifier.Shift, '*', () => this.expandSiblings());
 
     return manager;
   });
@@ -403,17 +392,17 @@ export class TreePattern<V> {
   }
 
   /** Expands a tree item. */
-  expand(item?: TreeItemPattern<V>) {
-    item ??= this.activeItem();
+  expand(opts?: SelectOptions) {
+    const item = this.activeItem();
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && !item.expanded()) {
       item.expansion.open();
-    } else if (item.expanded() && item.children().length > 0) {
-      const firstChild = item.children()[0];
-      if (this.listBehavior.isFocusable(firstChild)) {
-        this.listBehavior.goto(firstChild);
-      }
+    } else if (
+      item.expanded() &&
+      item.children().some(item => this.listBehavior.isFocusable(item))
+    ) {
+      this.listBehavior.next(opts);
     }
   }
 
@@ -421,12 +410,12 @@ export class TreePattern<V> {
   expandSiblings(item?: TreeItemPattern<V>) {
     item ??= this.activeItem();
     const siblings = item?.parent()?.children();
-    siblings?.forEach(item => this.expand(item));
+    siblings?.forEach(item => item.expansion.open());
   }
 
   /** Collapses a tree item. */
-  collapse(item?: TreeItemPattern<V>) {
-    item ??= this.activeItem();
+  collapse(opts?: SelectOptions) {
+    const item = this.activeItem();
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && item.expanded()) {
@@ -434,7 +423,7 @@ export class TreePattern<V> {
     } else if (item.parent() && item.parent() !== this) {
       const parentItem = item.parent();
       if (parentItem instanceof TreeItemPattern && this.listBehavior.isFocusable(parentItem)) {
-        this.listBehavior.goto(parentItem);
+        this.listBehavior.goto(parentItem, opts);
       }
     }
   }

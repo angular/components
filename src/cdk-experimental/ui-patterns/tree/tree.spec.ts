@@ -1216,6 +1216,74 @@ describe('Tree Pattern', () => {
       tree.onPointerdown(createClickEvent(item0.element()));
       expect(item0.expanded()).toBe(false);
     });
+
+    describe('follows focus & single select', () => {
+      beforeEach(() => {
+        treeInputs.selectionMode.set('follow');
+        treeInputs.multi.set(false);
+      });
+
+      it('should navigate and select the first child on expandKey if expanded and has children (vertical)', () => {
+        treeInputs.orientation.set('vertical');
+        const {tree, allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        tree.listBehavior.goto(item0);
+        item0.expansion.open();
+
+        tree.onKeydown(right());
+        expect(tree.activeItem()).toBe(item0_0);
+        expect(tree.inputs.value()).toEqual(['Item 0-0']);
+      });
+
+      it('should navigate and select the parent on collapseKey if collapsed (vertical)', () => {
+        treeInputs.orientation.set('vertical');
+        const {tree, allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        item0.expansion.open();
+        tree.listBehavior.goto(item0_0);
+
+        tree.onKeydown(left());
+        expect(tree.activeItem()).toBe(item0);
+        expect(tree.inputs.value()).toEqual(['Item 0']);
+      });
+    });
+
+    describe('follows focus & multi select', () => {
+      beforeEach(() => {
+        treeInputs.selectionMode.set('follow');
+        treeInputs.multi.set(true);
+      });
+
+      it('should navigate without select the first child on Ctrl + expandKey if expanded and has children (vertical)', () => {
+        treeInputs.orientation.set('vertical');
+        const {tree, allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        tree.listBehavior.goto(item0);
+        item0.expansion.open();
+        tree.inputs.value.set(['Item 1']); // pre-select something else
+
+        tree.onKeydown(right({control: true}));
+        expect(tree.activeItem()).toBe(item0_0);
+        expect(tree.inputs.value()).toEqual(['Item 1']);
+      });
+
+      it('should navigate without select the parent on Ctrl + collapseKey if collapsed (vertical)', () => {
+        treeInputs.orientation.set('vertical');
+        const {tree, allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        item0.expansion.open();
+        tree.listBehavior.goto(item0_0);
+        tree.inputs.value.set(['Item 1']); // pre-select something else
+
+        tree.onKeydown(left({control: true}));
+        expect(tree.activeItem()).toBe(item0);
+        expect(tree.inputs.value()).toEqual(['Item 1']);
+      });
+    });
   });
 
   describe('#setDefaultState', () => {
