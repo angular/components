@@ -62,8 +62,9 @@
   [focusMode]="focusMode"
   [selectionMode]="selectionMode"
   class="example-listbox example-parent"
+  aria-labelledby="configurable-select-label"
 >
-  <label class="example-label" id="fruit-example-label">List of Fruits</label>
+  <label class="example-label" id="configurable-select-label">Configurable Select Fruits</label>
 
   @for (fruit of fruits; track fruit) {
     @let optionDisabled = disabledOptions.includes(fruit);
