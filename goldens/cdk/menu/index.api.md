@@ -138,6 +138,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     getLabel(): string;
     getMenu(): Menu | undefined;
     getMenuTrigger(): CdkMenuTrigger | null;
+    protected _handleClick(event: MouseEvent): void;
     get hasMenu(): boolean;
     isMenuOpen(): boolean;
     // (undocumented)
