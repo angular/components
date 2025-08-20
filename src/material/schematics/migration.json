@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "migration-v21": {
-      "version": "20.0.0-0",
+      "version": "21.0.0-0",
       "description": "Updates Angular Material to v21",
       "factory": "./ng-update/index_bundled#updateToV21"
     }
