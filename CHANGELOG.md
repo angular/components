@@ -1,3 +1,18 @@
+<a name="20.1.7"></a>
+# 20.1.7 "neodymium-doorknob" (2025-08-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [96832c1b2](https://github.com/angular/components/commit/96832c1b2b0370b375d911b7235c4815ac177e28) | fix | **menu:** disabled behavior fixes for menu item ([#31721](https://github.com/angular/components/pull/31721)) |
+| [491e00834](https://github.com/angular/components/commit/491e00834767650da0ede87ba8c7a5a1504db62e) | fix | **tree:** set index in context ([#31709](https://github.com/angular/components/pull/31709)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [96f974c21](https://github.com/angular/components/commit/96f974c21ea185cc3b83ca40c593287322c647a3) | fix | **divider:** update color to spec ([#31650](https://github.com/angular/components/pull/31650)) |
+| [3e88abc9f](https://github.com/angular/components/commit/3e88abc9fc2b717cd533b4d04c957ff2bf618008) | fix | **menu:** incorrectly detaching lazy content when menu is transferred to a new trigger ([#31690](https://github.com/angular/components/pull/31690)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0-rc.0"></a>
 # 20.2.0-rc.0 "plastic-mice" (2025-08-14)
 ### cdk
