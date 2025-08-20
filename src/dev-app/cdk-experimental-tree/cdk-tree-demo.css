@@ -1,6 +1,6 @@
 .example-tree-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 100%);
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
   gap: 20px;
 }
 
