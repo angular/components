@@ -1,5 +1,6 @@
 .example-listbox-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   padding-bottom: 16px;

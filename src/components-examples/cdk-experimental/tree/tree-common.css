@@ -1,5 +1,6 @@
 .example-tree-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
@@ -16,6 +17,8 @@
   padding: 10px;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
+  overflow-x: scroll;
+  min-width: 24rem;
 }
 
 .example-tree-item {
