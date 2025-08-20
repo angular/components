@@ -38,6 +38,7 @@
   cursor: pointer;
   position: relative;
   align-items: center;
+  flex-shrink: 0;
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
