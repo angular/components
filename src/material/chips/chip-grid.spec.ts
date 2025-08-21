@@ -588,6 +588,74 @@ describe('MatChipGrid', () => {
     });
   });
 
+  describe('ChipGrid without input', () => {
+    it('should not throw when used without a chip input', () => {
+      expect(() => createComponent(ChipGridWithoutInput)).not.toThrow();
+    });
+
+    it('should be able to focus the first chip', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      chipGridInstance.focus();
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(primaryActions[0]);
+    });
+
+    it('should not do anything on focus if there are no chips', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      (testComponent as unknown as ChipGridWithoutInput).chips = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      chipGridInstance.focus();
+      fixture.detectChanges();
+
+      expect(chipGridNativeElement.contains(document.activeElement)).toBe(false);
+    });
+
+    it('should have a default id on the component instance', () => {
+      createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.id).toMatch(/^mat-chip-grid-\w+$/);
+    });
+
+    it('should have empty getters that work without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.empty).toBe(false);
+
+      (testComponent as unknown as ChipGridWithoutInput).chips = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(chipGridInstance.empty).toBe(true);
+    });
+
+    it('should have a placeholder getter that works without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      (testComponent as unknown as ChipGridWithoutInput).placeholder = 'Hello';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(chipGridInstance.placeholder).toBe('Hello');
+    });
+
+    it('should have a focused getter that works without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.focused).toBe(false);
+
+      chipGridInstance.focus();
+      fixture.detectChanges();
+
+      expect(chipGridInstance.focused).toBe(true);
+    });
+
+    it('should set aria-describedby on the grid when there is no input', fakeAsync(() => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+      flush();
+      fixture.detectChanges();
+
+      expect(chipGridNativeElement.getAttribute('aria-describedby')).toBe(hint.id);
+    }));
+  });
+
   describe('with chip remove', () => {
     it('should properly focus next item if chip is removed through click', fakeAsync(() => {
       // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
@@ -1233,4 +1301,23 @@ class ChipGridWithRemove {
   removeChip(event: MatChipEvent) {
     this.chips.splice(event.chip.value, 1);
   }
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Foods</mat-label>
+      <mat-chip-grid #chipGrid [placeholder]="placeholder">
+        @for (food of chips; track food) {
+          <mat-chip-row>{{ food }}</mat-chip-row>
+        }
+      </mat-chip-grid>
+      <mat-hint>Some hint</mat-hint>
+    </mat-form-field>
+  `,
+  imports: [MatChipGrid, MatChipRow, MatFormField, MatLabel, MatHint],
+})
+class ChipGridWithoutInput {
+  chips = ['Pizza', 'Pasta', 'Tacos'];
+  placeholder: string;
 }
