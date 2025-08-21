@@ -60,15 +60,15 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-[aria-disabled="true"]:focus-within,
+[aria-disabled='true']:focus-within,
 [aria-activedescendant]:focus-within {
   outline: var(--mat-sys-primary) solid 1px;
 }
 
-[aria-disabled="true"] .example-selectable:focus-within,
+[aria-disabled='true'] .example-selectable:focus-within,
 [aria-activedescendant] .example-selectable:focus-within {
   outline-color: transparent;
-  border-radius: 0px;
+  border-radius: 0;
 }
 
 [aria-disabled='true'] .example-selectable[aria-selected='true'],
