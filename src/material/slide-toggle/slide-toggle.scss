@@ -8,6 +8,13 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
 
 $fallbacks: m3-slide-toggle.get-tokens();
 
+[matCheckedIcon],
+[matUncheckedIcon],
+[matCheckedDisabledIcon],
+[matUncheckedDisabledIcon] {
+  display: none;
+}
+
 .mdc-switch {
   align-items: center;
   background: none;
@@ -66,9 +73,13 @@ $fallbacks: m3-slide-toggle.get-tokens();
 
     .mdc-switch--disabled & {
       border-width: token-utils.slot(
-          slide-toggle-disabled-unselected-track-outline-width, $fallbacks);
+        slide-toggle-disabled-unselected-track-outline-width,
+        $fallbacks
+      );
       border-color: token-utils.slot(
-          slide-toggle-disabled-unselected-track-outline-color, $fallbacks);
+        slide-toggle-disabled-unselected-track-outline-color,
+        $fallbacks
+      );
     }
   }
 
@@ -223,7 +234,9 @@ $fallbacks: m3-slide-toggle.get-tokens();
 
     &:has(.mdc-switch__icons) {
       margin: token-utils.slot(
-          slide-toggle-unselected-with-icon-handle-horizontal-margin, $fallbacks);
+        slide-toggle-unselected-with-icon-handle-horizontal-margin,
+        $fallbacks
+      );
     }
   }
 
@@ -234,7 +247,9 @@ $fallbacks: m3-slide-toggle.get-tokens();
 
     &:has(.mdc-switch__icons) {
       margin: token-utils.slot(
-          slide-toggle-selected-with-icon-handle-horizontal-margin, $fallbacks);
+        slide-toggle-selected-with-icon-handle-horizontal-margin,
+        $fallbacks
+      );
     }
   }
 
@@ -275,7 +290,8 @@ $fallbacks: m3-slide-toggle.get-tokens();
     left: 0;
     position: absolute;
     top: 0;
-    transition: background-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1),
+    transition:
+      background-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1),
       border-color 75ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
     z-index: -1;
 
@@ -435,39 +451,50 @@ $fallbacks: m3-slide-toggle.get-tokens();
   }
 }
 
-.mdc-switch__icon {
-  bottom: 0;
-  left: 0;
-  margin: auto;
+.mdc-switch__icons > [matUncheckedIcon],
+.mdc-switch__icons > [matCheckedIcon],
+.mdc-switch__icons > [matUncheckedDisabledIcon],
+.mdc-switch__icons > [matCheckedDisabledIcon] {
+  margin: 0;
   position: absolute;
-  right: 0;
-  top: 0;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
   opacity: 0;
+  font-size: 16px;
+  display: block;
+
   transition: opacity 30ms 0ms cubic-bezier(0.4, 0, 1, 1);
 
   .mdc-switch--unselected & {
     width: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
     height: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
     fill: token-utils.slot(slide-toggle-unselected-icon-color, $fallbacks);
+    color: token-utils.slot(slide-toggle-unselected-icon-color, $fallbacks);
   }
 
   .mdc-switch--unselected.mdc-switch--disabled & {
     fill: token-utils.slot(slide-toggle-disabled-unselected-icon-color, $fallbacks);
+    color: token-utils.slot(slide-toggle-disabled-unselected-icon-color, $fallbacks);
   }
 
   .mdc-switch--selected & {
     width: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
     height: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
     fill: token-utils.slot(slide-toggle-selected-icon-color, $fallbacks);
+    color: token-utils.slot(slide-toggle-selected-icon-color, $fallbacks);
   }
 
   .mdc-switch--selected.mdc-switch--disabled & {
     fill: token-utils.slot(slide-toggle-disabled-selected-icon-color, $fallbacks);
+    color: token-utils.slot(slide-toggle-disabled-selected-icon-color, $fallbacks);
   }
 }
 
-.mdc-switch--selected .mdc-switch__icon--on,
-.mdc-switch--unselected .mdc-switch__icon--off {
+.mdc-switch--selected .mdc-switch__icons [matCheckedIcon],
+.mdc-switch--unselected .mdc-switch__icons [matUncheckedIcon],
+.mdc-switch--disabled.mdc-switch--selected .mdc-switch__icons [matCheckedDisabledIcon],
+.mdc-switch--disabled.mdc-switch--unselected .mdc-switch__icons [matUncheckedDisabledIcon] {
   opacity: 1;
   transition: opacity 45ms 30ms cubic-bezier(0, 0, 0.2, 1);
 }
