@@ -53,7 +53,7 @@ html {
     ));
   }
 
-  @include mat.utility-classes();
+  @include mat.system-classes();
 }
 
 @include mat.typography-hierarchy($light-theme);

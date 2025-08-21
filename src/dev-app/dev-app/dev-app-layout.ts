@@ -116,6 +116,7 @@ export class DevAppLayout {
     {name: 'Snack Bar', route: '/snack-bar'},
     {name: 'Stepper', route: '/stepper'},
     {name: 'System', route: '/system'},
+    {name: 'System classes', route: '/system-classes'},
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
@@ -125,7 +126,6 @@ export class DevAppLayout {
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'},
-    {name: 'Utility', route: '/utility'},
     {name: 'Virtual Scrolling', route: '/virtual-scroll'},
     {name: 'YouTube Player', route: '/youtube-player'},
   ];
