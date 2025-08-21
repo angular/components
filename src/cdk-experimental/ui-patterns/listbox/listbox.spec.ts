@@ -45,6 +45,7 @@ describe('Listbox Pattern', () => {
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
       selectionMode: inputs.selectionMode ?? signal('explicit'),
+      element: signal(document.createElement('div')),
     });
   }
 

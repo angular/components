@@ -149,6 +149,7 @@ describe('Tree Pattern', () => {
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
+        element: signal(document.createElement('div')),
       };
     });
 
@@ -201,6 +202,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(true),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -246,6 +248,7 @@ describe('Tree Pattern', () => {
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
+        element: signal(document.createElement('div')),
       };
     });
 
@@ -430,6 +433,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -488,6 +492,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -552,6 +557,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -710,6 +716,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -860,6 +867,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -900,6 +908,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -944,6 +953,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -992,6 +1002,7 @@ describe('Tree Pattern', () => {
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
+          element: signal(document.createElement('div')),
         };
       });
 
@@ -1074,6 +1085,7 @@ describe('Tree Pattern', () => {
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
+        element: signal(document.createElement('div')),
       };
     });
 
@@ -1304,6 +1316,7 @@ describe('Tree Pattern', () => {
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
+        element: signal(document.createElement('div')),
       };
     });
 

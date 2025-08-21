@@ -130,6 +130,9 @@ export class CdkTabs {
   },
 })
 export class CdkTabList implements OnInit, OnDestroy {
+  /** A reference to the tab list element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** The parent CdkTabs. */
   private readonly _cdkTabs = inject(CdkTabs);
 
@@ -174,6 +177,7 @@ export class CdkTabList implements OnInit, OnDestroy {
     items: this.tabs,
     value: this._selection,
     activeItem: signal(undefined),
+    element: () => this._elementRef.nativeElement,
   });
 
   /** Whether the tree has received focus yet. */
