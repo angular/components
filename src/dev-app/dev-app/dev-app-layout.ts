@@ -7,7 +7,6 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,7 +24,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
-import {RouterModule} from '@angular/router';
+import {ActivatedRoute, RouterModule} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {getAppState, setAppState} from './dev-app-state';
 import {DevAppRippleOptions} from './ripple-options';
 import {DevAppDirectionality} from './dev-app-directionality';
@@ -54,8 +55,10 @@ export class DevAppLayout {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _document = inject(DOCUMENT);
   private _iconRegistry = inject(MatIconRegistry);
+  private _route = inject(ActivatedRoute);
 
   state = getAppState();
+  testMode: Observable<boolean>;
   navItems = [
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
@@ -135,6 +138,7 @@ export class DevAppLayout {
   readonly isZoneless = this._ngZone instanceof ɵNoopNgZone;
 
   constructor() {
+    this.testMode = this._route.queryParams.pipe(map(params => params['testonly'] === 'true'));
     this.toggleTheme(this.state.darkTheme);
     this.toggleSystemTheme(this.state.systemTheme);
     this.toggleStrongFocus(this.state.strongFocusEnabled);
@@ -143,6 +147,14 @@ export class DevAppLayout {
     this.toggleDirection(this.state.direction);
     this.toggleM3(this.state.m3Enabled);
     this.toggleColorApiBackCompat(this.state.colorApiBackCompat);
+
+    this.testMode.subscribe(isTestOnly => {
+      if (isTestOnly) {
+        this.toggleM3(true);
+        this.toggleSystemTheme(true);
+        this._document.body.classList.add('demo-testonly-mode');
+      }
+    });
   }
 
   toggleTheme(value = !this.state.darkTheme) {
