@@ -66,6 +66,7 @@ describe('Tabs Pattern', () => {
       skipDisabled: signal(true),
       items: signal([]),
       value: signal(['tab-1']),
+      element: signal(document.createElement('div')),
     };
     tabListPattern = new TabListPattern(tabListInputs);
 

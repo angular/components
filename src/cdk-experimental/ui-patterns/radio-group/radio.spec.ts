@@ -33,6 +33,7 @@ describe('RadioGroup Pattern', () => {
       items: inputs.items,
       value: inputs.value ?? signal([]),
       activeItem: signal(undefined),
+      element: signal(document.createElement('div')),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
       skipDisabled: inputs.skipDisabled ?? signal(true),

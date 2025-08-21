@@ -80,6 +80,9 @@ function sortDirectives(a: HasElement, b: HasElement) {
   },
 })
 export class CdkToolbar<V> {
+  /** A reference to the toolbar element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** The CdkTabList nested inside of the container. */
   private readonly _cdkWidgets = signal(new Set<CdkRadioButtonInterface<V> | CdkToolbarWidget>());
 
@@ -109,6 +112,7 @@ export class CdkToolbar<V> {
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     focusMode: signal('roving'),
+    element: () => this._elementRef.nativeElement,
   });
 
   /** Whether the toolbar has received focus yet. */

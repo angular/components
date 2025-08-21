@@ -24,6 +24,7 @@ export function getListFocus(inputs: TestInputs = {}): ListFocus<ListFocusItem> 
     disabled: signal(false),
     skipDisabled: signal(false),
     focusMode: signal('roving'),
+    element: signal({focus: () => {}} as HTMLElement),
     items: items,
     ...inputs,
   });
@@ -97,6 +98,12 @@ describe('List Focus', () => {
     it('should update the activedescendant of the list when navigating', () => {
       focusManager.inputs.activeItem.set(focusManager.inputs.items()[1]);
       expect(focusManager.getActiveDescendant()).toBe(focusManager.inputs.items()[1].id());
+    });
+
+    it('should focus the list element when focusing an item', () => {
+      const focusSpy = spyOn(focusManager.inputs.element()!, 'focus');
+      focusManager.focus(focusManager.inputs.items()[1]);
+      expect(focusSpy).toHaveBeenCalled();
     });
   });
 
