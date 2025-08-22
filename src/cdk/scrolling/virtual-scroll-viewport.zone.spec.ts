@@ -8,7 +8,7 @@ import {
   afterNextRender,
   provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {animationFrameScheduler} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
 import {ScrollingModule} from './scrolling-module';
@@ -21,16 +21,15 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
     let testComponent: FixedSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [provideZoneChangeDetection()],
-        imports: [ScrollingModule, FixedSizeVirtualScroll],
       });
 
       fixture = TestBed.createComponent(FixedSizeVirtualScroll);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
-    }));
+    });
 
     it('should emit on viewChange inside the Angular zone', fakeAsync(() => {
       const zoneTest = jasmine.createSpy('zone test');
