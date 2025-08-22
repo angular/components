@@ -10,10 +10,6 @@ describe('MatCardHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatCardModule, CardHarnessTest],
-    });
-
     fixture = TestBed.createComponent(CardHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
