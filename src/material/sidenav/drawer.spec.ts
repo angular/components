@@ -451,7 +451,6 @@ describe('MatDrawer', () => {
       const errorHandler = jasmine.createSpyObj(['handleError']);
 
       TestBed.configureTestingModule({
-        imports: [DrawerDynamicPosition],
         providers: [
           {
             provide: ErrorHandler,
