@@ -45,8 +45,6 @@ describe('MenuBar', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({});
-
       fixture = TestBed.createComponent(MenuBarRadioGroup);
       fixture.detectChanges();
 
@@ -101,10 +99,6 @@ describe('MenuBar', () => {
 
         detectChanges();
       }
-
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({});
-      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(MultiMenuWithSubmenu);
