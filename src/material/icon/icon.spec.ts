@@ -63,20 +63,6 @@ describe('MatIcon', () => {
     fakePath = '/$fake-path';
 
     TestBed.configureTestingModule({
-      imports: [
-        MatIconModule,
-        IconWithColor,
-        IconWithLigature,
-        IconWithLigatureByAttribute,
-        IconWithCustomFontCss,
-        IconFromSvgName,
-        IconWithAriaHiddenFalse,
-        IconWithBindingAndNgIf,
-        InlineIcon,
-        SvgIconWithUserContent,
-        IconWithLigatureAndSvgBinding,
-        BlankIcon,
-      ],
       providers: [
         provideHttpClientTesting(),
         {
