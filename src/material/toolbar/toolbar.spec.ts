@@ -1,21 +1,9 @@
 import {Component, signal} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatToolbarModule} from './index';
 
 describe('MatToolbar', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatToolbarModule,
-        ToolbarSingleRow,
-        ToolbarMultipleRows,
-        ToolbarMixedRowModes,
-        ToolbarMultipleIndirectRows,
-      ],
-    });
-  }));
-
   describe('with single row', () => {
     let fixture: ComponentFixture<ToolbarSingleRow>;
     let testComponent: ToolbarSingleRow;
