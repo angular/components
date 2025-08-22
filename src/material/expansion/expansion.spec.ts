@@ -25,17 +25,6 @@ import {MATERIAL_ANIMATIONS} from '../core';
 describe('MatExpansionPanel', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatExpansionModule,
-        PanelWithContent,
-        PanelWithContentInNgIf,
-        PanelWithCustomMargin,
-        LazyPanelWithContent,
-        LazyPanelOpenOnLoad,
-        PanelWithTwoWayBinding,
-        PanelWithHeaderTabindex,
-        NestedLazyPanelWithContent,
-      ],
       providers: [
         {
           provide: MATERIAL_ANIMATIONS,
