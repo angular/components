@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSliderHarness} from '@angular/material/slider/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatSliderModule} from '@angular/material/slider';
 import {SliderHarnessExample} from './slider-harness-example';
 
 describe('SliderHarnessExample', () => {
@@ -10,9 +9,6 @@ describe('SliderHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSliderModule, SliderHarnessExample],
-    });
     fixture = TestBed.createComponent(SliderHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
