@@ -17,7 +17,6 @@ const initialTooltipMessage = 'initial tooltip message';
 describe('MatTooltip Zone.js integration', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTooltipModule, OverlayModule, ScrollableTooltipDemo],
       providers: [provideZoneChangeDetection(), provideFakeDirectionality('rtl')],
     });
   }));
