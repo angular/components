@@ -25,23 +25,6 @@ import {MATERIAL_ANIMATIONS} from '../core';
 describe('MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatTabsModule,
-        SimpleTabsTestApp,
-        SimpleDynamicTabsTestApp,
-        BindedTabsTestApp,
-        AsyncTabsTestApp,
-        DisabledTabsTestApp,
-        TabGroupWithSimpleApi,
-        TemplateTabs,
-        TabGroupWithAriaInputs,
-        TabGroupWithIsActiveBinding,
-        NestedTabs,
-        TabGroupWithIndirectDescendantTabs,
-        TabGroupWithSpaceAbove,
-        NestedTabGroupWithLabel,
-        TabsWithClassesTestApp,
-      ],
       providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
   }));
@@ -1057,12 +1040,6 @@ describe('MatTabGroup', () => {
 });
 
 describe('nested MatTabGroup with enabled animations', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, NestedTabs, TabsWithCustomAnimationDuration],
-    });
-  }));
-
   it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
     expect(() => {
       let fixture = TestBed.createComponent(NestedTabs);
@@ -1091,12 +1068,6 @@ describe('nested MatTabGroup with enabled animations', () => {
 
 describe('MatTabGroup with ink bar fit to content', () => {
   let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
-
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabGroupWithInkBarFitToContent],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TabGroupWithInkBarFitToContent);
@@ -1136,7 +1107,6 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, SimpleTabsTestApp],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1167,7 +1137,6 @@ describe('MatTabNavBar with a default config', () => {
 describe('MatTabGroup labels aligned with a config', () => {
   it('should work with start align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1183,7 +1152,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with center align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1199,7 +1167,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with end align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1214,9 +1181,7 @@ describe('MatTabGroup labels aligned with a config', () => {
   });
 
   it('should not add align if default config doesnt set align', () => {
-    const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
-    }).createComponent(TabsWithAlignConfig);
+    const fixture = TestBed.createComponent(TabsWithAlignConfig);
     fixture.detectChanges();
 
     let tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="start"]');
@@ -1234,7 +1199,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should not break if config sets align on already aligned tabs', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignCenter],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {alignTabs: 'end'}}],
     }).createComponent(TabsWithAlignCenter);
     fixture.detectChanges();
