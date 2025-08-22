@@ -10,10 +10,6 @@ describe('MatOptgroupHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatOptionModule, OptgroupHarnessTest],
-    });
-
     fixture = TestBed.createComponent(OptgroupHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

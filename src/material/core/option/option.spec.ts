@@ -11,12 +11,6 @@ import {SPACE, ENTER} from '@angular/cdk/keycodes';
 import {MatOption, MatOptionModule, MAT_OPTION_PARENT_COMPONENT} from './index';
 
 describe('MatOption component', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatOptionModule, BasicOption],
-    });
-  }));
-
   it('should complete the `stateChanges` stream on destroy', () => {
     const fixture = TestBed.createComponent(BasicOption);
     fixture.detectChanges();
@@ -214,7 +208,6 @@ describe('MatOption component', () => {
     beforeEach(waitForAsync(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatOptionModule, InsideGroup],
         providers: [
           {
             provide: MAT_OPTION_PARENT_COMPONENT,
