@@ -12,13 +12,6 @@ describe('MatChip', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatChipsModule,
-        BasicChip,
-        SingleChip,
-        BasicChipWithStaticTabindex,
-        BasicChipWithBoundTabindex,
-      ],
       providers: [provideFakeDirectionality('ltr')],
     });
   }));
