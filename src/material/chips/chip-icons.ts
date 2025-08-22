@@ -8,7 +8,7 @@
 
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Directive} from '@angular/core';
-import {MatChipAction} from './chip-action';
+import {MatChipAction, MatChipContent} from './chip-action';
 import {MAT_CHIP_AVATAR, MAT_CHIP_EDIT, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
 /** Avatar image within a chip. */
@@ -32,13 +32,7 @@ export class MatChipAvatar {}
   },
   providers: [{provide: MAT_CHIP_TRAILING_ICON, useExisting: MatChipTrailingIcon}],
 })
-export class MatChipTrailingIcon extends MatChipAction {
-  /**
-   * MDC considers all trailing actions as a remove icon,
-   * but we support non-interactive trailing icons.
-   */
-  override isInteractive = false;
-
+export class MatChipTrailingIcon extends MatChipContent {
   override _isPrimary = false;
 }
 

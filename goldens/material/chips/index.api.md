@@ -524,7 +524,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     protected _originatesFromChip(event: Event): boolean;
     get role(): string | null;
     set role(value: string | null);
-    protected _skipPredicate(action: MatChipAction): boolean;
+    protected _skipPredicate(action: MatChipContent): boolean;
     protected _syncChipsState(): void;
     tabIndex: number;
     // (undocumented)
@@ -555,8 +555,7 @@ export interface MatChipTextControl {
 }
 
 // @public
-export class MatChipTrailingIcon extends MatChipAction {
-    isInteractive: boolean;
+export class MatChipTrailingIcon extends MatChipContent {
     // (undocumented)
     _isPrimary: boolean;
     // (undocumented)

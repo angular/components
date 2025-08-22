@@ -54,6 +54,17 @@ describe('MatChip', () => {
 
       expect(chip.getAttribute('tabindex')).toBe('15');
     });
+
+    it('should disable the ripple if there are no interactive actions', () => {
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+
+      expect(chipInstance._hasInteractiveActions()).toBe(false);
+      expect(chipInstance._isRippleDisabled()).toBe(true);
+    });
   });
 
   describe('MatChip', () => {
@@ -115,18 +126,6 @@ describe('MatChip', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(primaryAction.hasAttribute('tabindex')).toBe(false);
-    });
-
-    it('should disable the ripple if there are no interactive actions', () => {
-      // expect(chipInstance._isRippleDisabled()).toBe(false); TODO(andreyd)
-
-      // Make primary action non-interactive for testing purposes.
-      chipInstance.primaryAction.isInteractive = false;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(chipInstance._hasInteractiveActions()).toBe(false);
-      expect(chipInstance._isRippleDisabled()).toBe(true);
     });
 
     it('should return the chip text if value is undefined', () => {

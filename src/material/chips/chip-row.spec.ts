@@ -458,19 +458,6 @@ describe('Row Chips', () => {
         fixture.detectChanges();
         expect(chipInstance._hasInteractiveActions()).toBe(true);
       });
-
-      it('should return false if all actions are non-interactive', () => {
-        // Make primary action non-interactive for testing purposes.
-        chipInstance.primaryAction.isInteractive = false;
-        testComponent.showTrailingIcon = true;
-        testComponent.removable = false; // remove icon is interactive
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-
-        // The trailing icon is not interactive.
-        expect(chipInstance.trailingIcon.isInteractive).toBe(false);
-        expect(chipInstance._hasInteractiveActions()).toBe(false);
-      });
     });
 
     describe('with edit icon', () => {
