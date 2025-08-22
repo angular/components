@@ -1,18 +1,14 @@
 import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from '../index';
 import {AriaDescriber} from './aria-describer';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, ElementRef, ViewChild, Provider, inject} from '@angular/core';
+import {Component, ElementRef, ViewChild, inject} from '@angular/core';
 
 describe('AriaDescriber', () => {
   let ariaDescriber: AriaDescriber;
   let component: TestApp;
   let fixture: ComponentFixture<TestApp>;
 
-  function createFixture(providers: Provider[] = []) {
-    TestBed.configureTestingModule({
-      providers: [AriaDescriber, ...providers],
-    });
-
+  function createFixture() {
     fixture = TestBed.createComponent(TestApp);
     component = fixture.componentInstance;
     ariaDescriber = component.ariaDescriber;
