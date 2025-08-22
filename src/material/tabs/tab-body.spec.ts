@@ -15,17 +15,14 @@ import {
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatRippleModule} from '../core';
-import {MatTabBody, MatTabBodyPortal} from './tab-body';
+import {MatTabBody} from './tab-body';
 
 describe('MatTabBody', () => {
   let dir: WritableSignal<Direction>;
 
   beforeEach(waitForAsync(() => {
     dir = signal('ltr');
-    TestBed.configureTestingModule({
-      imports: [PortalModule, MatRippleModule, MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
-      providers: [provideFakeDirectionality(dir)],
-    });
+    TestBed.configureTestingModule({providers: [provideFakeDirectionality(dir)]});
   }));
 
   it('should be center position if origin is unchanged', () => {

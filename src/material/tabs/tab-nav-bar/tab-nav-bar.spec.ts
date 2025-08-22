@@ -26,12 +26,6 @@ describe('MatTabNavBar', () => {
     dir = signal('ltr');
 
     TestBed.configureTestingModule({
-      imports: [
-        MatTabsModule,
-        SimpleTabNavBarTestApp,
-        TabLinkWithNgIf,
-        TabBarWithInactiveTabsOnInit,
-      ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         provideFakeDirectionality(dir),
@@ -503,7 +497,6 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
   }));
@@ -523,12 +516,6 @@ describe('MatTabNavBar with a default config', () => {
 });
 
 describe('MatTabNavBar with enabled animations', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithCustomAnimationDuration],
-    });
-  }));
-
   it('should not throw when setting an animationDuration without units', fakeAsync(() => {
     expect(() => {
       let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
