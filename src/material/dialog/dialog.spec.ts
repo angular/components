@@ -47,7 +47,6 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogModule,
   MatDialogRef,
   MatDialogState,
   MatDialogTitle,
@@ -66,17 +65,6 @@ describe('MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        ComponentWithChildViewContainer,
-        ComponentWithTemplateRef,
-        PizzaMsg,
-        ContentElementDialog,
-        DialogWithInjectedData,
-        DialogWithoutFocusableElements,
-        DirectiveWithViewContainer,
-        ComponentWithContentElementTemplateRef,
-      ],
       providers: [
         {provide: Location, useClass: SpyLocation},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -2035,7 +2023,6 @@ describe('MatDialog with a parent MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentThatProvidesMatDialog],
       providers: [
         {
           provide: OverlayContainer,
@@ -2144,7 +2131,6 @@ describe('MatDialog with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
       providers: [
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -2205,10 +2191,6 @@ describe('MatDialog with animations enabled', () => {
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
-    });
-
     dialog = TestBed.inject(MatDialog);
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
@@ -2259,10 +2241,6 @@ describe('MatDialog with explicit injector provided', () => {
   let fixture: ComponentFixture<ModuleBoundDialogParentComponent>;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatDialogModule, ModuleBoundDialogParentComponent],
-    });
-
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ModuleBoundDialogParentComponent);
   }));
