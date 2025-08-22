@@ -19,7 +19,6 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatNativeDateModule} from '../core';
 import {JAN, MAR} from '../testing';
-import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 
 describe('MatMultiYearView', () => {
@@ -29,16 +28,7 @@ describe('MatMultiYearView', () => {
     dir = signal<Direction>('ltr');
 
     TestBed.configureTestingModule({
-      imports: [
-        MatNativeDateModule,
-        MatCalendarBody,
-        MatMultiYearView,
-        // Test components.
-        StandardMultiYearView,
-        MultiYearViewWithDateFilter,
-        MultiYearViewWithMinMaxDate,
-        MultiYearViewWithDateClass,
-      ],
+      imports: [MatNativeDateModule],
       providers: [provideFakeDirectionality(dir)],
     });
   }));
