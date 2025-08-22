@@ -12,13 +12,7 @@ import {yearsPerPage} from './multi-year-view';
 describe('MatCalendarHeader', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatNativeDateModule,
-        MatDatepickerModule,
-        // Test components.
-        StandardCalendar,
-        CalendarWithMinMaxDate,
-      ],
+      imports: [MatNativeDateModule, MatDatepickerModule],
       providers: [MatDatepickerIntl, provideFakeDirectionality('ltr')],
     });
   }));
