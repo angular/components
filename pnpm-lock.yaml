@@ -219,8 +219,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.9
       firebase-tools:
-        specifier: 14.12.1
-        version: 14.12.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.14.0
+        version: 14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.1
@@ -264,8 +264,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       magic-string:
-        specifier: 0.30.17
-        version: 0.30.17
+        specifier: 0.30.18
+        version: 0.30.18
       marked:
         specifier: ^16.0.0
         version: 16.1.2
@@ -294,8 +294,8 @@ importers:
         specifier: ^4.0.0
         version: 4.46.2
       rollup-plugin-dts:
-        specifier: 6.2.1
-        version: 6.2.1(rollup@4.46.2)(typescript@5.9.2)
+        specifier: 6.2.3
+        version: 6.2.3(rollup@4.46.2)(typescript@5.9.2)
       rollup-plugin-sourcemaps2:
         specifier: 0.5.3
         version: 0.5.3(@types/node@22.17.1)(rollup@4.46.2)
@@ -439,8 +439,8 @@ importers:
         specifier: ^1.12.1
         version: 1.26.0
       '@types/jasmine':
-        specifier: 5.1.8
-        version: 5.1.8
+        specifier: 5.1.9
+        version: 5.1.9
       '@types/node':
         specifier: ^22.14.1
         version: 22.17.1
@@ -3221,6 +3221,9 @@ packages:
   '@types/jasmine@5.1.8':
     resolution: {integrity: sha512-u7/CnvRdh6AaaIzYjCgUuVbREFgulhX05Qtf6ZtW+aOcjCKKVvKgpkPYJBFTZSHtFBYimzU4zP0V2vrEsq9Wcg==}
 
+  '@types/jasmine@5.1.9':
+    resolution: {integrity: sha512-8t4HtkW4wxiPVedMpeZ63n3vlWxEIquo/zc1Tm8ElU+SqVV7+D3Na2PWaJUp179AzTragMWVwkMv7mvty0NfyQ==}
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -5007,8 +5010,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.12.1:
-    resolution: {integrity: sha512-F4wZ/oXPVHfciLZh/Leq6uEh3LRrp9TsGPwcOFmMafO8c1HSXO25bOKxT7gHfvC2/3ftJt97+eSLTTgtGz4Zbw==}
+  firebase-tools@14.14.0:
+    resolution: {integrity: sha512-QDc/PL8wMGm6ZD9DDHIcQpK/8SmoVL6Hec3GohJjCumYpHCQsQK/8ncZmY21lW//rN29Q/CLYhhU9SN9u3xoEg==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6459,6 +6462,9 @@ packages:
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
+  magic-string@0.30.18:
+    resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}
+
   make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
@@ -7759,8 +7765,8 @@ packages:
     resolution: {integrity: sha512-vxI2sPN07MMaoYKlFrVva5qZ1Y7DAZkgp7MQwTnyHt4FUMz9Sh+YeCzNFV9JYHI6ZNwoGWLCfCViE3XVsRC1cg==}
     hasBin: true
 
-  rollup-plugin-dts@6.2.1:
-    resolution: {integrity: sha512-sR3CxYUl7i2CHa0O7bA45mCrgADyAQ0tVtGSqi3yvH28M+eg1+g5d7kQ9hLvEz5dorK3XVsH5L2jwHLQf72DzA==}
+  rollup-plugin-dts@6.2.3:
+    resolution: {integrity: sha512-UgnEsfciXSPpASuOelix7m4DrmyQgiaWBnvI0TM4GxuDh5FkqW8E5hu57bCxXB90VvR1WNfLV80yEDN18UogSA==}
     engines: {node: '>=16'}
     peerDependencies:
       rollup: ^3.29.4 || ^4
@@ -12013,7 +12019,7 @@ snapshots:
       estree-walker: 2.0.2
       fdir: 6.4.6(picomatch@4.0.3)
       is-reference: 1.2.1
-      magic-string: 0.30.17
+      magic-string: 0.30.18
       picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.46.2
@@ -12315,6 +12321,8 @@ snapshots:
       '@types/node': 22.17.1
 
   '@types/jasmine@5.1.8': {}
+
+  '@types/jasmine@5.1.9': {}
 
   '@types/json-schema@7.0.15': {}
 
@@ -14442,13 +14450,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@14.12.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.8.1(@types/node@22.17.1)
+      '@inquirer/prompts': 7.8.2(@types/node@22.17.1)
       '@modelcontextprotocol/sdk': 1.17.2
       abort-controller: 3.0.0
       ajv: 8.17.1
@@ -16221,6 +16229,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  magic-string@0.30.18:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.5
+
   make-dir@2.1.0:
     dependencies:
       pify: 4.0.1
@@ -17640,9 +17652,9 @@ snapshots:
       '@rolldown/binding-win32-ia32-msvc': 1.0.0-beta.32
       '@rolldown/binding-win32-x64-msvc': 1.0.0-beta.32
 
-  rollup-plugin-dts@6.2.1(rollup@4.46.2)(typescript@5.9.2):
+  rollup-plugin-dts@6.2.3(rollup@4.46.2)(typescript@5.9.2):
     dependencies:
-      magic-string: 0.30.17
+      magic-string: 0.30.18
       rollup: 4.46.2
       typescript: 5.9.2
     optionalDependencies:
