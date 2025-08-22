@@ -1013,11 +1013,6 @@ describe('MatButtonToggle without forms', () => {
   describe('with tokens to hide checkmark selection indicators', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MatButtonToggleModule,
-          ButtonTogglesInsideButtonToggleGroup,
-          ButtonTogglesInsideButtonToggleGroupMultiple,
-        ],
         providers: [
           {
             provide: MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
