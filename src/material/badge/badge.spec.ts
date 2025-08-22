@@ -13,16 +13,6 @@ describe('MatBadge', () => {
     let testComponent: BadgeOnInteractiveElement;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatBadgeModule,
-          BadgeOnInteractiveElement,
-          PreExistingBadge,
-          NestedBadge,
-          BadgeOnTemplate,
-        ],
-      });
-
       fixture = TestBed.createComponent(BadgeOnInteractiveElement);
       testComponent = fixture.debugElement.componentInstance;
       fixture.detectChanges();
@@ -231,10 +221,6 @@ describe('MatBadge', () => {
     let testComponent: BadgeOnNonInteractiveElement;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [MatBadgeModule, BadgeOnNonInteractiveElement],
-      });
-
       fixture = TestBed.createComponent(BadgeOnNonInteractiveElement);
       testComponent = fixture.debugElement.componentInstance;
       fixture.detectChanges();
