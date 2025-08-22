@@ -11,10 +11,6 @@ describe('radio harness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatRadioModule, ReactiveFormsModule, MultipleRadioButtonsHarnessTest],
-    });
-
     fixture = TestBed.createComponent(MultipleRadioButtonsHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
