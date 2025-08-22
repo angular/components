@@ -15,10 +15,6 @@ describe('MatOptionHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatOptionModule, OptionHarnessTest],
-    });
-
     fixture = TestBed.createComponent(OptionHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
