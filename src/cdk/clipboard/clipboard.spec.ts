@@ -14,8 +14,6 @@ describe('Clipboard', () => {
   let focusedInput: HTMLElement;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-
     clipboard = TestBed.inject(Clipboard);
     document = TestBed.inject(DOCUMENT);
     execCommand = spyOn(document, 'execCommand').and.returnValue(true);
