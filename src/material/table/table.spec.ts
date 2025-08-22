@@ -1,12 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {
-  waitForAsync,
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -14,26 +7,6 @@ import {MatSort, MatSortHeader, MatSortModule} from '../sort';
 import {MatPaginator, MatPaginatorModule} from '../paginator';
 
 describe('MatTable', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableApp,
-        MatTableWithWhenRowApp,
-        ArrayDataSourceMatTableApp,
-        NativeHtmlTableApp,
-        MatTableWithSortApp,
-        MatTableWithPaginatorApp,
-        StickyTableApp,
-        TableWithNgContainerRow,
-        NestedTableApp,
-        MatFlexTableApp,
-      ],
-    });
-  }));
-
   describe('with basic data source', () => {
     it('should be able to create a table with the right content and without when row', () => {
       let fixture = TestBed.createComponent(MatTableApp);
