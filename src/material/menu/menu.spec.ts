@@ -43,7 +43,7 @@ import {
   provideFakeDirectionality,
 } from '../../cdk/testing/private';
 import {MATERIAL_ANIMATIONS, MatRipple} from '../core';
-import {MatMenu, MatMenuItem, MatMenuModule} from './index';
+import {MatMenu, MatMenuItem} from './index';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MAT_MENU_SCROLL_STRATEGY,
@@ -2555,7 +2555,6 @@ describe('MatMenu', () => {
 describe('MatMenu default overrides', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule],
       providers: [
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
