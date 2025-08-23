@@ -16,10 +16,6 @@ describe('MatTreeHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTreeModule, TreeHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TreeHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
