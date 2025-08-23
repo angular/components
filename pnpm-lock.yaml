@@ -14619,7 +14619,7 @@ snapshots:
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.8.2(@types/node@22.17.1)
+      '@inquirer/prompts': 7.8.3(@types/node@22.17.1)
       '@modelcontextprotocol/sdk': 1.17.2
       abort-controller: 3.0.0
       ajv: 8.17.1
