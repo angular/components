@@ -185,8 +185,6 @@ describe('ContentObserver injectable', () => {
     let contentObserver: ContentObserver;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({});
-
       const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
       fixture.autoDetectChanges();
       spy = jasmine.createSpy('content observer');

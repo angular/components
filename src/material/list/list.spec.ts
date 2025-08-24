@@ -1,34 +1,10 @@
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {TestBed, fakeAsync, waitForAsync} from '@angular/core/testing';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
 describe('MatList', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatListModule,
-        ListWithOneAnchorItem,
-        ListWithOneItem,
-        ListWithTwoLineItem,
-        ListWithThreeLineItem,
-        ListWithAvatar,
-        ListWithItemWithCssClass,
-        ListWithDynamicNumberOfLines,
-        ListWithMultipleItems,
-        NavListWithOneAnchorItem,
-        NavListWithActivatedItem,
-        ActionListWithoutType,
-        ActionListWithType,
-        ActionListWithDisabledList,
-        ActionListWithDisabledItem,
-        ListWithDisabledItems,
-        StandaloneListItem,
-      ],
-    });
-  }));
-
   it('should apply an additional class to lists without lines', () => {
     const fixture = TestBed.createComponent(ListWithOneItem);
     const listItem = fixture.debugElement.query(By.css('mat-list-item'))!;

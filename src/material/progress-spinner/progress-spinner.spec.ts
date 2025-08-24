@@ -1,29 +1,10 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Component, ElementRef, ViewChild, ViewEncapsulation, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatProgressSpinnerModule} from './progress-spinner-module';
 import {MatProgressSpinner, MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from './progress-spinner';
 
 describe('MatProgressSpinner', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatProgressSpinnerModule,
-        BasicProgressSpinner,
-        IndeterminateProgressSpinner,
-        ProgressSpinnerWithValueAndBoundMode,
-        ProgressSpinnerWithColor,
-        ProgressSpinnerCustomStrokeWidth,
-        ProgressSpinnerCustomDiameter,
-        SpinnerWithColor,
-        ProgressSpinnerWithStringValues,
-        IndeterminateSpinnerInShadowDom,
-        IndeterminateSpinnerInShadowDomWithNgIf,
-        SpinnerWithMode,
-      ],
-    });
-  }));
-
   it('should apply a mode of "determinate" if no mode is provided.', () => {
     let fixture = TestBed.createComponent(BasicProgressSpinner);
     fixture.detectChanges();
@@ -455,35 +436,6 @@ class ProgressSpinnerWithColor {
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerWithStringValues {}
-
-@Component({
-  template: `
-    <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
-  `,
-  encapsulation: ViewEncapsulation.ShadowDom,
-  imports: [MatProgressSpinnerModule],
-})
-class IndeterminateSpinnerInShadowDom {
-  diameter: number;
-}
-
-@Component({
-  template: `
-    @if (true) {
-      <div>
-        <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
-      </div>
-    }
-  `,
-  encapsulation: ViewEncapsulation.ShadowDom,
-  imports: [MatProgressSpinnerModule],
-})
-class IndeterminateSpinnerInShadowDomWithNgIf {
-  @ViewChild(MatProgressSpinner, {read: ElementRef})
-  spinner: ElementRef<HTMLElement>;
-
-  diameter: number;
-}
 
 @Component({
   template: '<mat-spinner mode="determinate"></mat-spinner>',

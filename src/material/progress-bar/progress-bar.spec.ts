@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MAT_PROGRESS_BAR_DEFAULT_OPTIONS, MatProgressBarModule} from './index';
+import {MAT_PROGRESS_BAR_DEFAULT_OPTIONS} from './index';
 import {MatProgressBar} from './progress-bar';
 
 describe('MatProgressBar', () => {
@@ -17,11 +17,7 @@ describe('MatProgressBar', () => {
     componentType: Type<T>,
     providers: (Provider | EnvironmentProviders)[] = [],
   ): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [MatProgressBarModule, componentType],
-      providers,
-    });
-
+    TestBed.configureTestingModule({providers});
     return TestBed.createComponent<T>(componentType);
   }
 

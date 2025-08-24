@@ -11,10 +11,6 @@ describe('MatChipEditInput', () => {
   let inputInstance: MatChipEditInput;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule, ChipEditInputContainer],
-    });
-
     fixture = TestBed.createComponent(ChipEditInputContainer);
     inputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
     inputInstance = inputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);

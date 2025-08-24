@@ -1,15 +1,9 @@
 import {Component, DebugElement, QueryList} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
 describe('MatChipSet', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule, BasicChipSet, IndirectDescendantsChipSet],
-    });
-  }));
-
   describe('BasicChipSet', () => {
     let fixture: ComponentFixture<any>;
     let chipSetDebugElement: DebugElement;
