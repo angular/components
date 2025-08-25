@@ -6,5 +6,8 @@ ng_project(
     name = "cdk-experimental-tree",
     srcs = glob(["**/*.ts"]),
     assets = ["cdk-tree-demo.html"],
-    deps = ["//src/components-examples/cdk-experimental/tree"],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/tree",
+    ],
 )

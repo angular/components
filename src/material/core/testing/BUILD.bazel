@@ -28,6 +28,7 @@ ts_project(
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/core",
+        "//src/material/core/option",
     ],
 )
 

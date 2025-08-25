@@ -11,6 +11,7 @@ ng_project(
         "palette.ts",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
