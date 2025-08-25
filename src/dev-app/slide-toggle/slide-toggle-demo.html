@@ -1,16 +1,71 @@
 <div class="demo-slide-toggle">
-  <mat-slide-toggle color="primary" [(ngModel)]="firstToggle">Default Slide Toggle</mat-slide-toggle>
+  <mat-slide-toggle color="primary" [(ngModel)]="firstToggle"
+    >Default Slide Toggle</mat-slide-toggle
+  >
   <mat-slide-toggle [(ngModel)]="firstToggle" disabled>Disabled Slide Toggle</mat-slide-toggle>
   <mat-slide-toggle [disabled]="firstToggle">Disable Bound</mat-slide-toggle>
-  <mat-slide-toggle disabled disabledInteractive [(ngModel)]="firstToggle">Disabled Interactive Toggle</mat-slide-toggle>
+  <mat-slide-toggle disabled disabledInteractive [(ngModel)]="firstToggle"
+    >Disabled Interactive Toggle</mat-slide-toggle
+  >
+  <mat-slide-toggle hideIcon="unchecked" [(ngModel)]="firstToggle"
+    >No icon (While Unchecked)</mat-slide-toggle
+  >
+  <mat-slide-toggle hideIcon="checked" [(ngModel)]="firstToggle"
+    >No icon (While Checked)</mat-slide-toggle
+  >
   <mat-slide-toggle hideIcon [(ngModel)]="firstToggle">No icon</mat-slide-toggle>
-
+  <mat-slide-toggle [(ngModel)]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    Custom Icons
+  </mat-slide-toggle>
+  <mat-slide-toggle disabled [(ngModel)]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    Disabled Custom Icons
+  </mat-slide-toggle>
+  <mat-slide-toggle [disabled]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    <mat-icon matCheckedDisabledIcon>lock</mat-icon>
+    <mat-icon matUncheckedDisabledIcon>lock_open</mat-icon>
+    Disabled Custom Disabled Icons
+  </mat-slide-toggle>
   <p>With label before the slide toggle.</p>
 
-  <mat-slide-toggle labelPosition="before" color="primary" [(ngModel)]="firstToggle">Default Slide Toggle</mat-slide-toggle>
-  <mat-slide-toggle labelPosition="before" [(ngModel)]="firstToggle" disabled>Disabled Slide Toggle</mat-slide-toggle>
+  <mat-slide-toggle labelPosition="before" color="primary" [(ngModel)]="firstToggle"
+    >Default Slide Toggle</mat-slide-toggle
+  >
+  <mat-slide-toggle labelPosition="before" [(ngModel)]="firstToggle" disabled
+    >Disabled Slide Toggle</mat-slide-toggle
+  >
   <mat-slide-toggle labelPosition="before" [disabled]="firstToggle">Disable Bound</mat-slide-toggle>
-  <mat-slide-toggle labelPosition="before" hideIcon [(ngModel)]="firstToggle">No icon</mat-slide-toggle>
+  <mat-slide-toggle labelPosition="before" hideIcon="unchecked" [(ngModel)]="firstToggle"
+    >No icon (While Unchecked)</mat-slide-toggle
+  >
+  <mat-slide-toggle labelPosition="before" hideIcon="checked" [(ngModel)]="firstToggle"
+    >No icon (While Checked)</mat-slide-toggle
+  >
+  <mat-slide-toggle labelPosition="before" hideIcon [(ngModel)]="firstToggle"
+    >No icon</mat-slide-toggle
+  >
+  <mat-slide-toggle labelPosition="before" [(ngModel)]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    Custom Icons
+  </mat-slide-toggle>
+  <mat-slide-toggle labelPosition="before" disabled [(ngModel)]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    Disabled Custom Icons
+  </mat-slide-toggle>
+  <mat-slide-toggle labelPosition="before" [disabled]="firstToggle">
+    <mat-icon matCheckedIcon>light_mode</mat-icon>
+    <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+    <mat-icon matCheckedDisabledIcon>lock</mat-icon>
+    <mat-icon matUncheckedDisabledIcon>lock_open</mat-icon>
+    Disabled Custom Disabled Icons
+  </mat-slide-toggle>
 
   <p>Example where the slide toggle is required inside of a form.</p>
 

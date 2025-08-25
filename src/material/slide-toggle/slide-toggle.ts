@@ -46,6 +46,7 @@ import {
   MatRipple,
 } from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {NgTemplateOutlet} from '@angular/common';
 
 /** Change event object emitted by a slide toggle. */
 export class MatSlideToggleChange {
@@ -89,7 +90,7 @@ export class MatSlideToggleChange {
       multi: true,
     },
   ],
-  imports: [MatRipple, _MatInternalFormField],
+  imports: [MatRipple, _MatInternalFormField, NgTemplateOutlet],
 })
 export class MatSlideToggle
   implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
@@ -184,7 +185,7 @@ export class MatSlideToggle
   }
 
   /** Whether to hide the icon inside of the slide toggle. */
-  @Input({transform: booleanAttribute}) hideIcon: boolean;
+  @Input({transform: _defaultBoth}) hideIcon: 'both' | 'checked' | 'unchecked' | 'none' = 'none';
 
   /** Whether the slide toggle should remain interactive when it is disabled. */
   @Input({transform: booleanAttribute}) disabledInteractive: boolean;
@@ -214,7 +215,8 @@ export class MatSlideToggle
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.color = defaults.color || 'accent';
     this.id = this._uniqueId = inject(_IdGenerator).getId('mat-mdc-slide-toggle-');
-    this.hideIcon = defaults.hideIcon ?? false;
+
+    this.hideIcon = defaults.hideIcon ?? 'none';
     this.disabledInteractive = defaults.disabledInteractive ?? false;
     this._labelId = this._uniqueId + '-label';
   }
@@ -316,4 +318,15 @@ export class MatSlideToggle
     // `aria-labelledby`, because the button gets flagged as not having a label by tools like axe.
     return this.ariaLabel ? null : this._labelId;
   }
+}
+function _defaultBoth(
+  value: 'both' | 'checked' | 'unchecked' | '' | boolean | undefined,
+): 'both' | 'checked' | 'unchecked' | 'none' {
+  if (value === '' || value === true) {
+    return 'both';
+  }
+  if (value === undefined || value === false) {
+    return 'none';
+  }
+  return value as 'checked' | 'unchecked' | 'none';
 }

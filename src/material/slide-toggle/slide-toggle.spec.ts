@@ -26,6 +26,7 @@ describe('MatSlideToggle without forms', () => {
         SlideToggleWithTabindexAttr,
         SlideToggleWithoutLabel,
         SlideToggleProjectedLabel,
+        SlideToggleProjectedLabelAndCustomIcons,
         TextBindingComponent,
         SlideToggleWithStaticAriaAttributes,
       ],
@@ -366,7 +367,7 @@ describe('MatSlideToggle without forms', () => {
       expect(rippleElement.classList).toContain('mat-focus-indicator');
     }));
 
-    it('should be able to hide the icon', fakeAsync(() => {
+    it('should be able to hide both icons through true, "", and "both"', fakeAsync(() => {
       expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
 
       testComponent.hideIcon = true;
@@ -374,6 +375,51 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+
+      testComponent.hideIcon = '';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+
+      testComponent.hideIcon = 'both';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+    }));
+
+    it('should be able to hide the on icon through "checked"', fakeAsync(() => {
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
+
+      testComponent.hideIcon = 'checked';
+      testComponent.slideChecked = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+
+      testComponent.slideChecked = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
+    }));
+
+    it('should be able to hide the off icon through "unchecked"', fakeAsync(() => {
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
+
+      testComponent.hideIcon = 'unchecked';
+      testComponent.slideChecked = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeFalsy();
+
+      testComponent.slideChecked = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.querySelector('.mdc-switch__icons')).toBeTruthy();
     }));
 
     it('should be able to mark a slide toggle as interactive while it is disabled', fakeAsync(() => {
@@ -536,6 +582,86 @@ describe('MatSlideToggle without forms', () => {
     expect(host.hasAttribute('aria-label')).toBe(false);
     expect(host.hasAttribute('aria-labelledby')).toBe(false);
   });
+
+  it('should render default icons if no custom icons are present', () => {
+    const fixture = TestBed.createComponent(SlideToggleBasic);
+    const slideToggleDebug = fixture.debugElement.query(By.directive(MatSlideToggle))!;
+    const slideToggle = slideToggleDebug.componentInstance;
+    const slideToggleElement = slideToggleDebug.nativeElement;
+    fixture.detectChanges();
+
+    const offIconElement = slideToggleElement
+      .querySelector('.mdc-switch__icons')
+      ?.querySelector(`[matUncheckedIcon]`);
+    expect(offIconElement).toBeTruthy();
+
+    slideToggle.checked = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    const onIconElement = slideToggleElement
+      .querySelector('.mdc-switch__icons')
+      ?.querySelector(`[matCheckedIcon]`);
+    expect(onIconElement).toBeTruthy();
+  });
+
+  it('should render custom icons if hideIcon is not present', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SlideToggleProjectedLabelAndCustomIcons);
+    const slideToggleDebug = fixture.debugElement.query(By.directive(MatSlideToggle))!;
+    const slideToggle = slideToggleDebug.componentInstance;
+    const slideToggleElement = slideToggleDebug.nativeElement;
+    slideToggle.hideIcon = 'both';
+    slideToggle.checked = true;
+    slideToggle.disabled = false;
+    fixture.detectChanges();
+
+    const icons = {
+      '[matCheckedIcon]': {
+        checked: true,
+        disabled: false,
+        text: 'light_mode',
+        hide: ['checked', 'both'],
+      },
+      '[matUncheckedIcon]': {
+        checked: false,
+        disabled: false,
+        text: 'dark_mode',
+        hide: ['unchecked', 'both'],
+      },
+      '[matCheckedDisabledIcon]': {
+        checked: true,
+        disabled: true,
+        text: 'lock',
+        hide: ['checked', 'both'],
+      },
+      '[matUncheckedDisabledIcon]': {
+        checked: false,
+        disabled: true,
+        text: 'lock_open',
+        hide: ['unchecked', 'both'],
+      },
+    };
+    for (const hide of ['checked', 'unchecked', 'both', 'none']) {
+      slideToggle.hideIcon = hide;
+      for (const [icon, state] of Object.entries(icons)) {
+        slideToggle.checked = state.checked;
+        slideToggle.disabled = state.disabled;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+        const iconElement = slideToggleElement.querySelector(`${icon}`);
+        const otherIcons = Object.keys(icons)
+          .filter(key => key !== icon)
+          .map(key => slideToggleElement.querySelector(`${key}`));
+        state.hide.includes(hide)
+          ? expect(iconElement).toBeFalsy()
+          : expect(iconElement).toBeTruthy();
+        if (iconElement) {
+          expect(iconElement.textContent?.trim()).toBe(state.text);
+        }
+        otherIcons.forEach(otherIcon => expect(otherIcon).toBeFalsy());
+      }
+    }
+  }));
 });
 
 describe('MatSlideToggle with forms', () => {
@@ -900,7 +1026,7 @@ class SlideToggleBasic {
   toggleTriggered = 0;
   dragTriggered = 0;
   direction: Direction = 'ltr';
-  hideIcon = false;
+  hideIcon: '' | 'both' | 'checked' | 'unchecked' | 'none' | boolean = 'none';
   disabledInteractive = false;
 
   onSlideClick: (event?: Event) => void = () => {};
@@ -990,6 +1116,15 @@ class TextBindingComponent {
   text: string = 'Some text';
 }
 
+@Component({
+  template: `<mat-slide-toggle><mat-icon matCheckedIcon>light_mode</mat-icon>
+              <mat-icon matUncheckedIcon>dark_mode</mat-icon>
+              <mat-icon matCheckedDisabledIcon>lock</mat-icon>
+              <mat-icon matUncheckedDisabledIcon>lock_open</mat-icon>
+              <some-text></some-text></mat-slide-toggle>`,
+  imports: [MatSlideToggleModule, BidiModule],
+})
+class SlideToggleProjectedLabelAndCustomIcons {}
 @Component({
   template: `
     <mat-slide-toggle aria-label="Slide toggle" aria-labelledby="something"></mat-slide-toggle>
