@@ -76,6 +76,9 @@ function sortDirectives(a: HasElement, b: HasElement) {
   },
 })
 export class CdkTree<V> {
+  /** A reference to the tree element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** All CdkTreeItem instances within this tree. */
   private readonly _unorderedItems = signal(new Set<CdkTreeItem<V>>());
 
@@ -124,6 +127,7 @@ export class CdkTree<V> {
       [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
     ),
     activeItem: signal(undefined),
+    element: () => this._elementRef.nativeElement,
   });
 
   /** Whether the tree has received focus yet. */

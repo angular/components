@@ -93,6 +93,9 @@ export function mapSignal<T, V>(
   },
 })
 export class CdkRadioGroup<V> {
+  /** A reference to the radio group element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** The CdkRadioButtons nested inside of the CdkRadioGroup. */
   private readonly _cdkRadioButtons = contentChildren(CdkRadioButton, {descendants: true});
 
@@ -140,6 +143,7 @@ export class CdkRadioGroup<V> {
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     toolbar: this._toolbarPattern,
+    element: () => this._elementRef.nativeElement,
     focusMode: this._toolbarPattern()?.inputs.focusMode ?? this.focusMode,
     skipDisabled: this._toolbarPattern()?.inputs.skipDisabled ?? this.skipDisabled,
   });

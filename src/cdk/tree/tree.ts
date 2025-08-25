@@ -282,6 +282,10 @@ export class CdkTree<T, K = T>
   ngOnDestroy() {
     this._nodeOutlet.viewContainer.clear();
 
+    this._nodes.complete();
+    this._keyManagerNodes.complete();
+    this._nodeType.complete();
+    this._flattenedNodes.complete();
     this.viewChange.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
@@ -1403,6 +1407,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
         distinctUntilChanged(),
         takeUntil(this._destroyed),
       )
+      .pipe(takeUntil(this._destroyed))
       .subscribe(() => this._changeDetectorRef.markForCheck());
     this._tree._setNodeTypeIfUnset(this._type);
     this._tree._registerNode(this);

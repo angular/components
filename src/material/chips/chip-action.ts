@@ -20,25 +20,22 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
 
 /**
- * Section within a chip.
+ * A non-interactive section of a chip.
  * @docs-private
  */
 @Directive({
-  selector: '[matChipAction]',
+  selector: '[matChipContent]',
   host: {
-    'class': 'mdc-evolution-chip__action mat-mdc-chip-action',
+    'class':
+      'mat-mdc-chip-action mdc-evolution-chip__action mdc-evolution-chip__action--presentational',
     '[class.mdc-evolution-chip__action--primary]': '_isPrimary',
-    '[class.mdc-evolution-chip__action--presentational]': '!isInteractive',
     '[class.mdc-evolution-chip__action--secondary]': '!_isPrimary',
     '[class.mdc-evolution-chip__action--trailing]': '!_isPrimary && !_isLeading',
-    '[attr.tabindex]': '_getTabindex()',
     '[attr.disabled]': '_getDisabledAttribute()',
     '[attr.aria-disabled]': 'disabled',
-    '(click)': '_handleClick($event)',
-    '(keydown)': '_handleKeydown($event)',
   },
 })
-export class MatChipAction {
+export class MatChipContent {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _parentChip = inject<{
     _handlePrimaryActionInteraction(): void;
@@ -47,9 +44,6 @@ export class MatChipAction {
     _edit(): void;
     _isEditing?: boolean;
   }>(MAT_CHIP);
-
-  /** Whether the action is interactive. */
-  @Input() isInteractive = true;
 
   /** Whether this is the primary action in the chip. */
   _isPrimary = true;
@@ -88,15 +82,6 @@ export class MatChipAction {
     return this.disabled && !this._allowFocusWhenDisabled ? '' : null;
   }
 
-  /**
-   * Determine the value of the tabindex attribute for this chip action.
-   */
-  protected _getTabindex(): string | null {
-    return (this.disabled && !this._allowFocusWhenDisabled) || !this.isInteractive
-      ? null
-      : this.tabIndex.toString();
-  }
-
   constructor(...args: unknown[]);
 
   constructor() {
@@ -109,9 +94,31 @@ export class MatChipAction {
   focus() {
     this._elementRef.nativeElement.focus();
   }
+}
+
+/**
+ * Interactive section of a chip.
+ * @docs-private
+ */
+@Directive({
+  selector: '[matChipAction]',
+  host: {
+    '[attr.tabindex]': '_getTabindex()',
+    '[class.mdc-evolution-chip__action--presentational]': 'false',
+    '(click)': '_handleClick($event)',
+    '(keydown)': '_handleKeydown($event)',
+  },
+})
+export class MatChipAction extends MatChipContent {
+  /**
+   * Determine the value of the tabindex attribute for this chip action.
+   */
+  protected _getTabindex(): string | null {
+    return this.disabled && !this._allowFocusWhenDisabled ? null : this.tabIndex.toString();
+  }
 
   _handleClick(event: MouseEvent) {
-    if (!this.disabled && this.isInteractive && this._isPrimary) {
+    if (!this.disabled && this._isPrimary) {
       event.preventDefault();
       this._parentChip._handlePrimaryActionInteraction();
     }
@@ -121,7 +128,6 @@ export class MatChipAction {
     if (
       (event.keyCode === ENTER || event.keyCode === SPACE) &&
       !this.disabled &&
-      this.isInteractive &&
       this._isPrimary &&
       !this._parentChip._isEditing
     ) {

@@ -40,6 +40,8 @@ export interface ListFocusInputs<T extends ListFocusItem> {
 
   /** Whether disabled items in the list should be skipped when navigating. */
   skipDisabled: SignalLike<boolean>;
+
+  element: SignalLike<HTMLElement | undefined>;
 }
 
 /** Controls focus for a list of items. */
@@ -103,9 +105,7 @@ export class ListFocus<T extends ListFocusItem> {
     this.prevActiveItem.set(this.inputs.activeItem());
     this.inputs.activeItem.set(item);
 
-    if (this.inputs.focusMode() === 'roving') {
-      item.element().focus();
-    }
+    this.inputs.focusMode() === 'roving' ? item.element().focus() : this.inputs.element()?.focus();
 
     return true;
   }

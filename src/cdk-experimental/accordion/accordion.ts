@@ -150,6 +150,9 @@ export class CdkAccordionTrigger {
   },
 })
 export class CdkAccordionGroup {
+  /** A reference to the group element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** The CdkAccordionTriggers nested inside this group. */
   protected readonly _triggers = contentChildren(CdkAccordionTrigger, {descendants: true});
 
@@ -184,6 +187,7 @@ export class CdkAccordionGroup {
     expandedIds: this.value,
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
+    element: () => this._elementRef.nativeElement,
   });
 
   constructor() {

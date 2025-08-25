@@ -68,6 +68,7 @@ describe('Accordion Pattern', () => {
       expandedIds: signal<string[]>([]),
       skipDisabled: signal(true),
       wrap: signal(true),
+      element: signal(document.createElement('div')),
     };
     groupPattern = new AccordionGroupPattern(groupInputs);
 

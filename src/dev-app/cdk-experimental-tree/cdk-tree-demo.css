@@ -1,11 +1,10 @@
 .example-tree-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
   gap: 20px;
 }
 
 .example-tree-container {
-  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

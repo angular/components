@@ -55,6 +55,9 @@ import {_IdGenerator} from '@angular/cdk/a11y';
   },
 })
 export class CdkListbox<V> {
+  /** A reference to the listbox element. */
+  private readonly _elementRef = inject(ElementRef);
+
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -105,6 +108,7 @@ export class CdkListbox<V> {
     items: this.items,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
+    element: () => this._elementRef.nativeElement,
   });
 
   /** Whether the listbox has received focus yet. */

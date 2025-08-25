@@ -30,6 +30,7 @@ describe('List Behavior', () => {
       multi: inputs.multi ?? signal(false),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
+      element: signal({focus: () => {}} as HTMLElement),
       focusMode: inputs.focusMode ?? signal('roving'),
       skipDisabled: inputs.skipDisabled ?? signal(true),
       selectionMode: signal('explicit'),

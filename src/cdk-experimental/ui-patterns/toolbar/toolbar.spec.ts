@@ -51,6 +51,7 @@ describe('Toolbar Pattern', () => {
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
       toolbar: inputs.toolbar ?? signal(undefined),
+      element: signal(document.createElement('div')),
     });
   }
 
@@ -92,6 +93,7 @@ describe('Toolbar Pattern', () => {
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('horizontal'),
       wrap: inputs.wrap ?? signal(false),
+      element: signal(document.createElement('div')),
     });
   }
 

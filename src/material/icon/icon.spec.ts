@@ -1,6 +1,5 @@
-import {wrappedErrorMessage} from '@angular/cdk/testing/private';
 import {
-  HttpClientTestingModule,
+  provideHttpClientTesting,
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
@@ -9,7 +8,7 @@ import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {FAKE_SVGS} from './fake-svgs';
 import {MatIcon} from './icon';
-import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
+import {MatIconRegistry} from './icon-registry';
 import {MAT_ICON_DEFAULT_OPTIONS, MAT_ICON_LOCATION, MatIconModule} from './index';
 
 /** Returns the CSS classes assigned to an element as a sorted array. */
@@ -65,7 +64,6 @@ describe('MatIcon', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         MatIconModule,
         IconWithColor,
         IconWithLigature,
@@ -80,6 +78,7 @@ describe('MatIcon', () => {
         BlankIcon,
       ],
       providers: [
+        provideHttpClientTesting(),
         {
           provide: MAT_ICON_LOCATION,
           useValue: {getPathname: () => fakePath},
@@ -1358,38 +1357,6 @@ describe('MatIcon', () => {
   }
 });
 
-describe('MatIcon without HttpClientModule', () => {
-  let iconRegistry: MatIconRegistry;
-  let sanitizer: DomSanitizer;
-
-  @Component({
-    template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
-    imports: [MatIcon],
-  })
-  class IconFromSvgName {
-    iconName: string | undefined = '';
-  }
-
-  beforeEach(waitForAsync(() => {
-    iconRegistry = TestBed.inject(MatIconRegistry);
-    sanitizer = TestBed.inject(DomSanitizer);
-  }));
-
-  it('should throw an error when trying to load a remote icon', () => {
-    const expectedError = wrappedErrorMessage(getMatIconNoHttpProviderError());
-
-    expect(() => {
-      iconRegistry.addSvgIcon('fido', sanitizer.bypassSecurityTrustResourceUrl('dog.svg'));
-
-      const fixture = TestBed.createComponent(IconFromSvgName);
-
-      fixture.componentInstance.iconName = 'fido';
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-    }).toThrowError(expectedError);
-  });
-});
-
 describe('MatIcon with default options', () => {
   it('should be able to configure color globally', fakeAsync(() => {
     const fixture = createComponent(IconWithLigature, [
@@ -1457,7 +1424,7 @@ describe('MatIcon with default options', () => {
 
 @Component({
   template: `<mat-icon>{{iconName}}</mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithLigature {
   iconName = '';
@@ -1465,7 +1432,7 @@ class IconWithLigature {
 
 @Component({
   template: `<mat-icon [fontIcon]="iconName"></mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithLigatureByAttribute {
   iconName = '';
@@ -1473,7 +1440,7 @@ class IconWithLigatureByAttribute {
 
 @Component({
   template: `<mat-icon [color]="iconColor">{{iconName}}</mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithColor {
   iconName = '';
@@ -1482,7 +1449,7 @@ class IconWithColor {
 
 @Component({
   template: `<mat-icon [fontSet]="fontSet" [fontIcon]="fontIcon"></mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithCustomFontCss {
   fontSet = '';
@@ -1491,7 +1458,7 @@ class IconWithCustomFontCss {
 
 @Component({
   template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconFromSvgName {
   iconName: string | undefined = '';
@@ -1499,13 +1466,13 @@ class IconFromSvgName {
 
 @Component({
   template: '<mat-icon aria-hidden="false">face</mat-icon>',
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithAriaHiddenFalse {}
 
 @Component({
   template: `@if (showIcon) {<mat-icon [svgIcon]="iconName">{{iconName}}</mat-icon>}`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithBindingAndNgIf {
   iconName = 'fluffy';
@@ -1514,7 +1481,7 @@ class IconWithBindingAndNgIf {
 
 @Component({
   template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class InlineIcon {
   inline = false;
@@ -1522,7 +1489,7 @@ class InlineIcon {
 
 @Component({
   template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class SvgIconWithUserContent {
   iconName: string | undefined = '';
@@ -1530,7 +1497,7 @@ class SvgIconWithUserContent {
 
 @Component({
   template: '<mat-icon [svgIcon]="iconName">house</mat-icon>',
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class IconWithLigatureAndSvgBinding {
   iconName: string | undefined;
@@ -1538,7 +1505,7 @@ class IconWithLigatureAndSvgBinding {
 
 @Component({
   template: `<mat-icon></mat-icon>`,
-  imports: [HttpClientTestingModule, MatIconModule],
+  imports: [MatIconModule],
 })
 class BlankIcon {
   @ViewChild(MatIcon) icon: MatIcon;
