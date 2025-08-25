@@ -43,6 +43,7 @@ import {MatIconButton, MatButton} from '../button';
 import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {MatTooltip} from '../tooltip';
 
 /**
  * Possible views for the calendar.
@@ -57,7 +58,7 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButton, MatIconButton],
+  imports: [MatButton, MatIconButton, MatTooltip],
 })
 export class MatCalendarHeader<D> {
   private _intl = inject(MatDatepickerIntl);
