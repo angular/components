@@ -1,5 +1,5 @@
-load("//:packages.bzl", "ANGULAR_COMPONENTS_SCOPED_PACKAGES")
 load("@devinfra//bazel/integration:index.bzl", _integration_test = "integration_test")
+load("//:packages.bzl", "ANGULAR_COMPONENTS_SCOPED_PACKAGES")
 
 LOCAL_NPM_PACKAGES = {
     "//src/%s:npm_package_archive" % (pkg[len("@angular/"):]): pkg
@@ -28,8 +28,8 @@ def integration_test(
     # If Chromium should be configured, add it to the runfiles and expose its binaries
     # through test environment variables. The variables are auto-detected by e.g. Karma.
     if setup_chromium:
-        test_data.append("@rules_browsers//src/browsers/chromium")
-        test_toolchains.append("@rules_browsers//src/browsers/chromium:toolchain_alias")
+        test_data.append("@rules_browsers//browsers/chromium")
+        test_toolchains.append("@rules_browsers//browsers/chromium:toolchain_alias")
         test_environment.update({
             "CHROMEDRIVER_BIN": "$(CHROMEDRIVER)",
             "CHROME_BIN": "$(CHROME-HEADLESS-SHELL)",
