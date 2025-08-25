@@ -26,7 +26,7 @@ import {
   AccordionGroupPattern,
   AccordionPanelPattern,
   AccordionTriggerPattern,
-} from '../ui-patterns/';
+} from '../ui-patterns';
 
 /**
  * Represents the content panel of an accordion item. It is controlled by an

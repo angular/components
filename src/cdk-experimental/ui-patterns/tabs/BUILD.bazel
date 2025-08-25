@@ -26,6 +26,7 @@ ts_project(
     deps = [
         ":tabs",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
     ],
