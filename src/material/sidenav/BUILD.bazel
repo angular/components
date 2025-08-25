@@ -111,6 +111,7 @@ ts_project(
         "//src/cdk/scrolling",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
+        "//src/material/core",
     ],
 )
 

@@ -10,8 +10,9 @@ ng_project(
         "tree.ts",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/deferred-content",
-        "//src/cdk-experimental/ui-patterns",
+        "//src/cdk-experimental/ui-patterns/tree",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],
@@ -25,6 +26,7 @@ ts_project(
     ],
     deps = [
         ":tree",
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing/private",

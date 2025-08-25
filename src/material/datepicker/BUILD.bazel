@@ -205,6 +205,7 @@ ts_project(
         "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "//src/material/button",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
