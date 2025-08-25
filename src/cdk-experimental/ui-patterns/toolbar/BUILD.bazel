@@ -23,6 +23,8 @@ ts_project(
     deps = [
         ":toolbar",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/radio-group",
+        "//src/cdk-experimental/ui-patterns/radio-group",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
     ],

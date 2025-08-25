@@ -10,6 +10,7 @@ ng_project(
         "public-api.ts",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/deferred-content",
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",

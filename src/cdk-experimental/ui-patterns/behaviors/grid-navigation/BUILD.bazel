@@ -19,6 +19,7 @@ ts_project(
     deps = [
         ":grid-navigation",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/grid-focus",
     ],
 )
 

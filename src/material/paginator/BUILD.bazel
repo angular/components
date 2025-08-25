@@ -81,6 +81,7 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/material/button",
         "//src/material/core",
+        "//src/material/form-field",
         "//src/material/select",
         "//src/material/tooltip",
     ],
