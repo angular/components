@@ -188,9 +188,11 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   ngAfterViewInit() {
     // We use the focus monitor because we also want to style
     // things differently based on the focus origin.
-    this._focusMonitor
-      .monitor(this._elementRef, true)
-      .subscribe(() => this._recentlyCleared.set(null));
+    this._focusMonitor.monitor(this._elementRef, true).subscribe(() => {
+      // We need the delay here, because we can trigger a signal write error if the header
+      // has a signal bound to `disabled` which causes it to be blurred (see #31723.)
+      Promise.resolve().then(() => this._recentlyCleared.set(null));
+    });
   }
 
   ngOnDestroy() {
