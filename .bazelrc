@@ -39,6 +39,9 @@ build --nobuild_runfile_links
 # Prevents the npm package extract from occuring or caching on RBE which overwhelms our quota
 build --modify_execution_info=NpmPackageExtract=+no-remote
 
+# Frozen lockfile
+common --lockfile_mode=error
+
 ###############################
 # Output control              #
 ###############################
