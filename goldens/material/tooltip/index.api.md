@@ -103,11 +103,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTooltip, never>;
 }
 
-// @public @deprecated
-export const matTooltipAnimations: {
-    readonly tooltipState: any;
-};
-
 // @public
 export interface MatTooltipDefaultOptions {
     disableTooltipInteractivity?: boolean;

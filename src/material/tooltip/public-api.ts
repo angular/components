@@ -7,5 +7,4 @@
  */
 
 export * from './tooltip';
-export * from './tooltip-animations';
 export * from './tooltip-module';
