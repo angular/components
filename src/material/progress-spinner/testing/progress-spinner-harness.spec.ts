@@ -10,10 +10,6 @@ describe('MatProgressSpinnerHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule, ProgressSpinnerHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ProgressSpinnerHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

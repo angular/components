@@ -25,7 +25,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_DATE_FORMATS, MatNativeDateModule} from '../core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
-import {MatCalendarBody, MatCalendarUserEvent} from './calendar-body';
+import {MatCalendarUserEvent} from './calendar-body';
 import {
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
@@ -41,15 +41,7 @@ describe('MatMonthView', () => {
       dir = signal<Direction>('ltr');
 
       TestBed.configureTestingModule({
-        imports: [
-          MatNativeDateModule,
-          MatCalendarBody,
-          MatMonthView,
-          // Test components.
-          StandardMonthView,
-          MonthViewWithDateFilter,
-          MonthViewWithDateClass,
-        ],
+        imports: [MatNativeDateModule],
         providers: [
           provideFakeDirectionality(dir),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
@@ -806,15 +798,7 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MatNativeDateModule,
-          MatCalendarBody,
-          MatMonthView,
-          // Test components.
-          StandardMonthView,
-          MonthViewWithDateFilter,
-          MonthViewWithDateClass,
-        ],
+        imports: [MatNativeDateModule],
         providers: [
           provideFakeDirectionality('ltr'),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},

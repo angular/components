@@ -10,10 +10,6 @@ describe('MatToolbarHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatToolbarModule, ToolbarHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ToolbarHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

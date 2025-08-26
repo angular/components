@@ -11,12 +11,6 @@ describe('Chip Remove', () => {
   let chipNativeElement: HTMLElement;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule, TestChip],
-    });
-  }));
-
-  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(TestChip);
     testChip = fixture.debugElement.componentInstance;
     fixture.detectChanges();

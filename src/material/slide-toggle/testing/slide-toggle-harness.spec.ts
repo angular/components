@@ -11,10 +11,6 @@ describe('MatSlideToggleHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, ReactiveFormsModule, SlideToggleHarnessTest],
-    });
-
     fixture = TestBed.createComponent(SlideToggleHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

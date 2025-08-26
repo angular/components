@@ -132,8 +132,8 @@ importers:
         specifier: 'catalog:'
         version: 21.0.0-next.0(@angular/compiler-cli@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(typescript@5.9.2))(@angular/compiler@21.0.0-next.0)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#b9bae2cc9b96652721067a69ece7e79dba123787
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b9bae2cc9b96652721067a69ece7e79dba123787(@modelcontextprotocol/sdk@1.17.3)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#e5cf193487333c2dbb5eaaa0941a6b23b34af262
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e5cf193487333c2dbb5eaaa0941a6b23b34af262(@modelcontextprotocol/sdk@1.17.3)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 21.0.0-next.0(ed0fae169bacd5471655279aa6ddcf7a)
@@ -150,8 +150,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       '@bazel/ibazel':
-        specifier: ^0.25.0
-        version: 0.25.0
+        specifier: ^0.26.0
+        version: 0.26.10
       '@bazel/runfiles':
         specifier: 6.3.1
         version: 6.3.1
@@ -493,8 +493,8 @@ importers:
         specifier: ^24.6.1
         version: 24.16.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.90.0
-        version: 1.90.0
+        specifier: 1.91.0
+        version: 1.91.0
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -965,9 +965,9 @@ packages:
       '@angular/compiler': 21.0.0-next.0
       '@angular/compiler-cli': 21.0.0-next.0
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b9bae2cc9b96652721067a69ece7e79dba123787':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b9bae2cc9b96652721067a69ece7e79dba123787}
-    version: 0.0.0-7a11f99c467ca5ae4411c27beeec4300e32b616a
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e5cf193487333c2dbb5eaaa0941a6b23b34af262':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e5cf193487333c2dbb5eaaa0941a6b23b34af262}
+    version: 0.0.0-80db036355181684ed07021a175e9f039190d3d6
     hasBin: true
 
   '@angular/platform-browser-dynamic@21.0.0-next.0':
@@ -1573,8 +1573,8 @@ packages:
     resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
     hasBin: true
 
-  '@bazel/ibazel@0.25.0':
-    resolution: {integrity: sha512-dtosfsuZCSaqlUe5EyxNdaN7Gow0Y+ZJixdlciytcSieUcB/1lXPFTx6OihxhjgtTHkeFovlQ/QbvArRPnk+nQ==}
+  '@bazel/ibazel@0.26.10':
+    resolution: {integrity: sha512-+Is7qK/NKz70t1HlrJqLZmDeys6Tg1KaUPF3JB3Xjlm64xA4rX2FeojcYjvdlaZko717lXY29DGsX/B4HSnaqw==}
     hasBin: true
 
   '@bazel/runfiles@6.3.1':
@@ -7924,6 +7924,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  sass@1.91.0:
+    resolution: {integrity: sha512-aFOZHGf+ur+bp1bCHZ+u8otKGh77ZtmFyXDo4tlYvT7PWql41Kwd8wdkPqhhT+h2879IVblcHFglIMofsFd1EA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   saucelabs@1.5.0:
     resolution: {integrity: sha512-jlX3FGdWvYf4Q3LFfFWS1QvPg3IGCGWxIc8QBFdPTbpTJnt/v17FHXYVAn7C8sHf1yUXo2c7yIM0isDryfYtHQ==}
 
@@ -9687,7 +9692,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b9bae2cc9b96652721067a69ece7e79dba123787(@modelcontextprotocol/sdk@1.17.3)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e5cf193487333c2dbb5eaaa0941a6b23b34af262(@modelcontextprotocol/sdk@1.17.3)':
     dependencies:
       '@actions/core': 1.11.1
       '@google-cloud/spanner': 8.0.0(supports-color@10.1.0)
@@ -10594,7 +10599,7 @@ snapshots:
 
   '@bazel/buildifier@8.2.1': {}
 
-  '@bazel/ibazel@0.25.0': {}
+  '@bazel/ibazel@0.26.10': {}
 
   '@bazel/runfiles@6.3.1': {}
 
@@ -11215,16 +11220,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.17.1
 
-  '@inquirer/checkbox@4.2.0(@types/node@24.2.0)':
-    dependencies:
-      '@inquirer/core': 10.1.15(@types/node@24.2.0)
-      '@inquirer/figures': 1.0.13
-      '@inquirer/type': 3.0.8(@types/node@24.2.0)
-      ansi-escapes: 4.3.2
-      yoctocolors-cjs: 2.1.2
-    optionalDependencies:
-      '@types/node': 24.2.0
-
   '@inquirer/checkbox@4.2.1(@types/node@22.17.1)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@22.17.1)
@@ -11235,6 +11230,16 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.17.1
 
+  '@inquirer/checkbox@4.2.1(@types/node@24.2.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.2.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.2.0)
+      ansi-escapes: 4.3.2
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.2.0
+
   '@inquirer/confirm@5.1.14(@types/node@22.17.1)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@22.17.1)
@@ -11242,19 +11247,19 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.17.1
 
-  '@inquirer/confirm@5.1.14(@types/node@24.2.0)':
-    dependencies:
-      '@inquirer/core': 10.1.15(@types/node@24.2.0)
-      '@inquirer/type': 3.0.8(@types/node@24.2.0)
-    optionalDependencies:
-      '@types/node': 24.2.0
-
   '@inquirer/confirm@5.1.15(@types/node@22.17.1)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@22.17.1)
       '@inquirer/type': 3.0.8(@types/node@22.17.1)
     optionalDependencies:
       '@types/node': 22.17.1
+
+  '@inquirer/confirm@5.1.15(@types/node@24.2.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.2.0)
+      '@inquirer/type': 3.0.8(@types/node@24.2.0)
+    optionalDependencies:
+      '@types/node': 24.2.0
 
   '@inquirer/core@10.1.15(@types/node@22.17.1)':
     dependencies:
@@ -11290,14 +11295,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.17.1
 
-  '@inquirer/editor@4.2.16(@types/node@24.2.0)':
-    dependencies:
-      '@inquirer/core': 10.1.15(@types/node@24.2.0)
-      '@inquirer/external-editor': 1.0.0(@types/node@24.2.0)
-      '@inquirer/type': 3.0.8(@types/node@24.2.0)
-    optionalDependencies:
-      '@types/node': 24.2.0
-
   '@inquirer/editor@4.2.17(@types/node@22.17.1)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@22.17.1)
@@ -11305,6 +11302,14 @@ snapshots:
       '@inquirer/type': 3.0.8(@types/node@22.17.1)
     optionalDependencies:
       '@types/node': 22.17.1
+
+  '@inquirer/editor@4.2.17(@types/node@24.2.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.2.0)
+      '@inquirer/external-editor': 1.0.1(@types/node@24.2.0)
+      '@inquirer/type': 3.0.8(@types/node@24.2.0)
+    optionalDependencies:
+      '@types/node': 24.2.0
 
   '@inquirer/expand@4.0.17(@types/node@22.17.1)':
     dependencies:
@@ -11328,18 +11333,19 @@ snapshots:
       chardet: 2.1.0
       iconv-lite: 0.6.3
 
-  '@inquirer/external-editor@1.0.0(@types/node@24.2.0)':
-    dependencies:
-      '@types/node': 24.2.0
-      chardet: 2.1.0
-      iconv-lite: 0.6.3
-
   '@inquirer/external-editor@1.0.1(@types/node@22.17.1)':
     dependencies:
       chardet: 2.1.0
       iconv-lite: 0.6.3
     optionalDependencies:
       '@types/node': 22.17.1
+
+  '@inquirer/external-editor@1.0.1(@types/node@24.2.0)':
+    dependencies:
+      chardet: 2.1.0
+      iconv-lite: 0.6.3
+    optionalDependencies:
+      '@types/node': 24.2.0
 
   '@inquirer/figures@1.0.13': {}
 
@@ -11389,9 +11395,9 @@ snapshots:
 
   '@inquirer/prompts@7.8.0(@types/node@24.2.0)':
     dependencies:
-      '@inquirer/checkbox': 4.2.0(@types/node@24.2.0)
-      '@inquirer/confirm': 5.1.14(@types/node@24.2.0)
-      '@inquirer/editor': 4.2.16(@types/node@24.2.0)
+      '@inquirer/checkbox': 4.2.1(@types/node@24.2.0)
+      '@inquirer/confirm': 5.1.15(@types/node@24.2.0)
+      '@inquirer/editor': 4.2.17(@types/node@24.2.0)
       '@inquirer/expand': 4.0.17(@types/node@24.2.0)
       '@inquirer/input': 4.2.1(@types/node@24.2.0)
       '@inquirer/number': 3.0.17(@types/node@24.2.0)
@@ -17944,6 +17950,14 @@ snapshots:
       webpack: 5.101.3(esbuild@0.25.9)
 
   sass@1.90.0:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.3
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.1
+
+  sass@1.91.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3

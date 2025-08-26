@@ -12,7 +12,7 @@ import {
   inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
-import {MatDialog, MatDialogModule, MatDialogRef} from '../dialog';
+import {MatDialog, MatDialogRef} from '../dialog';
 import {Subject} from 'rxjs';
 import {MATERIAL_ANIMATIONS} from '../core';
 
@@ -26,12 +26,6 @@ describe('MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        ComponentWithChildViewContainer,
-        PizzaMsg,
-        DirectiveWithViewContainer,
-      ],
       providers: [
         provideZoneChangeDetection(),
         {provide: Location, useClass: SpyLocation},

@@ -10,10 +10,6 @@ describe('MatTableHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTableModule, TableHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TableHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

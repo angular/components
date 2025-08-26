@@ -48,17 +48,6 @@ describe('MatBottomSheet', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatBottomSheetModule,
-        ComponentWithChildViewContainer,
-        ComponentWithTemplateRef,
-        ContentElementDialog,
-        PizzaMsg,
-        TacoMsg,
-        DirectiveWithViewContainer,
-        BottomSheetWithInjectedData,
-        ShadowDomComponent,
-      ],
       providers: [
         {provide: Location, useClass: SpyLocation},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -873,7 +862,6 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, ComponentThatProvidesMatBottomSheet],
       providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
@@ -954,7 +942,6 @@ describe('MatBottomSheet with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
       providers: [
         {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},

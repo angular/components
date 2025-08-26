@@ -32,12 +32,6 @@ describe('CdkVirtualScrollViewport', () => {
     let testComponent: FixedSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, FixedSizeVirtualScroll],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(FixedSizeVirtualScroll);
       testComponent = fixture.componentInstance;
@@ -836,10 +830,6 @@ describe('CdkVirtualScrollViewport', () => {
     let contentWrapperEl: HTMLElement;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, FixedSizeVirtualScrollWithRtlDirection],
-      });
-
       fixture = TestBed.createComponent(FixedSizeVirtualScrollWithRtlDirection);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
@@ -935,12 +925,6 @@ describe('CdkVirtualScrollViewport', () => {
   });
 
   describe('with no VirtualScrollStrategy', () => {
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, VirtualScrollWithNoStrategy],
-      });
-    });
-
     it('should fail on construction', fakeAsync(() => {
       expect(() => TestBed.createComponent(VirtualScrollWithNoStrategy)).toThrowError(
         'Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.',
@@ -952,16 +936,6 @@ describe('CdkVirtualScrollViewport', () => {
     let fixture: ComponentFixture<VirtualScrollWithItemInjectingViewContainer>;
     let testComponent: VirtualScrollWithItemInjectingViewContainer;
     let viewport: CdkVirtualScrollViewport;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ScrollingModule,
-          VirtualScrollWithItemInjectingViewContainer,
-          InjectsViewContainer,
-        ],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(VirtualScrollWithItemInjectingViewContainer);
@@ -992,9 +966,6 @@ describe('CdkVirtualScrollViewport', () => {
     let viewport: CdkVirtualScrollViewport;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, DelayedInitializationVirtualScroll],
-      });
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
@@ -1022,9 +993,6 @@ describe('CdkVirtualScrollViewport', () => {
     let contentWrapperEl: HTMLElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, VirtualScrollWithAppendOnly],
-      });
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
@@ -1098,12 +1066,6 @@ describe('CdkVirtualScrollViewport', () => {
     let testComponent: VirtualScrollWithCustomScrollingElement;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, VirtualScrollWithCustomScrollingElement],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(VirtualScrollWithCustomScrollingElement);
       testComponent = fixture.componentInstance;
@@ -1135,12 +1097,6 @@ describe('CdkVirtualScrollViewport', () => {
     let testComponent: VirtualScrollWithScrollableWindow;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule, VirtualScrollWithScrollableWindow],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(VirtualScrollWithScrollableWindow);
       testComponent = fixture.componentInstance;
@@ -1162,10 +1118,6 @@ describe('CdkVirtualScrollViewport', () => {
   });
 
   it('should be able to query for a virtual scroll viewport as a CdkScrollable', () => {
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule, VirtualScrollableQuery],
-    });
-
     const fixture = TestBed.createComponent(VirtualScrollableQuery);
     fixture.detectChanges();
 
@@ -1385,7 +1337,7 @@ class InjectsViewContainer {
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [ScrollingModule],
+  imports: [InjectsViewContainer, ScrollingModule],
 })
 class VirtualScrollWithItemInjectingViewContainer {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
