@@ -144,11 +144,6 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
 }
 
-// @public @deprecated
-export const matFormFieldAnimations: {
-    readonly transitionMessages: any;
-};
-
 // @public
 export type MatFormFieldAppearance = 'fill' | 'outline';
 
