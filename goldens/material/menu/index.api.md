@@ -27,9 +27,6 @@ import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
-// @public @deprecated (undocumented)
-export const fadeInItems: any;
-
 // @public
 export const MAT_MENU_CONTENT: InjectionToken<MatMenuContent>;
 
@@ -152,12 +149,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenu, never>;
 }
-
-// @public @deprecated
-export const matMenuAnimations: {
-    readonly transformMenu: any;
-    readonly fadeInItems: any;
-};
 
 // @public
 export class MatMenuContent implements OnDestroy {
@@ -320,9 +311,6 @@ export type MenuPositionX = 'before' | 'after';
 
 // @public (undocumented)
 export type MenuPositionY = 'above' | 'below';
-
-// @public @deprecated (undocumented)
-export const transformMenu: any;
 
 // (No @packageDocumentation comment for this package)
 
