@@ -16,7 +16,6 @@ export {
   MENU_PANEL_TOP_PADDING,
 } from './menu-trigger-base';
 export * from './menu-module';
-export * from './menu-animations';
 export * from './menu-positions';
 export * from './menu-panel';
 export {MatContextMenuTrigger} from './context-menu-trigger';
