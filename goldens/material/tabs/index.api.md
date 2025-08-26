@@ -509,11 +509,6 @@ export class MatTabNavPanel {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNavPanel, never>;
 }
 
-// @public @deprecated
-export const matTabsAnimations: {
-    readonly translateTab: any;
-};
-
 // @public
 export interface MatTabsConfig {
     alignTabs?: 'start' | 'center' | 'end';
