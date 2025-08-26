@@ -330,12 +330,6 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerActions, never>;
 }
 
-// @public @deprecated
-export const matDatepickerAnimations: {
-    readonly transformPanel: any;
-    readonly fadeInCalendar: any;
-};
-
 // @public
 export class MatDatepickerApply {
     constructor(...args: unknown[]);

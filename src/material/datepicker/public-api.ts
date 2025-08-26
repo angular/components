@@ -15,7 +15,6 @@ export {
   MatDateRangeSelectionStrategy,
   DefaultMatCalendarRangeStrategy,
 } from './date-range-selection-strategy';
-export * from './datepicker-animations';
 export {
   MAT_DATEPICKER_SCROLL_STRATEGY,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
