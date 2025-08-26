@@ -80,16 +80,6 @@ export interface MatSortable {
     start: SortDirection;
 }
 
-// @public @deprecated
-export const matSortAnimations: {
-    readonly indicator: any;
-    readonly leftPointer: any;
-    readonly rightPointer: any;
-    readonly arrowOpacity: any;
-    readonly arrowPosition: any;
-    readonly allowChildren: any;
-};
-
 // @public
 export interface MatSortDefaultOptions {
     arrowPosition?: SortHeaderArrowPosition;
