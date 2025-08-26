@@ -32,5 +32,4 @@ export {
   MatTabHeaderPosition,
 } from './tab-group';
 export {MatTabNav, MatTabNavPanel, MatTabLink} from './tab-nav-bar/tab-nav-bar';
-export {matTabsAnimations} from './tabs-animations';
 export {MatTabLabelWrapper} from './tab-label-wrapper';
