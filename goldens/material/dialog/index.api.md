@@ -38,14 +38,6 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 // @public
 export function _closeDialogVia<R>(ref: MatDialogRef<R>, interactionType: FocusOrigin, result?: R): void;
 
-// @public @deprecated
-export const _defaultParams: {
-    params: {
-        enterAnimationDuration: string;
-        exitAnimationDuration: string;
-    };
-};
-
 // @public
 export interface DialogPosition {
     bottom?: string;
@@ -102,11 +94,6 @@ export class MatDialogActions extends MatDialogLayoutSection {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogActions, never>;
 }
-
-// @public @deprecated
-export const matDialogAnimations: {
-    readonly dialogContainer: any;
-};
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
