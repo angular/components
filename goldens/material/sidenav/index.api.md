@@ -69,11 +69,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawer, never>;
 }
 
-// @public @deprecated
-export const matDrawerAnimations: {
-    readonly transformDrawer: any;
-};
-
 // @public
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
     constructor(...args: unknown[]);
