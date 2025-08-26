@@ -151,12 +151,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
 
-// @public @deprecated
-export const matStepperAnimations: {
-    readonly horizontalStepTransition: any;
-    readonly verticalStepTransition: any;
-};
-
 // @public
 export class MatStepperIcon {
     constructor(...args: unknown[]);
