@@ -27,7 +27,6 @@ describe('Row Chips', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule, SingleChip],
       providers: [provideFakeDirectionality('ltr')],
     });
   }));

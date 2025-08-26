@@ -11,10 +11,6 @@ describe('MatChipGridHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatChipsModule, ReactiveFormsModule, ChipGridHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ChipGridHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

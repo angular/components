@@ -1,16 +1,9 @@
 import {MatTableDataSource} from './table-data-source';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Component, ViewChild} from '@angular/core';
 
 describe('MatTableDataSource', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule, MatSortApp],
-    });
-  }));
-
   describe('sort', () => {
     let dataSource: MatTableDataSource<any>;
     let fixture: ComponentFixture<MatSortApp>;

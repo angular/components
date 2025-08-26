@@ -20,10 +20,6 @@ describe('MatSliderHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSliderModule, SliderHarnessTest],
-    });
-
     fixture = TestBed.createComponent(SliderHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

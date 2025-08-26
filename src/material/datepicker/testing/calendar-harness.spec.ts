@@ -20,7 +20,7 @@ describe('MatCalendarHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule, CalendarHarnessTest],
+      imports: [MatNativeDateModule],
       providers: [
         {
           // Usually it's the date range picker that provides the default range selection strategy,

@@ -4,17 +4,11 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 
 describe('MatCalendarBody', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
-    });
-  }));
-
   describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
     let testComponent: StandardCalendarBody;

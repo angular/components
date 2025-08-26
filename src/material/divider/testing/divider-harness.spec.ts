@@ -10,10 +10,6 @@ describe('MatLegacyButtonHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatDividerModule, DividerHarnessTest],
-    });
-
     fixture = TestBed.createComponent(DividerHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

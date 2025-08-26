@@ -10,10 +10,6 @@ describe('MatProgressBarHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatProgressBarModule, ProgressBarHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ProgressBarHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
