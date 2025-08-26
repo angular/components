@@ -84,7 +84,6 @@ ng_project(
     srcs = [
         "accordion.ts",
         "accordion-base.ts",
-        "expansion-animations.ts",
         "expansion-module.ts",
         "expansion-panel.ts",
         "expansion-panel-base.ts",

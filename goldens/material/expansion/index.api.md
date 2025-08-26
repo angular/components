@@ -25,9 +25,6 @@ import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 
-// @public @deprecated
-export const EXPANSION_PANEL_ANIMATION_TIMING = "225ms cubic-bezier(0.4,0.0,0.2,1)";
-
 // @public
 export const MAT_ACCORDION: InjectionToken<MatAccordionBase>;
 
@@ -72,12 +69,6 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
 
 // @public
 export type MatAccordionTogglePosition = 'before' | 'after';
-
-// @public @deprecated
-export const matExpansionAnimations: {
-    readonly indicatorRotate: any;
-    readonly bodyExpansion: any;
-};
 
 // @public (undocumented)
 export class MatExpansionModule {
