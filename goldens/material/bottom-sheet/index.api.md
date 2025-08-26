@@ -46,11 +46,6 @@ export class MatBottomSheet implements OnDestroy {
     static ɵprov: i0.ɵɵInjectableDeclaration<MatBottomSheet>;
 }
 
-// @public @deprecated
-export const matBottomSheetAnimations: {
-    readonly bottomSheetState: any;
-};
-
 // @public
 export class MatBottomSheetConfig<D = any> {
     ariaLabel?: string | null;
