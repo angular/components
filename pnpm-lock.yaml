@@ -150,8 +150,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       '@bazel/ibazel':
-        specifier: ^0.25.0
-        version: 0.25.0
+        specifier: ^0.26.0
+        version: 0.26.10
       '@bazel/runfiles':
         specifier: 6.3.1
         version: 6.3.1
@@ -493,8 +493,8 @@ importers:
         specifier: ^24.6.1
         version: 24.16.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.90.0
-        version: 1.90.0
+        specifier: 1.91.0
+        version: 1.91.0
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -1573,8 +1573,8 @@ packages:
     resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
     hasBin: true
 
-  '@bazel/ibazel@0.25.0':
-    resolution: {integrity: sha512-dtosfsuZCSaqlUe5EyxNdaN7Gow0Y+ZJixdlciytcSieUcB/1lXPFTx6OihxhjgtTHkeFovlQ/QbvArRPnk+nQ==}
+  '@bazel/ibazel@0.26.10':
+    resolution: {integrity: sha512-+Is7qK/NKz70t1HlrJqLZmDeys6Tg1KaUPF3JB3Xjlm64xA4rX2FeojcYjvdlaZko717lXY29DGsX/B4HSnaqw==}
     hasBin: true
 
   '@bazel/runfiles@6.3.1':
@@ -7924,6 +7924,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  sass@1.91.0:
+    resolution: {integrity: sha512-aFOZHGf+ur+bp1bCHZ+u8otKGh77ZtmFyXDo4tlYvT7PWql41Kwd8wdkPqhhT+h2879IVblcHFglIMofsFd1EA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   saucelabs@1.5.0:
     resolution: {integrity: sha512-jlX3FGdWvYf4Q3LFfFWS1QvPg3IGCGWxIc8QBFdPTbpTJnt/v17FHXYVAn7C8sHf1yUXo2c7yIM0isDryfYtHQ==}
 
@@ -10594,7 +10599,7 @@ snapshots:
 
   '@bazel/buildifier@8.2.1': {}
 
-  '@bazel/ibazel@0.25.0': {}
+  '@bazel/ibazel@0.26.10': {}
 
   '@bazel/runfiles@6.3.1': {}
 
@@ -17945,6 +17950,14 @@ snapshots:
       webpack: 5.101.3(esbuild@0.25.9)
 
   sass@1.90.0:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.3
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.1
+
+  sass@1.91.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3
