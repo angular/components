@@ -76,11 +76,6 @@ export class MatSnackBarActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarActions, never>;
 }
 
-// @public @deprecated
-export const matSnackBarAnimations: {
-    readonly snackBarState: any;
-};
-
 // @public
 export class MatSnackBarConfig<D = any> {
     announcementMessage?: string;
