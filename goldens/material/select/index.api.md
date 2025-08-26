@@ -81,8 +81,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     get appearance(): MatFormFieldAppearance;
     set appearance(value: MatFormFieldAppearance);
     color: ThemePalette;
-    get _control(): MatFormFieldControl_2<any>;
-    set _control(value: MatFormFieldControl_2<any>);
+    get _control(): MatFormFieldControl<any>;
+    set _control(value: MatFormFieldControl<any>);
     // (undocumented)
     _elementRef: ElementRef<any>;
     // (undocumented)
@@ -93,7 +93,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     set floatLabel(value: FloatLabelType);
     _forceDisplayInfixLabel(): boolean | 0;
     // (undocumented)
-    _formFieldControl: MatFormFieldControl_2<any>;
+    _formFieldControl: MatFormFieldControl<any>;
     getConnectedOverlayOrigin(): ElementRef;
     getLabelId: i0.Signal<string | null>;
     _getSubscriptMessageType(): 'error' | 'hint';
@@ -247,7 +247,7 @@ export class MatPrefix {
 }
 
 // @public (undocumented)
-export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any> {
+export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl_2<any> {
     constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
@@ -386,11 +386,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, never>;
 }
-
-// @public @deprecated
-export const matSelectAnimations: {
-    readonly transformPanel: any;
-};
 
 // @public
 export class MatSelectChange<T = any> {
