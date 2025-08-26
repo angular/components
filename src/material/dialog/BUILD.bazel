@@ -73,7 +73,6 @@ ng_project(
     name = "dialog",
     srcs = [
         "dialog.ts",
-        "dialog-animations.ts",
         "dialog-config.ts",
         "dialog-container.ts",
         "dialog-content-directives.ts",

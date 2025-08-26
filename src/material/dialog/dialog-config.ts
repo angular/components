@@ -10,7 +10,6 @@ import {ViewContainerRef, Injector} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {DialogConfig} from '@angular/cdk/dialog';
-import {_defaultParams} from './dialog-animations';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
