@@ -1,3 +1,17 @@
+<a name="20.2.1"></a>
+# 20.2.1 "armalcolite-alligator" (2025-08-27)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ee808f8f3](https://github.com/angular/components/commit/ee808f8f32fc27d59c56b63044355e4c7e0e416c) | fix | **tree:** resolve memory leak ([#31754](https://github.com/angular/components/pull/31754)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [04c598ad0](https://github.com/angular/components/commit/04c598ad0a1a16a0149b324dc442255c2fdc0c17) | fix | **datepicker:** add visible labels to calendar buttons ([#31777](https://github.com/angular/components/pull/31777)) |
+| [839f3c1c1](https://github.com/angular/components/commit/839f3c1c1354438fdfa554662f5278703937678f) | fix | **sort:** error if signal is bound to disabled input ([#31776](https://github.com/angular/components/pull/31776)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0"></a>
 # 20.2.0 "neodymium-statue" (2025-08-20)
 ### material
