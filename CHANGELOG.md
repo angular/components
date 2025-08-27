@@ -1,3 +1,27 @@
+<a name="21.0.0-next.1"></a>
+# 21.0.0-next.1 "althupite-avocado" (2025-08-27)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [540637270](https://github.com/angular/components/commit/540637270a5b72173f299e2ef1731499f43f19d3) | fix | **tree:** resolve memory leak ([#31754](https://github.com/angular/components/pull/31754)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [29f0bb238](https://github.com/angular/components/commit/29f0bb238a2a327ac6ed69071f6aa555693ab2d4) | feat | **chips:** make ChipInput optional for MatChipGrid ([#31693](https://github.com/angular/components/pull/31693)) |
+| [13a9c48a0](https://github.com/angular/components/commit/13a9c48a093b1bfeab8f0328030dae60aca7519f) | fix | **chips:** refactor non-interactive actions to prevent adding click handlers ([#31664](https://github.com/angular/components/pull/31664)) |
+| [347963303](https://github.com/angular/components/commit/3479633036abf467354e936c1ddb4fd2cefcd6ea) | fix | **chips:** strengthen edit/remove icons focus/hover styling ([#31759](https://github.com/angular/components/pull/31759)) |
+| [605e2c9f6](https://github.com/angular/components/commit/605e2c9f6557b41f03ad3f9268d6c536433e1555) | fix | **core:** rename utility-classes to system-classes ([#31745](https://github.com/angular/components/pull/31745)) |
+| [8010c7cde](https://github.com/angular/components/commit/8010c7cde8e05661a978023dfd3c8c01a2861f97) | fix | **datepicker:** add visible labels to calendar buttons ([#31777](https://github.com/angular/components/pull/31777)) |
+| [46e189569](https://github.com/angular/components/commit/46e189569ed30b63ae8817ff4390bb1274a5a8b9) | fix | **sort:** error if signal is bound to disabled input ([#31776](https://github.com/angular/components/pull/31776)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [668a2b4d5](https://github.com/angular/components/commit/668a2b4d5aa89750c4c4cb65d2659d9a41042ba5) | fix | **ui-patterns:** deselectAll unavailable items ([#31734](https://github.com/angular/components/pull/31734)) |
+| [d2c3bb971](https://github.com/angular/components/commit/d2c3bb971db4515d04b8842bcf96d4a8f8a65dac) | fix | **ui-patterns:** focus list when using active desce… ([#31756](https://github.com/angular/components/pull/31756)) |
+| [df0d753f1](https://github.com/angular/components/commit/df0d753f166562ef15252b0923a583a93b76a4b2) | fix | **ui-patterns:** Tree expand/collapse key should work in follow focus mode ([#31747](https://github.com/angular/components/pull/31747)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.1"></a>
 # 20.2.1 "armalcolite-alligator" (2025-08-27)
 ### cdk
