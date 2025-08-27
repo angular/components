@@ -1,9 +1,10 @@
 // Utility classes that can be used to style elements with the most commonly used system tokens in
-// Material Design. Includes color, typography, elevation, and shape.
+// Material Design. Includes color, typography, elevation, state, and shape.
 @mixin system-classes() {
 
   // ***********************************************************************************************
-  // Background
+  // Background - Apply background color and a contrastful corresponding text color
+  // See https://m3.material.io/styles/color/roles for guidance.
   // ***********************************************************************************************
 
   // Styles an element with a primary color background and applies an accessible contrasting
@@ -135,7 +136,7 @@
 
 
   // ***********************************************************************************************
-  // Text
+  // Text - Apply colors to text
   // ***********************************************************************************************
 
   // Styles the text of an element with the primary color. Use for text that needs to stand out.
@@ -164,7 +165,8 @@
 
 
   // ***********************************************************************************************
-  // Font
+  // Font - Apply typography styles
+  // See https://m3.material.io/styles/typography/applying-type for guidance.
   // ***********************************************************************************************
 
   // Sets the font to the body small typeface. Use for small body text, such as captions. In Angular
@@ -255,50 +257,51 @@
 
 
   // ***********************************************************************************************
-  // Corner
+  // Corner - Apply varying amounts of a border radius
+  // See https://m3.material.io/styles/shape/corner-radius-scale for guidance.
   // ***********************************************************************************************
 
   // Sets the border radius to extra small. Use for components that need a small amount of rounding,
   // such as a chip. In Angular Material, this is used for the shape of a snackbar and a tooltip.
-  .mat-rounded-extra-sm {
+  .mat-corner-extra-sm {
     border-radius: var(--mat-sys-corner-extra-small);
   }
 
   // Sets the border radius to small. Use for components that need a small amount of rounding, such
   // as a text field.
-  .mat-rounded-sm {
+  .mat-corner-sm {
     border-radius: var(--mat-sys-corner-small);
   }
 
   // Sets the border radius to medium. Use for components that need a medium amount of rounding,
   // such as a button. In Angular Material, this is used for the shape of a card.
-  .mat-rounded-md {
+  .mat-corner-md {
     border-radius: var(--mat-sys-corner-medium);
   }
 
   // Sets the border radius to large. Use for components that need a large amount of rounding, such
   // as a card. In Angular Material, this is used for the shape of a floating action button and a
   // datepicker.
-  .mat-rounded-lg {
+  .mat-corner-lg {
     border-radius: var(--mat-sys-corner-large);
   }
 
   // Sets the border radius to extra large. Use for components that need a large amount of
   // rounding. In Angular Material, this is used for the shape of a button toggle and the shape of
   // a dialog.
-  .mat-rounded-xl {
+  .mat-corner-xl {
     border-radius: var(--mat-sys-corner-extra-large);
   }
 
   // Sets the border radius to full. Use for components that are circular, such as a user avatar.
   // In Angular Material, this is used for the shape of a badge and the shape of a button.
-  .mat-rounded-full {
+  .mat-corner-full {
     border-radius: var(--mat-sys-corner-full);
   }
 
 
   // ***********************************************************************************************
-  // Border
+  // Border - Applies a 1px solid border
   // ***********************************************************************************************
 
   // Adds an outline to an element. Use for components that need a visible boundary. In Angular
@@ -316,12 +319,12 @@
 
 
   // ***********************************************************************************************
-  // State
+  // Interactive - Adds interaction colors for hover, active, and focus
   // ***********************************************************************************************
 
   // Adds hover, focus, and active states to an element by applying varying shades of the surface
   // color. Use for interactive components that are not based on a primary color.
-  .mat-stateful {
+  .mat-interactive {
     &:hover {
       background: color-mix(
         in srgb,
@@ -349,7 +352,7 @@
 
   // Adds hover, focus, and active states to an element by applying varying shades of the primary
   // color. Use for interactive components that are not based on a primary color.
-  .mat-stateful-primary {
+  .mat-interactive-primary {
     &:hover {
       background: color-mix(
         in srgb,
@@ -377,7 +380,8 @@
 
 
   // ***********************************************************************************************
-  // Elevation
+  // Shadow - Applies elevation levels through box-shadow
+  // See https://m3.material.io/styles/elevation/applying-elevation for guidance.
   // ***********************************************************************************************
 
   // Use to slightly raise the appearance of a surface. In Angular Material, this is used for the
