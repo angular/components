@@ -85,6 +85,9 @@ export type AccordionTriggerInputs = Omit<ListNavigationItem & ListFocusItem, 'i
 export interface AccordionTriggerPattern extends AccordionTriggerInputs {}
 /** A pattern controls the expansion state of an accordion. */
 export class AccordionTriggerPattern {
+  /** A unique ID for the visually hidden label. */
+  readonly visuallyHiddenId: SignalLike<string>;
+
   /** Whether this tab has expandable content. */
   expandable: SignalLike<boolean>;
 
@@ -118,6 +121,7 @@ export class AccordionTriggerPattern {
     this.value = inputs.value;
     this.accordionGroup = inputs.accordionGroup;
     this.accordionPanel = inputs.accordionPanel;
+    this.visuallyHiddenId = computed(() => this.id() + '-label');
     this.expansionControl = new ExpansionControl({
       ...inputs,
       expansionId: inputs.value,
