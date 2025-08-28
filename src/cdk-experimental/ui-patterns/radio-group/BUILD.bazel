@@ -7,12 +7,14 @@ ts_project(
     srcs = [
         "radio-button.ts",
         "radio-group.ts",
+        "radio-group-interaction.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
         "//src/cdk-experimental/ui-patterns/behaviors/list",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+        "//src/cdk-experimental/ui-patterns/toolbar",
     ],
 )
 
