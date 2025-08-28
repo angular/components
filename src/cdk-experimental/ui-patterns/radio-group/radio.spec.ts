@@ -7,8 +7,9 @@
  */
 
 import {signal, WritableSignal} from '@angular/core';
-import {RadioGroupInputs, RadioGroupPattern, ToolbarLike} from './radio-group';
+import {RadioGroupInputs, RadioGroupPattern} from './radio-group';
 import {RadioButtonPattern} from './radio-button';
+import {ToolbarPattern} from './../toolbar/toolbar';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
 
@@ -306,24 +307,30 @@ describe('RadioGroup Pattern', () => {
     });
   });
 
-  describe('toolbar', () => {
+  describe('Toolbar', () => {
     let radioGroup: TestRadioGroup;
     let radioButtons: TestRadio[];
-    let toolbar: ToolbarLike<string>;
+    let toolbar: ToolbarPattern<string>;
 
     beforeEach(() => {
       const patterns = getDefaultPatterns();
-      radioGroup = patterns.radioGroup;
       radioButtons = patterns.radioButtons;
-      toolbar = {
-        listBehavior: radioGroup.listBehavior,
-        orientation: radioGroup.orientation,
-        disabled: radioGroup.disabled,
-      };
-      radioGroup.inputs.toolbar = signal(toolbar);
+      toolbar = new ToolbarPattern<string>({
+        items: signal([]),
+        activeItem: signal(undefined),
+        element: signal(document.createElement('div')),
+        orientation: signal('horizontal'),
+        textDirection: signal('ltr'),
+        disabled: signal(false),
+        skipDisabled: signal(true),
+        wrap: signal(false),
+        getItem: (e: Element) => undefined,
+      });
+      radioGroup = getRadioGroup({items: signal(radioButtons), toolbar: signal(toolbar)});
     });
 
     it('should ignore keyboard navigation when within a toolbar', () => {
+      radioGroup.inputs.activeItem.set(radioButtons[0]);
       const initialActive = radioGroup.inputs.activeItem();
       radioGroup.onKeydown(down());
       expect(radioGroup.inputs.activeItem()).toBe(initialActive);
@@ -338,6 +345,7 @@ describe('RadioGroup Pattern', () => {
     });
 
     it('should ignore pointer events when within a toolbar', () => {
+      radioGroup.inputs.activeItem.set(radioButtons[0]);
       const initialActive = radioGroup.inputs.activeItem();
       expect(radioGroup.inputs.value()).toEqual([]);
 
@@ -348,6 +356,96 @@ describe('RadioGroup Pattern', () => {
 
       expect(radioGroup.inputs.activeItem()).toBe(initialActive);
       expect(radioGroup.inputs.value()).toEqual([]);
+    });
+
+    describe('Toolbar Widget Group actions', () => {
+      beforeEach(() => {
+        radioGroup.inputs.activeItem.set(radioButtons[0]);
+      });
+
+      it('should handle "next" action', () => {
+        radioGroup.toolbarWidgetGroupActions.next(false);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
+      });
+
+      it('should handle "prev" action', () => {
+        radioGroup.inputs.activeItem.set(radioButtons[1]);
+        radioGroup.toolbarWidgetGroupActions.prev(false);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
+      });
+
+      it('should handle "first" action', () => {
+        radioGroup.toolbarWidgetGroupActions.first();
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
+      });
+
+      it('should handle "last" action', () => {
+        radioGroup.toolbarWidgetGroupActions.last();
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
+      });
+
+      it('should handle "unfocus" action by clearing active item', () => {
+        radioGroup.toolbarWidgetGroupActions.unfocus();
+        expect(radioGroup.inputs.activeItem()).toBe(undefined);
+      });
+
+      it('should handle "trigger" action to select an item', () => {
+        expect(radioGroup.inputs.value()).toEqual([]);
+        radioGroup.toolbarWidgetGroupActions.trigger();
+        expect(radioGroup.inputs.value()).toEqual(['Apple']);
+      });
+
+      it('should not "trigger" selection when readonly', () => {
+        (radioGroup.inputs.readonly as WritableSignal<boolean>).set(true);
+        expect(radioGroup.inputs.value()).toEqual([]);
+        radioGroup.toolbarWidgetGroupActions.trigger();
+        expect(radioGroup.inputs.value()).toEqual([]);
+      });
+
+      it('should handle "goto" action', () => {
+        const event = {target: radioButtons[2].element()} as unknown as PointerEvent;
+        radioGroup.toolbarWidgetGroupActions.goto(event);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
+        expect(radioGroup.inputs.value()).toEqual(['Cherry']);
+      });
+
+      it('should handle "goto" action in readonly mode (no selection)', () => {
+        (radioGroup.inputs.readonly as WritableSignal<boolean>).set(true);
+        const event = {target: radioButtons[2].element()} as unknown as PointerEvent;
+        radioGroup.toolbarWidgetGroupActions.goto(event);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
+        expect(radioGroup.inputs.value()).toEqual([]);
+      });
+
+      it('should handle "asEntryPoint" action', () => {
+        radioGroup.inputs.activeItem.set(undefined);
+        radioGroup.toolbarWidgetGroupActions.asEntryPoint();
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
+      });
+
+      it('should leave group on "next" at last item', () => {
+        radioGroup.inputs.activeItem.set(radioButtons[4]);
+        const result = radioGroup.toolbarWidgetGroupActions.next(false);
+        expect(result?.leaveGroup).toBe(true);
+        expect(radioGroup.inputs.activeItem()).toBe(undefined);
+      });
+
+      it('should leave group on "prev" at first item', () => {
+        const result = radioGroup.toolbarWidgetGroupActions.prev(false);
+        expect(result?.leaveGroup).toBe(true);
+        expect(radioGroup.inputs.activeItem()).toBe(undefined);
+      });
+
+      it('should wrap on "next" with wrap', () => {
+        radioGroup.inputs.activeItem.set(radioButtons[4]);
+        radioGroup.toolbarWidgetGroupActions.next(true);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
+      });
+
+      it('should wrap on "prev" with wrap', () => {
+        radioGroup.toolbarWidgetGroupActions.prev(true);
+        expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
+      });
     });
   });
 });

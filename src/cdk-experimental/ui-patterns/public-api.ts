@@ -12,5 +12,8 @@ export * from './radio-group/radio-group';
 export * from './radio-group/radio-button';
 export * from './behaviors/signal-like/signal-like';
 export * from './tabs/tabs';
+export * from './toolbar/toolbar';
+export * from './toolbar/toolbar-widget';
+export * from './toolbar/toolbar-widget-group';
 export * from './accordion/accordion';
 export * from './toolbar/toolbar';
