@@ -18,6 +18,7 @@ import {
   booleanAttribute,
   computed,
   WritableSignal,
+  Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -45,7 +46,7 @@ import {
     'class': 'cdk-accordion-panel',
     'role': 'region',
     '[attr.id]': 'pattern.id()',
-    '[attr.aria-labelledby]': 'pattern.accordionTrigger()?.id()',
+    '[attr.aria-labelledby]': 'pattern.accordionTrigger()?.visuallyHiddenId()',
     '[attr.inert]': 'pattern.hidden() ? true : null',
   },
 })
@@ -108,6 +109,11 @@ export class CdkAccordionTrigger {
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
+  private readonly _renderer = inject(Renderer2);
+
+  /** A computed signal to generate a consistent ID for the visually hidden label. */
+  readonly visuallyHiddenId = computed(() => this.pattern.id() + '-label');
+
   /** The parent CdkAccordionGroup. */
   private readonly _accordionGroup = inject(CdkAccordionGroup);
 
@@ -136,6 +142,32 @@ export class CdkAccordionTrigger {
     accordionGroup: computed(() => this._accordionGroup.pattern),
     accordionPanel: this.accordionPanel,
   });
+
+  // Creating the visuallyHiddenSpan as an accessible reference for the accordion content
+  constructor() {
+    // We'll use afterRenderEffect to ensure the element is created after the host element.
+    afterRenderEffect(() => {
+      // Find the element that holds the label text, or the button itself.
+      const buttonElement = this._elementRef.nativeElement;
+
+      // Create a new span element
+      const visuallyHiddenSpan = this._renderer.createElement('span');
+
+      // Add the cdk-visually-hidden class
+      this._renderer.addClass(visuallyHiddenSpan, 'cdk-visually-hidden');
+
+      // Set the ID for aria-labelledby
+      this._renderer.setAttribute(visuallyHiddenSpan, 'id', this.visuallyHiddenId());
+
+      // Get the button's text content and set it on the span
+      const buttonText = buttonElement.textContent?.trim() || '';
+      const textNode = this._renderer.createText(buttonText);
+      this._renderer.appendChild(visuallyHiddenSpan, textNode);
+
+      // Prepend the visually hidden span to the button element
+      this._renderer.insertBefore(buttonElement, visuallyHiddenSpan, buttonElement.firstChild);
+    });
+  }
 }
 
 /**
