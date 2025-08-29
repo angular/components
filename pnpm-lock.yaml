@@ -219,8 +219,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.9
       firebase-tools:
-        specifier: 14.14.0
-        version: 14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.1
+        version: 14.15.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.1
@@ -5065,8 +5065,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.14.0:
-    resolution: {integrity: sha512-QDc/PL8wMGm6ZD9DDHIcQpK/8SmoVL6Hec3GohJjCumYpHCQsQK/8ncZmY21lW//rN29Q/CLYhhU9SN9u3xoEg==}
+  firebase-tools@14.15.1:
+    resolution: {integrity: sha512-GoBOnmo3+lXvIob4XuezFVCn6sKT3ZDvlYnmfSPFax4VuqrK6CXzbIjFdpjM4D1MD4rqpYm/VlcvlBtEiP0Z1w==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -14619,14 +14619,14 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.15.1(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
       '@inquirer/prompts': 7.8.3(@types/node@22.17.1)
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/sdk': 1.17.3
       abort-controller: 3.0.0
       ajv: 8.17.1
       ajv-formats: 3.0.1
