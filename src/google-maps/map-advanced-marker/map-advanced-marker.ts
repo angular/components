@@ -135,32 +135,32 @@ export class MapAdvancedMarker
   /**
    * This event is fired when the AdvancedMarkerElement is double-clicked.
    */
-  @Output() readonly mapDblclick: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dblclick');
+  @Output() readonly mapDblclick: Observable<MouseEvent> =
+    this._eventManager.getLazyEmitter<MouseEvent>('dblclick', 'native');
 
   /**
    * This event is fired when the mouse moves out of the AdvancedMarkerElement.
    */
-  @Output() readonly mapMouseout: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseout');
+  @Output() readonly mapMouseout: Observable<MouseEvent> =
+    this._eventManager.getLazyEmitter<MouseEvent>('mouseout', 'native');
 
   /**
    * This event is fired when the mouse moves over the AdvancedMarkerElement.
    */
   @Output() readonly mapMouseover: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseover');
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseover', 'native');
 
   /**
    * This event is fired when the mouse button is released over the AdvancedMarkerElement.
    */
-  @Output() readonly mapMouseup: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('mouseup');
+  @Output() readonly mapMouseup: Observable<MouseEvent> =
+    this._eventManager.getLazyEmitter<MouseEvent>('mouseup', 'native');
 
   /**
    * This event is fired when the AdvancedMarkerElement is right-clicked.
    */
-  @Output() readonly mapRightclick: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
+  @Output() readonly mapRightclick: Observable<MouseEvent> =
+    this._eventManager.getLazyEmitter<MouseEvent>('auxclick', 'native');
 
   /**
    * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
