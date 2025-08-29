@@ -147,25 +147,29 @@ export class CdkAccordionTrigger {
   constructor() {
     // We'll use afterRenderEffect to ensure the element is created after the host element.
     afterRenderEffect(() => {
-      // Find the element that holds the label text, or the button itself.
+      // Find the button element and its parent
       const buttonElement = this._elementRef.nativeElement;
+      const parentElement = this._renderer.parentNode(buttonElement);
 
-      // Create a new span element
-      const visuallyHiddenSpan = this._renderer.createElement('span');
+      if (parentElement) {
+        // Create a new visually hidden span element to be referenced by accordionPanel
+        const visuallyHiddenSpan = this._renderer.createElement('span');
+        this._renderer.addClass(visuallyHiddenSpan, 'cdk-visually-hidden');
+        this._renderer.setAttribute(visuallyHiddenSpan, 'id', this.pattern.visuallyHiddenId());
 
-      // Add the cdk-visually-hidden class
-      this._renderer.addClass(visuallyHiddenSpan, 'cdk-visually-hidden');
+        // Get the button's text content and set it on the span
+        let buttonText = '';
+        for (const node of Array.from(buttonElement.childNodes)) {
+          if (node instanceof Node && node.nodeType === Node.TEXT_NODE) {
+            buttonText += node.textContent?.trim() + ' ';
+          }
+        }
+        const textNode = this._renderer.createText(buttonText);
+        this._renderer.appendChild(visuallyHiddenSpan, textNode);
 
-      // Set the ID for aria-labelledby
-      this._renderer.setAttribute(visuallyHiddenSpan, 'id', this.visuallyHiddenId());
-
-      // Get the button's text content and set it on the span
-      const buttonText = buttonElement.textContent?.trim() || '';
-      const textNode = this._renderer.createText(buttonText);
-      this._renderer.appendChild(visuallyHiddenSpan, textNode);
-
-      // Prepend the visually hidden span to the button element
-      this._renderer.insertBefore(buttonElement, visuallyHiddenSpan, buttonElement.firstChild);
+        // Insert the visually hidden span before the button, as its sibling
+        this._renderer.insertBefore(parentElement, visuallyHiddenSpan, buttonElement);
+      }
     });
   }
 }
