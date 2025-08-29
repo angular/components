@@ -156,6 +156,7 @@ export class CdkAccordionTrigger {
         const visuallyHiddenSpan = this._renderer.createElement('span');
         this._renderer.addClass(visuallyHiddenSpan, 'cdk-visually-hidden');
         this._renderer.setAttribute(visuallyHiddenSpan, 'id', this.pattern.visuallyHiddenId());
+        this._renderer.setAttribute(visuallyHiddenSpan, 'tabindex', '-1');
 
         // Get the button's text content and set it on the span
         let buttonText = '';
