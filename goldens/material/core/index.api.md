@@ -154,9 +154,6 @@ export const MAT_DATE_FORMATS: InjectionToken<MatDateFormats>;
 // @public
 export const MAT_DATE_LOCALE: InjectionToken<{}>;
 
-// @public @deprecated
-export function MAT_DATE_LOCALE_FACTORY(): {};
-
 // @public (undocumented)
 export const MAT_NATIVE_DATE_FORMATS: MatDateFormats;
 
