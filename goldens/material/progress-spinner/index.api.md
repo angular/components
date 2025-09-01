@@ -12,9 +12,6 @@ import { InjectionToken } from '@angular/core';
 // @public
 export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpinnerDefaultOptions>;
 
-// @public @deprecated
-export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
-
 // @public (undocumented)
 export class MatProgressSpinner {
     constructor(...args: unknown[]);
