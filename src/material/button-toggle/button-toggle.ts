@@ -82,22 +82,13 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonTog
   'MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      hideSingleSelectionIndicator: false,
+      hideMultipleSelectionIndicator: false,
+      disabledInteractive: false,
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions {
-  return {
-    hideSingleSelectionIndicator: false,
-    hideMultipleSelectionIndicator: false,
-    disabledInteractive: false,
-  };
-}
 
 /**
  * Injection token that can be used to reference instances of `MatButtonToggleGroup`.
