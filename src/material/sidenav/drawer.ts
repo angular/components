@@ -70,7 +70,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
   'MAT_DRAWER_DEFAULT_AUTOSIZE',
   {
     providedIn: 'root',
-    factory: MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY,
+    factory: () => false,
   },
 );
 
@@ -79,15 +79,6 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
  * @docs-private
  */
 export const MAT_DRAWER_CONTAINER = new InjectionToken('MAT_DRAWER_CONTAINER');
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
-  return false;
-}
 
 @Component({
   selector: 'mat-drawer-content',

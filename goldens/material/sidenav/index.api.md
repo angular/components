@@ -25,9 +25,6 @@ import { Subject } from 'rxjs';
 // @public
 export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 
-// @public @deprecated
-export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean;
-
 // @public
 export class MatDrawer implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);

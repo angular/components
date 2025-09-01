@@ -11,7 +11,6 @@ export {
   throwMatDuplicatedDrawerError,
   MatDrawerToggleResult,
   MAT_DRAWER_DEFAULT_AUTOSIZE,
-  MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY,
   MatDrawerContent,
   MatDrawer,
   MatDrawerContainer,
