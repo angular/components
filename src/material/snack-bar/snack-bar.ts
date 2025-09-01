@@ -33,21 +33,12 @@ import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
-  return new MatSnackBarConfig();
-}
-
 /** Injection token that can be used to specify default snack bar. */
 export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfig>(
   'mat-snack-bar-default-options',
   {
     providedIn: 'root',
-    factory: MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY,
+    factory: () => new MatSnackBarConfig(),
   },
 );
 
