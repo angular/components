@@ -7,5 +7,9 @@
  */
 
 export * from './checkbox';
-export * from './checkbox-config';
+export {
+  MatCheckboxDefaultOptions,
+  MAT_CHECKBOX_DEFAULT_OPTIONS,
+  MatCheckboxClickAction,
+} from './checkbox-config';
 export * from './checkbox-module';

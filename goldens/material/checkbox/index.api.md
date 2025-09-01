@@ -21,9 +21,6 @@ import { Validator } from '@angular/forms';
 // @public
 export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOptions>;
 
-// @public @deprecated
-export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions;
-
 // @public (undocumented)
 export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
     constructor(...args: unknown[]);
