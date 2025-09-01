@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
@@ -57,24 +57,3 @@ export class MatPaginatorIntl {
     return `${startIndex + 1} – ${endIndex} of ${length}`;
   };
 }
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl) {
-  return parentIntl || new MatPaginatorIntl();
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_PAGINATOR_INTL_PROVIDER = {
-  // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
-  provide: MatPaginatorIntl,
-  deps: [[new Optional(), new SkipSelf(), MatPaginatorIntl]],
-  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY,
-};
