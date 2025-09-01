@@ -18,12 +18,7 @@ export {MatTabsConfig, MAT_TABS_CONFIG} from './tab-config';
 export {MatTabContent, MAT_TAB_CONTENT} from './tab-content';
 export {MatTabLabel, MAT_TAB, MAT_TAB_LABEL} from './tab-label';
 export {MatTab, MAT_TAB_GROUP} from './tab';
-export {
-  MatInkBar,
-  _MatInkBarPositioner,
-  _MAT_INK_BAR_POSITIONER_FACTORY,
-  _MAT_INK_BAR_POSITIONER,
-} from './ink-bar';
+export {MatInkBar, _MatInkBarPositioner, _MAT_INK_BAR_POSITIONER} from './ink-bar';
 export {MatTabHeader} from './tab-header';
 export {
   MatTabGroup,
