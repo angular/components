@@ -20,9 +20,6 @@ export const MAT_BUTTON_CONFIG: InjectionToken<MatButtonConfig>;
 // @public
 export const MAT_FAB_DEFAULT_OPTIONS: InjectionToken<MatFabDefaultOptions>;
 
-// @public @deprecated
-export function MAT_FAB_DEFAULT_OPTIONS_FACTORY(): MatFabDefaultOptions;
-
 // @public
 export const MatAnchor: typeof MatButton;
 
