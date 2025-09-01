@@ -39,7 +39,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { OriginConnectionPosition } from '@angular/cdk/overlay';
 import { OverlayConnectionPosition } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
@@ -52,16 +51,6 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOptions>;
-
-// @public @deprecated
-export const MAT_PAGINATOR_INTL_PROVIDER: {
-    provide: typeof MatPaginatorIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_PAGINATOR_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
 export class MatPaginator implements OnInit, OnDestroy {
