@@ -11,16 +11,12 @@ import {PortalModule} from '../portal';
 import {ScrollingModule} from '../scrolling';
 import {NgModule} from '@angular/core';
 import {Overlay} from './overlay';
-import {
-  CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
-  CdkConnectedOverlay,
-  CdkOverlayOrigin,
-} from './overlay-directives';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from './overlay-directives';
 
 @NgModule({
   imports: [BidiModule, PortalModule, ScrollingModule, CdkConnectedOverlay, CdkOverlayOrigin],
   exports: [CdkConnectedOverlay, CdkOverlayOrigin, ScrollingModule],
-  providers: [Overlay, CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER],
+  providers: [Overlay],
 })
 export class OverlayModule {}
 

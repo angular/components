@@ -39,11 +39,7 @@ import {
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './position/flexible-connected-position-strategy';
-import {
-  createRepositionScrollStrategy,
-  RepositionScrollStrategy,
-  ScrollStrategy,
-} from './scroll/index';
+import {createRepositionScrollStrategy, ScrollStrategy} from './scroll/index';
 
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */
 const defaultPositionList: ConnectedPosition[] = [
@@ -462,25 +458,3 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this.open = false;
   }
 }
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  overlay: unknown,
-): () => RepositionScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector);
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER = {
-  provide: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY,
-  useFactory: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
