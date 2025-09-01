@@ -41,21 +41,12 @@ export const MAT_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<MatLuxonDateAda
   'MAT_LUXON_DATE_ADAPTER_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_LUXON_DATE_ADAPTER_OPTIONS_FACTORY,
+    factory: () => ({
+      useUtc: false,
+      defaultOutputCalendar: 'gregory',
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): MatLuxonDateAdapterOptions {
-  return {
-    useUtc: false,
-    defaultOutputCalendar: 'gregory',
-  };
-}
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
