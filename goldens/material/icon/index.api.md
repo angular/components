@@ -15,7 +15,6 @@ import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
@@ -31,16 +30,6 @@ export function getMatIconNameNotFoundError(iconName: string): Error;
 // @public
 export function getMatIconNoHttpProviderError(): Error;
 
-// @public @deprecated
-export const ICON_REGISTRY_PROVIDER: {
-    provide: typeof MatIconRegistry;
-    deps: (Optional[] | typeof DomSanitizer | typeof ErrorHandler)[];
-    useFactory: typeof ICON_REGISTRY_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: MatIconRegistry, httpClient: HttpClient, sanitizer: DomSanitizer, errorHandler: ErrorHandler, document?: any): MatIconRegistry;
-
 // @public
 export interface IconOptions {
     viewBox?: string;
@@ -55,9 +44,6 @@ export const MAT_ICON_DEFAULT_OPTIONS: InjectionToken<MatIconDefaultOptions>;
 
 // @public
 export const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
-
-// @public @deprecated
-export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 // @public
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
