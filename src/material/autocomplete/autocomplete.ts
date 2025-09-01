@@ -88,24 +88,15 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<MatAutocomple
   'mat-autocomplete-default-options',
   {
     providedIn: 'root',
-    factory: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      autoActiveFirstOption: false,
+      autoSelectActiveOption: false,
+      hideSingleSelectionIndicator: false,
+      requireSelection: false,
+      hasBackdrop: false,
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefaultOptions {
-  return {
-    autoActiveFirstOption: false,
-    autoSelectActiveOption: false,
-    hideSingleSelectionIndicator: false,
-    requireSelection: false,
-    hasBackdrop: false,
-  };
-}
 
 /** Autocomplete component. */
 @Component({

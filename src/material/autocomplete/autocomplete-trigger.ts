@@ -97,27 +97,6 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector);
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
-  deps: [] as any[],
-  useFactory: MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY,
-};
-
 /** Base class with all of the `MatAutocompleteTrigger` functionality. */
 @Directive({
   selector: `input[matAutocomplete], textarea[matAutocomplete]`,
