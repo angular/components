@@ -13,7 +13,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public @deprecated
@@ -29,16 +28,6 @@ export interface ArrowViewStateTransition {
 
 // @public
 export const MAT_SORT_DEFAULT_OPTIONS: InjectionToken<MatSortDefaultOptions>;
-
-// @public @deprecated
-export const MAT_SORT_HEADER_INTL_PROVIDER: {
-    provide: typeof MatSortHeaderIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_SORT_HEADER_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl): MatSortHeaderIntl;
 
 // @public
 export class MatSort implements OnChanges, OnDestroy, OnInit {
