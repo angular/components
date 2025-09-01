@@ -16,10 +16,7 @@ import {MatCommonModule} from '../core';
 import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {MatDatepicker} from './datepicker';
-import {
-  MatDatepickerContent,
-  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-} from './datepicker-base';
+import {MatDatepickerContent} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
@@ -78,6 +75,6 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerCancel,
     MatDatepickerApply,
   ],
-  providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
+  providers: [MatDatepickerIntl],
 })
 export class MatDatepickerModule {}

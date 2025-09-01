@@ -16,7 +16,6 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FactoryProvider } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -92,33 +91,11 @@ export const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelec
 // @public
 export const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy;
-
-// @public @deprecated
-export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: any[];
-    useFactory: typeof MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY;
-};
-
 // @public
 export const MAT_DATEPICKER_VALIDATORS: any;
 
 // @public
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any;
-
-// @public @deprecated
-export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
-
-// @public @deprecated
-export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
-
-// @public @deprecated
-export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
-
-// @public @deprecated
-export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
 // @public
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
