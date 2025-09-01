@@ -25,23 +25,12 @@ import * as i3 from '@angular/cdk/portal';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { StepState } from '@angular/cdk/stepper';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated
-export const MAT_STEPPER_INTL_PROVIDER: {
-    provide: typeof MatStepperIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_STEPPER_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl): MatStepperIntl;
 
 // @public (undocumented)
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
