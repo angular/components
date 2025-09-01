@@ -39,13 +39,6 @@ export const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 // @public
 export const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
-export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: any[];
-    useFactory: typeof MAT_MENU_SCROLL_STRATEGY_FACTORY;
-};
-
 // @public
 export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestroy {
     constructor();

@@ -14,7 +14,6 @@ import {MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
 import {MatMenuContent} from './menu-content';
 import {MatMenuTrigger} from './menu-trigger';
-import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER} from './menu-trigger-base';
 import {MatContextMenuTrigger} from './context-menu-trigger';
 
 @NgModule({
@@ -37,6 +36,5 @@ import {MatContextMenuTrigger} from './context-menu-trigger';
     MatMenuTrigger,
     MatContextMenuTrigger,
   ],
-  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatMenuModule {}
