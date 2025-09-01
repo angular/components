@@ -29,21 +29,8 @@ export function getMatTooltipInvalidPositionError(position: string): Error;
 // @public
 export const MAT_TOOLTIP_DEFAULT_OPTIONS: InjectionToken<MatTooltipDefaultOptions>;
 
-// @public @deprecated
-export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions;
-
 // @public
 export const MAT_TOOLTIP_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy;
-
-// @public @deprecated
-export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: any[];
-    useFactory: typeof MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY;
-};
 
 // @public
 export class MatTooltip implements OnDestroy, AfterViewInit {
