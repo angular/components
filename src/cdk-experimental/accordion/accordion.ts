@@ -106,13 +106,13 @@ export class CdkAccordionTrigger {
   /** A global unique identifier for the trigger. */
   private readonly _id = inject(_IdGenerator).getId('cdk-accordion-trigger-');
 
+  /** A computed signal to generate a consistent ID for the visually hidden label. */
+  private readonly _visuallyHiddenId = inject(_IdGenerator).getId('cdk-accordion-label-');
+
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
   private readonly _renderer = inject(Renderer2);
-
-  /** A computed signal to generate a consistent ID for the visually hidden label. */
-  readonly visuallyHiddenId = computed(() => this.pattern.id() + '-label');
 
   /** The parent CdkAccordionGroup. */
   private readonly _accordionGroup = inject(CdkAccordionGroup);
@@ -136,6 +136,7 @@ export class CdkAccordionTrigger {
   /** The UI pattern instance for this trigger. */
   readonly pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
     id: () => this._id,
+    visuallyHiddenId: () => this._visuallyHiddenId,
     value: this.value,
     disabled: this.disabled,
     element: () => this._elementRef.nativeElement,
@@ -143,36 +144,57 @@ export class CdkAccordionTrigger {
     accordionPanel: this.accordionPanel,
   });
 
-  // Creating the visuallyHiddenSpan as an accessible reference for the accordion content
+  /** The computed label value of this Accordion Trigger to be passed to a visually hidden
+   *  span that is accessible to screen readers whether the button is disabled or not.
+   */
+  readonly visuallyHiddenLabel = computed(() => {
+    let buttonText = '';
+    const buttonElement = this._elementRef.nativeElement;
+    for (const node of Array.from(buttonElement.childNodes)) {
+      if (node instanceof Node && node.nodeType === Node.TEXT_NODE) {
+        buttonText += (node as Text).textContent?.trim() + ' ';
+      }
+    }
+
+    // Determine the state labels of the Accordion Trigger to pass to the label
+    const expansionLabel = this.pattern.expanded() ? '(Expanded)' : '(Collapsed)';
+    const disabledLabel = this.pattern.disabled() ? '(Disabled)' : '';
+
+    // Combine all parts into the final label
+    return `${buttonText.trim()} ${expansionLabel} ${disabledLabel}`.trim();
+  });
+
   constructor() {
-    // We'll use afterRenderEffect to ensure the element is created after the host element.
     afterRenderEffect(() => {
-      // Find the button element and its parent
       const buttonElement = this._elementRef.nativeElement;
       const parentElement = this._renderer.parentNode(buttonElement);
 
       if (parentElement) {
-        // Create a new visually hidden span element to be referenced by accordionPanel
-        const visuallyHiddenSpan = this._renderer.createElement('span');
-        this._renderer.addClass(visuallyHiddenSpan, 'cdk-visually-hidden');
-        this._renderer.setAttribute(visuallyHiddenSpan, 'id', this.pattern.visuallyHiddenId());
-        this._renderer.setAttribute(visuallyHiddenSpan, 'tabindex', '-1');
-
-        // Get the button's text content and set it on the span
-        let buttonText = '';
-        for (const node of Array.from(buttonElement.childNodes)) {
-          if (node instanceof Node && node.nodeType === Node.TEXT_NODE) {
-            buttonText += node.textContent?.trim() + ' ';
-          }
+        // Create the span and attach it to the DOM only once.
+        if (!this._visuallyHiddenSpan) {
+          this._visuallyHiddenSpan = this._renderer.createElement('span');
+          this._renderer.addClass(this._visuallyHiddenSpan, 'cdk-visually-hidden');
+          this._renderer.setAttribute(
+            this._visuallyHiddenSpan,
+            'id',
+            this.pattern.visuallyHiddenId(),
+          );
+          this._renderer.setAttribute(this._visuallyHiddenSpan, 'tabindex', '-1');
+          this._renderer.insertBefore(parentElement, this._visuallyHiddenSpan, buttonElement);
         }
-        const textNode = this._renderer.createText(buttonText);
-        this._renderer.appendChild(visuallyHiddenSpan, textNode);
 
-        // Insert the visually hidden span before the button, as its sibling
-        this._renderer.insertBefore(parentElement, visuallyHiddenSpan, buttonElement);
+        // Update its text content whenever the signal changes.
+        this._renderer.setProperty(
+          this._visuallyHiddenSpan,
+          'textContent',
+          this.visuallyHiddenLabel(),
+        );
       }
     });
   }
+
+  // Add a private property to store a reference to the span
+  private _visuallyHiddenSpan!: HTMLElement;
 }
 
 /**
