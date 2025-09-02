@@ -19,9 +19,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i3$1 from '@angular/cdk/stepper';
-import * as i3 from '@angular/cdk/portal';
+import * as i2$1 from '@angular/cdk/stepper';
+import * as i2$2 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -178,7 +178,7 @@ export class MatStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof MatCommonModule, typeof i3.PortalModule, typeof i3$1.CdkStepperModule, typeof MatIconModule, typeof MatRippleModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent], [typeof MatCommonModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i2.PortalModule, typeof i2$1.CdkStepperModule, typeof MatIconModule, typeof MatRippleModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent], [typeof i2$2.BidiModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent]>;
 }
 
 // @public

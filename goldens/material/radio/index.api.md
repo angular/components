@@ -12,7 +12,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -161,7 +161,7 @@ export class MatRadioModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRadioModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof MatCommonModule, typeof MatRippleModule, typeof MatRadioGroup, typeof MatRadioButton], [typeof MatCommonModule, typeof MatRadioGroup, typeof MatRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof MatRippleModule, typeof MatRadioGroup, typeof MatRadioButton], [typeof i2.BidiModule, typeof MatRadioGroup, typeof MatRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

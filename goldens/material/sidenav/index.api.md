@@ -13,8 +13,8 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i5 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
@@ -178,7 +178,7 @@ export class MatSidenavModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSidenavModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSidenavModule, never, [typeof MatCommonModule, typeof i5.CdkScrollableModule, typeof MatDrawer, typeof MatDrawerContainer, typeof MatDrawerContent, typeof MatSidenav, typeof MatSidenavContainer, typeof MatSidenavContent], [typeof i5.CdkScrollableModule, typeof MatCommonModule, typeof MatDrawer, typeof MatDrawerContainer, typeof MatDrawerContent, typeof MatSidenav, typeof MatSidenavContainer, typeof MatSidenavContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSidenavModule, never, [typeof i1.CdkScrollableModule, typeof MatDrawer, typeof MatDrawerContainer, typeof MatDrawerContent, typeof MatSidenav, typeof MatSidenavContainer, typeof MatSidenavContent], [typeof i2.BidiModule, typeof i1.CdkScrollableModule, typeof MatDrawer, typeof MatDrawerContainer, typeof MatDrawerContent, typeof MatSidenav, typeof MatSidenavContainer, typeof MatSidenavContent]>;
 }
 
 // @public

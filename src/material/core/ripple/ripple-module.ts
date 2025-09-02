@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../common-behaviors/common-module';
 import {MatRipple} from './ripple';
 
 @NgModule({
-  imports: [MatCommonModule, MatRipple],
-  exports: [MatRipple, MatCommonModule],
+  imports: [MatRipple],
+  exports: [MatRipple, BidiModule],
 })
 export class MatRippleModule {}

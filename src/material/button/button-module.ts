@@ -7,20 +7,14 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
+import {MatRippleModule} from '../core';
 import {MatButton} from './button';
 import {MatFabButton, MatMiniFabButton} from './fab';
 import {MatIconButton} from './icon-button';
 
 @NgModule({
-  imports: [
-    MatCommonModule,
-    MatRippleModule,
-    MatButton,
-    MatMiniFabButton,
-    MatIconButton,
-    MatFabButton,
-  ],
-  exports: [MatCommonModule, MatButton, MatMiniFabButton, MatIconButton, MatFabButton],
+  imports: [MatRippleModule, MatButton, MatMiniFabButton, MatIconButton, MatFabButton],
+  exports: [BidiModule, MatButton, MatMiniFabButton, MatIconButton, MatFabButton],
 })
 export class MatButtonModule {}

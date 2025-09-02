@@ -13,9 +13,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/accordion';
-import * as i3 from '@angular/cdk/portal';
+import * as i1 from '@angular/cdk/accordion';
+import * as i2$1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -77,7 +77,7 @@ export class MatExpansionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatExpansionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof MatCommonModule, typeof i2.CdkAccordionModule, typeof i3.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof i1.CdkAccordionModule, typeof i2.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof i2$1.BidiModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
 }
 
 // @public

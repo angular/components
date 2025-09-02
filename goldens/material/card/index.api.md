@@ -5,7 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 
 // @public
@@ -102,7 +102,7 @@ export class MatCardModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCardModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCardModule, never, [typeof MatCommonModule, typeof MatCard, typeof MatCardActions, typeof MatCardAvatar, typeof MatCardContent, typeof MatCardFooter, typeof MatCardHeader, typeof MatCardImage, typeof MatCardLgImage, typeof MatCardMdImage, typeof MatCardSmImage, typeof MatCardSubtitle, typeof MatCardTitle, typeof MatCardTitleGroup, typeof MatCardXlImage], [typeof MatCard, typeof MatCardActions, typeof MatCardAvatar, typeof MatCardContent, typeof MatCardFooter, typeof MatCardHeader, typeof MatCardImage, typeof MatCardLgImage, typeof MatCardMdImage, typeof MatCardSmImage, typeof MatCardSubtitle, typeof MatCardTitle, typeof MatCardTitleGroup, typeof MatCardXlImage, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCardModule, never, [typeof MatCard, typeof MatCardActions, typeof MatCardAvatar, typeof MatCardContent, typeof MatCardFooter, typeof MatCardHeader, typeof MatCardImage, typeof MatCardLgImage, typeof MatCardMdImage, typeof MatCardSmImage, typeof MatCardSubtitle, typeof MatCardTitle, typeof MatCardTitleGroup, typeof MatCardXlImage], [typeof MatCard, typeof MatCardActions, typeof MatCardAvatar, typeof MatCardContent, typeof MatCardFooter, typeof MatCardHeader, typeof MatCardImage, typeof MatCardLgImage, typeof MatCardMdImage, typeof MatCardSmImage, typeof MatCardSubtitle, typeof MatCardTitle, typeof MatCardTitleGroup, typeof MatCardXlImage, typeof i2.BidiModule]>;
 }
 
 // @public

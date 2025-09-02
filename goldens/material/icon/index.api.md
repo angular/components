@@ -10,7 +10,7 @@ import { ElementRef } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -98,7 +98,7 @@ export class MatIconModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatIconModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, never, [typeof MatCommonModule, typeof MatIcon], [typeof MatIcon, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, never, [typeof MatIcon], [typeof MatIcon, typeof i2.BidiModule]>;
 }
 
 // @public

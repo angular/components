@@ -24,10 +24,10 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i1_2 from '@angular/cdk/observers';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i2_2 from '@angular/cdk/observers';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -403,7 +403,7 @@ export class MatSelectModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSelectModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatCommonModule, typeof MatSelect, typeof MatSelectTrigger], [typeof i5.CdkScrollableModule, typeof MatFormFieldModule, typeof MatSelect, typeof MatSelectTrigger, typeof MatOptionModule, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatSelect, typeof MatSelectTrigger], [typeof i2$1.BidiModule, typeof i1.CdkScrollableModule, typeof MatFormFieldModule, typeof MatSelect, typeof MatSelectTrigger, typeof MatOptionModule]>;
 }
 
 // @public

@@ -8,7 +8,7 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -55,7 +55,7 @@ export class MatButtonModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatButtonModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonModule, never, [typeof MatCommonModule, typeof MatRippleModule, typeof MatButton, typeof MatMiniFabButton, typeof MatIconButton, typeof MatFabButton], [typeof MatCommonModule, typeof MatButton, typeof MatMiniFabButton, typeof MatIconButton, typeof MatFabButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonModule, never, [typeof MatRippleModule, typeof MatButton, typeof MatMiniFabButton, typeof MatIconButton, typeof MatFabButton], [typeof i2.BidiModule, typeof MatButton, typeof MatMiniFabButton, typeof MatIconButton, typeof MatFabButton]>;
 }
 
 // @public

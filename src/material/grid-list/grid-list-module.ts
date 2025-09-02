@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatLineModule, MatCommonModule} from '../core';
+import {MatLineModule} from '../core';
+import {MatGridList} from './grid-list';
 import {
+  MatGridAvatarCssMatStyler,
   MatGridTile,
-  MatGridTileText,
   MatGridTileFooterCssMatStyler,
   MatGridTileHeaderCssMatStyler,
-  MatGridAvatarCssMatStyler,
+  MatGridTileText,
 } from './grid-tile';
-import {MatGridList} from './grid-list';
 
 // Export required to fix compiler confusion about import module paths
 export {MatLine} from '../core';
@@ -23,7 +24,6 @@ export {MatLine} from '../core';
 @NgModule({
   imports: [
     MatLineModule,
-    MatCommonModule,
     MatGridList,
     MatGridTile,
     MatGridTileText,
@@ -32,11 +32,11 @@ export {MatLine} from '../core';
     MatGridAvatarCssMatStyler,
   ],
   exports: [
+    BidiModule,
     MatGridList,
     MatGridTile,
     MatGridTileText,
     MatLineModule,
-    MatCommonModule,
     MatGridTileHeaderCssMatStyler,
     MatGridTileFooterCssMatStyler,
     MatGridAvatarCssMatStyler,

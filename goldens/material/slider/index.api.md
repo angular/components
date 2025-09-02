@@ -11,7 +11,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -146,7 +146,7 @@ export class MatSliderModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSliderModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, never, [typeof MatCommonModule, typeof MatRippleModule, typeof MatSlider, typeof MatSliderThumb, typeof MatSliderRangeThumb, typeof MatSliderVisualThumb], [typeof MatSlider, typeof MatSliderThumb, typeof MatSliderRangeThumb]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, never, [typeof MatRippleModule, typeof MatSlider, typeof MatSliderThumb, typeof MatSliderRangeThumb, typeof MatSliderVisualThumb], [typeof MatSlider, typeof MatSliderThumb, typeof MatSliderRangeThumb, typeof i2.BidiModule]>;
 }
 
 // @public (undocumented)

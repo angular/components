@@ -13,7 +13,7 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -138,16 +138,6 @@ export function _getAnimationsState(): 'enabled' | 'di-disabled' | 'reduced-moti
 // @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
-// @public @deprecated
-export interface GranularSanityChecks {
-    // (undocumented)
-    doctype: boolean;
-    // (undocumented)
-    theme: boolean;
-    // (undocumented)
-    version: boolean;
-}
-
 // @public (undocumented)
 export const MAT_DATE_FORMATS: InjectionToken<MatDateFormats>;
 
@@ -165,17 +155,6 @@ export const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponen
 
 // @public
 export const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
-
-// @public @deprecated
-export class MatCommonModule {
-    constructor(...args: any[]);
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatCommonModule, never>;
-    // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<MatCommonModule>;
-    // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCommonModule, never, [typeof i1.BidiModule], [typeof i1.BidiModule]>;
-}
 
 // @public (undocumented)
 export type MatDateFormats = {
@@ -196,9 +175,6 @@ export type MatDateFormats = {
 
 // @public
 export const MATERIAL_ANIMATIONS: InjectionToken<AnimationsConfig>;
-
-// @public @deprecated
-export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 // @public
 export class _MatInternalFormField {
@@ -224,7 +200,7 @@ export class MatLineModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatLineModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, never, [typeof MatCommonModule, typeof MatLine], [typeof MatLine, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatLineModule, never, [typeof MatLine], [typeof MatLine, typeof i2.BidiModule]>;
 }
 
 // @public (undocumented)
@@ -301,7 +277,7 @@ export class MatOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, never, [typeof MatRippleModule, typeof MatCommonModule, typeof MatPseudoCheckboxModule, typeof MatOption, typeof MatOptgroup], [typeof MatOption, typeof MatOptgroup]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatOptionModule, never, [typeof MatRippleModule, typeof MatPseudoCheckboxModule, typeof MatOption, typeof MatOptgroup], [typeof MatOption, typeof MatOptgroup, typeof i2.BidiModule]>;
 }
 
 // @public
@@ -346,7 +322,7 @@ export class MatPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, never, [typeof MatCommonModule, typeof MatPseudoCheckbox], [typeof MatPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPseudoCheckboxModule, never, [typeof MatPseudoCheckbox], [typeof MatPseudoCheckbox, typeof i2.BidiModule]>;
 }
 
 // @public
@@ -407,7 +383,7 @@ export class MatRippleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRippleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof MatCommonModule, typeof MatRipple], [typeof MatRipple, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRippleModule, never, [typeof MatRipple], [typeof MatRipple, typeof i2.BidiModule]>;
 }
 
 // @public
@@ -559,9 +535,6 @@ export interface RippleTarget {
     rippleConfig: RippleConfig;
     rippleDisabled: boolean;
 }
-
-// @public @deprecated
-export type SanityChecks = boolean | GranularSanityChecks;
 
 // @public
 export function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElement>, prefix?: string): void;

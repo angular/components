@@ -7,9 +7,10 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '../core';
+import {MatRippleModule} from '../core';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
+import {BidiModule} from '@angular/cdk/bidi';
 import {MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
 import {MatMenuContent} from './menu-content';
@@ -19,7 +20,6 @@ import {MatContextMenuTrigger} from './context-menu-trigger';
 @NgModule({
   imports: [
     MatRippleModule,
-    MatCommonModule,
     OverlayModule,
     MatMenu,
     MatMenuItem,
@@ -28,9 +28,9 @@ import {MatContextMenuTrigger} from './context-menu-trigger';
     MatContextMenuTrigger,
   ],
   exports: [
+    BidiModule,
     CdkScrollableModule,
     MatMenu,
-    MatCommonModule,
     MatMenuItem,
     MatMenuContent,
     MatMenuTrigger,

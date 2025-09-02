@@ -11,7 +11,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -161,7 +161,7 @@ export class MatButtonToggleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatButtonToggleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonToggleModule, never, [typeof MatCommonModule, typeof MatRippleModule, typeof MatButtonToggleGroup, typeof MatButtonToggle], [typeof MatCommonModule, typeof MatButtonToggleGroup, typeof MatButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonToggleModule, never, [typeof MatRippleModule, typeof MatButtonToggleGroup, typeof MatButtonToggle], [typeof i2.BidiModule, typeof MatButtonToggleGroup, typeof MatButtonToggle]>;
 }
 
 // @public @deprecated (undocumented)

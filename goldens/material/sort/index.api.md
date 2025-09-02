@@ -7,7 +7,7 @@
 import { AfterViewInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -134,7 +134,7 @@ export class MatSortModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSortModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, never, [typeof MatCommonModule, typeof MatSort, typeof MatSortHeader], [typeof MatSort, typeof MatSortHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, never, [typeof MatSort, typeof MatSortHeader], [typeof MatSort, typeof MatSortHeader, typeof i2.BidiModule]>;
 }
 
 // @public

@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {PortalModule} from '@angular/cdk/portal';
 import {CdkStepperModule} from '@angular/cdk/stepper';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '../core';
+import {ErrorStateMatcher, MatRippleModule} from '../core';
 import {MatIconModule} from '../icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
@@ -20,7 +21,6 @@ import {MatStepContent} from './step-content';
 
 @NgModule({
   imports: [
-    MatCommonModule,
     PortalModule,
     CdkStepperModule,
     MatIconModule,
@@ -35,7 +35,7 @@ import {MatStepContent} from './step-content';
     MatStepContent,
   ],
   exports: [
-    MatCommonModule,
+    BidiModule,
     MatStep,
     MatStepLabel,
     MatStepper,

@@ -5,7 +5,6 @@ package(default_visibility = ["//visibility:public"])
 ng_project(
     name = "common-behaviors",
     srcs = [
-        "common-module.ts",
         "error-state.ts",
         "index.ts",
         "palette.ts",
