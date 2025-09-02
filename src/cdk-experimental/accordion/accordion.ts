@@ -72,7 +72,7 @@ export class CdkAccordionPanel {
   });
 
   constructor() {
-    // Connect the panel's hidden state to the DeferredContentAware's visibility.
+    /** Connect the panel's hidden state to the DeferredContentAware's visibility. */
     afterRenderEffect(() => {
       this._deferredContentAware.contentVisible.set(!this.pattern.hidden());
     });
@@ -144,8 +144,9 @@ export class CdkAccordionTrigger {
     accordionPanel: this.accordionPanel,
   });
 
-  /** The computed label value of this Accordion Trigger to be passed to a visually hidden
-   *  span that is accessible to screen readers whether the button is disabled or not.
+  /**
+   * The computed label value of this Accordion Trigger to be passed to a visually hidden
+   * span that is accessible to screen readers whether the button is disabled or not.
    */
   readonly visuallyHiddenLabel = computed(() => {
     let buttonText = '';
@@ -156,11 +157,11 @@ export class CdkAccordionTrigger {
       }
     }
 
-    // Determine the state labels of the Accordion Trigger to pass to the label
+    /** Determine the state labels of the Accordion Trigger to pass to the label. */
     const expansionLabel = this.pattern.expanded() ? '(Expanded)' : '(Collapsed)';
     const disabledLabel = this.pattern.disabled() ? '(Disabled)' : '';
 
-    // Combine all parts into the final label
+    /** Combine all parts into the final label. */
     return `${buttonText.trim()} ${expansionLabel} ${disabledLabel}`.trim();
   });
 
@@ -170,7 +171,7 @@ export class CdkAccordionTrigger {
       const parentElement = this._renderer.parentNode(buttonElement);
 
       if (parentElement) {
-        // Create the span and attach it to the DOM only once.
+        /** Create the span and attach it to the DOM only once. */
         if (!this._visuallyHiddenSpan) {
           this._visuallyHiddenSpan = this._renderer.createElement('span');
           this._renderer.addClass(this._visuallyHiddenSpan, 'cdk-visually-hidden');
@@ -183,7 +184,7 @@ export class CdkAccordionTrigger {
           this._renderer.insertBefore(parentElement, this._visuallyHiddenSpan, buttonElement);
         }
 
-        // Update its text content whenever the signal changes.
+        /** Update its text content whenever the signal changes. */
         this._renderer.setProperty(
           this._visuallyHiddenSpan,
           'textContent',
@@ -193,7 +194,7 @@ export class CdkAccordionTrigger {
     });
   }
 
-  // Add a private property to store a reference to the span
+  /** Add a private property to store a reference to the span. */
   private _visuallyHiddenSpan!: HTMLElement;
 }
 
@@ -239,18 +240,20 @@ export class CdkAccordionGroup {
   /** The UI pattern instance for this accordion group. */
   readonly pattern: AccordionGroupPattern = new AccordionGroupPattern({
     ...this,
-    // TODO(ok7sai): Consider making `activeItem` an internal state in the pattern and call
-    // `setDefaultState` in the CDK.
+    /**
+     * TODO(ok7sai): Consider making `activeItem` an internal state in the pattern and call
+     * `setDefaultState` in the CDK.
+     */
     activeItem: signal(undefined),
     items: computed(() => this._triggers().map(trigger => trigger.pattern)),
     expandedIds: this.value,
-    // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
+    /** TODO(ok7sai): Investigate whether an accordion should support horizontal mode. */
     orientation: () => 'vertical',
     element: () => this._elementRef.nativeElement,
   });
 
   constructor() {
-    // Effect to link triggers with their corresponding panels and update the group's items.
+    /** Effect to link triggers with their corresponding panels and update the group's items. */
     afterRenderEffect(() => {
       const triggers = this._triggers();
       const panels = this._panels();

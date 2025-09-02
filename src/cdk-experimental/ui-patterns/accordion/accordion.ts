@@ -81,8 +81,9 @@ export type AccordionTriggerInputs = Omit<ListNavigationItem & ListFocusItem, 'i
     /** The accordion panel controlled by this trigger. */
     accordionPanel: SignalLike<AccordionPanelPattern | undefined>;
 
-    /** The id of the visually hidden span associated with the Accordion Trigger to be referenced by
-     * screen readers at all times for consistent accessibility.
+    /**
+     * The id of the visually hidden span associated with the Accordion Trigger to be
+     * referenced by screen readers at all times for consistent accessibility.
      */
     visuallyHiddenId: SignalLike<string>;
   };
