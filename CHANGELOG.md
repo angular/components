@@ -1,3 +1,121 @@
+<a name="21.0.0-next.2"></a>
+# 21.0.0-next.2 "plastic-screw" (2025-09-03)
+## Breaking Changes
+### cdk
+- * `LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY` has been removed.
+  * `TREE_KEY_MANAGER_FACTORY` has been removed.
+  * `TREE_KEY_MANAGER_FACTORY_PROVIDER` has been removed.
+### material
+- * `MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY` has been removed.
+  * `MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY` has been removed.
+  * `MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER` has been removed.
+- * `matBottomSheet` animations symbol has been removed.
+- * `MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `MAT_FAB_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `MAT_DATE_LOCAL_FACTORY` has been removed.
+- * `matDatepickerAnimations` symbol has been removed.
+- * `MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY` has been removed.
+  * `MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER` has been removed.
+  * `MAT_RANGE_DATE_SELECTION_MODEL_FACTORY` has been removed.
+  * `MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER` has been removed.
+  * `MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY` has been removed.
+  * `MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER` has been removed.
+- * `_defaultParams` symbol has been removed.
+  * `matDialogAnimations` symbol has been removed.
+- * `EXPANSION_PANEL_ANIMATION_TIMING` symbol has been removed.
+  * `matExpansionAnimations` symbol has been removed.
+- * `matFormFieldAnimations` symbol has been removed.
+- * `ICON_REGISTRY_PROVIDER` has been removed.
+  * `ICON_REGISTRY_PROVIDER_FACTORY` has been removed.
+  * `MAT_ICON_LOCATION_FACTORY` has been removed.
+- * `fadeInItems` symbol has been removed.
+  * `transformMenu` symbol has been removed.
+  * `matMenuAnimations` symbol has been removed.
+- * `MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER` has been removed.
+- * `MAT_PAGINATOR_INTL_PROVIDER` has been removed.
+  * `MAT_PAGINATOR_INTL_PROVIDER_FACTORY` has been removed.
+- * `MAT_PROGRESS_BAR_LOCATION_FACTORY` has been removed.
+- * `MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `MAT_RADIO_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `matSelectAnimations` symbol has been removed.
+- * `MAT_SELECT_SCROLL_STRATEGY_PROVIDER` has been removed.
+  * `MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY` has been removed.
+- * `matDrawerAnimations` symbol has been removed.
+- * `MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY` has been removed.
+- * `matSnackBarAnimations` symbol has been removed.
+- * `MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY` has been removed.
+- * `matSortAnimations` symbol has been removed.
+- * `MAT_SORT_HEADER_INTL_PROVIDER` has been removed.
+  * `MAT_SORT_HEADER_INTL_PROVIDER_FACTORY` has been removed.
+- * `matStepperAnimations` symbol has been removed.
+- * `MAT_STEPPER_INTL_PROVIDER` has been removed.
+  * `MAT_STEPPER_INTL_PROVIDER_FACTORY` has been removed.
+- * `matTabsAnimations` symbol has been removed.
+- * `_MAT_INK_BAR_POSITIONER_FACTORY` has been removed.
+- * `matTooltipAnimations` symbol has been removed.
+- * `MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY` has been removed.
+  * `MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY` has been removed.
+  * `MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER` has been removed.
+### material-moment-adapter
+- * `MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY` has been removed.
+### material-luxon-adapter
+- * `MAT_LUXON_DATE_ADAPTER_OPTIONS_FACTORY` has been removed.
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c1486fb7f8](https://github.com/angular/components/commit/c1486fb7f86c94d4a5986a60752094abe1b79912) | fix | remove deprecated factory functions |
+### material-moment-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6cee2b9e2d](https://github.com/angular/components/commit/6cee2b9e2d26027804233ade82fede9cfbbe06cb) | fix | remove deprecated factory functions |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [17cc7606a1](https://github.com/angular/components/commit/17cc7606a1efad644254505d116092f0cee20bfe) | fix | some events not firing on advanced marker |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [255df78cb1](https://github.com/angular/components/commit/255df78cb154b613d5f7db2b64b66fbcca27da45) | fix | **autocomplete:** remove deprecated factory functions |
+| [e8d005cbf8](https://github.com/angular/components/commit/e8d005cbf8823ad70e3e17d52df3924d6cd015df) | fix | **bottom-sheet:** remove deprecated animation definitions |
+| [7dc05280f7](https://github.com/angular/components/commit/7dc05280f7876260636a9800442e9d972099eb28) | fix | **button-toggle:** remove deprecated factory functions |
+| [69316b8713](https://github.com/angular/components/commit/69316b8713b0ae54de39cc893bc7a10ff356bb74) | fix | **button:** remove deprecated factory functions |
+| [b2c4df2d1e](https://github.com/angular/components/commit/b2c4df2d1e31a831f2082534e4228d1f3623bb56) | fix | **checkbox:** remove deprecated factory functions |
+| [24932b6e23](https://github.com/angular/components/commit/24932b6e23a3f1ebb6759e228bdcdda9ef77de73) | fix | **core:** remove deprecated factory functions |
+| [870433501c](https://github.com/angular/components/commit/870433501c9435128f14b40d478803c477fd5a50) | fix | **core:** rename some utility classes ([#31795](https://github.com/angular/components/pull/31795)) |
+| [3d89dfc3e9](https://github.com/angular/components/commit/3d89dfc3e9db1bc3acf168e517611ec2ac4ef121) | fix | **datepicker:** remove deprecated animation definitions |
+| [89ff55f411](https://github.com/angular/components/commit/89ff55f411943492f54e8b8862770127b2dafb0d) | fix | **datepicker:** remove deprecated factory functions |
+| [65c9b5ec76](https://github.com/angular/components/commit/65c9b5ec76982cdb16cd92c17a9d7c747549760c) | fix | **dialog:** remove deprecated animation definitions |
+| [aee4e92397](https://github.com/angular/components/commit/aee4e923973d4f78ece4323eb712b760aef9e84c) | fix | **expansion:** remove deprecated animation definitions |
+| [232b9fc595](https://github.com/angular/components/commit/232b9fc59535c5f04aaf16e07589e593395df4c1) | fix | **form-field:** remove deprecated animation definitions |
+| [dd5abe37e9](https://github.com/angular/components/commit/dd5abe37e94adf6a93c174f01d77eef19ef5919c) | fix | **icon:** remove deprecated factory functions |
+| [814ff1a25a](https://github.com/angular/components/commit/814ff1a25a5cb0bfeead32903ea8a23c70bf50da) | fix | **menu:** remove deprecated animation definitions |
+| [4b06a1a64b](https://github.com/angular/components/commit/4b06a1a64b0ab6d73e33b546079bde9ace6050ae) | fix | **menu:** remove deprecated factory functions |
+| [6d26c0fc1a](https://github.com/angular/components/commit/6d26c0fc1a382c6f4cd5f24761b93944ec3a0966) | fix | **paginator:** remove deprecated factory functions |
+| [8fc72e9319](https://github.com/angular/components/commit/8fc72e93194edc3c6f49c5ef9ac9caf227d7ef3e) | fix | **progress-bar:** remove deprecated factory functions |
+| [e1b68922bd](https://github.com/angular/components/commit/e1b68922bd6b5559ac9bfb6267c1b80df2f5e483) | fix | **progress-spinner:** remove deprecated factory functions |
+| [29c296f2fb](https://github.com/angular/components/commit/29c296f2fb6d83b99cb4886856154c3c2b5c8c28) | fix | **radio:** remove deprecated factory functions |
+| [7d25138f58](https://github.com/angular/components/commit/7d25138f580193f3cf0e09ef2d35659466750a75) | fix | **select:** remove deprecated animation definitions |
+| [479b4e343c](https://github.com/angular/components/commit/479b4e343c55dc9227566d85ee7525b2e6c67e02) | fix | **select:** remove deprecated factory functions |
+| [e87b95dc95](https://github.com/angular/components/commit/e87b95dc955942db118f6ed2144dbda82d399415) | fix | **sidenav:** remove deprecated animation definitions |
+| [4ec00baf54](https://github.com/angular/components/commit/4ec00baf54e739ccf7e8af686b0fa0ef7c2ad750) | fix | **sidenav:** remove deprecated factory functions |
+| [2259c7b4c7](https://github.com/angular/components/commit/2259c7b4c7810eacbaaeafff116faa6f0fa47ea3) | fix | **snack-bar:** remove deprecated animation definitions |
+| [54aad6efc4](https://github.com/angular/components/commit/54aad6efc4af6312971be4ee22d6cc85d587acb2) | fix | **snack-bar:** remove deprecated factory functions |
+| [6bdd8ae097](https://github.com/angular/components/commit/6bdd8ae09748821e2050daeab1318b08d7f3c92a) | fix | **sort:** remove deprecated animation definitions |
+| [f32bf20891](https://github.com/angular/components/commit/f32bf20891903b7182e87276c4968d880762ed52) | fix | **sort:** remove deprecated factory functions |
+| [bb7dbce929](https://github.com/angular/components/commit/bb7dbce92995385be39ee77517606d4006d4e07e) | fix | **stepper:** remove deprecated animation definitions |
+| [ac840a8c6c](https://github.com/angular/components/commit/ac840a8c6c4731e9429425b52c9006285127c3d9) | fix | **stepper:** remove deprecated factory functions |
+| [a7fce5e2c3](https://github.com/angular/components/commit/a7fce5e2c39110dca64ed5f9d68f145308d4d990) | fix | **tabs:** remove deprecated animation definitions |
+| [a5a7c12f03](https://github.com/angular/components/commit/a5a7c12f0315e95984234d3d31f2e8d513bbddbf) | fix | **tabs:** remove deprecated factory functions |
+| [ca1cd86dad](https://github.com/angular/components/commit/ca1cd86dad3628f80614aab104672d63b2288b26) | fix | **tooltip:** remove deprecated animation definitions |
+| [bc10a87c4a](https://github.com/angular/components/commit/bc10a87c4af99d416b8e27553e1fe553bc24cf91) | fix | **tooltip:** remove deprecated factory functions |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [30f6c3c457](https://github.com/angular/components/commit/30f6c3c4575ca4e4d3a8cb8c152d3ffba67b9e0f) | fix | **a11y:** remove deprecated factory functions |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.2"></a>
 # 20.2.2 "plastic-moose" (2025-09-03)
 
