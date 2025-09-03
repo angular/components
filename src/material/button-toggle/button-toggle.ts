@@ -716,7 +716,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // This serves two purposes:
     // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
     //    delay adding the class until the view is rendered.
-    // 2. We don't want animation if the `NoopAnimationsModule` is provided.
+    // 2. We don't want to animate if animations are disabled.
     if (!this._animationDisabled) {
       this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
     }

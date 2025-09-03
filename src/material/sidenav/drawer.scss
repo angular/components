@@ -54,7 +54,6 @@ $fallbacks: m3-sidenav.get-tokens();
     z-index: $drawer-backdrop-z-index;
   }
 
-  // Note that the `NoopAnimationsModule` is being handled inside of the component code.
   &.ng-animate-disabled,
   .ng-animate-disabled & {
     .mat-drawer-backdrop,

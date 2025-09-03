@@ -38,8 +38,8 @@ export interface MatProgressSpinnerDefaultOptions {
   /** Width of the spinner's stroke. */
   strokeWidth?: number;
   /**
-   * Whether the animations should be force to be enabled, ignoring if the current environment is
-   * using NoopAnimationsModule.
+   * Whether the animations should be force to be enabled, ignoring if the current environment
+   * disables them.
    */
   _forceAnimations?: boolean;
 }
