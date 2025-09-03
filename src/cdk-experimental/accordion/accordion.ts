@@ -94,7 +94,6 @@ export class CdkAccordionPanel {
     '[attr.aria-expanded]': 'pattern.expanded()',
     '[attr.aria-controls]': 'pattern.controls()',
     '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
     '[attr.tabindex]': 'pattern.tabindex()',
     '(keydown)': 'pattern.onKeydown($event)',
@@ -157,12 +156,8 @@ export class CdkAccordionTrigger {
       }
     }
 
-    /** Determine the state labels of the Accordion Trigger to pass to the label. */
-    const expansionLabel = this.pattern.expanded() ? '(Expanded)' : '(Collapsed)';
-    const disabledLabel = this.pattern.disabled() ? '(Disabled)' : '';
-
     /** Combine all parts into the final label. */
-    return `${buttonText.trim()} ${expansionLabel} ${disabledLabel}`.trim();
+    return `${buttonText.trim()}`.trim();
   });
 
   constructor() {
