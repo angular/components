@@ -1,3 +1,8 @@
+<a name="20.2.2"></a>
+# 20.2.2 "plastic-moose" (2025-09-03)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.1"></a>
 # 21.0.0-next.1 "althupite-avocado" (2025-08-27)
 ### cdk
