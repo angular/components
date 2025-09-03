@@ -11,7 +11,7 @@ interface ExtractedToken {
   /** Full prefix of the token. */
   prefix: string;
   /** Type of the token (color, typography etc.) */
-  type: string;
+  type: 'color' | 'typography' | 'density' | 'base';
   /** Value of the token. */
   value: string | number;
   /** Name under which the token can be referred to inside the `overrides` mixin. */
@@ -25,7 +25,7 @@ interface Token {
   /** Full prefix of the token. */
   prefix: string;
   /** Type of the token (color, typography etc.) */
-  type: string;
+  type: 'color' | 'typography' | 'density' | 'base';
   /** Name under which the token can be referred to inside the `overrides` mixin. */
   overridesName: string;
   /** Name of the system-level token that this token was derived from. */
@@ -172,8 +172,8 @@ function getUsageExample(themes: ThemeData[]): string | null {
     `// Customize the entire app. Change :root to your selector if you want to scope the styles.`,
     `:root {`,
     `  @include mat.${mixin.overridesMixin}((`,
-    `    ${firstToken.overridesName}: orange,`,
-    ...(secondToken ? [`    ${secondToken.overridesName}: red,`] : []),
+    `    ${getTokenExample(firstToken, 'first')},`,
+    ...(secondToken ? [`    ${getTokenExample(secondToken, 'second')},`] : []),
     `  ));`,
     `}`,
   ];
@@ -348,6 +348,30 @@ function jsonStringifyImplementation(
       }
     }
   `;
+}
+
+/** Generates an example string for a token. */
+function getTokenExample(token: Token, position: 'first' | 'second'): string {
+  const name = token.overridesName;
+  let value: string;
+
+  // Attempt to come up with a real-looking example based on the token's shape.
+  if (name.includes('shape')) {
+    value = position === 'first' ? '12px' : '16px';
+  } else if (name.includes('opacity')) {
+    value = position === 'first' ? '0.8' : '0.2';
+  } else if (name.includes('size')) {
+    value = position === 'first' ? '16px' : '10px';
+  } else if (name.includes('shadow')) {
+    value =
+      position === 'first'
+        ? '10px 10px 5px 0px rgba(0, 0, 0, 0.75)'
+        : '-4px -4px 5px 0px rgba(0, 0, 0, 0.5)';
+  } else {
+    value = position === 'first' ? 'orange' : 'red';
+  }
+
+  return `${name}: ${value}`;
 }
 
 /**
