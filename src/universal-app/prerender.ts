@@ -19,9 +19,6 @@ if (!outputPath) {
   throw new Error('Cannot determine output path for prerendered content');
 }
 
-// Do not enable production mode, because otherwise the `MatCommonModule` won't execute
-// the browser related checks that could cause NodeJS issues.
-
 renderApplication(bootstrap, {
   document: readFileSync(indexPath, 'utf-8'),
 })

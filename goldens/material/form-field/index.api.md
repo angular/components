@@ -11,8 +11,8 @@ import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/observers';
+import * as i1 from '@angular/cdk/observers';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -189,7 +189,7 @@ export class MatFormFieldModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatFormFieldModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, never, [typeof MatCommonModule, typeof i2.ObserversModule, typeof MatFormField, typeof MatLabel, typeof MatError, typeof MatHint, typeof MatPrefix, typeof MatSuffix], [typeof MatFormField, typeof MatLabel, typeof MatHint, typeof MatError, typeof MatPrefix, typeof MatSuffix, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatFormFieldModule, never, [typeof i1.ObserversModule, typeof MatFormField, typeof MatLabel, typeof MatError, typeof MatHint, typeof MatPrefix, typeof MatSuffix], [typeof MatFormField, typeof MatLabel, typeof MatHint, typeof MatError, typeof MatPrefix, typeof MatSuffix, typeof i2.BidiModule]>;
 }
 
 // @public

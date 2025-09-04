@@ -8,7 +8,7 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 
@@ -69,7 +69,7 @@ export class MatProgressBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressBarModule, never, [typeof MatProgressBar], [typeof MatProgressBar, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressBarModule, never, [typeof MatProgressBar], [typeof MatProgressBar, typeof i2.BidiModule]>;
 }
 
 // @public

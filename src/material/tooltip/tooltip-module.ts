@@ -8,13 +8,13 @@
 
 import {NgModule} from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
+import {BidiModule} from '@angular/cdk/bidi';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {MatCommonModule} from '../core';
 import {MatTooltip, TooltipComponent} from './tooltip';
 
 @NgModule({
-  imports: [A11yModule, OverlayModule, MatCommonModule, MatTooltip, TooltipComponent],
-  exports: [MatTooltip, TooltipComponent, MatCommonModule, CdkScrollableModule],
+  imports: [A11yModule, OverlayModule, MatTooltip, TooltipComponent],
+  exports: [MatTooltip, TooltipComponent, BidiModule, CdkScrollableModule],
 })
 export class MatTooltipModule {}

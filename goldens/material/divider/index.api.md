@@ -6,7 +6,7 @@
 
 import { BooleanInput } from '@angular/cdk/coercion';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 
 // @public (undocumented)
 export class MatDivider {
@@ -27,7 +27,7 @@ export class MatDividerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDividerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDividerModule, never, [typeof MatCommonModule, typeof MatDivider], [typeof MatDivider, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDividerModule, never, [typeof MatDivider], [typeof MatDivider, typeof i2.BidiModule]>;
 }
 
 // (No @packageDocumentation comment for this package)

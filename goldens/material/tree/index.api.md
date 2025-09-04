@@ -17,7 +17,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/tree';
-import * as i1_2 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -97,7 +97,7 @@ export class MatTreeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTreeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTreeModule, never, [typeof i1.CdkTreeModule, typeof MatCommonModule, typeof MatNestedTreeNode, typeof MatTreeNodeDef, typeof MatTreeNodePadding, typeof MatTreeNodeToggle, typeof MatTree, typeof MatTreeNode, typeof MatTreeNodeOutlet], [typeof MatCommonModule, typeof MatNestedTreeNode, typeof MatTreeNodeDef, typeof MatTreeNodePadding, typeof MatTreeNodeToggle, typeof MatTree, typeof MatTreeNode, typeof MatTreeNodeOutlet]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTreeModule, never, [typeof i1.CdkTreeModule, typeof MatNestedTreeNode, typeof MatTreeNodeDef, typeof MatTreeNodePadding, typeof MatTreeNodeToggle, typeof MatTree, typeof MatTreeNode, typeof MatTreeNodeOutlet], [typeof i2.BidiModule, typeof MatNestedTreeNode, typeof MatTreeNodeDef, typeof MatTreeNodePadding, typeof MatTreeNodeToggle, typeof MatTree, typeof MatTreeNode, typeof MatTreeNodeOutlet]>;
 }
 
 // @public

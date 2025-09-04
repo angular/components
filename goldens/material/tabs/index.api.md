@@ -18,7 +18,7 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -525,7 +525,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof i2.BidiModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
 }
 
 // @public

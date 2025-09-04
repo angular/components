@@ -17,9 +17,9 @@ import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2$1 from '@angular/cdk/portal';
+import * as i2$2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i3 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -141,7 +141,7 @@ export class MatSnackBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSnackBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, never, [typeof i2.OverlayModule, typeof i3.PortalModule, typeof MatButtonModule, typeof MatCommonModule, typeof SimpleSnackBar, typeof MatSnackBarContainer, typeof MatSnackBarLabel, typeof MatSnackBarActions, typeof MatSnackBarAction], [typeof MatCommonModule, typeof MatSnackBarContainer, typeof MatSnackBarLabel, typeof MatSnackBarActions, typeof MatSnackBarAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, never, [typeof i2.OverlayModule, typeof i2$1.PortalModule, typeof MatButtonModule, typeof SimpleSnackBar, typeof MatSnackBarContainer, typeof MatSnackBarLabel, typeof MatSnackBarActions, typeof MatSnackBarAction], [typeof i2$2.BidiModule, typeof MatSnackBarContainer, typeof MatSnackBarLabel, typeof MatSnackBarActions, typeof MatSnackBarAction]>;
 }
 
 // @public

@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
 import {MatSortHeader} from './sort-header';
 import {MatSort} from './sort';
-import {MatCommonModule} from '../core';
 
 @NgModule({
-  imports: [MatCommonModule, MatSort, MatSortHeader],
-  exports: [MatSort, MatSortHeader],
+  imports: [MatSort, MatSortHeader],
+  exports: [MatSort, MatSortHeader, BidiModule],
 })
 export class MatSortModule {}

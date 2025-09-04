@@ -10,10 +10,10 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import * as i1$1 from '@angular/cdk/scrolling';
 import * as i1 from '@angular/cdk/a11y';
-import * as i1_2 from '@angular/cdk/bidi';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
@@ -110,7 +110,7 @@ export class MatTooltipModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTooltipModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTooltipModule, never, [typeof i1.A11yModule, typeof i2.OverlayModule, typeof MatCommonModule, typeof MatTooltip, typeof TooltipComponent], [typeof MatTooltip, typeof TooltipComponent, typeof MatCommonModule, typeof i5.CdkScrollableModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTooltipModule, never, [typeof i1.A11yModule, typeof i2.OverlayModule, typeof MatTooltip, typeof TooltipComponent], [typeof MatTooltip, typeof TooltipComponent, typeof i2$1.BidiModule, typeof i1$1.CdkScrollableModule]>;
 }
 
 // @public

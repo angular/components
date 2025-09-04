@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatDivider} from './divider';
 
 @NgModule({
-  imports: [MatCommonModule, MatDivider],
-  exports: [MatDivider, MatCommonModule],
+  imports: [MatDivider],
+  exports: [MatDivider, BidiModule],
 })
 export class MatDividerModule {}
