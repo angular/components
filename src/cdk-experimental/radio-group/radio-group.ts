@@ -19,12 +19,16 @@ import {
   model,
   signal,
   WritableSignal,
-  OnDestroy,
 } from '@angular/core';
-import {RadioButtonPattern, RadioGroupPattern} from '../ui-patterns';
+import {
+  RadioButtonPattern,
+  RadioGroupPattern,
+  RadioGroupInteraction,
+  RadioGroupInstructionHandler,
+} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {CdkToolbar} from '../toolbar';
+import {CdkToolbarWidgetGroup} from '@angular/cdk-experimental/toolbar';
 
 // TODO: Move mapSignal to it's own file so it can be reused across components.
 
@@ -87,26 +91,27 @@ export function mapSignal<T, V>(
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '(keydown)': 'onKeydown($event)',
+    '(pointerdown)': 'onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
+  hostDirectives: [CdkToolbarWidgetGroup],
 })
 export class CdkRadioGroup<V> {
   /** A reference to the radio group element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the CdkToolbarWidgetGroup, if the radio group is in a toolbar. */
+  private readonly _cdkToolbarWidgetGroup = inject(CdkToolbarWidgetGroup);
+
+  /** Whether the radio group is inside of a CdkToolbar. */
+  private readonly _hasToolbar = computed(() => !!this._cdkToolbarWidgetGroup.toolbar());
 
   /** The CdkRadioButtons nested inside of the CdkRadioGroup. */
   private readonly _cdkRadioButtons = contentChildren(CdkRadioButton, {descendants: true});
 
   /** A signal wrapper for directionality. */
   protected textDirection = inject(Directionality).valueSignal;
-
-  /** A signal wrapper for toolbar. */
-  toolbar = inject(CdkToolbar, {optional: true});
-
-  /** Toolbar pattern if applicable */
-  private readonly _toolbarPattern = computed(() => this.toolbar?.pattern);
 
   /** The RadioButton UIPatterns of the child CdkRadioButtons. */
   protected items = computed(() => this._cdkRadioButtons().map(radio => radio.pattern));
@@ -135,17 +140,36 @@ export class CdkRadioGroup<V> {
     reverse: values => (values.length === 0 ? null : values[0]),
   });
 
+  /**
+   * The effective orientation of the radio group
+   * taking the parent toolbar's orientation into account.
+   */
+  private _orientation = computed(
+    () => this._cdkToolbarWidgetGroup.toolbar()?.orientation() ?? this.orientation(),
+  );
+
+  /** The effective skipDisabled behavior, taking the parent toolbar's setting into account. */
+  private _skipDisabled = computed(
+    () => this._cdkToolbarWidgetGroup.toolbar()?.skipDisabled() ?? this.skipDisabled(),
+  );
+
   /** The RadioGroup UIPattern. */
-  pattern: RadioGroupPattern<V> = new RadioGroupPattern<V>({
+  readonly pattern: RadioGroupPattern<V> = new RadioGroupPattern<V>({
     ...this,
     items: this.items,
     value: this._value,
     activeItem: signal(undefined),
+    orientation: this._orientation,
     textDirection: this.textDirection,
-    toolbar: this._toolbarPattern,
+    skipDisabled: this._skipDisabled,
     element: () => this._elementRef.nativeElement,
-    focusMode: this._toolbarPattern()?.inputs.focusMode ?? this.focusMode,
-    skipDisabled: this._toolbarPattern()?.inputs.skipDisabled ?? this.skipDisabled,
+  });
+
+  /** The interaction manager for the radio group, which translates DOM events into instructions. */
+  readonly interaction = new RadioGroupInteraction({
+    orientation: this._orientation,
+    textDirection: this.textDirection,
+    handler: () => (i => this.pattern.execute(i)) as RadioGroupInstructionHandler,
   });
 
   /** Whether the radio group has received focus yet. */
@@ -162,34 +186,34 @@ export class CdkRadioGroup<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused() && !this.toolbar) {
+      if (!this._hasFocused() && !this._hasToolbar()) {
         this.pattern.setDefaultState();
       }
     });
 
-    // TODO: Refactor to be handled within list behavior
     afterRenderEffect(() => {
-      if (this.toolbar) {
-        const radioButtons = this._cdkRadioButtons();
-        // If the group is disabled and the toolbar is set to skip disabled items,
-        // the radio buttons should not be part of the toolbar's navigation.
-        if (this.disabled() && this.toolbar.skipDisabled()) {
-          radioButtons.forEach(radio => this.toolbar!.unregister(radio));
-        } else {
-          radioButtons.forEach(radio => this.toolbar!.register(radio));
-        }
+      if (this._hasToolbar()) {
+        this._cdkToolbarWidgetGroup.disabled.set(this.disabled());
       }
     });
+
+    if (this._hasToolbar()) {
+      this._cdkToolbarWidgetGroup.handler.set(i => this.pattern.toolbarExecute(i));
+    }
   }
 
   onFocus() {
     this._hasFocused.set(true);
   }
 
-  toolbarButtonUnregister(radio: CdkRadioButton<V>) {
-    if (this.toolbar) {
-      this.toolbar.unregister(radio);
-    }
+  onKeydown(event: KeyboardEvent) {
+    if (this._hasToolbar()) return;
+    this.interaction.onKeydown(event);
+  }
+
+  onPointerdown(event: PointerEvent) {
+    if (this._hasToolbar()) return;
+    this.interaction.onPointerdown(event);
   }
 }
 
@@ -207,7 +231,7 @@ export class CdkRadioGroup<V> {
     '[id]': 'pattern.id()',
   },
 })
-export class CdkRadioButton<V> implements OnDestroy {
+export class CdkRadioButton<V> {
   /** A reference to the radio button element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -218,13 +242,13 @@ export class CdkRadioButton<V> implements OnDestroy {
   private readonly _generatedId = inject(_IdGenerator).getId('cdk-radio-button-');
 
   /** A unique identifier for the radio button. */
-  protected id = computed(() => this._generatedId);
+  readonly id = computed(() => this._generatedId);
 
   /** The value associated with the radio button. */
   readonly value = input.required<V>();
 
   /** The parent RadioGroup UIPattern. */
-  protected group = computed(() => this._cdkRadioGroup.pattern);
+  readonly group = computed(() => this._cdkRadioGroup.pattern);
 
   /** A reference to the radio button element to be focused on navigation. */
   element = computed(() => this._elementRef.nativeElement);
@@ -240,10 +264,4 @@ export class CdkRadioButton<V> implements OnDestroy {
     group: this.group,
     element: this.element,
   });
-
-  ngOnDestroy() {
-    if (this._cdkRadioGroup.toolbar) {
-      this._cdkRadioGroup.toolbarButtonUnregister(this);
-    }
-  }
 }

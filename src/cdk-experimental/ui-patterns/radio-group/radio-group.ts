@@ -6,11 +6,20 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {computed, signal} from '@angular/core';
 import {List, ListInputs} from '../behaviors/list/list';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {RadioButtonPattern} from './radio-button';
+import {
+  RadioGroupInstruction,
+  RadioGroupInstructionHandler,
+  RadioGroupOperation,
+} from './radio-group-interaction';
+import {
+  ToolbarWidgetGroupOperation,
+  ToolbarWidgetGroupInteractionHandler,
+  ToolbarWidgetGroupInstruction,
+} from '../toolbar/toolbar-widget-group';
 
 /** Represents the required inputs for a radio group. */
 export type RadioGroupInputs<V> = Omit<
@@ -22,145 +31,119 @@ export type RadioGroupInputs<V> = Omit<
 
   /** Whether the radio group is readonly. */
   readonly: SignalLike<boolean>;
-  /** Parent toolbar of radio group */
-  toolbar: SignalLike<ToolbarLike<V> | undefined>;
 };
-
-/**
- * Represents the properties exposed by a toolbar widget that need to be accessed by a radio group.
- * This exists to avoid circular dependency errors between the toolbar and radio button.
- */
-type ToolbarWidgetLike = {
-  id: SignalLike<string>;
-  index: SignalLike<number>;
-  element: SignalLike<HTMLElement>;
-  disabled: SignalLike<boolean>;
-  searchTerm: SignalLike<any>;
-  value: SignalLike<any>;
-};
-
-/**
- * Represents the properties exposed by a toolbar that need to be accessed by a radio group.
- * This exists to avoid circular dependency errors between the toolbar and radio button.
- */
-export interface ToolbarLike<V> {
-  listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
-  orientation: SignalLike<'vertical' | 'horizontal'>;
-  disabled: SignalLike<boolean>;
-}
 
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
   /** The list behavior for the radio group. */
-  readonly listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
+  readonly listBehavior: List<RadioButtonPattern<V>, V>;
 
   /** Whether the radio group is vertically or horizontally oriented. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+
+  /** Whether focus should wrap when navigating. */
+  readonly wrap = signal(false);
 
   /** Whether the radio group is disabled. */
-  disabled = computed(() => this.inputs.disabled() || this.listBehavior.disabled());
+  readonly disabled = computed(() => this.inputs.disabled() || this.listBehavior.disabled());
 
   /** The currently selected radio button. */
-  selectedItem = computed(() => this.listBehavior.selectionBehavior.selectedItems()[0]);
+  readonly selectedItem = computed(() => this.listBehavior.selectionBehavior.selectedItems()[0]);
 
   /** Whether the radio group is readonly. */
-  readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
+  readonly readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
   /** The tabindex of the radio group. */
-  tabindex = computed(() => (this.inputs.toolbar() ? -1 : this.listBehavior.tabindex()));
+  readonly tabindex = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active radio button (if using activedescendant). */
-  activedescendant = computed(() => this.listBehavior.activedescendant());
+  readonly activedescendant = computed(() => this.listBehavior.activedescendant());
 
-  /** The key used to navigate to the previous radio button. */
-  prevKey = computed(() => {
-    if (this.inputs.orientation() === 'vertical') {
-      return 'ArrowUp';
-    }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
-  });
+  /** A map of radio group operations to their corresponding instruction handlers. */
+  private readonly _actionMap: Record<RadioGroupOperation, RadioGroupInstructionHandler> = {
+    next: () => this.listBehavior.next({selectOne: !this.readonly()}),
+    prev: () => this.listBehavior.prev({selectOne: !this.readonly()}),
+    home: () => this.listBehavior.first({selectOne: !this.readonly()}),
+    end: () => this.listBehavior.last({selectOne: !this.readonly()}),
+    trigger: () => !this.readonly() && this.listBehavior.selectOne(),
+    goto: i =>
+      this.listBehavior.goto(this._getItem(i.metadata.event as PointerEvent)!, {
+        selectOne: !this.readonly(),
+      }),
+  };
 
-  /** The key used to navigate to the next radio button. */
-  nextKey = computed(() => {
-    if (this.inputs.orientation() === 'vertical') {
-      return 'ArrowDown';
-    }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
-  });
+  /** A map of toolbar widget group operations to their corresponding instruction handlers. */
+  private readonly _toolbarActionMap: Record<
+    ToolbarWidgetGroupOperation,
+    ToolbarWidgetGroupInteractionHandler<V>
+  > = {
+    enterFromStart: () => this.listBehavior.first(),
+    enterFromEnd: () => this.listBehavior.last(),
+    next: () => {
+      const item = this.inputs.activeItem();
+      this.listBehavior.next();
 
-  /** The keydown event manager for the radio group. */
-  keydown = computed(() => {
-    const manager = new KeyboardEventManager();
+      const leaveGroup = item === this.inputs.activeItem();
+      if (leaveGroup) {
+        this.inputs.activeItem.set(undefined);
+      }
+      return {
+        leaveGroup,
+      };
+    },
+    prev: () => {
+      const item = this.inputs.activeItem();
+      this.listBehavior.prev();
 
-    // When within a toolbar relinquish keyboard control
-    if (this.inputs.toolbar()) {
-      return manager;
-    }
-
-    // Readonly mode allows navigation but not selection changes.
-    if (this.readonly()) {
-      return manager
-        .on(this.prevKey, () => this.listBehavior.prev())
-        .on(this.nextKey, () => this.listBehavior.next())
-        .on('Home', () => this.listBehavior.first())
-        .on('End', () => this.listBehavior.last());
-    }
-
-    // Default behavior: navigate and select on arrow keys, home, end.
-    // Space/Enter also select the focused item.
-    return manager
-      .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}))
-      .on(this.nextKey, () => this.listBehavior.next({selectOne: true}))
-      .on('Home', () => this.listBehavior.first({selectOne: true}))
-      .on('End', () => this.listBehavior.last({selectOne: true}))
-      .on(' ', () => this.listBehavior.selectOne())
-      .on('Enter', () => this.listBehavior.selectOne());
-  });
-
-  /** The pointerdown event manager for the radio group. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
-
-    // When within a toolbar relinquish pointer control
-    if (this.inputs.toolbar()) {
-      return manager;
-    }
-
-    if (this.readonly()) {
-      // Navigate focus only in readonly mode.
-      return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
-    }
-
-    // Default behavior: navigate and select on click.
-    return manager.on(e => this.listBehavior.goto(this._getItem(e)!, {selectOne: true}));
-  });
+      const leaveGroup = item === this.inputs.activeItem();
+      if (leaveGroup) {
+        this.inputs.activeItem.set(undefined);
+      }
+      return {
+        leaveGroup,
+      };
+    },
+    groupNextWrap: () => {
+      this.wrap.set(true);
+      this.listBehavior.next();
+      this.wrap.set(false);
+    },
+    groupPrevWrap: () => {
+      this.wrap.set(true);
+      this.listBehavior.prev();
+      this.wrap.set(false);
+    },
+    home: () => this.inputs.activeItem.set(undefined),
+    end: () => this.inputs.activeItem.set(undefined),
+    trigger: i => this.execute({op: 'trigger', metadata: i.metadata}),
+    goto: i => this.execute({op: 'goto', metadata: i.metadata}),
+    asEntryPoint: () => this.setDefaultState(),
+  };
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
-    this.orientation =
-      inputs.toolbar() !== undefined ? inputs.toolbar()!.orientation : inputs.orientation;
+    this.orientation = inputs.orientation;
 
     this.listBehavior = new List({
       ...inputs,
-      activeItem: inputs.toolbar()?.listBehavior.inputs.activeItem ?? inputs.activeItem,
-      wrap: () => !!inputs.toolbar(),
+      wrap: this.wrap,
       multi: () => false,
-      selectionMode: () => (inputs.toolbar() ? 'explicit' : 'follow'),
+      selectionMode: () => 'follow',
       typeaheadDelay: () => 0, // Radio groups do not support typeahead.
     });
   }
 
-  /** Handles keydown events for the radio group. */
-  onKeydown(event: KeyboardEvent) {
-    if (!this.disabled()) {
-      this.keydown().handle(event);
-    }
+  /** Executes an instruction on the radio group. */
+  execute(instruction: RadioGroupInstruction) {
+    if (this.disabled()) return;
+
+    return this._actionMap[instruction.op](instruction);
   }
 
-  /** Handles pointerdown events for the radio group. */
-  onPointerdown(event: PointerEvent) {
-    if (!this.disabled()) {
-      this.pointerdown().handle(event);
-    }
+  /** Executes an instruction on the radio group as a toolbar widget group. */
+  toolbarExecute(instruction: ToolbarWidgetGroupInstruction<V>) {
+    if (this.disabled()) return;
+
+    return this._toolbarActionMap[instruction.op](instruction);
   }
 
   /**
