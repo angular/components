@@ -95,7 +95,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   @Input() id: string = inject(_IdGenerator).getId('cdk-drop-list-');
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  @Input('cdkDropListLockAxis') lockAxis: DragAxis;
+  @Input('cdkDropListLockAxis') lockAxis: DragAxis | null = null;
 
   /** Whether starting a dragging sequence from this container is disabled. */
   @Input({alias: 'cdkDropListDisabled', transform: booleanAttribute})
@@ -425,10 +425,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     this.sortingDisabled = sortingDisabled == null ? false : sortingDisabled;
     this.autoScrollDisabled = listAutoScrollDisabled == null ? false : listAutoScrollDisabled;
     this.orientation = listOrientation || 'vertical';
-
-    if (lockAxis) {
-      this.lockAxis = lockAxis;
-    }
+    this.lockAxis = lockAxis || null;
   }
 
   /** Syncs up the registered drag items with underlying drop list ref. */
