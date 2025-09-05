@@ -19,8 +19,9 @@ export class HeaderTagManager {
   private readonly _document = inject(DOCUMENT);
 
   /**
-   * Sets the canonical link in the header.
-   * It supposes the header link is already present in the index.html
+   * Sets the canonical link in the header. If the link already exists,
+   * it will be updated. Otherwise, a new link will be created and inserted
+   * after the title tag.
    *
    * The function behave invariably and will always point to angular.dev,
    * no matter if it's a specific version build
@@ -28,7 +29,22 @@ export class HeaderTagManager {
   setCanonical(absolutePath: string): void {
     const pathWithoutFragment = this._normalizePath(absolutePath).split('#')[0];
     const fullPath = `${MAT_ANGULAR_DEV}/${pathWithoutFragment}`;
-    this._document.querySelector('link[rel=canonical]')?.setAttribute('href', fullPath);
+    let canonicalLink = this._document.querySelector<HTMLLinkElement>('link[rel=canonical]');
+
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', fullPath);
+    } else {
+      canonicalLink = this._document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      canonicalLink.setAttribute('href', fullPath);
+
+      const title = this._document.head.querySelector('title');
+      if (title) {
+        title.insertAdjacentElement('afterend', canonicalLink);
+      } else {
+        this._document.head.appendChild(canonicalLink);
+      }
+    }
   }
 
   private _normalizePath(path: string): string {
