@@ -293,7 +293,7 @@ export class DragRef<T = any> {
   private _cachedShadowRoot: ShadowRoot | null | undefined;
 
   /** Axis along which dragging is locked. */
-  lockAxis: 'x' | 'y';
+  lockAxis: 'x' | 'y' | null = null;
 
   /**
    * Amount of milliseconds to wait after the user has put their
