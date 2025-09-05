@@ -4,8 +4,7 @@
   </h2>
   <doc-viewer [document]="getOverviewDocumentUrl(docItem)"
       class="docs-component-view-text-content docs-component-overview"
-      (contentRendered)="updateTableOfContents('Overview Content', $event)">
-  </doc-viewer>
+      (contentRendered)="updateTableOfContents('Overview Content', $event)" />
 
   @if (showToc | async) {
     <table-of-contents #toc container=".mat-drawer-content"/>

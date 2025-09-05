@@ -215,7 +215,7 @@ describe('DocViewer', () => {
 
 @Component({
   selector: 'test',
-  template: `<doc-viewer [document]="documentUrl"></doc-viewer>`,
+  template: `<doc-viewer [document]="documentUrl" />`,
   imports: [DocViewer],
 })
 class DocViewerTestComponent {
@@ -270,7 +270,7 @@ class TestComponent {}
 
 @Component({
   selector: 'test',
-  template: `<doc-viewer [document]="component"></doc-viewer>`,
+  template: `<doc-viewer [document]="component" />`,
   imports: [DocViewer, TestComponent],
 })
 class DocViewerWithCompTestComponent {
