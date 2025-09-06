@@ -183,18 +183,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:20.0.0-rc.2":
-  version: 20.0.0-rc.2
-  resolution: "@angular/animations@npm:20.0.0-rc.2"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/common": 20.0.0-rc.2
-    "@angular/core": 20.0.0-rc.2
-  checksum: 10/f9f861bbe5eee3985703d24696e7e0b344c12be17b1a4b3e219967f16c3ecf67e5b7e0b758cc06f97c7d396db19430d3fcc68a37096bcde774a4857ac51dcccd
-  languageName: node
-  linkType: hard
-
 "@angular/build@npm:20.0.0-rc.3":
   version: 20.0.0-rc.3
   resolution: "@angular/build@npm:20.0.0-rc.3"
@@ -9782,7 +9770,6 @@ __metadata:
   resolution: "yarn-pnp-compat@workspace:."
   dependencies:
     "@angular-devkit/build-angular": "npm:20.0.0-rc.3"
-    "@angular/animations": "npm:20.0.0-rc.2"
     "@angular/cdk": "npm:next"
     "@angular/cli": "npm:20.0.0-rc.3"
     "@angular/common": "npm:20.0.0-rc.2"

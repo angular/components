@@ -1,9 +1,9 @@
 import 'zone.js';
 
 import {ErrorHandler} from '@angular/core';
+import {MATERIAL_ANIMATIONS} from '@angular/material/core';
 import {bootstrapApplication, provideClientHydration} from '@angular/platform-browser';
 import {provideServerRendering, renderApplication} from '@angular/platform-server';
-import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {runfiles} from '@bazel/runfiles';
 import {readFileSync, writeFileSync} from 'fs';
 
@@ -32,7 +32,12 @@ renderApplication(bootstrap, {
 function bootstrap() {
   return bootstrapApplication(KitchenSink, {
     providers: [
-      provideNoopAnimations(),
+      {
+        provide: MATERIAL_ANIMATIONS,
+        useValue: {
+          animationsDisabled: true,
+        },
+      },
       provideServerRendering(),
       provideClientHydration(),
       {
