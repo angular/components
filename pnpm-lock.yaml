@@ -219,8 +219,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.9
       firebase-tools:
-        specifier: 14.14.0
-        version: 14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.2
+        version: 14.15.2(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.1
@@ -237,8 +237,8 @@ importers:
         specifier: ^5.6.0
         version: 5.9.0
       jasmine-core:
-        specifier: 5.9.0
-        version: 5.9.0
+        specifier: 5.10.0
+        version: 5.10.0
       jasmine-reporters:
         specifier: ^2.5.2
         version: 2.5.2
@@ -297,8 +297,8 @@ importers:
         specifier: 6.2.3
         version: 6.2.3(rollup@4.46.2)(typescript@5.9.2)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.3
-        version: 0.5.3(@types/node@22.17.1)(rollup@4.46.2)
+        specifier: 0.5.4
+        version: 0.5.4(@types/node@22.17.1)(rollup@4.46.2)
       sass:
         specifier: ^1.80.6
         version: 1.90.0
@@ -451,8 +451,8 @@ importers:
         specifier: ^14.0.0
         version: 14.12.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13)
       jasmine-core:
-        specifier: 5.9.0
-        version: 5.9.0
+        specifier: 5.10.0
+        version: 5.10.0
       jasmine-spec-reporter:
         specifier: 7.0.0
         version: 7.0.0
@@ -473,7 +473,7 @@ importers:
         version: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
       karma-jasmine-html-reporter:
         specifier: ^2.0.0
-        version: 2.1.0(jasmine-core@5.9.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
+        version: 2.1.0(jasmine-core@5.10.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
       light-server:
         specifier: ^2.9.1
         version: 2.9.1(bufferutil@4.0.9)
@@ -493,8 +493,8 @@ importers:
         specifier: ^24.6.1
         version: 24.16.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.91.0
-        version: 1.91.0
+        specifier: 1.92.1
+        version: 1.92.1
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -5065,8 +5065,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.14.0:
-    resolution: {integrity: sha512-QDc/PL8wMGm6ZD9DDHIcQpK/8SmoVL6Hec3GohJjCumYpHCQsQK/8ncZmY21lW//rN29Q/CLYhhU9SN9u3xoEg==}
+  firebase-tools@14.15.2:
+    resolution: {integrity: sha512-6wyA9F3tXToAKJR8IkDyHOlOwAOL6j9qoA1inF6psiC8lzMwJ9/t+Lc7HmvIgOb1KDdj82vxL3llX28wcHwonw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6085,6 +6085,9 @@ packages:
 
   jasmine-core@4.6.1:
     resolution: {integrity: sha512-VYz/BjjmC3klLJlLwA4Kw8ytk0zDSmbbDLNs794VnWmkcCB7I9aAL/D48VNQtmITyPvea2C3jdUMfc3kAoy0PQ==}
+
+  jasmine-core@5.10.0:
+    resolution: {integrity: sha512-MrChbWV5LBo+EaeKwTM1eZ6oYSz1brvFExnRafraEkJkbJ9evbUxABhnIgGQimhpMxhg+BD6QmOvb/e3NXsNdg==}
 
   jasmine-core@5.9.0:
     resolution: {integrity: sha512-OMUvF1iI6+gSRYOhMrH4QYothVLN9C3EJ6wm4g7zLJlnaTl8zbaPOr0bTw70l7QxkoM7sVFOWo83u9B2Fe2Zng==}
@@ -7827,8 +7830,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 5.9.2
 
-  rollup-plugin-sourcemaps2@0.5.3:
-    resolution: {integrity: sha512-KmD8A50Lvi/FVkmu8Xo1LXFfhE5tCK/CIAWcnN44cJlgjyGR1l8WqYrSpJ+SQ3e6KNSj7GBvwqUg/4nQt3Agow==}
+  rollup-plugin-sourcemaps2@0.5.4:
+    resolution: {integrity: sha512-XK6ITvEsKtUFN1GQbYKoqilwh1yKxTS9BLaFlVsm0IaYUYe3eVnhBWzKP4AHbkBO2BNOheGNlf407K7wCj6Rrw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -7924,8 +7927,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.91.0:
-    resolution: {integrity: sha512-aFOZHGf+ur+bp1bCHZ+u8otKGh77ZtmFyXDo4tlYvT7PWql41Kwd8wdkPqhhT+h2879IVblcHFglIMofsFd1EA==}
+  sass@1.92.1:
+    resolution: {integrity: sha512-ffmsdbwqb3XeyR8jJR6KelIXARM9bFQe8A6Q3W4Klmwy5Ckd5gz7jgUNHo4UOqutU5Sk1DtKLbpDP0nLCg1xqQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -14619,14 +14622,14 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@14.14.0(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.15.2(@types/node@22.17.1)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
       '@inquirer/prompts': 7.8.3(@types/node@22.17.1)
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/sdk': 1.17.3
       abort-controller: 3.0.0
       ajv: 8.17.1
       ajv-formats: 3.0.1
@@ -15850,6 +15853,8 @@ snapshots:
 
   jasmine-core@4.6.1: {}
 
+  jasmine-core@5.10.0: {}
+
   jasmine-core@5.9.0: {}
 
   jasmine-reporters@2.5.2:
@@ -16033,9 +16038,9 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.9.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.10.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
     dependencies:
-      jasmine-core: 5.9.0
+      jasmine-core: 5.10.0
       karma: 6.4.4(bufferutil@4.0.9)
       karma-jasmine: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
 
@@ -17829,7 +17834,7 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.27.1
 
-  rollup-plugin-sourcemaps2@0.5.3(@types/node@22.17.1)(rollup@4.46.2):
+  rollup-plugin-sourcemaps2@0.5.4(@types/node@22.17.1)(rollup@4.46.2):
     dependencies:
       '@rollup/pluginutils': 5.2.0(rollup@4.46.2)
       rollup: 4.46.2
@@ -17957,7 +17962,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.91.0:
+  sass@1.92.1:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3
