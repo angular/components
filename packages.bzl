@@ -33,7 +33,6 @@ NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
 })
 
 ANGULAR_PACKAGES_CONFIG = [
-    ("@angular/animations", struct(entry_points = ["browser"])),
     ("@angular/common", struct(entry_points = ["http/testing", "http", "testing"])),
     ("@angular/compiler", struct(entry_points = [])),
     ("@angular/core", struct(entry_points = ["testing"])),
