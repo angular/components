@@ -63,7 +63,7 @@ export class DropListRef<T = any> {
   sortingDisabled: boolean = false;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  lockAxis: 'x' | 'y';
+  lockAxis: 'x' | 'y' | null = null;
 
   /**
    * Whether auto-scrolling the view when the user
