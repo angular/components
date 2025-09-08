@@ -104,7 +104,7 @@ $fallbacks: m3-slider.get-tokens();
   display: flex;
   align-items: center;
   transform: scale(0);
-  transform-origin: bottom;
+  transform-origin: token-utils.slot(slider-value-indicator-transform-origin, $fallbacks);
   transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
 
   // Stop parent word-break from altering
