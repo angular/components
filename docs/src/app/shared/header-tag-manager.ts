@@ -20,8 +20,7 @@ export class HeaderTagManager {
 
   /**
    * Sets the canonical link in the header. If the link already exists,
-   * it will be updated. Otherwise, a new link will be created and inserted
-   * after the title tag.
+   * it will be updated. Otherwise, a new link will be created and inserted.
    *
    * The function behave invariably and will always point to angular.dev,
    * no matter if it's a specific version build
@@ -37,13 +36,7 @@ export class HeaderTagManager {
       canonicalLink = this._document.createElement('link');
       canonicalLink.setAttribute('rel', 'canonical');
       canonicalLink.setAttribute('href', fullPath);
-
-      const title = this._document.head.querySelector('title');
-      if (title) {
-        title.insertAdjacentElement('afterend', canonicalLink);
-      } else {
-        this._document.head.appendChild(canonicalLink);
-      }
+      this._document.head.appendChild(canonicalLink);
     }
   }
 
