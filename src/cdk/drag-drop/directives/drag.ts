@@ -91,7 +91,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragData') data: T;
 
   /** Locks the position of the dragged element along the specified axis. */
-  @Input('cdkDragLockAxis') lockAxis: DragAxis;
+  @Input('cdkDragLockAxis') lockAxis: DragAxis | null = null;
 
   /**
    * Selector that will be used to determine the root draggable element, starting from
@@ -560,10 +560,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
     this.disabled = draggingDisabled == null ? false : draggingDisabled;
     this.dragStartDelay = dragStartDelay || 0;
-
-    if (lockAxis) {
-      this.lockAxis = lockAxis;
-    }
+    this.lockAxis = lockAxis || null;
 
     if (constrainPosition) {
       this.constrainPosition = constrainPosition;
