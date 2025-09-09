@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatSlideToggle} from './slide-toggle';
 
 @NgModule({
-  imports: [MatSlideToggle, MatCommonModule],
-  exports: [MatSlideToggle, MatCommonModule],
+  imports: [MatSlideToggle],
+  exports: [MatSlideToggle, BidiModule],
 })
 export class MatSlideToggleModule {}

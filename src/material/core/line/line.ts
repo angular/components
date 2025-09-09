@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NgModule, Directive, ElementRef, QueryList} from '@angular/core';
+import {BidiModule} from '@angular/cdk/bidi';
+import {Directive, ElementRef, NgModule, QueryList} from '@angular/core';
 import {startWith} from 'rxjs/operators';
-import {MatCommonModule} from '../common-behaviors/common-module';
 
 /**
  * Shared directive to count lines inside a text area, such as a list item.
@@ -51,7 +51,7 @@ function setClass(element: ElementRef<HTMLElement>, className: string, isAdd: bo
 }
 
 @NgModule({
-  imports: [MatCommonModule, MatLine],
-  exports: [MatLine, MatCommonModule],
+  imports: [MatLine],
+  exports: [MatLine, BidiModule],
 })
 export class MatLineModule {}

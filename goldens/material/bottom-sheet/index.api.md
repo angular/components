@@ -12,8 +12,8 @@ import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/dialog';
-import * as i1_2 from '@angular/cdk/bidi';
-import * as i3 from '@angular/cdk/portal';
+import * as i2$1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -45,11 +45,6 @@ export class MatBottomSheet implements OnDestroy {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<MatBottomSheet>;
 }
-
-// @public @deprecated
-export const matBottomSheetAnimations: {
-    readonly bottomSheetState: any;
-};
 
 // @public
 export class MatBottomSheetConfig<D = any> {
@@ -102,7 +97,7 @@ export class MatBottomSheetModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatBottomSheetModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBottomSheetModule, never, [typeof i1.DialogModule, typeof MatCommonModule, typeof i3.PortalModule, typeof MatBottomSheetContainer], [typeof MatBottomSheetContainer, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatBottomSheetModule, never, [typeof i1.DialogModule, typeof i2.PortalModule, typeof MatBottomSheetContainer], [typeof MatBottomSheetContainer, typeof i2$1.BidiModule]>;
 }
 
 // @public

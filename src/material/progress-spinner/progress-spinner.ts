@@ -38,8 +38,8 @@ export interface MatProgressSpinnerDefaultOptions {
   /** Width of the spinner's stroke. */
   strokeWidth?: number;
   /**
-   * Whether the animations should be force to be enabled, ignoring if the current environment is
-   * using NoopAnimationsModule.
+   * Whether the animations should be force to be enabled, ignoring if the current environment
+   * disables them.
    */
   _forceAnimations?: boolean;
 }
@@ -48,17 +48,8 @@ export interface MatProgressSpinnerDefaultOptions {
 export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS =
   new InjectionToken<MatProgressSpinnerDefaultOptions>('mat-progress-spinner-default-options', {
     providedIn: 'root',
-    factory: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({diameter: BASE_SIZE}),
   });
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions {
-  return {diameter: BASE_SIZE};
-}
 
 /**
  * Base reference size of the spinner.

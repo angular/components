@@ -78,23 +78,14 @@ export const MAT_MENU_DEFAULT_OPTIONS = new InjectionToken<MatMenuDefaultOptions
   'mat-menu-default-options',
   {
     providedIn: 'root',
-    factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      overlapTrigger: false,
+      xPosition: 'after',
+      yPosition: 'below',
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
-  return {
-    overlapTrigger: false,
-    xPosition: 'after',
-    yPosition: 'below',
-    backdropClass: 'cdk-overlay-transparent-backdrop',
-  };
-}
 
 /** Name of the enter animation `@keyframes`. */
 const ENTER_ANIMATION = '_mat-menu-enter';

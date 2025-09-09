@@ -1,12 +1,13 @@
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
+  ANIMATION_MODULE_TYPE,
   Component,
   ErrorHandler,
   EventEmitter,
   Injectable,
   Injector,
-  Type,
+  Provider,
   ViewChild,
   ViewContainerRef,
   WritableSignal,
@@ -21,7 +22,6 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '../bidi';
 import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {dispatchFakeEvent} from '../testing/private';
@@ -47,16 +47,16 @@ describe('Overlay', () => {
   let dir: WritableSignal<Direction>;
   let mockLocation: SpyLocation;
 
-  function setup(imports: Type<unknown>[] = []) {
+  function setup(providers: Provider[] = []) {
     dir = signal<Direction>('ltr');
     TestBed.configureTestingModule({
-      imports,
       providers: [
         provideFakeDirectionality(dir),
         {
           provide: Location,
           useClass: SpyLocation,
         },
+        ...providers,
       ],
     });
 
@@ -892,7 +892,12 @@ describe('Overlay', () => {
     it('should set a class on the backdrop when animations are disabled', () => {
       cleanup();
       TestBed.resetTestingModule();
-      setup([NoopAnimationsModule]);
+      setup([
+        {
+          provide: ANIMATION_MODULE_TYPE,
+          useValue: 'NoopAnimations',
+        },
+      ]);
 
       let overlayRef = createOverlayRef(injector, config);
       overlayRef.attach(componentPortal);

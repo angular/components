@@ -15,11 +15,11 @@ import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/dialog';
-import * as i1_2 from '@angular/cdk/bidi';
+import * as i1$1 from '@angular/cdk/dialog';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i2$1 from '@angular/cdk/portal';
+import * as i2$2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i3 from '@angular/cdk/portal';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -37,14 +37,6 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
 // @public
 export function _closeDialogVia<R>(ref: MatDialogRef<R>, interactionType: FocusOrigin, result?: R): void;
-
-// @public @deprecated
-export const _defaultParams: {
-    params: {
-        enterAnimationDuration: string;
-        exitAnimationDuration: string;
-    };
-};
 
 // @public
 export interface DialogPosition {
@@ -102,11 +94,6 @@ export class MatDialogActions extends MatDialogLayoutSection {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogActions, never>;
 }
-
-// @public @deprecated
-export const matDialogAnimations: {
-    readonly dialogContainer: any;
-};
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
@@ -188,7 +175,7 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
 // @public
 export class MatDialogContent {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogContent, "[mat-dialog-content], mat-dialog-content, [matDialogContent]", never, {}, {}, never, never, true, [{ directive: typeof i5.CdkScrollable; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogContent, "[mat-dialog-content], mat-dialog-content, [matDialogContent]", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogContent, never>;
 }
@@ -200,7 +187,7 @@ export class MatDialogModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatDialogModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDialogModule, never, [typeof i1.DialogModule, typeof i2.OverlayModule, typeof i3.PortalModule, typeof MatCommonModule, typeof MatDialogContainer, typeof MatDialogClose, typeof MatDialogTitle, typeof MatDialogActions, typeof MatDialogContent], [typeof MatCommonModule, typeof MatDialogContainer, typeof MatDialogClose, typeof MatDialogTitle, typeof MatDialogActions, typeof MatDialogContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatDialogModule, never, [typeof i1$1.DialogModule, typeof i2.OverlayModule, typeof i2$1.PortalModule, typeof MatDialogContainer, typeof MatDialogClose, typeof MatDialogTitle, typeof MatDialogActions, typeof MatDialogContent], [typeof i2$2.BidiModule, typeof MatDialogContainer, typeof MatDialogClose, typeof MatDialogTitle, typeof MatDialogActions, typeof MatDialogContent]>;
 }
 
 // @public

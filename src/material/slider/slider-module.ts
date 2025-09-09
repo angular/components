@@ -6,21 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '../core';
+import {MatRippleModule} from '../core';
 import {MatSlider} from './slider';
 import {MatSliderVisualThumb} from './slider-thumb';
 import {MatSliderThumb, MatSliderRangeThumb} from './slider-input';
 
 @NgModule({
-  imports: [
-    MatCommonModule,
-    MatRippleModule,
-    MatSlider,
-    MatSliderThumb,
-    MatSliderRangeThumb,
-    MatSliderVisualThumb,
-  ],
-  exports: [MatSlider, MatSliderThumb, MatSliderRangeThumb],
+  imports: [MatRippleModule, MatSlider, MatSliderThumb, MatSliderRangeThumb, MatSliderVisualThumb],
+  exports: [MatSlider, MatSliderThumb, MatSliderRangeThumb, BidiModule],
 })
 export class MatSliderModule {}

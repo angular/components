@@ -12,14 +12,10 @@ import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '../button';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {MatCommonModule} from '../core';
 import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {MatDatepicker} from './datepicker';
-import {
-  MatDatepickerContent,
-  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-} from './datepicker-base';
+import {MatDatepickerContent} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
@@ -30,6 +26,7 @@ import {MatDateRangeInput} from './date-range-input';
 import {MatStartDate, MatEndDate} from './date-range-input-parts';
 import {MatDateRangePicker} from './date-range-picker';
 import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './datepicker-actions';
+import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
   imports: [
@@ -37,7 +34,6 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     OverlayModule,
     A11yModule,
     PortalModule,
-    MatCommonModule,
     MatCalendar,
     MatCalendarBody,
     MatDatepicker,
@@ -58,6 +54,7 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerApply,
   ],
   exports: [
+    BidiModule,
     CdkScrollableModule,
     MatCalendar,
     MatCalendarBody,
@@ -78,6 +75,6 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerCancel,
     MatDatepickerApply,
   ],
-  providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
+  providers: [MatDatepickerIntl],
 })
 export class MatDatepickerModule {}

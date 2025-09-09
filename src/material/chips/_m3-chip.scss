@@ -49,11 +49,8 @@
       chip-selected-label-text-color: map.get($system, on-secondary-container),
       chip-selected-trailing-action-state-layer-color: map.get($system, on-secondary-container),
       chip-selected-trailing-icon-color: map.get($system, on-secondary-container),
-      // Parent chips will show focus/hover state as well so need stronger focus/hover styling here
-      chip-trailing-action-focus-state-layer-opacity:
-        calc(map.get($system, focus-state-layer-opacity) * 2),
-      chip-trailing-action-hover-state-layer-opacity:
-        calc(map.get($system, hover-state-layer-opacity) * 2),
+      chip-trailing-action-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      chip-trailing-action-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
       chip-trailing-action-state-layer-color: map.get($system, on-surface-variant),
       chip-with-icon-disabled-icon-color: map.get($system, on-surface),
       chip-with-icon-icon-color: map.get($system, on-surface-variant),

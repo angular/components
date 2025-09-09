@@ -153,6 +153,8 @@ export function createAdvancedMarkerSpy(
 ): jasmine.SpyObj<google.maps.marker.AdvancedMarkerElement> {
   const advancedMarkerSpy = jasmine.createSpyObj('google.maps.marker.AdvancedMarkerElement', [
     'addListener',
+    'addEventListener',
+    'removeEventListener',
   ]);
   advancedMarkerSpy.addListener.and.returnValue({remove: () => {}});
   return advancedMarkerSpy;

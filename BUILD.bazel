@@ -1,9 +1,10 @@
+load("@devinfra//bazel/validation:defs.bzl", "validate_ts_version_matching")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_ENTRYPOINTS", "MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS")
-load("@npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -34,4 +35,9 @@ genrule(
     name = "entry_points_manifest",
     outs = ["entry_points_manifest.json"],
     cmd = "echo '%s' > $@" % entryPoints,
+)
+
+validate_ts_version_matching(
+    module_lock_file = "MODULE.bazel.lock",
+    package_json = "package.json",
 )

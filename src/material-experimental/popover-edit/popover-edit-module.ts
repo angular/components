@@ -7,7 +7,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
 import {CdkEditable, CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
 import {
   MatPopoverEdit,
@@ -20,7 +19,6 @@ import {MatEditLens, MatEditRevert, MatEditClose} from './lens-directives';
 @NgModule({
   imports: [
     CdkPopoverEditModule,
-    MatCommonModule,
     MatPopoverEdit,
     MatPopoverEditTabOut,
     MatRowHoverContent,

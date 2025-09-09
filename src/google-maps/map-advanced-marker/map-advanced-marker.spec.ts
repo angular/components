@@ -121,20 +121,21 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerSpy = createAdvancedMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
-    const addSpy = advancedMarkerSpy.addListener;
+    const customSpy = advancedMarkerSpy.addListener;
+    const nativeSpy = advancedMarkerSpy.addEventListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
     flush();
 
-    expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
+    expect(customSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('auxclick', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
   }));
 
   it('should be able to add an event listener after init', fakeAsync(() => {

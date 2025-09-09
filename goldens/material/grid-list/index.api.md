@@ -7,7 +7,7 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { NumberInput } from '@angular/cdk/coercion';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -47,7 +47,7 @@ export class MatGridListModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatGridListModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatGridListModule, never, [typeof MatLineModule, typeof MatCommonModule, typeof MatGridList, typeof MatGridTile, typeof MatGridTileText, typeof MatGridTileHeaderCssMatStyler, typeof MatGridTileFooterCssMatStyler, typeof MatGridAvatarCssMatStyler], [typeof MatGridList, typeof MatGridTile, typeof MatGridTileText, typeof MatLineModule, typeof MatCommonModule, typeof MatGridTileHeaderCssMatStyler, typeof MatGridTileFooterCssMatStyler, typeof MatGridAvatarCssMatStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatGridListModule, never, [typeof MatLineModule, typeof MatGridList, typeof MatGridTile, typeof MatGridTileText, typeof MatGridTileHeaderCssMatStyler, typeof MatGridTileFooterCssMatStyler, typeof MatGridAvatarCssMatStyler], [typeof i2.BidiModule, typeof MatGridList, typeof MatGridTile, typeof MatGridTileText, typeof MatLineModule, typeof MatGridTileHeaderCssMatStyler, typeof MatGridTileFooterCssMatStyler, typeof MatGridAvatarCssMatStyler]>;
 }
 
 // @public (undocumented)

@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatProgressBar} from './progress-bar';
 
 @NgModule({
   imports: [MatProgressBar],
-  exports: [MatProgressBar, MatCommonModule],
+  exports: [MatProgressBar, BidiModule],
 })
 export class MatProgressBarModule {}

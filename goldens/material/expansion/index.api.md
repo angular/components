@@ -13,9 +13,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/accordion';
-import * as i3 from '@angular/cdk/portal';
+import * as i1 from '@angular/cdk/accordion';
+import * as i2$1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -24,9 +24,6 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated
-export const EXPANSION_PANEL_ANIMATION_TIMING = "225ms cubic-bezier(0.4,0.0,0.2,1)";
 
 // @public
 export const MAT_ACCORDION: InjectionToken<MatAccordionBase>;
@@ -73,12 +70,6 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
 // @public
 export type MatAccordionTogglePosition = 'before' | 'after';
 
-// @public @deprecated
-export const matExpansionAnimations: {
-    readonly indicatorRotate: any;
-    readonly bodyExpansion: any;
-};
-
 // @public (undocumented)
 export class MatExpansionModule {
     // (undocumented)
@@ -86,7 +77,7 @@ export class MatExpansionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatExpansionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof MatCommonModule, typeof i2.CdkAccordionModule, typeof i3.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof i1.CdkAccordionModule, typeof i2.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof i2$1.BidiModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
 }
 
 // @public
