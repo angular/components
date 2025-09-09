@@ -10,8 +10,8 @@
 
 @switch (orientation) {
   @case ('horizontal') {
-    <div class="mat-horizontal-stepper-wrapper" role="group">
-      <div class="mat-horizontal-stepper-header-container">
+    <div class="mat-horizontal-stepper-wrapper">
+      <div class="mat-horizontal-stepper-header-container" role="group">
         @for (step of steps; track step) {
           <ng-container
             [ngTemplateOutlet]="stepTemplate"
@@ -22,7 +22,7 @@
         }
       </div>
 
-      <div class="mat-horizontal-content-container">
+      <div class="mat-horizontal-content-container" role="group">
         @for (step of steps; track step) {
           <div
             #animatedContainer
@@ -76,10 +76,7 @@
     (keydown)="_onKeydown($event)"
     [tabIndex]="_getFocusIndex() === step.index() ? 0 : -1"
     [id]="_getStepLabelId(step.index())"
-    [attr.aria-posinset]="step.index() + 1"
-    [attr.aria-setsize]="steps.length"
     [attr.aria-controls]="_getStepContentId(step.index())"
-    [attr.aria-selected]="step.isSelected()"
     [attr.aria-label]="step.ariaLabel || null"
     [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
     [attr.aria-disabled]="step.isNavigable() ? null : true"
