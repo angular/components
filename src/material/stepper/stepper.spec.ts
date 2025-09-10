@@ -114,25 +114,20 @@ describe('MatStepper', () => {
       expect(stepper.selected instanceof MatStep).toBe(true);
     });
 
-    it('should set the "tablist" role on stepper', () => {
-      const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
-      expect(stepperEl.getAttribute('role')).toBe('tablist');
-    });
-
     it('should display the correct label', () => {
-      let selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      let selectedLabel = fixture.nativeElement.querySelector('[aria-current="step"]');
       expect(selectedLabel.textContent).toMatch('Step 1');
 
       fixture.componentInstance.stepper.selectedIndex = 2;
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-current="step"]');
       expect(selectedLabel.textContent).toMatch('Step 3');
 
       fixture.componentInstance.inputLabel.set('New Label');
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-current="step"]');
       expect(selectedLabel.textContent).toMatch('New Label');
     });
 
@@ -340,15 +335,6 @@ describe('MatStepper', () => {
 
       selectionChangeSubscription.unsubscribe();
       animationDoneSubscription.unsubscribe();
-    });
-
-    it('should set the correct aria-posinset and aria-setsize', () => {
-      const headers = Array.from<HTMLElement>(
-        fixture.nativeElement.querySelectorAll('.mat-step-header'),
-      );
-
-      expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
-      expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
     it('should adjust the index when removing a step before the current one', () => {
@@ -937,14 +923,6 @@ describe('MatStepper', () => {
   });
 
   describe('vertical stepper', () => {
-    it('should set the aria-orientation to "vertical"', () => {
-      const fixture = createComponent(SimpleMatVerticalStepperApp);
-      fixture.detectChanges();
-
-      const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
-      expect(stepperEl.getAttribute('aria-orientation')).toBe('vertical');
-    });
-
     it('should support using the left/right arrows to move focus', () => {
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       fixture.detectChanges();
@@ -1045,7 +1023,7 @@ describe('MatStepper', () => {
       const fixture = createComponent(SimpleMatHorizontalStepperApp);
       fixture.detectChanges();
 
-      const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
+      const stepperEl = fixture.debugElement.query(By.css('[role="tablist"]'))!.nativeElement;
       expect(stepperEl.getAttribute('aria-orientation')).toBe('horizontal');
     });
 
@@ -1064,6 +1042,18 @@ describe('MatStepper', () => {
 
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
       assertArrowKeyInteractionInRtl(fixture, stepHeaders);
+    });
+
+    it('should set the correct aria-posinset and aria-setsize', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const headers = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.mat-step-header'),
+      );
+
+      expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+      expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
     it('should maintain the correct navigation order when a step is added later on', () => {
