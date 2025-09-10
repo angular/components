@@ -266,7 +266,7 @@ define a value for `color-scheme`, then the light colors will always be applied.
 
 You can define `color-scheme: light` or `color-scheme: dark` to explicitly
 define your application’s mode. To set the mode depending on the user’s system
-preferences, use `color-scheme: light-dark` as shown in the following example:
+preferences, use `color-scheme: light dark` as shown in the following example:
 
 ```scss
 @use '@angular/material' as mat;
