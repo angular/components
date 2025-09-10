@@ -34,7 +34,7 @@ export interface RippleGlobalOptions {
   /**
    * Default configuration for the animation duration of the ripples. There are two phases with
    * different durations for the ripples: `enter` and `leave`. The durations will be overwritten
-   * by the value of `matRippleAnimation` or if the `NoopAnimationsModule` is included.
+   * by the value of `matRippleAnimation` or if animations are disabled.
    */
   animation?: RippleAnimationConfig;
 
@@ -88,8 +88,8 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 
   /**
    * Configuration for the ripple animation. Allows modifying the enter and exit animation
-   * duration of the ripples. The animation durations will be overwritten if the
-   * `NoopAnimationsModule` is being used.
+   * duration of the ripples. The animation durations will be overwritten if animations are
+   * disabled.
    */
   @Input('matRippleAnimation') animation: RippleAnimationConfig;
 

@@ -93,7 +93,6 @@ export class CdkAccordionPanel {
     '[attr.aria-expanded]': 'pattern.expanded()',
     '[attr.aria-controls]': 'pattern.controls()',
     '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
     '[attr.tabindex]': 'pattern.tabindex()',
     '(keydown)': 'pattern.onKeydown($event)',

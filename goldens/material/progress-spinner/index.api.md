@@ -6,14 +6,11 @@
 
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 
 // @public
 export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpinnerDefaultOptions>;
-
-// @public @deprecated
-export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
 
 // @public (undocumented)
 export class MatProgressSpinner {
@@ -63,7 +60,7 @@ export class MatProgressSpinnerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatProgressSpinnerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, never, [typeof MatProgressSpinner, typeof MatProgressSpinner], [typeof MatProgressSpinner, typeof MatProgressSpinner, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatProgressSpinnerModule, never, [typeof MatProgressSpinner, typeof MatProgressSpinner], [typeof MatProgressSpinner, typeof MatProgressSpinner, typeof i2.BidiModule]>;
 }
 
 // @public @deprecated (undocumented)

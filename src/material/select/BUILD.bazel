@@ -69,7 +69,6 @@ ng_project(
         "index.ts",
         "public-api.ts",
         "select.ts",
-        "select-animations.ts",
         "select-errors.ts",
         "select-module.ts",
     ],

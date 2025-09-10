@@ -66,7 +66,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     getFreeDragPosition(): Readonly<Point>;
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
-    lockAxis: DragAxis;
+    lockAxis: DragAxis | null;
     readonly moved: Observable<CdkDragMove<T>>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -259,7 +259,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     getSortedItems(): CdkDrag[];
     hasAnchor: boolean;
     id: string;
-    lockAxis: DragAxis;
+    lockAxis: DragAxis | null;
     // (undocumented)
     static ngAcceptInputType_autoScrollDisabled: unknown;
     // (undocumented)
@@ -330,7 +330,7 @@ export interface DragDropConfig extends Partial<DragRefConfig> {
     // (undocumented)
     listOrientation?: DropListOrientation;
     // (undocumented)
-    lockAxis?: DragAxis;
+    lockAxis?: DragAxis | null;
     // (undocumented)
     previewClass?: string | string[];
     // (undocumented)
@@ -423,7 +423,7 @@ export class DragRef<T = any> {
     getRootElement(): HTMLElement;
     getVisibleElement(): HTMLElement;
     isDragging(): boolean;
-    lockAxis: 'x' | 'y';
+    lockAxis: 'x' | 'y' | null;
     readonly moved: Observable<{
         source: DragRef;
         pointerPosition: {
@@ -523,7 +523,7 @@ export class DropListRef<T = any> {
     isDragging(): boolean;
     _isOverContainer(x: number, y: number): boolean;
     isReceiving(): boolean;
-    lockAxis: 'x' | 'y';
+    lockAxis: 'x' | 'y' | null;
     readonly receivingStarted: Subject<{
         receiver: DropListRef;
         initiator: DropListRef;

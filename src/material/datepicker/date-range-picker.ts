@@ -6,10 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, ViewEncapsulation} from '@angular/core';
 import {MatDatepickerBase, MatDatepickerContent, MatDatepickerControl} from './datepicker-base';
 import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
-import {MAT_CALENDAR_RANGE_STRATEGY_PROVIDER} from './date-range-selection-strategy';
+import {
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+} from './date-range-selection-strategy';
+import {DateAdapter} from '../core';
 
 /**
  * Input that can be associated with a date range picker.
@@ -34,7 +38,13 @@ export interface MatDateRangePickerInput<D> extends MatDatepickerControl<D> {
   encapsulation: ViewEncapsulation.None,
   providers: [
     MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER,
-    MAT_CALENDAR_RANGE_STRATEGY_PROVIDER,
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useFactory: () => {
+        const parent = inject(MAT_DATE_RANGE_SELECTION_STRATEGY, {optional: true, skipSelf: true});
+        return parent || new DefaultMatCalendarRangeStrategy(inject(DateAdapter));
+      },
+    },
     {provide: MatDatepickerBase, useExisting: MatDateRangePicker},
   ],
 })

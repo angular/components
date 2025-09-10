@@ -7,13 +7,12 @@
 import { AfterViewInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public @deprecated
@@ -29,16 +28,6 @@ export interface ArrowViewStateTransition {
 
 // @public
 export const MAT_SORT_DEFAULT_OPTIONS: InjectionToken<MatSortDefaultOptions>;
-
-// @public @deprecated
-export const MAT_SORT_HEADER_INTL_PROVIDER: {
-    provide: typeof MatSortHeaderIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_SORT_HEADER_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl): MatSortHeaderIntl;
 
 // @public
 export class MatSort implements OnChanges, OnDestroy, OnInit {
@@ -79,16 +68,6 @@ export interface MatSortable {
     id: string;
     start: SortDirection;
 }
-
-// @public @deprecated
-export const matSortAnimations: {
-    readonly indicator: any;
-    readonly leftPointer: any;
-    readonly rightPointer: any;
-    readonly arrowOpacity: any;
-    readonly arrowPosition: any;
-    readonly allowChildren: any;
-};
 
 // @public
 export interface MatSortDefaultOptions {
@@ -155,7 +134,7 @@ export class MatSortModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSortModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, never, [typeof MatCommonModule, typeof MatSort, typeof MatSortHeader], [typeof MatSort, typeof MatSortHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, never, [typeof MatSort, typeof MatSortHeader], [typeof MatSort, typeof MatSortHeader, typeof i2.BidiModule]>;
 }
 
 // @public

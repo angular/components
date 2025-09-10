@@ -401,9 +401,6 @@ export const LIVE_ANNOUNCER_DEFAULT_OPTIONS: InjectionToken<LiveAnnouncerDefault
 // @public (undocumented)
 export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 
-// @public @deprecated
-export function LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY(): null;
-
 // @public (undocumented)
 export class LiveAnnouncer implements OnDestroy {
     constructor(...args: unknown[]);
@@ -428,9 +425,6 @@ export interface LiveAnnouncerDefaultOptions {
 
 // @public @deprecated
 export const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container";
-
-// @public @deprecated
-export function NOOP_TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T>;
 
 // @public @deprecated
 export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER: Provider;
@@ -464,15 +458,6 @@ export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: 
 
 // @public
 export const TREE_KEY_MANAGER: InjectionToken<TreeKeyManagerFactory<any>>;
-
-// @public @deprecated
-export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T>;
-
-// @public @deprecated
-export const TREE_KEY_MANAGER_FACTORY_PROVIDER: {
-    provide: InjectionToken<TreeKeyManagerFactory<any>>;
-    useFactory: typeof TREE_KEY_MANAGER_FACTORY;
-};
 
 // @public
 export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {

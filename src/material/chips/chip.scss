@@ -520,6 +520,7 @@ $fallbacks: m3-chip.get-tokens();
 }
 
 .mat-mdc-chip-edit, .mat-mdc-chip-remove {
+  $chip-opacity: token-utils.slot(chip-hover-state-layer-opacity, $fallbacks);
   opacity: token-utils.slot(chip-trailing-action-opacity, $fallbacks);
 
   &:focus {
@@ -531,17 +532,35 @@ $fallbacks: m3-chip.get-tokens();
   }
 
   &:hover::after {
-    opacity: token-utils.slot(chip-trailing-action-hover-state-layer-opacity, $fallbacks);
+    $action-opacity: token-utils.slot(chip-trailing-action-hover-state-layer-opacity, $fallbacks);
+    opacity: calc($chip-opacity + $action-opacity);
   }
 
   &:focus::after {
-    opacity: token-utils.slot(chip-trailing-action-focus-state-layer-opacity, $fallbacks);
+    $action-opacity: token-utils.slot(chip-trailing-action-focus-state-layer-opacity, $fallbacks);
+    opacity: calc($chip-opacity + $action-opacity);
   }
 }
 
 .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
 .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
   background-color: token-utils.slot(chip-selected-trailing-action-state-layer-color, $fallbacks);
+}
+
+.mat-mdc-chip.cdk-focused {
+  $chip-opacity: token-utils.slot(chip-selected-focus-state-layer-opacity, $fallbacks);
+
+  .mat-mdc-chip-edit, .mat-mdc-chip-remove {
+    &:focus::after {
+      $action-opacity: token-utils.slot(chip-trailing-action-focus-state-layer-opacity, $fallbacks);
+      opacity: calc($chip-opacity + $action-opacity);
+    }
+
+    &:hover::after {
+      $action-opacity: token-utils.slot(chip-trailing-action-hover-state-layer-opacity, $fallbacks);
+      opacity: calc($chip-opacity + $action-opacity);
+    }
+  }
 }
 
 .mat-mdc-standard-chip {

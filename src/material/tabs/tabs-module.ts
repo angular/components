@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
 import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 import {MatTab} from './tab';
@@ -15,18 +15,9 @@ import {MatTabGroup} from './tab-group';
 import {MatTabNav, MatTabNavPanel, MatTabLink} from './tab-nav-bar/tab-nav-bar';
 
 @NgModule({
-  imports: [
-    MatCommonModule,
-    MatTabContent,
-    MatTabLabel,
-    MatTab,
-    MatTabGroup,
-    MatTabNav,
-    MatTabNavPanel,
-    MatTabLink,
-  ],
+  imports: [MatTabContent, MatTabLabel, MatTab, MatTabGroup, MatTabNav, MatTabNavPanel, MatTabLink],
   exports: [
-    MatCommonModule,
+    BidiModule,
     MatTabContent,
     MatTabLabel,
     MatTab,

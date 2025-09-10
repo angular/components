@@ -74,7 +74,6 @@ ng_project(
         "public-api.ts",
         "simple-snack-bar.ts",
         "snack-bar.ts",
-        "snack-bar-animations.ts",
         "snack-bar-config.ts",
         "snack-bar-container.ts",
         "snack-bar-content.ts",

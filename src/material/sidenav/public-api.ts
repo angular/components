@@ -11,11 +11,9 @@ export {
   throwMatDuplicatedDrawerError,
   MatDrawerToggleResult,
   MAT_DRAWER_DEFAULT_AUTOSIZE,
-  MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY,
   MatDrawerContent,
   MatDrawer,
   MatDrawerContainer,
   MatDrawerMode,
 } from './drawer';
 export * from './sidenav';
-export * from './drawer-animations';

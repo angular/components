@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, SkipSelf, Optional} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
@@ -21,24 +21,3 @@ export class MatSortHeaderIntl {
    */
   readonly changes: Subject<void> = new Subject<void>();
 }
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl) {
-  return parentIntl || new MatSortHeaderIntl();
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_SORT_HEADER_INTL_PROVIDER = {
-  // If there is already an MatSortHeaderIntl available, use that. Otherwise, provide a new one.
-  provide: MatSortHeaderIntl,
-  deps: [[new Optional(), new SkipSelf(), MatSortHeaderIntl]],
-  useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY,
-};

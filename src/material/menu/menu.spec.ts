@@ -30,7 +30,6 @@ import {
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {
   createKeyboardEvent,
@@ -256,10 +255,6 @@ describe('MatMenu', () => {
   }));
 
   it('should move focus to another item if the active item is destroyed', fakeAsync(() => {
-    // TODO(crisbeto): figure out why NoopAnimationsModule is necessary
-    // here and our token isn't enough. Likely indicates an issue.
-    TestBed.resetTestingModule().configureTestingModule({imports: [NoopAnimationsModule]});
-    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     const fixture = TestBed.createComponent(MenuWithRepeatedItems);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
@@ -268,17 +263,19 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     tick(500);
 
-    const items = overlayContainerElement.querySelectorAll(
+    const items = overlayContainerElement.querySelectorAll<HTMLElement>(
       '.mat-mdc-menu-panel .mat-mdc-menu-item',
     );
 
-    expect(document.activeElement).toBe(items[0]);
+    // Stub out the `_hasFocus` method since it's hard to move focus reliably within the test.
+    spyOn(fixture.componentInstance.itemInstances.first, '_hasFocus').and.callFake(() => true);
+    const spy = spyOn(items[1], 'focus');
 
     fixture.componentInstance.items.shift();
     fixture.detectChanges();
     tick(500);
 
-    expect(document.activeElement).toBe(items[1]);
+    expect(spy).toHaveBeenCalled();
   }));
 
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
@@ -3027,5 +3024,6 @@ class MenuWithRepeatedItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
   @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
   @ViewChild(MatMenu, {static: false}) menu: MatMenu;
+  @ViewChildren(MatMenuItem) itemInstances: QueryList<MatMenuItem>;
   items = ['One', 'Two', 'Three'];
 }

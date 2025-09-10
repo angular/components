@@ -1,6 +1,5 @@
 import {Component, ElementRef, Injector, signal, ViewChild, WritableSignal} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {Direction} from '../bidi';
 import {A, ESCAPE} from '../keycodes';
@@ -381,7 +380,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the offsetY', () => {
-      const trigger = fixture.debugElement.query(By.css('button'))!.nativeElement;
+      const trigger = fixture.nativeElement.querySelector('button');
       trigger.style.position = 'absolute';
       trigger.style.top = '30px';
       trigger.style.height = '20px';

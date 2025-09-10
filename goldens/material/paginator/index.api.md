@@ -25,11 +25,11 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i1_2 from '@angular/cdk/a11y';
-import * as i2 from '@angular/cdk/overlay';
-import * as i2_2 from '@angular/cdk/observers';
-import * as i5 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i1_2 from '@angular/cdk/observers';
+import * as i1_3 from '@angular/cdk/a11y';
+import * as i2 from '@angular/cdk/bidi';
+import * as i2_2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -39,7 +39,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { OriginConnectionPosition } from '@angular/cdk/overlay';
 import { OverlayConnectionPosition } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
@@ -52,16 +51,6 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOptions>;
-
-// @public @deprecated
-export const MAT_PAGINATOR_INTL_PROVIDER: {
-    provide: typeof MatPaginatorIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_PAGINATOR_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
 export class MatPaginator implements OnInit, OnDestroy {

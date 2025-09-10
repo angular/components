@@ -82,22 +82,13 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonTog
   'MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      hideSingleSelectionIndicator: false,
+      hideMultipleSelectionIndicator: false,
+      disabledInteractive: false,
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions {
-  return {
-    hideSingleSelectionIndicator: false,
-    hideMultipleSelectionIndicator: false,
-    disabledInteractive: false,
-  };
-}
 
 /**
  * Injection token that can be used to reference instances of `MatButtonToggleGroup`.
@@ -725,7 +716,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // This serves two purposes:
     // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
     //    delay adding the class until the view is rendered.
-    // 2. We don't want animation if the `NoopAnimationsModule` is provided.
+    // 2. We don't want to animate if animations are disabled.
     if (!this._animationDisabled) {
       this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
     }

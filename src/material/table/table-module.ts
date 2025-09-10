@@ -7,8 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatRecycleRows, MatTable} from './table';
+import {BidiModule} from '@angular/cdk/bidi';
 import {CdkTableModule} from '@angular/cdk/table';
 import {
   MatCell,
@@ -59,7 +59,7 @@ const EXPORTED_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, CdkTableModule, ...EXPORTED_DECLARATIONS],
-  exports: [MatCommonModule, EXPORTED_DECLARATIONS],
+  imports: [CdkTableModule, ...EXPORTED_DECLARATIONS],
+  exports: [BidiModule, EXPORTED_DECLARATIONS],
 })
 export class MatTableModule {}

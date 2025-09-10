@@ -40,20 +40,9 @@ export const MAT_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<MatMomentDateA
   'MAT_MOMENT_DATE_ADAPTER_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY,
+    factory: () => ({useUtc: false}),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): MatMomentDateAdapterOptions {
-  return {
-    useUtc: false,
-  };
-}
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {

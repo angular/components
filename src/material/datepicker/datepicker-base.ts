@@ -92,32 +92,11 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector);
-}
-
 /** Possible positions for the datepicker dropdown along the X axis. */
 export type DatepickerDropdownPositionX = 'start' | 'end';
 
 /** Possible positions for the datepicker dropdown along the Y axis. */
 export type DatepickerDropdownPositionY = 'above' | 'below';
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-  deps: [] as any[],
-  useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
-};
 
 /**
  * Component used as the content for the datepicker overlay. We use this instead of using

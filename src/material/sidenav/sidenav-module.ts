@@ -5,15 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
+import {BidiModule} from '@angular/cdk/bidi';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
 
 @NgModule({
   imports: [
-    MatCommonModule,
     CdkScrollableModule,
     MatDrawer,
     MatDrawerContainer,
@@ -23,8 +22,8 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
     MatSidenavContent,
   ],
   exports: [
+    BidiModule,
     CdkScrollableModule,
-    MatCommonModule,
     MatDrawer,
     MatDrawerContainer,
     MatDrawerContent,

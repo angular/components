@@ -43,8 +43,8 @@ import {
   _animationsDisabled,
 } from '../core';
 import {
+  checkboxDefaults,
   MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
   MatCheckboxDefaultOptions,
 } from './checkbox-config';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
@@ -71,9 +71,6 @@ export class MatCheckboxChange {
   /** The new `checked` value of the checkbox. */
   checked: boolean;
 }
-
-// Default checkbox configuration.
-const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 
 @Component({
   selector: 'mat-checkbox',
@@ -248,8 +245,8 @@ export class MatCheckbox
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
-    this._options = this._options || defaults;
-    this.color = this._options.color || defaults.color;
+    this._options = this._options || checkboxDefaults;
+    this.color = this._options.color || checkboxDefaults.color;
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.id = this._uniqueId = inject(_IdGenerator).getId('mat-mdc-checkbox-');
     this.disabledInteractive = this._options?.disabledInteractive ?? false;

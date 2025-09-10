@@ -55,27 +55,6 @@ export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>
 );
 
 /**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_MENU_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector);
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_MENU_SCROLL_STRATEGY,
-  deps: [] as any[],
-  useFactory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
-};
-
-/**
  * Default top padding of the menu panel.
  * @deprecated No longer being used. Will be removed.
  * @breaking-change 15.0.0

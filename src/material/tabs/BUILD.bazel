@@ -122,7 +122,6 @@ ng_project(
         "tab-label.ts",
         "tab-label-wrapper.ts",
         "tab-nav-bar/tab-nav-bar.ts",
-        "tabs-animations.ts",
         "tabs-module.ts",
     ],
     assets = [

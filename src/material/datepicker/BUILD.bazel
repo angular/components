@@ -132,7 +132,6 @@ ng_project(
         "date-selection-model.ts",
         "datepicker.ts",
         "datepicker-actions.ts",
-        "datepicker-animations.ts",
         "datepicker-base.ts",
         "datepicker-errors.ts",
         "datepicker-input.ts",

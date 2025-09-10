@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
 import {
   MatCard,
   MatCardActions,
@@ -43,7 +43,7 @@ const CARD_DIRECTIVES = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, ...CARD_DIRECTIVES],
-  exports: [CARD_DIRECTIVES, MatCommonModule],
+  imports: CARD_DIRECTIVES,
+  exports: [CARD_DIRECTIVES, BidiModule],
 })
 export class MatCardModule {}

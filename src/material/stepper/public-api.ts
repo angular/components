@@ -13,6 +13,5 @@ export * from './stepper';
 export * from './stepper-button';
 export * from './step-header';
 export * from './stepper-intl';
-export {matStepperAnimations} from './stepper-animations';
 export * from './stepper-icon';
 export * from './step-content';

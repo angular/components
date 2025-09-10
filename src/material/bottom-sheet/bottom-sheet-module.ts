@@ -9,13 +9,13 @@
 import {DialogModule} from '@angular/cdk/dialog';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheet} from './bottom-sheet';
 
 @NgModule({
-  imports: [DialogModule, MatCommonModule, PortalModule, MatBottomSheetContainer],
-  exports: [MatBottomSheetContainer, MatCommonModule],
+  imports: [DialogModule, PortalModule, MatBottomSheetContainer],
+  exports: [MatBottomSheetContainer, BidiModule],
   providers: [MatBottomSheet],
 })
 export class MatBottomSheetModule {}

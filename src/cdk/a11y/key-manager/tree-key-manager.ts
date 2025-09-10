@@ -411,27 +411,8 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   }
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T> {
-  return (items, options) => new TreeKeyManager(items, options);
-}
-
 /** Injection token that determines the key manager to use. */
 export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>('tree-key-manager', {
   providedIn: 'root',
-  factory: TREE_KEY_MANAGER_FACTORY,
+  factory: () => (items, options) => new TreeKeyManager(items, options),
 });
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const TREE_KEY_MANAGER_FACTORY_PROVIDER = {
-  provide: TREE_KEY_MANAGER,
-  useFactory: TREE_KEY_MANAGER_FACTORY,
-};

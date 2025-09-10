@@ -7,21 +7,18 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatOptionModule} from '../core';
+import {MatOptionModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatAutocomplete} from './autocomplete';
-import {
-  MatAutocompleteTrigger,
-  MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER,
-} from './autocomplete-trigger';
+import {MatAutocompleteTrigger} from './autocomplete-trigger';
 import {MatAutocompleteOrigin} from './autocomplete-origin';
 
 @NgModule({
   imports: [
     OverlayModule,
     MatOptionModule,
-    MatCommonModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatAutocompleteOrigin,
@@ -30,10 +27,9 @@ import {MatAutocompleteOrigin} from './autocomplete-origin';
     CdkScrollableModule,
     MatAutocomplete,
     MatOptionModule,
-    MatCommonModule,
+    BidiModule,
     MatAutocompleteTrigger,
     MatAutocompleteOrigin,
   ],
-  providers: [MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatAutocompleteModule {}

@@ -10,5 +10,4 @@ export * from './bottom-sheet-module';
 export * from './bottom-sheet';
 export * from './bottom-sheet-config';
 export * from './bottom-sheet-container';
-export * from './bottom-sheet-animations';
 export * from './bottom-sheet-ref';

@@ -90,46 +90,16 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector, {scrollThrottle: SCROLL_THROTTLE_MS});
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_TOOLTIP_SCROLL_STRATEGY,
-  deps: [] as any[],
-  useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
-};
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
-  return {
-    showDelay: 0,
-    hideDelay: 0,
-    touchendHideDelay: 1500,
-  };
-}
-
 /** Injection token to be used to override the default options for `matTooltip`. */
 export const MAT_TOOLTIP_DEFAULT_OPTIONS = new InjectionToken<MatTooltipDefaultOptions>(
   'mat-tooltip-default-options',
   {
     providedIn: 'root',
-    factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      showDelay: 0,
+      hideDelay: 0,
+      touchendHideDelay: 1500,
+    }),
   },
 );
 

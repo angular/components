@@ -11,11 +11,9 @@ import {
   ErrorHandler,
   Inject,
   Injectable,
-  InjectionToken,
   OnDestroy,
   Optional,
   SecurityContext,
-  SkipSelf,
   DOCUMENT,
 } from '@angular/core';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
@@ -727,39 +725,6 @@ export class MatIconRegistry implements OnDestroy {
     return undefined;
   }
 }
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function ICON_REGISTRY_PROVIDER_FACTORY(
-  parentRegistry: MatIconRegistry,
-  httpClient: HttpClient,
-  sanitizer: DomSanitizer,
-  errorHandler: ErrorHandler,
-  document?: any,
-) {
-  return parentRegistry || new MatIconRegistry(httpClient, sanitizer, document, errorHandler);
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const ICON_REGISTRY_PROVIDER = {
-  // If there is already an MatIconRegistry available, use that. Otherwise, provide a new one.
-  provide: MatIconRegistry,
-  deps: [
-    [new Optional(), new SkipSelf(), MatIconRegistry],
-    [new Optional(), HttpClient],
-    DomSanitizer,
-    ErrorHandler,
-    [new Optional(), DOCUMENT as InjectionToken<any>],
-  ],
-  useFactory: ICON_REGISTRY_PROVIDER_FACTORY,
-};
 
 /** Clones an SVGElement while preserving type information. */
 function cloneSvg(svg: SVGElement): SVGElement {

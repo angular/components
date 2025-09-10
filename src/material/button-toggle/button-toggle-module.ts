@@ -7,11 +7,12 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '../core';
+import {BidiModule} from '@angular/cdk/bidi';
+import {MatRippleModule} from '../core';
 import {MatButtonToggle, MatButtonToggleGroup} from './button-toggle';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule, MatButtonToggleGroup, MatButtonToggle],
-  exports: [MatCommonModule, MatButtonToggleGroup, MatButtonToggle],
+  imports: [MatRippleModule, MatButtonToggleGroup, MatButtonToggle],
+  exports: [BidiModule, MatButtonToggleGroup, MatButtonToggle],
 })
 export class MatButtonToggleModule {}

@@ -10,12 +10,11 @@ import { ElementRef } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
@@ -31,16 +30,6 @@ export function getMatIconNameNotFoundError(iconName: string): Error;
 // @public
 export function getMatIconNoHttpProviderError(): Error;
 
-// @public @deprecated
-export const ICON_REGISTRY_PROVIDER: {
-    provide: typeof MatIconRegistry;
-    deps: (Optional[] | typeof DomSanitizer | typeof ErrorHandler)[];
-    useFactory: typeof ICON_REGISTRY_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: MatIconRegistry, httpClient: HttpClient, sanitizer: DomSanitizer, errorHandler: ErrorHandler, document?: any): MatIconRegistry;
-
 // @public
 export interface IconOptions {
     viewBox?: string;
@@ -55,9 +44,6 @@ export const MAT_ICON_DEFAULT_OPTIONS: InjectionToken<MatIconDefaultOptions>;
 
 // @public
 export const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
-
-// @public @deprecated
-export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 // @public
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
@@ -112,7 +98,7 @@ export class MatIconModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatIconModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, never, [typeof MatCommonModule, typeof MatIcon], [typeof MatIcon, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatIconModule, never, [typeof MatIcon], [typeof MatIcon, typeof i2.BidiModule]>;
 }
 
 // @public

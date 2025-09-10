@@ -8,7 +8,6 @@
 
 export * from './select-module';
 export * from './select';
-export * from './select-animations';
 
 // Re-export these since they're required to be used together with `mat-select`.
 // Also they used to be provided implicitly with `MatSelectModule`.

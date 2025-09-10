@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatCheckbox} from './checkbox';
 
 @NgModule({
-  imports: [MatCheckbox, MatCommonModule],
-  exports: [MatCheckbox, MatCommonModule],
+  imports: [MatCheckbox],
+  exports: [MatCheckbox, BidiModule],
 })
 export class MatCheckboxModule {}

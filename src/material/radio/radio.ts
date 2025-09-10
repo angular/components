@@ -94,21 +94,12 @@ export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptio
   'mat-radio-default-options',
   {
     providedIn: 'root',
-    factory: MAT_RADIO_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      color: 'accent',
+      disabledInteractive: false,
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
-  return {
-    color: 'accent',
-    disabledInteractive: false,
-  };
-}
 
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.

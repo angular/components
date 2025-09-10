@@ -70,7 +70,6 @@ ng_project(
         "context-menu-trigger.ts",
         "index.ts",
         "menu.ts",
-        "menu-animations.ts",
         "menu-content.ts",
         "menu-errors.ts",
         "menu-item.ts",

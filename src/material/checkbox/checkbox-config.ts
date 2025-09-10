@@ -26,27 +26,20 @@ export interface MatCheckboxDefaultOptions {
   disabledInteractive?: boolean;
 }
 
+export const checkboxDefaults: MatCheckboxDefaultOptions = {
+  color: 'accent',
+  clickAction: 'check-indeterminate',
+  disabledInteractive: false,
+};
+
 /** Injection token to be used to override the default options for `mat-checkbox`. */
 export const MAT_CHECKBOX_DEFAULT_OPTIONS = new InjectionToken<MatCheckboxDefaultOptions>(
   'mat-checkbox-default-options',
   {
     providedIn: 'root',
-    factory: MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
+    factory: () => checkboxDefaults,
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions {
-  return {
-    color: 'accent',
-    clickAction: 'check-indeterminate',
-    disabledInteractive: false,
-  };
-}
 
 /**
  * Checkbox click action when user click on input element.

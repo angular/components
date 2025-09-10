@@ -54,7 +54,16 @@ export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions
  */
 export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
   providedIn: 'root',
-  factory: MAT_ICON_LOCATION_FACTORY,
+  factory: () => {
+    const _document = inject(DOCUMENT);
+    const _location = _document ? _document.location : null;
+
+    return {
+      // Note that this needs to be a function, rather than a property, because Angular
+      // will only resolve it once, but we want the current path on each call.
+      getPathname: () => (_location ? _location.pathname + _location.search : ''),
+    };
+  },
 });
 
 /**
@@ -63,22 +72,6 @@ export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-l
  */
 export interface MatIconLocation {
   getPathname: () => string;
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
-  const _document = inject(DOCUMENT);
-  const _location = _document ? _document.location : null;
-
-  return {
-    // Note that this needs to be a function, rather than a property, because Angular
-    // will only resolve it once, but we want the current path on each call.
-    getPathname: () => (_location ? _location.pathname + _location.search : ''),
-  };
 }
 
 /** SVG attributes that accept a FuncIRI (e.g. `url(<something>)`). */

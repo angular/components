@@ -28,6 +28,7 @@
       slider-with-tick-marks-container-shape: 50%,
       slider-with-tick-marks-container-size: 2px,
       slider-with-tick-marks-inactive-container-opacity: 0.6,
+      slider-value-indicator-transform-origin: bottom,
     ),
     color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       slider-disabled-active-track-color: map.get($system, on-surface),

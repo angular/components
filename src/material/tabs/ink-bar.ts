@@ -189,26 +189,18 @@ export interface _MatInkBarPositioner {
   (element: HTMLElement): {left: string; width: string};
 }
 
-/**
- * The default positioner function for the MatInkBar.
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner {
-  const method = (element: HTMLElement) => ({
-    left: element ? (element.offsetLeft || 0) + 'px' : '0',
-    width: element ? (element.offsetWidth || 0) + 'px' : '0',
-  });
-
-  return method;
-}
-
 /** Injection token for the MatInkBar's Positioner. */
 export const _MAT_INK_BAR_POSITIONER = new InjectionToken<_MatInkBarPositioner>(
   'MatInkBarPositioner',
   {
     providedIn: 'root',
-    factory: _MAT_INK_BAR_POSITIONER_FACTORY,
+    factory: () => {
+      const method = (element: HTMLElement) => ({
+        left: element ? (element.offsetLeft || 0) + 'px' : '0',
+        width: element ? (element.offsetWidth || 0) + 'px' : '0',
+      });
+
+      return method;
+    },
   },
 );

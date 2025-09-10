@@ -8,21 +8,21 @@
 
 import {OverlayModule} from '@angular/cdk/overlay';
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatOptionModule} from '../core';
+import {MatOptionModule} from '../core';
 import {MatFormFieldModule} from '../form-field';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {MatSelect, MatSelectTrigger, MAT_SELECT_SCROLL_STRATEGY_PROVIDER} from './select';
+import {MatSelect, MatSelectTrigger} from './select';
+import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
-  imports: [OverlayModule, MatOptionModule, MatCommonModule, MatSelect, MatSelectTrigger],
+  imports: [OverlayModule, MatOptionModule, MatSelect, MatSelectTrigger],
   exports: [
+    BidiModule,
     CdkScrollableModule,
     MatFormFieldModule,
     MatSelect,
     MatSelectTrigger,
     MatOptionModule,
-    MatCommonModule,
   ],
-  providers: [MAT_SELECT_SCROLL_STRATEGY_PROVIDER],
 })
 export class MatSelectModule {}

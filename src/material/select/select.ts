@@ -105,18 +105,6 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  _overlay: unknown,
-): () => ScrollStrategy {
-  const injector = inject(Injector);
-  return () => createRepositionScrollStrategy(injector);
-}
-
 /** Object that can be used to configure the default options for the select module. */
 export interface MatSelectConfig {
   /** Whether option centering should be disabled. */
@@ -146,17 +134,6 @@ export interface MatSelectConfig {
 
 /** Injection token that can be used to provide the default options the select module. */
 export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT_CONFIG');
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_SELECT_SCROLL_STRATEGY,
-  deps: [] as any[],
-  useFactory: MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
 
 /**
  * Injection token that can be used to reference instances of `MatSelectTrigger`. It serves as

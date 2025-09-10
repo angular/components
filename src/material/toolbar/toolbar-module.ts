@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatToolbar, MatToolbarRow} from './toolbar';
 
 @NgModule({
-  imports: [MatCommonModule, MatToolbar, MatToolbarRow],
-  exports: [MatToolbar, MatToolbarRow, MatCommonModule],
+  imports: [MatToolbar, MatToolbarRow],
+  exports: [MatToolbar, MatToolbarRow, BidiModule],
 })
 export class MatToolbarModule {}

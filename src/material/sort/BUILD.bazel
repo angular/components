@@ -67,7 +67,6 @@ ng_project(
         "index.ts",
         "public-api.ts",
         "sort.ts",
-        "sort-animations.ts",
         "sort-direction.ts",
         "sort-errors.ts",
         "sort-header.ts",

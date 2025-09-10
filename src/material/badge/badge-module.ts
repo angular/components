@@ -7,14 +7,14 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {A11yModule} from '@angular/cdk/a11y';
+import {BidiModule} from '@angular/cdk/bidi';
 import {MatBadge, _MatBadgeStyleLoader} from './badge';
 
 @NgModule({
   // Note: we _shouldn't_ have to import `_MatBadgeStyleLoader`,
   // but it seems to be necessary for tests.
-  imports: [A11yModule, MatCommonModule, MatBadge, _MatBadgeStyleLoader],
-  exports: [MatBadge, MatCommonModule],
+  imports: [A11yModule, MatBadge, _MatBadgeStyleLoader],
+  exports: [MatBadge, BidiModule],
 })
 export class MatBadgeModule {}

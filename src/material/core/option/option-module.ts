@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
 import {MatRippleModule} from '../ripple/ripple-module';
 import {MatPseudoCheckboxModule} from '../selection/pseudo-checkbox/pseudo-checkbox-module';
-import {MatCommonModule} from '../common-behaviors/common-module';
 import {MatOption} from './option';
 import {MatOptgroup} from './optgroup';
 
 @NgModule({
-  imports: [MatRippleModule, MatCommonModule, MatPseudoCheckboxModule, MatOption, MatOptgroup],
-  exports: [MatOption, MatOptgroup],
+  imports: [MatRippleModule, MatPseudoCheckboxModule, MatOption, MatOptgroup],
+  exports: [MatOption, MatOptgroup, BidiModule],
 })
 export class MatOptionModule {}

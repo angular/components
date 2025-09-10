@@ -13,9 +13,9 @@ import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -26,9 +26,6 @@ import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated (undocumented)
-export const fadeInItems: any;
 
 // @public
 export const MAT_MENU_CONTENT: InjectionToken<MatMenuContent>;
@@ -41,13 +38,6 @@ export const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 
 // @public
 export const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: any[];
-    useFactory: typeof MAT_MENU_SCROLL_STRATEGY_FACTORY;
-};
 
 // @public
 export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestroy {
@@ -153,12 +143,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenu, never>;
 }
 
-// @public @deprecated
-export const matMenuAnimations: {
-    readonly transformMenu: any;
-    readonly fadeInItems: any;
-};
-
 // @public
 export class MatMenuContent implements OnDestroy {
     constructor(...args: unknown[]);
@@ -228,7 +212,7 @@ export class MatMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof MatCommonModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger], [typeof i5.CdkScrollableModule, typeof MatMenu, typeof MatCommonModule, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger], [typeof i2$1.BidiModule, typeof i1.CdkScrollableModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger]>;
 }
 
 // @public
@@ -320,9 +304,6 @@ export type MenuPositionX = 'before' | 'after';
 
 // @public (undocumented)
 export type MenuPositionY = 'above' | 'below';
-
-// @public @deprecated (undocumented)
-export const transformMenu: any;
 
 // (No @packageDocumentation comment for this package)
 

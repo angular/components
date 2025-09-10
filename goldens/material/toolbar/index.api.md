@@ -7,7 +7,7 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { QueryList } from '@angular/core';
 
 // @public (undocumented)
@@ -32,7 +32,7 @@ export class MatToolbarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatToolbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatToolbarModule, never, [typeof MatCommonModule, typeof MatToolbar, typeof MatToolbarRow], [typeof MatToolbar, typeof MatToolbarRow, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatToolbarModule, never, [typeof MatToolbar, typeof MatToolbarRow], [typeof MatToolbar, typeof MatToolbarRow, typeof i2.BidiModule]>;
 }
 
 // @public (undocumented)

@@ -37,7 +37,6 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MATERIAL_ANIMATIONS} from '../core';
 import {MatError, MatFormField, MatHint, MatLabel} from '../form-field';
 import {
@@ -178,13 +177,14 @@ describe('MatChipGrid', () => {
 
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
-          const midItem = chips.get(2)!;
+          const fixture = createComponent(StandardChipGrid);
+          const midItemAction = primaryActions[2];
+          patchElementFocus(midItemAction);
 
           // Focus the middle item
-          midItem.focus();
+          midItemAction.focus();
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
@@ -196,11 +196,14 @@ describe('MatChipGrid', () => {
         });
 
         it('should focus the previous item', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
+          const lastAction = primaryActions[primaryActions.length - 1];
+
           // Focus the last item
-          chips.last.focus();
+          patchElementFocus(lastAction);
+          lastAction.focus();
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
 
           // Destroy the last item
           testComponent.chips.pop();
@@ -212,9 +215,7 @@ describe('MatChipGrid', () => {
         });
 
         it('should not focus if chip grid is not focused', fakeAsync(() => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
           const midItem = chips.get(2)!;
 
           // Focus and blur the middle item
@@ -233,9 +234,7 @@ describe('MatChipGrid', () => {
         }));
 
         it('should focus the grid if the last focused item is removed', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
           testComponent.chips = [0];
           fixture.changeDetectorRef.markForCheck();
 
@@ -252,7 +251,7 @@ describe('MatChipGrid', () => {
       });
 
       it('should have a focus indicator', () => {
-        createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+        createComponent(StandardChipGrid);
         const focusIndicators = chipGridNativeElement.querySelectorAll(
           '.mat-mdc-chip-primary-focus-indicator',
         );
@@ -510,9 +509,7 @@ describe('MatChipGrid', () => {
   describe('FormFieldChipGrid', () => {
     describe('keyboard behavior', () => {
       it('should maintain focus if the active chip is deleted', () => {
-        // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-        // It can indicate a deeper issue with the chips.
-        const fixture = createComponent(FormFieldChipGrid, undefined, [NoopAnimationsModule]);
+        const fixture = createComponent(FormFieldChipGrid);
         const secondChip = fixture.nativeElement.querySelectorAll('.mat-mdc-chip')[1];
         const secondChipAction = secondChip.querySelector('.mdc-evolution-chip__action--primary');
 
@@ -658,9 +655,7 @@ describe('MatChipGrid', () => {
 
   describe('with chip remove', () => {
     it('should properly focus next item if chip is removed through click', fakeAsync(() => {
-      // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-      // It can indicate a deeper issue with the chips.
-      const fixture = createComponent(ChipGridWithRemove, undefined, [NoopAnimationsModule]);
+      const fixture = createComponent(ChipGridWithRemove);
       flush();
       const trailingActions = chipGridNativeElement.querySelectorAll<HTMLElement>(
         '.mdc-evolution-chip__action--secondary',

@@ -7,6 +7,8 @@
 /// @param {String} $color-variant The color variant to use for the component
 @function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
+  $indicator-size: 28px;
+
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   }
@@ -15,8 +17,8 @@
     base: (
       slider-value-indicator-opacity: 1,
       slider-value-indicator-padding: 0,
-      slider-value-indicator-width: 28px,
-      slider-value-indicator-height: 28px,
+      slider-value-indicator-width: $indicator-size,
+      slider-value-indicator-height: $indicator-size,
       slider-value-indicator-caret-display: none,
       slider-value-indicator-border-radius: 50% 50% 50% 0,
       slider-value-indicator-text-transform: rotate(45deg),
@@ -29,6 +31,7 @@
       slider-with-tick-marks-active-container-opacity: 0.38,
       slider-with-tick-marks-container-size: 2px,
       slider-with-tick-marks-inactive-container-opacity: 0.38,
+      slider-value-indicator-transform-origin: 0 $indicator-size,
     ),
     color: (
       slider-active-track-color: map.get($system, primary),

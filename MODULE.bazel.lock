@@ -542,10 +542,8 @@
     "@@aspect_rules_ts~//ts:extensions.bzl%ext": {
       "general": {
         "bzlTransitiveDigest": "9IJp6IlB/FMHFBJe4MX/DQM4zi3oArC8yqYE/+NyPwk=",
-        "usagesDigest": "Sz9Bt4IU6oJPfWwcpEB3Uz+IShADwq16bU/Mk+/8uzE=",
+        "usagesDigest": "FN1SAx4DpL2FgDt82a58jz0UTyLqjp7ZhcUaVdApZz8=",
         "recordedFileInputs": {
-          "@@//package.json": "065233db5dde48f20c7c75d37f4c8ab02e91dd6eb8632733e3a597ef31bf8154",
-          "@@devinfra~//bazel/package.json": "960bcecf963a211f96a3967c7cfb5d3e1cea08d94b27056a3e8dbf2fad1e2dd3",
           "@@rules_browsers~//package.json": "0d8cc69cc2c9ecf0eff677fa86843ad9146eca22462aace022a09c3adcb979f8"
         },
         "recordedDirentsInputs": {},
@@ -555,8 +553,7 @@
             "bzlFile": "@@aspect_rules_ts~//ts/private:npm_repositories.bzl",
             "ruleClassName": "http_archive_version",
             "attributes": {
-              "version": "",
-              "version_from": "@@//:package.json",
+              "version": "5.9.2",
               "integrity": "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
               "urls": [
                 "https://registry.npmjs.org/typescript/-/typescript-{}.tgz"
@@ -590,8 +587,7 @@
             "bzlFile": "@@aspect_rules_ts~//ts/private:npm_repositories.bzl",
             "ruleClassName": "http_archive_version",
             "attributes": {
-              "version": "",
-              "version_from": "@@devinfra~//bazel:package.json",
+              "version": "5.9.2",
               "integrity": "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
               "urls": [
                 "https://registry.npmjs.org/typescript/-/typescript-{}.tgz"

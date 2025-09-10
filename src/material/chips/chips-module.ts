@@ -8,7 +8,7 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '../core';
+import {ErrorStateMatcher, MatRippleModule} from '../core';
 import {MatChip} from './chip';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
 import {MatChipEditInput} from './chip-edit-input';
@@ -20,6 +20,7 @@ import {MatChipRow} from './chip-row';
 import {MatChipOption} from './chip-option';
 import {MatChipSet} from './chip-set';
 import {MatChipAction} from './chip-action';
+import {BidiModule} from '@angular/cdk/bidi';
 
 const CHIP_DECLARATIONS = [
   MatChip,
@@ -37,8 +38,8 @@ const CHIP_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule, MatChipAction, CHIP_DECLARATIONS],
-  exports: [MatCommonModule, CHIP_DECLARATIONS],
+  imports: [MatRippleModule, MatChipAction, CHIP_DECLARATIONS],
+  exports: [BidiModule, CHIP_DECLARATIONS],
   providers: [
     ErrorStateMatcher,
     {

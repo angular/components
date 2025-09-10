@@ -99,7 +99,6 @@ ng_project(
     name = "form-field",
     srcs = [
         "form-field.ts",
-        "form-field-animations.ts",
         "form-field-control.ts",
         "form-field-errors.ts",
         "form-field-module.ts",

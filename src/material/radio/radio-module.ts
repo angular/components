@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '../core';
+import {MatRippleModule} from '../core';
 import {MatRadioButton, MatRadioGroup} from './radio';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule, MatRadioGroup, MatRadioButton],
-  exports: [MatCommonModule, MatRadioGroup, MatRadioButton],
+  imports: [MatRippleModule, MatRadioGroup, MatRadioButton],
+  exports: [BidiModule, MatRadioGroup, MatRadioButton],
 })
 export class MatRadioModule {}

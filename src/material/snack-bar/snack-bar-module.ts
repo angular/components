@@ -9,8 +9,8 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
+import {BidiModule} from '@angular/cdk/bidi';
 import {MatButtonModule} from '../button';
-import {MatCommonModule} from '../core';
 
 import {SimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
@@ -20,15 +20,8 @@ import {MatSnackBar} from './snack-bar';
 const DIRECTIVES = [MatSnackBarContainer, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction];
 
 @NgModule({
-  imports: [
-    OverlayModule,
-    PortalModule,
-    MatButtonModule,
-    MatCommonModule,
-    SimpleSnackBar,
-    ...DIRECTIVES,
-  ],
-  exports: [MatCommonModule, ...DIRECTIVES],
+  imports: [OverlayModule, PortalModule, MatButtonModule, SimpleSnackBar, ...DIRECTIVES],
+  exports: [BidiModule, ...DIRECTIVES],
   providers: [MatSnackBar],
 })
 export class MatSnackBarModule {}

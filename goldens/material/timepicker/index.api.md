@@ -13,7 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
@@ -116,7 +116,7 @@ export class MatTimepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle], [typeof i5.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle], [typeof i1.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle]>;
 }
 
 // @public

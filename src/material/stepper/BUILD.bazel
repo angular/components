@@ -88,7 +88,6 @@ ng_project(
         "step-header.ts",
         "step-label.ts",
         "stepper.ts",
-        "stepper-animations.ts",
         "stepper-button.ts",
         "stepper-icon.ts",
         "stepper-intl.ts",

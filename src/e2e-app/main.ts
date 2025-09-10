@@ -1,6 +1,5 @@
 import {enableProdMode} from '@angular/core';
 import {bootstrapApplication, provideProtractorTestingSupport} from '@angular/platform-browser';
-import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {provideRouter} from '@angular/router';
 
 import {E2eApp} from './components/e2e-app/e2e-app';
@@ -14,7 +13,6 @@ enableProdMode();
 
 bootstrapApplication(E2eApp, {
   providers: [
-    provideNoopAnimations(),
     provideProtractorTestingSupport(),
     provideRouter([
       {path: '', component: Home},

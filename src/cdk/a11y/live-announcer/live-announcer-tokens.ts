@@ -18,18 +18,9 @@ export const LIVE_ANNOUNCER_ELEMENT_TOKEN = new InjectionToken<HTMLElement | nul
   'liveAnnouncerElement',
   {
     providedIn: 'root',
-    factory: LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY,
+    factory: () => null,
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY(): null {
-  return null;
-}
 
 /** Object that can be used to configure the default options for the LiveAnnouncer. */
 export interface LiveAnnouncerDefaultOptions {
