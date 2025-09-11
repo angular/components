@@ -12,6 +12,7 @@ import {
   ContentContainerComponentHarness,
   HarnessPredicate,
 } from '@angular/cdk/testing';
+import {MatIconHarness} from '@angular/material/icon/testing';
 import {
   ButtonAppearance,
   ButtonHarnessFilters,
@@ -58,7 +59,10 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       })
       .addOption('buttonType', options.buttonType, (harness, buttonType) =>
         HarnessPredicate.stringMatches(harness.getType(), buttonType),
-      );
+      )
+      .addOption('icon', options.icon, (harness, icon) => {
+        return harness.hasHarness(MatIconHarness.with({name: icon}));
+      });
   }
 
   /**
