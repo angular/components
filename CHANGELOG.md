@@ -1,3 +1,30 @@
+<a name="21.0.0-next.3"></a>
+# 21.0.0-next.3 "red-envelope" (2025-09-11)
+## Breaking Changes
+### material
+- * `MatCommonModule` has been removed.
+  * `GranularSanityChecks` has been removed.
+  * `MATERIAL_SANITY_CHECKS` has been removed.
+  * `SanityChecks` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f137183858](https://github.com/angular/components/commit/f137183858bf6bb9d47f7d184ea55241f2ee4a61) | fix | **accordion:** removes inert attribute from accordion trigger ([#31817](https://github.com/angular/components/pull/31817)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [931ac3c1c7](https://github.com/angular/components/commit/931ac3c1c7f8468acaae1e9b266bdd5f52cd35fd) | fix | **chips:** Adjust trailing icon opacity based on chip state ([#31828](https://github.com/angular/components/pull/31828)) |
+| [c832533062](https://github.com/angular/components/commit/c832533062738e91142d0222f99b1e6859e89cce) | fix | **core:** remove MatCommonModule ([#31813](https://github.com/angular/components/pull/31813)) |
+| [878700d10a](https://github.com/angular/components/commit/878700d10ab042b6a62c6f86f4fcc24d5a0ae685) | fix | **progress-bar:** avoid CSP issues due to buffer dots ([#31818](https://github.com/angular/components/pull/31818)) |
+| [5a1a0ba4e6](https://github.com/angular/components/commit/5a1a0ba4e68c40886505c8c096f6c1257b9edb7b) | fix | **select:** ensure proper highlighting on selection ([#31789](https://github.com/angular/components/pull/31789)) |
+| [e0a35c52d5](https://github.com/angular/components/commit/e0a35c52d582d9f08aa9e76490481984dae53b75) | fix | **slider:** incorrect indicator transform origin in M3 ([#31834](https://github.com/angular/components/pull/31834)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [54f641e330](https://github.com/angular/components/commit/54f641e33073172e426b444500fdea552c94d2e3) | fix | **drag-drop:** allow axis lock to be reset ([#31829](https://github.com/angular/components/pull/31829)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.3"></a>
 # 20.2.3 "tango-heels" (2025-09-11)
 ### cdk
