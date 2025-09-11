@@ -1,15 +1,10 @@
-<div class="example-combobox-container">
+<div cdkCombobox class="example-combobox-container">
   <div class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
-    <input
-      cdkComboboxInput
-      class="example-combobox-input"
-      [popup]="popup"
-      placeholder="Search..."
-    />
+    <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
   </div>
 
-  <div cdkComboboxPopup #popup="cdkComboboxPopup">
+  <ng-template cdkComboboxPopupContent>
     <div cdkListbox class="example-listbox" [value]="['Apple']">
       @for (fruit of fruits; track fruit) {
         <div
@@ -27,5 +22,5 @@
         </div>
       }
     </div>
-  </div>
+  </ng-template>
 </div>

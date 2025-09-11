@@ -6,14 +6,26 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkComboboxInput, CdkComboboxPopup} from '@angular/cdk-experimental/combobox';
+import {
+  CdkCombobox,
+  CdkComboboxInput,
+  CdkComboboxPopup,
+  CdkComboboxPopupContent,
+} from '@angular/cdk-experimental/combobox';
 import {CdkListbox, CdkOption} from '@angular/cdk-experimental/listbox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
   styleUrl: 'cdk-combobox-demo.css',
-  imports: [CdkComboboxInput, CdkComboboxPopup, CdkListbox, CdkOption],
+  imports: [
+    CdkCombobox,
+    CdkComboboxInput,
+    CdkComboboxPopup,
+    CdkComboboxPopupContent,
+    CdkListbox,
+    CdkOption,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkComboboxDemo {

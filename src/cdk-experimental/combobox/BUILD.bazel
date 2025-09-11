@@ -10,5 +10,6 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/deferred-content",
     ],
 )
