@@ -6,6 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './combobox-module';
-export * from './combobox';
-export * from './combobox-popup';
+export {CdkComboboxInput, CdkComboboxPopup} from './combobox';

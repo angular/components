@@ -6,12 +6,50 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkComboboxModule} from '@angular/cdk-experimental/combobox';
+import {CdkComboboxInput, CdkComboboxPopup} from '@angular/cdk-experimental/combobox';
+import {CdkListbox, CdkOption} from '@angular/cdk-experimental/listbox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
-  imports: [CdkComboboxModule],
+  styleUrl: 'cdk-combobox-demo.css',
+  imports: [CdkComboboxInput, CdkComboboxPopup, CdkListbox, CdkOption],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CdkComboboxDemo {}
+export class CdkComboboxDemo {
+  fruits = [
+    'Apple',
+    'Apricot',
+    'Banana',
+    'Blackberry',
+    'Blueberry',
+    'Cantaloupe',
+    'Cherry',
+    'Clementine',
+    'Cranberry',
+    'Dates',
+    'Figs',
+    'Grapes',
+    'Grapefruit',
+    'Guava',
+    'Kiwi',
+    'Kumquat',
+    'Lemon',
+    'Lime',
+    'Mandarin',
+    'Mango',
+    'Nectarine',
+    'Orange',
+    'Papaya',
+    'Passion',
+    'Peach',
+    'Pear',
+    'Pineapple',
+    'Plum',
+    'Pomegranate',
+    'Raspberries',
+    'Strawberry',
+    'Tangerine',
+    'Watermelon',
+  ];
+}

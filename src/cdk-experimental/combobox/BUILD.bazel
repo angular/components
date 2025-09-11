@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -9,33 +9,6 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src:dev_mode_types",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-        "//src/cdk/overlay",
     ],
-)
-
-ng_project(
-    name = "unit_test_sources",
-    testonly = True,
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
-    ),
-    deps = [
-        ":combobox",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
-    ],
-)
-
-ng_web_test_suite(
-    name = "unit_tests",
-    deps = [":unit_test_sources"],
 )
