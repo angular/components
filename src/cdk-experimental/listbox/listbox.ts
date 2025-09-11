@@ -22,6 +22,7 @@ import {ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
+import {CdkComboboxPopup} from '../combobox';
 
 /**
  * A listbox container.
@@ -53,8 +54,11 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(pointerdown)': 'pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
+  hostDirectives: [{directive: CdkComboboxPopup}],
 })
 export class CdkListbox<V> {
+  private readonly _popup = inject(CdkComboboxPopup, {optional: true});
+
   /** A reference to the listbox element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -109,6 +113,7 @@ export class CdkListbox<V> {
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
+    isComboboxPopup: () => !!this._popup?.combobox,
   });
 
   /** Whether the listbox has received focus yet. */

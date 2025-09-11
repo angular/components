@@ -15,6 +15,9 @@ import {List, ListInputs} from '../behaviors/list/list';
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
   readonly: SignalLike<boolean>;
+
+  /** Whether the listbox is in a combobox popup. */
+  isComboboxPopup: SignalLike<boolean>;
 };
 
 /** Controls the state of a listbox. */
@@ -215,13 +218,13 @@ export class ListboxPattern<V> {
 
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
-    if (!this.disabled()) {
+    if (!this.disabled() && !this.inputs.isComboboxPopup()) {
       this.keydown().handle(event);
     }
   }
 
   onPointerdown(event: PointerEvent) {
-    if (!this.disabled()) {
+    if (!this.disabled() && !this.inputs.isComboboxPopup()) {
       this.pointerdown().handle(event);
     }
   }
@@ -237,6 +240,10 @@ export class ListboxPattern<V> {
    * is called.
    */
   setDefaultState() {
+    if (this.inputs.isComboboxPopup()) {
+      return;
+    }
+
     let firstItem: OptionPattern<V> | null = null;
 
     for (const item of this.inputs.items()) {
