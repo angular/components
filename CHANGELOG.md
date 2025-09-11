@@ -1,3 +1,17 @@
+<a name="20.2.3"></a>
+# 20.2.3 "tango-heels" (2025-09-11)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [442d4ca6b7](https://github.com/angular/components/commit/442d4ca6b752eabcf60003df0f1ad6905dddad5f) | fix | **drag-drop:** allow axis lock to be reset ([#31829](https://github.com/angular/components/pull/31829)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ec33bf8eba](https://github.com/angular/components/commit/ec33bf8eba46b1281e6b2a814a1ce3e15475ec20) | fix | **progress-bar:** avoid CSP issues due to buffer dots ([#31818](https://github.com/angular/components/pull/31818)) |
+| [9a68265302](https://github.com/angular/components/commit/9a682653023fd3d181d4b5b318ffc13974a9bf2b) | fix | **slider:** incorrect indicator transform origin in M3 ([#31834](https://github.com/angular/components/pull/31834)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.2"></a>
 # 20.2.2 "plastic-moose" (2025-09-03)
 
