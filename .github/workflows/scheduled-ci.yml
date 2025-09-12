@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@0f0f9518682c1e02be885ef2ecf1255499863dde
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/bazel/setup@0f0f9518682c1e02be885ef2ecf1255499863dde
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@0f0f9518682c1e02be885ef2ecf1255499863dde
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
@@ -41,13 +41,13 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@0f0f9518682c1e02be885ef2ecf1255499863dde
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/bazel/setup@0f0f9518682c1e02be885ef2ecf1255499863dde
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@0f0f9518682c1e02be885ef2ecf1255499863dde
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7a11f99c467ca5ae4411c27beeec4300e32b616a
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@0f0f9518682c1e02be885ef2ecf1255499863dde
         with:
           cache-node-modules: true
       # See: https://github.com/puppeteer/puppeteer/pull/13196 and
