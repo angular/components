@@ -46,6 +46,7 @@ describe('Listbox Pattern', () => {
       orientation: inputs.orientation ?? signal('vertical'),
       selectionMode: inputs.selectionMode ?? signal('explicit'),
       element: signal(document.createElement('div')),
+      combobox: signal(undefined),
     });
   }
 
