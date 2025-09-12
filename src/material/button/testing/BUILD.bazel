@@ -11,6 +11,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk/testing",
+        "//src/material/icon/testing",
     ],
 )
 
