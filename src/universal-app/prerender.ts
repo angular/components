@@ -2,7 +2,11 @@ import 'zone.js';
 
 import {ErrorHandler} from '@angular/core';
 import {MATERIAL_ANIMATIONS} from '@angular/material/core';
-import {bootstrapApplication, provideClientHydration} from '@angular/platform-browser';
+import {
+  BootstrapContext,
+  bootstrapApplication,
+  provideClientHydration,
+} from '@angular/platform-browser';
 import {provideServerRendering, renderApplication} from '@angular/platform-server';
 import {runfiles} from '@bazel/runfiles';
 import {readFileSync, writeFileSync} from 'fs';
@@ -29,33 +33,37 @@ renderApplication(bootstrap, {
     process.exit(1);
   });
 
-function bootstrap() {
-  return bootstrapApplication(KitchenSink, {
-    providers: [
-      {
-        provide: MATERIAL_ANIMATIONS,
-        useValue: {
-          animationsDisabled: true,
-        },
-      },
-      provideServerRendering(),
-      provideClientHydration(),
-      {
-        provide: AUTOMATED_KITCHEN_SINK,
-        useValue: !isDebugMode,
-      },
-      {
-        // If an error is thrown asynchronously during server-side rendering
-        // it'll get logged to stderr, but it won't cause the build to fail.
-        // We still want to catch these errors so we provide an ErrorHandler
-        // that rethrows the error and causes the process to exit correctly.
-        provide: ErrorHandler,
-        useValue: {
-          handleError: (error: Error) => {
-            throw error;
+function bootstrap(context: BootstrapContext) {
+  return bootstrapApplication(
+    KitchenSink,
+    {
+      providers: [
+        {
+          provide: MATERIAL_ANIMATIONS,
+          useValue: {
+            animationsDisabled: true,
           },
         },
-      },
-    ],
-  });
+        provideServerRendering(),
+        provideClientHydration(),
+        {
+          provide: AUTOMATED_KITCHEN_SINK,
+          useValue: !isDebugMode,
+        },
+        {
+          // If an error is thrown asynchronously during server-side rendering
+          // it'll get logged to stderr, but it won't cause the build to fail.
+          // We still want to catch these errors so we provide an ErrorHandler
+          // that rethrows the error and causes the process to exit correctly.
+          provide: ErrorHandler,
+          useValue: {
+            handleError: (error: Error) => {
+              throw error;
+            },
+          },
+        },
+      ],
+    },
+    context,
+  );
 }
