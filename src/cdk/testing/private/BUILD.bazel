@@ -13,6 +13,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
         "//:node_modules/axe-core",
+        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/testing/testbed",
     ],

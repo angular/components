@@ -14,8 +14,10 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
+        "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/platform",
     ],
 )
 

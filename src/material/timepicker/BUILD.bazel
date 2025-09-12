@@ -90,6 +90,7 @@ ng_project(
         "//src/cdk/scrolling",
         "//src/material/button",
         "//src/material/core",
+        "//src/material/form-field",
         "//src/material/input",
     ],
 )

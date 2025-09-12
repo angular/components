@@ -92,6 +92,7 @@ ng_project(
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/core",
+        "//src/material/core/animation",
     ],
 )
 
@@ -119,6 +120,7 @@ ts_project(
         "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "//src/material/core",
     ],
 )
 

@@ -33,6 +33,8 @@ ts_project(
         "//src/cdk/testing/testbed",
         "//src/material/core",
         "//src/material/datepicker",
+        "//src/material/form-field",
+        "//src/material/input",
     ],
 )
 

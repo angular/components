@@ -117,6 +117,7 @@ ts_project(
         "//src/cdk/a11y",
         "//src/cdk/overlay",
         "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 
