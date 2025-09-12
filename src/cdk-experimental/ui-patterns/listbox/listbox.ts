@@ -11,13 +11,14 @@ import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
+import {ComboboxPattern, ComboboxPopupControls} from '../combobox/combobox';
 
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
   readonly: SignalLike<boolean>;
 
-  /** Whether the listbox is in a combobox popup. */
-  isComboboxPopup: SignalLike<boolean>;
+  /** The combobox controlling the listbox. */
+  combobox: SignalLike<ComboboxPattern<OptionPattern<V>, V> | undefined>;
 };
 
 /** Controls the state of a listbox. */
@@ -34,7 +35,7 @@ export class ListboxPattern<V> {
   readonly: SignalLike<boolean>;
 
   /** The tabindex of the listbox. */
-  tabindex = computed(() => this.listBehavior.tabindex());
+  tabindex = computed(() => (this.inputs.combobox() ? -1 : this.listBehavior.tabindex()));
 
   /** The id of the current active item. */
   activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -192,6 +193,11 @@ export class ListboxPattern<V> {
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
 
+    if (this.inputs.combobox()) {
+      this.inputs.focusMode = () => 'activedescendant';
+      this.inputs.element = this.inputs.combobox()!.inputs.inputEl;
+    }
+
     this.listBehavior = new List(inputs);
   }
 
@@ -218,13 +224,13 @@ export class ListboxPattern<V> {
 
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
-    if (!this.disabled() && !this.inputs.isComboboxPopup()) {
+    if (!this.disabled() && !this.inputs.combobox()) {
       this.keydown().handle(event);
     }
   }
 
   onPointerdown(event: PointerEvent) {
-    if (!this.disabled() && !this.inputs.isComboboxPopup()) {
+    if (!this.disabled() && !this.inputs.combobox()) {
       this.pointerdown().handle(event);
     }
   }
@@ -240,7 +246,7 @@ export class ListboxPattern<V> {
    * is called.
    */
   setDefaultState() {
-    if (this.inputs.isComboboxPopup()) {
+    if (this.inputs.combobox()) {
       return;
     }
 
@@ -271,4 +277,28 @@ export class ListboxPattern<V> {
     const element = e.target.closest('[role="option"]');
     return this.inputs.items().find(i => i.element() === element);
   }
+
+  /** The actions that can be performed on a combobox popup listbox. */
+  comboboxActions: ComboboxPopupControls<OptionPattern<V>, V> = {
+    activeId: computed(() => this.listBehavior.activedescendant()),
+
+    next: () => this.listBehavior.next(),
+    prev: () => this.listBehavior.prev(),
+    last: () => this.listBehavior.last(),
+    first: () => this.listBehavior.first(),
+    unfocus: () => this.listBehavior.unfocus(),
+    select: item => this.listBehavior.select(item),
+
+    getItem: e => this._getItem(e),
+    getSelectedItem: () => this.inputs.items().find(i => i.selected()),
+
+    setValue: (value: V | undefined) => this.inputs.value.set(value ? [value] : []),
+
+    filter: (text: string) => {
+      this.inputs.items().forEach(i => {
+        const isMatch = i.searchTerm().toLowerCase().includes(text.toLowerCase());
+        i.inert.set(isMatch ? null : true);
+      });
+    },
+  };
 }
