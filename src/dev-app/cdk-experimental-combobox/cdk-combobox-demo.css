@@ -1,7 +1,10 @@
 .example-combobox-container {
   width: 300px;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 .example-combobox-input-container {
@@ -9,10 +12,6 @@
   overflow: hidden;
   position: relative;
   align-items: center;
-  border: 1px solid var(--mat-sys-outline);
-  border-radius: var(--mat-sys-corner-extra-small);
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
 }
 
 .example-icon {
@@ -35,27 +34,34 @@
   border: none;
   outline: none;
   font-size: 1rem;
-  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
   background-color: var(--mat-sys-surface);
 }
+
 .example-listbox {
   display: flex;
   flex-direction: column;
   overflow: auto;
-  height: 20rem;
+  max-height: 20rem;
   padding: 0.5rem;
-  border: 1px solid var(--mat-sys-outline);
-  border-top: none;
-  border-bottom-left-radius: var(--mat-sys-corner-extra-small);
-  border-bottom-right-radius: var(--mat-sys-corner-extra-small);
+  border-top: 1px solid var(--mat-sys-outline);
+}
+
+.example-listbox:not(:has(.example-option:not([inert]))),
+.example-combobox-container[data-expanded='false'] .example-listbox {
+  height: 0;
+  padding: 0 0.5rem;
+  border: none;
 }
 
 .example-option {
   outline: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 1rem;
   border-radius: var(--mat-sys-corner-extra-small);
   display: flex;
+  overflow: hidden;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
 }
@@ -66,4 +72,26 @@
 
 .example-option[aria-selected='true'] .example-selected-icon {
   visibility: visible;
+}
+
+.example-option[inert] {
+  height: 0;
+  padding: 0 1rem;
+}
+
+.example-combobox-container:focus-within .cdk-active {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-combobox-container:focus-within .cdk-active[aria-selected='true'] {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
+    transparent
+  );
+  color: var(--mat-sys-primary);
 }

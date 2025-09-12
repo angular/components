@@ -1,9 +1,9 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
-    name = "listbox",
+    name = "combobox",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
@@ -13,16 +13,15 @@ ts_project(
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
         "//src/cdk-experimental/ui-patterns/behaviors/list",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
-        "//src/cdk-experimental/ui-patterns/combobox",
     ],
 )
 
-ng_project(
+ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":listbox",
+        ":combobox",
         "//:node_modules/@angular/core",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",

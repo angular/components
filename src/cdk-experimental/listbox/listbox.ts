@@ -44,6 +44,7 @@ import {CdkComboboxPopup} from '../combobox';
   host: {
     'role': 'listbox',
     'class': 'cdk-listbox',
+    '[attr.id]': 'id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-readonly]': 'pattern.readonly()',
     '[attr.aria-disabled]': 'pattern.disabled()',
@@ -57,7 +58,17 @@ import {CdkComboboxPopup} from '../combobox';
   hostDirectives: [{directive: CdkComboboxPopup}],
 })
 export class CdkListbox<V> {
-  private readonly _popup = inject(CdkComboboxPopup, {optional: true});
+  /** A unique identifier for the listbox. */
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
+
+  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
+  /** A unique identifier for the option. */
+  protected id = computed(() => this._generatedId);
+
+  /** A reference to the parent combobox popup, if one exists. */
+  private readonly _popup = inject<CdkComboboxPopup<V>>(CdkComboboxPopup, {
+    optional: true,
+  });
 
   /** A reference to the listbox element. */
   private readonly _elementRef = inject(ElementRef);
@@ -113,13 +124,15 @@ export class CdkListbox<V> {
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
-    isComboboxPopup: () => !!this._popup?.combobox,
+    combobox: () => this._popup?.combobox?.pattern,
   });
 
   /** Whether the listbox has received focus yet. */
   private _hasFocused = signal(false);
 
   constructor() {
+    this._popup?.actions?.set(this.pattern.comboboxActions);
+
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         const violations = this.pattern.validate();
@@ -153,6 +166,7 @@ export class CdkListbox<V> {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.inert]': 'pattern.inert()',
   },
 })
 export class CdkOption<V> {
