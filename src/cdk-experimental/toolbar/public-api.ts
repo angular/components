@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {CdkToolbar, CdkToolbarWidget} from './toolbar';
+export {CdkToolbar, CdkToolbarWidget, CdkToolbarWidgetGroup} from './toolbar';
