@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@35c6b5e6701396d0b2e004657b9330e6f858208b
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/bazel/setup@35c6b5e6701396d0b2e004657b9330e6f858208b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@35c6b5e6701396d0b2e004657b9330e6f858208b
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
@@ -39,11 +39,11 @@ jobs:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@35c6b5e6701396d0b2e004657b9330e6f858208b
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/bazel/setup@35c6b5e6701396d0b2e004657b9330e6f858208b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@35c6b5e6701396d0b2e004657b9330e6f858208b
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@30d78d3d9f682c5e11eb647033b567fcd4f72692
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@35c6b5e6701396d0b2e004657b9330e6f858208b
       # See: https://github.com/puppeteer/puppeteer/pull/13196 and
       # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md.
       - name: Disable AppArmor
