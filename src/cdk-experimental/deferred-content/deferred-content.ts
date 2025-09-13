@@ -7,8 +7,8 @@
  */
 
 import {
+  afterRenderEffect,
   Directive,
-  effect,
   inject,
   input,
   TemplateRef,
@@ -21,7 +21,7 @@ import {
  */
 @Directive()
 export class DeferredContentAware {
-  contentVisible = signal(false);
+  readonly contentVisible = signal(false);
   readonly preserveContent = input(false);
 }
 
@@ -48,16 +48,13 @@ export class DeferredContent {
   private _isRendered = false;
 
   constructor() {
-    effect(() => {
-      if (
-        this._deferredContentAware.preserveContent() ||
-        this._deferredContentAware.contentVisible()
-      ) {
+    afterRenderEffect(() => {
+      if (this._deferredContentAware.contentVisible()) {
         if (this._isRendered) return;
         this._viewContainerRef.clear();
         this._viewContainerRef.createEmbeddedView(this._templateRef);
         this._isRendered = true;
-      } else {
+      } else if (!this._deferredContentAware.preserveContent()) {
         this._viewContainerRef.clear();
         this._isRendered = false;
       }
