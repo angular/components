@@ -36,7 +36,7 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
     'class': 'mat-step-header',
     '[class.mat-step-header-empty-label]': '_hasEmptyLabel()',
     '[class]': '"mat-" + (color || "primary")',
-    'role': 'tab',
+    'role': 'button',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
