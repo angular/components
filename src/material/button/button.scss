@@ -163,8 +163,10 @@ $fallbacks: m3-button.get-tokens();
     border-radius: token-utils.slot(button-protected-container-shape, $fallbacks);
   }
 
-  &:hover {
-    box-shadow: token-utils.slot(button-protected-hover-container-elevation-shadow, $fallbacks);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(button-protected-hover-container-elevation-shadow, $fallbacks);
+    }
   }
 
   &:focus {

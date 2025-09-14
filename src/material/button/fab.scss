@@ -101,8 +101,10 @@ $fallbacks: m3-fab.get-tokens();
   color: token-utils.slot(fab-foreground-color, $fallbacks, inherit);
   box-shadow: token-utils.slot(fab-container-elevation-shadow, $fallbacks);
 
-  &:hover {
-    box-shadow: token-utils.slot(fab-hover-container-elevation-shadow, $fallbacks);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-hover-container-elevation-shadow, $fallbacks);
+    }
   }
 
   &:focus {
@@ -133,8 +135,10 @@ $fallbacks: m3-fab.get-tokens();
   color: token-utils.slot(fab-small-foreground-color, $fallbacks, inherit);
   box-shadow: token-utils.slot(fab-small-container-elevation-shadow, $fallbacks);
 
-  &:hover {
-    box-shadow: token-utils.slot(fab-small-hover-container-elevation-shadow, $fallbacks);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-small-hover-container-elevation-shadow, $fallbacks);
+    }
   }
 
   &:focus {
@@ -176,8 +180,10 @@ $fallbacks: m3-fab.get-tokens();
   font-weight: token-utils.slot(fab-extended-label-text-weight, $fallbacks);
   letter-spacing: token-utils.slot(fab-extended-label-text-tracking, $fallbacks);
 
-  &:hover {
-    box-shadow: token-utils.slot(fab-extended-hover-container-elevation-shadow, $fallbacks);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(fab-extended-hover-container-elevation-shadow, $fallbacks);
+    }
   }
 
   &:focus {

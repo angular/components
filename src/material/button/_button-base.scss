@@ -82,8 +82,10 @@
     background-color: token-utils.slot($disabled-state-layer-color-token, $fallbacks);
   }
 
-  &:hover > .mat-mdc-button-persistent-ripple::before {
-    opacity: token-utils.slot($hover-state-layer-opacity-token, $fallbacks);
+  @media (hover: hover) {
+    &:hover > .mat-mdc-button-persistent-ripple::before {
+      opacity: token-utils.slot($hover-state-layer-opacity-token, $fallbacks);
+    }
   }
 
   &.cdk-program-focused,
