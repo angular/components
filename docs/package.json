@@ -47,7 +47,7 @@
     "@angular/youtube-player": "workspace:*",
     "@stackblitz/sdk": "^1.5.2",
     "moment": "^2.29.1",
-    "path-normalize": "^6.0.13",
+    "path-normalize": "^7.0.0",
     "rxjs": "catalog:",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
