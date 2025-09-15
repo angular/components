@@ -59,7 +59,7 @@ class DocFetcher {
   selector: 'doc-viewer',
   template: `
     @if (portal) {
-      <ng-template [cdkPortalOutlet]="portal"></ng-template>
+      <ng-template [cdkPortalOutlet]="portal" />
     } @else {
       Loading document...
     }
