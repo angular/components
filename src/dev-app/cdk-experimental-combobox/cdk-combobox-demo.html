@@ -1,26 +1,18 @@
-<div cdkCombobox class="example-combobox-container">
-  <div class="example-combobox-input-container">
-    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
-    <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
-  </div>
-
-  <ng-template cdkComboboxPopupContent>
-    <div cdkListbox class="example-listbox">
-      @for (fruit of fruits; track fruit) {
-        <div
-          class="example-option example-selectable example-stateful"
-          cdkOption
-          [value]="fruit"
-          [label]="fruit"
-        >
-          <span>{{fruit}}</span>
-          <span
-            aria-hidden="true"
-            class="material-symbols-outlined example-icon example-selected-icon"
-            >check</span
-          >
-        </div>
-      }
+<div>
+  <div class="example-combobox-grid">
+    <div class="example-combobox-container">
+      <h2>Combobox with manual filtering</h2>
+      <cdk-combobox-manual-example></cdk-combobox-manual-example>
     </div>
-  </ng-template>
+
+    <div class="example-combobox-container">
+      <h2>Combobox with auto-select filtering</h2>
+      <cdk-combobox-auto-select-example></cdk-combobox-auto-select-example>
+    </div>
+
+    <div class="example-combobox-container">
+      <h2>Combobox with highlight filtering</h2>
+      <cdk-combobox-highlight-example></cdk-combobox-highlight-example>
+    </div>
+  </div>
 </div>

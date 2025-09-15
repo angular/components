@@ -1,97 +1,24 @@
+.example-combobox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
 .example-combobox-container {
-  width: 300px;
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
-  border: 1px solid var(--mat-sys-outline);
-  border-radius: var(--mat-sys-corner-extra-small);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    /* stylelint-disable material/no-prefixes */
+    width: fit-content;
 }
 
-.example-combobox-input-container {
-  display: flex;
-  overflow: hidden;
-  position: relative;
-  align-items: center;
+.example-configurable-combobox-container {
+    padding-top: 40px;
 }
 
-.example-icon {
-  width: 24px;
-  height: 24px;
-  font-size: 20px;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
+h2 {
+    font-size: 1.1rem;
 }
 
-.example-search-icon {
-  padding: 0 0.5rem;
-  position: absolute;
-  opacity: 0.8;
-}
-
-.example-combobox-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  padding: 0.7rem 1rem 0.7rem 2.5rem;
-  background-color: var(--mat-sys-surface);
-}
-
-.example-listbox {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  max-height: 20rem;
-  padding: 0.5rem;
-  border-top: 1px solid var(--mat-sys-outline);
-}
-
-.example-listbox:not(:has(.example-option:not([inert]))),
-.example-combobox-container[data-expanded='false'] .example-listbox {
-  height: 0;
-  padding: 0 0.5rem;
-  border: none;
-}
-
-.example-option {
-  outline: none;
-  cursor: pointer;
-  padding: 0.3rem 1rem;
-  border-radius: var(--mat-sys-corner-extra-small);
-  display: flex;
-  overflow: hidden;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.example-selected-icon {
-  visibility: hidden;
-}
-
-.example-option[aria-selected='true'] .example-selected-icon {
-  visibility: visible;
-}
-
-.example-option[inert] {
-  height: 0;
-  padding: 0 1rem;
-}
-
-.example-combobox-container:focus-within .cdk-active {
-  background: color-mix(
-    in srgb,
-    var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
-    transparent
-  );
-}
-
-.example-combobox-container:focus-within .cdk-active[aria-selected='true'] {
-  background: color-mix(
-    in srgb,
-    var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
-    transparent
-  );
-  color: var(--mat-sys-primary);
-}

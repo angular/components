@@ -7,61 +7,16 @@
  */
 
 import {
-  CdkCombobox,
-  CdkComboboxInput,
-  CdkComboboxPopup,
-  CdkComboboxPopupContent,
-} from '@angular/cdk-experimental/combobox';
-import {CdkListbox, CdkOption} from '@angular/cdk-experimental/listbox';
+  CdkComboboxAutoSelectExample,
+  CdkComboboxHighlightExample,
+  CdkComboboxManualExample,
+} from '@angular/components-examples/cdk-experimental/combobox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
   styleUrl: 'cdk-combobox-demo.css',
-  imports: [
-    CdkCombobox,
-    CdkComboboxInput,
-    CdkComboboxPopup,
-    CdkComboboxPopupContent,
-    CdkListbox,
-    CdkOption,
-  ],
+  imports: [CdkComboboxManualExample, CdkComboboxAutoSelectExample, CdkComboboxHighlightExample],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CdkComboboxDemo {
-  fruits = [
-    'Apple',
-    'Apricot',
-    'Banana',
-    'Blackberry',
-    'Blueberry',
-    'Cantaloupe',
-    'Cherry',
-    'Clementine',
-    'Cranberry',
-    'Dates',
-    'Figs',
-    'Grapes',
-    'Grapefruit',
-    'Guava',
-    'Kiwi',
-    'Kumquat',
-    'Lemon',
-    'Lime',
-    'Mandarin',
-    'Mango',
-    'Nectarine',
-    'Orange',
-    'Papaya',
-    'Passion',
-    'Peach',
-    'Pear',
-    'Pineapple',
-    'Plum',
-    'Pomegranate',
-    'Raspberries',
-    'Strawberry',
-    'Tangerine',
-    'Watermelon',
-  ];
-}
+export class CdkComboboxDemo {}

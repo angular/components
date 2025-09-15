@@ -1,0 +1,28 @@
+<div #combobox="cdkCombobox" cdkCombobox class="example-combobox-container" filterMode="manual">
+  <div class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template cdkComboboxPopupContent>
+      <div cdkListbox class="example-listbox">
+        @for (state of states; track state) {
+          <div
+            class="example-option example-selectable example-stateful"
+            cdkOption
+            [value]="state"
+            [label]="state"
+          >
+            <span>{{state}}</span>
+            <span
+              aria-hidden="true"
+              class="material-symbols-outlined example-icon example-selected-icon"
+              >check</span
+            >
+          </div>
+        }
+      </div>
+    </ng-template>
+  </div>
+</div>
