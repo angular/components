@@ -18,7 +18,7 @@ import {
   model,
   signal,
 } from '@angular/core';
-import {ListboxPattern, OptionPattern} from '../ui-patterns';
+import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
@@ -118,20 +118,28 @@ export class CdkListbox<V> {
   value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
-  pattern: ListboxPattern<V> = new ListboxPattern<V>({
-    ...this,
-    items: this.items,
-    activeItem: signal(undefined),
-    textDirection: this.textDirection,
-    element: () => this._elementRef.nativeElement,
-    combobox: () => this._popup?.combobox?.pattern,
-  });
+  pattern: ListboxPattern<V>;
 
   /** Whether the listbox has received focus yet. */
   private _hasFocused = signal(false);
 
   constructor() {
-    this._popup?.actions?.set(this.pattern.comboboxActions);
+    const inputs = {
+      ...this,
+      items: this.items,
+      activeItem: signal(undefined),
+      textDirection: this.textDirection,
+      element: () => this._elementRef.nativeElement,
+      combobox: () => this._popup?.combobox?.pattern,
+    };
+
+    this.pattern = this._popup?.combobox
+      ? new ComboboxListboxPattern<V>(inputs)
+      : new ListboxPattern<V>(inputs);
+
+    if (this._popup) {
+      this._popup.actions.set((this.pattern as ComboboxListboxPattern<V>).comboboxActions);
+    }
 
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
