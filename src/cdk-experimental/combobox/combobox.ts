@@ -57,6 +57,10 @@ export class CdkCombobox<V> {
   /** The values of the current selected items. */
   value = model<V | undefined>(undefined);
 
+  filter = input<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
+    itemText.toLowerCase().includes(inputText.toLowerCase()),
+  );
+
   /** The combobox ui pattern. */
   readonly pattern = new ComboboxPattern<any, V>({
     ...this,
