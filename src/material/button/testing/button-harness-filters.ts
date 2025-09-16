@@ -35,5 +35,5 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
   buttonType?: ButtonType;
 
   /** Only find instances that contain an icon whose name matches the given value. */
-  icon?: string | RegExp;
+  iconName?: string | RegExp;
 }

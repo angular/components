@@ -116,7 +116,7 @@ describe('MatButtonHarness', () => {
   });
 
   it('should be able to filter buttons containing a named icon', async () => {
-    const favBtn = await loader.getHarness(MatButtonHarness.with({icon: 'favorite'}));
+    const favBtn = await loader.getHarness(MatButtonHarness.with({iconName: 'favorite'}));
 
     expect(await (await favBtn.host()).getAttribute('id')).toBe('favorite-icon');
     expect(await (await favBtn.getHarness(MatIconHarness)).getName()).toBe('favorite');
