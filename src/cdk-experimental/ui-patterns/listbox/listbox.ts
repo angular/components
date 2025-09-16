@@ -296,8 +296,10 @@ export class ListboxPattern<V> {
     setValue: (value: V | undefined) => this.inputs.value.set(value ? [value] : []),
 
     filter: (text: string) => {
+      const filterFn = this.inputs.combobox()!.inputs.filter();
+
       this.inputs.items().forEach(i => {
-        const isMatch = i.searchTerm().toLowerCase().includes(text.toLowerCase());
+        const isMatch = filterFn(text, i.searchTerm());
         i.inert.set(isMatch ? null : true);
       });
     },
