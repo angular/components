@@ -27,6 +27,9 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
 
   /** The filtering mode for the combobox. */
   filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
+
+  /** The function used to filter items in the combobox. */
+  filter: SignalLike<(inputText: string, itemText: string) => boolean>;
 };
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
@@ -189,6 +192,19 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
+  setDefaultState() {
+    if (this.inputs.value() !== undefined) {
+      this.inputs.popupControls()?.setValue(this.inputs.value());
+
+      const inputEl = this.inputs.inputEl();
+      const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm() ?? '';
+
+      if (inputEl) {
+        inputEl.value = searchTerm;
+      }
+    }
+  }
+
   /** Closes the combobox. */
   close() {
     this.expanded.set(false);
@@ -223,7 +239,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .startsWith(this.searchString().toLowerCase());
 
     if (element && isHighlightable) {
-      element.value = item.searchTerm();
+      element.value = this.searchString() + item.searchTerm().slice(this.searchString().length);
       element.setSelectionRange(this.searchString().length, item.searchTerm().length);
       this.highlightedItem.set(item);
     }
