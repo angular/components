@@ -49,6 +49,9 @@ export type ComboboxPopupControls<T extends ListItem<V>, V> = {
   /** Selects the current item in the popup. */
   select: (item?: T) => void;
 
+  /** Clears the selection state of the popup. */
+  clearSelection: () => void;
+
   /** Filters the items in the popup. */
   filter: (text: string) => void;
 
@@ -95,7 +98,20 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last())
-      .on('Escape', () => this.close())
+      .on('Escape', () => {
+        if (this.inputs.filterMode() === 'highlight' && this.inputs.popupControls()?.activeId()) {
+          this.inputs.popupControls()?.unfocus();
+          this.inputs.popupControls()?.clearSelection();
+
+          const inputEl = this.inputs.inputEl();
+
+          if (inputEl) {
+            inputEl.value = this.searchString();
+          }
+        } else {
+          this.close();
+        }
+      }) // TODO: When filter mode is 'highlight', escape should revert to the last committed value.
       .on('Enter', () => this.select({commit: true, close: true}));
   });
 
@@ -141,7 +157,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this.open();
     this.inputs.popupControls()?.first();
 
-    if (event instanceof InputEvent && event.inputType === 'deleteContentBackward') {
+    if (
+      event instanceof InputEvent &&
+      this.inputs.filterMode() !== 'manual' &&
+      event.inputType.match(/delete.*/)
+    ) {
       this.inputs.popupControls()?.select();
       return;
     }
@@ -161,11 +181,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       !(event.relatedTarget instanceof HTMLElement) ||
       !this.inputs.containerEl()?.contains(event.relatedTarget)
     ) {
-      this.close();
-
       if (this.inputs.filterMode() !== 'manual') {
         this.commit();
       }
+
+      this.close();
     }
   }
 
@@ -173,6 +193,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   close() {
     this.expanded.set(false);
     this.inputs.popupControls()?.unfocus();
+    this.inputs.popupControls()?.clearSelection();
   }
 
   /** Opens the combobox. */
@@ -241,6 +262,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
     if (opts.highlight) {
       this.highlight();
+    }
+    if (this.inputs.filterMode() === 'manual') {
+      this.inputs.popupControls()?.clearSelection();
+      this.inputs.value.set(undefined);
     }
   }
 

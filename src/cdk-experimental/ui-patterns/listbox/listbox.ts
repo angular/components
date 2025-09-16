@@ -288,6 +288,7 @@ export class ListboxPattern<V> {
     first: () => this.listBehavior.first(),
     unfocus: () => this.listBehavior.unfocus(),
     select: item => this.listBehavior.select(item),
+    clearSelection: () => this.listBehavior.deselectAll(),
 
     getItem: e => this._getItem(e),
     getSelectedItem: () => this.inputs.items().find(i => i.selected()),
