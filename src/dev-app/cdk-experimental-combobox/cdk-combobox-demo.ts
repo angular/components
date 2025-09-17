@@ -10,13 +10,23 @@ import {
   CdkComboboxAutoSelectExample,
   CdkComboboxHighlightExample,
   CdkComboboxManualExample,
+  CdkComboboxTreeAutoSelectExample,
+  CdkComboboxTreeHighlightExample,
+  CdkComboboxTreeManualExample,
 } from '@angular/components-examples/cdk-experimental/combobox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-combobox-demo.html',
   styleUrl: 'cdk-combobox-demo.css',
-  imports: [CdkComboboxManualExample, CdkComboboxAutoSelectExample, CdkComboboxHighlightExample],
+  imports: [
+    CdkComboboxManualExample,
+    CdkComboboxAutoSelectExample,
+    CdkComboboxHighlightExample,
+    CdkComboboxTreeManualExample,
+    CdkComboboxTreeAutoSelectExample,
+    CdkComboboxTreeHighlightExample,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkComboboxDemo {}
