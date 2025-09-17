@@ -17,7 +17,7 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
   value: WritableSignalLike<V | undefined>;
 
   /** The controls for the popup associated with the combobox. */
-  popupControls: SignalLike<ComboboxPopupControls<T, V> | undefined>;
+  popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | undefined>;
 
   /** The HTML input element that serves as the combobox input. */
   inputEl: SignalLike<HTMLInputElement | undefined>;
@@ -33,7 +33,10 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
 };
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
-export type ComboboxPopupControls<T extends ListItem<V>, V> = {
+export type ComboboxListboxControls<T extends ListItem<V>, V> = {
+  /** The ARIA role for the popup. */
+  role: SignalLike<'listbox' | 'tree' | 'grid'>;
+
   /** The ID of the active item in the popup. */
   activeId: SignalLike<string | undefined>;
 
@@ -71,6 +74,17 @@ export type ComboboxPopupControls<T extends ListItem<V>, V> = {
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
 };
 
+export type ComboboxTreeControls<T extends ListItem<V>, V> = ComboboxListboxControls<T, V> & {
+  /** Expands the currently active item in the popup. */
+  expandItem: () => void;
+
+  /** Collapses the currently active item in the popup. */
+  collapseItem: () => void;
+
+  /** Checks if the currently active item in the popup is expandable. */
+  isItemExpandable: () => boolean;
+};
+
 /** Controls the state of a combobox. */
 export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is expanded. */
@@ -88,6 +102,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is focused. */
   isFocused = signal(false);
 
+  /** The key used to navigate to the previous item in the list. */
+  expandKey = computed(() => 'ArrowRight'); // TODO: RTL support.
+
+  /** The key used to navigate to the next item in the list. */
+  collapseKey = computed(() => 'ArrowLeft'); // TODO: RTL support.
+
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
     if (!this.expanded()) {
@@ -96,15 +116,21 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         .on('ArrowUp', () => this.open({last: true}));
     }
 
-    return new KeyboardEventManager()
+    const popupControls = this.inputs.popupControls();
+
+    if (!popupControls) {
+      return new KeyboardEventManager();
+    }
+
+    const manager = new KeyboardEventManager()
       .on('ArrowDown', () => this.next())
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last())
       .on('Escape', () => {
-        if (this.inputs.filterMode() === 'highlight' && this.inputs.popupControls()?.activeId()) {
-          this.inputs.popupControls()?.unfocus();
-          this.inputs.popupControls()?.clearSelection();
+        if (this.inputs.filterMode() === 'highlight' && popupControls.activeId()) {
+          popupControls.unfocus();
+          popupControls.clearSelection();
 
           const inputEl = this.inputs.inputEl();
 
@@ -116,6 +142,18 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         }
       }) // TODO: When filter mode is 'highlight', escape should revert to the last committed value.
       .on('Enter', () => this.select({commit: true, close: true}));
+
+    if (popupControls.role() === 'tree') {
+      const treeControls = popupControls as ComboboxTreeControls<T, V>;
+
+      if (treeControls.isItemExpandable()) {
+        manager
+          .on(this.expandKey(), () => treeControls.expandItem())
+          .on(this.collapseKey(), () => treeControls.collapseItem());
+      }
+    }
+
+    return manager;
   });
 
   /** The pointerup event manager for the combobox. */

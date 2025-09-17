@@ -16,3 +16,5 @@ export * from './behaviors/signal-like/signal-like';
 export * from './tabs/tabs';
 export * from './accordion/accordion';
 export * from './toolbar/toolbar';
+export * from './tree/tree';
+export * from './tree/combobox-tree';

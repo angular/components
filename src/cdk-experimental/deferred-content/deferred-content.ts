@@ -14,6 +14,7 @@ import {
   TemplateRef,
   signal,
   ViewContainerRef,
+  model,
 } from '@angular/core';
 
 /**
@@ -22,7 +23,7 @@ import {
 @Directive()
 export class DeferredContentAware {
   readonly contentVisible = signal(false);
-  readonly preserveContent = input(false);
+  readonly preserveContent = model(false);
 }
 
 /**
