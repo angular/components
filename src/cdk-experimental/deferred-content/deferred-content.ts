@@ -10,7 +10,6 @@ import {
   Directive,
   effect,
   inject,
-  input,
   TemplateRef,
   signal,
   ViewContainerRef,
