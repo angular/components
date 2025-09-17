@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "tree",
     srcs = [
+        "combobox-tree.ts",
         "tree.ts",
     ],
     deps = [
@@ -13,6 +14,7 @@ ts_project(
         "//src/cdk-experimental/ui-patterns/behaviors/expansion",
         "//src/cdk-experimental/ui-patterns/behaviors/list",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+        "//src/cdk-experimental/ui-patterns/combobox",
     ],
 )
 

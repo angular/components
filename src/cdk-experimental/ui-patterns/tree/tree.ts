@@ -32,6 +32,9 @@ export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
  * Represents an item in a Tree.
  */
 export class TreeItemPattern<V> implements ExpansionItem {
+  /** Whether the option is inert. */
+  inert = signal<true | null>(null);
+
   /** The position of this item among its siblings. */
   readonly index = computed(() => this.tree().visibleItems().indexOf(this));
 
@@ -148,7 +151,7 @@ export class TreePattern<V> {
   readonly expanded = () => true;
 
   /** The tabindex of the tree. */
-  readonly tabindex = computed(() => this.listBehavior.tabindex());
+  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
   readonly activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -425,7 +428,7 @@ export class TreePattern<V> {
   }
 
   /** Retrieves the TreeItemPattern associated with a DOM event, if any. */
-  private _getItem(event: Event): TreeItemPattern<V> | undefined {
+  protected _getItem(event: Event): TreeItemPattern<V> | undefined {
     if (!(event.target instanceof HTMLElement)) {
       return;
     }
