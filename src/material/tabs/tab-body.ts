@@ -39,6 +39,7 @@ import {_animationsDisabled} from '../core';
 @Directive({selector: '[matTabBodyHost]'})
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
   private _host = inject(MatTabBody);
+  private _ngZone = inject(NgZone);
 
   /** Subscription to events for when the tab body begins centering. */
   private _centeringSub = Subscription.EMPTY;
@@ -59,13 +60,20 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
       .pipe(startWith(this._host._isCenterPosition()))
       .subscribe((isCentering: boolean) => {
         if (this._host._content && isCentering && !this.hasAttached()) {
-          this.attach(this._host._content);
+          // Attach in the zone since the events from the tab body may be happening outside.
+          // See: https://github.com/angular/components/issues/31867
+          this._ngZone.run(() => {
+            // `Promise.resolve` is necessary to destabilize the zone.
+            // Otherwise some apps throw a `ApplicationRef.tick is called recursively` error.
+            Promise.resolve().then();
+            this.attach(this._host._content);
+          });
         }
       });
 
     this._leavingSub = this._host._afterLeavingCenter.subscribe(() => {
       if (!this._host.preserveContent) {
-        this.detach();
+        this._ngZone.run(() => this.detach());
       }
     });
   }
@@ -117,7 +125,7 @@ export type MatTabBodyOriginState = 'left' | 'right';
   changeDetection: ChangeDetectionStrategy.Default,
   host: {
     'class': 'mat-mdc-tab-body',
-    // In most cases the `visibility: hidden` that we set on the off-screen content is enough
+    // In most cases the `hidden` that we set on the off-screen content is enough
     // to stop interactions with it, but if a child element sets its own `visibility`, it'll
     // override the one from the parent. This ensures that even those elements will be removed
     // from the accessibility tree.
