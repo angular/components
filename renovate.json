@@ -3,15 +3,5 @@
   "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
   "baseBranchPatterns": ["main", "20.2.x"],
   "ignoreDeps": ["stylelint", "selenium-webdriver", "@types/selenium-webdriver", "typescript"],
-  "ignorePaths": ["docs/src/assets/stackblitz/**", "integration/**"],
-  "packageRules": [
-    {
-      "matchBaseBranches": ["main"],
-      "addLabels": ["target: minor"]
-    },
-    {
-      "matchBaseBranches": ["!main"],
-      "addLabels": ["target: patch"]
-    }
-  ]
+  "ignorePaths": ["docs/src/assets/stackblitz/**", "integration/**"]
 }

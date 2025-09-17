@@ -3,134 +3,109 @@
 @mixin system-classes() {
 
   // ***********************************************************************************************
-  // Background - Apply background color and a contrastful corresponding text color
-  // See https://m3.material.io/styles/color/roles for guidance.
+  // Background - Applies background colors defined by Material Design.
+  // See https://m3.material.io/styles/color/roles for detailed guidance.
   // ***********************************************************************************************
 
-  // Styles an element with a primary color background and applies an accessible contrasting
-  // color for text and icons. Use for key components across the UI, such as buttons that
-  // have greater importance on the page. In Angular Material, this is used for the selected
-  // date in a datepicker, the handle of a slider, and the background of a checkbox.
+  // Styles an element with a primary color background. Use for key components across the UI, such
+  // as buttons that have greater importance on the page. In Angular Material, this is used for the
+  // selected date in a datepicker, the handle of a slider, and the background of a checkbox.
   .mat-bg-primary {
     background-color: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
   }
 
-  // Styles an element with a primary container color background and applies an accessible
-  // contrasting color for text and icons. Use for filling components that should stand out
-  // on a surface. In Angular Material, this is used for
-  // the container of a floating action button.
+  // Styles an element with a primary container color background. Use for filling components that
+  // should stand out on a surface. In Angular Material, this is used for the container of a
+  // floating action button.
   .mat-bg-primary-container {
     background-color: var(--mat-sys-primary-container);
-    color: var(--mat-sys-on-primary-container);
   }
 
-  // Styles an element with a secondary color background and applies an accessible contrasting
-  // color for text and icons. Use for less prominent components in the UI that have a different
-  // color scheme than the primary.
+  // Styles an element with a secondary color background. Use for less prominent components in the
+  // UI that have a different color scheme than the primary.
   .mat-bg-secondary {
     background-color: var(--mat-sys-secondary);
-    color: var(--mat-sys-on-secondary);
   }
 
-  // Styles an element with a secondary container color background and applies an accessible
-  // contrasting color for text and icons. Use for components that need less emphasis than
-  // secondary, such as filter chips. In Angular Material, this is used for selected items
-  // in a list and the container of a tonal button.
+  // Styles an element with a secondary container color background. Use for components that need
+  // less emphasis than secondary, such as filter chips. In Angular Material, this is used for
+  // selected items in a list and the container of a tonal button.
   .mat-bg-secondary-container {
     background-color: var(--mat-sys-secondary-container);
-    color: var(--mat-sys-on-secondary-container);
   }
 
-  // Styles an element with an error color background and applies an accessible contrasting
-  // color for text and icons. Use for indicating an error state, such as an invalid text field, or
-  // for the background of an important notification. In Angular Material, this is used for the
-  // background of a badge.
+  // Styles an element with an error color background. Use for indicating an error state, such as
+  // an invalid text field, or for the background of an important notification. In Angular
+  // Material, this is used for the background of a badge.
   .mat-bg-error {
     background-color: var(--mat-sys-error);
-    color: var(--mat-sys-on-error);
   }
 
-  // Styles an element with an error container color background and applies an accessible
-  // contrasting color for text and icons. Use for components that need less emphasis than
-  // error, such as a container for error text.
+  // Styles an element with an error container color background. Use for components that need less
+  // emphasis than error, such as a container for error text.
   .mat-bg-error-container {
     background-color: var(--mat-sys-error-container);
-    color: var(--mat-sys-on-error-container);
   }
 
-  // Styles an element with a surface color background and applies an accessible contrasting
-  // color for text and icons. Use for general surfaces of components. In Angular Material, this is
-  // used for the background of many components, like tables, dialogs, menus, and toolbars.
+  // Styles an element with a surface color background. Use for general surfaces of components. In
+  // Angular Material, this is used for the background of many components, like tables, dialogs,
+  // menus, and toolbars.
   .mat-bg-surface {
     background-color: var(--mat-sys-surface);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with a surface variant color background and applies an accessible
-  // contrasting color for text and icons. Use for surfaces that need to stand out from the
-  // main surface color. In Angular Material, this is used for the background of a filled
-  // form field and the track of a progress bar.
+  // Styles an element with a surface variant color background. Use for surfaces that need to stand
+  // out from the main surface color. In Angular Material, this is used for the background of a
+  // filled form field and the track of a progress bar.
   .mat-bg-surface-variant {
     background-color: var(--mat-sys-surface-variant);
-    color: var(--mat-sys-on-surface-variant);
   }
 
-  // Styles an element with the "highest" surface container color background and applies an
-  // accessible contrasting color for text and icons. Use for surfaces that need the most
-  // emphasis against the main surface color. In Angular Material, this is used for the
-  // background of a filled card.
+  // Styles an element with the "highest" surface container color background. Use for surfaces that
+  // need the most emphasis against the main surface color. In Angular Material, this is used for
+  // the background of a filled card.
   .mat-bg-surface-container-highest {
     background-color: var(--mat-sys-surface-container-highest);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with a "high" surface container color background and applies an accessible
-  // contrasting color for text and icons. Use for surfaces that need more emphasis against
-  // the main surface color. In Angular Material, this is used for the background of a datepicker.
+  // Styles an element with a "high" surface container color background. Use for surfaces that need
+  // more emphasis against the main surface color. In Angular Material, this is used for the
+  // background of a datepicker.
   .mat-bg-surface-container-high {
     background-color: var(--mat-sys-surface-container-high);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with a surface container color background and applies an accessible
-  // contrasting color for text and icons. Use for surfaces that need to stand out from the
-  // main surface color. In Angular Material, this is used for the background of a menu.
+  // Styles an element with a surface container color background. Use for surfaces that need to
+  // stand out from the main surface color. In Angular Material, this is used for the background
+  // of a menu.
   .mat-bg-surface-container {
     background-color: var(--mat-sys-surface-container);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with a "low" surface container color background and applies an accessible
-  // contrasting color for text and icons. Use for surfaces that need less emphasis against
-  // the main surface color. In Angular Material, this is used for the background of a bottom sheet.
+  // Styles an element with a "low" surface container color background. Use for surfaces that need
+  // less emphasis against the main surface color. In Angular Material, this is used for the
+  // background of a bottom sheet.
   .mat-bg-surface-container-low {
     background-color: var(--mat-sys-surface-container-low);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with the "lowest" surface container color background and applies an
-  // accessible contrasting color for text and icons. Use for surfaces that need the least
-  // emphasis against the main surface color.
+  // Styles an element with the "lowest" surface container color background. Use for surfaces that
+  // need the least emphasis against the main surface color.
   .mat-bg-surface-container-lowest {
     background-color: var(--mat-sys-surface-container-lowest);
-    color: var(--mat-sys-on-surface);
   }
 
-  // Styles an element with an inverse surface color background and applies an accessible
-  // contrasting color for text and icons. Use for making elements stand out against the
-  // default color scheme. Good for temporary notifications. In Angular Material, this is used for
-  // the background of a snackbar and a tooltip.
+  // Styles an element with an inverse surface color background. Use for making elements stand out
+  // against the default color scheme. Good for temporary notifications. In Angular Material, this
+  // is used for the background of a snackbar and a tooltip.
   .mat-bg-inverse-surface {
     background-color: var(--mat-sys-inverse-surface);
-    color: var(--mat-sys-inverse-on-surface);
   }
 
-  // Styles an element with a disabled color background and applies an accessible contrasting
-  // color for text and icons. Use for disabled components. In Angular Material, this is used
-  // for components generally filled with the primary color but are currently disabled.
+  // Styles an element with a disabled color background. Use for disabled components. In Angular
+  // Material, this is used for components generally filled with the primary color but are
+  // currently disabled.
   .mat-bg-disabled {
-    color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
     background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
   }
 
@@ -145,8 +120,7 @@
     color: var(--mat-sys-primary);
   }
 
-  // Styles the text of an element with the secondary color. Use for text that needs less emphasis
-  // than primary text.
+  // Styles the text of an element with the secondary color. Use for text that needs to stand out.
   .mat-text-secondary {
     color: var(--mat-sys-secondary);
   }
@@ -158,11 +132,60 @@
   }
 
   // Styles the text of an element with the disabled color. Use for text in disabled components.
-  // In Angular Material this is used to show text is disabled, generally on a "surface" background.
   .mat-text-disabled {
     color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
   }
 
+  // Styles the text of an element with the on-surface-variant color. Use for text that should have
+  // a lower emphasis than the surrounding text. This can include subheading, captions, and hint
+  // text.
+  .mat-text-on-surface-variant {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a primary background.
+  .mat-text-on-primary {
+    color: var(--mat-sys-on-primary);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a primary-container
+  // background.
+  .mat-text-on-primary-container {
+    color: var(--mat-sys-on-primary-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a secondary background.
+  .mat-text-on-secondary {
+    color: var(--mat-sys-on-secondary);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a secondary-container
+  // background.
+  .mat-text-on-secondary-container {
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an error background.
+  .mat-text-on-error {
+    color: var(--mat-sys-on-error);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an error-container
+  // background.
+  .mat-text-on-error-container {
+    color: var(--mat-sys-on-error-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a surface background.
+  .mat-text-on-surface {
+    color: var(--mat-sys-on-surface);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an inverse-surface
+  // background.
+  .mat-text-inverse-on-surface {
+    color: var(--mat-sys-inverse-on-surface);
+  }
 
   // ***********************************************************************************************
   // Font - Apply typography styles
@@ -230,6 +253,26 @@
   .mat-font-headline-lg {
     font: var(--mat-sys-headline-large);
     letter-spacing: var(--mat-sys-headline-large-tracking);
+  }
+
+  // Sets the font to the label small typeface. Use for small labels, such as text in a badge.
+  .mat-font-label-sm {
+    font: var(--mat-sys-label-small);
+    letter-spacing: var(--mat-sys-label-small-tracking);
+  }
+
+  // Sets the font to the label medium typeface. Use for medium labels. In Angular Material, this
+  // is used for the slider label.
+  .mat-font-label-md {
+    font: var(--mat-sys-label-medium);
+    letter-spacing: var(--mat-sys-label-medium-tracking);
+  }
+
+  // Sets the font to the label large typeface. Use for large labels. In Angular Material, this is
+  // used for buttons, chips, and menu labels.
+  .mat-font-label-lg {
+    font: var(--mat-sys-label-large);
+    letter-spacing: var(--mat-sys-label-large-tracking);
   }
 
   // Sets the font to the title small typeface. Use for small titles, such as a card title. In
@@ -316,68 +359,6 @@
   .mat-border-subtle {
     border: 1px solid var(--mat-sys-outline-variant);
   }
-
-
-  // ***********************************************************************************************
-  // Interactive - Adds interaction colors for hover, active, and focus
-  // ***********************************************************************************************
-
-  // Adds hover, focus, and active states to an element by applying varying shades of the surface
-  // color. Use for interactive components that are not based on a primary color.
-  .mat-interactive {
-    &:hover {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-
-    &:focus {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-
-    &:active {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-on-surface) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-  }
-
-  // Adds hover, focus, and active states to an element by applying varying shades of the primary
-  // color. Use for interactive components that are not based on a primary color.
-  .mat-interactive-primary {
-    &:hover {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-primary) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-
-    &:focus {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-primary) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-
-    &:active {
-      background: color-mix(
-        in srgb,
-        var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
-        transparent
-      );
-    }
-  }
-
 
   // ***********************************************************************************************
   // Shadow - Applies elevation levels through box-shadow

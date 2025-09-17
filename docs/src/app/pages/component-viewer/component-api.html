@@ -11,8 +11,7 @@
   <div class="docs-component-api">
     <doc-viewer [document]="getApiDocumentUrl(docItem)"
       class="docs-component-view-text-content"
-      (contentRendered)="updateTableOfContents(docItem.name, $event)">
-    </doc-viewer>
+      (contentRendered)="updateTableOfContents(docItem.name, $event)" />
 
     @for (additionalApiDoc of docItem.additionalApiDocs; track additionalApiDoc) {
       <doc-viewer

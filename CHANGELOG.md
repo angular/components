@@ -1,3 +1,68 @@
+<a name="21.0.0-next.4"></a>
+# 21.0.0-next.4 "v21.0.0-next4 release" (2025-09-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [962a60c11](https://github.com/angular/components/commit/962a60c113ffdcb8920c1b4fee60d850007fda5f) | fix | **button:** do not show hover state on devices that don't support hover ([#31866](https://github.com/angular/components/pull/31866)) |
+| [31562a4b8](https://github.com/angular/components/commit/31562a4b8f2700d43c53f2c170f14d4b28a7ac53) | fix | **core:** separate text/bg colors in utility classes ([#31879](https://github.com/angular/components/pull/31879)) |
+| [a2906ddf3](https://github.com/angular/components/commit/a2906ddf36de4897b839df46941e59f3c0e0d727) | fix | **tabs:** attach content inside the zone ([#31868](https://github.com/angular/components/pull/31868)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c21dfa348](https://github.com/angular/components/commit/c21dfa348d49c2312e0f5c523f5d13ea51a7118f) | fix | **ui-patterns:** enter/space/click in single selection mode should not deselect tree item ([#31843](https://github.com/angular/components/pull/31843)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="20.2.4"></a>
+# 20.2.4 "v20.2.4 release" (2025-09-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7a0c19d0](https://github.com/angular/components/commit/e7a0c19d09bbe38852168c1a5ffcfeed66c1da6f) | fix | **tabs:** attach content inside the zone ([#31868](https://github.com/angular/components/pull/31868)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.0-next.3"></a>
+# 21.0.0-next.3 "red-envelope" (2025-09-11)
+## Breaking Changes
+### material
+- * `MatCommonModule` has been removed.
+  * `GranularSanityChecks` has been removed.
+  * `MATERIAL_SANITY_CHECKS` has been removed.
+  * `SanityChecks` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f137183858](https://github.com/angular/components/commit/f137183858bf6bb9d47f7d184ea55241f2ee4a61) | fix | **accordion:** removes inert attribute from accordion trigger ([#31817](https://github.com/angular/components/pull/31817)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [931ac3c1c7](https://github.com/angular/components/commit/931ac3c1c7f8468acaae1e9b266bdd5f52cd35fd) | fix | **chips:** Adjust trailing icon opacity based on chip state ([#31828](https://github.com/angular/components/pull/31828)) |
+| [c832533062](https://github.com/angular/components/commit/c832533062738e91142d0222f99b1e6859e89cce) | fix | **core:** remove MatCommonModule ([#31813](https://github.com/angular/components/pull/31813)) |
+| [878700d10a](https://github.com/angular/components/commit/878700d10ab042b6a62c6f86f4fcc24d5a0ae685) | fix | **progress-bar:** avoid CSP issues due to buffer dots ([#31818](https://github.com/angular/components/pull/31818)) |
+| [5a1a0ba4e6](https://github.com/angular/components/commit/5a1a0ba4e68c40886505c8c096f6c1257b9edb7b) | fix | **select:** ensure proper highlighting on selection ([#31789](https://github.com/angular/components/pull/31789)) |
+| [e0a35c52d5](https://github.com/angular/components/commit/e0a35c52d582d9f08aa9e76490481984dae53b75) | fix | **slider:** incorrect indicator transform origin in M3 ([#31834](https://github.com/angular/components/pull/31834)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [54f641e330](https://github.com/angular/components/commit/54f641e33073172e426b444500fdea552c94d2e3) | fix | **drag-drop:** allow axis lock to be reset ([#31829](https://github.com/angular/components/pull/31829)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="20.2.3"></a>
+# 20.2.3 "tango-heels" (2025-09-11)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [442d4ca6b7](https://github.com/angular/components/commit/442d4ca6b752eabcf60003df0f1ad6905dddad5f) | fix | **drag-drop:** allow axis lock to be reset ([#31829](https://github.com/angular/components/pull/31829)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ec33bf8eba](https://github.com/angular/components/commit/ec33bf8eba46b1281e6b2a814a1ce3e15475ec20) | fix | **progress-bar:** avoid CSP issues due to buffer dots ([#31818](https://github.com/angular/components/pull/31818)) |
+| [9a68265302](https://github.com/angular/components/commit/9a682653023fd3d181d4b5b318ffc13974a9bf2b) | fix | **slider:** incorrect indicator transform origin in M3 ([#31834](https://github.com/angular/components/pull/31834)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.2"></a>
 # 21.0.0-next.2 "plastic-screw" (2025-09-03)
 ## Breaking Changes

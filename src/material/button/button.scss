@@ -15,6 +15,14 @@ $fallbacks: m3-button.get-tokens();
     min-height: fit-content;
     flex-shrink: 0;
   }
+
+  // Hide the hover ripple on devices that don't support hover. Note that we have the `span`
+  // in the selector in order to increase the specificity over the actual hover styles.
+  @media (hover: none) {
+    &:hover > span.mat-mdc-button-persistent-ripple::before {
+      opacity: 0;
+    }
+  }
 }
 
 .mdc-button {
@@ -163,8 +171,10 @@ $fallbacks: m3-button.get-tokens();
     border-radius: token-utils.slot(button-protected-container-shape, $fallbacks);
   }
 
-  &:hover {
-    box-shadow: token-utils.slot(button-protected-hover-container-elevation-shadow, $fallbacks);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: token-utils.slot(button-protected-hover-container-elevation-shadow, $fallbacks);
+    }
   }
 
   &:focus {

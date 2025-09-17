@@ -59,7 +59,7 @@
         <mat-icon>code</mat-icon>
       </button>
 
-      <stackblitz-button [example]="example"></stackblitz-button>
+      <stackblitz-button [example]="example" />
     </div>
 
     @if (view() === 'full') {
@@ -74,7 +74,7 @@
                   <mat-icon>content_copy</mat-icon>
                 </button>
               </div>
-              <code-snippet [source]="exampleTabs()[tabName]"></code-snippet>
+              <code-snippet [source]="exampleTabs()[tabName]" />
             </mat-tab>
           }
         </mat-tab-group>

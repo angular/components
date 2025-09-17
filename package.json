@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.17.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "^10.0.0"
+    "pnpm": "10.17.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -21,6 +21,7 @@
     "build-docs-content": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-docs-content-main.mts",
     "build-and-check-release-output": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/build-and-check-release-output.mts",
     "dev-app": "ibazel run //src/dev-app:devserver",
+    "docs-app": "ibazel run //docs:serve",
     "universal-app": "bazel run //src/universal-app:server",
     "test": "node ./scripts/run-component-tests.js",
     "test-local": "pnpm -s test --local",
@@ -52,7 +53,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "21.0.0-next.2",
+  "version": "21.0.0-next.4",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -75,7 +76,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#e5cf193487333c2dbb5eaaa0941a6b23b34af262",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#f1aac3fc3a6704ad3ea36c0c2bc46b11eb4e4d11",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",

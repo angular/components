@@ -11,7 +11,10 @@
 @switch (orientation) {
   @case ('horizontal') {
     <div class="mat-horizontal-stepper-wrapper">
-      <div class="mat-horizontal-stepper-header-container">
+      <div 
+        aria-orientation="horizontal"
+        class="mat-horizontal-stepper-header-container" 
+        role="tablist">
         @for (step of steps; track step) {
           <ng-container
             [ngTemplateOutlet]="stepTemplate"
@@ -40,28 +43,31 @@
   }
 
   @case ('vertical') {
-    @for (step of steps; track step) {
-      <div class="mat-step">
-        <ng-container
-          [ngTemplateOutlet]="stepTemplate"
-          [ngTemplateOutletContext]="{step}"/>
-        <div
-          #animatedContainer
-          class="mat-vertical-content-container"
-          [class.mat-stepper-vertical-line]="!$last"
-          [class.mat-vertical-content-container-active]="selectedIndex === $index"
-          [attr.inert]="selectedIndex === $index ? null : ''">
-          <div class="mat-vertical-stepper-content"
-            role="tabpanel"
-            [id]="_getStepContentId($index)"
-            [attr.aria-labelledby]="_getStepLabelId($index)">
-            <div class="mat-vertical-content">
-              <ng-container [ngTemplateOutlet]="step.content"/>
+    <div class="mat-vertical-stepper-wrapper">
+      @for (step of steps; track step) {
+        <div class="mat-step">
+          <ng-container
+            [ngTemplateOutlet]="stepTemplate"
+            [ngTemplateOutletContext]="{step}"/>
+          <div
+            #animatedContainer
+            class="mat-vertical-content-container"
+            [class.mat-stepper-vertical-line]="!$last"
+            [class.mat-vertical-content-container-active]="selectedIndex === $index"
+            [attr.inert]="selectedIndex === $index ? null : ''">
+            <div 
+              class="mat-vertical-stepper-content"
+              role="region"
+              [id]="_getStepContentId($index)"
+              [attr.aria-labelledby]="_getStepLabelId($index)">
+              <div class="mat-vertical-content">
+                <ng-container [ngTemplateOutlet]="step.content"/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    }
+      }
+    </div>
   }
 }
 
@@ -74,10 +80,14 @@
     (keydown)="_onKeydown($event)"
     [tabIndex]="_getFocusIndex() === step.index() ? 0 : -1"
     [id]="_getStepLabelId(step.index())"
-    [attr.aria-posinset]="step.index() + 1"
-    [attr.aria-setsize]="steps.length"
+    [attr.role]="orientation === 'horizontal' ? 'tab' : 'button'"
+    [attr.aria-posinset]="orientation === 'horizontal' ? step.index() + 1 : null"
+    [attr.aria-setsize]="orientation === 'horizontal' ? steps.length : null"
+    [attr.aria-selected]="orientation === 'horizontal' ? step.isSelected() : null"
+    [attr.aria-current]="orientation === 'vertical' && step.isSelected() ? 'step' : null"
+    [attr.aria-disabled]="orientation === 'vertical' && step.isSelected() ? 'true' : null"
+    [attr.aria-expanded]="orientation === 'vertical' ? step.isSelected() : null"
     [attr.aria-controls]="_getStepContentId(step.index())"
-    [attr.aria-selected]="step.isSelected()"
     [attr.aria-label]="step.ariaLabel || null"
     [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
     [attr.aria-disabled]="step.isNavigable() ? null : true"

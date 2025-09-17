@@ -501,9 +501,16 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(space());
         expect(tree.inputs.value()).toEqual(['Item 0']);
+      });
+
+      it('should not deselect an item on Space', () => {
+        const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.value()).toEqual(['Item 0']);
+
+        tree.onKeydown(space());
+        expect(tree.inputs.value()).toEqual(['Item 0']);
       });
 
       it('should select an item on Enter', () => {
@@ -511,9 +518,16 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(enter());
         expect(tree.inputs.value()).toEqual(['Item 0']);
+      });
+
+      it('should not deselect an item on Enter', () => {
+        const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.value()).toEqual(['Item 0']);
+
+        tree.onKeydown(enter());
+        expect(tree.inputs.value()).toEqual(['Item 0']);
       });
 
       it('should only allow one selected item', () => {
@@ -919,10 +933,19 @@ describe('Tree Pattern', () => {
         tree.onPointerdown(createClickEvent(item1.element()));
         expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
+      });
+
+      it('should not deselect item on click', () => {
+        const {tree, allItems} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(allItems(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()));
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.value()).toEqual(['Item 1']);
+
+        tree.onPointerdown(createClickEvent(item1.element()));
+        expect(tree.activeItem()).toBe(item1);
+        expect(tree.inputs.value()).toEqual(['Item 1']);
       });
 
       it('should not change selection when the tree is disabled', () => {
