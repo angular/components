@@ -104,11 +104,11 @@ export class CdkComboboxInput {
 }
 
 @Directive({
-  selector: 'ng-template[cdkComboboxPopupContent]',
-  exportAs: 'cdkComboboxPopupContent',
+  selector: 'ng-template[cdkComboboxPopupContainer]',
+  exportAs: 'cdkComboboxPopupContainer',
   hostDirectives: [DeferredContent],
 })
-export class CdkComboboxPopupContent {}
+export class CdkComboboxPopupContainer {}
 
 @Directive({
   selector: '[cdkComboboxPopup]',
