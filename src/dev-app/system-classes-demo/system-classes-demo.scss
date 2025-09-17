@@ -1,6 +1,6 @@
 .demo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
@@ -15,4 +15,12 @@
 
 .demo-typography > div {
   margin-bottom: 16px;
+}
+
+.demo-section-container {
+  padding: 16px;
+}
+
+h3 {
+  padding-left: 16px;
 }
