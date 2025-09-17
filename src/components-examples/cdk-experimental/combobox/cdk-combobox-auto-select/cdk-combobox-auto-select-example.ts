@@ -10,7 +10,7 @@ import {
   CdkCombobox,
   CdkComboboxInput,
   CdkComboboxPopup,
-  CdkComboboxPopupContent,
+  CdkComboboxPopupContainer,
 } from '@angular/cdk-experimental/combobox';
 import {CdkListbox, CdkOption} from '@angular/cdk-experimental/listbox';
 import {
@@ -30,7 +30,7 @@ import {
     CdkCombobox,
     CdkComboboxInput,
     CdkComboboxPopup,
-    CdkComboboxPopupContent,
+    CdkComboboxPopupContainer,
     CdkListbox,
     CdkOption,
   ],

@@ -10,7 +10,7 @@ import {
   CdkCombobox,
   CdkComboboxInput,
   CdkComboboxPopup,
-  CdkComboboxPopupContent,
+  CdkComboboxPopupContainer,
 } from '@angular/cdk-experimental/combobox';
 import {
   CdkTree,
@@ -37,7 +37,7 @@ import {NgTemplateOutlet} from '@angular/common';
     CdkCombobox,
     CdkComboboxInput,
     CdkComboboxPopup,
-    CdkComboboxPopupContent,
+    CdkComboboxPopupContainer,
     CdkTree,
     CdkTreeItem,
     CdkTreeItemGroup,
