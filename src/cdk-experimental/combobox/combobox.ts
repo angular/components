@@ -18,7 +18,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
-import {ComboboxPattern, ComboboxPopupControls} from '../ui-patterns';
+import {ComboboxPattern, ComboboxListboxControls, ComboboxTreeControls} from '../ui-patterns';
 
 @Directive({
   selector: '[cdkCombobox]',
@@ -66,7 +66,7 @@ export class CdkCombobox<V> {
     ...this,
     inputEl: signal(undefined),
     containerEl: signal(undefined),
-    popupControls: () => this.popup()?.actions(),
+    popupControls: () => this.popup()?.controls(),
   });
 
   constructor() {
@@ -118,6 +118,8 @@ export class CdkComboboxPopup<V> {
   /** The combobox that the popup belongs to. */
   readonly combobox = inject<CdkCombobox<V>>(CdkCombobox, {optional: true});
 
-  /** The actions that the combobox can perform on the popup. */
-  readonly actions = signal<ComboboxPopupControls<any, V> | undefined>(undefined);
+  /** The controls the popup exposes to the combobox. */
+  readonly controls = signal<
+    ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | undefined
+  >(undefined);
 }

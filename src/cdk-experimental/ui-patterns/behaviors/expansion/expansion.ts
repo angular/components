@@ -38,7 +38,7 @@ export class ExpansionControl {
     this.disabled = inputs.disabled;
   }
 
-  /** Requests the Expansopn manager to open this item. */
+  /** Requests the Expansion manager to open this item. */
   open() {
     this.inputs.expansionManager.open(this);
   }

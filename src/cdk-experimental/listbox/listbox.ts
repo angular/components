@@ -138,7 +138,7 @@ export class CdkListbox<V> {
       : new ListboxPattern<V>(inputs);
 
     if (this._popup) {
-      this._popup.actions.set((this.pattern as ComboboxListboxPattern<V>).comboboxActions);
+      this._popup.controls.set(this.pattern as ComboboxListboxPattern<V>);
     }
 
     afterRenderEffect(() => {

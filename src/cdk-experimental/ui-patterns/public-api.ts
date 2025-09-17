@@ -20,3 +20,5 @@ export * from './toolbar/toolbar-widget';
 export * from './toolbar/toolbar-widget-group';
 export * from './accordion/accordion';
 export * from './toolbar/toolbar';
+export * from './tree/tree';
+export * from './tree/combobox-tree';
