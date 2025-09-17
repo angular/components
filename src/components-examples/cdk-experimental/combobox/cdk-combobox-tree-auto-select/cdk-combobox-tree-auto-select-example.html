@@ -1,0 +1,52 @@
+<div #combobox="cdkCombobox" cdkCombobox class="example-combobox-container" filterMode="auto-select">
+  <div class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template cdkComboboxPopupContent>
+      <ul cdkTree #tree="cdkTree" class="example-tree">
+        <ng-template
+          [ngTemplateOutlet]="treeNodes"
+          [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"
+        />
+      </ul>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.name) {
+    <li
+      cdkTreeItem
+      [parent]="parent"
+      [value]="node.name"
+      [label]="node.name"
+      [disabled]="node.disabled"
+      #treeItem="cdkTreeItem"
+      class="example-tree-item example-selectable example-stateful"
+    >
+      <span
+        aria-hidden="true"
+        class="material-symbols-outlined example-parent-icon example-icon"
+        >{{node.children ? 'chevron_right' : ''}}</span
+      >
+      {{ node.name }}
+      <span aria-hidden="true" class="material-symbols-outlined example-selected-icon example-icon"
+        >check</span
+      >
+    </li>
+
+    @if (node.children) {
+      <ul cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
+        <ng-template cdkTreeItemGroupContent>
+          <ng-template
+            [ngTemplateOutlet]="treeNodes"
+            [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
+          />
+        </ng-template>
+      </ul>
+    }
+  }
+</ng-template>

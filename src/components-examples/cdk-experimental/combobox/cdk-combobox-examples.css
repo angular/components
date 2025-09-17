@@ -80,9 +80,9 @@
   visibility: visible;
 }
 
-.example-option[inert] {
-  height: 0;
-  padding: 0 1rem;
+.example-option[inert],
+.example-tree-item[inert] {
+  display: none;
 }
 
 .example-combobox-container:focus-within .cdk-active {
@@ -100,4 +100,50 @@
     transparent
   );
   color: var(--mat-sys-primary);
+}
+
+.example-tree {
+  padding: 10px;
+  overflow-x: scroll;
+}
+
+.example-tree-item {
+  cursor: pointer;
+  list-style: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.3rem 1rem;
+}
+
+li[aria-expanded='false'] + ul[role='group'] {
+  display: none;
+}
+
+li[inert] + ul[role='group'] {
+  padding-inline-start: 0;
+}
+
+.example-icon {
+  margin: 0;
+  width: 24px;
+}
+
+.example-parent-icon {
+  transition: transform 0.2s ease;
+}
+
+.example-tree-item[aria-expanded='true'] .example-parent-icon {
+  transform: rotate(90deg);
+}
+
+.example-selected-icon {
+  visibility: hidden;
+  margin-left: auto;
+}
+
+.example-tree-item[aria-current] .example-selected-icon,
+.example-tree-item[aria-selected='true'] .example-selected-icon {
+  visibility: visible;
 }
