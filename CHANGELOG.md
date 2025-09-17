@@ -1,3 +1,12 @@
+<a name="20.2.4"></a>
+# 20.2.4 "v20.2.4 release" (2025-09-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7a0c19d0](https://github.com/angular/components/commit/e7a0c19d09bbe38852168c1a5ffcfeed66c1da6f) | fix | **tabs:** attach content inside the zone ([#31868](https://github.com/angular/components/pull/31868)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.3"></a>
 # 21.0.0-next.3 "red-envelope" (2025-09-11)
 ## Breaking Changes
