@@ -10,7 +10,6 @@ import {
   afterRenderEffect,
   Directive,
   inject,
-  input,
   TemplateRef,
   signal,
   ViewContainerRef,

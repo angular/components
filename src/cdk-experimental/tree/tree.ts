@@ -24,7 +24,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
 import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../ui-patterns';
-import {CdkCombobox, CdkComboboxPopup} from '@angular/cdk-experimental/combobox';
+import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox';
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -342,6 +342,8 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
         this._deferredContentAware.contentVisible.set(
           tree.pattern.inputs.combobox()?.isFocused() ?? false,
         );
+      } else {
+        this._deferredContentAware.contentVisible.set(this.visible());
       }
     });
   }
