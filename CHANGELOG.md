@@ -1,3 +1,18 @@
+<a name="21.0.0-next.4"></a>
+# 21.0.0-next.4 "v21.0.0-next4 release" (2025-09-17)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [962a60c11](https://github.com/angular/components/commit/962a60c113ffdcb8920c1b4fee60d850007fda5f) | fix | **button:** do not show hover state on devices that don't support hover ([#31866](https://github.com/angular/components/pull/31866)) |
+| [31562a4b8](https://github.com/angular/components/commit/31562a4b8f2700d43c53f2c170f14d4b28a7ac53) | fix | **core:** separate text/bg colors in utility classes ([#31879](https://github.com/angular/components/pull/31879)) |
+| [a2906ddf3](https://github.com/angular/components/commit/a2906ddf36de4897b839df46941e59f3c0e0d727) | fix | **tabs:** attach content inside the zone ([#31868](https://github.com/angular/components/pull/31868)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c21dfa348](https://github.com/angular/components/commit/c21dfa348d49c2312e0f5c523f5d13ea51a7118f) | fix | **ui-patterns:** enter/space/click in single selection mode should not deselect tree item ([#31843](https://github.com/angular/components/pull/31843)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.4"></a>
 # 20.2.4 "v20.2.4 release" (2025-09-17)
 ### material
