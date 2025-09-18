@@ -11,6 +11,12 @@ $fallbacks: m3-radio.get-tokens();
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
 
+  // Clicking the label toggles the radio, but MDC does not include any styles that inform the
+  // user of this. Therefore we add the pointer cursor on top of MDC's styles.
+  label {
+    cursor: pointer;
+  }
+
   .mdc-radio__background::before {
     background-color: token-utils.slot(radio-ripple-color, $fallbacks);
   }
