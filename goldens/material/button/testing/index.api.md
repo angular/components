@@ -17,6 +17,7 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
     appearance?: ButtonAppearance;
     buttonType?: ButtonType;
     disabled?: boolean;
+    iconName?: string | RegExp;
     text?: string | RegExp;
     variant?: ButtonVariant;
 }

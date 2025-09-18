@@ -33,4 +33,7 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
 
   /** Only find instances with the specified type. */
   buttonType?: ButtonType;
+
+  /** Only find instances that contain an icon whose name matches the given value. */
+  iconName?: string | RegExp;
 }

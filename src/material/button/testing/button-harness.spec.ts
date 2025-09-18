@@ -115,6 +115,13 @@ describe('MatButtonHarness', () => {
     expect(await favIcon.getName()).toBe('favorite');
   });
 
+  it('should be able to filter buttons containing a named icon', async () => {
+    const favBtn = await loader.getHarness(MatButtonHarness.with({iconName: 'favorite'}));
+
+    expect(await (await favBtn.host()).getAttribute('id')).toBe('favorite-icon');
+    expect(await (await favBtn.getHarness(MatIconHarness)).getName()).toBe('favorite');
+  });
+
   it('should be able to ge the type variant of the button', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
     const variants = await parallel(() => buttons.map(button => button.getVariant()));
