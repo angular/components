@@ -31,7 +31,7 @@ export class ListboxPattern<V> {
   readonly: SignalLike<boolean>;
 
   /** The tabindex of the listbox. */
-  tabindex = computed(() => this.listBehavior.tabindex());
+  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
   activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -188,7 +188,6 @@ export class ListboxPattern<V> {
     this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
-
     this.listBehavior = new List(inputs);
   }
 
@@ -256,7 +255,7 @@ export class ListboxPattern<V> {
     }
   }
 
-  private _getItem(e: PointerEvent) {
+  protected _getItem(e: PointerEvent) {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }

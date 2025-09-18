@@ -18,10 +18,11 @@ import {
   model,
   signal,
 } from '@angular/core';
-import {ListboxPattern, OptionPattern} from '../ui-patterns';
+import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
+import {CdkComboboxPopup} from '../combobox';
 
 /**
  * A listbox container.
@@ -43,6 +44,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
   host: {
     'role': 'listbox',
     'class': 'cdk-listbox',
+    '[attr.id]': 'id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-readonly]': 'pattern.readonly()',
     '[attr.aria-disabled]': 'pattern.disabled()',
@@ -53,8 +55,21 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(pointerdown)': 'pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
+  hostDirectives: [{directive: CdkComboboxPopup}],
 })
 export class CdkListbox<V> {
+  /** A unique identifier for the listbox. */
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
+
+  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
+  /** A unique identifier for the option. */
+  protected id = computed(() => this._generatedId);
+
+  /** A reference to the parent combobox popup, if one exists. */
+  private readonly _popup = inject<CdkComboboxPopup<V>>(CdkComboboxPopup, {
+    optional: true,
+  });
+
   /** A reference to the listbox element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -103,18 +118,29 @@ export class CdkListbox<V> {
   value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
-  pattern: ListboxPattern<V> = new ListboxPattern<V>({
-    ...this,
-    items: this.items,
-    activeItem: signal(undefined),
-    textDirection: this.textDirection,
-    element: () => this._elementRef.nativeElement,
-  });
+  pattern: ListboxPattern<V>;
 
   /** Whether the listbox has received focus yet. */
   private _hasFocused = signal(false);
 
   constructor() {
+    const inputs = {
+      ...this,
+      items: this.items,
+      activeItem: signal(undefined),
+      textDirection: this.textDirection,
+      element: () => this._elementRef.nativeElement,
+      combobox: () => this._popup?.combobox?.pattern,
+    };
+
+    this.pattern = this._popup?.combobox
+      ? new ComboboxListboxPattern<V>(inputs)
+      : new ListboxPattern<V>(inputs);
+
+    if (this._popup) {
+      this._popup.controls.set(this.pattern as ComboboxListboxPattern<V>);
+    }
+
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         const violations = this.pattern.validate();
@@ -148,6 +174,7 @@ export class CdkListbox<V> {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.inert]': 'pattern.inert()',
   },
 })
 export class CdkOption<V> {

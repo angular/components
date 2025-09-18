@@ -47,7 +47,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   select(item?: ListSelectionItem<V>, opts = {anchor: true}) {
     item = item ?? (this.inputs.focusManager.inputs.activeItem() as ListSelectionItem<V>);
 
-    if (item.disabled() || this.inputs.value().includes(item.value())) {
+    if (!item || item.disabled() || this.inputs.value().includes(item.value())) {
       return;
     }
 

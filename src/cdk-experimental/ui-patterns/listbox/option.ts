@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
@@ -31,6 +31,9 @@ export class OptionPattern<V> {
 
   /** The value of the option. */
   value: SignalLike<V>;
+
+  /** Whether the option is inert. */
+  inert = signal<true | null>(null);
 
   /** The position of the option in the list. */
   index = computed(() => this.listbox()?.inputs.items().indexOf(this) ?? -1);
