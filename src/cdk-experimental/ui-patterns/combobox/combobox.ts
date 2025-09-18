@@ -40,14 +40,17 @@ export type ComboboxListboxControls<T extends ListItem<V>, V> = {
   /** The ID of the active item in the popup. */
   activeId: SignalLike<string | undefined>;
 
+  /** The list of items in the popup. */
+  items: SignalLike<T[]>;
+
   /** Navigates to the next item in the popup. */
   next: () => void;
 
   /** Navigates to the previous item in the popup. */
   prev: () => void;
 
-  /** Navigates to the first item in the popup. */
-  first: () => void;
+  /** Navigates to the first item in the popup, or the first match if filterText is provided. */
+  first: (filterText?: string) => void;
 
   /** Navigates to the last item in the popup. */
   last: () => void;
@@ -75,6 +78,9 @@ export type ComboboxListboxControls<T extends ListItem<V>, V> = {
 };
 
 export type ComboboxTreeControls<T extends ListItem<V>, V> = ComboboxListboxControls<T, V> & {
+  /** Whether the currently active item in the popup is collapsible. */
+  isItemCollapsible: () => boolean;
+
   /** Expands the currently active item in the popup. */
   expandItem: () => void;
 
@@ -146,10 +152,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (popupControls.role() === 'tree') {
       const treeControls = popupControls as ComboboxTreeControls<T, V>;
 
+      if (treeControls.isItemExpandable() || treeControls.isItemCollapsible()) {
+        manager.on(this.collapseKey(), () => this.collapseItem());
+      }
+
       if (treeControls.isItemExpandable()) {
-        manager
-          .on(this.expandKey(), () => treeControls.expandItem())
-          .on(this.collapseKey(), () => treeControls.collapseItem());
+        manager.on(this.expandKey(), () => this.expandItem());
       }
     }
 
@@ -196,18 +204,21 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this.inputs.popupControls()?.filter(inputEl.value);
 
     this.open();
-    this.inputs.popupControls()?.first();
+    this.inputs.popupControls()?.first(this.searchString() || undefined);
 
-    if (
-      event instanceof InputEvent &&
-      this.inputs.filterMode() !== 'manual' &&
-      event.inputType.match(/delete.*/)
-    ) {
-      this.inputs.popupControls()?.select();
-      return;
+    if (event instanceof InputEvent && event.inputType.match(/delete.*/)) {
+      if (this.inputs.filterMode() === 'manual') {
+        this.inputs.value.set(undefined);
+        this.inputs.popupControls()?.clearSelection();
+      } else {
+        this.inputs.popupControls()?.select();
+        return;
+      }
     }
 
-    this.select({highlight: this.inputs.filterMode() === 'highlight'});
+    if (this.inputs.filterMode() !== 'manual') {
+      this.select({highlight: this.inputs.filterMode() === 'highlight'});
+    }
   }
 
   onFocusIn() {
@@ -224,6 +235,15 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     ) {
       if (this.inputs.filterMode() !== 'manual') {
         this.commit();
+      } else {
+        const item = this.inputs
+          .popupControls()
+          ?.items()
+          .find(i => i.searchTerm() === this.inputs.inputEl()?.value);
+
+        if (item) {
+          this.select({item});
+        }
       }
 
       this.close();
@@ -247,7 +267,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   close() {
     this.expanded.set(false);
     this.inputs.popupControls()?.unfocus();
-    this.inputs.popupControls()?.clearSelection();
   }
 
   /** Opens the combobox. */
@@ -303,6 +322,16 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this._navigate(() => this.inputs.popupControls()?.last());
   }
 
+  collapseItem() {
+    const controls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
+    this._navigate(() => controls?.collapseItem());
+  }
+
+  expandItem() {
+    const controls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
+    this._navigate(() => controls?.expandItem());
+  }
+
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean; highlight?: boolean} = {}) {
     this.inputs.popupControls()?.select(opts.item);
@@ -316,10 +345,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
     if (opts.highlight) {
       this.highlight();
-    }
-    if (this.inputs.filterMode() === 'manual') {
-      this.inputs.popupControls()?.clearSelection();
-      this.inputs.value.set(undefined);
     }
   }
 
