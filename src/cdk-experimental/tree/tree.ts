@@ -330,21 +330,13 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   /** Tree item that owns the group. */
   readonly ownedBy = input.required<CdkTreeItem<V>>();
 
-  /** The combobox that the input belongs to. */
-  // readonly combobox = inject(CdkCombobox);
-
   constructor() {
     this._deferredContentAware.preserveContent.set(true);
     // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      const tree = this.ownedBy().tree();
-      if (tree.pattern instanceof ComboboxTreePattern) {
-        this._deferredContentAware.contentVisible.set(
-          tree.pattern.inputs.combobox()?.isFocused() ?? false,
-        );
-      } else {
-        this._deferredContentAware.contentVisible.set(this.visible());
-      }
+      this.ownedBy().tree().pattern instanceof ComboboxTreePattern
+        ? this._deferredContentAware.contentVisible.set(true)
+        : this._deferredContentAware.contentVisible.set(this.visible());
     });
   }
 

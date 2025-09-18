@@ -20,11 +20,17 @@ export class ComboboxTreePattern<V>
   extends TreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
+  /** Whether the currently focused item is collapsible. */
+  isItemCollapsible = () => this.activeItem()?.parent() instanceof TreeItemPattern;
+
   /** The ARIA role for the tree. */
   role = () => 'tree' as const;
 
   /* The id of the active (focused) item in the tree. */
   activeId = computed(() => this.listBehavior.activedescendant());
+
+  /** The list of items in the tree. */
+  items = computed(() => this.inputs.allItems());
 
   /** The tabindex for the tree. Always -1 because the combobox handles focus. */
   override tabindex: SignalLike<-1 | 0> = () => -1;
@@ -46,9 +52,7 @@ export class ComboboxTreePattern<V>
   override onPointerdown(_: PointerEvent): void {}
 
   /** Noop. The combobox controls the open state. */
-  override setDefaultState(): void {
-    console.log('setDefaultState');
-  }
+  override setDefaultState(): void {}
 
   /** Navigates to the next focusable item in the tree. */
   next = () => this.listBehavior.next();
@@ -60,7 +64,18 @@ export class ComboboxTreePattern<V>
   last = () => this.listBehavior.last();
 
   /** Navigates to the first focusable item in the tree. */
-  first = () => this.listBehavior.first();
+  first = (filterText?: string) => {
+    if (!filterText) {
+      this.listBehavior.first();
+    } else {
+      const filterFn = this.inputs.combobox()!.inputs.filter();
+      const match = this.inputs.allItems().find(i => filterFn(filterText, i.searchTerm()));
+
+      if (match) {
+        this.listBehavior.goto(match);
+      }
+    }
+  };
 
   /** Unfocuses the currently focused item in the tree. */
   unfocus = () => this.listBehavior.unfocus();
@@ -94,6 +109,14 @@ export class ComboboxTreePattern<V>
 
   /** Filters the items in the tree based on the provided text. */
   filter = (text: string) => {
+    if (!text) {
+      this.inputs.allItems().forEach(i => {
+        i.inert.set(null);
+        i.expansion.close();
+      });
+      return;
+    }
+
     const filterFn = this.inputs.combobox()!.inputs.filter();
     this.inputs.allItems().forEach(i => i.expansion.close());
 
@@ -104,6 +127,7 @@ export class ComboboxTreePattern<V>
         let parent = i.parent();
         while (parent && parent instanceof TreeItemPattern) {
           parent.inert.set(null);
+          parent.expansion.open();
           parent = parent.parent();
         }
       }
