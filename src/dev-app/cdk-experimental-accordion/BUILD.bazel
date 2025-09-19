@@ -9,5 +9,8 @@ ng_project(
         "cdk-accordion-demo.html",
         "cdk-accordion-demo.css",
     ],
-    deps = ["//src/components-examples/cdk-experimental/accordion"],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/accordion",
+    ],
 )
