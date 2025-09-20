@@ -13,21 +13,23 @@
 }
 
 .docs-example-viewer-title {
-  align-content: center;
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   padding: 16px 16px 0 24px;
   color: var(--mat-sys-on-surface-variant);
+}
+
+.docs-example-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .docs-example-viewer-source code-snippet {
   border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
 
-.docs-example-viewer-title-spacer {
-  flex: 1 1 auto;
-}
 
 .docs-example-viewer-body {
   padding: 16px 24px;
