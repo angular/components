@@ -118,8 +118,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _cachedLineHeight?: number;
   /** Cached height of a textarea with only the placeholder. */
   private _cachedPlaceholderHeight?: number;
-  /** Cached scroll top of a textarea */
-  private _cachedScrollTop: number;
 
   /** Used to reference correct document/window */
   protected _document = inject(DOCUMENT);
@@ -306,7 +304,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     this._cacheTextareaLineHeight();
     this._cacheTextareaPlaceholderHeight();
-    this._cachedScrollTop = this._textareaElement.scrollTop;
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point
     // in checking the height of the textarea.
@@ -371,7 +368,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // it to receive focus on IE and Edge.
     if (!this._destroyed.isStopped && this._hasFocus) {
       textarea.setSelectionRange(selectionStart, selectionEnd);
-      textarea.scrollTop = this._cachedScrollTop;
     }
   }
 }
