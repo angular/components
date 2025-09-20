@@ -6,7 +6,7 @@
 4. Clone your fork to your machine with `git clone`.
    Recommendation: name your git remotes `upstream` for `angular/components`
    and `<your-username>` for your fork. Also see the [team git shortcuts](https://github.com/angular/components/wiki/Team-git----bash-shortcuts).
-5. From the root of the project, run `pnpm` to install the dependencies.
+5. From the root of the project, run `pnpm i` to install the dependencies.
 
 
 To build angular/components in release mode, run `pnpm build`. The output can be found under `dist/releases`.
