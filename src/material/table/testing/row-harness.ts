@@ -61,7 +61,7 @@ export abstract class _MatRowHarnessBase<
 /** Harness for interacting with an Angular Material table row. */
 export class MatRowHarness extends _MatRowHarnessBase<typeof MatCellHarness, MatCellHarness> {
   /** The selector for the host element of a `MatRowHarness` instance. */
-  static hostSelector = '.mat-mdc-row';
+  static hostSelector = '.mat-mdc-row:not(.mat-mdc-no-data-row)';
   protected _cellHarness = MatCellHarness;
 
   /**

@@ -249,7 +249,11 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
 export class CdkNoDataRow {
     constructor(...args: unknown[]);
     // (undocumented)
-    _contentClassName: string;
+    _cellClassNames: string[];
+    // (undocumented)
+    _cellSelector: string;
+    // (undocumented)
+    _contentClassNames: string[];
     // (undocumented)
     templateRef: TemplateRef<any>;
     // (undocumented)

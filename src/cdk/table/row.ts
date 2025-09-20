@@ -366,7 +366,9 @@ export class CdkRow {}
 export class CdkNoDataRow {
   templateRef = inject<TemplateRef<any>>(TemplateRef);
 
-  _contentClassName = 'cdk-no-data-row';
+  _contentClassNames = ['cdk-no-data-row', 'cdk-row'];
+  _cellClassNames = ['cdk-cell', 'cdk-no-data-cell'];
+  _cellSelector = 'td, cdk-cell, [cdk-cell], .cdk-cell';
 
   constructor(...args: unknown[]);
   constructor() {}

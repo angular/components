@@ -56,7 +56,7 @@ export abstract class _MatCellHarnessBase extends ContentContainerComponentHarne
 /** Harness for interacting with an Angular Material table cell. */
 export class MatCellHarness extends _MatCellHarnessBase {
   /** The selector for the host element of a `MatCellHarness` instance. */
-  static hostSelector = '.mat-mdc-cell';
+  static hostSelector = '.mat-mdc-cell:not(.mat-no-data-cell)';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a table cell with specific attributes.
