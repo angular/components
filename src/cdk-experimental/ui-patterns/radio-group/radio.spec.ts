@@ -7,7 +7,7 @@
  */
 
 import {signal, WritableSignal} from '@angular/core';
-import {RadioGroupInputs, RadioGroupPattern, ToolbarLike} from './radio-group';
+import {RadioGroupInputs, RadioGroupPattern} from './radio-group';
 import {RadioButtonPattern} from './radio-button';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
@@ -40,7 +40,7 @@ describe('RadioGroup Pattern', () => {
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
-      toolbar: inputs.toolbar ?? signal(undefined),
+      getItem: e => inputs.items().find(i => i.element() === e.target),
     });
   }
 
@@ -303,51 +303,6 @@ describe('RadioGroup Pattern', () => {
       radioButtons[1].disabled.set(true); // Disable the selected item.
       const violations = radioGroup.validate();
       expect(violations.length).toBe(1);
-    });
-  });
-
-  describe('toolbar', () => {
-    let radioGroup: TestRadioGroup;
-    let radioButtons: TestRadio[];
-    let toolbar: ToolbarLike<string>;
-
-    beforeEach(() => {
-      const patterns = getDefaultPatterns();
-      radioGroup = patterns.radioGroup;
-      radioButtons = patterns.radioButtons;
-      toolbar = {
-        listBehavior: radioGroup.listBehavior,
-        orientation: radioGroup.orientation,
-        disabled: radioGroup.disabled,
-      };
-      radioGroup.inputs.toolbar = signal(toolbar);
-    });
-
-    it('should ignore keyboard navigation when within a toolbar', () => {
-      const initialActive = radioGroup.inputs.activeItem();
-      radioGroup.onKeydown(down());
-      expect(radioGroup.inputs.activeItem()).toBe(initialActive);
-    });
-
-    it('should ignore keyboard selection when within a toolbar', () => {
-      expect(radioGroup.inputs.value()).toEqual([]);
-      radioGroup.onKeydown(space());
-      expect(radioGroup.inputs.value()).toEqual([]);
-      radioGroup.onKeydown(enter());
-      expect(radioGroup.inputs.value()).toEqual([]);
-    });
-
-    it('should ignore pointer events when within a toolbar', () => {
-      const initialActive = radioGroup.inputs.activeItem();
-      expect(radioGroup.inputs.value()).toEqual([]);
-
-      const clickEvent = {
-        target: radioButtons[1].element(),
-      } as unknown as PointerEvent;
-      radioGroup.onPointerdown(clickEvent);
-
-      expect(radioGroup.inputs.activeItem()).toBe(initialActive);
-      expect(radioGroup.inputs.value()).toEqual([]);
     });
   });
 });
