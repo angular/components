@@ -1419,7 +1419,13 @@ export class CdkTable<T>
       // to figure out which one to add it to when there are multiple.
       if (view.rootNodes.length === 1 && rootNode?.nodeType === this._document.ELEMENT_NODE) {
         rootNode.setAttribute('role', 'row');
-        rootNode.classList.add(noDataRow._contentClassName);
+        rootNode.classList.add(...noDataRow._contentClassNames);
+
+        const cells = rootNode.querySelectorAll(noDataRow._cellSelector);
+
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].classList.add(...noDataRow._cellClassNames);
+        }
       }
     } else {
       container.clear();
