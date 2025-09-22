@@ -683,7 +683,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select on focusout if the input text exactly matches an item', () => {
-        const {combobox, tree, inputEl} = getPatterns({filterMode: 'manual'});
+        const {combobox, inputEl} = getPatterns({filterMode: 'manual'});
         combobox.onPointerup(clickInput(inputEl));
         inputEl.value = 'Apple';
         combobox.onInput(new InputEvent('input'));

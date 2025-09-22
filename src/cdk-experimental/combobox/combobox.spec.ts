@@ -171,43 +171,6 @@ describe('Combobox', () => {
       });
     });
 
-    describe('Expansion', () => {
-      beforeEach(() => setupCombobox());
-
-      it('should open on click', () => {
-        click(inputElement);
-        expect(comboboxInstance.pattern.expanded()).toBe(true);
-      });
-
-      it('should open on ArrowDown', () => {
-        keydown('ArrowDown');
-        expect(comboboxInstance.pattern.expanded()).toBe(true);
-      });
-
-      it('should open on ArrowUp', () => {
-        keydown('ArrowUp');
-        expect(comboboxInstance.pattern.expanded()).toBe(true);
-      });
-
-      it('should close on Escape', () => {
-        down();
-        escape();
-        expect(comboboxInstance.pattern.expanded()).toBe(false);
-      });
-
-      it('should close on focusout', () => {
-        focus();
-        blur();
-        expect(comboboxInstance.pattern.expanded()).toBe(false);
-      });
-
-      it('should not close on focusout if focus moves to an element inside the container', () => {
-        down();
-        blur(getOptions()[0]!);
-        expect(comboboxInstance.pattern.expanded()).toBe(true);
-      });
-    });
-
     describe('Navigation', () => {
       beforeEach(() => setupCombobox());
 
@@ -255,6 +218,73 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
+      });
+    });
+
+    describe('Expansion', () => {
+      beforeEach(() => setupCombobox());
+
+      it('should open on click', () => {
+        focus();
+        click(inputElement);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should open on ArrowDown', () => {
+        focus();
+        keydown('ArrowDown');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should open on ArrowUp', () => {
+        focus();
+        keydown('ArrowUp');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should close on Escape', () => {
+        down();
+        escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on focusout', () => {
+        focus();
+        blur();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should not close on focusout if focus moves to an element inside the container', () => {
+        down();
+        blur(getOption('Apple')!);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should clear the completion string and not close on escape when a completion is present', () => {
+        fixture.componentInstance.filterMode.set('highlight');
+        focus();
+        input('A');
+        expect(inputElement.value).toBe('Apple');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.value).toBe('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.value).toBe('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on enter', () => {
+        down();
+        enter();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on click to select an item', () => {
+        down();
+        const fruitItem = getOption('Apple')!;
+        click(fruitItem);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
@@ -955,6 +985,73 @@ describe('Combobox', () => {
       });
     });
 
+    describe('Expansion', () => {
+      beforeEach(() => setupCombobox());
+
+      it('should open on click', () => {
+        focus();
+        click(inputElement);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should open on ArrowDown', () => {
+        focus();
+        keydown('ArrowDown');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should open on ArrowUp', () => {
+        focus();
+        keydown('ArrowUp');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should close on Escape', () => {
+        down();
+        escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on focusout', () => {
+        focus();
+        blur();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should not close on focusout if focus moves to an element inside the container', () => {
+        down();
+        blur(getTreeItem('Fruit')!);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should clear the completion string and not close on escape when a completion is present', () => {
+        fixture.componentInstance.filterMode.set('highlight');
+        focus();
+        input('A');
+        expect(inputElement.value).toBe('Apple');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.value).toBe('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.value).toBe('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on enter', () => {
+        down();
+        enter();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on click to select an item', () => {
+        down();
+        const fruitItem = getTreeItem('Fruit')!;
+        click(fruitItem);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+    });
+
     describe('with disabled items', () => {
       beforeEach(() => {
         setupCombobox();
@@ -1260,7 +1357,6 @@ class ComboboxListboxExample {
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [
     CdkCombobox,
     CdkComboboxInput,
