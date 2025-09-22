@@ -17,6 +17,7 @@ import {
   input,
   model,
   signal,
+  untracked,
 } from '@angular/core';
 import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
@@ -62,7 +63,7 @@ export class CdkListbox<V> {
   private readonly _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
-  /** A unique identifier for the option. */
+  /** A unique identifier for the listbox. */
   protected id = computed(() => this._generatedId);
 
   /** A reference to the parent combobox popup, if one exists. */
@@ -126,6 +127,7 @@ export class CdkListbox<V> {
   constructor() {
     const inputs = {
       ...this,
+      id: this.id,
       items: this.items,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
@@ -153,6 +155,25 @@ export class CdkListbox<V> {
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this.pattern.setDefaultState();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.items();
+      const activeItem = untracked(() => inputs.activeItem());
+
+      if (!items.some(i => i === activeItem) && activeItem) {
+        this.pattern.listBehavior.unfocus();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.items();
+      const value = untracked(() => this.value());
+
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
+        this._popup?.combobox?.pattern?.inputs.value.set(this.value()[0]);
       }
     });
   }

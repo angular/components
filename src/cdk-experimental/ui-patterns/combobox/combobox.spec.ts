@@ -88,6 +88,7 @@ function getListboxPattern(combobox: ComboboxPattern<TestOption, string>, values
   const options = signal<TestOption[]>([]);
 
   const listbox = new ComboboxListboxPattern<string>({
+    id: signal('listbox-1'),
     items: options,
     value: signal(combobox.inputs.value() ? [combobox.inputs.value()!] : []),
     combobox: signal(combobox) as any,
@@ -130,6 +131,7 @@ function getTreePattern(
   const items = signal<TreeItemPattern<string>[]>([]);
 
   const tree = new ComboboxTreePattern<string>({
+    id: signal('tree-1'),
     allItems: items,
     value: signal(combobox.inputs.value() ? [combobox.inputs.value()!] : []),
     combobox: signal(combobox) as any,

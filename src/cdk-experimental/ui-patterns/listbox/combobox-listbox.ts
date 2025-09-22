@@ -21,7 +21,11 @@ export class ComboboxListboxPattern<V>
   extends ListboxPattern<V>
   implements ComboboxListboxControls<OptionPattern<V>, V>
 {
-  role = () => 'listbox' as const;
+  /** A unique identifier for the popup. */
+  id = computed(() => this.inputs.id());
+
+  /** The ARIA role for the listbox. */
+  role = computed(() => 'listbox' as const);
 
   /** The id of the active (focused) item in the listbox. */
   activeId = computed(() => this.listBehavior.activedescendant());

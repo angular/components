@@ -125,6 +125,9 @@ interface SelectOptions {
 
 /** Represents the required inputs for a tree. */
 export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, 'items'> {
+  /** A unique identifier for the tree. */
+  id: SignalLike<string>;
+
   /** All items in the tree, in document order (DFS-like, a flattened list). */
   allItems: SignalLike<TreeItemPattern<V>[]>;
 

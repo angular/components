@@ -57,9 +57,13 @@ export class CdkCombobox<V> {
   /** The values of the current selected items. */
   value = model<V | undefined>(undefined);
 
+  /** The function used to filter the options in the popup based on the input text. */
   filter = input<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
     itemText.toLowerCase().includes(inputText.toLowerCase()),
   );
+
+  /** Whether the listbox has received focus yet. */
+  private _hasBeenFocused = signal(false);
 
   /** The combobox ui pattern. */
   readonly pattern = new ComboboxPattern<any, V>({
@@ -77,6 +81,21 @@ export class CdkCombobox<V> {
     afterRenderEffect(() => {
       this._deferredContentAware?.contentVisible.set(this.pattern.isFocused());
     });
+
+    afterRenderEffect(() => {
+      if (!this._hasBeenFocused() && this.pattern.isFocused()) {
+        this._hasBeenFocused.set(true);
+      }
+    });
+
+    afterRenderEffect(() => {
+      if (!this._hasBeenFocused()) {
+        if (this.value() !== undefined) {
+          this._deferredContentAware?.contentVisible.set(false);
+          this.pattern.setDefaultState();
+        }
+      }
+    });
   }
 }
 
@@ -87,6 +106,9 @@ export class CdkCombobox<V> {
     'role': 'combobox',
     '[attr.aria-expanded]': 'combobox.pattern.expanded()',
     '[attr.aria-activedescendant]': 'combobox.pattern.activedescendant()',
+    '[attr.aria-controls]': 'combobox.pattern.popupId()',
+    '[attr.aria-haspopup]': 'combobox.pattern.hasPopup()',
+    '[attr.aria-autocomplete]': 'combobox.pattern.autocomplete()',
   },
 })
 export class CdkComboboxInput {
