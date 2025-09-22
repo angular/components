@@ -34,6 +34,9 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
 export type ComboboxListboxControls<T extends ListItem<V>, V> = {
+  /** A unique identifier for the popup. */
+  id: () => string;
+
   /** The ARIA role for the popup. */
   role: SignalLike<'listbox' | 'tree' | 'grid'>;
 
@@ -113,6 +116,15 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** The key used to navigate to the next item in the list. */
   collapseKey = computed(() => 'ArrowLeft'); // TODO: RTL support.
+
+  /** The ID of the popup associated with the combobox. */
+  popupId = computed(() => this.inputs.popupControls()?.id() || null);
+
+  /** The autocomplete behavior of the combobox. */
+  autocomplete = computed(() => (this.inputs.filterMode() === 'highlight' ? 'both' : 'list'));
+
+  /** The ARIA role of the popup associated with the combobox. */
+  hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
 
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
@@ -227,12 +239,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles focus out events for the combobox. */
   onFocusOut(event: FocusEvent) {
-    this.isFocused.set(false);
-
     if (
       !(event.relatedTarget instanceof HTMLElement) ||
       !this.inputs.containerEl()?.contains(event.relatedTarget)
     ) {
+      this.isFocused.set(false);
       if (this.inputs.filterMode() !== 'manual') {
         this.commit();
       } else {

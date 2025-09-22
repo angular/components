@@ -14,6 +14,10 @@ import {List, ListInputs} from '../behaviors/list/list';
 
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
+  /** A unique identifier for the listbox. */
+  id: SignalLike<string>;
+
+  /** Whether the listbox is readonly. */
   readonly: SignalLike<boolean>;
 };
 

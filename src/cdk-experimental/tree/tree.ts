@@ -19,6 +19,7 @@ import {
   Signal,
   OnInit,
   OnDestroy,
+  untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -66,6 +67,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
+    '[attr.id]': 'id()',
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multi()',
     '[attr.aria-disabled]': 'pattern.disabled()',
@@ -78,6 +80,13 @@ function sortDirectives(a: HasElement, b: HasElement) {
   hostDirectives: [{directive: CdkComboboxPopup}],
 })
 export class CdkTree<V> {
+  /** A unique identifier for the tree. */
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-tree-');
+
+  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
+  /** A unique identifier for the tree. */
+  protected id = computed(() => this._generatedId);
+
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<CdkComboboxPopup<V>>(CdkComboboxPopup, {
     optional: true,
@@ -136,10 +145,11 @@ export class CdkTree<V> {
   constructor() {
     const inputs = {
       ...this,
+      id: this.id,
       allItems: computed(() =>
         [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
       ),
-      activeItem: signal(undefined),
+      activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
       element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?.pattern,
     };
@@ -155,6 +165,25 @@ export class CdkTree<V> {
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this.pattern.setDefaultState();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.allItems();
+      const activeItem = untracked(() => inputs.activeItem());
+
+      if (!items.some(i => i === activeItem) && activeItem) {
+        this.pattern.listBehavior.unfocus();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.allItems();
+      const value = untracked(() => this.value());
+
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
+        this._popup?.combobox?.pattern?.inputs.value.set(this.value()[0]);
       }
     });
   }
