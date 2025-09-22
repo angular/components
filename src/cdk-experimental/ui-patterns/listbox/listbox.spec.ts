@@ -32,6 +32,7 @@ const shift = () => createKeyboardEvent('keydown', 16, 'Shift', {shift: true});
 describe('Listbox Pattern', () => {
   function getListbox(inputs: Partial<TestInputs> & Pick<TestInputs, 'items'>) {
     return new ListboxPattern({
+      id: signal('listbox-1'),
       items: inputs.items,
       value: inputs.value ?? signal([]),
       activeItem: signal(undefined),
