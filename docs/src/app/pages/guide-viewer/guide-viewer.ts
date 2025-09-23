@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
@@ -26,11 +26,11 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   },
 })
 export class GuideViewer implements OnInit {
-  private _componentPageTitle = inject(ComponentPageTitle);
-  private _router = inject(Router);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
+  private readonly _router = inject(Router);
   guideItems = inject(GuideItems);
 
-  guide: GuideItem | undefined;
+  guide = signal<GuideItem | undefined>(undefined);
 
   constructor() {
     const _route = inject(ActivatedRoute);
@@ -39,18 +39,18 @@ export class GuideViewer implements OnInit {
     _route.params.subscribe(p => {
       const guideItem = guideItems.getItemById(p['id']);
       if (guideItem) {
-        this.guide = guideItem;
+        this.guide.set(guideItem);
       }
 
-      if (!this.guide) {
+      if (!this.guide()) {
         this._router.navigate(['/guides']);
       }
     });
   }
 
   ngOnInit(): void {
-    if (this.guide !== undefined) {
-      this._componentPageTitle.title = this.guide.name;
+    if (this.guide() !== undefined) {
+      this._componentPageTitle.title = this.guide()!.name;
     }
   }
 }
