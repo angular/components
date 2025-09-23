@@ -4,9 +4,7 @@
 //
 
 @use 'sass:map';
-
-// Indicates whether alternative tokens should be used
-$_alternate-tokens: false;
+@use './md-sys-typescale-internal';
 
 @function md-sys-typescale-values($typography: ()) {
   $plain: map.get($typography, plain);
@@ -110,19 +108,7 @@ $_alternate-tokens: false;
     title-small-weight: $medium
   );
 
-  @if ($_alternate-tokens) {
-    $values: map.merge($values, (
-      body-large-tracking: 0,
-      body-medium-tracking: 0,
-      body-small-tracking: 0.006rem,
-      display-large-tracking: 0,
-      label-large-tracking: 0,
-      label-medium-tracking: 0.006rem,
-      label-small-tracking: 0.006rem,
-      title-medium-tracking: 0,
-      title-small-tracking: 0,
-    ));
-  }
+  $values: map.merge($values, md-sys-typescale-internal.values($typography));
 
   @return $values;
 }
