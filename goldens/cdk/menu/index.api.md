@@ -21,7 +21,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import * as rxjs from 'rxjs';
@@ -368,15 +367,13 @@ export { MenuTracker }
 // @public
 export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: "vertical" | "horizontal") => {
     provide: InjectionToken<MenuStack>;
-    deps: Optional[][];
-    useFactory: (parentMenuStack?: MenuStack) => MenuStack;
+    useFactory: () => MenuStack;
 };
 
 // @public
 export const PARENT_OR_NEW_MENU_STACK_PROVIDER: {
     provide: InjectionToken<MenuStack>;
-    deps: Optional[][];
-    useFactory: (parentMenuStack?: MenuStack) => MenuStack;
+    useFactory: () => MenuStack;
 };
 
 // @public

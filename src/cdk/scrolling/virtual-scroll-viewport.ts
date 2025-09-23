@@ -19,12 +19,10 @@ import {
   effect,
   ElementRef,
   inject,
-  Inject,
   Injector,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   signal,
   untracked,
@@ -74,11 +72,8 @@ const SCROLL_SCHEDULER =
   providers: [
     {
       provide: CdkScrollable,
-      useFactory: (
-        virtualScrollable: CdkVirtualScrollable | null,
-        viewport: CdkVirtualScrollViewport,
-      ) => virtualScrollable || viewport,
-      deps: [[new Optional(), new Inject(VIRTUAL_SCROLLABLE)], CdkVirtualScrollViewport],
+      useFactory: () =>
+        inject(VIRTUAL_SCROLLABLE, {optional: true}) || inject(CdkVirtualScrollViewport),
     },
   ],
 })
