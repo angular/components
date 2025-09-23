@@ -7,6 +7,7 @@ sass_library(
     srcs = [
         "_index.scss",
         "_md-sys-color.scss",
+        "_md-sys-color-internal.scss",
         "_md-sys-elevation.scss",
         "_md-sys-motion.scss",
         "_md-sys-shape.scss",

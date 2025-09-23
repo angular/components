@@ -1,8 +1,9 @@
 @use 'sass:map';
 @use '../../m2/palette';
+@use './md-sys-color-internal';
 
 @function md-sys-color-values-dark($palettes) {
-  @return (
+  $values: (
     primary: map.get($palettes, primary, default),
     on-primary: map.get($palettes, primary, default-contrast),
     inverse-primary: map.get($palettes, primary, 600),
@@ -55,10 +56,14 @@
     tertiary-fixed: map.get($palettes, accent, default),
     tertiary-fixed-dim: map.get($palettes, accent, default),
   );
+
+  $values: map.merge($values, md-sys-color-internal.values-dark($palettes));
+
+  @return $values;
 }
 
 @function md-sys-color-values-light($palettes) {
-  @return (
+  $values: (
     primary: map.get($palettes, primary, default),
     on-primary: map.get($palettes, primary, default-contrast),
     inverse-primary: map.get($palettes, primary, 300),
@@ -111,4 +116,8 @@
     tertiary-fixed: map.get($palettes, accent, default),
     tertiary-fixed-dim: map.get($palettes, accent, default),
   );
+
+  $values: map.merge($values, md-sys-color-internal.values-light($palettes));
+
+  @return $values;
 }
