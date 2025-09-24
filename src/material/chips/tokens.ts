@@ -6,13 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER, ModifierKey} from '@angular/cdk/keycodes';
 import {InjectionToken} from '@angular/core';
+
+/** Key that can be used as a separator between chips. */
+export interface SeparatorKey {
+  keyCode: number;
+  modifiers: readonly ModifierKey[];
+}
 
 /** Default options, for the chips module, that can be overridden. */
 export interface MatChipsDefaultOptions {
   /** The list of key codes that will trigger a chipEnd event. */
-  separatorKeyCodes: readonly number[] | ReadonlySet<number>;
+  separatorKeyCodes: readonly (number | SeparatorKey)[] | ReadonlySet<number | SeparatorKey>;
 
   /** Whether icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
