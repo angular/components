@@ -32,6 +32,7 @@ ts_project(
         "//src/cdk/overlay",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
+        "//src/material/core",
         "//src/material/form-field",
         "//src/material/form-field/testing/control",
         "//src/material/select",
