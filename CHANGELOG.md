@@ -1,3 +1,14 @@
+<a name="20.2.5"></a>
+# 20.2.5 "sparkling-penguin" (2025-09-24)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [36be42637](https://github.com/angular/components/commit/36be42637df5021ae9afa4d097e84d83d78c197e) | fix | **core:** move internal tokens ([#31907](https://github.com/angular/components/pull/31907)) |
+| [3ac762be5](https://github.com/angular/components/commit/3ac762be5dc180594c0681e2842e35123195feb6) | fix | **form-field:** restore error message animation ([#31774](https://github.com/angular/components/pull/31774)) |
+| [65f23c003](https://github.com/angular/components/commit/65f23c003e94d59bbb08ad81eb66d725b1b5e79a) | fix | **table:** style no data row properly ([#31895](https://github.com/angular/components/pull/31895)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.4"></a>
 # 21.0.0-next.4 "v21.0.0-next4 release" (2025-09-17)
 ### material
