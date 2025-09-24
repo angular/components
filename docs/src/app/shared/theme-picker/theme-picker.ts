@@ -9,7 +9,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   ViewEncapsulation,
   inject,
@@ -21,7 +21,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {map} from 'rxjs/operators';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
@@ -33,13 +33,13 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatTooltip, MatMenu, MatMenuItem, MatMenuTrigger, MatIcon],
 })
-export class ThemePicker implements OnInit, OnDestroy {
-  styleManager = inject(StyleManager);
-  private _themeStorage = inject(ThemeStorage);
-  private _activatedRoute = inject(ActivatedRoute);
-  private _liveAnnouncer = inject(LiveAnnouncer);
+export class ThemePicker implements OnInit {
+  public readonly styleManager = inject(StyleManager);
+  private readonly themeStorage = inject(ThemeStorage);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private _queryParamSubscription = Subscription.EMPTY;
   currentTheme: DocsSiteTheme | undefined;
 
   // The below colors need to align with the themes defined in theme-picker.scss
@@ -72,7 +72,7 @@ export class ThemePicker implements OnInit, OnDestroy {
   ];
 
   constructor() {
-    const themeName = this._themeStorage.getStoredThemeName();
+    const themeName = this.themeStorage.getStoredThemeName();
     if (themeName) {
       this.selectTheme(themeName);
     } else {
@@ -85,17 +85,16 @@ export class ThemePicker implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._queryParamSubscription = this._activatedRoute.queryParamMap
-      .pipe(map((params: ParamMap) => params.get('theme')))
+    this.activatedRoute.queryParamMap
+      .pipe(
+        map((params: ParamMap) => params.get('theme')),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe((themeName: string | null) => {
         if (themeName) {
           this.selectTheme(themeName);
         }
       });
-  }
-
-  ngOnDestroy() {
-    this._queryParamSubscription.unsubscribe();
   }
 
   selectTheme(themeName: string) {
@@ -112,8 +111,8 @@ export class ThemePicker implements OnInit, OnDestroy {
     }
 
     if (this.currentTheme) {
-      this._liveAnnouncer.announce(`${theme.displayName} theme selected.`, 'polite', 3000);
-      this._themeStorage.storeTheme(this.currentTheme);
+      this.liveAnnouncer.announce(`${theme.displayName} theme selected.`, 'polite', 3000);
+      this.themeStorage.storeTheme(this.currentTheme);
     }
   }
 }
