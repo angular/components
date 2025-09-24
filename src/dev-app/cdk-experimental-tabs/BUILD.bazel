@@ -9,5 +9,8 @@ ng_project(
         "cdk-tabs-demo.html",
         "cdk-tabs-demo.css",
     ],
-    deps = ["//src/components-examples/cdk-experimental/tabs"],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/tabs",
+    ],
 )

@@ -61,6 +61,7 @@ ng_project(
         ":option_css",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/keycodes",

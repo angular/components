@@ -129,13 +129,12 @@ def npm_package(name, srcs = [], **kwargs):
 
 def ts_project(
         name,
+        srcs = [],
         deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
         visibility = None,
-        # TODO: Switch this flag as we no longer depend on `interop_deps`.
-        ignore_strict_deps = True,
         **kwargs):
     if tsconfig == None and native.package_name().startswith("src"):
         tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
@@ -147,16 +146,17 @@ def ts_project(
         declaration = True,
         tsconfig = tsconfig,
         visibility = visibility,
+        srcs = srcs,
         deps = deps,
         **kwargs
     )
 
-    if not ignore_strict_deps:
-        strict_deps_test(
-            name = "%s_strict_deps_test" % name,
-            srcs = kwargs.get("srcs", []),
-            deps = deps,
-        )
+    strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        srcs = srcs,
+        deps = deps,
+        tsconfig = tsconfig,
+    )
 
     # TODO(devversion): Partner with ISE team to support `rules_js` here.
     # if False and not testonly:
@@ -164,13 +164,12 @@ def ts_project(
 
 def ng_project(
         name,
+        srcs = [],
         deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
         visibility = None,
-        # TODO: Switch this flag as we no longer depend on `interop_deps`.
-        ignore_strict_deps = True,
         **kwargs):
     if tsconfig == None and native.package_name().startswith("src"):
         tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
@@ -182,16 +181,17 @@ def ng_project(
         declaration = True,
         tsconfig = tsconfig,
         visibility = visibility,
+        srcs = srcs,
         deps = deps,
         **kwargs
     )
 
-    if not ignore_strict_deps:
-        strict_deps_test(
-            name = "%s_strict_deps_test" % name,
-            srcs = kwargs.get("srcs", []),
-            deps = deps,
-        )
+    strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        srcs = srcs,
+        deps = deps,
+        tsconfig = tsconfig,
+    )
 
     # TODO(devversion): Partner with ISE team to support `rules_js` here.
     # if False and not testonly:

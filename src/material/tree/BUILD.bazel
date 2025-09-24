@@ -95,6 +95,7 @@ ts_project(
     ),
     deps = [
         ":tree",
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
