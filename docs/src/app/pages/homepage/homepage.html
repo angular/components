@@ -53,7 +53,7 @@
       </a>
     </div>
     <app-carousel [aria-label]="'Featured components'">
-      @for (comp of getTopComponents(); track comp) {
+      @for (comp of topComponents; track comp) {
         <a carousel-item class="docs-carousel-item docs-featured-components-carousel-item"
            routerLink="/components/{{comp}}">
           <div class="docs-homepage-img-container">

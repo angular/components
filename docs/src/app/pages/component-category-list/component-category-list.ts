@@ -27,9 +27,9 @@ import {ComponentPageTitle} from '../page-title/page-title';
   imports: [NavigationFocus, RouterLink, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
-  readonly _docItems = inject(DocumentationItems);
-  private _componentPageTitle = inject(ComponentPageTitle);
-  private _route = inject(ActivatedRoute);
+  private readonly _docItems = inject(DocumentationItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
+  private readonly _route = inject(ActivatedRoute);
 
   items: DocItem[] = [];
   section = '';
