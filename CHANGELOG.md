@@ -1,3 +1,32 @@
+<a name="21.0.0-next.5"></a>
+# 21.0.0-next.5 "hungry-kiwi" (2025-09-24)
+## Breaking Changes
+### cdk
+- * `$z-index-overlay-container` has been removed. Use `$overlay-container-z-index` instead.
+  * `$z-index-overlay` has been removed. Use `$overlay-z-index` instead.
+  * `$dark-backdrop-background` has been removed. Use `$overlay-backdrop-color` instead.
+  * `$z-index-overlay-backdrop` has been removed. Use `$overlay-backdrop-z-index` instead.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f0047282a](https://github.com/angular/components/commit/f0047282a10551bb9044c74e4b441e795bec1de9) | fix | **ui-patterns:** preserveContent should not render until first visible ([#31660](https://github.com/angular/components/pull/31660)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [737c69fce](https://github.com/angular/components/commit/737c69fce7c362a4e49fb7f7869ed7237f4f8a35) | feat | **radio:** Hovering over label of a radio will show the pointer cursor ([#31894](https://github.com/angular/components/pull/31894)) |
+| [3619903fa](https://github.com/angular/components/commit/3619903fa26910a784f01bee627e30d922b9b525) | feat | **testing:** Add icon name filtering to MatButtonHarness ([#31852](https://github.com/angular/components/pull/31852)) |
+| [3b95117e5](https://github.com/angular/components/commit/3b95117e5901b4f53b685ca031f12f108a96f86f) | fix | **chips:** remove visible overflow for labels ([#31679](https://github.com/angular/components/pull/31679)) |
+| [7a17fe950](https://github.com/angular/components/commit/7a17fe950dd69505d0cea705445aff14312a0212) | fix | **core:** move internal tokens ([#31907](https://github.com/angular/components/pull/31907)) |
+| [977f46fe6](https://github.com/angular/components/commit/977f46fe61c9e77d0b3706a94016c14cd0cdbe90) | fix | **form-field:** restore error message animation ([#31774](https://github.com/angular/components/pull/31774)) |
+| [ff10f0448](https://github.com/angular/components/commit/ff10f044826323811eee0f918e9c1515a5514c5e) | fix | **stepper:** Adjust aria tab-related roles to fix violations ([#31844](https://github.com/angular/components/pull/31844)) |
+| [b6d81939c](https://github.com/angular/components/commit/b6d81939c822684a4084b3081a2a42d885e1907d) | fix | **table:** style no data row properly ([#31895](https://github.com/angular/components/pull/31895)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [84fc0d963](https://github.com/angular/components/commit/84fc0d9638948ee2a94659d5af78894809f2a30c) | fix | **overlay:** remove deprecated variables ([#31898](https://github.com/angular/components/pull/31898)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.5"></a>
 # 20.2.5 "sparkling-penguin" (2025-09-24)
 ### material
