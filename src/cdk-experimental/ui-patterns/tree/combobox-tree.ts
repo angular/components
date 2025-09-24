@@ -20,8 +20,6 @@ export class ComboboxTreePattern<V>
   extends TreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
-  override id = computed(() => this.inputs.id());
-
   /** Whether the currently focused item is collapsible. */
   isItemCollapsible = () => this.activeItem()?.parent() instanceof TreeItemPattern;
 

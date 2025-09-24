@@ -299,6 +299,7 @@ export class TreePattern<V> {
   });
 
   constructor(readonly inputs: TreeInputs<V>) {
+    this.id = inputs.id;
     this.nav = inputs.nav;
     this.currentType = inputs.currentType;
     this.allItems = inputs.allItems;

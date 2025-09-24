@@ -21,7 +21,6 @@ describe('Combobox', () => {
   describe('with Listbox', () => {
     let fixture: ComponentFixture<ComboboxListboxExample>;
     let inputElement: HTMLInputElement;
-    let comboboxInstance: CdkCombobox<string>;
 
     const keydown = (key: string, modifierKeys: {} = {}) => {
       focus();
@@ -77,8 +76,6 @@ describe('Combobox', () => {
     }
 
     function defineTestVariables() {
-      const comboboxDebugElement = fixture.debugElement.query(By.directive(CdkCombobox));
-      comboboxInstance = comboboxDebugElement.injector.get(CdkCombobox);
       const inputDebugElement = fixture.debugElement.query(By.directive(CdkComboboxInput));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
     }
@@ -298,7 +295,7 @@ describe('Combobox', () => {
           click(options[0]);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
           expect(inputElement.value).toBe('Apple');
         });
 
@@ -306,7 +303,7 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
           expect(inputElement.value).toBe('Apple');
         });
 
@@ -314,7 +311,7 @@ describe('Combobox', () => {
           down();
           down();
 
-          expect(comboboxInstance.value()).toBe(undefined);
+          expect(fixture.componentInstance.value()).toEqual([]);
         });
 
         it('should select on focusout if the input text exactly matches an item', () => {
@@ -322,7 +319,7 @@ describe('Combobox', () => {
           input('Apple');
           blur();
 
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
         });
 
         it('should not select on focusout if the input text does not match an item', () => {
@@ -330,7 +327,7 @@ describe('Combobox', () => {
           input('Appl');
           blur();
 
-          expect(comboboxInstance.value()).toBe(undefined);
+          expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
@@ -344,7 +341,7 @@ describe('Combobox', () => {
           click(options[1]);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
           expect(inputElement.value).toBe('Apricot');
         });
 
@@ -353,23 +350,23 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
           expect(inputElement.value).toBe('Apricot');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
 
           down();
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
         });
 
         it('should select the first option on input', () => {
           focus();
           input('B');
 
-          expect(comboboxInstance.value()).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Banana']);
         });
 
         it('should commit the selected option on focusout', () => {
@@ -378,7 +375,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('Apricot');
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
         });
       });
 
@@ -391,7 +388,7 @@ describe('Combobox', () => {
           click(options[2]);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Banana']);
           expect(inputElement.value).toBe('Banana');
         });
 
@@ -401,16 +398,16 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Banana']);
           expect(inputElement.value).toBe('Banana');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
 
           down();
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
         });
 
         it('should update input value on navigation', () => {
@@ -425,7 +422,7 @@ describe('Combobox', () => {
           focus();
           input('Canta');
 
-          expect(comboboxInstance.value()).toBe('Cantaloupe');
+          expect(fixture.componentInstance.value()).toEqual(['Cantaloupe']);
         });
 
         it('should insert a highlighted completion string on input', fakeAsync(() => {
@@ -444,7 +441,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('Apricot');
-          expect(comboboxInstance.value()).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
         });
       });
     });
@@ -467,7 +464,7 @@ describe('Combobox', () => {
         const disabledOption = getOption('Apricot')!;
         click(disabledOption);
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should skip disabled options during keyboard navigation', () => {
@@ -493,7 +490,7 @@ describe('Combobox', () => {
 
         input('Apr');
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should not select disabled option with highlight on input', () => {
@@ -502,7 +499,7 @@ describe('Combobox', () => {
 
         input('Apr');
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
         expect(inputElement.value).toBe('Apr');
       });
     });
@@ -527,7 +524,7 @@ describe('Combobox', () => {
       it('should update the combobox value if the selected item is removed', () => {
         down(); // -> Apple
         enter();
-        expect(comboboxInstance.value()).toBe('Apple');
+        expect(fixture.componentInstance.value()).toEqual(['Apple']);
         expect(inputElement.value).toBe('Apple');
 
         fixture.componentInstance.options.set(
@@ -535,7 +532,7 @@ describe('Combobox', () => {
         );
         fixture.detectChanges();
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should clear active item if listbox becomes empty', () => {
@@ -608,14 +605,24 @@ describe('Combobox', () => {
       });
     });
 
-    // TODO(wagnermaciel): Enable these tests once we have a way to set the value
-    // describe('with programmatic value changes', () => {});
+    describe('with programmatic value changes', () => {
+      // TODO(wagnermaciel): Figure out if there's a way to automatically update the
+      // input value when the popup value signal is updated programmatically.
+      it('should update the selected item when the value is set programmatically', () => {
+        setupCombobox();
+        focus();
+        fixture.componentInstance.value.set(['Banana']);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.value()).toEqual(['Banana']);
+        const bananaOption = getOption('Banana')!;
+        expect(bananaOption.getAttribute('aria-selected')).toBe('true');
+      });
+    });
   });
 
   describe('with Tree', () => {
     let fixture: ComponentFixture<ComboboxTreeExample>;
     let inputElement: HTMLInputElement;
-    let comboboxInstance: CdkCombobox<string>;
 
     const keydown = (key: string, modifierKeys: {} = {}) => {
       focus();
@@ -673,8 +680,6 @@ describe('Combobox', () => {
     }
 
     function defineTestVariables() {
-      const comboboxDebugElement = fixture.debugElement.query(By.directive(CdkCombobox));
-      comboboxInstance = comboboxDebugElement.injector.get(CdkCombobox);
       const inputDebugElement = fixture.debugElement.query(By.directive(CdkComboboxInput));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
     }
@@ -831,7 +836,7 @@ describe('Combobox', () => {
           click(fruitItem);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
           expect(inputElement.value).toBe('Fruit');
         });
 
@@ -839,7 +844,7 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
           expect(inputElement.value).toBe('Fruit');
         });
 
@@ -848,14 +853,14 @@ describe('Combobox', () => {
           input('Apple');
           blur();
 
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
         });
 
         it('should not select on navigation', () => {
           down();
           down();
 
-          expect(comboboxInstance.value()).toBe(undefined);
+          expect(fixture.componentInstance.value()).toEqual([]);
         });
 
         it('should not select on focusout if the input text does not match an item', () => {
@@ -863,7 +868,7 @@ describe('Combobox', () => {
           input('Appl');
           blur();
 
-          expect(comboboxInstance.value()).toBe(undefined);
+          expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
@@ -879,7 +884,7 @@ describe('Combobox', () => {
           click(appleItem);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
           expect(inputElement.value).toBe('Apple');
         });
 
@@ -888,23 +893,23 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
           expect(inputElement.value).toBe('Vegetables');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(comboboxInstance.value()).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
 
           down();
-          expect(comboboxInstance.value()).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
         });
 
         it('should select the first option on input', () => {
           focus();
           input('B');
 
-          expect(comboboxInstance.value()).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Banana']);
         });
 
         it('should commit the selected option on focusout', () => {
@@ -913,7 +918,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('Apple');
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
         });
       });
 
@@ -928,7 +933,7 @@ describe('Combobox', () => {
           click(bananaItem);
           fixture.detectChanges();
 
-          expect(comboboxInstance.value()).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Banana']);
           expect(inputElement.value).toBe('Banana');
         });
 
@@ -937,16 +942,16 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(comboboxInstance.value()).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
           expect(inputElement.value).toBe('Vegetables');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(comboboxInstance.value()).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
 
           down();
-          expect(comboboxInstance.value()).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
         });
 
         it('should update input value on navigation', () => {
@@ -961,7 +966,7 @@ describe('Combobox', () => {
           focus();
           input('Canta');
 
-          expect(comboboxInstance.value()).toBe('Cantaloupe');
+          expect(fixture.componentInstance.value()).toEqual(['Cantaloupe']);
         });
 
         it('should insert a highlighted completion string on input', fakeAsync(() => {
@@ -980,7 +985,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('Apple');
-          expect(comboboxInstance.value()).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Apple']);
         });
       });
     });
@@ -1087,7 +1092,7 @@ describe('Combobox', () => {
         const disabledItem = getTreeItem('Vegetables')!;
         click(disabledItem);
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should skip disabled items during keyboard navigation', () => {
@@ -1119,7 +1124,7 @@ describe('Combobox', () => {
 
         input('Vege'); // Matches 'Vegetables', which is disabled.
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should not highlight disabled item with highlight on input', () => {
@@ -1128,7 +1133,7 @@ describe('Combobox', () => {
 
         input('Vege'); // Matches 'Vegetables', which is disabled.
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
         expect(inputElement.value).toBe('Vege');
       });
 
@@ -1138,7 +1143,7 @@ describe('Combobox', () => {
 
         input('Bana'); // Matches 'Banana', which is disabled.
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
     });
 
@@ -1179,7 +1184,7 @@ describe('Combobox', () => {
       it('should update the combobox value if the selected item is removed', () => {
         down(); // -> Fruit
         enter();
-        expect(comboboxInstance.value()).toBe('Fruit');
+        expect(fixture.componentInstance.value()).toEqual(['Fruit']);
         expect(inputElement.value).toBe('Fruit');
 
         fixture.componentInstance.nodes.set(
@@ -1187,7 +1192,7 @@ describe('Combobox', () => {
         );
         fixture.detectChanges();
 
-        expect(comboboxInstance.value()).toBeUndefined();
+        expect(fixture.componentInstance.value()).toEqual([]);
       });
 
       it('should clear active item if tree becomes empty', () => {
@@ -1270,8 +1275,18 @@ describe('Combobox', () => {
       });
     });
 
-    // TODO(wagnermaciel): Enable these tests once we have a way to set the value
-    // describe('with programmatic value changes', () => {});
+    describe('with programmatic value changes', () => {
+      // TODO(wagnermaciel): Figure out if there's a way to automatically update the
+      // input value when the popup value signal is updated programmatically.
+      it('should update the selected item when the value is set programmatically', () => {
+        setupCombobox();
+        focus();
+        fixture.componentInstance.value.set(['Fruit']);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.value()).toEqual(['Fruit']);
+        expect(getTreeItem('Fruit')!.getAttribute('aria-selected')).toBe('true');
+      });
+    });
   });
 });
 
@@ -1281,7 +1296,7 @@ describe('Combobox', () => {
       <input cdkComboboxInput placeholder="Search..." aria-label="Fruits" />
 
       <ng-template cdkComboboxPopupContainer>
-        <div cdkListbox aria-label="select a fruit">
+        <div cdkListbox aria-label="select a fruit" [(value)]="value">
           @for (option of options(); track option.name) {
             <li cdkOption [value]="option.name" [disabled]="option.disabled">{{ option.name }}</li>
           }
@@ -1299,6 +1314,7 @@ describe('Combobox', () => {
   ],
 })
 class ComboboxListboxExample {
+  value = signal<string[]>([]);
   filterFn = signal<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
     itemText.toLowerCase().includes(inputText.toLowerCase()),
   );
@@ -1322,7 +1338,7 @@ class ComboboxListboxExample {
       <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
 
       <ng-template cdkComboboxPopupContainer>
-        <ul cdkTree #tree="cdkTree">
+        <ul cdkTree #tree="cdkTree" [(value)]="value">
           <ng-template
             [ngTemplateOutlet]="treeNodes"
             [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1369,6 +1385,7 @@ class ComboboxListboxExample {
   ],
 })
 class ComboboxTreeExample {
+  value = signal<string[]>([]);
   filterFn = signal<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
     itemText.toLowerCase().includes(inputText.toLowerCase()),
   );

@@ -183,7 +183,6 @@ export class CdkTree<V> {
 
       if (items && value.some(v => !items.some(i => i.value() === v))) {
         this.value.set(value.filter(v => items.some(i => i.value() === v)));
-        this._popup?.combobox?.pattern?.inputs.value.set(this.value()[0]);
       }
     });
   }

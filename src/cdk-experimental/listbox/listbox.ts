@@ -158,6 +158,8 @@ export class CdkListbox<V> {
       }
     });
 
+    // Ensure that if the active item is removed from
+    // the list, the listbox updates it's focus state.
     afterRenderEffect(() => {
       const items = inputs.items();
       const activeItem = untracked(() => inputs.activeItem());
@@ -167,13 +169,13 @@ export class CdkListbox<V> {
       }
     });
 
+    // Ensure that the value is always in sync with the available options.
     afterRenderEffect(() => {
       const items = inputs.items();
       const value = untracked(() => this.value());
 
       if (items && value.some(v => !items.some(i => i.value() === v))) {
         this.value.set(value.filter(v => items.some(i => i.value() === v)));
-        this._popup?.combobox?.pattern?.inputs.value.set(this.value()[0]);
       }
     });
   }
