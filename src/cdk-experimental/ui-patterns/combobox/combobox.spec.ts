@@ -64,13 +64,11 @@ function getComboboxPattern(
     [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
   }> = {},
 ) {
-  const value = signal<string | undefined>(inputs.value);
   const containerEl = signal(document.createElement('div'));
   const inputEl = signal(document.createElement('input'));
   containerEl()?.appendChild(inputEl()!);
 
   const combobox = new ComboboxPattern<any, string>({
-    value,
     popupControls: signal(undefined), // will be set later
     inputEl,
     containerEl,
@@ -84,13 +82,17 @@ function getComboboxPattern(
   return {combobox, inputEl, containerEl};
 }
 
-function getListboxPattern(combobox: ComboboxPattern<TestOption, string>, values: string[]) {
+function getListboxPattern(
+  combobox: ComboboxPattern<TestOption, string>,
+  values: string[],
+  initialValue?: string,
+) {
   const options = signal<TestOption[]>([]);
 
   const listbox = new ComboboxListboxPattern<string>({
     id: signal('listbox-1'),
     items: options,
-    value: signal(combobox.inputs.value() ? [combobox.inputs.value()!] : []),
+    value: signal(initialValue ? [initialValue] : []),
     combobox: signal(combobox) as any,
     activeItem: signal(undefined),
     typeaheadDelay: signal(0.5),
@@ -127,13 +129,14 @@ function getListboxPattern(combobox: ComboboxPattern<TestOption, string>, values
 function getTreePattern(
   combobox: ComboboxPattern<TreeItemPattern<string>, string>,
   data: TreeItemData[],
+  initialValue?: string,
 ) {
   const items = signal<TreeItemPattern<string>[]>([]);
 
   const tree = new ComboboxTreePattern<string>({
     id: signal('tree-1'),
     allItems: items,
-    value: signal(combobox.inputs.value() ? [combobox.inputs.value()!] : []),
+    value: signal(initialValue ? [initialValue] : []),
     combobox: signal(combobox) as any,
     activeItem: signal(undefined),
     typeaheadDelay: signal(0.5),
@@ -326,7 +329,7 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox, inputEl} = getPatterns();
         combobox.onPointerup(clickOption(listbox.inputs.items(), 0));
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
         expect(inputEl.value).toBe('Apple');
       });
 
@@ -335,7 +338,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
         expect(inputEl.value).toBe('Apple');
       });
 
@@ -345,7 +348,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onInput(new InputEvent('input'));
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
       it('should deselect on backspace', () => {
@@ -357,14 +360,14 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onInput(new InputEvent('input', {inputType: 'deleteContentBackward'}));
 
         expect(listbox.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(listbox.inputs.value()).toEqual([]);
       });
 
       it('should not select on navigation', () => {
         const {combobox, listbox} = getPatterns({filterMode: 'manual'});
         combobox.onKeydown(down());
         expect(listbox.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(listbox.inputs.value()).toEqual([]);
       });
 
       it('should not select on input', () => {
@@ -372,7 +375,7 @@ describe('Combobox with Listbox Pattern', () => {
         inputEl.value = 'A';
         combobox.onInput(new InputEvent('input'));
         expect(listbox.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(listbox.inputs.value()).toEqual([]);
       });
 
       it('should not select on focusout if the input text does not match an item', () => {
@@ -381,7 +384,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onInput(new InputEvent('input'));
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(listbox.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(listbox.inputs.value()).toEqual([]);
         expect(inputEl.value).toBe('Appl');
       });
     });
@@ -391,7 +394,7 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox, inputEl} = getPatterns({filterMode: 'auto-select'});
         combobox.onPointerup(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[3]);
-        expect(combobox.inputs.value()).toBe('Blackberry');
+        expect(listbox.inputs.value()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
       });
 
@@ -402,7 +405,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(listbox.inputs.value()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
 
@@ -410,7 +413,7 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox} = getPatterns({filterMode: 'auto-select'});
         combobox.onKeydown(down());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
       it('should select the last item on arrow up when collapsed', () => {
@@ -419,7 +422,7 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.getSelectedItem()).toBe(
           listbox.inputs.items()[listbox.inputs.items().length - 1],
         );
-        expect(combobox.inputs.value()).toBe('Cranberry');
+        expect(listbox.inputs.value()).toEqual(['Cranberry']);
       });
 
       it('should select on navigation', () => {
@@ -427,7 +430,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[1]);
-        expect(combobox.inputs.value()).toBe('Apricot');
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
       });
 
       it('should select the first option on input', () => {
@@ -436,13 +439,13 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onInput(new InputEvent('input'));
 
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
 
         inputEl.value = 'Apr';
         combobox.onInput(new InputEvent('input'));
 
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[1]);
-        expect(combobox.inputs.value()).toBe('Apricot');
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
       });
 
       it('should commit the selected option on focusout', () => {
@@ -460,7 +463,7 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox, inputEl} = getPatterns({filterMode: 'highlight'});
         combobox.onPointerup(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[3]);
-        expect(combobox.inputs.value()).toBe('Blackberry');
+        expect(listbox.inputs.value()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
       });
 
@@ -471,7 +474,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(listbox.inputs.value()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
 
@@ -479,7 +482,7 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(down());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
       it('should select the last item on arrow up when collapsed', () => {
@@ -488,7 +491,7 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.getSelectedItem()).toBe(
           listbox.inputs.items()[listbox.inputs.items().length - 1],
         );
-        expect(combobox.inputs.value()).toBe('Cranberry');
+        expect(listbox.inputs.value()).toEqual(['Cranberry']);
       });
 
       it('should select on navigation', () => {
@@ -496,7 +499,7 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[1]);
-        expect(combobox.inputs.value()).toBe('Apricot');
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
       });
 
       it('should select the first option on input', () => {
@@ -505,13 +508,13 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onInput(new InputEvent('input'));
 
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[0]);
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(listbox.inputs.value()).toEqual(['Apple']);
 
         inputEl.value = 'Apr';
         combobox.onInput(new InputEvent('input'));
 
         expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[1]);
-        expect(combobox.inputs.value()).toBe('Apricot');
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
       });
 
       it('should commit the selected option on navigation', () => {
@@ -669,7 +672,7 @@ describe('Combobox with Tree Pattern', () => {
       it('should select and commit on click', () => {
         const {combobox, tree, inputEl} = getPatterns();
         combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
-        expect(combobox.inputs.value()).toBe('Fruit');
+        expect(tree.inputs.value()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
 
@@ -678,17 +681,17 @@ describe('Combobox with Tree Pattern', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(tree.getSelectedItem()).toBe(tree.inputs.allItems()[0]);
-        expect(combobox.inputs.value()).toBe('Fruit');
+        expect(tree.inputs.value()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
 
       it('should select on focusout if the input text exactly matches an item', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'manual'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'manual'});
         combobox.onPointerup(clickInput(inputEl));
         inputEl.value = 'Apple';
         combobox.onInput(new InputEvent('input'));
         combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(tree.inputs.value()).toEqual(['Apple']);
       });
 
       it('should deselect on backspace', () => {
@@ -700,14 +703,14 @@ describe('Combobox with Tree Pattern', () => {
         combobox.onInput(new InputEvent('input', {inputType: 'deleteContentBackward'}));
 
         expect(tree.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should not select on navigation', () => {
         const {combobox, tree} = getPatterns({filterMode: 'manual'});
         combobox.onKeydown(down());
         expect(tree.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should not select on input', () => {
@@ -715,7 +718,7 @@ describe('Combobox with Tree Pattern', () => {
         inputEl.value = 'A';
         combobox.onInput(new InputEvent('input'));
         expect(tree.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should not select on focusout if the input text does not match an item', () => {
@@ -724,7 +727,7 @@ describe('Combobox with Tree Pattern', () => {
         combobox.onInput(new InputEvent('input'));
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(tree.getSelectedItem()).toBe(undefined);
-        expect(combobox.inputs.value()).toBe(undefined);
+        expect(tree.inputs.value()).toEqual([]);
         expect(inputEl.value).toBe('Appl');
       });
     });
@@ -734,17 +737,17 @@ describe('Combobox with Tree Pattern', () => {
         const {combobox, tree, inputEl} = getPatterns({filterMode: 'auto-select'});
         combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 2));
         expect(tree.getSelectedItem()).toBe(tree.inputs.allItems()[2]);
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(tree.inputs.value()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
 
       it('should select and commit on Enter', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'auto-select'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'auto-select'});
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
-        expect(combobox.inputs.value()).toBe('Grains');
+        expect(tree.inputs.value()).toEqual(['Grains']);
         expect(inputEl.value).toBe('Grains');
       });
 
@@ -752,34 +755,34 @@ describe('Combobox with Tree Pattern', () => {
         const {combobox, tree} = getPatterns({filterMode: 'auto-select'});
         combobox.onKeydown(down());
         expect(tree.getSelectedItem()).toBe(tree.inputs.allItems()[0]);
-        expect(combobox.inputs.value()).toBe('Fruit');
+        expect(tree.inputs.value()).toEqual(['Fruit']);
       });
 
       it('should select the last focusable item on arrow up when collapsed', () => {
-        const {combobox} = getPatterns({filterMode: 'auto-select'});
+        const {combobox, tree} = getPatterns({filterMode: 'auto-select'});
         combobox.onKeydown(up());
-        expect(combobox.inputs.value()).toBe('Grains');
+        expect(tree.inputs.value()).toEqual(['Grains']);
       });
 
       it('should select on navigation', () => {
-        const {combobox} = getPatterns({filterMode: 'auto-select'});
+        const {combobox, tree} = getPatterns({filterMode: 'auto-select'});
         combobox.onKeydown(down());
         combobox.onKeydown(right());
         combobox.onKeydown(right());
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(tree.inputs.value()).toEqual(['Apple']);
       });
 
       it('should select the first option on input', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'auto-select'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'auto-select'});
         inputEl.value = 'B';
         combobox.onInput(new InputEvent('input'));
 
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(tree.inputs.value()).toEqual(['Banana']);
 
         inputEl.value = 'Bro';
         combobox.onInput(new InputEvent('input'));
 
-        expect(combobox.inputs.value()).toBe('Broccoli');
+        expect(tree.inputs.value()).toEqual(['Broccoli']);
       });
 
       it('should commit the selected option on focusout', () => {
@@ -797,17 +800,17 @@ describe('Combobox with Tree Pattern', () => {
         const {combobox, tree, inputEl} = getPatterns({filterMode: 'highlight'});
         combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 2));
         expect(tree.getSelectedItem()).toBe(tree.inputs.allItems()[2]);
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(tree.inputs.value()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
 
       it('should select and commit on Enter', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'highlight'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
-        expect(combobox.inputs.value()).toBe('Grains');
+        expect(tree.inputs.value()).toEqual(['Grains']);
         expect(inputEl.value).toBe('Grains');
       });
 
@@ -815,45 +818,45 @@ describe('Combobox with Tree Pattern', () => {
         const {combobox, tree} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(down());
         expect(tree.getSelectedItem()).toBe(tree.inputs.allItems()[0]);
-        expect(combobox.inputs.value()).toBe('Fruit');
+        expect(tree.inputs.value()).toEqual(['Fruit']);
       });
 
       it('should select the last focusable item on arrow up when collapsed', () => {
-        const {combobox} = getPatterns({filterMode: 'highlight'});
+        const {combobox, tree} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(up());
-        expect(combobox.inputs.value()).toBe('Grains');
+        expect(tree.inputs.value()).toEqual(['Grains']);
       });
 
       it('should select on navigation', () => {
-        const {combobox} = getPatterns({filterMode: 'highlight'});
+        const {combobox, tree} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(down());
         combobox.onKeydown(right());
         combobox.onKeydown(right());
-        expect(combobox.inputs.value()).toBe('Apple');
+        expect(tree.inputs.value()).toEqual(['Apple']);
       });
 
       it('should select the first option on input', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'highlight'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'highlight'});
         inputEl.value = 'B';
         combobox.onInput(new InputEvent('input'));
 
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(tree.inputs.value()).toEqual(['Banana']);
 
         inputEl.value = 'Bro';
         combobox.onInput(new InputEvent('input'));
 
-        expect(combobox.inputs.value()).toBe('Broccoli');
+        expect(tree.inputs.value()).toEqual(['Broccoli']);
       });
 
       it('should commit the selected option on navigation', () => {
-        const {combobox, inputEl} = getPatterns({filterMode: 'highlight'});
+        const {combobox, inputEl, tree} = getPatterns({filterMode: 'highlight'});
         combobox.onKeydown(down());
         expect(inputEl.value).toBe('Fruit');
         combobox.onKeydown(right());
         combobox.onKeydown(right());
         expect(inputEl.value).toBe('Apple');
         combobox.onKeydown(down());
-        expect(combobox.inputs.value()).toBe('Banana');
+        expect(tree.inputs.value()).toEqual(['Banana']);
       });
 
       it('should commit the selected option on focusout', () => {

@@ -8,14 +8,11 @@
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {computed, signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */
 export type ComboboxInputs<T extends ListItem<V>, V> = {
-  /** The current value of the combobox. */
-  value: WritableSignalLike<V | undefined>;
-
   /** The controls for the popup associated with the combobox. */
   popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | undefined>;
 
@@ -220,7 +217,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     if (event instanceof InputEvent && event.inputType.match(/delete.*/)) {
       if (this.inputs.filterMode() === 'manual') {
-        this.inputs.value.set(undefined);
         this.inputs.popupControls()?.clearSelection();
       } else {
         this.inputs.popupControls()?.select();
@@ -262,16 +258,14 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   setDefaultState() {
-    if (this.inputs.value() !== undefined) {
-      this.inputs.popupControls()?.setValue(this.inputs.value());
-
-      const inputEl = this.inputs.inputEl();
-      const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm() ?? '';
-
-      if (inputEl) {
-        inputEl.value = searchTerm;
-      }
-    }
+    // if (this.inputs.value() !== undefined) {
+    //   this.inputs.popupControls()?.setValue(this.inputs.value());
+    //   const inputEl = this.inputs.inputEl();
+    //   const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm() ?? '';
+    //   if (inputEl) {
+    //     inputEl.value = searchTerm;
+    //   }
+    // }
   }
 
   /** Closes the combobox. */
@@ -284,7 +278,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   open(nav?: {first?: boolean; last?: boolean}) {
     this.expanded.set(true);
     this.inputs.popupControls()?.filter(this.inputs.inputEl()?.value ?? '');
-    this.inputs.popupControls()?.setValue(this.inputs.value());
 
     if (nav?.first) {
       this.first();
@@ -346,7 +339,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean; highlight?: boolean} = {}) {
     this.inputs.popupControls()?.select(opts.item);
-    this.inputs.value.set(this.inputs.popupControls()?.getSelectedItem()?.value());
 
     if (opts.commit) {
       this.commit();

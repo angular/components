@@ -13,7 +13,6 @@ import {
   ElementRef,
   inject,
   input,
-  model,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -54,9 +53,6 @@ export class CdkCombobox<V> {
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
 
-  /** The values of the current selected items. */
-  value = model<V | undefined>(undefined);
-
   /** The function used to filter the options in the popup based on the input text. */
   filter = input<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
     itemText.toLowerCase().includes(inputText.toLowerCase()),
@@ -69,31 +65,20 @@ export class CdkCombobox<V> {
   readonly pattern = new ComboboxPattern<any, V>({
     ...this,
     inputEl: signal(undefined),
-    containerEl: signal(undefined),
+    containerEl: () => this._elementRef.nativeElement,
     popupControls: () => this.popup()?.controls(),
   });
 
   constructor() {
-    (this.pattern.inputs.containerEl as WritableSignal<HTMLElement>).set(
-      this._elementRef.nativeElement,
-    );
-
     afterRenderEffect(() => {
-      this._deferredContentAware?.contentVisible.set(this.pattern.isFocused());
+      if (!this._deferredContentAware?.contentVisible() && this.pattern.isFocused()) {
+        this._deferredContentAware?.contentVisible.set(true);
+      }
     });
 
     afterRenderEffect(() => {
       if (!this._hasBeenFocused() && this.pattern.isFocused()) {
         this._hasBeenFocused.set(true);
-      }
-    });
-
-    afterRenderEffect(() => {
-      if (!this._hasBeenFocused()) {
-        if (this.value() !== undefined) {
-          this._deferredContentAware?.contentVisible.set(false);
-          this.pattern.setDefaultState();
-        }
       }
     });
   }
