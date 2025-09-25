@@ -29,28 +29,6 @@ import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
 
-// @public @deprecated (undocumented)
-export class AnimationCurves {
-    // (undocumented)
-    static ACCELERATION_CURVE: string;
-    // (undocumented)
-    static DECELERATION_CURVE: string;
-    // (undocumented)
-    static SHARP_CURVE: string;
-    // (undocumented)
-    static STANDARD_CURVE: string;
-}
-
-// @public @deprecated (undocumented)
-export class AnimationDurations {
-    // (undocumented)
-    static COMPLEX: string;
-    // (undocumented)
-    static ENTERING: string;
-    // (undocumented)
-    static EXITING: string;
-}
-
 // @public
 export interface AnimationsConfig {
     animationsDisabled?: boolean;
@@ -446,8 +424,6 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     today(): Date;
     // (undocumented)
     toIso8601(date: Date): string;
-    // @deprecated (undocumented)
-    useUtcForDisplay: boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, never>;
     // (undocumented)

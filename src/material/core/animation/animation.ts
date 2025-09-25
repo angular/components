@@ -18,29 +18,6 @@ export interface AnimationsConfig {
 /** Injection token used to configure the animations in Angular Material. */
 export const MATERIAL_ANIMATIONS = new InjectionToken<AnimationsConfig>('MATERIAL_ANIMATIONS');
 
-/**
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- * @docs-private
- */
-export class AnimationCurves {
-  static STANDARD_CURVE = 'cubic-bezier(0.4,0.0,0.2,1)';
-  static DECELERATION_CURVE = 'cubic-bezier(0.0,0.0,0.2,1)';
-  static ACCELERATION_CURVE = 'cubic-bezier(0.4,0.0,1,1)';
-  static SHARP_CURVE = 'cubic-bezier(0.4,0.0,0.6,1)';
-}
-
-/**
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- * @docs-private
- */
-export class AnimationDurations {
-  static COMPLEX = '375ms';
-  static ENTERING = '225ms';
-  static EXITING = '195ms';
-}
-
 let reducedMotion: boolean | null = null;
 
 /**
