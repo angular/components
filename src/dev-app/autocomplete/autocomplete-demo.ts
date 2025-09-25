@@ -13,6 +13,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSelectModule} from '@angular/material/select';
 import {ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -42,6 +43,7 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatCardModule,
     MatCheckboxModule,
     MatInputModule,
+    MatSelectModule,
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +69,9 @@ export class AutocompleteDemo {
 
   reactiveRequireSelection = false;
   templateRequireSelection = false;
+
+  reactiveRevertToValue = null;
+  templateRevertToValue = null;
 
   reactiveHideSingleSelectionIndicator = false;
   templateHideSingleSelectionIndicator = false;
