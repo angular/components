@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {BACKSPACE, hasModifierKey, ModifierKey} from '@angular/cdk/keycodes';
 import {
   Directive,
   ElementRef,
@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {MatFormField, MAT_FORM_FIELD} from '../form-field';
-import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS, SeparatorKey} from './tokens';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
 
@@ -97,7 +97,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
    * Defaults to `[ENTER]`.
    */
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: readonly number[] | ReadonlySet<number>;
+  separatorKeyCodes: readonly (number | SeparatorKey)[] | ReadonlySet<number | SeparatorKey>;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
@@ -242,8 +242,33 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   }
 
   /** Checks whether a keycode is one of the configured separators. */
-  private _isSeparatorKey(event: KeyboardEvent) {
-    return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
+  private _isSeparatorKey(event: KeyboardEvent): boolean {
+    if (!this.separatorKeyCodes) {
+      return false;
+    }
+
+    for (const key of this.separatorKeyCodes) {
+      let keyCode: number;
+      let modifiers: readonly ModifierKey[] | null;
+
+      if (typeof key === 'number') {
+        keyCode = key;
+        modifiers = null;
+      } else {
+        keyCode = key.keyCode;
+        modifiers = key.modifiers;
+      }
+
+      const modifiersMatch = !modifiers?.length
+        ? !hasModifierKey(event)
+        : hasModifierKey(event, ...modifiers);
+
+      if (keyCode === event.keyCode && modifiersMatch) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /** Gets the value to set on the `readonly` attribute. */
