@@ -7,25 +7,36 @@
  */
 
 import {signal, WritableSignal} from '@angular/core';
-import {ToolbarInputs, ToolbarPattern, ToolbarWidgetPattern} from './toolbar';
-import {RadioButtonPattern} from '../radio-group/radio-button';
-import {RadioGroupInputs, RadioGroupPattern} from '../radio-group/radio-group';
+import {ToolbarInputs, ToolbarPattern} from './toolbar';
+import {ToolbarWidgetInputs, ToolbarWidgetPattern} from './toolbar-widget';
+import {
+  ToolbarWidgetGroupControls,
+  ToolbarWidgetGroupInputs,
+  ToolbarWidgetGroupPattern,
+} from './toolbar-widget-group';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 
-type TestToolbarInputs = ToolbarInputs<string>;
-type TestRadioGroupInputs = RadioGroupInputs<string>;
-type TestRadio = RadioButtonPattern<string> & {
-  disabled: WritableSignal<boolean>;
-  element: WritableSignal<HTMLElement>;
+// Converts the SignalLike type to WritableSignal type for controlling test inputs.
+type WritableSignalOverrides<O> = {
+  [K in keyof O as O[K] extends SignalLike<any> ? K : never]: O[K] extends SignalLike<infer T>
+    ? WritableSignal<T>
+    : never;
 };
-type TestRadioGroup = RadioGroupPattern<string>;
-type TestToolbar = ToolbarPattern<string>;
-type TestWidget = ToolbarWidgetPattern & {
-  disabled: WritableSignal<boolean>;
-  element: WritableSignal<HTMLElement>;
-};
-type TestItem = TestRadio | TestWidget;
+
+type TestToolbarInputs<V> = Omit<
+  ToolbarInputs<V> & WritableSignalOverrides<ToolbarInputs<V>>,
+  'items' | 'element' | 'getItem'
+>;
+type TestToolbarWidgetInputs<V> = Omit<
+  ToolbarWidgetInputs<V> & WritableSignalOverrides<ToolbarWidgetInputs<V>>,
+  'element' | 'id' | 'toolbar'
+>;
+type TestToolbarWidgetGroupInputs<V> = Omit<
+  ToolbarWidgetGroupInputs<V> & WritableSignalOverrides<ToolbarWidgetGroupInputs<V>>,
+  'element' | 'id' | 'toolbar'
+>;
 
 const up = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 38, 'ArrowUp', mods);
 const down = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 40, 'ArrowDown', mods);
@@ -35,364 +46,421 @@ const home = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 36, 'Home',
 const end = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 35, 'End', mods);
 const space = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 32, ' ', mods);
 const enter = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 13, 'Enter', mods);
+const click = (target: Element) =>
+  ({target, stopPropagation: () => {}, preventDefault: () => {}}) as unknown as PointerEvent;
 
 describe('Toolbar Pattern', () => {
-  function getRadioGroup(
-    inputs: Partial<TestRadioGroupInputs> & Pick<TestRadioGroupInputs, 'items'>,
+  function createToolbar<V>(
+    widgets: (TestToolbarWidgetInputs<V> | TestToolbarWidgetGroupInputs<V>)[],
+    toolbarInputs: TestToolbarInputs<V>,
   ) {
-    return new RadioGroupPattern({
-      items: inputs.items,
-      value: inputs.value ?? signal([]),
-      activeItem: signal(undefined),
-      readonly: inputs.readonly ?? signal(false),
-      disabled: inputs.disabled ?? signal(false),
-      skipDisabled: inputs.skipDisabled ?? signal(true),
-      focusMode: inputs.focusMode ?? signal('roving'),
-      textDirection: inputs.textDirection ?? signal('ltr'),
-      orientation: inputs.orientation ?? signal('vertical'),
-      toolbar: inputs.toolbar ?? signal(undefined),
+    const items = signal<(ToolbarWidgetPattern<V> | ToolbarWidgetGroupPattern<V>)[]>([]);
+    const toolbar = new ToolbarPattern<V>({
+      ...toolbarInputs,
+      items,
       element: signal(document.createElement('div')),
+      getItem: target => items().find(widget => widget.element() === target),
     });
-  }
 
-  function getRadios(radioGroup: TestRadioGroup, values: string[]): TestRadio[] {
-    return values.map((value, index) => {
+    const widgetPatterns = widgets.map((widgetInputs, index) => {
+      const id = `widget-${index}`;
       const element = document.createElement('div');
-      element.role = 'radio';
-      return new RadioButtonPattern({
-        value: signal(value),
-        id: signal(`radio-${index}`),
-        disabled: signal(false),
-        group: signal(radioGroup),
-        element: signal(element),
-      });
-    }) as TestRadio[];
-  }
+      element.id = id;
 
-  function getWidgets(toolbar: TestToolbar, values: string[]): TestWidget[] {
-    return values.map((value, index) => {
-      const element = document.createElement('button');
-      element.role = 'button';
-
-      return new ToolbarWidgetPattern({
-        id: signal(`button-${index}`),
-        disabled: signal(false),
-        parentToolbar: signal(toolbar as any),
-        element: signal(element),
-      });
-    }) as TestWidget[];
-  }
-
-  function getToolbar(inputs: Partial<TestToolbarInputs> & Pick<TestToolbarInputs, 'items'>) {
-    return new ToolbarPattern({
-      items: inputs.items,
-      activeItem: inputs.activeItem ?? signal(undefined),
-      disabled: inputs.disabled ?? signal(false),
-      skipDisabled: inputs.skipDisabled ?? signal(true),
-      focusMode: inputs.focusMode ?? signal('roving'),
-      textDirection: inputs.textDirection ?? signal('ltr'),
-      orientation: inputs.orientation ?? signal('horizontal'),
-      wrap: inputs.wrap ?? signal(false),
-      element: signal(document.createElement('div')),
+      if ('controls' in widgetInputs) {
+        // It's a group
+        element.classList.add('toolbar-widget-group');
+        return new ToolbarWidgetGroupPattern<V>({
+          ...widgetInputs,
+          id: signal(id),
+          element: signal(element),
+          toolbar: signal(toolbar),
+        });
+      } else {
+        // It's a widget
+        element.classList.add('toolbar-widget');
+        return new ToolbarWidgetPattern<V>({
+          ...widgetInputs,
+          id: signal(id),
+          element: signal(element),
+          toolbar: signal(toolbar),
+        });
+      }
     });
-  }
-
-  function getRadioPatterns(values: string[], inputs: Partial<TestRadioGroupInputs> = {}) {
-    const radioButtons = signal<TestRadio[]>([]);
-    const radioGroup = getRadioGroup({...inputs, items: radioButtons});
-    radioButtons.set(getRadios(radioGroup, values));
-    radioGroup.inputs.activeItem.set(radioButtons()[0]);
-    return {radioGroup, radioButtons};
-  }
-
-  function getToolbarPatterns(
-    widgetValues: string[],
-    inputs: Partial<TestToolbarInputs>,
-    radioInputs: Partial<TestRadioGroupInputs> = {},
-  ) {
-    const {radioGroup, radioButtons} = getRadioPatterns(['Apple', 'Banana', 'Cherry'], radioInputs);
-    const widgets = signal<TestWidget[]>([]);
-    const children = signal<(TestWidget | TestRadio)[]>([]);
-
-    // Make the radio group and toolbar share an active item
-    inputs.activeItem = radioGroup.inputs.activeItem;
-
-    const toolbar = getToolbar({
-      ...inputs,
-      items: children,
-    });
-    widgets.set(getWidgets(toolbar, widgetValues));
-    children.set([...radioButtons(), ...widgets()]);
-    radioGroup.inputs.toolbar = signal(toolbar);
-    toolbar.inputs.activeItem.set(children()[0]);
-
-    return {toolbar, widgets: children(), radioGroup};
-  }
-
-  function getDefaultPatterns(
-    inputs: Partial<TestToolbarInputs> = {},
-    radioInputs: Partial<TestRadioGroupInputs> = {},
-  ) {
-    return getToolbarPatterns(['Pear', 'Peach', 'Plum'], inputs, radioInputs);
+    items.set(widgetPatterns);
+    return {toolbar, items: widgetPatterns};
   }
 
   describe('Keyboard Navigation', () => {
+    let toolbar: ToolbarPattern<string>;
+    let toolbarInputs: TestToolbarInputs<string>;
+    let widgetInputs: (TestToolbarWidgetInputs<string> | TestToolbarWidgetGroupInputs<string>)[];
+    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
+
+    beforeEach(() => {
+      toolbarInputs = {
+        activeItem: signal(undefined),
+        orientation: signal('horizontal'),
+        textDirection: signal('ltr'),
+        disabled: signal(false),
+        skipDisabled: signal(true),
+        wrap: signal(false),
+      };
+      widgetInputs = [
+        {disabled: signal(false)},
+        {disabled: signal(false)},
+        {
+          disabled: signal(false),
+          controls: signal(undefined),
+        },
+        {disabled: signal(false)},
+      ];
+      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
+        widgetInputs,
+        toolbarInputs,
+      );
+      toolbar = newToolbar;
+      items = newItems;
+      toolbarInputs.activeItem.set(items[0]);
+    });
+
     it('should navigate next on ArrowRight (horizontal)', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should navigate prev on ArrowLeft (horizontal)', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      toolbar.inputs.activeItem.set(widgets[1]);
+      toolbarInputs.activeItem.set(items[1]);
       toolbar.onKeydown(left());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
     it('should navigate next on ArrowDown (vertical)', () => {
-      const {toolbar, widgets} = getDefaultPatterns({orientation: signal('vertical')});
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      toolbarInputs.orientation.set('vertical');
       toolbar.onKeydown(down());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should navigate prev on ArrowUp (vertical)', () => {
-      const {toolbar, widgets} = getDefaultPatterns({orientation: signal('vertical')});
-      toolbar.inputs.activeItem.set(widgets[1]);
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      toolbarInputs.orientation.set('vertical');
+      toolbarInputs.activeItem.set(items[1]);
       toolbar.onKeydown(up());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
     it('should navigate next on ArrowLeft (rtl)', () => {
-      const {toolbar, widgets} = getDefaultPatterns({
-        textDirection: signal('rtl'),
-      });
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      toolbarInputs.textDirection.set('rtl');
       toolbar.onKeydown(left());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should navigate prev on ArrowRight (rtl)', () => {
-      const {toolbar, widgets} = getDefaultPatterns({
-        textDirection: signal('rtl'),
-      });
-      toolbar.inputs.activeItem.set(widgets[1]);
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      toolbarInputs.textDirection.set('rtl');
+      toolbarInputs.activeItem.set(items[1]);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
     it('should navigate to the first item on Home', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      toolbar.inputs.activeItem.set(widgets[5]);
-
-      expect(toolbar.inputs.activeItem()).toBe(widgets[5]);
+      toolbarInputs.activeItem.set(items[3]);
       toolbar.onKeydown(home());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
     it('should navigate to the last item on End', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
       toolbar.onKeydown(end());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[5]);
-    });
-    it('should navigate between a radio button and toolbar widget', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      toolbar.inputs.activeItem.set(widgets[2]);
-      toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[3]);
-      toolbar.onKeydown(left());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[2]);
-    });
-
-    it('should skip a disabled radio button when skipDisabled is true', () => {
-      const {toolbar, widgets} = getDefaultPatterns({skipDisabled: signal(true)});
-      widgets[1].disabled.set(true);
-      toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[2]);
+      expect(toolbarInputs.activeItem()).toBe(items[3]);
     });
 
     it('should skip a disabled toolbar widget when skipDisabled is true', () => {
-      const {toolbar, widgets} = getDefaultPatterns({skipDisabled: signal(true)});
-      toolbar.inputs.activeItem.set(widgets[3]);
-      widgets[4].disabled.set(true);
+      widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[5]);
+      expect(toolbarInputs.activeItem()).toBe(items[2]);
     });
 
     it('should not skip disabled items when skipDisabled is false', () => {
-      const {toolbar, widgets} = getDefaultPatterns({skipDisabled: signal(false)});
-      toolbar.inputs.activeItem.set(widgets[3]);
-      widgets[4].disabled.set(true);
+      toolbarInputs.skipDisabled.set(false);
+      widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[4]);
-    });
-
-    it('should be able to navigate when inner radio group in readonly mode', () => {
-      const {toolbar, widgets} = getDefaultPatterns({}, {readonly: signal(true)});
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
-      toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should wrap back to the first item when wrap is true', () => {
-      const {toolbar, widgets} = getDefaultPatterns({wrap: signal(true)});
-      toolbar.inputs.activeItem.set(widgets[5]);
+      toolbarInputs.wrap.set(true);
+      toolbarInputs.activeItem.set(items[3]);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
-      toolbar.onKeydown(left());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[5]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
     it('should not wrap when wrap is false', () => {
-      const {toolbar, widgets} = getDefaultPatterns({wrap: signal(false)});
-      toolbar.inputs.activeItem.set(widgets[5]);
+      toolbarInputs.activeItem.set(items[3]);
       toolbar.onKeydown(right());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[5]);
+      expect(toolbarInputs.activeItem()).toBe(items[3]);
     });
 
-    it('should wrap within the radio group when alternate right key is pressed', () => {
-      const {toolbar, widgets} = getDefaultPatterns({wrap: signal(false)});
-      toolbar.inputs.activeItem.set(widgets[2]);
-      toolbar.onKeydown(down());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
-    });
-    it('should wrap within the radio group when alternate left key is pressed', () => {
-      const {toolbar, widgets} = getDefaultPatterns({wrap: signal(false)});
-      toolbar.inputs.activeItem.set(widgets[0]);
-      toolbar.onKeydown(up());
-      expect(toolbar.inputs.activeItem()).toBe(widgets[2]);
-    });
-  });
-
-  describe('Keyboard Selection', () => {
-    let toolbar: TestToolbar;
-    let widgets: TestItem[];
-    let radioGroup: TestRadioGroup;
-
-    beforeEach(() => {
-      let patterns = getDefaultPatterns({}, {value: signal([])});
-      toolbar = patterns.toolbar;
-      widgets = patterns.widgets;
-      radioGroup = patterns.radioGroup;
-    });
-
-    it('should select a radio on Space', () => {
-      toolbar.onKeydown(space());
-      expect(radioGroup.inputs.value()).toEqual(['Apple']);
-    });
-
-    it('should select a radio on Enter', () => {
-      toolbar.onKeydown(enter());
-      expect(radioGroup.inputs.value()).toEqual(['Apple']);
-    });
-
-    it('should not be able to change selection when in readonly mode', () => {
-      const readonly = radioGroup.inputs.readonly as WritableSignal<boolean>;
-      readonly.set(true);
-
-      toolbar.onKeydown(space());
-      expect(radioGroup.inputs.value()).toEqual([]);
-
-      toolbar.onKeydown(enter());
-      expect(radioGroup.inputs.value()).toEqual([]);
-    });
-
-    it('should not select a disabled radio via keyboard', () => {
-      const skipDisabled = toolbar.inputs.skipDisabled as WritableSignal<boolean>;
-      skipDisabled.set(false);
-      widgets[1].disabled.set(true);
-
+    it('should not navigate when the toolbar is disabled', () => {
+      toolbarInputs.disabled.set(true);
       toolbar.onKeydown(right());
-      expect(radioGroup.inputs.value()).toEqual([]);
-
-      toolbar.onKeydown(space());
-      expect(radioGroup.inputs.value()).toEqual([]);
-
-      toolbar.onKeydown(enter());
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
   });
 
   describe('Pointer Events', () => {
-    function click(widgets: TestItem[], index: number) {
-      return {
-        target: widgets[index].element(),
-      } as unknown as PointerEvent;
-    }
+    let toolbar: ToolbarPattern<string>;
+    let toolbarInputs: TestToolbarInputs<string>;
+    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
 
-    it('should select a radio on click', () => {
-      const {toolbar, widgets, radioGroup} = getDefaultPatterns();
-      toolbar.onPointerdown(click(widgets, 0));
-      expect(radioGroup.inputs.value()).toEqual(['Apple']);
+    beforeEach(() => {
+      toolbarInputs = {
+        activeItem: signal(undefined),
+        orientation: signal('horizontal'),
+        textDirection: signal('ltr'),
+        disabled: signal(false),
+        skipDisabled: signal(true),
+        wrap: signal(false),
+      };
+      const widgetInputs = [
+        {disabled: signal(false)},
+        {disabled: signal(false)},
+        {
+          disabled: signal(false),
+          controls: signal(undefined),
+        },
+        {disabled: signal(false)},
+      ];
+      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
+        widgetInputs,
+        toolbarInputs,
+      );
+      toolbar = newToolbar;
+      items = newItems;
+      toolbarInputs.activeItem.set(items[0]);
     });
 
-    it('should not select a disabled radio on click', () => {
-      const {toolbar, widgets, radioGroup} = getDefaultPatterns();
-      widgets[0].disabled.set(true);
-      toolbar.onPointerdown(click(widgets, 0));
-      expect(radioGroup.inputs.value()).toEqual([]);
+    it('should set the active item on pointerdown', () => {
+      toolbar.onPointerdown(click(items[1].element()));
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
-    it('should only update active index if the inner radio group is readonly', () => {
-      const {toolbar, widgets, radioGroup} = getDefaultPatterns({}, {readonly: signal(true)});
-      toolbar.onPointerdown(click(widgets, 0));
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
-      expect(radioGroup.inputs.value()).toEqual([]);
+    it('should not set the active item on pointerdown if the toolbar is disabled', () => {
+      toolbarInputs.disabled.set(true);
+      toolbar.onPointerdown(click(items[1].element()));
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
   });
 
   describe('#setDefaultState', () => {
-    it('should set the active index to the first widget', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      toolbar.setDefaultState();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+    let toolbar: ToolbarPattern<string>;
+    let toolbarInputs: TestToolbarInputs<string>;
+    let widgetInputs: (TestToolbarWidgetInputs<string> | TestToolbarWidgetGroupInputs<string>)[];
+    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
+
+    beforeEach(() => {
+      toolbarInputs = {
+        activeItem: signal(undefined),
+        orientation: signal('horizontal'),
+        textDirection: signal('ltr'),
+        disabled: signal(false),
+        skipDisabled: signal(true),
+        wrap: signal(false),
+      };
+      widgetInputs = [
+        {disabled: signal(false)},
+        {disabled: signal(false)},
+        {
+          disabled: signal(false),
+          controls: signal(undefined),
+        },
+      ];
+      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
+        widgetInputs,
+        toolbarInputs,
+      );
+      toolbar = newToolbar;
+      items = newItems;
     });
 
-    it('should set the active index to the first focusable widget (radio button)', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      widgets[0].disabled.set(true);
-      widgets[1].disabled.set(true);
-
+    it('should set the active item to the first focusable widget', () => {
       toolbar.setDefaultState();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[2]);
-    });
-    it('should set the active index to the first focusable widget (toolbar widget', () => {
-      const {toolbar, widgets} = getDefaultPatterns();
-      widgets[0].disabled.set(true);
-      widgets[1].disabled.set(true);
-      widgets[2].disabled.set(true);
-      widgets[3].disabled.set(true);
-      toolbar.setDefaultState();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[4]);
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
 
-    it('should set the active index to the selected radio if applicable', () => {
-      const {toolbar, widgets} = getDefaultPatterns({}, {value: signal(['Banana'])});
+    it('should skip disabled widgets and set the next focusable widget as active', () => {
+      widgetInputs[0].disabled.set(true);
       toolbar.setDefaultState();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[1]);
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
-    it('should set the active index to the first focusable widget if selected radio is disabled', () => {
-      const {toolbar, widgets} = getDefaultPatterns({}, {value: signal(['Banana'])});
-      widgets[1].disabled.set(true);
+    it('should call "setDefaultState" on a widget group if it is the first focusable item', () => {
+      const fakeControls = jasmine.createSpyObj<ToolbarWidgetGroupControls>('fakeControls', [
+        'setDefaultState',
+      ]);
+      (widgetInputs[2] as TestToolbarWidgetGroupInputs<string>).controls.set(fakeControls);
+
+      widgetInputs[0].disabled.set(true);
+      widgetInputs[1].disabled.set(true);
       toolbar.setDefaultState();
-      expect(toolbar.inputs.activeItem()).toBe(widgets[0]);
+      expect(toolbarInputs.activeItem()).toBe(items[2]);
+      expect(fakeControls.setDefaultState).toHaveBeenCalled();
     });
   });
 
-  describe('validate', () => {
-    it('should report a violation if the selected item is disabled and skipDisabled is true', () => {
-      const {toolbar, widgets, radioGroup} = getDefaultPatterns({skipDisabled: signal(true)});
-      toolbar.inputs.activeItem.set(widgets[1]);
-      radioGroup.inputs.value.set(['Banana']);
-      widgets[1].disabled.set(true);
-      expect(toolbar.validate()).toEqual([
-        "Accessibility Violation: A selected radio button inside the toolbar is disabled while 'skipDisabled' is true, making the selection unreachable via keyboard.",
+  describe('Widget Group', () => {
+    let toolbar: ToolbarPattern<string>;
+    let toolbarInputs: TestToolbarInputs<string>;
+    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
+    let fakeControls: jasmine.SpyObj<ToolbarWidgetGroupControls>;
+
+    beforeEach(() => {
+      fakeControls = jasmine.createSpyObj<ToolbarWidgetGroupControls>('fakeControls', [
+        'next',
+        'prev',
+        'first',
+        'last',
+        'unfocus',
+        'trigger',
+        'goto',
+        'setDefaultState',
+        'isOnFirstItem',
+        'isOnLastItem',
       ]);
+      toolbarInputs = {
+        activeItem: signal(undefined),
+        orientation: signal('horizontal'),
+        textDirection: signal('ltr'),
+        disabled: signal(false),
+        skipDisabled: signal(true),
+        wrap: signal(false),
+      };
+      const widgetInputs = [
+        {disabled: signal(false)},
+        {
+          disabled: signal(false),
+          controls: signal(fakeControls),
+        },
+        {disabled: signal(false)},
+      ];
+      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
+        widgetInputs,
+        toolbarInputs,
+      );
+      toolbar = newToolbar;
+      items = newItems;
+
+      // Set the widget group as the active item for tests.
+      toolbarInputs.activeItem.set(items[1]);
+    });
+
+    it('should call "next" on the group handler when navigating next (horizontal)', () => {
+      fakeControls.isOnLastItem.and.returnValue(false);
+      toolbar.onKeydown(right());
+      expect(fakeControls.next).toHaveBeenCalledWith(false);
+    });
+
+    it('should call "next" on the group handler when navigating next (vertical)', () => {
+      fakeControls.isOnLastItem.and.returnValue(false);
+      toolbarInputs.orientation.set('vertical');
+      toolbar.onKeydown(down());
+      expect(fakeControls.next).toHaveBeenCalledWith(false);
+    });
+
+    it('should navigate to the next widget if the group allows it', () => {
+      fakeControls.isOnLastItem.and.returnValue(true);
+      toolbar.onKeydown(right());
+      expect(toolbarInputs.activeItem()).toBe(items[2]);
+      expect(fakeControls.unfocus).toHaveBeenCalled();
+    });
+
+    it('should not navigate to the next widget if the group prevents it', () => {
+      fakeControls.isOnLastItem.and.returnValue(false);
+      toolbar.onKeydown(right());
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
+      expect(fakeControls.next).toHaveBeenCalledWith(false);
+    });
+
+    it('should call "prev" on the group handler when navigating previous (horizontal)', () => {
+      fakeControls.isOnFirstItem.and.returnValue(false);
+      toolbar.onKeydown(left());
+      expect(fakeControls.prev).toHaveBeenCalledWith(false);
+    });
+
+    it('should call "prev" on the group handler when navigating previous (vertical)', () => {
+      fakeControls.isOnFirstItem.and.returnValue(false);
+      toolbarInputs.orientation.set('vertical');
+      toolbar.onKeydown(up());
+      expect(fakeControls.prev).toHaveBeenCalledWith(false);
+    });
+
+    it('should navigate to the previous widget if the group allows it', () => {
+      fakeControls.isOnFirstItem.and.returnValue(true);
+      toolbar.onKeydown(left());
+      expect(toolbarInputs.activeItem()).toBe(items[0]);
+      expect(fakeControls.unfocus).toHaveBeenCalled();
+    });
+
+    it('should not navigate to the previous widget if the group prevents it', () => {
+      fakeControls.isOnFirstItem.and.returnValue(false);
+      toolbar.onKeydown(left());
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
+      expect(fakeControls.prev).toHaveBeenCalledWith(false);
+    });
+
+    it('should call "unfocus" on the group handler on Home', () => {
+      toolbar.onKeydown(home());
+      expect(fakeControls.unfocus).toHaveBeenCalled();
+      expect(toolbarInputs.activeItem()).toBe(items[0]); // Also moves focus
+    });
+
+    it('should call "unfocus" on the group handler on End', () => {
+      toolbar.onKeydown(end());
+      expect(fakeControls.unfocus).toHaveBeenCalled();
+      expect(toolbarInputs.activeItem()).toBe(items[2]); // Also moves focus
+    });
+
+    it('should call "trigger" on the group handler on Enter', () => {
+      toolbar.onKeydown(enter());
+      expect(fakeControls.trigger).toHaveBeenCalled();
+    });
+
+    it('should call "trigger" on the group handler on Space', () => {
+      toolbar.onKeydown(space());
+      expect(fakeControls.trigger).toHaveBeenCalled();
+    });
+
+    it('should call "next" with wrap on the group handler (horizontal)', () => {
+      toolbar.onKeydown(down());
+      expect(fakeControls.next).toHaveBeenCalledWith(true);
+    });
+
+    it('should call "next" with wrap on the group handler (vertical)', () => {
+      toolbarInputs.orientation.set('vertical');
+      toolbar.onKeydown(right());
+      expect(fakeControls.next).toHaveBeenCalledWith(true);
+    });
+
+    it('should call "prev" with wrap on the group handler (horizontal)', () => {
+      toolbar.onKeydown(up());
+      expect(fakeControls.prev).toHaveBeenCalledWith(true);
+    });
+
+    it('should call "prev" with wrap on the group handler (vertical)', () => {
+      toolbarInputs.orientation.set('vertical');
+      toolbar.onKeydown(left());
+      expect(fakeControls.prev).toHaveBeenCalledWith(true);
+    });
+
+    it('should call "first" when navigating into a group from the previous item', () => {
+      toolbarInputs.activeItem.set(items[0]);
+      toolbar.onKeydown(right());
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
+      expect(fakeControls.first).toHaveBeenCalled();
+    });
+
+    it('should call "last" when navigating into a group from the next item', () => {
+      toolbarInputs.activeItem.set(items[2]);
+      toolbar.onKeydown(left());
+      expect(toolbarInputs.activeItem()).toBe(items[1]);
+      expect(fakeControls.last).toHaveBeenCalled();
     });
   });
 });

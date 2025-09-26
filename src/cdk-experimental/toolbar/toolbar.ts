@@ -19,19 +19,14 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {ToolbarPattern, RadioButtonPattern, ToolbarWidgetPattern} from '../ui-patterns';
+import {
+  ToolbarPattern,
+  ToolbarWidgetPattern,
+  ToolbarWidgetGroupPattern,
+  ToolbarWidgetGroupControls,
+} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-
-/** Interface for a radio button that can be used with a toolbar. Based on radio-button in ui-patterns */
-interface CdkRadioButtonInterface<V> {
-  /** The HTML element associated with the radio button. */
-  element: Signal<HTMLElement>;
-  /** Whether the radio button is disabled. */
-  disabled: Signal<boolean>;
-
-  pattern: RadioButtonPattern<V>;
-}
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -73,7 +68,6 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(pointerdown)': 'pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
@@ -84,51 +78,41 @@ export class CdkToolbar<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** The CdkTabList nested inside of the container. */
-  private readonly _cdkWidgets = signal(new Set<CdkRadioButtonInterface<V> | CdkToolbarWidget>());
+  private readonly _cdkWidgets = signal(new Set<CdkToolbarWidget<V> | CdkToolbarWidgetGroup<V>>());
 
   /** A signal wrapper for directionality. */
-  textDirection = inject(Directionality).valueSignal;
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
-  items = computed(() =>
+  readonly items = computed(() =>
     [...this._cdkWidgets()].sort(sortDirectives).map(widget => widget.pattern),
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('horizontal');
+  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
 
   /** Whether disabled items in the group should be skipped when navigating. */
-  skipDisabled = input(false, {transform: booleanAttribute});
+  readonly skipDisabled = input(false, {transform: booleanAttribute});
 
   /** Whether the toolbar is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
   /** The toolbar UIPattern. */
-  pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
+  readonly pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
-    focusMode: signal('roving'),
     element: () => this._elementRef.nativeElement,
+    getItem: e => this._getItem(e),
   });
 
   /** Whether the toolbar has received focus yet. */
   private _hasFocused = signal(false);
 
-  onFocus() {
-    this._hasFocused.set(true);
-  }
-
   constructor() {
-    afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this.pattern.setDefaultState();
-      }
-    });
-
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         const violations = this.pattern.validate();
@@ -137,9 +121,19 @@ export class CdkToolbar<V> {
         }
       }
     });
+
+    afterRenderEffect(() => {
+      if (!this._hasFocused()) {
+        this.pattern.setDefaultState();
+      }
+    });
   }
 
-  register(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
+  onFocus() {
+    this._hasFocused.set(true);
+  }
+
+  register(widget: CdkToolbarWidget<V> | CdkToolbarWidgetGroup<V>) {
     const widgets = this._cdkWidgets();
     if (!widgets.has(widget)) {
       widgets.add(widget);
@@ -147,11 +141,20 @@ export class CdkToolbar<V> {
     }
   }
 
-  unregister(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
+  unregister(widget: CdkToolbarWidget<V> | CdkToolbarWidgetGroup<V>) {
     const widgets = this._cdkWidgets();
     if (widgets.delete(widget)) {
       this._cdkWidgets.set(new Set(widgets));
     }
+  }
+
+  /** Finds the toolbar item associated with a given element. */
+  private _getItem(element: Element) {
+    const widgetTarget = element.closest('.cdk-toolbar-widget');
+    const groupTarget = element.closest('.cdk-toolbar-widget-group');
+    return this.items().find(
+      widget => widget.element() === widgetTarget || widget.element() === groupTarget,
+    );
   }
 }
 
@@ -165,7 +168,6 @@ export class CdkToolbar<V> {
   selector: '[cdkToolbarWidget]',
   exportAs: 'cdkToolbarWidget',
   host: {
-    'role': 'button',
     'class': 'cdk-toolbar-widget',
     '[class.cdk-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
@@ -175,7 +177,7 @@ export class CdkToolbar<V> {
     '[id]': 'pattern.id()',
   },
 })
-export class CdkToolbarWidget implements OnInit, OnDestroy {
+export class CdkToolbarWidget<V> implements OnInit, OnDestroy {
   /** A reference to the widget element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -186,27 +188,28 @@ export class CdkToolbarWidget implements OnInit, OnDestroy {
   private readonly _generatedId = inject(_IdGenerator).getId('cdk-toolbar-widget-');
 
   /** A unique identifier for the widget. */
-  protected id = computed(() => this._generatedId);
+  readonly id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
-  protected parentToolbar = computed(() => this._cdkToolbar.pattern);
+  readonly toolbar = computed(() => this._cdkToolbar.pattern);
 
   /** A reference to the widget element to be focused on navigation. */
-  element = computed(() => this._elementRef.nativeElement);
+  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Whether the widget is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
   readonly hardDisabled = computed(
     () => this.pattern.disabled() && this._cdkToolbar.skipDisabled(),
   );
 
-  pattern = new ToolbarWidgetPattern({
+  /** The ToolbarWidget UIPattern. */
+  readonly pattern = new ToolbarWidgetPattern<V>({
     ...this,
     id: this.id,
     element: this.element,
     disabled: computed(() => this._cdkToolbar.disabled() || this.disabled()),
-    parentToolbar: this.parentToolbar,
   });
 
   ngOnInit() {
@@ -215,5 +218,55 @@ export class CdkToolbarWidget implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._cdkToolbar.unregister(this);
+  }
+}
+
+/**
+ * A directive that groups toolbar widgets, used for more complex widgets like radio groups that
+ * have their own internal navigation.
+ */
+@Directive({
+  host: {
+    '[class.cdk-toolbar-widget-group]': '!!toolbar()',
+  },
+})
+export class CdkToolbarWidgetGroup<V> implements OnInit, OnDestroy {
+  /** A reference to the widget element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** The parent CdkToolbar. */
+  private readonly _cdkToolbar = inject(CdkToolbar, {optional: true});
+
+  /** A unique identifier for the widget. */
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-toolbar-widget-group-');
+
+  /** A unique identifier for the widget. */
+  readonly id = computed(() => this._generatedId);
+
+  /** The parent Toolbar UIPattern. */
+  readonly toolbar = computed(() => this._cdkToolbar?.pattern);
+
+  /** A reference to the widget element to be focused on navigation. */
+  readonly element = computed(() => this._elementRef.nativeElement);
+
+  /** Whether the widget group is disabled. */
+  readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** The controls that can be performed on the widget group. */
+  readonly controls = signal<ToolbarWidgetGroupControls | undefined>(undefined);
+
+  /** The ToolbarWidgetGroup UIPattern. */
+  readonly pattern = new ToolbarWidgetGroupPattern<V>({
+    ...this,
+    id: this.id,
+    element: this.element,
+  });
+
+  ngOnInit() {
+    this._cdkToolbar?.register(this);
+  }
+
+  ngOnDestroy() {
+    this._cdkToolbar?.unregister(this);
   }
 }

@@ -6,13 +6,14 @@ ts_project(
     name = "toolbar",
     srcs = [
         "toolbar.ts",
+        "toolbar-widget.ts",
+        "toolbar-widget-group.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
         "//src/cdk-experimental/ui-patterns/behaviors/list",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
-        "//src/cdk-experimental/ui-patterns/radio-group",
     ],
 )
 
@@ -24,6 +25,7 @@ ng_project(
         ":toolbar",
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/radio-group",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "//src/cdk-experimental/ui-patterns/radio-group",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
