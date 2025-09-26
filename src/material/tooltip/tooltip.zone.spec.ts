@@ -10,7 +10,7 @@ import {
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatTooltipModule} from './tooltip-module';
-import {MatTooltip} from './tooltip';
+import {MatTooltip, TooltipPosition} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
@@ -68,7 +68,7 @@ describe('MatTooltip Zone.js integration', () => {
   imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {
-  position: string = 'below';
+  position: TooltipPosition = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 

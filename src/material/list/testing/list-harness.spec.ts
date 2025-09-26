@@ -583,7 +583,7 @@ class ActionListHarnessTest {
         </a>
         <div matSubheader>Section 1</div>
         <mat-divider></mat-divider>
-        <a mat-list-item activated href (click)="onClick($event, 'Item 2')">
+        <a mat-list-item [activated]="true" href (click)="onClick($event, 'Item 2')">
           <span class="test-item-content">Item 2</span>
         </a>
         <a

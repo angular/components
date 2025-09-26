@@ -285,7 +285,7 @@ describe('MatCheckbox', () => {
     }));
 
     it('should generate a unique id for the checkbox input if no id is set', fakeAsync(() => {
-      testComponent.checkboxId = null;
+      testComponent.checkboxId = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1233,7 +1233,7 @@ class SingleCheckbox {
   parentElementClicked = false;
   parentElementKeyedUp = false;
   disabledInteractive = false;
-  checkboxId: string | null = 'simple-check';
+  checkboxId = 'simple-check';
   checkboxColor: ThemePalette = 'primary';
   checkboxValue: string = 'single_checkbox';
 

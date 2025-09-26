@@ -1351,7 +1351,7 @@ class StandaloneTimepicker {
   readonly max = signal<Date | string | null>(null);
   readonly ariaLabel = signal<string | null>(null);
   readonly ariaLabelledby = signal<string | null>(null);
-  readonly toggleAriaLabel = signal<string | null>(null);
+  readonly toggleAriaLabel = signal<string | undefined>(undefined);
   readonly toggleDisabled = signal<boolean>(false);
   readonly toggleTabIndex = signal<number>(0);
   readonly customOptions = signal<MatTimepickerOption<Date>[] | null>(null);

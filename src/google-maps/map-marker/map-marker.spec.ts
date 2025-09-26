@@ -55,10 +55,10 @@ describe('MapMarker', () => {
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = options.position;
-    fixture.componentInstance.title = options.title;
-    fixture.componentInstance.label = options.label;
-    fixture.componentInstance.clickable = options.clickable;
+    fixture.componentInstance.position = options.position!;
+    fixture.componentInstance.title = options.title!;
+    fixture.componentInstance.label = options.label!;
+    fixture.componentInstance.clickable = options.clickable!;
     fixture.componentInstance.icon = 'icon.png';
     fixture.componentInstance.visible = false;
     fixture.detectChanges();
@@ -108,10 +108,10 @@ describe('MapMarker', () => {
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = expectedOptions.position;
-    fixture.componentInstance.title = expectedOptions.title;
-    fixture.componentInstance.label = expectedOptions.label;
-    fixture.componentInstance.clickable = expectedOptions.clickable;
+    fixture.componentInstance.position = expectedOptions.position!;
+    fixture.componentInstance.title = expectedOptions.title!;
+    fixture.componentInstance.label = expectedOptions.label!;
+    fixture.componentInstance.clickable = expectedOptions.clickable!;
     fixture.componentInstance.options = options;
     fixture.detectChanges();
     flush();
@@ -237,13 +237,13 @@ describe('MapMarker', () => {
 })
 class TestApp {
   @ViewChild(MapMarker) marker: MapMarker;
-  title?: string | null;
-  position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
-  label?: string | google.maps.MarkerLabel | null;
-  clickable?: boolean | null;
-  options?: google.maps.MarkerOptions;
-  icon?: string;
-  visible?: boolean;
+  title: string;
+  position: google.maps.LatLng | google.maps.LatLngLiteral;
+  label: string | google.maps.MarkerLabel;
+  clickable: boolean;
+  options: google.maps.MarkerOptions;
+  icon: string;
+  visible: boolean;
 
   handleClick() {}
 

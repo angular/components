@@ -6,6 +6,7 @@ import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {
+  AriaLivePoliteness,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LiveAnnouncerDefaultOptions,
@@ -400,12 +401,12 @@ class TestModal {
 @Component({
   template: `
     <div
-      [cdkAriaLive]="politeness ? politeness : null"
+      [cdkAriaLive]="politeness"
       [cdkAriaLiveDuration]="duration">{{content}}</div>`,
   imports: [A11yModule],
 })
 class DivWithCdkAriaLive {
-  politeness = 'polite';
+  politeness: AriaLivePoliteness = 'polite';
   content = 'Initial content';
   duration: number;
 }

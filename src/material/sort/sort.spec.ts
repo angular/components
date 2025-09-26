@@ -602,7 +602,7 @@ class MatSortableMissingIdApp {}
 
 @Component({
   template: `
-    <div matSort matSortDirection="ascending">
+    <div matSort [matSortDirection]="$any('ascending')">
       <div mat-sort-header="a"> A </div>
     </div>
   `,
@@ -656,7 +656,7 @@ class MatSortWithoutExplicitInputs {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithArrowPosition {
-  arrowPosition?: 'before' | 'after';
+  arrowPosition: 'before' | 'after';
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild('defaultA') defaultA: MatSortHeader;
   @ViewChild('defaultB') defaultB: MatSortHeader;

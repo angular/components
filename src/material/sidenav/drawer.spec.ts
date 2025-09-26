@@ -18,7 +18,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatDrawer, MatDrawerContainer, MatSidenavModule} from './index';
+import {MatDrawer, MatDrawerContainer, MatDrawerMode, MatSidenavModule} from './index';
 import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatDrawer', () => {
@@ -1214,7 +1214,7 @@ class BasicTestApp {
   closeStartCount = 0;
   backdropClickedCount = 0;
   hasBackdrop: boolean | null = null;
-  position = 'start';
+  position: 'start' | 'end' = 'start';
 
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;
@@ -1289,8 +1289,8 @@ class DrawerOpenBinding {
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDynamicPosition {
-  drawer1Position = 'start';
-  drawer2Position = 'end';
+  drawer1Position: 'start' | 'end' = 'start';
+  drawer2Position: 'start' | 'end' = 'end';
 }
 
 @Component({
@@ -1306,7 +1306,7 @@ class DrawerDynamicPosition {
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerWithFocusableElements {
-  mode: string = 'over';
+  mode: MatDrawerMode = 'over';
   hasBackdrop: boolean | null = null;
 }
 
@@ -1350,14 +1350,14 @@ class DrawerContainerStateChangesTestApp {
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
 
   direction: Direction = 'ltr';
-  mode = 'side';
+  mode: MatDrawerMode = 'side';
   renderDrawer = true;
 }
 
 @Component({
   template: `
     <mat-drawer-container autosize style="min-height: 200px;">
-      <mat-drawer mode="push" [position]="drawer1Position">
+      <mat-drawer mode="push">
         Text
         <div [style.width.px]="fillerWidth" style="height: 200px; background: red;"></div>
       </mat-drawer>

@@ -5,7 +5,6 @@ load(
     "ng_project",
     "ng_web_test_suite",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -48,7 +47,7 @@ ng_project(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "input_tests_lib",
     testonly = True,
     srcs = glob(

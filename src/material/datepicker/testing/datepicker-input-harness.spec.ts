@@ -212,7 +212,7 @@ describe('MatDatepickerInputHarness', () => {
       <mat-datepicker #picker [touchUi]="touchUi"></mat-datepicker>
     </mat-form-field>
 
-    <input id="no-datepicker" matDatepicker>
+    <input id="no-datepicker" [matDatepicker]="null!">
   `,
   imports: [
     MatNativeDateModule,

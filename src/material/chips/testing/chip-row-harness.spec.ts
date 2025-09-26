@@ -33,7 +33,7 @@ describe('MatChipRowHarness', () => {
   template: `
     <mat-chip-grid #grid>
       <mat-basic-chip-row [editable]="editable()"> Basic Chip Row </mat-basic-chip-row>
-      <mat-chip-row [editable]="editable"> Chip Row </mat-chip-row>
+      <mat-chip-row [editable]="editable()"> Chip Row </mat-chip-row>
       <input [matChipInputFor]="grid" />
     </mat-chip-grid>
   `,

@@ -158,8 +158,8 @@ describe('MapKmlLayer', () => {
 })
 class TestApp {
   @ViewChild(MapKmlLayer) kmlLayer: MapKmlLayer;
-  options?: google.maps.KmlLayerOptions;
-  url?: string;
+  options: google.maps.KmlLayerOptions;
+  url: string;
 
   handleClick() {}
 

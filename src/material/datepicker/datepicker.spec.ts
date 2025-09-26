@@ -2827,12 +2827,13 @@ class DelayedDatepicker {
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
   date: Date | null;
   assignedDatepicker: MatDatepicker<Date>;
+  touch = false;
 }
 
 @Component({
   template: `
     <input [matDatepicker]="d">
-    <mat-datepicker-toggle tabIndex="7" [for]="d" [disabled]="disabled">
+    <mat-datepicker-toggle [tabIndex]="7" [for]="d" [disabled]="disabled">
       <div class="custom-icon" matDatepickerToggleIcon></div>
     </mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
@@ -2850,7 +2851,7 @@ class DatepickerWithTabindexOnToggle {
 class DatepickerToggleWithNoDatepicker {}
 
 @Component({
-  template: `<input [matDatepicker]="d">`,
+  template: `<input [matDatepicker]="null!">`,
   imports: [MatDatepickerInput],
 })
 class DatepickerInputWithNoDatepicker {}
@@ -2892,6 +2893,6 @@ class DatepickerInputWithCustomValidator {
 })
 class PanelClassDatepicker {
   date = new Date(0);
-  panelClass: string | string[] | undefined;
+  panelClass: string | string[];
   @ViewChild('d') datepicker: MatDatepicker<Date>;
 }

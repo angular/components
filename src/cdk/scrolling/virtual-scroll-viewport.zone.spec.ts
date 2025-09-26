@@ -105,7 +105,7 @@ class FixedSizeVirtualScroll {
   // Casting virtualForOf as any so we can spy on private methods
   @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
 
-  orientation = 'vertical';
+  orientation: 'vertical' | 'horizontal' = 'vertical';
   viewportSize = 200;
   viewportCrossSize = 100;
   itemSize = 50;

@@ -140,8 +140,8 @@ describe('MapDirectionsRenderer', () => {
 })
 class TestApp {
   @ViewChild(MapDirectionsRenderer) directionsRenderer: MapDirectionsRenderer;
-  options?: google.maps.DirectionsRendererOptions;
-  directions?: google.maps.DirectionsResult;
+  options: google.maps.DirectionsRendererOptions;
+  directions: google.maps.DirectionsResult;
 
   handleDirectionsChanged() {}
 }

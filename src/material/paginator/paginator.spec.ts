@@ -697,7 +697,7 @@ class MatPaginatorWithoutOptionsApp {
   template: `
     <mat-paginator pageIndex="0"
                    pageSize="10"
-                   [pageSizeOptions]="['5', '10', '25', '100']"
+                   [pageSizeOptions]="$any(['5', '10', '25', '100'])"
                    length="100">
     </mat-paginator>
   `,

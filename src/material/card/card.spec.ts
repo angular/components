@@ -42,7 +42,7 @@ describe('MatCard', () => {
 });
 
 @Component({
-  template: '<mat-card [appearance]="appearance()"></mat-card>',
+  template: '<mat-card [appearance]="appearance()!"></mat-card>',
   imports: [MatCard],
 })
 class BasicCard {

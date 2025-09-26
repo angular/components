@@ -172,7 +172,7 @@ class BasicTextColumnApp {
 
   headerTextB: string;
   dataAccessorA: (data: TestData) => string;
-  justifyC = 'start';
+  justifyC = 'start' as const;
 }
 
 @Component({

@@ -199,7 +199,7 @@ describe('CdkVirtualScrollViewport', () => {
     }));
 
     it('should set the vertical class if an invalid orientation is set', fakeAsync(() => {
-      testComponent.orientation = 'diagonal';
+      testComponent.orientation = 'diagonal' as any;
       finishInit(fixture);
       const viewportElement: HTMLElement = fixture.nativeElement.querySelector(
         '.cdk-virtual-scroll-viewport',
@@ -1196,7 +1196,7 @@ class FixedSizeVirtualScroll {
   // Casting virtualForOf as any so we can spy on private methods
   @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
 
-  orientation = 'vertical';
+  orientation: 'vertical' | 'horizontal' = 'vertical';
   viewportSize = 200;
   viewportCrossSize = 100;
   itemSize = 50;
@@ -1259,7 +1259,7 @@ class FixedSizeVirtualScroll {
 class FixedSizeVirtualScrollWithRtlDirection {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
 
-  orientation = 'vertical';
+  orientation: 'vertical' | 'horizontal' = 'vertical';
   viewportSize = 200;
   viewportCrossSize = 100;
   itemSize = 50;

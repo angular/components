@@ -2678,7 +2678,6 @@ class OverlapMenu implements TestableMenu {
     </ng-template>
   `,
   exportAs: 'matCustomMenu',
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class CustomMenuPanel implements MatMenuPanel {
   direction: Direction;
@@ -2701,7 +2700,7 @@ class CustomMenuPanel implements MatMenuPanel {
       <button mat-menu-item> Custom Content </button>
     </custom-menu>
   `,
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem, CustomMenuPanel],
+  imports: [MatMenuTrigger, MatMenuItem, CustomMenuPanel],
 })
 class CustomMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2987,25 +2986,25 @@ class LazyMenuWithOnPush {
       <button [matMenuTriggerFor]="menu"></button>
     </mat-menu>
   `,
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [MatMenuTrigger, MatMenu],
 })
 class InvalidRecursiveMenu {}
 
 @Component({
   template: '<mat-menu aria-label="label"></mat-menu>',
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [MatMenu],
 })
 class StaticAriaLabelMenu {}
 
 @Component({
   template: '<mat-menu aria-labelledby="some-element"></mat-menu>',
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [MatMenu],
 })
 class StaticAriaLabelledByMenu {}
 
 @Component({
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
-  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [MatMenu],
 })
 class StaticAriaDescribedbyMenu {}
 

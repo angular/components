@@ -684,7 +684,7 @@ describe('MatTooltip', () => {
 
     it('should throw when trying to assign an invalid position', () => {
       expect(() => {
-        fixture.componentInstance.position = 'everywhere';
+        fixture.componentInstance.position = 'everywhere' as any;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         tooltipDirective.show();
@@ -1569,7 +1569,7 @@ describe('MatTooltip', () => {
   imports: [MatTooltipModule, OverlayModule],
 })
 class BasicTooltipDemo {
-  position = 'below';
+  position: TooltipPosition = 'below';
   message: any = initialTooltipMessage;
   showButton = true;
   showTooltipClass = false;
@@ -1592,7 +1592,7 @@ class BasicTooltipDemo {
   imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {
-  position: string = 'below';
+  position: TooltipPosition = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 
@@ -1619,7 +1619,7 @@ class ScrollableTooltipDemo {
   imports: [MatTooltipModule, OverlayModule],
 })
 class OnPushTooltipDemo {
-  position: string = 'below';
+  position: TooltipPosition = 'below';
   message: string = initialTooltipMessage;
 }
 

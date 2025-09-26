@@ -1,5 +1,5 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
@@ -94,12 +94,12 @@ function finishInit(fixture: ComponentFixture<any>) {
 class AutoSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
 
-  @Input() orientation = 'vertical';
-  @Input() viewportSize = 200;
-  @Input() viewportCrossSize = 100;
-  @Input() minBufferPx = 0;
-  @Input() maxBufferPx = 0;
-  @Input() items = Array(10).fill(50);
+  orientation: 'vertical' | 'horizontal' = 'vertical';
+  viewportSize = 200;
+  viewportCrossSize = 100;
+  minBufferPx = 0;
+  maxBufferPx = 0;
+  items = Array(10).fill(50);
 
   get viewportWidth() {
     return this.orientation == 'horizontal' ? this.viewportSize : this.viewportCrossSize;

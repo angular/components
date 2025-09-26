@@ -275,6 +275,7 @@ class ComponentWithChildTextContent {
 class ComponentWithDebouncedListener {
   debounce = 500;
   spy = jasmine.createSpy('MutationObserver callback');
+  text = '';
 }
 
 @Component({

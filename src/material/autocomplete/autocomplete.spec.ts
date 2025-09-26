@@ -41,8 +41,14 @@ import {AsyncPipe} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {MATERIAL_ANIMATIONS, MatOptgroup, MatOption, MatOptionSelectionChange} from '../core';
-import {MatFormField} from '../form-field';
+import {
+  MATERIAL_ANIMATIONS,
+  MatOptgroup,
+  MatOption,
+  MatOptionSelectionChange,
+  ThemePalette,
+} from '../core';
+import {FloatLabelType, MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
@@ -331,7 +337,8 @@ describe('MatAutocomplete', () => {
     });
 
     it('should not mess with label placement if set to never', fakeAsync(() => {
-      fixture.componentInstance.floatLabel = 'never';
+      // TODO(crisbeto): this test likely doesn't make sense anymore.
+      fixture.componentInstance.floatLabel = 'never' as any;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -2450,7 +2457,8 @@ describe('MatAutocomplete', () => {
     }));
 
     it('should be able to preselect the first option when the floating label is disabled', waitForAsync(async () => {
-      fixture.componentInstance.floatLabel = 'never';
+      // TODO(crisbeto): this test likely doesn't make sense anymore.
+      fixture.componentInstance.floatLabel = 'never' as any;
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -4026,8 +4034,8 @@ class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];
   valueSub: Subscription;
-  floatLabel = 'auto';
-  position = 'auto';
+  floatLabel: FloatLabelType = 'auto';
+  position: 'auto' | 'above' | 'below' = 'auto';
   width: number;
   disableRipple = false;
   autocompleteDisabled = false;
@@ -4036,7 +4044,7 @@ class SimpleAutocomplete implements OnDestroy {
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = 'class-one class-two';
-  theme: string;
+  theme: ThemePalette;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 
@@ -4140,7 +4148,7 @@ class NgIfAutocomplete {
   template: `
     <mat-form-field>
       <input matInput placeholder="State" [matAutocomplete]="auto"
-      (input)="onInput($event.target?.value)">
+      (input)="onInput($event.target.value)">
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
@@ -4285,8 +4293,8 @@ class AutocompleteWithNativeInput {
 }
 
 @Component({
-  template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`,
-  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule],
+  template: `<input placeholder="Choose" [matAutocomplete]="null!" [formControl]="control">`,
+  imports: [MatAutocompleteTrigger, ReactiveFormsModule],
 })
 class AutocompleteWithoutPanel {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4400,7 +4408,7 @@ class AutocompleteWithSelectEvent {
     <input [formControl]="formControl" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
-  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule],
+  imports: [MatAutocomplete, MatAutocompleteTrigger, ReactiveFormsModule],
 })
 class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl('');
@@ -4465,7 +4473,7 @@ class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteOrigin) alternateOrigin: MatAutocompleteOrigin;
   selectedValue: string;
   values = ['one', 'two', 'three'];
-  connectedTo?: MatAutocompleteOrigin;
+  connectedTo: MatAutocompleteOrigin;
 }
 
 @Component({
@@ -4473,15 +4481,15 @@ class AutocompleteWithDifferentOrigin {
     <input autocomplete="changed" [(ngModel)]="value" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
-  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, FormsModule],
+  imports: [MatAutocomplete, MatAutocompleteTrigger, FormsModule],
 })
 class AutocompleteWithNativeAutocompleteAttribute {
   value: string;
 }
 
 @Component({
-  template: '<input [matAutocomplete]="null" matAutocompleteDisabled>',
-  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption],
+  template: '<input [matAutocomplete]="null!" matAutocompleteDisabled>',
+  imports: [MatAutocompleteTrigger],
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -4559,7 +4567,7 @@ class AutocompleteInsideAModal {
     <mat-autocomplete #auto="matAutocomplete">
     </mat-autocomplete>
   `,
-  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatInputModule],
 })
 class AutocompleteWithoutOptions {
   @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
