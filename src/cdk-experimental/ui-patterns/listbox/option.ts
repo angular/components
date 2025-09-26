@@ -32,9 +32,6 @@ export class OptionPattern<V> {
   /** The value of the option. */
   value: SignalLike<V>;
 
-  /** Whether the option is inert. */
-  inert = signal<true | null>(null);
-
   /** The position of the option in the list. */
   index = computed(() => this.listbox()?.inputs.items().indexOf(this) ?? -1);
 

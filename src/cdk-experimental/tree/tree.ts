@@ -222,7 +222,6 @@ export class CdkTree<V> {
     '[attr.aria-setsize]': 'pattern.setsize()',
     '[attr.aria-posinset]': 'pattern.posinset()',
     '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.inert]': 'pattern.inert()',
   },
 })
 export class CdkTreeItem<V> implements OnInit, OnDestroy, HasElement {

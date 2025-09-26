@@ -11,6 +11,7 @@ ng_project(
     ]),
     deps = [
         "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk-experimental/listbox",
         "//src/cdk-experimental/tree",
     ],

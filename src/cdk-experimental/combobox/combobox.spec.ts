@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, computed, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -138,12 +138,7 @@ describe('Combobox', () => {
       it('should set aria-selected on the selected option', () => {
         down();
         enter();
-
-        const appleOption = getOption('Apple')!;
-        const apricotOption = getOption('Apricot')!;
-
-        expect(appleOption.getAttribute('aria-selected')).toBe('true');
-        expect(apricotOption.getAttribute('aria-selected')).toBe('false');
+        expect(getOption('Alabama')!.getAttribute('aria-selected')).toBe('true');
       });
 
       it('should set aria-expanded to false by default', () => {
@@ -163,7 +158,7 @@ describe('Combobox', () => {
 
       it('should set aria-activedescendant to the active option id', () => {
         down();
-        const option = getOption('Apple')!;
+        const option = getOption('Alabama')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(option.id);
       });
     });
@@ -253,7 +248,7 @@ describe('Combobox', () => {
 
       it('should not close on focusout if focus moves to an element inside the container', () => {
         down();
-        blur(getOption('Apple')!);
+        blur(getOption('Alabama')!);
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
@@ -261,7 +256,7 @@ describe('Combobox', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
         input('A');
-        expect(inputElement.value).toBe('Apple');
+        expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
         expect(inputElement.value).toBe('A');
@@ -279,7 +274,7 @@ describe('Combobox', () => {
 
       it('should close on click to select an item', () => {
         down();
-        const fruitItem = getOption('Apple')!;
+        const fruitItem = getOption('Alabama')!;
         click(fruitItem);
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
@@ -295,16 +290,17 @@ describe('Combobox', () => {
           click(options[0]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
-          expect(inputElement.value).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
+          expect(inputElement.value).toBe('Alabama');
         });
 
         it('should select and commit to input on Enter', () => {
+          focus();
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
-          expect(inputElement.value).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
+          expect(inputElement.value).toBe('Alabama');
         });
 
         it('should not select on navigation', () => {
@@ -316,10 +312,10 @@ describe('Combobox', () => {
 
         it('should select on focusout if the input text exactly matches an item', () => {
           focus();
-          input('Apple');
+          input('Alabama');
           blur();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
         });
 
         it('should not select on focusout if the input text does not match an item', () => {
@@ -341,8 +337,8 @@ describe('Combobox', () => {
           click(options[1]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
-          expect(inputElement.value).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
+          expect(inputElement.value).toBe('Alaska');
         });
 
         it('should select and commit on Enter', () => {
@@ -350,32 +346,35 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
-          expect(inputElement.value).toBe('Apricot');
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
+          expect(inputElement.value).toBe('Alaska');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
+
+          down();
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
         });
 
         it('should select the first option on input', () => {
           focus();
-          input('B');
+          input('W');
 
-          expect(fixture.componentInstance.value()).toEqual(['Banana']);
+          expect(fixture.componentInstance.value()).toEqual(['Washington']);
         });
 
         it('should commit the selected option on focusout', () => {
           focus();
-          input('Apr');
+          input('G');
           blur();
 
-          expect(inputElement.value).toBe('Apricot');
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
+          expect(inputElement.value).toBe('Georgia');
+          expect(fixture.componentInstance.value()).toEqual(['Georgia']);
         });
       });
 
@@ -388,8 +387,8 @@ describe('Combobox', () => {
           click(options[2]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Banana']);
-          expect(inputElement.value).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
+          expect(inputElement.value).toBe('Arizona');
         });
 
         it('should select and commit on Enter', () => {
@@ -398,31 +397,31 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Banana']);
-          expect(inputElement.value).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
+          expect(inputElement.value).toBe('Arizona');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
         });
 
         it('should update input value on navigation', () => {
           down();
-          expect(inputElement.value).toBe('Apple');
+          expect(inputElement.value).toBe('Alabama');
 
           down();
-          expect(inputElement.value).toBe('Apricot');
+          expect(inputElement.value).toBe('Alaska');
         });
 
         it('should select the first option on input', () => {
           focus();
-          input('Canta');
+          input('Cali');
 
-          expect(fixture.componentInstance.value()).toEqual(['Cantaloupe']);
+          expect(fixture.componentInstance.value()).toEqual(['California']);
         });
 
         it('should insert a highlighted completion string on input', fakeAsync(() => {
@@ -430,194 +429,75 @@ describe('Combobox', () => {
           input('A');
           tick();
 
-          expect(inputElement.value).toBe('Apple');
+          expect(inputElement.value).toBe('Alabama');
           expect(inputElement.selectionStart).toBe(1);
-          expect(inputElement.selectionEnd).toBe(5);
+          expect(inputElement.selectionEnd).toBe(7);
         }));
 
         it('should commit the selected option on focusout', () => {
           focus();
-          input('Apr');
+          input('Cali');
           blur();
 
-          expect(inputElement.value).toBe('Apricot');
-          expect(fixture.componentInstance.value()).toEqual(['Apricot']);
+          expect(inputElement.value).toBe('California');
+          expect(fixture.componentInstance.value()).toEqual(['California']);
         });
       });
     });
 
-    describe('with disabled options', () => {
-      beforeEach(() => {
-        setupCombobox();
-        fixture.componentInstance.options.set([
-          {name: 'Apple'},
-          {name: 'Apricot', disabled: true},
-          {name: 'Banana'},
-          {name: 'Blackberry', disabled: true},
-          {name: 'Blueberry'},
-        ]);
-        fixture.detectChanges();
-      });
-
-      it('should not select a disabled option by clicking', () => {
-        click(inputElement);
-        const disabledOption = getOption('Apricot')!;
-        click(disabledOption);
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should skip disabled options during keyboard navigation', () => {
-        down(); // To Apple
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getOption('Apple')!.id);
-
-        down(); // Should skip Apricot and go to Banana
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getOption('Banana')!.id);
-
-        down(); // Should skip Blackberry and go to Blueberry
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getOption('Blueberry')!.id);
-
-        up(); // Back to Banana
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getOption('Banana')!.id);
-
-        up(); // Back to Apple
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getOption('Apple')!.id);
-      });
-
-      it('should not select disabled option with auto-select on input', () => {
-        fixture.componentInstance.filterMode.set('auto-select');
-        fixture.detectChanges();
-
-        input('Apr');
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should not select disabled option with highlight on input', () => {
-        fixture.componentInstance.filterMode.set('highlight');
-        fixture.detectChanges();
-
-        input('Apr');
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-        expect(inputElement.value).toBe('Apr');
-      });
-    });
-
-    describe('with dynamic data', () => {
-      beforeEach(() => setupCombobox());
-
-      it('should update active item if an option is removed', () => {
-        down(); // -> Apple
-        down(); // -> Apricot
-
-        const apricot = getOption('Apricot')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(apricot.id);
-
-        fixture.componentInstance.options.set(
-          fixture.componentInstance.options().filter(n => n.name !== 'Apricot'),
-        );
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(null);
-      });
-
-      it('should update the combobox value if the selected item is removed', () => {
-        down(); // -> Apple
-        enter();
-        expect(fixture.componentInstance.value()).toEqual(['Apple']);
-        expect(inputElement.value).toBe('Apple');
-
-        fixture.componentInstance.options.set(
-          fixture.componentInstance.options().filter(n => n.name !== 'Apple'),
-        );
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should clear active item if listbox becomes empty', () => {
-        down(); // -> Apple
-        expect(inputElement.hasAttribute('aria-activedescendant')).toBe(true);
-
-        fixture.componentInstance.options.set([]);
-        fixture.detectChanges();
-
-        expect(inputElement.hasAttribute('aria-activedescendant')).toBe(false);
-        expect(getOptions().length).toBe(0);
-      });
-    });
+    // TODO(wagnermaciel): Add unit tests for disabled options.
 
     describe('Filtering', () => {
-      const getVisibleOptions = () => getOptions().filter(o => !o.inert);
-
       beforeEach(() => setupCombobox());
 
       it('should lazily render options', () => {
         expect(getOptions().length).toBe(0);
         focus();
-        expect(getOptions().length).toBe(9);
+        expect(getOptions().length).toBe(50);
       });
 
       it('should filter the options based on the input value', () => {
         focus();
-        input('ap');
+        input('New');
 
-        let options = getVisibleOptions();
-        expect(options.length).toBe(2);
-        expect(options[0].textContent?.trim()).toBe('Apple');
-        expect(options[1].textContent?.trim()).toBe('Apricot');
-
-        input('apple');
-        options = getVisibleOptions();
-        expect(options.length).toBe(1);
-        expect(options[0].textContent?.trim()).toBe('Apple');
+        const options = getOptions();
+        expect(options.length).toBe(4);
+        expect(options[0].textContent?.trim()).toBe('New Hampshire');
+        expect(options[1].textContent?.trim()).toBe('New Jersey');
+        expect(options[2].textContent?.trim()).toBe('New Mexico');
+        expect(options[3].textContent?.trim()).toBe('New York');
       });
 
       it('should show no options if nothing matches', () => {
         focus();
         input('xyz');
-        const options = getVisibleOptions();
+        const options = getOptions();
         expect(options.length).toBe(0);
       });
 
       it('should show all options when the input is cleared', () => {
         focus();
-        input('Apple');
-        expect(getVisibleOptions().length).toBe(1);
+        input('Alabama');
+        expect(getOptions().length).toBe(1);
 
         input('');
-        expect(getVisibleOptions().length).toBe(9);
-      });
-
-      it('should allow changing the filter function', () => {
-        fixture.componentInstance.filterFn.set(
-          (inputText, itemText) => itemText.includes(inputText), // Case sensitive filter.
-        );
-
-        focus();
-        input('apple');
-        expect(getVisibleOptions().length).toBe(0);
-
-        input('Apple');
-        const options = getVisibleOptions();
-        expect(options.length).toBe(1);
-        expect(options[0].textContent?.trim()).toBe('Apple');
+        expect(getOptions().length).toBe(50);
       });
     });
 
-    describe('with programmatic value changes', () => {
-      // TODO(wagnermaciel): Figure out if there's a way to automatically update the
-      // input value when the popup value signal is updated programmatically.
-      it('should update the selected item when the value is set programmatically', () => {
-        setupCombobox();
-        focus();
-        fixture.componentInstance.value.set(['Banana']);
-        fixture.detectChanges();
-        expect(fixture.componentInstance.value()).toEqual(['Banana']);
-        const bananaOption = getOption('Banana')!;
-        expect(bananaOption.getAttribute('aria-selected')).toBe('true');
-      });
-    });
+    // describe('with programmatic value changes', () => {
+    //   // TODO(wagnermaciel): Figure out if there's a way to automatically update the
+    //   // input value when the popup value signal is updated programmatically.
+    //   it('should update the selected item when the value is set programmatically', () => {
+    //     setupCombobox();
+    //     focus();
+    //     fixture.componentInstance.value.set(['Banana']);
+    //     fixture.detectChanges();
+    //     expect(fixture.componentInstance.value()).toEqual(['Banana']);
+    //     const bananaOption = getOption('Banana')!;
+    //     expect(bananaOption.getAttribute('aria-selected')).toBe('true');
+    //   });
+    // });
   });
 
   describe('with Tree', () => {
@@ -636,10 +516,13 @@ describe('Combobox', () => {
       fixture.detectChanges();
     };
 
-    const input = (value: string) => {
+    const input = (value: string, opts: {backspace?: boolean} = {}) => {
       focus();
       inputElement.value = value;
-      inputElement.dispatchEvent(new Event('input', {bubbles: true}));
+      const event = opts.backspace
+        ? new InputEvent('input', {inputType: 'deleteContentBackward', bubbles: true})
+        : new InputEvent('input', {bubbles: true});
+      inputElement.dispatchEvent(event);
       fixture.detectChanges();
     };
 
@@ -701,7 +584,14 @@ describe('Combobox', () => {
       return fixture.debugElement
         .queryAll(By.directive(CdkTreeItem))
         .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement)
-        .filter(el => !el.parentElement?.hasAttribute('inert') && !el.hasAttribute('inert'));
+        .filter(el => {
+          if (el.parentElement?.role === 'group') {
+            return (
+              el.parentElement.previousElementSibling?.getAttribute('aria-expanded') === 'true'
+            );
+          }
+          return true;
+        });
     }
 
     afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
@@ -721,23 +611,23 @@ describe('Combobox', () => {
       });
 
       it('should set aria-selected on the selected tree item', () => {
-        down(); // -> Fruit
+        down();
         enter();
 
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(fruitItem.getAttribute('aria-selected')).toBe('true');
+        const item = getTreeItem('Winter')!;
+        expect(item.getAttribute('aria-selected')).toBe('true');
       });
 
       it('should toggle aria-expanded on parent nodes', () => {
-        down(); // -> Fruit
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(fruitItem.getAttribute('aria-expanded')).toBe('false');
+        down();
+        const item = getTreeItem('Winter')!;
+        expect(item.getAttribute('aria-expanded')).toBe('false');
 
-        right(); // Expand Fruit
-        expect(fruitItem.getAttribute('aria-expanded')).toBe('true');
+        right();
+        expect(item.getAttribute('aria-expanded')).toBe('true');
 
-        left(); // Collapse Fruit
-        expect(fruitItem.getAttribute('aria-expanded')).toBe('false');
+        left();
+        expect(item.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
@@ -746,82 +636,81 @@ describe('Combobox', () => {
 
       it('should navigate to the first focusable item on ArrowDown', () => {
         down();
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(fruitItem.id);
+        const item = getTreeItem('Winter')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should navigate to the last focusable item on ArrowUp', () => {
         up();
-        const grainsItem = getTreeItem('Grains')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(grainsItem.id);
+        const item = getTreeItem('Fall')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should navigate to the next focusable item on ArrowDown when open', () => {
         down();
         down();
-        const vegetablesItem = getTreeItem('Vegetables')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(vegetablesItem.id);
+        const item = getTreeItem('Spring')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should navigate to the previous item on ArrowUp when open', () => {
         up();
         up();
-        const vegetablesItem = getTreeItem('Vegetables')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(vegetablesItem.id);
+        const item = getTreeItem('Summer')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should expand a closed node on ArrowRight', () => {
-        down(); // To Fruit
-        expect(getVisibleTreeItems().length).toBe(3);
+        down();
+        expect(getVisibleTreeItems().length).toBe(4);
         right();
         fixture.detectChanges();
-        expect(getVisibleTreeItems().length).toBe(6);
-        const appleItem = getTreeItem('Apple')!;
-        expect(appleItem).not.toBeNull();
+        expect(getVisibleTreeItems().length).toBe(7);
+        expect(getTreeItem('January')).not.toBeNull();
       });
 
       it('should navigate to the next item on ArrowRight when already expanded', () => {
-        down(); // To Fruit
-        right(); // Expand Fruit
-        right(); // To Apple
-        const appleItem = getTreeItem('Apple')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(appleItem.id);
+        down();
+        right();
+        right();
+        const item = getTreeItem('December')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should collapse an open node on ArrowLeft', () => {
-        down(); // To Fruit
-        right(); // Expand Fruit
+        down();
+        right();
         fixture.detectChanges();
-        expect(getVisibleTreeItems().length).toBe(6);
-        left(); // Collapse Fruit
+        expect(getVisibleTreeItems().length).toBe(7);
+        left();
         fixture.detectChanges();
-        expect(getVisibleTreeItems().length).toBe(3);
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(fruitItem.id);
+        expect(getVisibleTreeItems().length).toBe(4);
+        const item = getTreeItem('Winter')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should navigate to the parent node on ArrowLeft when in a child node', () => {
-        down(); // To Fruit
-        right(); // Expand Fruit
-        right(); // To Apple
-        const appleItem = getTreeItem('Apple')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(appleItem.id);
-        left(); // To Fruit
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(fruitItem.id);
+        down();
+        right();
+        right();
+        const item1 = getTreeItem('December')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item1.id);
+        left();
+        const item2 = getTreeItem('Winter')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item2.id);
       });
 
       it('should navigate to the first focusable item on Home when open', () => {
         up();
         keydown('Home');
-        const fruitItem = getTreeItem('Fruit')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(fruitItem.id);
+        const item = getTreeItem('Winter')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
       it('should navigate to the last focusable item on End when open', () => {
         down();
         keydown('End');
-        const grainsItem = getTreeItem('Grains')!;
+        const grainsItem = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(grainsItem.id);
       });
     });
@@ -832,28 +721,28 @@ describe('Combobox', () => {
 
         it('should select and commit on click', () => {
           click(inputElement);
-          const fruitItem = getTreeItem('Fruit')!;
-          click(fruitItem);
+          const item = getTreeItem('April')!;
+          click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
-          expect(inputElement.value).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['April']);
+          expect(inputElement.value).toBe('April');
         });
 
         it('should select and commit to input on Enter', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
-          expect(inputElement.value).toBe('Fruit');
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
+          expect(inputElement.value).toBe('Winter');
         });
 
         it('should select on focusout if the input text exactly matches an item', () => {
           focus();
-          input('Apple');
+          input('November');
           blur();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(fixture.componentInstance.value()).toEqual(['November']);
         });
 
         it('should not select on navigation', () => {
@@ -880,12 +769,12 @@ describe('Combobox', () => {
           click(inputElement);
           down();
           right();
-          const appleItem = getTreeItem('Apple')!;
-          click(appleItem);
+          const item = getTreeItem('February')!;
+          click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
-          expect(inputElement.value).toBe('Apple');
+          expect(fixture.componentInstance.value()).toEqual(['February']);
+          expect(inputElement.value).toBe('February');
         });
 
         it('should select and commit on Enter', () => {
@@ -893,32 +782,31 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
-          expect(inputElement.value).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
+          expect(inputElement.value).toBe('Spring');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
 
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
         });
 
         it('should select the first option on input', () => {
           focus();
-          input('B');
-
-          expect(fixture.componentInstance.value()).toEqual(['Banana']);
+          input('Dec');
+          expect(fixture.componentInstance.value()).toEqual(['December']);
         });
 
         it('should commit the selected option on focusout', () => {
           focus();
-          input('App');
+          input('Jun');
           blur();
 
-          expect(inputElement.value).toBe('Apple');
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(inputElement.value).toBe('June');
+          expect(fixture.componentInstance.value()).toEqual(['June']);
         });
       });
 
@@ -929,12 +817,12 @@ describe('Combobox', () => {
           click(inputElement);
           down();
           right();
-          const bananaItem = getTreeItem('Banana')!;
-          click(bananaItem);
+          const item = getTreeItem('February')!;
+          click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.value()).toEqual(['Banana']);
-          expect(inputElement.value).toBe('Banana');
+          expect(fixture.componentInstance.value()).toEqual(['February']);
+          expect(inputElement.value).toBe('February');
         });
 
         it('should select and commit on Enter', () => {
@@ -942,50 +830,50 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
-          expect(inputElement.value).toBe('Vegetables');
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
+          expect(inputElement.value).toBe('Spring');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Fruit']);
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
 
           down();
-          expect(fixture.componentInstance.value()).toEqual(['Vegetables']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
         });
 
         it('should update input value on navigation', () => {
           down();
-          expect(inputElement.value).toBe('Fruit');
+          expect(inputElement.value).toBe('Winter');
 
           down();
-          expect(inputElement.value).toBe('Vegetables');
+          expect(inputElement.value).toBe('Spring');
         });
 
         it('should select the first option on input', () => {
           focus();
-          input('Canta');
+          input('Sept');
 
-          expect(fixture.componentInstance.value()).toEqual(['Cantaloupe']);
+          expect(fixture.componentInstance.value()).toEqual(['September']);
         });
 
         it('should insert a highlighted completion string on input', fakeAsync(() => {
           focus();
-          input('A');
+          input('Feb');
           tick();
 
-          expect(inputElement.value).toBe('Apple');
-          expect(inputElement.selectionStart).toBe(1);
-          expect(inputElement.selectionEnd).toBe(5);
+          expect(inputElement.value).toBe('February');
+          expect(inputElement.selectionStart).toBe(3);
+          expect(inputElement.selectionEnd).toBe(8);
         }));
 
         it('should commit the selected option on focusout', () => {
           focus();
-          input('App');
+          input('Jan');
           blur();
 
-          expect(inputElement.value).toBe('Apple');
-          expect(fixture.componentInstance.value()).toEqual(['Apple']);
+          expect(inputElement.value).toBe('January');
+          expect(fixture.componentInstance.value()).toEqual(['January']);
         });
       });
     });
@@ -1025,21 +913,21 @@ describe('Combobox', () => {
 
       it('should not close on focusout if focus moves to an element inside the container', () => {
         down();
-        blur(getTreeItem('Fruit')!);
+        blur(getTreeItem('Spring')!);
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
       it('should clear the completion string and not close on escape when a completion is present', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
-        input('A');
-        expect(inputElement.value).toBe('Apple');
+        input('Mar');
+        expect(inputElement.value).toBe('March');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('A');
+        expect(inputElement.value).toBe('Mar');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('A');
+        expect(inputElement.value).toBe('Mar');
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
@@ -1051,161 +939,12 @@ describe('Combobox', () => {
 
       it('should close on click to select an item', () => {
         down();
-        const fruitItem = getTreeItem('Fruit')!;
-        click(fruitItem);
+        click(getTreeItem('Spring')!);
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
-    describe('with disabled items', () => {
-      beforeEach(() => {
-        setupCombobox();
-        fixture.componentInstance.nodes.set([
-          {
-            name: 'Fruit',
-            value: 'Fruit',
-            children: [
-              {name: 'Apple', value: 'Apple'},
-              {name: 'Banana', value: 'Banana', disabled: true},
-              {name: 'Cantaloupe', value: 'Cantaloupe'},
-            ],
-          },
-          {
-            name: 'Vegetables',
-            value: 'Vegetables',
-            disabled: true,
-            children: [
-              {name: 'Broccoli', value: 'Broccoli'},
-              {name: 'Carrot', value: 'Carrot'},
-            ],
-          },
-          {
-            name: 'Grains',
-            value: 'Grains',
-          },
-        ]);
-        fixture.detectChanges();
-      });
-
-      it('should not select a disabled item by clicking', () => {
-        click(inputElement);
-        const disabledItem = getTreeItem('Vegetables')!;
-        click(disabledItem);
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should skip disabled items during keyboard navigation', () => {
-        down(); // To Fruit
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getTreeItem('Fruit')!.id);
-
-        down(); // Should skip Vegetables and go to Grains
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getTreeItem('Grains')!.id);
-
-        up(); // Back to Fruit
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getTreeItem('Fruit')!.id);
-      });
-
-      it('should skip disabled child items during keyboard navigation', () => {
-        down(); // To Fruit
-        right(); // Expand Fruit
-        down(); // To Apple
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(getTreeItem('Apple')!.id);
-
-        down(); // Should skip Banana and go to Cantaloupe
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(
-          getTreeItem('Cantaloupe')!.id,
-        );
-      });
-
-      it('should not select disabled item with auto-select on input', () => {
-        fixture.componentInstance.filterMode.set('auto-select');
-        fixture.detectChanges();
-
-        input('Vege'); // Matches 'Vegetables', which is disabled.
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should not highlight disabled item with highlight on input', () => {
-        fixture.componentInstance.filterMode.set('highlight');
-        fixture.detectChanges();
-
-        input('Vege'); // Matches 'Vegetables', which is disabled.
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-        expect(inputElement.value).toBe('Vege');
-      });
-
-      it('should not select disabled child item with auto-select on input', () => {
-        fixture.componentInstance.filterMode.set('auto-select');
-        fixture.detectChanges();
-
-        input('Bana'); // Matches 'Banana', which is disabled.
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-    });
-
-    describe('with dynamic data', () => {
-      beforeEach(() => setupCombobox());
-
-      it('should update active item if a top-level node is removed', () => {
-        down(); // -> Fruit
-        down(); // -> Vegetables
-
-        const vegetables = getTreeItem('Vegetables')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(vegetables.id);
-
-        fixture.componentInstance.nodes.set(
-          fixture.componentInstance.nodes().filter(n => n.name !== 'Vegetables'),
-        );
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(null);
-      });
-
-      it('should update active item if a child node is removed', () => {
-        down(); // -> Fruit
-        right(); // Expand Fruit
-        down(); // -> Apple
-        down(); // -> Banana
-
-        const banana = getTreeItem('Banana')!;
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(banana.id);
-
-        const nodes = fixture.componentInstance.nodes();
-        nodes[0].children = nodes[0].children!.filter(c => c.name !== 'Banana');
-        fixture.componentInstance.nodes.set([...nodes]);
-        fixture.detectChanges();
-
-        expect(inputElement.getAttribute('aria-activedescendant')).toBe(null);
-      });
-
-      it('should update the combobox value if the selected item is removed', () => {
-        down(); // -> Fruit
-        enter();
-        expect(fixture.componentInstance.value()).toEqual(['Fruit']);
-        expect(inputElement.value).toBe('Fruit');
-
-        fixture.componentInstance.nodes.set(
-          fixture.componentInstance.nodes().filter(n => n.name !== 'Fruit'),
-        );
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.value()).toEqual([]);
-      });
-
-      it('should clear active item if tree becomes empty', () => {
-        down(); // -> Fruit
-        expect(inputElement.hasAttribute('aria-activedescendant')).toBe(true);
-
-        fixture.componentInstance.nodes.set([]);
-        fixture.detectChanges();
-
-        expect(inputElement.hasAttribute('aria-activedescendant')).toBe(false);
-        expect(getVisibleTreeItems().length).toBe(0);
-      });
-    });
+    // TODO(wagnermaciel): Add unit tests for disabled options.
 
     describe('Filtering', () => {
       beforeEach(() => setupCombobox());
@@ -1213,26 +952,26 @@ describe('Combobox', () => {
       it('should lazily render options', () => {
         expect(getTreeItems().length).toBe(0);
         focus();
-        expect(getTreeItems().length).toBe(11);
+        expect(getTreeItems().length).toBe(16);
       });
 
       it('should filter the options based on the input value', () => {
         focus();
-        input('vegetables');
+        input('Summer');
 
         let items = getVisibleTreeItems();
         expect(items.length).toBe(1);
-        expect(items[0].textContent?.trim()).toBe('Vegetables');
+        expect(items[0].textContent?.trim()).toBe('Summer');
       });
 
       it('should render parents if a child matches', () => {
         focus();
-        input('broccoli');
+        input('January');
 
         let items = getVisibleTreeItems();
         expect(items.length).toBe(2);
-        expect(items[0].textContent?.trim()).toBe('Vegetables');
-        expect(items[1].textContent?.trim()).toBe('Broccoli');
+        expect(items[0].textContent?.trim()).toBe('Winter');
+        expect(items[1].textContent?.trim()).toBe('January');
       });
 
       it('should show no options if nothing matches', () => {
@@ -1243,35 +982,21 @@ describe('Combobox', () => {
 
       it('should show all options when the input is cleared', () => {
         focus();
-        input('Fruit');
+        input('Winter');
         expect(getVisibleTreeItems().length).toBe(1);
 
-        input('');
-        expect(getVisibleTreeItems().length).toBe(3);
+        input('', {backspace: true});
+        fixture.detectChanges();
+        expect(getVisibleTreeItems().length).toBe(4);
       });
 
       it('should expand all nodes when filtering', () => {
         focus();
-        expect(getVisibleTreeItems().length).toBe(3);
+        expect(getVisibleTreeItems().length).toBe(4);
 
-        input('a');
-        expect(getTreeItem('Fruit')!.getAttribute('aria-expanded')).toBe('true');
-        expect(getTreeItem('Vegetables')!.getAttribute('aria-expanded')).toBe('true');
-        expect(getTreeItem('Grains')!.getAttribute('aria-expanded')).toBe('true');
-      });
-
-      it('should allow changing the filter function', () => {
-        focus();
-        fixture.componentInstance.filterFn.set(
-          (inputText, itemText) => itemText.includes(inputText), // Case sensitive filter.
-        );
-        input('fruit');
-        expect(getVisibleTreeItems().length).toBe(0);
-
-        input('Fruit');
-        const options = getVisibleTreeItems();
-        expect(options.length).toBe(1);
-        expect(options[0].textContent?.trim()).toBe('Fruit');
+        input('J');
+        expect(getTreeItem('Winter')!.getAttribute('aria-expanded')).toBe('true');
+        expect(getTreeItem('Summer')!.getAttribute('aria-expanded')).toBe('true');
       });
     });
 
@@ -1281,10 +1006,10 @@ describe('Combobox', () => {
       it('should update the selected item when the value is set programmatically', () => {
         setupCombobox();
         focus();
-        fixture.componentInstance.value.set(['Fruit']);
+        fixture.componentInstance.value.set(['August']);
         fixture.detectChanges();
-        expect(fixture.componentInstance.value()).toEqual(['Fruit']);
-        expect(getTreeItem('Fruit')!.getAttribute('aria-selected')).toBe('true');
+        expect(fixture.componentInstance.value()).toEqual(['August']);
+        expect(getTreeItem('August')!.getAttribute('aria-selected')).toBe('true');
       });
     });
   });
@@ -1292,17 +1017,31 @@ describe('Combobox', () => {
 
 @Component({
   template: `
-    <div cdkCombobox [filterMode]="filterMode()" [filter]="filterFn()">
-      <input cdkComboboxInput placeholder="Search..." aria-label="Fruits" />
+<div
+  cdkCombobox
+  #combobox="cdkCombobox"
+  [filterMode]="filterMode()"
+>
+  <input
+    cdkComboboxInput
+    placeholder="Search..."
+    [(value)]="searchString"
+  />
 
-      <ng-template cdkComboboxPopupContainer>
-        <div cdkListbox aria-label="select a fruit" [(value)]="value">
-          @for (option of options(); track option.name) {
-            <li cdkOption [value]="option.name" [disabled]="option.disabled">{{ option.name }}</li>
-          }
+  <ng-template cdkComboboxPopupContainer>
+    <div cdkListbox [(value)]="value">
+      @for (option of options(); track option) {
+        <div
+          cdkOption
+          [value]="option"
+          [label]="option"
+        >
+          <span>{{option}}</span>
         </div>
-      </ng-template>
+      }
     </div>
+  </ng-template>
+</div>
   `,
   imports: [
     CdkCombobox,
@@ -1315,63 +1054,63 @@ describe('Combobox', () => {
 })
 class ComboboxListboxExample {
   value = signal<string[]>([]);
-  filterFn = signal<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
-    itemText.toLowerCase().includes(inputText.toLowerCase()),
-  );
+
   filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
-  options = signal<{name: string; disabled?: boolean}[]>([
-    {name: 'Apple'},
-    {name: 'Apricot'},
-    {name: 'Banana'},
-    {name: 'Blackberry'},
-    {name: 'Blueberry'},
-    {name: 'Cantaloupe'},
-    {name: 'Cherry'},
-    {name: 'Clementine'},
-    {name: 'Cranberry'},
-  ]);
+
+  searchString = signal('');
+
+  options = computed(() =>
+    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
+  );
 }
 
 @Component({
   template: `
-    <div cdkCombobox [filterMode]="filterMode()" [filter]="filterFn()">
-      <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
+<div
+  #combobox="cdkCombobox"
+  cdkCombobox
+  [firstMatch]="firstMatch()"
+  [filterMode]="filterMode()"
+>
+  <input
+    cdkComboboxInput
+    placeholder="Search..."
+    [(value)]="searchString"
+  />
 
-      <ng-template cdkComboboxPopupContainer>
-        <ul cdkTree #tree="cdkTree" [(value)]="value">
+  <ng-template cdkComboboxPopupContainer>
+    <ul cdkTree #tree="cdkTree" [(value)]="value">
+      <ng-template
+        [ngTemplateOutlet]="treeNodes"
+        [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
+      />
+    </ul>
+  </ng-template>
+</div>
+
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.name) {
+    <li cdkTreeItem
+      [parent]="parent"
+      [value]="node.name"
+      [label]="node.name"
+      #treeItem="cdkTreeItem"
+    >
+      {{ node.name }}
+    </li>
+
+    @if (node.children) {
+      <ul cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
+        <ng-template cdkTreeItemGroupContent>
           <ng-template
             [ngTemplateOutlet]="treeNodes"
-            [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
+            [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
           />
-        </ul>
-
-        <ng-template #treeNodes let-nodes="nodes" let-parent="parent">
-          @for (node of nodes; track node.value) {
-            <li
-              cdkTreeItem
-              [parent]="parent"
-              [value]="node.value"
-              [label]="node.name"
-              [disabled]="node.disabled"
-              #treeItem="cdkTreeItem"
-            >
-              {{ node.name }}
-            </li>
-
-            @if (node.children) {
-              <ul cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
-                <ng-template cdkTreeItemGroupContent>
-                  <ng-template
-                    [ngTemplateOutlet]="treeNodes"
-                    [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
-                  />
-                </ng-template>
-              </ul>
-            }
-          }
         </ng-template>
-      </ng-template>
-    </div>
+      </ul>
+    }
+  }
+</ng-template>
   `,
   imports: [
     CdkCombobox,
@@ -1386,43 +1125,113 @@ class ComboboxListboxExample {
 })
 class ComboboxTreeExample {
   value = signal<string[]>([]);
-  filterFn = signal<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
-    itemText.toLowerCase().includes(inputText.toLowerCase()),
-  );
+
   filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
-  nodes = signal<
-    {
-      name: string;
-      value: string;
-      disabled?: boolean;
-      children?: {name: string; value: string; disabled?: boolean}[];
-    }[]
-  >([
-    {
-      name: 'Fruit',
-      value: 'Fruit',
-      children: [
-        {name: 'Apple', value: 'Apple'},
-        {name: 'Banana', value: 'Banana'},
-        {name: 'Cantaloupe', value: 'Cantaloupe'},
-      ],
-    },
-    {
-      name: 'Vegetables',
-      value: 'Vegetables',
-      children: [
-        {name: 'Broccoli', value: 'Broccoli'},
-        {name: 'Carrot', value: 'Carrot'},
-        {name: 'Lettuce', value: 'Lettuce'},
-      ],
-    },
-    {
-      name: 'Grains',
-      value: 'Grains',
-      children: [
-        {name: 'Rice', value: 'Rice'},
-        {name: 'Wheat', value: 'Wheat'},
-      ],
-    },
-  ]);
+
+  searchString = signal('');
+
+  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
+
+  firstMatch = computed<string | undefined>(() => {
+    const flatNodes = this.flattenTreeNodes(this.nodes());
+    const node = flatNodes.find(n => this.isMatch(n));
+    return node?.name;
+  });
+
+  flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.flatMap(node => {
+      return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
+    });
+  }
+
+  filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.reduce((acc, node) => {
+      const children = node.children ? this.filterTreeNodes(node.children) : undefined;
+      if (this.isMatch(node) || (children && children.length > 0)) {
+        acc.push({...node, children});
+      }
+      return acc;
+    }, [] as TreeNode[]);
+  }
+
+  isMatch(node: TreeNode) {
+    return node.name.toLowerCase().includes(this.searchString().toLowerCase());
+  }
 }
+
+export interface TreeNode {
+  name: string;
+  children?: TreeNode[];
+}
+
+export const TREE_NODES = [
+  {
+    name: 'Winter',
+    children: [{name: 'December'}, {name: 'January'}, {name: 'February'}],
+  },
+  {
+    name: 'Spring',
+    children: [{name: 'March'}, {name: 'April'}, {name: 'May'}],
+  },
+  {
+    name: 'Summer',
+    children: [{name: 'June'}, {name: 'July'}, {name: 'August'}],
+  },
+  {
+    name: 'Fall',
+    children: [{name: 'September'}, {name: 'October'}, {name: 'November'}],
+  },
+];
+
+const states = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
+];

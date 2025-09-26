@@ -8,7 +8,7 @@
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {computed, signal} from '@angular/core';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */
@@ -25,8 +25,11 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
   /** The filtering mode for the combobox. */
   filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
 
-  /** The function used to filter items in the combobox. */
-  filter: SignalLike<(inputText: string, itemText: string) => boolean>;
+  /** The current value of the combobox. */
+  inputValue?: WritableSignalLike<string>;
+
+  /** The value of the first matching item in the popup. */
+  firstMatch: SignalLike<V | undefined>;
 };
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
@@ -43,14 +46,17 @@ export type ComboboxListboxControls<T extends ListItem<V>, V> = {
   /** The list of items in the popup. */
   items: SignalLike<T[]>;
 
+  /** Navigates to the given item in the popup. */
+  focus: (item: T) => void;
+
   /** Navigates to the next item in the popup. */
   next: () => void;
 
   /** Navigates to the previous item in the popup. */
   prev: () => void;
 
-  /** Navigates to the first item in the popup, or the first match if filterText is provided. */
-  first: (filterText?: string) => void;
+  /** Navigates to the first item in the popup. */
+  first: () => void;
 
   /** Navigates to the last item in the popup. */
   last: () => void;
@@ -60,9 +66,6 @@ export type ComboboxListboxControls<T extends ListItem<V>, V> = {
 
   /** Clears the selection state of the popup. */
   clearSelection: () => void;
-
-  /** Filters the items in the popup. */
-  filter: (text: string) => void;
 
   /** Removes focus from any item in the popup. */
   unfocus: () => void;
@@ -89,6 +92,12 @@ export type ComboboxTreeControls<T extends ListItem<V>, V> = ComboboxListboxCont
 
   /** Checks if the currently active item in the popup is expandable. */
   isItemExpandable: () => boolean;
+
+  /** Expands all nodes in the tree. */
+  expandAll: () => void;
+
+  /** Collapses all nodes in the tree. */
+  collapseAll: () => void;
 };
 
 /** Controls the state of a combobox. */
@@ -99,11 +108,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** The ID of the active item in the combobox. */
   activedescendant = computed(() => this.inputs.popupControls()?.activeId() ?? null);
 
-  /** The current search string for filtering. */
-  searchString = signal('');
-
   /** The currently highlighted item in the combobox. */
   highlightedItem = signal<T | undefined>(undefined);
+
+  /** Whether the most recent input event was a deletion. */
+  isDeleting = false;
 
   /** Whether the combobox is focused. */
   isFocused = signal(false);
@@ -143,17 +152,18 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('Home', () => this.first())
       .on('End', () => this.last())
       .on('Escape', () => {
+        // TODO(wagnermaciel): We may want to fold this logic into the close() method.
         if (this.inputs.filterMode() === 'highlight' && popupControls.activeId()) {
           popupControls.unfocus();
           popupControls.clearSelection();
 
           const inputEl = this.inputs.inputEl();
-
           if (inputEl) {
-            inputEl.value = this.searchString();
+            inputEl.value = this.inputs.inputValue!();
           }
         } else {
           this.close();
+          this.inputs.popupControls()?.clearSelection();
         }
       }) // TODO: When filter mode is 'highlight', escape should revert to the last committed value.
       .on('Enter', () => this.select({commit: true, close: true}));
@@ -209,23 +219,16 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return;
     }
 
-    this.searchString.set(inputEl.value);
-    this.inputs.popupControls()?.filter(inputEl.value);
-
     this.open();
-    this.inputs.popupControls()?.first(this.searchString() || undefined);
+    this.inputs.inputValue?.set(inputEl.value);
+    this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
 
-    if (event instanceof InputEvent && event.inputType.match(/delete.*/)) {
-      if (this.inputs.filterMode() === 'manual') {
+    if (this.inputs.filterMode() === 'manual') {
+      const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm();
+
+      if (searchTerm && this.inputs.inputValue!() !== searchTerm) {
         this.inputs.popupControls()?.clearSelection();
-      } else {
-        this.inputs.popupControls()?.select();
-        return;
       }
-    }
-
-    if (this.inputs.filterMode() !== 'manual') {
-      this.select({highlight: this.inputs.filterMode() === 'highlight'});
     }
   }
 
@@ -257,15 +260,74 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
-  setDefaultState() {
-    // if (this.inputs.value() !== undefined) {
-    //   this.inputs.popupControls()?.setValue(this.inputs.value());
-    //   const inputEl = this.inputs.inputEl();
-    //   const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm() ?? '';
-    //   if (inputEl) {
-    //     inputEl.value = searchTerm;
-    //   }
-    // }
+  firstMatch = computed(() => {
+    // TODO(wagnermaciel): Consider whether we should not provide this default behavior for the
+    // listbox. Instead, we may want to allow users to have no match so that typing does not focus
+    // any option.
+    if (this.inputs.popupControls()?.role() === 'listbox') {
+      return this.inputs.popupControls()?.items()[0];
+    }
+
+    return this.inputs
+      .popupControls()
+      ?.items()
+      .find(i => i.value() === this.inputs.firstMatch());
+  });
+
+  onFilter() {
+    // TODO(wagnermaciel)
+    // When the user first interacts with the combobox, the popup will lazily render for the first
+    // time. This is a simple way to detect this and avoid auto-focus & selection logic, but this
+    // should probably be moved to the component layer instead.
+    const isInitialRender = !this.inputs.inputValue?.().length && !this.isDeleting;
+
+    if (isInitialRender) {
+      return;
+    }
+
+    if (this.inputs.popupControls()?.role() === 'tree') {
+      const treeControls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
+      this.inputs.inputValue?.().length ? treeControls.expandAll() : treeControls.collapseAll();
+    }
+
+    const item = this.firstMatch();
+
+    if (!item) {
+      this.inputs.popupControls()?.clearSelection();
+      this.inputs.popupControls()?.unfocus();
+      return;
+    }
+
+    this.inputs.popupControls()?.focus(item);
+
+    if (this.inputs.filterMode() !== 'manual') {
+      this.select({item});
+    }
+
+    if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
+      this.highlight();
+    }
+  }
+
+  highlight() {
+    const inputEl = this.inputs.inputEl();
+    const item = this.inputs.popupControls()?.getSelectedItem();
+
+    if (!inputEl || !item) {
+      return;
+    }
+
+    const isHighlightable = item
+      .searchTerm()
+      .toLowerCase()
+      .startsWith(this.inputs.inputValue!().toLowerCase());
+
+    if (isHighlightable) {
+      inputEl.value =
+        this.inputs.inputValue!() + item.searchTerm().slice(this.inputs.inputValue!().length);
+      inputEl.setSelectionRange(this.inputs.inputValue!().length, item.searchTerm().length);
+      this.highlightedItem.set(item);
+    }
   }
 
   /** Closes the combobox. */
@@ -277,32 +339,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Opens the combobox. */
   open(nav?: {first?: boolean; last?: boolean}) {
     this.expanded.set(true);
-    this.inputs.popupControls()?.filter(this.inputs.inputEl()?.value ?? '');
 
     if (nav?.first) {
       this.first();
-    } else if (nav?.last) {
+    }
+    if (nav?.last) {
       this.last();
-    }
-  }
-
-  highlight() {
-    const element = this.inputs.inputEl();
-    const item = this.inputs.popupControls()?.getSelectedItem();
-
-    if (!item) {
-      return;
-    }
-
-    const isHighlightable = item
-      .searchTerm()
-      .toLowerCase()
-      .startsWith(this.searchString().toLowerCase());
-
-    if (element && isHighlightable) {
-      element.value = this.searchString() + item.searchTerm().slice(this.searchString().length);
-      element.setSelectionRange(this.searchString().length, item.searchTerm().length);
-      this.highlightedItem.set(item);
     }
   }
 
@@ -337,7 +379,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   /** Selects an item in the combobox popup. */
-  select(opts: {item?: T; commit?: boolean; close?: boolean; highlight?: boolean} = {}) {
+  select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
     this.inputs.popupControls()?.select(opts.item);
 
     if (opts.commit) {
@@ -346,22 +388,20 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (opts.close) {
       this.close();
     }
-    if (opts.highlight) {
-      this.highlight();
-    }
   }
 
   /** Updates the value of the input based on the currently selected item. */
   commit() {
-    const element = this.inputs.inputEl();
+    const inputEl = this.inputs.inputEl();
     const item = this.inputs.popupControls()?.getSelectedItem();
 
-    if (element && item) {
-      element.value = item.searchTerm();
+    if (inputEl && item) {
+      inputEl.value = item.searchTerm();
+      this.inputs.inputValue?.set(item.searchTerm());
 
       if (this.inputs.filterMode() === 'highlight') {
-        const length = element.value.length;
-        element.setSelectionRange(length, length);
+        const length = inputEl.value.length;
+        inputEl.setSelectionRange(length, length);
       }
     }
   }
@@ -370,18 +410,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   private _navigate(operation: () => void) {
     operation();
 
-    if (this.inputs.filterMode() === 'auto-select') {
+    if (this.inputs.filterMode() !== 'manual') {
       this.select();
     }
 
     if (this.inputs.filterMode() === 'highlight') {
-      this.select({commit: true});
-
       // This is to handle when the user navigates back to the originally highlighted item.
       // E.g. User types "Al", highlights "Alice", then navigates down and back up to "Alice".
       const selectedItem = this.inputs.popupControls()?.getSelectedItem();
-      if (selectedItem && selectedItem === this.highlightedItem()) {
+
+      if (!selectedItem) {
+        return;
+      }
+
+      if (selectedItem === this.highlightedItem()) {
         this.highlight();
+      } else {
+        const inputEl = this.inputs.inputEl()!;
+        inputEl.value = selectedItem?.searchTerm()!;
       }
     }
   }

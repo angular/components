@@ -205,14 +205,6 @@ export class ListboxPattern<V> {
       );
     }
 
-    const activeItem = this.inputs.activeItem();
-
-    if (activeItem && !this.inputs.items().includes(activeItem)) {
-      violations.push(
-        `The current active item does not exist in the list. Active item: ${activeItem.id()}.`,
-      );
-    }
-
     return violations;
   }
 

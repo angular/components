@@ -1,24 +1,23 @@
-export interface FoodNode {
+export interface TreeNode {
   name: string;
-  children?: FoodNode[];
+  children?: TreeNode[];
 }
 
-export const TREE_DATA: FoodNode[] = [
+export const TREE_NODES = [
   {
-    name: 'Fruit',
-    children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
+    name: 'Winter',
+    children: [{name: 'December'}, {name: 'January'}, {name: 'February'}],
   },
   {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [{name: 'Broccoli'}, {name: 'Brussels sprouts'}],
-      },
-      {
-        name: 'Orange',
-        children: [{name: 'Pumpkins'}, {name: 'Carrots'}],
-      },
-    ],
+    name: 'Spring',
+    children: [{name: 'March'}, {name: 'April'}, {name: 'May'}],
+  },
+  {
+    name: 'Summer',
+    children: [{name: 'June'}, {name: 'July'}, {name: 'August'}],
+  },
+  {
+    name: 'Fall',
+    children: [{name: 'September'}, {name: 'October'}, {name: 'November'}],
   },
 ];

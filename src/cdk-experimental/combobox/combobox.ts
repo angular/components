@@ -13,7 +13,9 @@ import {
   ElementRef,
   inject,
   input,
+  model,
   signal,
+  untracked,
   WritableSignal,
 } from '@angular/core';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
@@ -53,10 +55,8 @@ export class CdkCombobox<V> {
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
 
-  /** The function used to filter the options in the popup based on the input text. */
-  filter = input<(inputText: string, itemText: string) => boolean>((inputText, itemText) =>
-    itemText.toLowerCase().includes(inputText.toLowerCase()),
-  );
+  /** The value of the first matching item in the popup. */
+  firstMatch = input<V | undefined>(undefined);
 
   /** Whether the listbox has received focus yet. */
   private _hasBeenFocused = signal(false);
@@ -64,6 +64,7 @@ export class CdkCombobox<V> {
   /** The combobox ui pattern. */
   readonly pattern = new ComboboxPattern<any, V>({
     ...this,
+    inputValue: signal(''),
     inputEl: signal(undefined),
     containerEl: () => this._elementRef.nativeElement,
     popupControls: () => this.popup()?.controls(),
@@ -89,6 +90,7 @@ export class CdkCombobox<V> {
   exportAs: 'cdkComboboxInput',
   host: {
     'role': 'combobox',
+    '[value]': 'value()',
     '[attr.aria-expanded]': 'combobox.pattern.expanded()',
     '[attr.aria-activedescendant]': 'combobox.pattern.activedescendant()',
     '[attr.aria-controls]': 'combobox.pattern.popupId()',
@@ -98,15 +100,25 @@ export class CdkCombobox<V> {
 })
 export class CdkComboboxInput {
   /** The element that the combobox is attached to. */
-  private readonly _elementRef = inject(ElementRef);
+  private readonly _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
   /** The combobox that the input belongs to. */
   readonly combobox = inject(CdkCombobox);
+
+  /** The value of the input. */
+  value = model<string>('');
 
   constructor() {
     (this.combobox.pattern.inputs.inputEl as WritableSignal<HTMLInputElement>).set(
       this._elementRef.nativeElement,
     );
+    this.combobox.pattern.inputs.inputValue = this.value;
+
+    /** Focuses & selects the first item in the combobox if the user changes the input value. */
+    afterRenderEffect(() => {
+      this.combobox.popup()?.controls()?.items();
+      untracked(() => this.combobox.pattern.onFilter());
+    });
   }
 }
 
