@@ -22,10 +22,12 @@ import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
+  signal,
   viewChild,
 } from '@angular/core';
-import {TREE_DATA, FoodNode} from '../data';
+import {TREE_NODES, TreeNode} from '../data';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** @title Combobox with tree popup and auto-select filtering. */
@@ -48,10 +50,38 @@ import {NgTemplateOutlet} from '@angular/common';
 })
 export class CdkComboboxTreeAutoSelectExample {
   popover = viewChild<ElementRef>('popover');
-  tree = viewChild<CdkTree<FoodNode>>(CdkTree);
-  combobox = viewChild<CdkCombobox<FoodNode>>(CdkCombobox);
+  tree = viewChild<CdkTree<TreeNode>>(CdkTree);
+  combobox = viewChild<CdkCombobox<any>>(CdkCombobox);
 
-  nodes = TREE_DATA;
+  searchString = signal('');
+
+  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
+
+  firstMatch = computed<string | undefined>(() => {
+    const flatNodes = this.flattenTreeNodes(this.nodes());
+    const node = flatNodes.find(n => this.isMatch(n));
+    return node?.name;
+  });
+
+  flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.flatMap(node => {
+      return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
+    });
+  }
+
+  filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.reduce((acc, node) => {
+      const children = node.children ? this.filterTreeNodes(node.children) : undefined;
+      if (this.isMatch(node) || (children && children.length > 0)) {
+        acc.push({...node, children});
+      }
+      return acc;
+    }, [] as TreeNode[]);
+  }
+
+  isMatch(node: TreeNode) {
+    return node.name.toLowerCase().includes(this.searchString().toLowerCase());
+  }
 
   constructor() {
     afterRenderEffect(() => {

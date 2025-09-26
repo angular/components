@@ -55,6 +55,9 @@ export class ComboboxListboxPattern<V>
   /** Noop. The combobox controls the open state. */
   override setDefaultState(): void {}
 
+  /** Navigates to the specified item in the listbox. */
+  focus = (item: OptionPattern<V>) => this.listBehavior.goto(item);
+
   /** Navigates to the next focusable item in the listbox. */
   next = () => this.listBehavior.next();
 
@@ -84,14 +87,4 @@ export class ComboboxListboxPattern<V>
 
   /** Sets the value of the combobox listbox. */
   setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
-
-  /** Filters the items in the listbox based on the provided text. */
-  filter = (text: string) => {
-    const filterFn = this.inputs.combobox()!.inputs.filter();
-
-    this.inputs.items().forEach(i => {
-      const isMatch = filterFn(text, i.searchTerm());
-      i.inert.set(isMatch ? null : true);
-    });
-  };
 }

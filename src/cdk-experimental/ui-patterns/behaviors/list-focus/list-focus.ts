@@ -22,9 +22,6 @@ export interface ListFocusItem {
 
   /** The index of the item in the list. */
   index: SignalLike<number>;
-
-  /** Whether the item is currently focused. */
-  inert?: SignalLike<true | null>;
 }
 
 /** Represents the required inputs for a collection that contains focusable items. */
@@ -115,6 +112,6 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns true if the given item can be navigated to. */
   isFocusable(item: T): boolean {
-    return (!item.disabled() || !this.inputs.skipDisabled()) && !item.inert?.();
+    return !item.disabled() || !this.inputs.skipDisabled();
   }
 }

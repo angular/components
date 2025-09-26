@@ -32,9 +32,6 @@ export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
  * Represents an item in a Tree.
  */
 export class TreeItemPattern<V> implements ExpansionItem {
-  /** Whether the option is inert. */
-  inert = signal<true | null>(null);
-
   /** The position of this item among its siblings. */
   readonly index = computed(() => this.tree().visibleItems().indexOf(this));
 

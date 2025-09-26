@@ -121,8 +121,8 @@ li[aria-expanded='false'] + ul[role='group'] {
   display: none;
 }
 
-li[inert] + ul[role='group'] {
-  padding-inline-start: 0;
+ul[role='group'] {
+  padding-inline-start: 1rem;
 }
 
 .example-icon {

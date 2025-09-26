@@ -54,6 +54,9 @@ export class ComboboxTreePattern<V>
   /** Noop. The combobox controls the open state. */
   override setDefaultState(): void {}
 
+  /** Navigates to the specified item in the tree. */
+  focus = (item: TreeItemPattern<V>) => this.listBehavior.goto(item);
+
   /** Navigates to the next focusable item in the tree. */
   next = () => this.listBehavior.next();
 
@@ -64,18 +67,7 @@ export class ComboboxTreePattern<V>
   last = () => this.listBehavior.last();
 
   /** Navigates to the first focusable item in the tree. */
-  first = (filterText?: string) => {
-    if (!filterText) {
-      this.listBehavior.first();
-    } else {
-      const filterFn = this.inputs.combobox()!.inputs.filter();
-      const match = this.inputs.allItems().find(i => filterFn(filterText, i.searchTerm()));
-
-      if (match) {
-        this.listBehavior.goto(match);
-      }
-    }
-  };
+  first = () => this.listBehavior.first();
 
   /** Unfocuses the currently focused item in the tree. */
   unfocus = () => this.listBehavior.unfocus();
@@ -102,37 +94,13 @@ export class ComboboxTreePattern<V>
   collapseItem = () => this.collapse();
 
   /** Whether the specified item or the currently active item is expandable. */
-  isItemExpandable = (item?: TreeItemPattern<V>) => {
-    item = item || this.activeItem();
+  isItemExpandable(item: TreeItemPattern<V> | undefined = this.activeItem()) {
     return item ? item.expandable() : false;
-  };
+  }
 
-  /** Filters the items in the tree based on the provided text. */
-  filter = (text: string) => {
-    if (!text) {
-      this.inputs.allItems().forEach(i => {
-        i.inert.set(null);
-        i.expansion.close();
-      });
-      return;
-    }
+  /** Expands all of the tree items. */
+  expandAll = () => this.items().forEach(item => item.expansion.open());
 
-    const filterFn = this.inputs.combobox()!.inputs.filter();
-    this.inputs.allItems().forEach(i => i.expansion.close());
-
-    this.inputs.allItems().forEach(i => {
-      const isMatch = filterFn(text, i.searchTerm());
-
-      if (isMatch) {
-        let parent = i.parent();
-        while (parent && parent instanceof TreeItemPattern) {
-          parent.inert.set(null);
-          parent.expansion.open();
-          parent = parent.parent();
-        }
-      }
-
-      i.inert.set(isMatch ? null : true);
-    });
-  };
+  /** Collapses all of the tree items. */
+  collapseAll = () => this.items().forEach(item => item.expansion.close());
 }

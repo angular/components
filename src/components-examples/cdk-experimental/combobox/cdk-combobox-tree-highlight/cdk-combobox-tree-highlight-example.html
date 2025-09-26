@@ -1,7 +1,18 @@
-<div #combobox="cdkCombobox" cdkCombobox class="example-combobox-container" filterMode="highlight">
+<div
+  #combobox="cdkCombobox"
+  cdkCombobox
+  class="example-combobox-container"
+  [firstMatch]="firstMatch()"
+  filterMode="highlight"
+>
   <div class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
-    <input cdkComboboxInput class="example-combobox-input" placeholder="Search..." />
+    <input
+      cdkComboboxInput
+      class="example-combobox-input"
+      placeholder="Search..."
+      [(value)]="searchString"
+    />
   </div>
 
   <div popover="manual" #popover class="example-popover">
@@ -9,7 +20,7 @@
       <ul cdkTree #tree="cdkTree" class="example-tree">
         <ng-template
           [ngTemplateOutlet]="treeNodes"
-          [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"
+          [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
         />
       </ul>
     </ng-template>
@@ -23,7 +34,6 @@
       [parent]="parent"
       [value]="node.name"
       [label]="node.name"
-      [disabled]="node.disabled"
       #treeItem="cdkTreeItem"
       class="example-tree-item example-selectable example-stateful"
     >

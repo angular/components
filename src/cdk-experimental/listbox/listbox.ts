@@ -197,7 +197,6 @@ export class CdkListbox<V> {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.inert]': 'pattern.inert()',
   },
 })
 export class CdkOption<V> {
