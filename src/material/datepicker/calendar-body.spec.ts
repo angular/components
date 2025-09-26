@@ -231,7 +231,7 @@ describe('MatCalendarBody', () => {
 
     it('should not mark a cell as a start bridge if there is no end range value', () => {
       testComponent.startValue = 1;
-      testComponent.endValue = null;
+      testComponent.endValue = null!;
       testComponent.comparisonStart = 5;
       testComponent.comparisonEnd = 10;
       fixture.changeDetectorRef.markForCheck();
@@ -259,7 +259,7 @@ describe('MatCalendarBody', () => {
       testComponent.comparisonStart = 1;
       testComponent.comparisonEnd = 5;
       testComponent.startValue = 5;
-      testComponent.endValue = null;
+      testComponent.endValue = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -433,7 +433,7 @@ describe('MatCalendarBody', () => {
     });
 
     it('should not show a range if there is no start', () => {
-      testComponent.startValue = null;
+      testComponent.startValue = null!;
       testComponent.endValue = 10;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -756,8 +756,8 @@ class StandardCalendarBody {
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);
-  startValue: number | null;
-  endValue: number | null;
+  startValue: number;
+  endValue: number;
   comparisonStart: number | null;
   comparisonEnd: number | null;
   previewStart: number | null;
@@ -772,7 +772,7 @@ class RangeCalendarBody {
       this.endValue = value;
     } else {
       this.startValue = value;
-      this.endValue = null;
+      this.endValue = null!;
     }
   }
 

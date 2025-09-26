@@ -741,7 +741,7 @@ describe('CdkOption and CdkListbox', () => {
     it('should focus the selected option when the listbox is focused', () => {
       const {testComponent, fixture, listbox, listboxEl, options} =
         setupComponent(ListboxWithOptions);
-      testComponent.selectedValue = 'peach';
+      testComponent.selectedValue = ['peach'];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       listbox.focus();
@@ -766,7 +766,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
       expect(options[1].isActive()).toBeTrue();
 
-      testComponent.selectedValue = 'peach';
+      testComponent.selectedValue = ['peach'];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expect(options[1].isActive()).toBeTrue();
@@ -985,7 +985,7 @@ describe('CdkOption and CdkListbox', () => {
   imports: [CdkListbox, CdkOption],
 })
 class ListboxWithOptions {
-  changedOption: CdkOption | null;
+  changedOption: CdkOption<string> | null;
   isListboxDisabled = signal(false);
   isAppleDisabled = false;
   isOrangeDisabled = false;
@@ -999,9 +999,9 @@ class ListboxWithOptions {
   appleId: string;
   appleTabindex: number;
   orientation: 'horizontal' | 'vertical' = 'vertical';
-  selectedValue: string;
+  selectedValue: string[];
 
-  onSelectionChange(event: ListboxValueChangeEvent<unknown>) {
+  onSelectionChange(event: ListboxValueChangeEvent<string>) {
     this.changedOption = event.option;
   }
 }

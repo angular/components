@@ -976,8 +976,8 @@ describe('MatTabGroup', () => {
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
       expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
 
-      delete fixture.componentInstance.labelClassList;
-      delete fixture.componentInstance.bodyClassList;
+      fixture.componentInstance.labelClassList = [];
+      fixture.componentInstance.bodyClassList = [];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -997,8 +997,8 @@ describe('MatTabGroup', () => {
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
       expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
 
-      delete fixture.componentInstance.labelClassList;
-      delete fixture.componentInstance.bodyClassList;
+      fixture.componentInstance.labelClassList = [];
+      fixture.componentInstance.bodyClassList = [];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1559,8 +1559,8 @@ class NestedTabGroupWithLabel {}
   imports: [MatTabsModule],
 })
 class TabsWithClassesTestApp {
-  labelClassList?: string | string[];
-  bodyClassList?: string | string[];
+  labelClassList: string | string[];
+  bodyClassList: string | string[];
 }
 
 @Component({

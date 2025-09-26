@@ -1695,7 +1695,7 @@ class SimpleCdkTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   indent: number | string = 28;
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
@@ -1736,7 +1736,7 @@ class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
 class NestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1796,7 +1796,7 @@ class WhenNodeNestedCdkTreeApp {
 
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1821,7 +1821,7 @@ class CdkTreeAppWithToggle {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1852,7 +1852,7 @@ class NestedCdkTreeAppWithToggle {
   isExpandable = (node: TestData) =>
     node.observableChildren.pipe(map(children => children.length > 0));
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1882,7 +1882,7 @@ class WhenNodeCdkTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1905,7 +1905,7 @@ class ArrayDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataArray() {
     return this.dataSource.data;
@@ -1940,7 +1940,7 @@ class ObservableDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataObservable() {
     return this.dataSource._dataChange;
@@ -1964,7 +1964,7 @@ class ObservableDataSourceCdkTreeApp {
 class ArrayDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataArray() {
     return this.dataSource.data;
@@ -1988,7 +1988,7 @@ class ArrayDataSourceNestedCdkTreeApp {
 class ObservableDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataObservable() {
     return this.dataSource._dataChange;
@@ -2013,7 +2013,7 @@ class ObservableDataSourceNestedCdkTreeApp {
 class DepthNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataArray() {
     return this.dataSource.data;
@@ -2050,7 +2050,7 @@ class CdkTreeAppWithTrackBy {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -2083,7 +2083,7 @@ class NestedCdkTreeAppWithTrackBy {
 
   getChildren = (node: TestData) => node.observableChildren;
 
-  dataSource: FakeDataSource = new FakeDataSource();
+  dataSource = new FakeDataSource();
 
   get dataArray() {
     return this.dataSource.data;

@@ -979,9 +979,9 @@ class ElementDataSource extends DataSource<PeriodicElement> {
             </div>
           </ng-template>
 
-          <span *cdkIfRowHovered>
+          <ng-template>
             <button cdkEditOpen>Edit</button>
-          </span>
+          </ng-template>
         </cdk-cell>
       </ng-container>
 
@@ -1053,9 +1053,9 @@ class CdkFlexTableInCell extends BaseTestComponent {
             </div>
           </ng-template>
 
-          <span *cdkIfRowHovered>
+          <ng-template>
             <button cdkEditOpen>Edit</button>
-          </span>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -1128,9 +1128,9 @@ class CdkTableInCell extends BaseTestComponent {
             </div>
           </ng-template>
 
-          <span *cdkIfRowHovered>
+          <ng-template>
             <button cdkEditOpen>Edit</button>
-          </span>
+          </ng-template>
         </td>
       </ng-container>
 

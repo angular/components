@@ -782,6 +782,8 @@ class GridListWithFooterContainingTwoLines {}
         <mat-grid-tile-footer>
           @if (true) {
             <h3 mat-line>First line</h3>
+          }
+          @if (true) {
             <span mat-line>Second line</span>
           }
         </mat-grid-tile-footer>

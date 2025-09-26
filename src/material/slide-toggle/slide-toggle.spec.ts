@@ -151,7 +151,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggleElement.id).toBe('nextId');
       expect(buttonElement.id).toBe(`${slideToggleElement.id}-button`);
 
-      testComponent.slideId = null;
+      testComponent.slideId = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -229,7 +229,7 @@ describe('MatSlideToggle without forms', () => {
 
       expect(buttonElement.getAttribute('aria-describedby')).toBe('some-element');
 
-      testComponent.slideAriaDescribedBy = null;
+      testComponent.slideAriaDescribedBy = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -859,14 +859,14 @@ class SlideToggleBasic {
   disableRipple = false;
   slideChecked = false;
   slideColor: string;
-  slideId: string | null;
+  slideId: string;
   slideName: string | null;
   slideLabel: string | null;
   slideLabelledBy: string | null;
-  slideAriaDescribedBy: string | null;
+  slideAriaDescribedBy: string;
   slideTabindex: number;
   lastEvent: MatSlideToggleChange;
-  labelPosition: string;
+  labelPosition: 'before' | 'after';
   toggleTriggered = 0;
   dragTriggered = 0;
   direction: Direction = 'ltr';

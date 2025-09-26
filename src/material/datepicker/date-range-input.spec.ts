@@ -1213,7 +1213,7 @@ class StandardRangePicker {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  imports: [MatDateRangeInput, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoStart {}
 
@@ -1227,7 +1227,7 @@ class RangePickerNoStart {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  imports: [MatDateRangeInput, MatStartDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoEnd {}
 

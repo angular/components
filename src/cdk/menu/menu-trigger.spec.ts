@@ -647,7 +647,7 @@ class TriggerOpensItsMenu {
 
     <ng-template #sub1>
       <div cdkMenu>
-        <button #submenu_item cdkMenuItem [cdkMenuTriggerFor]="sub2">Second</button>
+        <button #submenu_item cdkMenuItem>Second</button>
       </div>
     </ng-template>
 

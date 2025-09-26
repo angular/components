@@ -20,6 +20,7 @@ import {By} from '@angular/platform-browser';
 import {MatNativeDateModule} from '../core';
 import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
 import {MatYearView} from './year-view';
+import {MatCalendarCellClassFunction} from './calendar-body';
 
 describe('MatYearView', () => {
   let dir: WritableSignal<Direction>;
@@ -434,7 +435,7 @@ class YearViewWithDateFilter {
 })
 class YearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);
-  dateClass(date: Date) {
-    return date.getMonth() % 2 == 0 ? 'even' : undefined;
-  }
+  dateClass: MatCalendarCellClassFunction<Date> = (date: Date) => {
+    return date.getMonth() % 2 == 0 ? 'even' : [];
+  };
 }

@@ -114,7 +114,7 @@ filegroup(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "slider_tests_lib",
     testonly = True,
     srcs = glob(

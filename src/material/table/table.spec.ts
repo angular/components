@@ -694,7 +694,7 @@ class FakeDataSource extends DataSource<TestData> {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
@@ -729,7 +729,7 @@ class MatTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NativeHtmlTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -783,7 +783,7 @@ class NativeHtmlTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NestedTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -831,7 +831,7 @@ class StickyTableApp {
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -1015,7 +1015,7 @@ class MatTableWithPaginatorApp implements OnInit {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class TableWithNgContainerRow {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 }
 
@@ -1053,7 +1053,7 @@ class TableWithNgContainerRow {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatFlexTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

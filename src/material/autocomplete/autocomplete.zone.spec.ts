@@ -13,8 +13,8 @@ import {
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {MATERIAL_ANIMATIONS, MatOption} from '../core';
-import {MatFormField} from '../form-field';
+import {MATERIAL_ANIMATIONS, MatOption, ThemePalette} from '../core';
+import {FloatLabelType, MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatAutocomplete} from './autocomplete';
 import {MatAutocompleteTrigger} from './autocomplete-trigger';
@@ -121,8 +121,8 @@ class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];
   valueSub: Subscription;
-  floatLabel = 'auto';
-  position = 'auto';
+  floatLabel: FloatLabelType = 'auto';
+  position: 'auto' | 'above' | 'below' = 'auto';
   width: number;
   disableRipple = false;
   autocompleteDisabled = false;
@@ -131,7 +131,7 @@ class SimpleAutocomplete implements OnDestroy {
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = 'class-one class-two';
-  theme: string;
+  theme: ThemePalette;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 

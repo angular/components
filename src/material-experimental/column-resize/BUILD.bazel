@@ -26,6 +26,7 @@ sass_library(
     ],
 )
 
+# TODO(crisbeto): this should be `ng_project`, but will require some refactors of the tests.
 ts_project(
     name = "column_resize_test_sources",
     testonly = True,

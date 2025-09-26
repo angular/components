@@ -1770,7 +1770,7 @@ function createComponent<T>(
   <form [formGroup]="formGroup">
     <mat-stepper>
       <mat-step errorMessage="This field is required"
-        [stepControl]="formGroup.get('firstNameCtrl')">
+        [stepControl]="formGroup.get('firstNameCtrl')!">
         <ng-template matStepLabel>Step 1</ng-template>
         <mat-form-field>
           <mat-label>First name</mat-label>
@@ -1843,7 +1843,7 @@ class SimpleMatHorizontalStepperApp {
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
   secondStepTheme = signal<ThemePalette>(undefined);
-  headerPosition = signal('');
+  headerPosition = signal<'top' | 'bottom'>('top');
 }
 
 @Component({

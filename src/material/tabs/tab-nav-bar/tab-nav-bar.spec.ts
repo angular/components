@@ -586,7 +586,7 @@ class TabLinkWithNgIf {
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       @for (tab of tabs; track tab) {
-        <a mat-tab-link [active]="false">Tab link {{label}}</a>
+        <a mat-tab-link [active]="false">Tab link {{tab}}</a>
       }
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>

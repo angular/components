@@ -1448,7 +1448,7 @@ class SimpleCdkTreeApp {
   isExpandable = (node: TestData) => node.children.length > 0;
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
   indent: number | string = 28;
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
@@ -1487,7 +1487,7 @@ class NestedCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1550,7 +1550,7 @@ class WhenNodeNestedCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1574,7 +1574,7 @@ class CdkTreeAppWithToggle {
   isExpandable = (node: TestData) => node.children.length > 0;
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1602,7 +1602,7 @@ class NestedCdkTreeAppWithToggle {
   isExpandable?: (node: TestData) => boolean;
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1631,7 +1631,7 @@ class WhenNodeCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
 
-  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1654,7 +1654,7 @@ class ArrayDataSourceCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataArray() {
     return this.dataSource.data;
@@ -1681,7 +1681,7 @@ class ObservableDataSourceCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataObservable() {
     return this.dataSource._dataChange;
@@ -1706,7 +1706,7 @@ class ArrayDataSourceNestedCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataArray() {
     return this.dataSource.data;
@@ -1731,7 +1731,7 @@ class ObservableDataSourceNestedCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataObservable() {
     return this.dataSource._dataChange;
@@ -1757,7 +1757,7 @@ class DepthNestedCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataArray() {
     return this.dataSource.data;
@@ -1794,7 +1794,7 @@ class CdkTreeAppWithTrackBy {
   isExpandable = (node: TestData) => node.children.length > 0;
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
@@ -1828,7 +1828,7 @@ class NestedCdkTreeAppWithTrackBy {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+  dataSource = new FakeDataSource(this.treeControl);
 
   get dataArray() {
     return this.dataSource.data;

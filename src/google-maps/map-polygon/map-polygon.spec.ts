@@ -161,8 +161,8 @@ describe('MapPolygon', () => {
 })
 class TestApp {
   @ViewChild(MapPolygon) polygon: MapPolygon;
-  options?: google.maps.PolygonOptions;
-  paths?: google.maps.LatLngLiteral[];
+  options: google.maps.PolygonOptions;
+  paths: google.maps.LatLngLiteral[];
 
   handleClick() {}
 

@@ -1249,7 +1249,6 @@ class InputChipGrid {
     MatFormField,
     MatHint,
     MatError,
-    MatLabel,
     ReactiveFormsModule,
     FormsModule,
   ],
