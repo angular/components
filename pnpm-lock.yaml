@@ -484,8 +484,8 @@ importers:
         specifier: ^24.6.1
         version: 24.16.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.93.1
-        version: 1.93.1
+        specifier: 1.93.2
+        version: 1.93.2
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -8305,8 +8305,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.93.1:
-    resolution: {integrity: sha512-wLAeLB7IksO2u+cCfhHqcy7/2ZUMPp/X2oV6+LjmweTqgjhOKrkaE/Q1wljxtco5EcOcupZ4c981X0gpk5Tiag==}
+  sass@1.93.2:
+    resolution: {integrity: sha512-t+YPtOQHpGW1QWsh1CHQ5cPIr9lbbGZLZnbihP/D/qZj/yuV68m8qarcV17nvkOX81BCrvzAlq2klCQFZghyTg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -18834,7 +18834,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.93.1:
+  sass@1.93.2:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3
