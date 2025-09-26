@@ -42,7 +42,7 @@ export function supportsScrollBehavior(): boolean {
     }
 
     // If the element can have a `scrollBehavior` style, we can be sure that it's supported.
-    if ('scrollBehavior' in document.documentElement!.style) {
+    if (document.documentElement?.style && 'scrollBehavior' in document.documentElement!.style) {
       scrollBehaviorSupported = true;
     } else {
       // At this point we have 3 possibilities: `scrollTo` isn't supported at all, it's
