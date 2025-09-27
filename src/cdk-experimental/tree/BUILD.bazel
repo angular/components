@@ -13,7 +13,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/combobox",
         "//src/cdk-experimental/deferred-content",
-        "//src/cdk-experimental/ui-patterns/tree",
+        "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],
