@@ -122,6 +122,9 @@ interface SelectOptions {
 
 /** Represents the required inputs for a tree. */
 export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, 'items'> {
+  /** A unique identifier for the tree. */
+  id: SignalLike<string>;
+
   /** All items in the tree, in document order (DFS-like, a flattened list). */
   allItems: SignalLike<TreeItemPattern<V>[]>;
 
@@ -148,7 +151,7 @@ export class TreePattern<V> {
   readonly expanded = () => true;
 
   /** The tabindex of the tree. */
-  readonly tabindex = computed(() => this.listBehavior.tabindex());
+  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
   readonly activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -293,6 +296,7 @@ export class TreePattern<V> {
   });
 
   constructor(readonly inputs: TreeInputs<V>) {
+    this.id = inputs.id;
     this.nav = inputs.nav;
     this.currentType = inputs.currentType;
     this.allItems = inputs.allItems;
@@ -425,7 +429,7 @@ export class TreePattern<V> {
   }
 
   /** Retrieves the TreeItemPattern associated with a DOM event, if any. */
-  private _getItem(event: Event): TreeItemPattern<V> | undefined {
+  protected _getItem(event: Event): TreeItemPattern<V> | undefined {
     if (!(event.target instanceof HTMLElement)) {
       return;
     }

@@ -5,317 +5,140 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW, ENTER, ESCAPE, TAB} from '@angular/cdk/keycodes';
-import {
-  ConnectedPosition,
-  createBlockScrollStrategy,
-  createFlexibleConnectedPositionStrategy,
-  createOverlayRef,
-  FlexibleConnectedPositionStrategy,
-  OverlayConfig,
-  OverlayRef,
-} from '@angular/cdk/overlay';
-import {_getEventTarget} from '@angular/cdk/platform';
-import {TemplatePortal} from '@angular/cdk/portal';
 
 import {
-  ChangeDetectorRef,
+  afterRenderEffect,
+  contentChild,
   Directive,
   ElementRef,
-  EventEmitter,
-  HOST_TAG_NAME,
-  InjectionToken,
-  Injector,
-  Input,
-  OnDestroy,
-  Output,
-  TemplateRef,
-  ViewContainerRef,
   inject,
-  DOCUMENT,
+  input,
+  model,
+  signal,
+  untracked,
+  WritableSignal,
 } from '@angular/core';
-
-export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
-export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
-export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
-
-const allowedOpenActions = ['focus', 'click', 'downKey', 'toggle'];
-
-export const CDK_COMBOBOX = new InjectionToken<CdkCombobox>('CDK_COMBOBOX');
+import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
+import {ComboboxPattern, ComboboxListboxControls, ComboboxTreeControls} from '../ui-patterns';
 
 @Directive({
   selector: '[cdkCombobox]',
   exportAs: 'cdkCombobox',
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
   host: {
-    'role': 'combobox',
-    'class': 'cdk-combobox',
-    '(click)': '_handleInteractions("click")',
-    '(focus)': '_handleInteractions("focus")',
-    '(keydown)': '_keydown($event)',
-    '(document:click)': '_attemptClose($event)',
-    '[attr.aria-disabled]': 'disabled',
-    '[attr.aria-owns]': 'contentId',
-    '[attr.aria-haspopup]': 'contentType',
-    '[attr.aria-expanded]': 'isOpen()',
-    '[attr.tabindex]': '_getTabIndex()',
+    '[attr.data-expanded]': 'pattern.expanded()',
+    '(input)': 'pattern.onInput($event)',
+    '(keydown)': 'pattern.onKeydown($event)',
+    '(pointerup)': 'pattern.onPointerup($event)',
+    '(focusin)': 'pattern.onFocusIn()',
+    '(focusout)': 'pattern.onFocusOut($event)',
   },
-  providers: [{provide: CDK_COMBOBOX, useExisting: CdkCombobox}],
 })
-export class CdkCombobox<T = unknown> implements OnDestroy {
-  private readonly _tagName = inject(HOST_TAG_NAME);
-  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected readonly _viewContainerRef = inject(ViewContainerRef);
-  private readonly _injector = inject(Injector);
-  private readonly _doc = inject(DOCUMENT);
-  private readonly _directionality = inject(Directionality, {optional: true});
-  private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _overlayRef: OverlayRef;
-  private _panelPortal: TemplatePortal;
+export class CdkCombobox<V> {
+  /** The element that the combobox is attached to. */
+  private readonly _elementRef = inject(ElementRef);
 
-  @Input('cdkComboboxTriggerFor')
-  _panelTemplateRef: TemplateRef<unknown>;
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
 
-  @Input()
-  value: T | T[];
+  /** The combobox popup. */
+  readonly popup = contentChild<CdkComboboxPopup<V>>(CdkComboboxPopup);
 
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled: boolean = false;
+  /** The filter mode for the combobox. */
+  filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
 
-  @Input()
-  get openActions(): OpenAction[] {
-    return this._openActions;
-  }
-  set openActions(action: OpenActionInput) {
-    this._openActions = this._coerceOpenActionProperty(action);
-  }
-  private _openActions: OpenAction[] = ['click'];
+  /** Whether the combobox is focused. */
+  readonly isFocused = signal(false);
 
-  /** Whether the textContent is automatically updated upon change of the combobox value. */
-  @Input()
-  get autoSetText(): boolean {
-    return this._autoSetText;
-  }
-  set autoSetText(value: BooleanInput) {
-    this._autoSetText = coerceBooleanProperty(value);
-  }
-  private _autoSetText: boolean = true;
+  /** The value of the first matching item in the popup. */
+  firstMatch = input<V | undefined>(undefined);
 
-  @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
-  @Output('comboboxPanelClosed') readonly closed: EventEmitter<void> = new EventEmitter<void>();
-  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]> = new EventEmitter<
-    T[]
-  >();
+  /** Whether the listbox has received focus yet. */
+  private _hasBeenFocused = signal(false);
 
-  contentId: string = '';
-  contentType: AriaHasPopupValue;
+  /** The combobox ui pattern. */
+  readonly pattern = new ComboboxPattern<any, V>({
+    ...this,
+    inputValue: signal(''),
+    inputEl: signal(undefined),
+    containerEl: () => this._elementRef.nativeElement,
+    popupControls: () => this.popup()?.controls(),
+  });
 
-  ngOnDestroy() {
-    if (this._overlayRef) {
-      this._overlayRef.dispose();
-    }
-
-    this.opened.complete();
-    this.closed.complete();
-    this.panelValueChanged.complete();
-  }
-
-  _keydown(event: KeyboardEvent) {
-    const {keyCode} = event;
-
-    if (keyCode === DOWN_ARROW) {
-      if (this.isOpen()) {
-        // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
-        this._doc.getElementById(this.contentId)?.focus();
-      } else if (this._openActions.indexOf('downKey') !== -1) {
-        this.open();
+  constructor() {
+    afterRenderEffect(() => {
+      if (!this._deferredContentAware?.contentVisible() && this.pattern.isFocused()) {
+        this._deferredContentAware?.contentVisible.set(true);
       }
-    } else if (keyCode === ENTER) {
-      if (this._openActions.indexOf('toggle') !== -1) {
-        this.toggle();
-      } else if (this._openActions.indexOf('click') !== -1) {
-        this.open();
+    });
+
+    afterRenderEffect(() => {
+      if (!this._hasBeenFocused() && this.pattern.isFocused()) {
+        this._hasBeenFocused.set(true);
       }
-    } else if (keyCode === ESCAPE) {
-      event.preventDefault();
-      this.close();
-    } else if (keyCode === TAB) {
-      this.close();
-    }
-  }
-
-  /** Handles click or focus interactions. */
-  _handleInteractions(interaction: OpenAction) {
-    if (interaction === 'click') {
-      if (this._openActions.indexOf('toggle') !== -1) {
-        this.toggle();
-      } else if (this._openActions.indexOf('click') !== -1) {
-        this.open();
-      }
-    } else if (interaction === 'focus') {
-      if (this._openActions.indexOf('focus') !== -1) {
-        this.open();
-      }
-    }
-  }
-
-  /** Given a click in the document, determines if the click was inside a combobox. */
-  _attemptClose(event: MouseEvent) {
-    if (this.isOpen()) {
-      let target = _getEventTarget(event);
-      while (target instanceof Element) {
-        if (target.className.indexOf('cdk-combobox') !== -1) {
-          return;
-        }
-        target = target.parentElement;
-      }
-    }
-
-    this.close();
-  }
-
-  /** Toggles the open state of the panel. */
-  toggle() {
-    if (this.hasPanel()) {
-      this.isOpen() ? this.close() : this.open();
-    }
-  }
-
-  /** If the combobox is closed and not disabled, opens the panel. */
-  open() {
-    if (!this.isOpen() && !this.disabled) {
-      this.opened.next();
-      this._overlayRef =
-        this._overlayRef || createOverlayRef(this._injector, this._getOverlayConfig());
-      this._overlayRef.attach(this._getPanelContent());
-      this._changeDetectorRef.markForCheck();
-      if (!this._isTextTrigger()) {
-        // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
-        this._doc.getElementById(this.contentId)?.focus();
-      }
-    }
-  }
-
-  /** If the combobox is open and not disabled, closes the panel. */
-  close() {
-    if (this.isOpen() && !this.disabled) {
-      this.closed.next();
-      this._overlayRef.detach();
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /** Returns true if panel is currently opened. */
-  isOpen(): boolean {
-    return this._overlayRef ? this._overlayRef.hasAttached() : false;
-  }
-
-  /** Returns true if combobox has a child panel. */
-  hasPanel(): boolean {
-    return !!this._panelTemplateRef;
-  }
-
-  _getTabIndex(): string | null {
-    return this.disabled ? null : '0';
-  }
-
-  private _setComboboxValue(value: T | T[]) {
-    const valueChanged = this.value !== value;
-    this.value = value;
-
-    if (valueChanged) {
-      this.panelValueChanged.emit(coerceArray(value));
-      if (this._autoSetText) {
-        this._setTextContent(value);
-      }
-    }
-  }
-
-  updateAndClose(value: T | T[]) {
-    this._setComboboxValue(value);
-    this.close();
-  }
-
-  private _setTextContent(content: T | T[]) {
-    const contentArray = coerceArray(content);
-    this._elementRef.nativeElement.textContent = contentArray.join(' ');
-  }
-
-  private _isTextTrigger() {
-    // TODO: Should check if the trigger is contenteditable.
-    const tagName = this._tagName.toLowerCase();
-    return tagName === 'input' || tagName === 'textarea';
-  }
-
-  private _getOverlayConfig() {
-    return new OverlayConfig({
-      positionStrategy: this._getOverlayPositionStrategy(),
-      scrollStrategy: createBlockScrollStrategy(this._injector),
-      direction: this._directionality || undefined,
     });
   }
+}
 
-  private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
-    return createFlexibleConnectedPositionStrategy(this._injector, this._elementRef).withPositions(
-      this._getOverlayPositions(),
+@Directive({
+  selector: 'input[cdkComboboxInput]',
+  exportAs: 'cdkComboboxInput',
+  host: {
+    'role': 'combobox',
+    '[value]': 'value()',
+    '[attr.aria-expanded]': 'combobox.pattern.expanded()',
+    '[attr.aria-activedescendant]': 'combobox.pattern.activedescendant()',
+    '[attr.aria-controls]': 'combobox.pattern.popupId()',
+    '[attr.aria-haspopup]': 'combobox.pattern.hasPopup()',
+    '[attr.aria-autocomplete]': 'combobox.pattern.autocomplete()',
+  },
+})
+export class CdkComboboxInput {
+  /** The element that the combobox is attached to. */
+  private readonly _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
+  /** The combobox that the input belongs to. */
+  readonly combobox = inject(CdkCombobox);
+
+  /** The value of the input. */
+  value = model<string>('');
+
+  constructor() {
+    (this.combobox.pattern.inputs.inputEl as WritableSignal<HTMLInputElement>).set(
+      this._elementRef.nativeElement,
     );
-  }
+    this.combobox.pattern.inputs.inputValue = this.value;
 
-  private _getOverlayPositions(): ConnectedPosition[] {
-    return [
-      {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
-      {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom'},
-      {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top'},
-      {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom'},
-    ];
+    /** Focuses & selects the first item in the combobox if the user changes the input value. */
+    afterRenderEffect(() => {
+      this.combobox.popup()?.controls()?.items();
+      untracked(() => this.combobox.pattern.onFilter());
+    });
   }
+}
 
-  private _getPanelInjector() {
-    return this._injector;
-  }
+@Directive({
+  selector: 'ng-template[cdkComboboxPopupContainer]',
+  exportAs: 'cdkComboboxPopupContainer',
+  hostDirectives: [DeferredContent],
+})
+export class CdkComboboxPopupContainer {}
 
-  private _getPanelContent() {
-    const hasPanelChanged = this._panelTemplateRef !== this._panelPortal?.templateRef;
-    if (this._panelTemplateRef && (!this._panelPortal || hasPanelChanged)) {
-      this._panelPortal = new TemplatePortal(
-        this._panelTemplateRef,
-        this._viewContainerRef,
-        undefined,
-        this._getPanelInjector(),
-      );
-    }
+@Directive({
+  selector: '[cdkComboboxPopup]',
+  exportAs: 'cdkComboboxPopup',
+})
+export class CdkComboboxPopup<V> {
+  /** The combobox that the popup belongs to. */
+  readonly combobox = inject<CdkCombobox<V>>(CdkCombobox, {optional: true});
 
-    return this._panelPortal;
-  }
-
-  private _coerceOpenActionProperty(input: OpenActionInput): OpenAction[] {
-    let actions = typeof input === 'string' ? input.trim().split(/[ ,]+/) : input;
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      actions?.some(a => allowedOpenActions.indexOf(a) === -1)
-    ) {
-      throw Error(`${input} is not a support open action for CdkCombobox`);
-    }
-    return actions as OpenAction[];
-  }
-
-  /** Registers the content's id and the content type with the panel. */
-  _registerContent(contentId: string, contentType: AriaHasPopupValue) {
-    if (
-      (typeof ngDevMode === 'undefined' || ngDevMode) &&
-      contentType !== 'listbox' &&
-      contentType !== 'dialog'
-    ) {
-      throw Error('CdkComboboxPanel currently only supports listbox or dialog content.');
-    }
-    this.contentId = contentId;
-    this.contentType = contentType;
-  }
+  /** The controls the popup exposes to the combobox. */
+  readonly controls = signal<
+    ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | undefined
+  >(undefined);
 }

@@ -1,0 +1,38 @@
+<div
+  #combobox="cdkCombobox"
+  cdkCombobox
+  filterMode="auto-select"
+  class="example-combobox-container"
+>
+  <div class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input
+      cdkComboboxInput
+      placeholder="Search..."
+      [(value)]="searchString"
+      class="example-combobox-input"
+    />
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template cdkComboboxPopupContainer>
+      <div cdkListbox class="example-listbox">
+        @for (option of options(); track option) {
+          <div
+            class="example-option example-selectable example-stateful"
+            cdkOption
+            [value]="option"
+            [label]="option"
+          >
+            <span>{{option}}</span>
+            <span
+              aria-hidden="true"
+              class="material-symbols-outlined example-icon example-selected-icon"
+              >check</span
+            >
+          </div>
+        }
+      </div>
+    </ng-template>
+  </div>
+</div>

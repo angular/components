@@ -1,0 +1,24 @@
+.example-combobox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.example-combobox-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    /* stylelint-disable material/no-prefixes */
+    width: fit-content;
+}
+
+.example-configurable-combobox-container {
+    padding-top: 40px;
+}
+
+h2 {
+    font-size: 1.1rem;
+}
+

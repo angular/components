@@ -136,6 +136,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
+        id: signal('tree-1'),
         activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
@@ -189,6 +190,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -235,6 +237,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
+        id: signal('tree-1'),
         activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
@@ -420,6 +423,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -479,6 +483,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -558,6 +563,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -717,6 +723,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -868,6 +875,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -909,6 +917,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -963,6 +972,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -1012,6 +1022,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
+          id: signal('tree-1'),
           activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
@@ -1095,6 +1106,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
+        id: signal('tree-1'),
         activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
@@ -1326,6 +1338,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
+        id: signal('tree-1'),
         activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
