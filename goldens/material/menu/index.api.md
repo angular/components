@@ -100,7 +100,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     _handleKeydown(event: KeyboardEvent): void;
     hasBackdrop?: boolean;
     _hovered(): Observable<MatMenuItem>;
-    _isAnimating: boolean;
+    _isAnimating: i0.WritableSignal<boolean>;
     // @deprecated
     items: QueryList<MatMenuItem>;
     lazyContent: MatMenuContent;
