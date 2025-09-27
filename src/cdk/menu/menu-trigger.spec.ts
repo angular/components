@@ -8,6 +8,8 @@ import {Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CdkMenuBar} from './menu-bar';
+import {OverlayContainer} from '../overlay';
+import {CDK_MENU_DEFAULT_OPTIONS} from './menu-trigger-base';
 
 describe('MenuTrigger', () => {
   describe('on CdkMenuItem', () => {
@@ -513,6 +515,65 @@ describe('MenuTrigger', () => {
 
       expect(fixture.componentInstance.trigger.isOpen()).toBeFalse();
     });
+  });
+
+  describe('with backdrop in options', () => {
+    let overlayContainerElement: HTMLElement;
+
+    it('should not contain backdrop by default', fakeAsync(() => {
+      const fixture = TestBed.createComponent(MenuBarWithNestedSubMenus);
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      fixture.detectChanges();
+
+      const triggers = fixture.componentInstance.triggers.toArray();
+      triggers[0].toggle();
+      fixture.detectChanges();
+
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+    }));
+
+    it('should be able to add the backdrop using hasBackdrop option', fakeAsync(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{provide: CDK_MENU_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}],
+      });
+
+      const fixture = TestBed.createComponent(MenuBarWithNestedSubMenus);
+      fixture.detectChanges();
+
+      const triggers = fixture.componentInstance.triggers.toArray();
+      triggers[0].toggle();
+      fixture.detectChanges();
+
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      tick(500);
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+    }));
+
+    it('should be able to add the custom backdrop class using backdropClass option', fakeAsync(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: CDK_MENU_DEFAULT_OPTIONS,
+            useValue: {hasBackdrop: true, backdropClass: 'custom-backdrop'},
+          },
+        ],
+      });
+
+      const fixture = TestBed.createComponent(MenuBarWithNestedSubMenus);
+      fixture.detectChanges();
+      const triggers = fixture.componentInstance.triggers.toArray();
+      triggers[0].toggle();
+      fixture.detectChanges();
+
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.custom-backdrop')).toBeTruthy();
+    }));
   });
 
   it('should focus the first item when opening on click', fakeAsync(() => {
