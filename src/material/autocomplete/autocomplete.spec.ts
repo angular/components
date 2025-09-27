@@ -1614,6 +1614,36 @@ describe('MatAutocomplete', () => {
     });
   });
 
+  describe('form control with initial value', () => {
+    let fixture: ComponentFixture<FormControlWithInitialValue>;
+    let input: HTMLInputElement;
+
+    beforeEach(waitForAsync(async () => {
+      fixture = createComponent(FormControlWithInitialValue);
+      fixture.detectChanges();
+
+      input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+    }));
+
+    it('should mark the initial value as selected if its present', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+      trigger.openPanel();
+      fixture.detectChanges();
+
+      const options = overlayContainerElement.querySelectorAll(
+        'mat-option',
+      ) as NodeListOf<HTMLElement>;
+
+      expect(input.value).toBe('Three');
+      expect(options.length).toBe(3);
+      expect(options[2].classList).toContain('mdc-list-item--selected');
+    }));
+  });
+
   describe('option groups', () => {
     let DOWN_ARROW_EVENT: KeyboardEvent;
     let UP_ARROW_EVENT: KeyboardEvent;
@@ -4412,6 +4442,37 @@ class AutocompleteWithSelectEvent {
 })
 class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl('');
+}
+
+@Component({
+  template: `
+<mat-form-field>
+      <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
+    </mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete" >
+      @for (option of options; track option) {
+  <mat-option [value]="option">
+         {{option}}
+      </mat-option>
+}
+    </mat-autocomplete>
+  `,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
+})
+class FormControlWithInitialValue {
+  optionCtrl = new FormControl('Three');
+  filteredOptions: Observable<any>;
+  options = ['One', 'Two', 'Three'];
+
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+
+  constructor() {}
 }
 
 @Component({
