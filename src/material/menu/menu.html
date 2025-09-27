@@ -5,7 +5,7 @@
     [class]="_classList"
     [class.mat-menu-panel-animations-disabled]="_animationsDisabled"
     [class.mat-menu-panel-exit-animation]="_panelAnimationState === 'void'"
-    [class.mat-menu-panel-animating]="_isAnimating"
+    [class.mat-menu-panel-animating]="_isAnimating()"
     (click)="closed.emit('click')"
     tabindex="-1"
     role="menu"
