@@ -65,7 +65,7 @@ $_fallback-size: 40px;
     pointer-events: none;
 
     @include cdk.high-contrast {
-      opacity: 0.5;
+      color: GrayText;
     }
   }
 
