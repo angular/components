@@ -12,7 +12,7 @@ import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-li
 import {ListItem} from '../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */
-export type ComboboxInputs<T extends ListItem<V>, V> = {
+export interface ComboboxInputs<T extends ListItem<V>, V> {
   /** The controls for the popup associated with the combobox. */
   popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | undefined>;
 
@@ -30,10 +30,10 @@ export type ComboboxInputs<T extends ListItem<V>, V> = {
 
   /** The value of the first matching item in the popup. */
   firstMatch: SignalLike<V | undefined>;
-};
+}
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
-export type ComboboxListboxControls<T extends ListItem<V>, V> = {
+export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** A unique identifier for the popup. */
   id: () => string;
 
@@ -78,9 +78,10 @@ export type ComboboxListboxControls<T extends ListItem<V>, V> = {
 
   /** Sets the value of the combobox based on the selected item. */
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
-};
+}
 
-export type ComboboxTreeControls<T extends ListItem<V>, V> = ComboboxListboxControls<T, V> & {
+export interface ComboboxTreeControls<T extends ListItem<V>, V>
+  extends ComboboxListboxControls<T, V> {
   /** Whether the currently active item in the popup is collapsible. */
   isItemCollapsible: () => boolean;
 
@@ -98,7 +99,7 @@ export type ComboboxTreeControls<T extends ListItem<V>, V> = ComboboxListboxCont
 
   /** Collapses all nodes in the tree. */
   collapseAll: () => void;
-};
+}
 
 /** Controls the state of a combobox. */
 export class ComboboxPattern<T extends ListItem<V>, V> {
