@@ -77,7 +77,7 @@ describe('AccordionGroup', () => {
   }
 
   function isTriggerActive(target: HTMLElement): boolean {
-    return target.classList.contains('active');
+    return target.getAttribute('data-active') === 'true';
   }
 
   function isTriggerExpanded(target: HTMLElement): boolean {
