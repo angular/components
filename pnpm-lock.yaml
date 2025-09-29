@@ -347,6 +347,9 @@ importers:
 
   docs:
     dependencies:
+      '@angular/aria':
+        specifier: workspace:*
+        version: link:../src/aria
       '@angular/cdk':
         specifier: workspace:*
         version: link:../src/cdk
@@ -516,7 +519,7 @@ importers:
       '@angular/youtube-player':
         specifier: workspace:*
         version: link:../src/youtube-player
-        
+
   src/aria:
     dependencies:
       tslib:
