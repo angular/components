@@ -5,7 +5,7 @@
     "outDir": "./dist/packages/all",
     "experimentalDecorators": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
