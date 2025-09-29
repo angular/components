@@ -120,6 +120,14 @@ div.mat-mdc-select-panel {
     color: token-utils.slot(select-disabled-arrow-color, $fallbacks);
   }
 
+  .mat-select-open & {
+    transform: rotate(180deg);
+  }
+
+  .mat-form-field-animations-enabled & {
+    transition: transform variables.$swift-linear-duration variables.$swift-linear-timing-function;
+  }
+
   svg {
     fill: currentColor;
     position: absolute;
