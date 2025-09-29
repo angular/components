@@ -19,11 +19,13 @@ import {
   Signal,
   OnInit,
   OnDestroy,
+  untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
-import {TreeItemPattern, TreePattern} from '../ui-patterns/tree/tree';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../ui-patterns';
+import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox';
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -65,6 +67,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
+    '[attr.id]': 'id()',
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multi()',
     '[attr.aria-disabled]': 'pattern.disabled()',
@@ -74,8 +77,21 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '(pointerdown)': 'pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
+  hostDirectives: [{directive: CdkComboboxPopup}],
 })
 export class CdkTree<V> {
+  /** A unique identifier for the tree. */
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-tree-');
+
+  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
+  /** A unique identifier for the tree. */
+  protected id = computed(() => this._generatedId);
+
+  /** A reference to the parent combobox popup, if one exists. */
+  private readonly _popup = inject<CdkComboboxPopup<V>>(CdkComboboxPopup, {
+    optional: true,
+  });
+
   /** A reference to the tree element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -121,22 +137,52 @@ export class CdkTree<V> {
   );
 
   /** The UI pattern for the tree. */
-  readonly pattern: TreePattern<V> = new TreePattern<V>({
-    ...this,
-    allItems: computed(() =>
-      [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
-    ),
-    activeItem: signal(undefined),
-    element: () => this._elementRef.nativeElement,
-  });
+  readonly pattern: TreePattern<V>;
 
   /** Whether the tree has received focus yet. */
   private _hasFocused = signal(false);
 
   constructor() {
+    const inputs = {
+      ...this,
+      id: this.id,
+      allItems: computed(() =>
+        [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
+      ),
+      activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
+      element: () => this._elementRef.nativeElement,
+      combobox: () => this._popup?.combobox?.pattern,
+    };
+
+    this.pattern = this._popup?.combobox
+      ? new ComboboxTreePattern<V>(inputs)
+      : new TreePattern<V>(inputs);
+
+    if (this._popup?.combobox) {
+      this._popup?.controls?.set(this.pattern as ComboboxTreePattern<V>);
+    }
+
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this.pattern.setDefaultState();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.allItems();
+      const activeItem = untracked(() => inputs.activeItem());
+
+      if (!items.some(i => i === activeItem) && activeItem) {
+        this.pattern.listBehavior.unfocus();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.allItems();
+      const value = untracked(() => this.value());
+
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
   }
@@ -176,7 +222,6 @@ export class CdkTree<V> {
     '[attr.aria-setsize]': 'pattern.setsize()',
     '[attr.aria-posinset]': 'pattern.posinset()',
     '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.inert]': 'pattern.visible() ? null : true',
   },
 })
 export class CdkTreeItem<V> implements OnInit, OnDestroy, HasElement {
@@ -313,9 +358,12 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   readonly ownedBy = input.required<CdkTreeItem<V>>();
 
   constructor() {
+    this._deferredContentAware.preserveContent.set(true);
     // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(this.visible());
+      this.ownedBy().tree().pattern instanceof ComboboxTreePattern
+        ? this._deferredContentAware.contentVisible.set(true)
+        : this._deferredContentAware.contentVisible.set(this.visible());
     });
   }
 

@@ -129,6 +129,11 @@ export class List<T extends ListItem<V>, V> {
     this._navigate(opts, () => this.navigationBehavior.goto(item));
   }
 
+  /** Removes focus from the list. */
+  unfocus() {
+    this.inputs.activeItem.set(undefined);
+  }
+
   /** Marks the given index as the potential start of a range selection. */
   anchor(index: number) {
     this._anchorIndex.set(index);
@@ -145,8 +150,8 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Selects the currently active item in the list. */
-  select() {
-    this.selectionBehavior.select();
+  select(item?: T) {
+    this.selectionBehavior.select(item);
   }
 
   /** Sets the selection to only the current active item. */
