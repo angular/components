@@ -1,0 +1,20 @@
+<div class="example-container">
+  <ul
+    radioGroup
+    [disabled]="true"
+    class="example-radio-group example-parent"
+    aria-labelledby="disabled-radio-label"
+  >
+    <label class="example-label" id="disabled-radio-label">Favorite Fruit (Disabled)</label>
+    @for (fruit of fruits; track fruit) {
+      <li class="example-radio-button example-stateful example-selectable" [value]="fruit" radioButton #radioButton="radioButton">
+        <span
+          class="example-radio-indicator"
+          [class.example-radio-checked]="radioButton.pattern.selected()"
+        ></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+  <p><i>The entire radio group is disabled. Focus should not enter the group.</i></p>
+</div>

@@ -1,0 +1,24 @@
+<!-- Readonly -->
+<div class="example-container">
+  <ul
+    listbox
+    [readonly]="true"
+    class="example-listbox example-parent"
+    aria-labelledby="readonly-label"
+  >
+    <label class="example-label" id="readonly-label">Readonly Fruits</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-option example-stateful example-selectable"
+        [value]="fruit"
+        option
+        #option="option"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

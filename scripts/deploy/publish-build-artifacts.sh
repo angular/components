@@ -17,6 +17,7 @@ fi
 
 # Release packages that need to published as snapshots.
 PACKAGES=(
+  aria
   cdk
   cdk-experimental
   material

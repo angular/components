@@ -1,0 +1,40 @@
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "tree",
+    srcs = [
+        "index.ts",
+        "public-api.ts",
+        "tree.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/combobox",
+        "//src/aria/deferred-content",
+        "//src/aria/ui-patterns",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = [
+        "tree.spec.ts",
+    ],
+    deps = [
+        ":tree",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

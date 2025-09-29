@@ -1,0 +1,30 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//src/aria:config.bzl", "ARIA_TARGETS")
+load("//tools:defaults.bzl", "ng_package", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "aria",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = ["//:node_modules/@angular/core"],
+)
+
+ng_package(
+    name = "npm_package",
+    package_name = "@angular/aria",
+    srcs = ["package.json"],
+    tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+        "//src/material-experimental:__subpackages__",
+    ],
+    deps = ARIA_TARGETS,
+)

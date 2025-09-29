@@ -7,7 +7,13 @@ const commonTypos = new Map([['snackbar', 'snack-bar']]);
 // List of packages where the specified component could be defined in. The script uses the
 // first package that contains the component (if no package is specified explicitly).
 // e.g. "button" will become "material/button", and "overlay" becomes "cdk/overlay".
-const orderedGuessPackages = ['material', 'cdk', 'material-experimental', 'cdk-experimental'];
+const orderedGuessPackages = [
+  'material',
+  'aria',
+  'cdk',
+  'material-experimental',
+  'cdk-experimental',
+];
 
 /**
  * Tries to guess the full name of a package, based on a shorthand name.

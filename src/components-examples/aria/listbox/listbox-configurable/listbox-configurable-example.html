@@ -1,0 +1,87 @@
+<div class="example-listbox-controls">
+  <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection</mat-label>
+    <mat-select [(value)]="selection" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Disabled Options</mat-label>
+    <mat-select [(value)]="disabledOptions" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Orientation</mat-label>
+    <mat-select [(value)]="orientation">
+      <mat-option value="vertical">Vertical</mat-option>
+      <mat-option value="horizontal">Horizontal</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection strategy</mat-label>
+    <mat-select [(value)]="selectionMode">
+      <mat-option value="explicit">Explicit</mat-option>
+      <mat-option value="follow">Follow Focus</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving tabindex">Roving Tabindex</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- #docregion listbox -->
+<ul
+  listbox
+  #listbox="listbox"
+  [value]="selection"
+  [wrap]="wrap.value"
+  [multi]="multi.value"
+  [readonly]="readonly.value"
+  [disabled]="disabled.value"
+  [skipDisabled]="skipDisabled.value"
+  [orientation]="orientation"
+  [focusMode]="focusMode"
+  [selectionMode]="selectionMode"
+  class="example-listbox example-parent"
+  aria-labelledby="configurable-select-label"
+>
+  <label class="example-label" id="configurable-select-label">Configurable Select Fruits</label>
+
+  @for (fruit of fruits; track fruit) {
+    @let optionDisabled = disabledOptions.includes(fruit);
+
+    <li
+      class="example-option example-stateful example-selectable"
+      [disabled]="optionDisabled"
+      [value]="fruit"
+      option
+      #option="option"
+    >
+      <mat-pseudo-checkbox
+        [disabled]="optionDisabled || listbox.disabled()"
+        [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+      ></mat-pseudo-checkbox>
+      <span>{{ fruit }}</span>
+    </li>
+  }
+</ul>
+<!-- #enddocregion listbox -->

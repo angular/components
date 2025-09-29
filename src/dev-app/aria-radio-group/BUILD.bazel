@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-radio-group",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "radio-group-demo.html",
+        ":radio-group-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/aria/radio-group",
+    ],
+)

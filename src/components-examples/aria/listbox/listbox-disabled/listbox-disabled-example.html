@@ -1,0 +1,23 @@
+<div class="example-container">
+  <ul
+    listbox
+    [disabled]="true"
+    class="example-listbox example-parent"
+    aria-labelledby="disabled-label"
+  >
+    <label class="example-label" id="disabled-label">Disabled Fruits</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-option example-stateful example-selectable"
+        [value]="fruit"
+        option
+        #option="option"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

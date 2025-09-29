@@ -41,48 +41,36 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./card/card-demo').then(m => m.CardDemo),
   },
   {
-    path: 'cdk-experimental-combobox',
-    loadComponent: () =>
-      import('./cdk-experimental-combobox/cdk-combobox-demo').then(m => m.CdkComboboxDemo),
+    path: 'aria-combobox',
+    loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
   },
   {
-    path: 'cdk-experimental-listbox',
-    loadComponent: () =>
-      import('./cdk-experimental-listbox/cdk-listbox-demo').then(m => m.CdkExperimentalListboxDemo),
+    path: 'aria-listbox',
+    loadComponent: () => import('./aria-listbox/listbox-demo').then(m => m.ListboxDemo),
   },
   {
-    path: 'cdk-experimental-menu',
-    loadComponent: () =>
-      import('./cdk-experimental-menu/cdk-menu-demo').then(m => m.CdkExperimentalMenuDemo),
+    path: 'aria-menu',
+    loadComponent: () => import('./aria-menu/menu-demo').then(m => m.MenuDemo),
   },
   {
-    path: 'cdk-experimental-radio-group',
-    loadComponent: () =>
-      import('./cdk-experimental-radio-group/cdk-radio-group-demo').then(
-        m => m.CdkExperimentalRadioGroupDemo,
-      ),
+    path: 'aria-radio-group',
+    loadComponent: () => import('./aria-radio-group/radio-group-demo').then(m => m.RadioGroupDemo),
   },
   {
-    path: 'cdk-experimental-tabs',
-    loadComponent: () =>
-      import('./cdk-experimental-tabs/cdk-tabs-demo').then(m => m.CdkExperimentalTabsDemo),
+    path: 'aria-tabs',
+    loadComponent: () => import('./aria-tabs/tabs-demo').then(m => m.TabsDemo),
   },
   {
-    path: 'cdk-experimental-accordion',
-    loadComponent: () =>
-      import('./cdk-experimental-accordion/cdk-accordion-demo').then(
-        m => m.CdkExperimentalAccordionDemo,
-      ),
+    path: 'aria-accordion',
+    loadComponent: () => import('./aria-accordion/accordion-demo').then(m => m.AccordionDemo),
   },
   {
-    path: 'cdk-experimental-tree',
-    loadComponent: () =>
-      import('./cdk-experimental-tree/cdk-tree-demo').then(m => m.CdkExperimentalTreeDemo),
+    path: 'aria-tree',
+    loadComponent: () => import('./aria-tree/tree-demo').then(m => m.TreeDemo),
   },
   {
-    path: 'cdk-experimental-toolbar',
-    loadComponent: () =>
-      import('./cdk-experimental-toolbar/cdk-toolbar-demo').then(m => m.CdkExperimentalToolbarDemo),
+    path: 'aria-toolbar',
+    loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },
   {
     path: 'cdk-dialog',

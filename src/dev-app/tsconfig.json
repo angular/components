@@ -6,6 +6,8 @@
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {
+      "@angular/aria": ["../aria"],
+      "@angular/aria/*": ["../aria/*"],
       "@angular/cdk/*": ["../cdk/*"],
       "@angular/material/*": ["../material/*"],
       "@angular/material-experimental/*": ["../material-experimental/*"],

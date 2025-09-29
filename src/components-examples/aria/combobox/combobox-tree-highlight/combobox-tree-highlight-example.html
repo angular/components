@@ -1,0 +1,62 @@
+<div
+  #combobox="combobox"
+  combobox
+  class="example-combobox-container"
+  [firstMatch]="firstMatch()"
+  filterMode="highlight"
+>
+  <div class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input
+      comboboxInput
+      class="example-combobox-input"
+      placeholder="Search..."
+      [(value)]="searchString"
+    />
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template comboboxPopupContainer>
+      <ul tree #tree="tree" class="example-tree">
+        <ng-template
+          [ngTemplateOutlet]="treeNodes"
+          [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
+        />
+      </ul>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.name) {
+    <li
+      treeItem
+      [parent]="parent"
+      [value]="node.name"
+      [label]="node.name"
+      #treeItem="treeItem"
+      class="example-tree-item example-selectable example-stateful"
+    >
+      <span
+        aria-hidden="true"
+        class="material-symbols-outlined example-parent-icon example-icon"
+        >{{node.children ? 'chevron_right' : ''}}</span
+      >
+      {{ node.name }}
+      <span aria-hidden="true" class="material-symbols-outlined example-selected-icon example-icon"
+        >check</span
+      >
+    </li>
+
+    @if (node.children) {
+      <ul treeItemGroup [ownedBy]="treeItem" #group="treeItemGroup">
+        <ng-template treeItemGroupContent>
+          <ng-template
+            [ngTemplateOutlet]="treeNodes"
+            [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
+          />
+        </ng-template>
+      </ul>
+    }
+  }
+</ng-template>

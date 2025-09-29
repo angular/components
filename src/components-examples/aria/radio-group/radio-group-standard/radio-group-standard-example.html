@@ -1,0 +1,18 @@
+<div class="example-container">
+  <ul
+    radioGroup
+    class="example-radio-group example-parent"
+    aria-labelledby="standard-radio-label"
+  >
+    <label class="example-label" id="standard-radio-label">Favorite Fruit</label>
+    @for (fruit of fruits; track fruit) {
+      <li class="example-radio-button example-stateful example-selectable" [value]="fruit" radioButton #radioButton="radioButton">
+        <span
+          class="example-radio-indicator"
+          [class.example-radio-checked]="radioButton.pattern.selected()"
+        ></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

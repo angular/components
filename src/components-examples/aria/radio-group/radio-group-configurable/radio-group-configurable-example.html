@@ -1,0 +1,56 @@
+<div class="example-radio-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Disabled Radio Options</mat-label>
+    <mat-select [(value)]="disabledOptions" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Orientation</mat-label>
+    <mat-select [(value)]="orientation">
+      <mat-option value="vertical">Vertical</mat-option>
+      <mat-option value="horizontal">Horizontal</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving Tabindex</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- #docregion radio-group -->
+<ul
+  radioGroup
+  [disabled]="disabled.value"
+  [readonly]="readonly.value"
+  [skipDisabled]="skipDisabled.value"
+  [orientation]="orientation"
+  [focusMode]="focusMode"
+  class="example-radio-group example-parent"
+  aria-label="Select your favorite fruit"
+>
+  @for (fruit of fruits; track fruit) {
+    @let optionDisabled = disabledOptions.includes(fruit);
+    <li
+      radioButton
+      [value]="fruit"
+      [disabled]="optionDisabled"
+      class="example-radio-button example-stateful example-selectable"
+    >
+      <span class="example-radio-indicator"></span>
+      <span>{{ fruit }}</span>
+    </li>
+  }
+</ul>
+<!-- #enddocregion radio-group -->
