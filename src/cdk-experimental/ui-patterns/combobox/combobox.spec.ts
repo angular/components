@@ -68,6 +68,7 @@ function _type(
   firstMatch: WritableSignal<string | undefined>,
   backspace = false,
 ) {
+  combobox.onFocusIn();
   inputEl.value = text;
   combobox.onInput(
     backspace

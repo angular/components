@@ -286,6 +286,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return;
     }
 
+    // Avoid refocusing the input if a filter event occurs after focus has left the combobox.
+    if (!this.isFocused()) {
+      return;
+    }
+
     if (this.inputs.popupControls()?.role() === 'tree') {
       const treeControls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
       this.inputs.inputValue?.().length ? treeControls.expandAll() : treeControls.collapseAll();
