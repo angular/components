@@ -200,6 +200,7 @@ export class MatSelectChange<T = any> {
     '[class.mat-mdc-select-required]': 'required',
     '[class.mat-mdc-select-empty]': 'empty',
     '[class.mat-mdc-select-multiple]': 'multiple',
+    '[class.mat-select-open]': 'panelOpen',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
