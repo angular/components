@@ -29,6 +29,7 @@ import {
   AfterRenderRef,
   inject,
   Injector,
+  signal,
 } from '@angular/core';
 import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
@@ -146,7 +147,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   readonly _animationDone = new Subject<'void' | 'enter'>();
 
   /** Whether the menu is animating. */
-  _isAnimating = false;
+  _isAnimating = signal(false);
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -470,13 +471,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
         this._exitFallbackTimeout = undefined;
       }
       this._animationDone.next(isExit ? 'void' : 'enter');
-      this._isAnimating = false;
+      this._isAnimating.set(false);
     }
   }
 
   protected _onAnimationStart(state: string) {
     if (state === ENTER_ANIMATION || state === EXIT_ANIMATION) {
-      this._isAnimating = true;
+      this._isAnimating.set(true);
     }
   }
 
