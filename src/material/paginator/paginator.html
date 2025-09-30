@@ -2,7 +2,7 @@
   <div class="mat-mdc-paginator-container">
     @if (!hidePageSize) {
       <div class="mat-mdc-paginator-page-size">
-        <div class="mat-mdc-paginator-page-size-label" [attr.id]="_pageSizeLabelId">
+        <div class="mat-mdc-paginator-page-size-label" [attr.id]="_pageSizeLabelId" aria-hidden="true">
           {{_intl.itemsPerPageLabel}}
         </div>
 
@@ -37,7 +37,7 @@
     }
 
     <div class="mat-mdc-paginator-range-actions">
-      <div class="mat-mdc-paginator-range-label" aria-live="polite">
+      <div class="mat-mdc-paginator-range-label" aria-atomic="true" aria-live="polite" role="status">
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
       </div>
 
