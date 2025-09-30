@@ -49,22 +49,22 @@ function sortDirectives(a: HasElement, b: HasElement) {
  * with ToolbarWidget and RadioGroup as follows:
  *
  * ```html
- * <div toolbar>
- *  <button toolbarWidget>Button</button>
- *  <div radioGroup>
- *    <label radioButton value="1">Option 1</label>
- *    <label radioButton value="2">Option 2</label>
- *    <label radioButton value="3">Option 3</label>
+ * <div ngToolbar>
+ *  <button ngToolbarWidget>Button</button>
+ *  <div ngRadioGroup>
+ *    <label ngRadioButton value="1">Option 1</label>
+ *    <label ngRadioButton value="2">Option 2</label>
+ *    <label ngRadioButton value="3">Option 3</label>
  *  </div>
  * </div>
  * ```
  */
 @Directive({
-  selector: '[toolbar]',
-  exportAs: 'toolbar',
+  selector: '[ngToolbar]',
+  exportAs: 'ngToolbar',
   host: {
     'role': 'toolbar',
-    'class': 'toolbar',
+    'class': 'ng-toolbar',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
@@ -78,14 +78,14 @@ export class Toolbar<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** The TabList nested inside of the container. */
-  private readonly _Widgets = signal(new Set<ToolbarWidget<V> | ToolbarWidgetGroup<V>>());
+  private readonly _widgets = signal(new Set<ToolbarWidget<V> | ToolbarWidgetGroup<V>>());
 
   /** A signal wrapper for directionality. */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
   readonly items = computed(() =>
-    [...this._Widgets()].sort(sortDirectives).map(widget => widget.pattern),
+    [...this._widgets()].sort(sortDirectives).map(widget => widget.pattern),
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
@@ -134,24 +134,24 @@ export class Toolbar<V> {
   }
 
   register(widget: ToolbarWidget<V> | ToolbarWidgetGroup<V>) {
-    const widgets = this._Widgets();
+    const widgets = this._widgets();
     if (!widgets.has(widget)) {
       widgets.add(widget);
-      this._Widgets.set(new Set(widgets));
+      this._widgets.set(new Set(widgets));
     }
   }
 
   unregister(widget: ToolbarWidget<V> | ToolbarWidgetGroup<V>) {
-    const widgets = this._Widgets();
+    const widgets = this._widgets();
     if (widgets.delete(widget)) {
-      this._Widgets.set(new Set(widgets));
+      this._widgets.set(new Set(widgets));
     }
   }
 
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
-    const widgetTarget = element.closest('.toolbar-widget');
-    const groupTarget = element.closest('.toolbar-widget-group');
+    const widgetTarget = element.closest('.ng-toolbar-widget');
+    const groupTarget = element.closest('.ng-toolbar-widget-group');
     return this.items().find(
       widget => widget.element() === widgetTarget || widget.element() === groupTarget,
     );
@@ -165,10 +165,10 @@ export class Toolbar<V> {
  * that has the purpose of acting as a widget navigatable within a toolbar.
  */
 @Directive({
-  selector: '[toolbarWidget]',
-  exportAs: 'toolbarWidget',
+  selector: '[ngToolbarWidget]',
+  exportAs: 'ngToolbarWidget',
   host: {
-    'class': 'toolbar-widget',
+    'class': 'ng-toolbar-widget',
     '[attr.data-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
@@ -182,16 +182,16 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent Toolbar. */
-  private readonly _Toolbar = inject(Toolbar);
+  private readonly _toolbar = inject(Toolbar);
 
   /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('toolbar-widget-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-');
 
   /** A unique identifier for the widget. */
   readonly id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._Toolbar.pattern);
+  readonly toolbar = computed(() => this._toolbar.pattern);
 
   /** A reference to the widget element to be focused on navigation. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -200,22 +200,22 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
-  readonly hardDisabled = computed(() => this.pattern.disabled() && this._Toolbar.skipDisabled());
+  readonly hardDisabled = computed(() => this.pattern.disabled() && this._toolbar.skipDisabled());
 
   /** The ToolbarWidget UIPattern. */
   readonly pattern = new ToolbarWidgetPattern<V>({
     ...this,
     id: this.id,
     element: this.element,
-    disabled: computed(() => this._Toolbar.disabled() || this.disabled()),
+    disabled: computed(() => this._toolbar.disabled() || this.disabled()),
   });
 
   ngOnInit() {
-    this._Toolbar.register(this);
+    this._toolbar.register(this);
   }
 
   ngOnDestroy() {
-    this._Toolbar.unregister(this);
+    this._toolbar.unregister(this);
   }
 }
 
@@ -225,7 +225,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
  */
 @Directive({
   host: {
-    '[class.toolbar-widget-group]': '!!toolbar()',
+    '[class.ng-toolbar-widget-group]': '!!toolbar()',
   },
 })
 export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
@@ -233,16 +233,16 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent Toolbar. */
-  private readonly _Toolbar = inject(Toolbar, {optional: true});
+  private readonly _toolbar = inject(Toolbar, {optional: true});
 
   /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('toolbar-widget-group-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-group-');
 
   /** A unique identifier for the widget. */
   readonly id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._Toolbar?.pattern);
+  readonly toolbar = computed(() => this._toolbar?.pattern);
 
   /** A reference to the widget element to be focused on navigation. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -261,10 +261,10 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this._Toolbar?.register(this);
+    this._toolbar?.register(this);
   }
 
   ngOnDestroy() {
-    this._Toolbar?.unregister(this);
+    this._toolbar?.unregister(this);
   }
 }

@@ -50,8 +50,8 @@
 
 <!-- #docregion listbox -->
 <ul
-  listbox
-  #listbox="listbox"
+  ngListbox
+  #listbox="ngListbox"
   [value]="selection"
   [wrap]="wrap.value"
   [multi]="multi.value"
@@ -73,8 +73,8 @@
       class="example-option example-stateful example-selectable"
       [disabled]="optionDisabled"
       [value]="fruit"
-      option
-      #option="option"
+      ngOption
+      #option="ngOption"
     >
       <mat-pseudo-checkbox
         [disabled]="optionDisabled || listbox.disabled()"

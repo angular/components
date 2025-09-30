@@ -381,7 +381,7 @@ describe('AccordionGroup', () => {
 @Component({
   template: `
     <div
-      accordionGroup
+      ngAccordionGroup
       [(value)]="value"
       [multiExpandable]="multiExpandable()"
       [disabled]="disabledGroup()"
@@ -391,15 +391,15 @@ describe('AccordionGroup', () => {
       @for (item of items(); track item.value) {
         <div class="item-container">
           <button
-            accordionTrigger
+            ngAccordionTrigger
             [value]="item.value"
             [disabled]="item.disabled"
           >{{ item.header }}</button>
           <div
-            accordionPanel
+            ngAccordionPanel
             [value]="item.value"
           >
-            <ng-template accordionContent>
+            <ng-template ngAccordionContent>
               {{ item.content }}
             </ng-template>
           </div>

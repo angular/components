@@ -26,8 +26,8 @@ import {
 } from '@angular/aria/ui-patterns';
 
 @Directive({
-  selector: '[combobox]',
-  exportAs: 'combobox',
+  selector: '[ngCombobox]',
+  exportAs: 'ngCombobox',
   hostDirectives: [
     {
       directive: DeferredContentAware,
@@ -90,8 +90,8 @@ export class Combobox<V> {
 }
 
 @Directive({
-  selector: 'input[comboboxInput]',
-  exportAs: 'comboboxInput',
+  selector: 'input[ngComboboxInput]',
+  exportAs: 'ngComboboxInput',
   host: {
     'role': 'combobox',
     '[value]': 'value()',
@@ -127,15 +127,15 @@ export class ComboboxInput {
 }
 
 @Directive({
-  selector: 'ng-template[comboboxPopupContainer]',
-  exportAs: 'comboboxPopupContainer',
+  selector: 'ng-template[ngComboboxPopupContainer]',
+  exportAs: 'ngComboboxPopupContainer',
   hostDirectives: [DeferredContent],
 })
 export class ComboboxPopupContainer {}
 
 @Directive({
-  selector: '[comboboxPopup]',
-  exportAs: 'comboboxPopup',
+  selector: '[ngComboboxPopup]',
+  exportAs: 'ngComboboxPopup',
 })
 export class ComboboxPopup<V> {
   /** The combobox that the popup belongs to. */

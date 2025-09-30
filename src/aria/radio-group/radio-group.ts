@@ -74,19 +74,19 @@ export function mapSignal<T, V>(
  * as follows:
  *
  * ```html
- * <div radioGroup>
- *   <div radioButton value="1">Option 1</div>
- *   <div radioButton value="2">Option 2</div>
- *   <div radioButton value="3">Option 3</div>
+ * <div ngRadioGroup>
+ *   <div ngRadioButton value="1">Option 1</div>
+ *   <div ngRadioButton value="2">Option 2</div>
+ *   <div ngRadioButton value="3">Option 3</div>
  * </div>
  * ```
  */
 @Directive({
-  selector: '[radioGroup]',
-  exportAs: 'radioGroup',
+  selector: '[ngRadioGroup]',
+  exportAs: 'ngRadioGroup',
   host: {
     'role': 'radiogroup',
-    'class': 'radio-group',
+    'class': 'ng-radio-group',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-readonly]': 'pattern.readonly()',
     '[attr.aria-disabled]': 'pattern.disabled()',
@@ -108,19 +108,19 @@ export class RadioGroup<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the ToolbarWidgetGroup, if the radio group is in a toolbar. */
-  private readonly _ToolbarWidgetGroup = inject(ToolbarWidgetGroup);
+  private readonly _toolbarWidgetGroup = inject(ToolbarWidgetGroup);
 
   /** Whether the radio group is inside of a Toolbar. */
-  private readonly _hasToolbar = computed(() => !!this._ToolbarWidgetGroup.toolbar());
+  private readonly _hasToolbar = computed(() => !!this._toolbarWidgetGroup.toolbar());
 
   /** The RadioButtons nested inside of the RadioGroup. */
-  private readonly _RadioButtons = contentChildren(RadioButton, {descendants: true});
+  private readonly _radioButtons = contentChildren(RadioButton, {descendants: true});
 
   /** A signal wrapper for directionality. */
   protected textDirection = inject(Directionality).valueSignal;
 
   /** The RadioButton UIPatterns of the child RadioButtons. */
-  protected items = computed(() => this._RadioButtons().map(radio => radio.pattern));
+  protected items = computed(() => this._radioButtons().map(radio => radio.pattern));
 
   /** Whether the radio group is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -167,7 +167,7 @@ export class RadioGroup<V> {
         const element = e.target.closest('[role="radio"]');
         return this.items().find(i => i.element() === element);
       },
-      toolbar: this._ToolbarWidgetGroup.toolbar,
+      toolbar: this._toolbarWidgetGroup.toolbar,
     };
 
     this.pattern = this._hasToolbar()
@@ -175,7 +175,7 @@ export class RadioGroup<V> {
       : new RadioGroupPattern<V>(inputs as RadioGroupInputs<V>);
 
     if (this._hasToolbar()) {
-      this._ToolbarWidgetGroup.controls.set(this.pattern as ToolbarRadioGroupPattern<V>);
+      this._toolbarWidgetGroup.controls.set(this.pattern as ToolbarRadioGroupPattern<V>);
     }
 
     afterRenderEffect(() => {
@@ -201,11 +201,11 @@ export class RadioGroup<V> {
 
 /** A selectable radio button in a RadioGroup. */
 @Directive({
-  selector: '[radioButton]',
-  exportAs: 'radioButton',
+  selector: '[ngRadioButton]',
+  exportAs: 'ngRadioButton',
   host: {
     'role': 'radio',
-    'class': 'radio-button',
+    'class': 'ng-radio-button',
     '[attr.data-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-checked]': 'pattern.selected()',
@@ -218,10 +218,10 @@ export class RadioButton<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent RadioGroup. */
-  private readonly _RadioGroup = inject(RadioGroup);
+  private readonly _radioGroup = inject(RadioGroup);
 
   /** A unique identifier for the radio button. */
-  private readonly _generatedId = inject(_IdGenerator).getId('radio-button-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-radio-button-');
 
   /** A unique identifier for the radio button. */
   readonly id = computed(() => this._generatedId);
@@ -230,7 +230,7 @@ export class RadioButton<V> {
   readonly value = input.required<V>();
 
   /** The parent RadioGroup UIPattern. */
-  readonly group = computed(() => this._RadioGroup.pattern);
+  readonly group = computed(() => this._radioGroup.pattern);
 
   /** A reference to the radio button element to be focused on navigation. */
   element = computed(() => this._elementRef.nativeElement);

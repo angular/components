@@ -46,29 +46,29 @@ function sortDirectives(a: HasElement, b: HasElement) {
  * TabList, Tab, and TabPanel as follows:
  *
  * ```html
- * <div tabs>
- *   <ul tabList>
- *     <li tab value="tab1">Tab 1</li>
- *     <li tab value="tab2">Tab 2</li>
- *     <li tab value="tab3">Tab 3</li>
+ * <div ngTabs>
+ *   <ul ngTabList>
+ *     <li ngTab value="tab1">Tab 1</li>
+ *     <li ngTab value="tab2">Tab 2</li>
+ *     <li ngTab value="tab3">Tab 3</li>
  *   </ul>
  *
- *   <div tabPanel value="tab1">
- *      <ng-template tabContent>Tab content 1</ng-template>
+ *   <div ngTabPanel value="tab1">
+ *      <ng-template ngTabContent>Tab content 1</ng-template>
  *   </div>
- *   <div tabPanel value="tab2">
- *      <ng-template tabContent>Tab content 2</ng-template>
+ *   <div ngTabPanel value="tab2">
+ *      <ng-template ngTabContent>Tab content 2</ng-template>
  *   </div>
- *   <div tabPanel value="tab3">
- *      <ng-template tabContent>Tab content 3</ng-template>
+ *   <div ngTabPanel value="tab3">
+ *      <ng-template ngTabContent>Tab content 3</ng-template>
  *   </div>
  * ```
  */
 @Directive({
-  selector: '[tabs]',
-  exportAs: 'tabs',
+  selector: '[ngTabs]',
+  exportAs: 'ngTabs',
   host: {
-    'class': 'tabs',
+    'class': 'ng-tabs',
   },
 })
 export class Tabs {
@@ -115,11 +115,11 @@ export class Tabs {
  * Controls a list of Tab(s).
  */
 @Directive({
-  selector: '[tabList]',
-  exportAs: 'tabList',
+  selector: '[ngTabList]',
+  exportAs: 'ngTabList',
   host: {
     'role': 'tablist',
-    'class': 'tablist',
+    'class': 'ng-tablist',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
@@ -134,7 +134,7 @@ export class TabList implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent Tabs. */
-  private readonly _Tabs = inject(Tabs);
+  private readonly _tabs = inject(Tabs);
 
   /** The Tabs nested inside of the TabList. */
   private readonly _unorderedTabs = signal(new Set<Tab>());
@@ -200,11 +200,11 @@ export class TabList implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._Tabs.register(this);
+    this._tabs.register(this);
   }
 
   ngOnDestroy() {
-    this._Tabs.deregister(this);
+    this._tabs.deregister(this);
   }
 
   register(child: Tab) {
@@ -220,11 +220,11 @@ export class TabList implements OnInit, OnDestroy {
 
 /** A selectable tab in a TabList. */
 @Directive({
-  selector: '[tab]',
-  exportAs: 'tab',
+  selector: '[ngTab]',
+  exportAs: 'ngTab',
   host: {
     'role': 'tab',
-    'class': 'tab',
+    'class': 'ng-tab',
     '[attr.data-active]': 'pattern.active()',
     '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
@@ -238,23 +238,23 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent Tabs. */
-  private readonly _Tabs = inject(Tabs);
+  private readonly _tabs = inject(Tabs);
 
   /** The parent TabList. */
-  private readonly _TabList = inject(TabList);
+  private readonly _tabList = inject(TabList);
 
   /** A global unique identifier for the tab. */
-  private readonly _id = inject(_IdGenerator).getId('tab-');
+  private readonly _id = inject(_IdGenerator).getId('ng-tab-');
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The parent TabList UIPattern. */
-  readonly tablist = computed(() => this._TabList.pattern);
+  readonly tablist = computed(() => this._tabList.pattern);
 
   /** The TabPanel UIPattern associated with the tab */
   readonly tabpanel = computed(() =>
-    this._Tabs.unorderedTabpanels().find(tabpanel => tabpanel.value() === this.value()),
+    this._tabs.unorderedTabpanels().find(tabpanel => tabpanel.value() === this.value()),
   );
 
   /** Whether a tab is disabled. */
@@ -273,11 +273,11 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this._TabList.register(this);
+    this._tabList.register(this);
   }
 
   ngOnDestroy() {
-    this._TabList.deregister(this);
+    this._tabList.deregister(this);
   }
 }
 
@@ -290,11 +290,11 @@ export class Tab implements HasElement, OnInit, OnDestroy {
  * and a proper styling is required.
  */
 @Directive({
-  selector: '[tabPanel]',
-  exportAs: 'tabPanel',
+  selector: '[ngTabPanel]',
+  exportAs: 'ngTabPanel',
   host: {
     'role': 'tabpanel',
-    'class': 'tabpanel',
+    'class': 'ng-tabpanel',
     '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.inert]': 'pattern.hidden() ? true : null',
@@ -315,7 +315,7 @@ export class TabPanel implements OnInit, OnDestroy {
   private readonly _Tabs = inject(Tabs);
 
   /** A global unique identifier for the tab. */
-  private readonly _id = inject(_IdGenerator).getId('tabpanel-');
+  private readonly _id = inject(_IdGenerator).getId('ng-tabpanel-');
 
   /** The Tab UIPattern associated with the tabpanel */
   readonly tab = computed(() => this._Tabs.tabs()?.find(tab => tab.value() === this.value()));
@@ -347,8 +347,8 @@ export class TabPanel implements OnInit, OnDestroy {
  * A TabContent container for the lazy-loaded content.
  */
 @Directive({
-  selector: 'ng-template[tabContent]',
-  exportAs: 'tabContent',
+  selector: 'ng-template[ngTabContent]',
+  exportAs: 'ngTabContent',
   hostDirectives: [DeferredContent],
 })
 export class TabContent {}

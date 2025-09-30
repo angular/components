@@ -1,19 +1,24 @@
 <div class="example-container">
   <ul
-    radioGroup
+    ngRadioGroup
     focusMode="activedescendant"
     class="example-radio-group"
     aria-labelledby="active-descendant-radio-label"
   >
-    <label class="example-label" id="active-descendant-radio-label">Favorite Fruit (Active Descendant)</label>
+    <label class="example-label" id="active-descendant-radio-label"
+      >Favorite Fruit (Active Descendant)</label
+    >
     @for (fruit of fruits; track fruit) {
       <li
         class="example-radio-button example-stateful example-selectable"
         [value]="fruit"
-        radioButton
-        #radioButton="radioButton"
+        ngRadioButton
+        #radioButton="ngRadioButton"
       >
-        <span class="example-radio-indicator" [class.example-radio-checked]="radioButton.pattern.selected()"></span>
+        <span
+          class="example-radio-indicator"
+          [class.example-radio-checked]="radioButton.pattern.selected()"
+        ></span>
         <span>{{ fruit }}</span>
       </li>
     }

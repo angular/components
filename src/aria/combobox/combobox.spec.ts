@@ -1008,17 +1008,17 @@ describe('Combobox', () => {
 @Component({
   template: `
 <div
-  combobox
-  #combobox="combobox"
+  ngCombobox
+  #combobox="ngCombobox"
   [filterMode]="filterMode()"
 >
   <input
-    comboboxInput
+    ngComboboxInput
     placeholder="Search..."
     [(value)]="searchString"
   />
 
-  <ng-template comboboxPopupContainer>
+  <ng-template ngComboboxPopupContainer>
     <div listbox [(value)]="value">
       @for (option of options(); track option) {
         <div
@@ -1050,18 +1050,18 @@ class ComboboxListboxExample {
 @Component({
   template: `
 <div
-  #combobox="combobox"
-  combobox
+  ngCombobox
+  #combobox="ngCombobox"
   [firstMatch]="firstMatch()"
   [filterMode]="filterMode()"
 >
   <input
-    comboboxInput
+    ngComboboxInput
     placeholder="Search..."
     [(value)]="searchString"
   />
 
-  <ng-template comboboxPopupContainer>
+  <ng-template ngComboboxPopupContainer>
     <ul tree #tree="tree" [(value)]="value">
       <ng-template
         [ngTemplateOutlet]="treeNodes"

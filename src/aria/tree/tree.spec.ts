@@ -1329,7 +1329,7 @@ interface TestTreeNode<V = string> {
 @Component({
   template: `
     <ul
-      tree
+      ngTree
       [focusMode]="focusMode()"
       [selectionMode]="selectionMode()"
       [multi]="multi()"
@@ -1340,7 +1340,7 @@ interface TestTreeNode<V = string> {
       [(value)]="value"
       [nav]="nav()"
       [currentType]="currentType()"
-      #tree="tree"
+      #tree="ngTree"
     >
       @for (node of nodes(); track node.value) {
         <ng-template [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: tree }" />
@@ -1349,22 +1349,22 @@ interface TestTreeNode<V = string> {
 
     <ng-template #nodeTemplate let-node="node" let-parent="parent">
       <li
-        treeItem
+        ngTreeItem
         [value]="node.value"
         [label]="node.label"
         [disabled]="!!node.disabled"
         [parent]="parent"
         [attr.data-value]="node.value"
-        #treeItem="treeItem"
+        #treeItem="ngTreeItem"
       >
         {{ node.label }}
         @if (node.children !== undefined && node.children!.length > 0) {
           <ul
-            treeItemGroup
+            ngTreeItemGroup
             [ownedBy]="treeItem"
             [attr.data-group-for]="node.value"
-            #group="treeItemGroup">
-            <ng-template treeItemGroupContent>
+            #group="ngTreeItemGroup">
+            <ng-template ngTreeItemGroupContent>
               @for (node of node.children; track node.value) {
                 <ng-template [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: group }" />
               }

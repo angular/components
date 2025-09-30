@@ -1,7 +1,7 @@
 <!-- Disabled Options are Skipped -->
 <div class="example-container">
   <ul
-    listbox
+    ngListbox
     [skipDisabled]="true"
     class="example-listbox example-parent"
     aria-labelledby="disabled-skipped-label"
@@ -12,8 +12,8 @@
         class="example-option example-stateful example-selectable"
         [value]="fruit"
         [disabled]="i % 2 === 0"
-        option
-        #option="option"
+        ngOption
+        #option="ngOption"
       >
         <mat-pseudo-checkbox
           [state]="option.pattern.selected() ? 'checked' : 'unchecked'"

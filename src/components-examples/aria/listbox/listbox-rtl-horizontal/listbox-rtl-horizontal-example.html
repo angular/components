@@ -1,7 +1,7 @@
 <!-- RTL & Horizontal Orientation -->
 <div class="example-container" dir="rtl">
   <ul
-    listbox
+    ngListbox
     orientation="horizontal"
     class="example-listbox example-parent"
     aria-labelledby="rtl-horizontal-label"
@@ -11,8 +11,8 @@
       <li
         class="example-option example-stateful example-selectable"
         [value]="fruit"
-        option
-        #option="option"
+        ngOption
+        #option="ngOption"
       >
         <mat-pseudo-checkbox
           [state]="option.pattern.selected() ? 'checked' : 'unchecked'"

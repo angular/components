@@ -1,13 +1,18 @@
 <div class="example-container">
   <ul
-    radioGroup
+    ngRadioGroup
     [disabled]="true"
     class="example-radio-group example-parent"
     aria-labelledby="disabled-radio-label"
   >
     <label class="example-label" id="disabled-radio-label">Favorite Fruit (Disabled)</label>
     @for (fruit of fruits; track fruit) {
-      <li class="example-radio-button example-stateful example-selectable" [value]="fruit" radioButton #radioButton="radioButton">
+      <li
+        class="example-radio-button example-stateful example-selectable"
+        [value]="fruit"
+        ngRadioButton
+        #radioButton="ngRadioButton"
+      >
         <span
           class="example-radio-indicator"
           [class.example-radio-checked]="radioButton.pattern.selected()"

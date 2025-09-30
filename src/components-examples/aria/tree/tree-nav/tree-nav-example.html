@@ -1,4 +1,4 @@
-<ul tree [nav]="true" #tree="tree" class="example-tree">
+<ul ngTree [nav]="true" #tree="ngTree" class="example-tree">
   <ng-template
     [ngTemplateOutlet]="treeNodes"
     [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"
@@ -8,12 +8,12 @@
 <ng-template #treeNodes let-nodes="nodes" let-parent="parent">
   @for (node of nodes; track node.value) {
     <a
-      treeItem
+      ngTreeItem
       [parent]="parent"
       [value]="node.value"
       [label]="node.name"
       [disabled]="node.disabled"
-      #treeItem="treeItem"
+      #treeItem="ngTreeItem"
       class="example-tree-item example-selectable example-stateful"
       href="#{{ node.name }}"
       (click)="$event.preventDefault()"
@@ -35,8 +35,8 @@
     </a>
 
     @if (node.children) {
-      <ul treeItemGroup [ownedBy]="treeItem" #group="treeItemGroup">
-        <ng-template treeItemGroupContent>
+      <ul ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
+        <ng-template ngTreeItemGroupContent>
           <ng-template
             [ngTemplateOutlet]="treeNodes"
             [ngTemplateOutletContext]="{nodes: node.children, parent: group}"

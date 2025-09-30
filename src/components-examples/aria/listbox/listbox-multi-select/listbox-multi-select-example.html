@@ -1,7 +1,7 @@
 <!-- Multi Select -->
 <div class="example-container">
   <ul
-    listbox
+    ngListbox
     [multi]="true"
     selectionMode="explicit"
     class="example-listbox example-parent"
@@ -12,8 +12,8 @@
       <li
         class="example-option example-stateful example-selectable"
         [value]="fruit"
-        option
-        #option="option"
+        ngOption
+        #option="ngOption"
       >
         <mat-pseudo-checkbox
           [state]="option.pattern.selected() ? 'checked' : 'unchecked'"

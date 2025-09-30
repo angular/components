@@ -1,6 +1,6 @@
 <div class="example-container">
   <ul
-    radioGroup
+    ngRadioGroup
     orientation="horizontal"
     class="example-radio-group example-radio-group-horizontal example-parent"
     aria-labelledby="horizontal-radio-label"
@@ -10,10 +10,13 @@
       <li
         class="example-radio-button example-stateful example-selectable"
         [value]="fruit"
-        radioButton
-        #radioButton="radioButton"
+        ngRadioButton
+        #radioButton="ngRadioButton"
       >
-        <span class="example-radio-indicator" [class.example-radio-checked]="radioButton.pattern.selected()"></span>
+        <span
+          class="example-radio-indicator"
+          [class.example-radio-checked]="radioButton.pattern.selected()"
+        ></span>
         <span>{{ fruit }}</span>
       </li>
     }

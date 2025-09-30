@@ -532,9 +532,9 @@ interface TestOption {
       [focusMode]="focusMode"
       [orientation]="orientation"
       [skipDisabled]="skipDisabled"
-      radioGroup>
+      ngRadioGroup>
       @for (option of options(); track option.value) {
-        <div radioButton [value]="option.value" [disabled]="option.disabled">{{ option.label }}</div>
+        <div ngRadioButton [value]="option.value" [disabled]="option.disabled">{{ option.label }}</div>
       }
     </div>
   `,
@@ -559,10 +559,10 @@ class RadioGroupExample {
 
 @Component({
   template: `
-  <div radioGroup>
-    <div radioButton [value]="0">0</div>
-    <div radioButton [value]="1">1</div>
-    <div radioButton [value]="2">2</div>
+  <div ngRadioGroup>
+    <div ngRadioButton [value]="0">0</div>
+    <div ngRadioButton [value]="1">1</div>
+    <div ngRadioButton [value]="2">2</div>
   </div>
   `,
   imports: [RadioGroup, RadioButton],

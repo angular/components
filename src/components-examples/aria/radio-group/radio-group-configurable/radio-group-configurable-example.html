@@ -31,7 +31,7 @@
 
 <!-- #docregion radio-group -->
 <ul
-  radioGroup
+  ngRadioGroup
   [disabled]="disabled.value"
   [readonly]="readonly.value"
   [skipDisabled]="skipDisabled.value"
@@ -43,7 +43,7 @@
   @for (fruit of fruits; track fruit) {
     @let optionDisabled = disabledOptions.includes(fruit);
     <li
-      radioButton
+      ngRadioButton
       [value]="fruit"
       [disabled]="optionDisabled"
       class="example-radio-button example-stateful example-selectable"

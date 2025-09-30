@@ -454,16 +454,16 @@ class TestToolbarWidgetGroup {
 @Component({
   template: `
     <div
-      toolbar
+      ngToolbar
       [orientation]="orientation()"
       [disabled]="disabled()"
       [wrap]="wrap()"
       [skipDisabled]="skipDisabled()"
     >
-      <button toolbarWidget data-value="widget">Widget Button 1</button>
-      <button toolbarWidget data-value="widget" [disabled]="true">Widget Button 2</button>
+      <button ngToolbarWidget data-value="widget">Widget Button 1</button>
+      <button ngToolbarWidget data-value="widget" [disabled]="true">Widget Button 2</button>
       <testWidgetGroup [disabled]="widgetGroupDisabled()"></testWidgetGroup>
-      <button toolbarWidget data-value="widget">Widget Button 3</button>
+      <button ngToolbarWidget data-value="widget">Widget Button 3</button>
     </div>
   `,
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup, TestToolbarWidgetGroup],

@@ -1,6 +1,6 @@
 <div class="example-container">
   <ul
-    listbox
+    ngListbox
     [disabled]="true"
     class="example-listbox example-parent"
     aria-labelledby="disabled-label"
@@ -10,8 +10,8 @@
       <li
         class="example-option example-stateful example-selectable"
         [value]="fruit"
-        option
-        #option="option"
+        ngOption
+        #option="ngOption"
       >
         <mat-pseudo-checkbox
           [state]="option.pattern.selected() ? 'checked' : 'unchecked'"

@@ -46,26 +46,26 @@ function sortDirectives(a: HasElement, b: HasElement) {
  * Transforms nested lists into an accessible, ARIA-compliant tree structure.
  *
  * ```html
- * <ul tree [(value)]="selectedItems" [multi]="true">
- *   <li treeItem [value]="'leaf1'">Leaf Item 1</li>
- *   <li treeItem [value]="'parent1'">
+ * <ul ngTree [(value)]="selectedItems" [multi]="true">
+ *   <li ngTreeItem [value]="'leaf1'">Leaf Item 1</li>
+ *   <li ngTreeItem [value]="'parent1'">
  *     Parent Item 1
- *     <ul treeItemGroup [value]="'parent1'">
- *       <ng-template treeItemGroupContent>
- *         <li treeItem [value]="'child1.1'">Child Item 1.1</li>
- *         <li treeItem [value]="'child1.2'">Child Item 1.2</li>
+ *     <ul ngTreeItemGroup [value]="'parent1'">
+ *       <ng-template ngTreeItemGroupContent>
+ *         <li ngTreeItem [value]="'child1.1'">Child Item 1.1</li>
+ *         <li ngTreeItem [value]="'child1.2'">Child Item 1.2</li>
  *       </ng-template>
  *     </ul>
  *   </li>
- *   <li treeItem [value]="'leaf2'" [disabled]="true">Disabled Leaf Item 2</li>
+ *   <li ngTreeItem [value]="'leaf2'" [disabled]="true">Disabled Leaf Item 2</li>
  * </ul>
  * ```
  */
 @Directive({
-  selector: '[tree]',
-  exportAs: 'tree',
+  selector: '[ngTree]',
+  exportAs: 'ngTree',
   host: {
-    'class': 'tree',
+    'class': 'ng-tree',
     'role': 'tree',
     '[attr.id]': 'id()',
     '[attr.aria-orientation]': 'pattern.orientation()',
@@ -81,7 +81,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
 })
 export class Tree<V> {
   /** A unique identifier for the tree. */
-  private readonly _generatedId = inject(_IdGenerator).getId('tree-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-tree-');
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the tree. */
@@ -206,10 +206,10 @@ export class Tree<V> {
  * A selectable and expandable Tree Item in a Tree.
  */
 @Directive({
-  selector: '[treeItem]',
-  exportAs: 'treeItem',
+  selector: '[ngTreeItem]',
+  exportAs: 'ngTreeItem',
   host: {
-    'class': 'treeitem',
+    'class': 'ng-treeitem',
     '[attr.data-active]': 'pattern.active()',
     'role': 'treeitem',
     '[id]': 'pattern.id()',
@@ -229,7 +229,7 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
   private readonly _elementRef = inject(ElementRef);
 
   /** A unique identifier for the tree item. */
-  private readonly _id = inject(_IdGenerator).getId('tree-item-');
+  private readonly _id = inject(_IdGenerator).getId('ng-tree-item-');
 
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
@@ -317,8 +317,8 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
  * Container that designates content as a group.
  */
 @Directive({
-  selector: '[treeItemGroup]',
-  exportAs: 'treeItemGroup',
+  selector: '[ngTreeItemGroup]',
+  exportAs: 'ngTreeItemGroup',
   hostDirectives: [
     {
       directive: DeferredContentAware,
@@ -326,7 +326,7 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
     },
   ],
   host: {
-    'class': 'treeitem-group',
+    'class': 'ng-treeitem-group',
     'role': 'group',
     '[id]': 'id',
     '[attr.inert]': 'visible() ? null : true',
@@ -346,7 +346,7 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Unique ID for the group. */
-  readonly id = inject(_IdGenerator).getId('tree-group-');
+  readonly id = inject(_IdGenerator).getId('ng-tree-group-');
 
   /** Whether the group is visible. */
   readonly visible = signal(true);
@@ -391,7 +391,7 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
  * for a `TreeItemGroup`. This content can be lazily loaded.
  */
 @Directive({
-  selector: 'ng-template[treeItemGroupContent]',
+  selector: 'ng-template[ngTreeItemGroupContent]',
   hostDirectives: [DeferredContent],
 })
 export class TreeItemGroupContent {}

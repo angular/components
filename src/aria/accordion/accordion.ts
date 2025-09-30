@@ -33,8 +33,8 @@ import {
  * associated `AccordionTrigger`.
  */
 @Directive({
-  selector: '[accordionPanel]',
-  exportAs: 'accordionPanel',
+  selector: '[ngAccordionPanel]',
+  exportAs: 'ngAccordionPanel',
   hostDirectives: [
     {
       directive: DeferredContentAware,
@@ -42,7 +42,7 @@ import {
     },
   ],
   host: {
-    'class': 'accordion-panel',
+    'class': 'ng-accordion-panel',
     'role': 'region',
     '[attr.id]': 'pattern.id()',
     '[attr.aria-labelledby]': 'pattern.accordionTrigger()?.id()',
@@ -83,10 +83,10 @@ export class AccordionPanel {
  * state of an associated `AccordionPanel`.
  */
 @Directive({
-  selector: '[accordionTrigger]',
-  exportAs: 'accordionTrigger',
+  selector: '[ngAccordionTrigger]',
+  exportAs: 'ngAccordionTrigger',
   host: {
-    'class': 'accordion-trigger',
+    'class': 'ng-accordion-trigger',
     '[attr.data-active]': 'pattern.active()',
     'role': 'button',
     '[id]': 'pattern.id()',
@@ -102,7 +102,7 @@ export class AccordionPanel {
 })
 export class AccordionTrigger {
   /** A global unique identifier for the trigger. */
-  private readonly _id = inject(_IdGenerator).getId('accordion-trigger-');
+  private readonly _id = inject(_IdGenerator).getId('ng-accordion-trigger-');
 
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
@@ -142,10 +142,10 @@ export class AccordionTrigger {
  * interactions of the accordion, such as keyboard navigation and expansion mode.
  */
 @Directive({
-  selector: '[accordionGroup]',
-  exportAs: 'accordionGroup',
+  selector: '[ngAccordionGroup]',
+  exportAs: 'ngAccordionGroup',
   host: {
-    'class': 'accordion-group',
+    'class': 'ng-accordion-group',
   },
 })
 export class AccordionGroup {
@@ -211,7 +211,7 @@ export class AccordionGroup {
  * for a `AccordionPanel`. This content can be lazily loaded.
  */
 @Directive({
-  selector: 'ng-template[accordionContent]',
+  selector: 'ng-template[ngAccordionContent]',
   hostDirectives: [DeferredContent],
 })
 export class AccordionContent {}

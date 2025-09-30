@@ -674,8 +674,8 @@ describe('Tabs', () => {
 
 @Component({
   template: `
-    <div tabs>
-      <ul tabList
+    <div ngTabs>
+      <ul ngTabList
           [(selectedTab)]="selectedTab"
           [orientation]="orientation()"
           [disabled]="disabled()"
@@ -684,13 +684,13 @@ describe('Tabs', () => {
           [focusMode]="focusMode()"
           [selectionMode]="selectionMode()">
         @for (tabDef of tabsData(); track tabDef.value) {
-          <li tab [value]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
+          <li ngTab [value]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
         }
       </ul>
 
       @for (tabDef of tabsData(); track tabDef.value) {
-        <div tabPanel [value]="tabDef.value">
-          <ng-template tabContent>{{ tabDef.content }}</ng-template>
+        <div ngTabPanel [value]="tabDef.value">
+          <ng-template ngTabContent>{{ tabDef.content }}</ng-template>
         </div>
       }
     </div>

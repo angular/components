@@ -742,7 +742,7 @@ interface TestOption {
 @Component({
   template: `
     <ul
-      listbox
+      ngListbox
       aria-label="Test Listbox"
       [(value)]="value"
       [disabled]="disabled"
@@ -755,7 +755,7 @@ interface TestOption {
       [selectionMode]="selectionMode"
       [typeaheadDelay]="typeaheadDelay">
       @for (option of options(); track option.value) {
-        <li option [value]="option.value" [disabled]="option.disabled" [label]="option.label">{{ option.label }}</li>
+        <li ngOption [value]="option.value" [disabled]="option.disabled" [label]="option.label">{{ option.label }}</li>
       }
     </ul>
   `,
@@ -784,10 +784,10 @@ class ListboxExample {
 
 @Component({
   template: `
-    <ul aria-label="Test Listbox" listbox>
-      <li option [value]="0">0</li>
-      <li option [value]="1">1</li>
-      <li option [value]="2">2</li>
+    <ul aria-label="Test Listbox" ngListbox>
+      <li ngOption [value]="0">0</li>
+      <li ngOption [value]="1">1</li>
+      <li ngOption [value]="2">2</li>
     </ul>
   `,
   imports: [Listbox, Option],

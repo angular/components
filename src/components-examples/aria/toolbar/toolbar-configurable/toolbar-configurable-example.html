@@ -40,7 +40,7 @@
 
 <!-- #docregion toolbar -->
 <div
-  toolbar
+  ngToolbar
   [orientation]="orientation"
   [skipDisabled]="skipDisabled.value"
   [wrap]="wrap.value"
@@ -48,7 +48,7 @@
   class="example-toolbar"
 >
   <button
-    toolbarWidget
+    ngToolbarWidget
     class="example-radio-button"
     (click)="test('Pear')"
     [disabled]="disabledButtonOptions.includes('Pear')"
@@ -56,7 +56,7 @@
     Pear
   </button>
   <ul
-    radioGroup
+    ngRadioGroup
     [disabled]="disabled.value"
     [readonly]="readonly.value"
     class="example-radio-group"
@@ -64,27 +64,23 @@
   >
     @for (fruit of fruits; track fruit) {
       @let optionDisabled = disabledOptions.includes(fruit);
-      <li radioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
+      <li ngRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
         <span class="example-radio-indicator"></span>
         <span>{{ fruit }}</span>
       </li>
     }
   </ul>
-  <ul
-    radioGroup
-    class="example-radio-group"
-    aria-label="Select your favorite fruit"
-  >
+  <ul ngRadioGroup class="example-radio-group" aria-label="Select your favorite fruit">
     @for (fruit of fruits; track fruit) {
       @let optionDisabled = disabledOptions.includes(fruit);
-      <li radioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
+      <li ngRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
         <span class="example-radio-indicator"></span>
         <span>{{ fruit }}</span>
       </li>
     }
   </ul>
   <button
-    toolbarWidget
+    ngToolbarWidget
     class="example-radio-button"
     (click)="test('Blueberry')"
     [disabled]="disabledButtonOptions.includes('Blueberry')"
@@ -92,7 +88,7 @@
     Blueberry
   </button>
   <button
-    toolbarWidget
+    ngToolbarWidget
     class="example-radio-button"
     (click)="test('Cherry')"
     [disabled]="disabledButtonOptions.includes('Cherry')"
@@ -100,7 +96,7 @@
     Cherry
   </button>
   <button
-    toolbarWidget
+    ngToolbarWidget
     class="example-radio-button"
     (click)="test('Date')"
     [disabled]="disabledButtonOptions.includes('Date')"

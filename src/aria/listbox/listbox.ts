@@ -32,19 +32,19 @@ import {ComboboxPopup} from '../combobox';
  * to be used in conjunction with Option as follows:
  *
  * ```html
- * <ul listbox>
- *   <li [value]="1" option>Item 1</li>
- *   <li [value]="2" option>Item 2</li>
- *   <li [value]="3" option>Item 3</li>
+ * <ul ngListbox>
+ *   <li [value]="1" ngOption>Item 1</li>
+ *   <li [value]="2" ngOption>Item 2</li>
+ *   <li [value]="3" ngOption>Item 3</li>
  * </ul>
  * ```
  */
 @Directive({
-  selector: '[listbox]',
-  exportAs: 'listbox',
+  selector: '[ngListbox]',
+  exportAs: 'ngListbox',
   host: {
     'role': 'listbox',
-    'class': 'listbox',
+    'class': 'ng-listbox',
     '[attr.id]': 'id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-readonly]': 'pattern.readonly()',
@@ -60,7 +60,7 @@ import {ComboboxPopup} from '../combobox';
 })
 export class Listbox<V> {
   /** A unique identifier for the listbox. */
-  private readonly _generatedId = inject(_IdGenerator).getId('listbox-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-listbox-');
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the listbox. */
@@ -78,7 +78,7 @@ export class Listbox<V> {
   private readonly _directionality = inject(Directionality);
 
   /** The Options nested inside of the Listbox. */
-  private readonly _Options = contentChildren(Option, {descendants: true});
+  private readonly _options = contentChildren(Option, {descendants: true});
 
   /** A signal wrapper for directionality. */
   protected textDirection = toSignal(this._directionality.change, {
@@ -86,7 +86,7 @@ export class Listbox<V> {
   });
 
   /** The Option UIPatterns of the child Options. */
-  protected items = computed(() => this._Options().map(option => option.pattern));
+  protected items = computed(() => this._options().map(option => option.pattern));
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -187,11 +187,11 @@ export class Listbox<V> {
 
 /** A selectable option in a Listbox. */
 @Directive({
-  selector: '[option]',
-  exportAs: 'option',
+  selector: '[ngOption]',
+  exportAs: 'ngOption',
   host: {
     'role': 'option',
-    'class': 'option',
+    'class': 'ng-option',
     '[attr.data-active]': 'pattern.active()',
     '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
@@ -204,10 +204,10 @@ export class Option<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent Listbox. */
-  private readonly _Listbox = inject(Listbox);
+  private readonly _listbox = inject(Listbox);
 
   /** A unique identifier for the option. */
-  private readonly _generatedId = inject(_IdGenerator).getId('option-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-option-');
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the option. */
@@ -219,7 +219,7 @@ export class Option<V> {
   protected searchTerm = computed(() => this.label() ?? this.element().textContent);
 
   /** The parent Listbox UIPattern. */
-  protected listbox = computed(() => this._Listbox.pattern);
+  protected listbox = computed(() => this._listbox.pattern);
 
   /** A reference to the option element to be focused on navigation. */
   protected element = computed(() => this._elementRef.nativeElement);
