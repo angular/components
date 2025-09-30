@@ -1019,10 +1019,10 @@ describe('Combobox', () => {
   />
 
   <ng-template ngComboboxPopupContainer>
-    <div listbox [(value)]="value">
+    <div ngListbox [(value)]="value">
       @for (option of options(); track option) {
         <div
-          option
+          ngOption
           [value]="option"
           [label]="option"
         >
@@ -1062,7 +1062,7 @@ class ComboboxListboxExample {
   />
 
   <ng-template ngComboboxPopupContainer>
-    <ul tree #tree="tree" [(value)]="value">
+    <ul ngTree #tree="ngTree" [(value)]="value">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1073,18 +1073,18 @@ class ComboboxListboxExample {
 
 <ng-template #treeNodes let-nodes="nodes" let-parent="parent">
   @for (node of nodes; track node.name) {
-    <li treeItem
+    <li ngTreeItem
       [parent]="parent"
       [value]="node.name"
       [label]="node.name"
-      #treeItem="treeItem"
+      #treeItem="ngTreeItem"
     >
       {{ node.name }}
     </li>
 
     @if (node.children) {
-      <ul treeItemGroup [ownedBy]="treeItem" #group="treeItemGroup">
-        <ng-template treeItemGroupContent>
+      <ul ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
+        <ng-template ngTreeItemGroupContent>
           <ng-template
             [ngTemplateOutlet]="treeNodes"
             [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
