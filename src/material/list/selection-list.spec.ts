@@ -1892,7 +1892,7 @@ class SelectionListWithPreselectedFormControlOnPush {
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
   selectedOptions: {id: number; label: string}[] = [];
-  compareWith?: (o1: any, o2: any) => boolean;
+  compareWith: (o1: any, o2: any) => boolean;
   options = [
     {id: 1, label: 'One'},
     {id: 2, label: 'Two'},
@@ -1912,7 +1912,7 @@ class SelectionListWithCustomComparator {
   imports: [MatListModule],
 })
 class SelectionListWithAvatar {
-  togglePosition: MatListOptionTogglePosition | undefined;
+  togglePosition: MatListOptionTogglePosition;
 }
 
 @Component({
@@ -1927,7 +1927,7 @@ class SelectionListWithAvatar {
   imports: [MatListModule],
 })
 class SelectionListWithIcon {
-  togglePosition: MatListOptionTogglePosition | undefined;
+  togglePosition: MatListOptionTogglePosition;
 }
 
 @Component({

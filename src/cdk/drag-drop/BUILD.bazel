@@ -33,6 +33,7 @@ ng_project(
     ],
 )
 
+# TODO(crisbeto): this should be `ng_project`, but will require some refactors of the shared tests.
 ts_project(
     name = "unit_test_sources",
     testonly = True,

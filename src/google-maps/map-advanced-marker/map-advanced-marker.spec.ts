@@ -52,11 +52,11 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerConstructorSpy = createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = options.position;
-    fixture.componentInstance.title = options.title;
-    fixture.componentInstance.content = options.content;
-    fixture.componentInstance.gmpDraggable = options.gmpDraggable;
-    fixture.componentInstance.zIndex = options.zIndex;
+    fixture.componentInstance.position = options.position!;
+    fixture.componentInstance.title = options.title!;
+    fixture.componentInstance.content = options.content!;
+    fixture.componentInstance.gmpDraggable = options.gmpDraggable!;
+    fixture.componentInstance.zIndex = options.zIndex!;
 
     fixture.detectChanges();
     flush();
@@ -104,12 +104,12 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerConstructorSpy = createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = expectedOptions.position;
-    fixture.componentInstance.title = expectedOptions.title;
-    fixture.componentInstance.content = expectedOptions.content;
-    fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable;
-    fixture.componentInstance.zIndex = expectedOptions.zIndex;
-    fixture.componentInstance.options = options;
+    fixture.componentInstance.position = expectedOptions.position!;
+    fixture.componentInstance.title = expectedOptions.title!;
+    fixture.componentInstance.content = expectedOptions.content!;
+    fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable!;
+    fixture.componentInstance.zIndex = expectedOptions.zIndex!;
+    fixture.componentInstance.options = options!;
 
     fixture.detectChanges();
     flush();
@@ -181,11 +181,11 @@ describe('MapAdvancedMarker', () => {
 })
 class TestApp {
   @ViewChild(MapAdvancedMarker) advancedMarker: MapAdvancedMarker;
-  title?: string | null;
-  position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
-  content?: Node | google.maps.marker.PinElement | null;
-  gmpDraggable?: boolean | null;
-  zIndex?: number | null;
+  title: string;
+  position: google.maps.LatLng | google.maps.LatLngLiteral;
+  content: Node | google.maps.marker.PinElement;
+  gmpDraggable: boolean;
+  zIndex: number;
   options: google.maps.marker.AdvancedMarkerElementOptions;
 
   handleClick() {}

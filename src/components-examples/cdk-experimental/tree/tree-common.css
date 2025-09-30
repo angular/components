@@ -53,3 +53,7 @@
 .example-tree-item[aria-selected='true'] .example-selected-icon {
   visibility: visible;
 }
+
+li[aria-expanded='false'] + ul[role='group'] {
+  display: none;
+}

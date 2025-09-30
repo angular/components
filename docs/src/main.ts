@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ErrorHandler} from '@angular/core';
 import {provideHttpClient} from '@angular/common/http';
+import {ErrorHandler, provideZoneChangeDetection} from '@angular/core';
 
-import {unregisterServiceWorkers} from './unregister-service-workers';
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideRouter, withInMemoryScrolling} from '@angular/router';
 import {MaterialDocsApp} from './app/material-docs-app';
 import {MATERIAL_DOCS_ROUTES} from './app/routes';
-import {withInMemoryScrolling, provideRouter} from '@angular/router';
-import {bootstrapApplication} from '@angular/platform-browser';
 import {AnalyticsErrorReportHandler} from './app/shared/analytics/error-report-handler';
-import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {unregisterServiceWorkers} from './unregister-service-workers';
 
 // Unregister all installed service workers and force reload the page if there was
 // an old service worker from a previous version of the docs.
@@ -33,5 +33,6 @@ bootstrapApplication(MaterialDocsApp, {
       }),
     ),
     provideHttpClient(),
+    provideZoneChangeDetection(),
   ],
 }).catch(err => console.error(err));

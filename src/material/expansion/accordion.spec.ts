@@ -10,6 +10,7 @@ import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatAccordion,
+  MatAccordionTogglePosition,
   MatExpansionModule,
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -384,5 +385,5 @@ class AccordionWithHideToggle {
   imports: [MatExpansionModule],
 })
 class AccordionWithTogglePosition {
-  togglePosition = 'after';
+  togglePosition: MatAccordionTogglePosition = 'after';
 }

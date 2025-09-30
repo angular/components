@@ -133,7 +133,7 @@ describe('MatTabBody', () => {
 @Component({
   template: `
     <ng-template>Tab Body Content</ng-template>
-    <mat-tab-body [content]="content()" [position]="position"></mat-tab-body>
+    <mat-tab-body [content]="content()!" [position]="position"></mat-tab-body>
   `,
   imports: [PortalModule, MatRippleModule, MatTabBody],
 })

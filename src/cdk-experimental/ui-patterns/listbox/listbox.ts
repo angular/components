@@ -14,6 +14,10 @@ import {List, ListInputs} from '../behaviors/list/list';
 
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
+  /** A unique identifier for the listbox. */
+  id: SignalLike<string>;
+
+  /** Whether the listbox is readonly. */
   readonly: SignalLike<boolean>;
 };
 
@@ -31,7 +35,7 @@ export class ListboxPattern<V> {
   readonly: SignalLike<boolean>;
 
   /** The tabindex of the listbox. */
-  tabindex = computed(() => this.listBehavior.tabindex());
+  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
   activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -188,7 +192,6 @@ export class ListboxPattern<V> {
     this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
-
     this.listBehavior = new List(inputs);
   }
 
@@ -199,14 +202,6 @@ export class ListboxPattern<V> {
     if (!this.inputs.multi() && this.inputs.value().length > 1) {
       violations.push(
         `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
-      );
-    }
-
-    const activeItem = this.inputs.activeItem();
-
-    if (activeItem && !this.inputs.items().includes(activeItem)) {
-      violations.push(
-        `The current active item does not exist in the list. Active item: ${activeItem.id()}.`,
       );
     }
 
@@ -256,7 +251,7 @@ export class ListboxPattern<V> {
     }
   }
 
-  private _getItem(e: PointerEvent) {
+  protected _getItem(e: PointerEvent) {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }

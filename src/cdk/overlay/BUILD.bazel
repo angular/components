@@ -57,7 +57,7 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

@@ -50,14 +50,12 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   },
 })
 export class Homepage implements OnInit {
-  _componentPageTitle = inject(ComponentPageTitle);
-  guideItems = inject(GuideItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
+  protected readonly guideItems = inject(GuideItems);
+
+  protected readonly topComponents = TOP_COMPONENTS;
 
   ngOnInit(): void {
     this._componentPageTitle.title = '';
-  }
-
-  getTopComponents(): string[] {
-    return TOP_COMPONENTS;
   }
 }

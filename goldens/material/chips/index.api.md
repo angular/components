@@ -19,6 +19,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { ModifierKey } from '@angular/cdk/keycodes';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -304,7 +305,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     _onInput(): void;
     placeholder: string;
     readonly: boolean;
-    separatorKeyCodes: readonly number[] | ReadonlySet<number>;
+    separatorKeyCodes: readonly (number | SeparatorKey)[] | ReadonlySet<number | SeparatorKey>;
     // (undocumented)
     setDescribedByIds(ids: string[]): void;
     // (undocumented)
@@ -472,7 +473,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 export interface MatChipsDefaultOptions {
     hideSingleSelectionIndicator?: boolean;
     inputDisabledInteractive?: boolean;
-    separatorKeyCodes: readonly number[] | ReadonlySet<number>;
+    separatorKeyCodes: readonly (number | SeparatorKey)[] | ReadonlySet<number | SeparatorKey>;
 }
 
 // @public
@@ -562,6 +563,14 @@ export class MatChipTrailingIcon extends MatChipContent {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipTrailingIcon, "mat-chip-trailing-icon, [matChipTrailingIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipTrailingIcon, never>;
+}
+
+// @public
+export interface SeparatorKey {
+    // (undocumented)
+    keyCode: number;
+    // (undocumented)
+    modifiers: readonly ModifierKey[];
 }
 
 // (No @packageDocumentation comment for this package)

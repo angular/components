@@ -15,8 +15,8 @@
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.0.0/MODULE.bazel": "e118477db5c49419a88d78ebc7a2c2cea9d49600fe0f490c1903324a2c16ecd9",
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.14.0/MODULE.bazel": "2b31ffcc9bdc8295b2167e07a757dbbc9ac8906e7028e5170a3708cecaac119f",
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.19.3/MODULE.bazel": "253d739ba126f62a5767d832765b12b59e9f8d2bc88cc1572f4a73e46eb298ca",
-    "https://bcr.bazel.build/modules/aspect_bazel_lib/2.21.1/MODULE.bazel": "07e3ce3eaaa50dbd0be7fa0094e36890478937adc780ec53e77fd9fe543af8b1",
-    "https://bcr.bazel.build/modules/aspect_bazel_lib/2.21.1/source.json": "cb7d22ce044efa47c6e251107a35b8a919f5cd35254190d825adff1b7ae21e6e",
+    "https://bcr.bazel.build/modules/aspect_bazel_lib/2.21.2/MODULE.bazel": "276347663a25b0d5bd6cad869252bea3e160c4d980e764b15f3bae7f80b30624",
+    "https://bcr.bazel.build/modules/aspect_bazel_lib/2.21.2/source.json": "f42051fa42629f0e59b7ac2adf0a55749144b11f1efcd8c697f0ee247181e526",
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.7.7/MODULE.bazel": "491f8681205e31bb57892d67442ce448cda4f472a8e6b3dc062865e29a64f89c",
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.8.1/MODULE.bazel": "812d2dd42f65dca362152101fbec418029cc8fd34cbad1a2fde905383d705838",
     "https://bcr.bazel.build/modules/aspect_bazel_lib/2.9.3/MODULE.bazel": "66baf724dbae7aff4787bf2245cc188d50cb08e07789769730151c0943587c14",
@@ -26,8 +26,8 @@
     "https://bcr.bazel.build/modules/aspect_rules_jasmine/2.0.0/source.json": "45fa9603cdfe100575a12d8b65fa425fe8713dd8c9f0cdf802168b670bc0e299",
     "https://bcr.bazel.build/modules/aspect_rules_js/2.0.0/MODULE.bazel": "b45b507574aa60a92796e3e13c195cd5744b3b8aff516a9c0cb5ae6a048161c5",
     "https://bcr.bazel.build/modules/aspect_rules_js/2.4.2/MODULE.bazel": "0d01db38b96d25df7ed952a5e96eac4b3802723d146961974bf020f6dd07591d",
-    "https://bcr.bazel.build/modules/aspect_rules_js/2.5.0/MODULE.bazel": "12bb9ffdfda5b952644ffa75a69fac1e63da788ad445b056d3ccc70ad39825ac",
-    "https://bcr.bazel.build/modules/aspect_rules_js/2.5.0/source.json": "884ab90109fb7b92488d8187dfd8e0b93be105d2e42b06d887ab4730ba7d77da",
+    "https://bcr.bazel.build/modules/aspect_rules_js/2.6.0/MODULE.bazel": "5a6f8dbc5b170769453f1819d469fe54b0e4b86a0e82e13fde8e5a45438a1890",
+    "https://bcr.bazel.build/modules/aspect_rules_js/2.6.0/source.json": "e1e20b259d4f1b0a5d8b99d57b418c96f306e1c77f96e9ea1c9f1068a628b211",
     "https://bcr.bazel.build/modules/aspect_rules_ts/3.6.3/MODULE.bazel": "d09db394970f076176ce7bab5b5fa7f0d560fd4f30b8432ea5e2c2570505b130",
     "https://bcr.bazel.build/modules/aspect_rules_ts/3.7.0/MODULE.bazel": "5aace216caf88638950ef061245d23c36f57c8359e56e97f02a36f70bb09c50f",
     "https://bcr.bazel.build/modules/aspect_rules_ts/3.7.0/source.json": "4a8115ea69dd796353232ff27a7e93e6d7d1ad43bea1eb33c6bd3acfa656bf2e",
@@ -46,6 +46,8 @@
     "https://bcr.bazel.build/modules/bazel_features/1.34.0/source.json": "dfa5c4b01110313153b484a735764d247fee5624bbab63d25289e43b151a657a",
     "https://bcr.bazel.build/modules/bazel_features/1.4.1/MODULE.bazel": "e45b6bb2350aff3e442ae1111c555e27eac1d915e77775f6fdc4b351b758b5d7",
     "https://bcr.bazel.build/modules/bazel_features/1.9.0/MODULE.bazel": "885151d58d90d8d9c811eb75e3288c11f850e1d6b481a8c9f766adee4712358b",
+    "https://bcr.bazel.build/modules/bazel_lib/3.0.0-beta.1/MODULE.bazel": "407729e232f611c3270005b016b437005daa7b1505826798ea584169a476e878",
+    "https://bcr.bazel.build/modules/bazel_lib/3.0.0-beta.1/source.json": "72bfbe19a3936675719157798de64631e9ac54c2b41f13b544b821d094f4840a",
     "https://bcr.bazel.build/modules/bazel_skylib/1.0.3/MODULE.bazel": "bcb0fd896384802d1ad283b4e4eb4d718eebd8cb820b0a2c3a347fb971afd9d8",
     "https://bcr.bazel.build/modules/bazel_skylib/1.1.1/MODULE.bazel": "1add3e7d93ff2e6998f9e118022c84d163917d912f5afafb3058e3d2f1545b5e",
     "https://bcr.bazel.build/modules/bazel_skylib/1.2.0/MODULE.bazel": "44fe84260e454ed94ad326352a698422dbe372b21a1ac9f3eab76eb531223686",
@@ -59,7 +61,8 @@
     "https://bcr.bazel.build/modules/bazel_skylib/1.7.0/MODULE.bazel": "0db596f4563de7938de764cc8deeabec291f55e8ec15299718b93c4423e9796d",
     "https://bcr.bazel.build/modules/bazel_skylib/1.7.1/MODULE.bazel": "3120d80c5861aa616222ec015332e5f8d3171e062e3e804a2a0253e1be26e59b",
     "https://bcr.bazel.build/modules/bazel_skylib/1.8.1/MODULE.bazel": "88ade7293becda963e0e3ea33e7d54d3425127e0a326e0d17da085a5f1f03ff6",
-    "https://bcr.bazel.build/modules/bazel_skylib/1.8.1/source.json": "7ebaefba0b03efe59cac88ed5bbc67bcf59a3eff33af937345ede2a38b2d368a",
+    "https://bcr.bazel.build/modules/bazel_skylib/1.8.2/MODULE.bazel": "69ad6927098316848b34a9142bcc975e018ba27f08c4ff403f50c1b6e646ca67",
+    "https://bcr.bazel.build/modules/bazel_skylib/1.8.2/source.json": "34a3c8bcf233b835eb74be9d628899bb32999d3e0eadef1947a0a562a2b16ffb",
     "https://bcr.bazel.build/modules/buildozer/7.1.2/MODULE.bazel": "2e8dd40ede9c454042645fd8d8d0cd1527966aa5c919de86661e62953cd73d84",
     "https://bcr.bazel.build/modules/buildozer/7.1.2/source.json": "c9028a501d2db85793a6996205c8de120944f50a0d570438fcae0457a5f9d1f8",
     "https://bcr.bazel.build/modules/gawk/5.3.2.bcr.1/MODULE.bazel": "cdf8cbe5ee750db04b78878c9633cc76e80dcf4416cbe982ac3a9222f80713c8",
@@ -146,7 +149,8 @@
     "https://bcr.bazel.build/modules/rules_nodejs/6.2.0/MODULE.bazel": "ec27907f55eb34705adb4e8257952162a2d4c3ed0f0b3b4c3c1aad1fac7be35e",
     "https://bcr.bazel.build/modules/rules_nodejs/6.3.0/MODULE.bazel": "45345e4aba35dd6e4701c1eebf5a4e67af4ed708def9ebcdc6027585b34ee52d",
     "https://bcr.bazel.build/modules/rules_nodejs/6.5.0/MODULE.bazel": "546d0cf79f36f9f6e080816045f97234b071c205f4542e3351bd4424282a8810",
-    "https://bcr.bazel.build/modules/rules_nodejs/6.5.0/source.json": "ac075bc5babebc25a0adc88ee885f2c8d8520d141f6e139ba9dfa0eedb5be908",
+    "https://bcr.bazel.build/modules/rules_nodejs/6.5.2/MODULE.bazel": "7f9ea68a0ce6d82905ce9f74e76ab8a8b4531ed4c747018c9d76424ad0b3370d",
+    "https://bcr.bazel.build/modules/rules_nodejs/6.5.2/source.json": "6a6ca0940914d55c550d1417cad13a56c9900e23f651a762d8ccc5a64adcf661",
     "https://bcr.bazel.build/modules/rules_pkg/0.7.0/MODULE.bazel": "df99f03fc7934a4737122518bb87e667e62d780b610910f0447665a7e2be62dc",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/MODULE.bazel": "5b1df97dbc29623bccdf2b0dcd0f5cb08e2f2c9050aab1092fd39a41e82686ff",
     "https://bcr.bazel.build/modules/rules_pkg/1.1.0/MODULE.bazel": "9db8031e71b6ef32d1846106e10dd0ee2deac042bd9a2de22b4761b0c3036453",
@@ -180,12 +184,13 @@
     "https://bcr.bazel.build/modules/stardoc/0.7.2/source.json": "58b029e5e901d6802967754adf0a9056747e8176f017cfe3607c0851f4d42216",
     "https://bcr.bazel.build/modules/tar.bzl/0.2.1/MODULE.bazel": "52d1c00a80a8cc67acbd01649e83d8dd6a9dc426a6c0b754a04fe8c219c76468",
     "https://bcr.bazel.build/modules/tar.bzl/0.5.1/MODULE.bazel": "7c2eb3dcfc53b0f3d6f9acdfd911ca803eaf92aadf54f8ca6e4c1f3aee288351",
-    "https://bcr.bazel.build/modules/tar.bzl/0.5.5/MODULE.bazel": "4bfab9bbc7a1966c2c5f7371f5848f5e2d27c465951b4435adc9aaf00ed681da",
-    "https://bcr.bazel.build/modules/tar.bzl/0.5.5/source.json": "67c322bd9f9a6714b9d55d4df36ddc222976a7fbb2070410ef036f68cdf2eeb7",
+    "https://bcr.bazel.build/modules/tar.bzl/0.5.6/MODULE.bazel": "c5b8bfa6bc7b640883d41bfec4a200fb45c16a2a7b2fb081323f499197cfcc09",
+    "https://bcr.bazel.build/modules/tar.bzl/0.5.6/source.json": "848b3a4eaf2bb4a09ab78533c348e19a6723c7d5f820eb1dceb0eeb5e5914ac1",
     "https://bcr.bazel.build/modules/upb/0.0.0-20220923-a547704/MODULE.bazel": "7298990c00040a0e2f121f6c32544bab27d4452f80d9ce51349b1a28f3005c43",
     "https://bcr.bazel.build/modules/yq.bzl/0.1.1/MODULE.bazel": "9039681f9bcb8958ee2c87ffc74bdafba9f4369096a2b5634b88abc0eaefa072",
     "https://bcr.bazel.build/modules/yq.bzl/0.2.0/MODULE.bazel": "6f3a675677db8885be4d607fde14cc51829715e3a879fb016eb9bf336786ce6d",
-    "https://bcr.bazel.build/modules/yq.bzl/0.2.0/source.json": "ff33c6f75da6848caade494240b6824cf00e7e6b8892100f4253984e1dfae2af",
+    "https://bcr.bazel.build/modules/yq.bzl/0.3.1/MODULE.bazel": "9bcb7151b3cd4681b89d350530eaf7b45e32a44dda94843b8932b0cb1cd4594a",
+    "https://bcr.bazel.build/modules/yq.bzl/0.3.1/source.json": "f0b0f204a2a6b0e34b4c9541efe8c04f2ef1af65948daa784eccea738b21dbd2",
     "https://bcr.bazel.build/modules/zlib/1.2.11/MODULE.bazel": "07b389abc85fdbca459b69e2ec656ae5622873af3f845e1c9d80fe179f3effa0",
     "https://bcr.bazel.build/modules/zlib/1.2.12/MODULE.bazel": "3b1a8834ada2a883674be8cbd36ede1b6ec481477ada359cd2d3ddc562340b27",
     "https://bcr.bazel.build/modules/zlib/1.3.1.bcr.3/MODULE.bazel": "af322bc08976524477c79d1e45e241b6efbeb918c497e8840b8ab116802dda79",
@@ -224,7 +229,7 @@
     },
     "@@aspect_rules_esbuild~//esbuild:extensions.bzl%esbuild": {
       "general": {
-        "bzlTransitiveDigest": "D8qNgGrrdZct3S3KMxl6kgSKedwrEWvW34y5AVoV4PQ=",
+        "bzlTransitiveDigest": "NeP8heP5Z49UtK5ZkdaSGN2wdf2vyTLxJfpSPeyvV24=",
         "usagesDigest": "u8wMZJd6Ovxb3YTmhoM3sMbh11Qwrv5EHaggdNi5Wb8=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -404,8 +409,8 @@
     },
     "@@aspect_rules_js~//npm:extensions.bzl%pnpm": {
       "general": {
-        "bzlTransitiveDigest": "0Kn7fvnVxLaVWd5Q+UPHLEIH0A8dYAnRoL8iW6cFIJI=",
-        "usagesDigest": "65Ivq9DqfRJC0d6awlrm+ODJDfRz7Z3Xq67mSEFUqEU=",
+        "bzlTransitiveDigest": "eebwHza1XBCmrNmoTUnW56khfYFfcwZpPWjM1Nvu3sk=",
+        "usagesDigest": "aoP58fHDHJmRSHzsTSkJqLBDeeIkNna9MUbGxoZJSls=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -544,7 +549,7 @@
         "bzlTransitiveDigest": "9IJp6IlB/FMHFBJe4MX/DQM4zi3oArC8yqYE/+NyPwk=",
         "usagesDigest": "FN1SAx4DpL2FgDt82a58jz0UTyLqjp7ZhcUaVdApZz8=",
         "recordedFileInputs": {
-          "@@rules_browsers~//package.json": "0d8cc69cc2c9ecf0eff677fa86843ad9146eca22462aace022a09c3adcb979f8"
+          "@@rules_browsers~//package.json": "45572077938c7a4916e4aaedf7db7ce8425854ab92f35348cff02a2134023bb8"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -617,7 +622,7 @@
     "@@aspect_tools_telemetry~//:extension.bzl%telemetry": {
       "general": {
         "bzlTransitiveDigest": "gA7tPEdJXhskzPIEUxjX9IdDrM6+WjfbgXJ8Ez47umk=",
-        "usagesDigest": "nut5sNZyApCgI/gzif8dERYFw/f5M+qEHBu7l/fx+qI=",
+        "usagesDigest": "3AICyjhN/vrKBxRCE7X7mX6C5gCzpm/lgEYspsAZZoE=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -627,7 +632,7 @@
             "ruleClassName": "tel_repository",
             "attributes": {
               "deps": {
-                "aspect_rules_js": "2.5.0",
+                "aspect_rules_js": "2.6.0",
                 "aspect_rules_ts": "3.7.0",
                 "aspect_tools_telemetry": "0.2.8"
               }
@@ -722,7 +727,7 @@
     },
     "@@rules_browsers~//browsers:extensions.bzl%browsers": {
       "general": {
-        "bzlTransitiveDigest": "yqhZdGXdR0JohAH2diKEa7TtjybE5ulk1cTFF5q5nL8=",
+        "bzlTransitiveDigest": "ep2OrXzFai22oPOQwhS3aeTWxT9Jn6Us7ws4lRa4bU8=",
         "usagesDigest": "78aLbl2cYObLkrJFomb3ZkfFUiUFbqzqZK8lnW+Y7Uk=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -732,9 +737,9 @@
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "142c7bce7a6f717c41c4c76f53a0db4f6ab72f2e0955eec7b2d8c9995c6c2668",
+              "sha256": "14086c6c0844122d4066a5e3a846b963259648945d7fb6c51b520f2105edd597",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chrome-headless-shell-linux64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/linux64/chrome-headless-shell-linux64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-linux64/chrome-headless-shell"
@@ -751,9 +756,9 @@
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "5aa26c327efbfa6b88fb9beeb26701307dae99cbf77929a2bf241f4ddc97f8fc",
+              "sha256": "fa2ff20c870e289511cdde481d069f167e403d289b91b1d9d063dd7b2f77ed6e",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/mac-x64/chrome-headless-shell-mac-x64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/mac-x64/chrome-headless-shell-mac-x64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-x64/chrome-headless-shell"
@@ -770,9 +775,9 @@
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "e8759d758b2e709bbe241d7b6828d8f531a115010bd476d13a3912967ce72336",
+              "sha256": "cbb938bd24ed648280e3654592c46f7eb8e2e184ca331f2138816bd59fcaed32",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/mac-arm64/chrome-headless-shell-mac-arm64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/mac-arm64/chrome-headless-shell-mac-arm64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-arm64/chrome-headless-shell"
@@ -785,13 +790,32 @@
               ]
             }
           },
+          "rules_browsers_chrome_win64": {
+            "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
+            "ruleClassName": "browser_repo",
+            "attributes": {
+              "sha256": "68bf73ab78647e697bf7b81e8329f23c1331d8792af6e2ab66553aeb9ede9cd3",
+              "urls": [
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/win64/chrome-headless-shell-win64.zip"
+              ],
+              "named_files": {
+                "CHROME-HEADLESS-SHELL": "chrome-headless-shell-win64/chrome-headless-shell.exe"
+              },
+              "exclude_patterns": [
+                "**/*.log"
+              ],
+              "exports_files": [
+                "chrome-headless-shell-win64/chrome-headless-shell.exe"
+              ]
+            }
+          },
           "rules_browsers_chromedriver_linux": {
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "0ef562acf7a87733a77cf51f52e3841cf7fb63c17d618b6ccb45a9a53ca89017",
+              "sha256": "ec29104132a6ff1ae5f2ffe7b27b7ff675a58ab9b1ef616badcbdd35577b31b3",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chromedriver-linux64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/linux64/chromedriver-linux64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-linux64/chromedriver"
@@ -806,9 +830,9 @@
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "bff1fc6075912698a1699a8d0979da3fdc576775a3fe78e6ae68338459c8882f",
+              "sha256": "2b9787f5f758c9f3e3888ac23270f8de47b168679718a4440bd1cea2b3cc57e9",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/mac-x64/chromedriver-mac-x64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/mac-x64/chromedriver-mac-x64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-mac-x64/chromedriver"
@@ -823,9 +847,9 @@
             "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
             "ruleClassName": "browser_repo",
             "attributes": {
-              "sha256": "dc64ab4843ea298f02cd69e2995b7441544d4132b74ac97e14a596eaaf1cd697",
+              "sha256": "6da850508d250c00c10b09dcac00c97a58d51346047972c2c47d3e3b850d4662",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/mac-arm64/chromedriver-mac-arm64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/mac-arm64/chromedriver-mac-arm64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-mac-arm64/chromedriver"
@@ -833,6 +857,23 @@
               "exclude_patterns": [],
               "exports_files": [
                 "chromedriver-mac-arm64/chromedriver"
+              ]
+            }
+          },
+          "rules_browsers_chromedriver_win64": {
+            "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
+            "ruleClassName": "browser_repo",
+            "attributes": {
+              "sha256": "d4af3e6c8f3a7ceb50ff298e43ff07efcad46c1d6ceb0d894eeb2d593db7e522",
+              "urls": [
+                "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.68/win64/chromedriver-win64.zip"
+              ],
+              "named_files": {
+                "CHROMEDRIVER": "chromedriver-win64/chromedriver.exe"
+              },
+              "exclude_patterns": [],
+              "exports_files": [
+                "chromedriver-win64/chromedriver.exe"
               ]
             }
           },
@@ -886,15 +927,26 @@
                 "Firefox.app/Contents/MacOS/firefox"
               ]
             }
+          },
+          "rules_browsers_firefox_win64": {
+            "bzlFile": "@@rules_browsers~//browsers/private:browser_repo.bzl",
+            "ruleClassName": "browser_repo",
+            "attributes": {
+              "sha256": "f46d3cb68caa4d4366b942c225d256e0fc15a189263cd9efe29eff0dbfe02685",
+              "urls": [
+                "https://archive.mozilla.org/pub/firefox/releases/135.0/win64/en-US/Firefox%20Setup%20135.0.exe"
+              ],
+              "named_files": {
+                "FIREFOX": "core/firefox.exe"
+              },
+              "exclude_patterns": [],
+              "exports_files": [
+                "core/firefox.exe"
+              ]
+            }
           }
         },
-        "recordedRepoMappingEntries": [
-          [
-            "rules_browsers~",
-            "rules_browsers",
-            "rules_browsers~"
-          ]
-        ]
+        "recordedRepoMappingEntries": []
       }
     },
     "@@rules_fuzzing~//fuzzing/private:extensions.bzl%non_module_dependencies": {
@@ -1082,8 +1134,8 @@
     },
     "@@rules_nodejs~//nodejs:extensions.bzl%node": {
       "general": {
-        "bzlTransitiveDigest": "hdICB1K7PX7oWtO8oksVTBDNt6xxiNERpcO4Yxoa0Gc=",
-        "usagesDigest": "YYe8ikzDnIBF68hm157FTr1JYpMtjORqW3/l/3oNnH0=",
+        "bzlTransitiveDigest": "FmfMiNXAxRoLWw3NloQbssosE1egrSvzirbQnso7j7E=",
+        "usagesDigest": "pTmMkTD+HKgNDse8jy6mfVjAob/KQLHIvN/b2NXw/d0=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -4085,7 +4137,7 @@
     },
     "@@rules_sass~//src/toolchain:extensions.bzl%sass": {
       "general": {
-        "bzlTransitiveDigest": "+GauQp6nWf/mHsJ/XVWUL2JTuC15MuxATrVcAgDpclc=",
+        "bzlTransitiveDigest": "RA58Nyrsn03Z5YmQnpmBw3mqlVck++XIrx34amsqU/E=",
         "usagesDigest": "FPXQ5+6+DFGdSdCMXLwFaruzstMFlLH6N0TRxi0sSH8=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -4100,6 +4152,18 @@
               "constraints": [
                 "@@platforms//os:linux",
                 "@@platforms//cpu:x86_64"
+              ]
+            }
+          },
+          "linux_arm64_sass": {
+            "bzlFile": "@@rules_sass~//src/toolchain:configure_sass.bzl",
+            "ruleClassName": "configure_sass",
+            "attributes": {
+              "file": "@rules_sass//src/compiler/built:sass_linux_arm",
+              "sha256": "",
+              "constraints": [
+                "@@platforms//os:linux",
+                "@@platforms//cpu:arm64"
               ]
             }
           },
@@ -4131,71 +4195,10 @@
         "recordedRepoMappingEntries": []
       }
     },
-    "@@tar.bzl~//tar:extensions.bzl%toolchains": {
-      "general": {
-        "bzlTransitiveDigest": "x8T4avQwaccwFRDkBObSMray93ZBHwpcjsZTPQOyII0=",
-        "usagesDigest": "aQJiuhjXhigIjDvDZxsHPfosrrHvNBHV55yj8QdZQgs=",
-        "recordedFileInputs": {},
-        "recordedDirentsInputs": {},
-        "envVariables": {},
-        "generatedRepoSpecs": {
-          "bsd_tar_toolchains": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:toolchain.bzl",
-            "ruleClassName": "tar_toolchains_repo",
-            "attributes": {
-              "user_repository_name": "bsd_tar_toolchains"
-            }
-          },
-          "bsd_tar_toolchains_darwin_amd64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "darwin_amd64"
-            }
-          },
-          "bsd_tar_toolchains_darwin_arm64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "darwin_arm64"
-            }
-          },
-          "bsd_tar_toolchains_linux_amd64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "linux_amd64"
-            }
-          },
-          "bsd_tar_toolchains_linux_arm64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "linux_arm64"
-            }
-          },
-          "bsd_tar_toolchains_windows_amd64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "windows_amd64"
-            }
-          },
-          "bsd_tar_toolchains_windows_arm64": {
-            "bzlFile": "@@tar.bzl~//tar/toolchain:platforms.bzl",
-            "ruleClassName": "bsdtar_binary_repo",
-            "attributes": {
-              "platform": "windows_arm64"
-            }
-          }
-        },
-        "recordedRepoMappingEntries": []
-      }
-    },
     "@@yq.bzl~//yq:extensions.bzl%yq": {
       "general": {
         "bzlTransitiveDigest": "61Uz+o5PnlY0jJfPZEUNqsKxnM/UCLeWsn5VVCc8u5Y=",
-        "usagesDigest": "jZ44ttF4K14aKanQDZY9nFWD9FqS71EA/Zp3RPvQew8=",
+        "usagesDigest": "3Yefzt7ha1NB6ak4d2Xsxna4bkR35URwnEmIjuJOJbA=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},

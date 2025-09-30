@@ -25,8 +25,8 @@ import {MatRipple} from '@angular/material/core';
   },
 })
 export class GuideList implements OnInit {
-  guideItems = inject(GuideItems);
-  _componentPageTitle = inject(ComponentPageTitle);
+  readonly guideItems = inject(GuideItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
 
   ngOnInit(): void {
     this._componentPageTitle.title = 'Guides';

@@ -6,7 +6,6 @@ load(
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -90,7 +89,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "autocomplete_tests_lib",
     testonly = True,
     srcs = glob(
@@ -101,6 +100,7 @@ ts_project(
     ),
     deps = [
         ":autocomplete",
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",

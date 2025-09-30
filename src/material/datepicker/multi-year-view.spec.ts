@@ -20,6 +20,7 @@ import {By} from '@angular/platform-browser';
 import {MatNativeDateModule} from '../core';
 import {JAN, MAR} from '../testing';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
+import {MatCalendarCellClassFunction} from './calendar-body';
 
 describe('MatMultiYearView', () => {
   let dir: WritableSignal<Direction>;
@@ -447,7 +448,7 @@ class MultiYearViewWithMinMaxDate {
 })
 class MultiYearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);
-  dateClass(date: Date) {
-    return date.getFullYear() % 2 == 0 ? 'even' : undefined;
-  }
+  dateClass: MatCalendarCellClassFunction<Date> = (date: Date) => {
+    return date.getFullYear() % 2 == 0 ? 'even' : [];
+  };
 }

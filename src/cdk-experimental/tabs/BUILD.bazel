@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,6 +10,7 @@ ng_project(
         "tabs.ts",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/deferred-content",
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
@@ -17,7 +18,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = [

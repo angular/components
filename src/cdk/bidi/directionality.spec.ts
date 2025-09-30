@@ -123,7 +123,7 @@ describe('Directionality', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('rtl');
 
-      fixture.componentInstance.direction.set('not-valid');
+      fixture.componentInstance.direction.set('not-valid' as any);
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('ltr');
     });
@@ -171,7 +171,7 @@ class InjectsDirectionality {
 })
 class ElementWithDir {
   @ViewChild(Dir) dir: Dir;
-  direction = signal('rtl');
+  direction = signal<Direction>('rtl');
   changeCount = 0;
 }
 
@@ -184,7 +184,7 @@ class ElementWithPredefinedAutoDir {
 }
 
 @Component({
-  template: '<div dir="RTL"></div>',
+  template: '<div [dir]="$any(`RTL`)"></div>',
   imports: [Dir],
 })
 class ElementWithPredefinedUppercaseDir {

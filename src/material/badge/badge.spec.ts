@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement, ViewEncapsulation, ViewChild, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MatBadge, MatBadgeModule} from './index';
+import {MatBadge, MatBadgeModule, MatBadgePosition, MatBadgeSize} from './index';
 import {ThemePalette} from '../core';
 
 describe('MatBadge', () => {
@@ -272,7 +272,7 @@ describe('MatBadge', () => {
             [matBadgeHidden]="badgeHidden()"
             [matBadgeSize]="badgeSize()"
             [matBadgeOverlap]="badgeOverlap()"
-            [matBadgeDescription]="badgeDescription()"
+            [matBadgeDescription]="badgeDescription()!"
             [matBadgeDisabled]="badgeDisabled()">
       home
     </button>
@@ -283,9 +283,9 @@ class BadgeOnInteractiveElement {
   @ViewChild(MatBadge) badgeInstance: MatBadge;
   badgeColor = signal<ThemePalette>(undefined);
   badgeContent = signal<string | number | undefined | null>('1');
-  badgeDirection = signal('above after');
+  badgeDirection = signal<MatBadgePosition>('above after');
   badgeHidden = signal(false);
-  badgeSize = signal('medium');
+  badgeSize = signal<MatBadgeSize>('medium');
   badgeOverlap = signal(false);
   badgeDescription = signal<string | undefined>(undefined);
   badgeDisabled = signal(false);

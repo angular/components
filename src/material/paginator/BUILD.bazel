@@ -6,7 +6,6 @@ load(
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -81,12 +80,13 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/material/button",
         "//src/material/core",
+        "//src/material/form-field",
         "//src/material/select",
         "//src/material/tooltip",
     ],
 )
 
-ts_project(
+ng_project(
     name = "paginator_tests_lib",
     testonly = True,
     srcs = glob(

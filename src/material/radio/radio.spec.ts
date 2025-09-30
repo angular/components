@@ -10,6 +10,7 @@ import {
   MatRadioGroup,
   MatRadioModule,
 } from './index';
+import {ThemePalette} from '../core';
 
 describe('MatRadio', () => {
   describe('inside of a group', () => {
@@ -410,7 +411,7 @@ describe('MatRadio', () => {
         .withContext('Expected every radio element to use the primary color from the binding.')
         .toBe(true);
 
-      testComponent.color = null;
+      testComponent.color = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1076,7 +1077,7 @@ class RadiosInsideRadioGroup {
   isGroupDisabledInteractive = false;
   groupValue: string | null = null;
   disableRipple = false;
-  color: string | null;
+  color: ThemePalette;
   isFirstShown = true;
 }
 

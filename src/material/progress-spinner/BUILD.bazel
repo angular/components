@@ -6,7 +6,6 @@ load(
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -80,7 +79,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "progress_spinner_tests_lib",
     testonly = True,
     srcs = glob(

@@ -1002,7 +1002,7 @@ class NestedMatTreeApp {
 
   treeControl = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
@@ -1039,7 +1039,7 @@ class WhenNodeNestedMatTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
@@ -1122,7 +1122,7 @@ class NestedMatTreeAppWithToggle {
     node.observableChildren.pipe(map(children => children.length > 0));
 
   treeControl = new NestedTreeControl(this.getChildren);
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;

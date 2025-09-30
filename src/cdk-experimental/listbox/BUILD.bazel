@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,13 +10,14 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/combobox",
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

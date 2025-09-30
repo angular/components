@@ -509,7 +509,6 @@ describe('MatSnackBar', () => {
     viewContainerFixture.destroy();
 
     TestBed.resetTestingModule().overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
-      deps: [],
       useFactory: () => ({panelClass: 'custom-class'}),
     });
 

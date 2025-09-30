@@ -1416,5 +1416,5 @@ class TestTreeComponent {
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);
-  currentType = signal('page');
+  currentType = signal('page' as 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false');
 }

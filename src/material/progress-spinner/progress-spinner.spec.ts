@@ -2,7 +2,11 @@ import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Component, signal} from '@angular/core';
 import {MatProgressSpinnerModule} from './progress-spinner-module';
-import {MatProgressSpinner, MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from './progress-spinner';
+import {
+  MatProgressSpinner,
+  MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
+  ProgressSpinnerMode,
+} from './progress-spinner';
 
 describe('MatProgressSpinner', () => {
   it('should apply a mode of "determinate" if no mode is provided.', () => {
@@ -407,7 +411,7 @@ class IndeterminateProgressSpinner {}
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerWithValueAndBoundMode {
-  mode = signal('indeterminate');
+  mode = signal<ProgressSpinnerMode>('indeterminate');
   value = signal(50);
 }
 

@@ -204,7 +204,7 @@ describe('MatIcon', () => {
 
       const testComponent = fixture.componentInstance;
       const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
-      testComponent.iconName = undefined;
+      testComponent.iconName = undefined!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -731,7 +731,7 @@ describe('MatIcon', () => {
 
       expect(icon.querySelector('svg')).toBeTruthy();
 
-      testComponent.iconName = undefined;
+      testComponent.iconName = undefined!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1447,7 +1447,7 @@ class IconWithCustomFontCss {
   imports: [MatIconModule],
 })
 class IconFromSvgName {
-  iconName: string | undefined = '';
+  iconName = '';
 }
 
 @Component({
@@ -1466,7 +1466,7 @@ class IconWithBindingAndNgIf {
 }
 
 @Component({
-  template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`,
+  template: `<mat-icon [inline]="inline"></mat-icon>`,
   imports: [MatIconModule],
 })
 class InlineIcon {
@@ -1478,7 +1478,7 @@ class InlineIcon {
   imports: [MatIconModule],
 })
 class SvgIconWithUserContent {
-  iconName: string | undefined = '';
+  iconName = '';
 }
 
 @Component({
@@ -1486,7 +1486,7 @@ class SvgIconWithUserContent {
   imports: [MatIconModule],
 })
 class IconWithLigatureAndSvgBinding {
-  iconName: string | undefined;
+  iconName: string;
 }
 
 @Component({

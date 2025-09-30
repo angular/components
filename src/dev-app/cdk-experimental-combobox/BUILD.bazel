@@ -7,9 +7,10 @@ ng_project(
     srcs = glob(["**/*.ts"]),
     assets = [
         "cdk-combobox-demo.html",
+        "cdk-combobox-demo.css",
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/combobox",
+        "//src/components-examples/cdk-experimental/combobox",
     ],
 )

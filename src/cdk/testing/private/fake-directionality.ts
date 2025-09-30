@@ -33,6 +33,5 @@ export function provideFakeDirectionality(direction: Direction | WritableSignal<
     provide: Directionality,
     useFactory: () =>
       new FakeDirectionality(typeof direction === 'string' ? signal(direction) : direction),
-    deps: [],
   };
 }

@@ -1,7 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, provideZoneChangeDetection, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {Carousel, CarouselItem} from './carousel';
 import {provideRouter} from '@angular/router';
+import {Carousel, CarouselItem} from './carousel';
 
 describe('HorizontalCarousel', () => {
   let fixture: ComponentFixture<CarouselTestComponent>;
@@ -9,7 +9,7 @@ describe('HorizontalCarousel', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideZoneChangeDetection()],
     });
     fixture = TestBed.createComponent(CarouselTestComponent);
     fixture.nativeElement.style.width = '1300px';

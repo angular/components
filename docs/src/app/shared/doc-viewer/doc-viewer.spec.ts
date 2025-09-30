@@ -1,14 +1,14 @@
-import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {Component} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DocViewer} from './doc-viewer';
-import {ExampleViewer} from '../example-viewer/example-viewer';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatIconButton} from '@angular/material/button';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
+import {By} from '@angular/platform-browser';
 import {provideRouter} from '@angular/router';
+import {ExampleViewer} from '../example-viewer/example-viewer';
+import {DocViewer} from './doc-viewer';
 
 describe('DocViewer', () => {
   let http: HttpTestingController;
@@ -22,6 +22,7 @@ describe('DocViewer', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideZoneChangeDetection(),
       ],
     });
 

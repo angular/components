@@ -5,7 +5,6 @@ load(
     "ng_project",
     "ng_web_test_suite",
     "sass_binary",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -68,7 +67,7 @@ ng_package(
     deps = [":youtube-player"],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = ["fake-youtube-player.ts"] + glob(

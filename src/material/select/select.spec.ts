@@ -61,6 +61,7 @@ import {
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
+  ThemePalette,
 } from '../core';
 import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
 import {MAT_SELECT_CONFIG, MatSelectConfig} from '../select';
@@ -2880,7 +2881,7 @@ describe('MatSelect', () => {
       });
 
       const fixture = TestBed.createComponent(FloatLabelSelect);
-      fixture.componentInstance.floatLabel = null;
+      fixture.componentInstance.floatLabel = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       const label = fixture.nativeElement.querySelector('.mat-mdc-form-field label');
@@ -4855,7 +4856,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
       multi: true,
     },
   ],
-  imports: [CustomSelectAccessor, MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
+  imports: [CustomSelectAccessor, ReactiveFormsModule],
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
@@ -4879,7 +4880,7 @@ class ThrowsErrorOnInit implements OnInit {
     </mat-form-field>
     <throws-error-on-init></throws-error-on-init>
   `,
-  imports: [ThrowsErrorOnInit, MatSelect, MatOption, MatFormFieldModule, FormsModule],
+  imports: [ThrowsErrorOnInit, MatSelect, MatFormFieldModule, FormsModule],
 })
 class SelectWithErrorSibling {
   value: string;
@@ -4944,7 +4945,7 @@ class BasicSelectOnPushPreselected {
   imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class FloatLabelSelect {
-  floatLabel: FloatLabelType | null = 'auto';
+  floatLabel: FloatLabelType = 'auto';
   control = new FormControl('');
   placeholder = 'Food I want to eat right now';
   foods: any[] = [
@@ -4989,7 +4990,7 @@ class MultiSelect {
 
 @Component({
   template: `<mat-form-field><mat-select tabindex="5"></mat-select></mat-form-field>`,
-  imports: [MatSelect, MatOption, MatFormFieldModule],
+  imports: [MatSelect, MatFormFieldModule],
 })
 class SelectWithPlainTabindex {}
 
@@ -5002,7 +5003,7 @@ class SelectWithPlainTabindex {}
       <div></div>
     }
   `,
-  imports: [MatSelect, MatOption, MatFormFieldModule],
+  imports: [MatSelect, MatFormFieldModule],
 })
 class SelectEarlyAccessSibling {}
 
@@ -5045,7 +5046,7 @@ class BasicSelectNoPlaceholder {}
 })
 class BasicSelectWithTheming {
   @ViewChild(MatSelect) select: MatSelect;
-  theme: string;
+  theme: ThemePalette;
 }
 
 @Component({
@@ -5190,7 +5191,7 @@ class SelectWithGroupsAndNgContainer {
       </mat-form-field>
     </form>
   `,
-  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
+  imports: [MatSelect, MatFormFieldModule, FormsModule],
 })
 class InvalidSelectInForm {
   value: any;
@@ -5299,7 +5300,7 @@ class BasicSelectWithoutFormsMultiple {
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" #select="matSelect">
         <mat-select-trigger>
-          {{ select.selected?.viewValue.split('').reverse().join('') }}
+          {{ getTriggerText(select) }}
         </mat-select-trigger>
         @for (food of foods; track food) {
           <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
@@ -5315,13 +5316,17 @@ class SelectWithCustomTrigger {
     {value: 'pizza-1', viewValue: 'Pizza'},
   ];
   control = new FormControl('');
+
+  getTriggerText(select: MatSelect) {
+    return (select.selected as MatOption | undefined)?.viewValue.split('').reverse().join('');
+  }
 }
 
 @Component({
   template: `
     <mat-form-field>
       <mat-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)"
-                 [compareWith]="comparator">
+                 [compareWith]="comparator!">
         @for (food of foods; track food) {
           <mat-option [value]="food">{{ food.viewValue }}</mat-option>
         }

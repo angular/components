@@ -46,7 +46,6 @@ describe('Observe content directive', () => {
       // test this scenario reliably without risking flaky tests, which is why we supply a mock
       // MutationObserver and check that the methods are called at the right time.
       TestBed.overrideProvider(MutationObserverFactory, {
-        deps: [],
         useFactory: () => ({
           create: () => ({observe: observeSpy, disconnect: disconnectSpy}),
         }),
@@ -276,6 +275,7 @@ class ComponentWithChildTextContent {
 class ComponentWithDebouncedListener {
   debounce = 500;
   spy = jasmine.createSpy('MutationObserver callback');
+  text = '';
 }
 
 @Component({

@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -12,13 +12,14 @@ ts_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = ["grid-navigation.spec.ts"],
     deps = [
         ":grid-navigation",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/grid-focus",
     ],
 )
 

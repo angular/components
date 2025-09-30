@@ -303,6 +303,40 @@ describe('MatChipInput', () => {
 
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
+
+    it('should ignore modifier keys when `SeparatorKey.modifiers` is empty', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [{keyCode: COMMA, modifiers: []}];
+      fixture.detectChanges();
+
+      // With a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {shift: true});
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // Without a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA);
+      expect(testChipInput.add).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only allow modifiers from the `SeparatorKey.modifiers` array', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [{keyCode: COMMA, modifiers: ['ctrlKey']}];
+      fixture.detectChanges();
+
+      // Without a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA);
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // With a different modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {shift: true});
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // With the correct modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {control: true});
+      expect(testChipInput.add).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

@@ -36,6 +36,6 @@ describe('GuideViewer', () => {
   it('should set the guide based off route params', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    expect(component.guide).toEqual(component.guideItems.getItemById(guideItemsId));
+    expect(component.guide()).toEqual(component.guideItems.getItemById(guideItemsId));
   });
 });

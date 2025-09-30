@@ -9,13 +9,9 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src:dev_mode_types",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-        "//src/cdk/overlay",
+        "//src/cdk-experimental/deferred-content",
+        "//src/cdk-experimental/ui-patterns",
     ],
 )
 
@@ -28,9 +24,12 @@ ts_project(
     ),
     deps = [
         ":combobox",
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/keycodes",
+        "//:node_modules/axe-core",
+        "//src/cdk-experimental/listbox",
+        "//src/cdk-experimental/tree",
         "//src/cdk/testing/private",
     ],
 )

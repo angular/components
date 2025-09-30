@@ -46,6 +46,12 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[1]);
     });
 
+    it('should peek next item', () => {
+      const nav = getNavigation();
+      expect(nav.peekNext()).toBe(nav.inputs.items()[1]);
+      expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
+    });
+
     it('should wrap', () => {
       const nav = getNavigation({wrap: signal(true)});
       nav.next(); // 0 -> 1
@@ -122,6 +128,13 @@ describe('List Navigation', () => {
       nav.goto(nav.inputs.items()[2]);
       nav.prev(); // 2 -> 1
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[1]);
+    });
+
+    it('should peek previous item', () => {
+      const nav = getNavigation();
+      nav.goto(nav.inputs.items()[2]);
+      expect(nav.peekPrev()).toBe(nav.inputs.items()[1]);
+      expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[2]);
     });
 
     it('should wrap', () => {

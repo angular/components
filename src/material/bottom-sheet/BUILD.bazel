@@ -6,7 +6,6 @@ load(
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -94,7 +93,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -112,6 +111,7 @@ ts_project(
         "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "//src/material/core",
     ],
 )
 
