@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './public-api';
+export {DeferredContentAware, DeferredContent} from './deferred-content';

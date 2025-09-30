@@ -6,7 +6,6 @@ ng_project(
     name = "tree",
     srcs = [
         "index.ts",
-        "public-api.ts",
         "tree.ts",
     ],
     deps = [

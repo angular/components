@@ -7,7 +7,6 @@ ng_project(
     srcs = [
         "deferred-content.ts",
         "index.ts",
-        "public-api.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",
