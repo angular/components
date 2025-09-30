@@ -174,7 +174,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
 
     this._viewport.setRenderedRange(newRange);
-    this._viewport.setRenderedContentOffset(this._itemSize * newRange.start);
+    this._viewport.setRenderedContentOffset(Math.round(this._itemSize * newRange.start));
     this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));
   }
 }
