@@ -169,7 +169,25 @@ async function cleanupAndPrepareReportsDir() {
     await fs.promises.rm(reportsDir, {recursive: true});
   } catch {}
 
-  await fs.promises.mkdir(reportsDir, {recursive: true});
+  try {
+    await fs.promises.mkdir(reportsDir, {recursive: true});
+  } catch (err) {
+    // If mkdir fails, try to create the entire path structure
+    const pathParts = reportsDir.split(path.sep);
+    let currentPath = pathParts[0] || path.sep;
+
+    for (let i = 1; i < pathParts.length; i++) {
+      currentPath = path.join(currentPath, pathParts[i]);
+      try {
+        await fs.promises.mkdir(currentPath);
+      } catch (mkdirErr) {
+        // Ignore EEXIST errors, but throw others
+        if (mkdirErr.code !== 'EEXIST') {
+          throw mkdirErr;
+        }
+      }
+    }
+  }
 }
 
 /**

@@ -1,0 +1,23 @@
+<div class="example-container">
+  <h3>Custom Wrapper Components</h3>
+  
+  <div class="example-section">
+    <h4>Permission Select Component</h4>
+    <mat-form-field>
+      <mat-label>User Permissions</mat-label>
+      <app-permission-select [formControl]="permissionControl"></app-permission-select>
+      <mat-hint>Choose the appropriate permission level</mat-hint>
+    </mat-form-field>
+    <p>Selected value: {{ permissionControl.value }}</p>
+  </div>
+
+  <div class="example-section">
+    <h4>Phone Input Component</h4>
+    <mat-form-field>
+      <mat-label>Phone Number</mat-label>
+      <app-phone-input [formControl]="phoneControl"></app-phone-input>
+      <mat-hint>Enter your phone number</mat-hint>
+    </mat-form-field>
+    <p>Formatted value: {{ phoneControl.value }}</p>
+  </div>
+</div>

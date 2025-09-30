@@ -1,0 +1,29 @@
+.example-container {
+  max-width: 600px;
+  margin: 20px;
+}
+
+.example-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.example-section h4 {
+  margin-top: 0;
+  color: #1976d2;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 10px 0;
+  font-family: 'Roboto Mono', monospace;
+  background-color: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+}
