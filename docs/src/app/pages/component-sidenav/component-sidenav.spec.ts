@@ -1,8 +1,9 @@
+import {provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {take} from 'rxjs/operators';
-import {ComponentSidenav} from './component-sidenav';
 import {MatSidenav} from '@angular/material/sidenav';
 import {provideRouter} from '@angular/router';
+import {take} from 'rxjs/operators';
+import {ComponentSidenav} from './component-sidenav';
 
 describe('ComponentSidenav', () => {
   let fixture: ComponentFixture<ComponentSidenav>;
@@ -10,7 +11,7 @@ describe('ComponentSidenav', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideZoneChangeDetection()],
     });
 
     fixture = TestBed.createComponent(ComponentSidenav);
