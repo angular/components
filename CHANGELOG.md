@@ -1,3 +1,31 @@
+<a name="21.0.0-next.6"></a>
+# 21.0.0-next.6 "carbon-flamingo" (2025-10-01)
+## Breaking Changes
+### material
+- * `AnimationCurves` has been removed.
+  * `AnimationDurations` has been removed.
+  * `NativeDateAdapter.useUtcForDisplay` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f9e7eff127](https://github.com/angular/components/commit/f9e7eff127447a685126f3c942571653aa245728) | feat | **combobox:** introduce new signals-based combobox ([#31872](https://github.com/angular/components/pull/31872)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef70029820](https://github.com/angular/components/commit/ef70029820423ff7ba6a5a1a372c24a0583a03f2) | feat | **chips:** allow for modifiers to be specified on separator keys ([#31914](https://github.com/angular/components/pull/31914)) |
+| [1b06a8ea80](https://github.com/angular/components/commit/1b06a8ea8033a9cadffb52102aa74cc4f768adb1) | fix | **core:** remove deprecated APIs for v21 ([#31924](https://github.com/angular/components/pull/31924)) |
+| [81eeff4bed](https://github.com/angular/components/commit/81eeff4beddbadd6518aca123182ae271be80819) | fix | **menu:** prevent child menu reopening while parent is animating away ([#31958](https://github.com/angular/components/pull/31958)) |
+| [813f66b839](https://github.com/angular/components/commit/813f66b839d1684c3d5342e55ba61e948c979fab) | fix | **menu:** switch internal state to signals ([#31934](https://github.com/angular/components/pull/31934)) |
+| [131c7ff804](https://github.com/angular/components/commit/131c7ff80420a9501618be1cb1c4b168cd286c4a) | fix | **paginator:** trim extraneous announcements ([#31943](https://github.com/angular/components/pull/31943)) |
+| [6fba2049c3](https://github.com/angular/components/commit/6fba2049c36b86659a1713baf965da8651b6aae4) | fix | **select:** rotate arrow while open ([#31936](https://github.com/angular/components/pull/31936)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [667a007d0d](https://github.com/angular/components/commit/667a007d0d4017d14eadb2db4b5c0665efa1c2b9) | fix | **scrolling:** Fix undefined error when documentElement.style is undefined ([#31904](https://github.com/angular/components/pull/31904)) |
+| [2918e2804a](https://github.com/angular/components/commit/2918e2804a4563c64a20822605424d66de7adb91) | fix | **scrolling:** prevent subpixel gaps in virtual scroll viewport ([#31940](https://github.com/angular/components/pull/31940)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.7"></a>
 # 20.2.7 "ceramic-nebula" (2025-10-01)
 ### material
