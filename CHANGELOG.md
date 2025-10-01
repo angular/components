@@ -1,3 +1,18 @@
+<a name="20.2.6"></a>
+# 20.2.6 "wool-gyroscope" (2025-10-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e8e8662ab](https://github.com/angular/components/commit/e8e8662ab68e493d3ae7c364297c569032a7af7f) | fix | **scrolling:** Fix undefined error when documentElement.style is undefined ([#31904](https://github.com/angular/components/pull/31904)) |
+| [a9b1afdb6](https://github.com/angular/components/commit/a9b1afdb6ba4e6720ec0358f0b85888f506905fc) | fix | **scrolling:** prevent subpixel gaps in virtual scroll viewport ([#31940](https://github.com/angular/components/pull/31940)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a6f0bd8e7](https://github.com/angular/components/commit/a6f0bd8e72d64d897611ec02cb2d9eb54d922318) | fix | **menu:** switch internal state to signals ([#31934](https://github.com/angular/components/pull/31934)) |
+| [94716a805](https://github.com/angular/components/commit/94716a8055ace7b4332a3b5bc37404434ccaf475) | fix | **select:** rotate arrow while open ([#31936](https://github.com/angular/components/pull/31936)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.5"></a>
 # 20.2.5 "sparkling-penguin" (2025-09-24)
 ### material
