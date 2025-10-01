@@ -211,7 +211,12 @@ export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentIn
     // Subscribe to changes in the hovered item in order to toggle the panel.
     if (this.triggersSubmenu() && this._parentMaterialMenu) {
       this._hoverSubscription = this._parentMaterialMenu._hovered().subscribe(active => {
-        if (active === this._menuItemInstance && !active.disabled) {
+        if (
+          active === this._menuItemInstance &&
+          !active.disabled &&
+          // Ignore hover events if the parent menu is in the process of being closed (see #31956).
+          this._parentMaterialMenu?._panelAnimationState !== 'void'
+        ) {
           this._openedBy = 'mouse';
           // Open the menu, but do NOT auto-focus on first item when just hovering.
           // When VoiceOver is enabled, this is particularly confusing as the focus will
