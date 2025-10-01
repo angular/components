@@ -1,3 +1,12 @@
+<a name="20.2.7"></a>
+# 20.2.7 "ceramic-nebula" (2025-10-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85ed6550c2](https://github.com/angular/components/commit/85ed6550c2a3f8199350dcb1fb7d6f775dc2ba61) | fix | **menu:** prevent child menu reopening while parent is animating away ([#31958](https://github.com/angular/components/pull/31958)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.6"></a>
 # 20.2.6 "wool-gyroscope" (2025-10-01)
 ### cdk
