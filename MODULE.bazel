@@ -32,7 +32,7 @@ git_override(
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "84f4bf185682d841c7e7b369f498e68c742229cc",
+    commit = "c3721b6ece2050a59a97562e3b95527a3092b03b",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
