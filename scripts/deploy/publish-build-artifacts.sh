@@ -17,7 +17,7 @@ fi
 
 # Release packages that need to published as snapshots.
 PACKAGES=(
-  aria
+  # aria TODO(crisbeto): enable this once there's a builds repo for ARIA
   cdk
   cdk-experimental
   material
