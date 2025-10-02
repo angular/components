@@ -1,5 +1,5 @@
 import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
@@ -161,6 +161,7 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[3].click(); // Select 1:30 AM
       fixture.detectChanges();
+      tick(); // Wait for setTimeout(0) to complete
       flush();
 
       expect(formControlValue).toBeTruthy();
