@@ -46,7 +46,6 @@ describe('MatTimepicker', () => {
 
       getOptions()[3].click();
       fixture.detectChanges();
-      flushMicrotasks();
       flush();
 
       const value = fixture.componentInstance.input.value()!;
@@ -72,7 +71,6 @@ describe('MatTimepicker', () => {
 
       getOptions()[1].click();
       fixture.detectChanges();
-      flushMicrotasks();
       flush();
 
       expect(getPanel()).toBeFalsy();
@@ -126,7 +124,6 @@ describe('MatTimepicker', () => {
 
       getOptions()[getActiveOptionIndex()].click();
       fixture.detectChanges();
-      flushMicrotasks();
       flush();
 
       expect(getPanel()).toBeFalsy();
@@ -164,7 +161,6 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[3].click(); // Select 1:30 AM
       fixture.detectChanges();
-      flushMicrotasks(); // Wait for Promise.resolve().then() to complete
       flush();
 
       expect(formControlValue).toBeTruthy();
@@ -871,7 +867,6 @@ describe('MatTimepicker', () => {
 
       const event = dispatchKeyboardEvent(input, 'keydown', ENTER);
       fixture.detectChanges();
-      flushMicrotasks();
       flush();
 
       expect(input.value).toBe('1:30 AM');
@@ -965,7 +960,7 @@ describe('MatTimepicker', () => {
       expect(control.dirty).toBe(true);
     });
 
-    it('should propagate value selected from the panel to the form control', () => {
+    it('should propagate value selected from the panel to the form control', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
       fixture.detectChanges();
@@ -976,11 +971,11 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[5].click();
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(true);
-    });
+    }));
 
     it('should format values assigned to the input through the form control', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
@@ -1003,7 +998,7 @@ describe('MatTimepicker', () => {
       expect(input.value).toBe('10:10 AM');
     });
 
-    it('should not change the control if the same value is selected from the dropdown', () => {
+    it('should not change the control if the same value is selected from the dropdown', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
       control.setValue(createTime(2, 30));
@@ -1017,13 +1012,13 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[5].click();
       fixture.detectChanges();
-      flushMicrotasks();
+      flush();
 
       expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(false);
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
-    });
+    }));
 
     it('should not propagate programmatic changes to the form control', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
