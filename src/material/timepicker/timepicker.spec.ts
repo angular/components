@@ -1,12 +1,5 @@
 import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  TestBed,
-  tick,
-  flushMicrotasks,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, flushMicrotasks} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
