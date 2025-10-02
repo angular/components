@@ -162,35 +162,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
   }
 
   parse(value: unknown, parseFormat: string | string[]): Date | null {
-    if (typeof value == 'string' && value.length > 0) {
-      const iso8601Date = parseISO(value);
-
-      if (this.isValid(iso8601Date)) {
-        return iso8601Date;
-      }
-
-      const formats = Array.isArray(parseFormat) ? parseFormat : [parseFormat];
-
-      if (!parseFormat.length) {
-        throw Error('Formats array must not be empty.');
-      }
-
-      for (const currentFormat of formats) {
-        const fromFormat = parse(value, currentFormat, new Date(), {locale: this.locale});
-
-        if (this.isValid(fromFormat)) {
-          return fromFormat;
-        }
-      }
-
-      return this.invalid();
-    } else if (typeof value === 'number') {
-      return new Date(value);
-    } else if (value instanceof Date) {
-      return this.clone(value);
-    }
-
-    return null;
+    return this._parse(value, parseFormat);
   }
 
   format(date: Date, displayFormat: string): string {
@@ -278,10 +250,48 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
   }
 
   override parseTime(value: unknown, parseFormat: string | string[]): Date | null {
-    return this.parse(value, parseFormat);
+    return this._parse(value, parseFormat, false);
   }
 
   override addSeconds(date: Date, amount: number): Date {
     return addSeconds(date, amount);
+  }
+
+  private _parse(
+    value: unknown,
+    parseFormat: string | string[],
+    shouldTryParseIso = true,
+  ): Date | null {
+    if (typeof value == 'string' && value.length > 0) {
+      if (shouldTryParseIso) {
+        const iso8601Date = parseISO(value);
+
+        if (this.isValid(iso8601Date)) {
+          return iso8601Date;
+        }
+      }
+
+      const formats = Array.isArray(parseFormat) ? parseFormat : [parseFormat];
+
+      if (!parseFormat.length) {
+        throw Error('Formats array must not be empty.');
+      }
+
+      for (const currentFormat of formats) {
+        const fromFormat = parse(value, currentFormat, new Date(), {locale: this.locale});
+
+        if (this.isValid(fromFormat)) {
+          return fromFormat;
+        }
+      }
+
+      return this.invalid();
+    } else if (typeof value === 'number') {
+      return new Date(value);
+    } else if (value instanceof Date) {
+      return this.clone(value);
+    }
+
+    return null;
   }
 }

@@ -535,6 +535,15 @@ describe('DateFnsAdapter', () => {
     expect(adapter.getSeconds(result)).toBe(0);
   });
 
+  it('should parse a time string containing only hours', () => {
+    const result = adapter.parseTime('11', 'HH')!;
+    expect(result).toBeTruthy();
+    expect(adapter.isValid(result)).toBe(true);
+    expect(adapter.getHours(result)).toBe(11);
+    expect(adapter.getMinutes(result)).toBe(0);
+    expect(adapter.getSeconds(result)).toBe(0);
+  });
+
   it('should return an invalid date when parsing invalid time string', () => {
     expect(adapter.isValid(adapter.parseTime('abc', 'p')!)).toBe(false);
     expect(adapter.isValid(adapter.parseTime('123', 'p')!)).toBe(false);
