@@ -462,12 +462,6 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
           this._previewEnd = this._getCellCompareValue(dragRange.end);
         }
       }
-
-      // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
-      // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time
-      // when navigating one month back using the keyboard which will cause this handler
-      // to throw a "changed after checked" error when updating the preview state.
-      this._changeDetectorRef.detectChanges();
     }
   }
 
