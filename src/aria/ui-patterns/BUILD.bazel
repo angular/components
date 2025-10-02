@@ -1,0 +1,22 @@
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "ui-patterns",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/ui-patterns/accordion",
+        "//src/aria/ui-patterns/behaviors/signal-like",
+        "//src/aria/ui-patterns/combobox",
+        "//src/aria/ui-patterns/listbox",
+        "//src/aria/ui-patterns/radio-group",
+        "//src/aria/ui-patterns/tabs",
+        "//src/aria/ui-patterns/toolbar",
+        "//src/aria/ui-patterns/tree",
+    ],
+)

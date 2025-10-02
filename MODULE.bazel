@@ -77,6 +77,7 @@ npm.npm_translate_lock(
         "//:package.json",
         "//:pnpm-workspace.yaml",
         "//integration:package.json",
+        "//src/aria:package.json",
         "//src/cdk:package.json",
         "//src/cdk-experimental:package.json",
         "//src/components-examples:package.json",
@@ -93,6 +94,10 @@ npm.npm_translate_lock(
     ],
     npmrc = "//:.npmrc",
     package_visibility = {
+        "@angular/aria": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
         "@angular/cdk": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",

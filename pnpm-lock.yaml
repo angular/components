@@ -347,6 +347,9 @@ importers:
 
   docs:
     dependencies:
+      '@angular/aria':
+        specifier: workspace:*
+        version: link:../src/aria
       '@angular/cdk':
         specifier: workspace:*
         version: link:../src/cdk
@@ -517,6 +520,16 @@ importers:
         specifier: workspace:*
         version: link:../src/youtube-player
 
+  src/aria:
+    dependencies:
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
+
   src/cdk:
     dependencies:
       parse5:
@@ -542,6 +555,9 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
+      '@angular/aria':
+        specifier: workspace:*
+        version: link:../aria
       '@angular/cdk':
         specifier: workspace:*
         version: link:../cdk
@@ -560,6 +576,9 @@ importers:
 
   src/dev-app:
     devDependencies:
+      '@angular/aria':
+        specifier: workspace:*
+        version: link:../aria
       '@angular/cdk':
         specifier: workspace:*
         version: link:../cdk
