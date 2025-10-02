@@ -696,8 +696,8 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     // (undocumented)
     readonly _changeDetectorRef: ChangeDetectorRef;
     comparisonEnd: D | null;
-    _comparisonRangeEnd: number | null;
-    _comparisonRangeStart: number | null;
+    _comparisonRangeEnd: i0.WritableSignal<number | null>;
+    _comparisonRangeStart: i0.WritableSignal<number | null>;
     comparisonStart: D | null;
     // (undocumented)
     _dateAdapter: DateAdapter<D, any>;
@@ -708,19 +708,19 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     protected _dragEnded(event: MatCalendarUserEvent<D | null>): void;
     readonly dragStarted: EventEmitter<MatCalendarUserEvent<D>>;
     endDateAccessibleName: string | null;
-    _firstWeekOffset: number;
+    _firstWeekOffset: i0.WritableSignal<number>;
     _focusActiveCell(movePreview?: boolean): void;
     _focusActiveCellAfterViewChecked(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _handleCalendarBodyKeyup(event: KeyboardEvent): void;
     _init(): void;
-    _isRange: boolean;
+    _isRange: i0.WritableSignal<boolean>;
     _matCalendarBody: MatCalendarBody;
     get maxDate(): D | null;
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
-    _monthLabel: string;
+    _monthLabel: i0.WritableSignal<string>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -728,23 +728,23 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     _previewChanged({ event, value: cell }: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
-    _previewEnd: number | null;
-    _previewStart: number | null;
-    _rangeEnd: number | null;
-    _rangeStart: number | null;
+    _previewEnd: i0.WritableSignal<number | null>;
+    _previewStart: i0.WritableSignal<number | null>;
+    _rangeEnd: i0.WritableSignal<number | null>;
+    _rangeStart: i0.WritableSignal<number | null>;
     get selected(): DateRange<D> | D | null;
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
     startDateAccessibleName: string | null;
-    _todayDate: number | null;
+    _todayDate: i0.WritableSignal<number | null>;
     _updateActiveDate(event: MatCalendarUserEvent<number>): void;
     readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>>;
-    _weekdays: {
+    _weekdays: i0.WritableSignal<{
         long: string;
         narrow: string;
         id: number;
-    }[];
-    _weeks: MatCalendarCell[][];
+    }[]>;
+    _weeks: i0.WritableSignal<MatCalendarCell<any>[][]>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatMonthView<any>, "mat-month-view", ["matMonthView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; "comparisonStart": { "alias": "comparisonStart"; "required": false; }; "comparisonEnd": { "alias": "comparisonEnd"; "required": false; }; "startDateAccessibleName": { "alias": "startDateAccessibleName"; "required": false; }; "endDateAccessibleName": { "alias": "endDateAccessibleName"; "required": false; }; "activeDrag": { "alias": "activeDrag"; "required": false; }; }, { "selectedChange": "selectedChange"; "_userSelection": "_userSelection"; "dragStarted": "dragStarted"; "dragEnded": "dragEnded"; "activeDateChange": "activeDateChange"; }, never, never, true, never>;
     // (undocumented)
@@ -780,10 +780,10 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     get selected(): DateRange<D> | D | null;
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D>;
-    _selectedYear: number | null;
-    _todayYear: number;
+    _selectedYear: i0.WritableSignal<number | null>;
+    _todayYear: i0.WritableSignal<number>;
     _updateActiveDate(event: MatCalendarUserEvent<number>): void;
-    _years: MatCalendarCell[][];
+    _years: i0.WritableSignal<MatCalendarCell<any>[][]>;
     readonly yearSelected: EventEmitter<D>;
     _yearSelected(event: MatCalendarUserEvent<number>): void;
     // (undocumented)
@@ -860,7 +860,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
-    _months: MatCalendarCell[][];
+    _months: i0.WritableSignal<MatCalendarCell<any>[][]>;
     readonly monthSelected: EventEmitter<D>;
     _monthSelected(event: MatCalendarUserEvent<number>): void;
     // (undocumented)
@@ -870,10 +870,10 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     get selected(): DateRange<D> | D | null;
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D>;
-    _selectedMonth: number | null;
-    _todayMonth: number | null;
+    _selectedMonth: i0.WritableSignal<number | null>;
+    _todayMonth: i0.WritableSignal<number | null>;
     _updateActiveDate(event: MatCalendarUserEvent<number>): void;
-    _yearLabel: string;
+    _yearLabel: i0.WritableSignal<string>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatYearView<any>, "mat-year-view", ["matYearView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "monthSelected": "monthSelected"; "activeDateChange": "activeDateChange"; }, never, never, true, never>;
     // (undocumented)
