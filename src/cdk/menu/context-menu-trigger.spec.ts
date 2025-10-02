@@ -1,5 +1,5 @@
 import {Component, ViewChild, ElementRef, ViewChildren, QueryList} from '@angular/core';
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
@@ -8,6 +8,8 @@ import {CdkMenuItem} from './menu-item';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CdkMenuBar} from './menu-bar';
 import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
+import {OverlayContainer} from '../overlay';
+import {CDK_MENU_DEFAULT_OPTIONS} from './menu-trigger-base';
 
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {
@@ -378,6 +380,77 @@ describe('CdkContextMenuTrigger', () => {
 
       expect(getFileMenu()).not.toBeDefined();
     });
+  });
+
+  describe('with backdrop in options', () => {
+    let fixture: ComponentFixture<SimpleContextMenu>;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleContextMenu);
+      fixture.detectChanges();
+    });
+
+    /** Get the context in which the context menu should trigger. */
+    function getMenuTrigger() {
+      return fixture.componentInstance.triggerElement.nativeElement;
+    }
+
+    /** Open up the context menu and run change detection. */
+    function openContextMenu() {
+      // right click triggers a context menu event
+      dispatchMouseEvent(getMenuTrigger(), 'contextmenu');
+      fixture.detectChanges();
+    }
+
+    it('should not contain backdrop by default', fakeAsync(() => {
+      openContextMenu();
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      fixture.detectChanges();
+      tick(500);
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+    }));
+
+    it('should be able to add the backdrop using hasBackdrop option', fakeAsync(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{provide: CDK_MENU_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}],
+      });
+
+      fixture = TestBed.createComponent(SimpleContextMenu);
+      fixture.detectChanges();
+
+      openContextMenu();
+
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+    }));
+
+    it('should be able to add the custom backdrop class using backdropClass option', fakeAsync(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: CDK_MENU_DEFAULT_OPTIONS,
+            useValue: {hasBackdrop: true, backdropClass: 'custom-backdrop'},
+          },
+        ],
+      });
+
+      fixture = TestBed.createComponent(SimpleContextMenu);
+      fixture.detectChanges();
+
+      openContextMenu();
+
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.custom-backdrop')).toBeTruthy();
+    }));
   });
 
   describe('with shared triggered menu', () => {
