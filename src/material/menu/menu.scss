@@ -100,7 +100,7 @@ mat-menu {
 
   .mat-divider {
     // Use margin instead of padding since divider uses border-top to render out the line.
-    color: token-utils.slot(menu-divider-color, $fallbacks);
+    border-top-color: token-utils.slot(menu-divider-color, $fallbacks);
     margin-bottom: token-utils.slot(menu-divider-bottom-spacing, $fallbacks);
     margin-top: token-utils.slot(menu-divider-top-spacing, $fallbacks);
   }
