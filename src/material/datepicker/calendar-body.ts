@@ -615,7 +615,9 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
       const col = cell.getAttribute('data-mat-col');
 
       if (row && col) {
-        return this.rows[parseInt(row)][parseInt(col)];
+        // We need the optional read here, because this can
+        // fire too late when the user is navigating quickly.
+        return this.rows[parseInt(row)]?.[parseInt(col)] || null;
       }
     }
 
