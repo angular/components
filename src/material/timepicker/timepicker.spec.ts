@@ -135,6 +135,39 @@ describe('MatTimepicker', () => {
         }),
       );
     }));
+
+    it('should emit selected event after form control value is updated', fakeAsync(() => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      fixture.detectChanges();
+
+      let formControlValue: Date | null = null;
+      let eventValue: Date | null = null;
+
+      // Subscribe to form control changes
+      control.valueChanges.subscribe(value => {
+        formControlValue = value;
+      });
+
+      // Subscribe to selected event
+      fixture.componentInstance.input.timepicker().selected.subscribe(event => {
+        eventValue = event.value;
+        // At this point, form control should already be updated
+        expect(control.value).toBeTruthy();
+        expectSameTime(control.value, event.value);
+      });
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      getOptions()[3].click(); // Select 1:30 AM
+      fixture.detectChanges();
+      flush();
+
+      expect(formControlValue).toBeTruthy();
+      expect(eventValue).toBeTruthy();
+      expectSameTime(formControlValue, eventValue);
+      expectSameTime(control.value, createTime(1, 30));
+    }));
   });
 
   describe('input behavior', () => {
