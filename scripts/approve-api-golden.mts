@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const shelljs = require('shelljs');
-const chalk = require('chalk');
-const path = require('path');
-const {guessPackageName} = require('./util');
-const projectDir = path.join(__dirname, '../');
+import chalk from 'chalk';
+import {join} from 'path';
+import sh from 'shelljs';
+import {guessPackageName} from './util.mjs';
+
 const bazel = process.env['BAZEL'] || 'pnpm -s bazel';
 
 if (process.argv.length < 3) {
@@ -12,12 +12,10 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
-// ShellJS should exit if any command fails.
-shelljs.set('-e');
-shelljs.cd(projectDir);
+sh.set('-e');
 
 for (const searchPackageName of process.argv.slice(2)) {
-  const packageNameGuess = guessPackageName(searchPackageName, path.join(projectDir, 'src'));
+  const packageNameGuess = guessPackageName(searchPackageName, join(process.cwd(), 'src'));
 
   if (!packageNameGuess.result) {
     console.error(
@@ -30,8 +28,8 @@ for (const searchPackageName of process.argv.slice(2)) {
     process.exit(1);
   }
 
-  const [packageName, ..._entryPointTail] = packageNameGuess.result.split('/');
+  const [packageName] = packageNameGuess.result.split('/');
   const apiGoldenTargetName = `//goldens:${packageName}_api.accept`.replace(/-/g, '_');
 
-  shelljs.exec(`${bazel} run ${apiGoldenTargetName}`);
+  sh.exec(`${bazel} run ${apiGoldenTargetName}`);
 }

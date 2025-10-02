@@ -17,27 +17,31 @@
  *   --no-watch   | Watch mode is enabled by default. This flag opts-out to standard Bazel.
  */
 
-const yargs = require('yargs');
-const shelljs = require('shelljs');
-const chalk = require('chalk');
-const path = require('path');
-const args = process.argv.slice(2);
-const {guessPackageName, convertPathToPosix} = require('./util');
+import chalk from 'chalk';
+import {join, relative} from 'path';
+import sh from 'shelljs';
+import yargs from 'yargs';
+import {guessPackageName, convertPathToPosix} from './util.mjs';
 
-// Path to the project directory.
-const projectDir = path.join(__dirname, '../');
+const args = process.argv.slice(2);
 
 // Path to the directory that contains all packages.
-const packagesDir = path.join(projectDir, 'src/');
+const packagesDir = join(process.cwd(), 'src/');
 
 // ShellJS should exit if any command fails.
-shelljs.set('-e');
-shelljs.cd(projectDir);
+sh.set('-e');
+
+interface CliArgs {
+  components: string[];
+  debug: boolean;
+  firefox: boolean;
+  watch: boolean;
+}
 
 // Extracts the supported command line options.
-const {components, debug, firefox, watch} = yargs(args)
+const parser = yargs(args)
   .command('* <components..>', 'Run tests for specified components', args =>
-    args.positional('components', {type: 'array'}),
+    args.positional('components', {type: 'string', array: true}),
   )
   .option('debug', {
     alias: 'local',
@@ -53,8 +57,9 @@ const {components, debug, firefox, watch} = yargs(args)
     default: true,
     description: 'Whether tests should be re-run automatically upon changes.',
   })
-  .strict()
-  .parseSync();
+  .strict();
+
+const {components, debug, firefox, watch} = parser.parseSync() as unknown as CliArgs;
 
 // Whether tests for all components should be run.
 const all = components.length === 1 && components[0] === 'all';
@@ -84,51 +89,49 @@ if (all) {
     console.warn(chalk.yellow('Unable to run all component tests in watch mode.'));
     console.warn(chalk.yellow('Tests will be run in non-watch mode..'));
   }
-  shelljs.exec(
+  sh.exec(
     `pnpm -s bazel test --test_tag_filters=-e2e,browser:${browserName} ` +
       `--build_tag_filters=browser:${browserName} --build_tests_only //src/...`,
   );
-  return;
-}
+} else {
+  // Exit if no component has been specified.
+  if (!components.length) {
+    console.error(
+      chalk.red(
+        'No component specified. Please either specify individual components, or pass "all" ' +
+          'in order to run tests for all components.',
+      ),
+    );
+    console.info(chalk.yellow('Below are a few examples of how the script can be run:'));
+    console.info(chalk.yellow(` - pnpm test all`));
+    console.info(chalk.yellow(` - pnpm test cdk/overlay material/stepper`));
+    console.info(chalk.yellow(` - pnpm test button toolbar`));
+    process.exit(1);
+  }
 
-// Exit if no component has been specified.
-if (!components.length) {
-  console.error(
-    chalk.red(
-      'No component specified. Please either specify individual components, or pass "all" ' +
-        'in order to run tests for all components.',
-    ),
+  const bazelAction = debug ? 'run' : 'test';
+  const testLabels = components.map(
+    t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`,
   );
-  console.info(chalk.yellow('Below are a few examples of how the script can be run:'));
-  console.info(chalk.yellow(` - pnpm test all`));
-  console.info(chalk.yellow(` - pnpm test cdk/overlay material/stepper`));
-  console.info(chalk.yellow(` - pnpm test button toolbar`));
-  process.exit(1);
+
+  // Runs Bazel for the determined test labels.
+  sh.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')}`);
 }
-
-const bazelAction = debug ? 'run' : 'test';
-const testLabels = components.map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
-
-// Runs Bazel for the determined test labels.
-shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')}`);
-
 /**
  * Gets the Bazel package label for the specified component name. Throws if
  * the component could not be resolved to a Bazel package.
  */
-function getBazelPackageOfComponentName(name) {
+function getBazelPackageOfComponentName(name: string) {
   // Before guessing any Bazel package, we test if the name contains the
   // package name already. If so, we just use that for Bazel package.
   const targetName =
-    convertPathToBazelLabel(name) || convertPathToBazelLabel(path.join(packagesDir, name));
+    convertPathToBazelLabel(name) || convertPathToBazelLabel(join(packagesDir, name));
   if (targetName !== null) {
     return targetName;
   }
   // If the name does not contain an explicit package name, try to guess it.
   const guess = guessPackageName(name, packagesDir);
-  const guessLabel = guess.result
-    ? convertPathToBazelLabel(path.join(packagesDir, guess.result))
-    : null;
+  const guessLabel = guess.result ? convertPathToBazelLabel(join(packagesDir, guess.result)) : null;
 
   if (guessLabel) {
     return guessLabel;
@@ -144,15 +147,15 @@ function getBazelPackageOfComponentName(name) {
 }
 
 /** Converts a path to a Bazel label. */
-function convertPathToBazelLabel(name) {
-  if (shelljs.test('-d', name)) {
-    return `//${convertPathToPosix(path.relative(projectDir, name))}`;
+function convertPathToBazelLabel(name: string) {
+  if (sh.test('-d', name)) {
+    return `//${convertPathToPosix(relative(process.cwd(), name))}`;
   }
   return null;
 }
 
 /** Gets the name of the target that should be run. */
-function getTargetName(packageName) {
+function getTargetName(packageName: string) {
   // Schematics don't have _debug and browser targets.
   if (packageName && packageName.endsWith('schematics')) {
     return 'unit_tests';
