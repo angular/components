@@ -60,7 +60,7 @@ export class MatTimepickerHarness extends ComponentHarness {
     }
     await options[0].click();
     // Wait for the timepicker to close after selection
-    await this.waitForTasksOutsideAngular();
+    await this.forceStabilize();
   }
 
   /** Gets the selector that can be used to find the timepicker's panel. */
