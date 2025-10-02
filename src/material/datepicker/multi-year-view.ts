@@ -30,6 +30,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
   inject,
+  signal,
 } from '@angular/core';
 import {DateAdapter} from '../core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -150,13 +151,13 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
   /** Grid of calendar cells representing the currently displayed years. */
-  _years: MatCalendarCell[][];
+  _years = signal<MatCalendarCell[][]>([]);
 
   /** The year that today falls on. */
-  _todayYear: number;
+  _todayYear = signal(0);
 
   /** The year of the selected date. Null if the selected date is null. */
-  _selectedYear: number | null;
+  _selectedYear = signal<number | null>(null);
 
   constructor(...args: unknown[]);
 
@@ -180,7 +181,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this multi-year view. */
   _init() {
-    this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
+    this._todayYear.set(this._dateAdapter.getYear(this._dateAdapter.today()));
 
     // We want a range years such that we maximize the number of
     // enabled dates visible at once. This prevents issues where the minimum year
@@ -192,14 +193,15 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     const minYearOfPage =
       activeYear - getActiveOffset(this._dateAdapter, this.activeDate, this.minDate, this.maxDate);
 
-    this._years = [];
+    const years: MatCalendarCell[][] = [];
     for (let i = 0, row: number[] = []; i < yearsPerPage; i++) {
       row.push(minYearOfPage + i);
       if (row.length == yearsPerRow) {
-        this._years.push(row.map(year => this._createCellForYear(year)));
+        years.push(row.map(year => this._createCellForYear(year)));
         row = [];
       }
     }
+    this._years.set(years);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -389,16 +391,16 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Sets the currently-highlighted year based on a model value. */
   private _setSelectedYear(value: DateRange<D> | D | null) {
-    this._selectedYear = null;
+    this._selectedYear.set(null);
 
     if (value instanceof DateRange) {
       const displayValue = value.start || value.end;
 
       if (displayValue) {
-        this._selectedYear = this._dateAdapter.getYear(displayValue);
+        this._selectedYear.set(this._dateAdapter.getYear(displayValue));
       }
     } else if (value) {
-      this._selectedYear = this._dateAdapter.getYear(value);
+      this._selectedYear.set(this._dateAdapter.getYear(value));
     }
   }
 }
