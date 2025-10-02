@@ -28,6 +28,7 @@
     "npm": "Please use pnpm instead of NPM to install dependencies"
   },
   "dependencies": {
+    "@angular/aria": "workspace:*",
     "@angular/cdk": "workspace:*",
     "@angular/cdk-experimental": "workspace:*",
     "@angular/common": "catalog:",

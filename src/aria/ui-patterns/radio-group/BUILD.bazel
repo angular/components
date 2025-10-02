@@ -1,0 +1,37 @@
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "radio-group",
+    srcs = [
+        "radio-button.ts",
+        "radio-group.ts",
+        "toolbar-radio-group.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/ui-patterns/behaviors/event-manager",
+        "//src/aria/ui-patterns/behaviors/list",
+        "//src/aria/ui-patterns/behaviors/signal-like",
+        "//src/aria/ui-patterns/toolbar",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":radio-group",
+        "//:node_modules/@angular/core",
+        "//src/aria/ui-patterns/toolbar",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

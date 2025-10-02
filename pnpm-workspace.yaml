@@ -2,6 +2,7 @@ packages:
   - .
   - docs
   - integration
+  - src/aria
   - src/cdk
   - src/cdk-experimental
   - src/components-examples

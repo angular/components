@@ -19,6 +19,7 @@ COMMON_CONFIG = [
 
 # Project dependencies common across libs/tests
 DEPS = [
+    "//docs:node_modules/@angular/aria",
     "//docs:node_modules/@angular/cdk",
     "//docs:node_modules/@angular/cdk-experimental",
     "//docs:node_modules/@angular/material",

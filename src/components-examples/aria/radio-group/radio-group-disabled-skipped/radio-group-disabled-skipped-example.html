@@ -1,0 +1,26 @@
+<div class="example-container">
+  <ul
+    ngRadioGroup
+    class="example-radio-group example-parent"
+    aria-labelledby="disabled-skipped-radio-label"
+  >
+    <label class="example-label" id="disabled-skipped-radio-label"
+      >Select a Fruit (Disabled are Skipped)</label
+    >
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-radio-button example-stateful example-selectable"
+        [value]="fruit"
+        [disabled]="disabledFruits.includes(fruit)"
+        ngRadioButton
+        #radioButton="ngRadioButton"
+      >
+        <span
+          class="example-radio-indicator"
+          [class.example-radio-checked]="radioButton.pattern.selected()"
+        ></span>
+        <span>{{ fruit }} {{ disabledFruits.includes(fruit) ? '(Disabled)' : '' }}</span>
+      </li>
+    }
+  </ul>
+</div>
