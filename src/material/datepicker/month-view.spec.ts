@@ -353,6 +353,29 @@ describe('MatMonthView', () => {
             expect(calendarInstance.date).toEqual(new Date(2017, JAN, 19));
           });
 
+          it('should not crash when navigating to next month with down arrow in range mode', () => {
+            // Set up a range selection to reproduce the bug scenario
+            testComponent.selected = new DateRange(new Date(2017, JAN, 15), null);
+            fixture.changeDetectorRef.markForCheck();
+            fixture.detectChanges();
+
+            // Navigate to a date near the end of the month
+            calendarInstance.date = new Date(2017, JAN, 28);
+            fixture.changeDetectorRef.markForCheck();
+            fixture.detectChanges();
+
+            // This should trigger month navigation and test the fix for the LView detachment error
+            expect(() => {
+              for (let i = 0; i < 10; i++) {
+                dispatchKeyboardEvent(calendarBodyEl, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+              }
+            }).not.toThrow();
+
+            // Verify we navigated to the next month
+            expect(calendarInstance.date.getMonth()).toBe(FEB);
+          });
+
           it('should go to beginning of the month on home press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', HOME);
             fixture.detectChanges();

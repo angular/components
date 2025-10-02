@@ -221,7 +221,11 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
    * key on the row, but that would require a breaking change for the `rows` input. We don't
    * use the built-in identity tracking, because it logs warnings.
    */
-  _trackRow = (row: MatCalendarCell[]) => row;
+  _trackRow = (index: number, row: MatCalendarCell[]) => {
+    // Use a combination of index and first cell value for more stable tracking
+    // This prevents LView detachment errors when navigating between months
+    return row.length > 0 ? `${index}-${row[0].value}` : index;
+  };
 
   constructor(...args: unknown[]);
 
