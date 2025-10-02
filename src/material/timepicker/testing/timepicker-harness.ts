@@ -59,6 +59,8 @@ export class MatTimepickerHarness extends ComponentHarness {
       throw Error(`Could not find a mat-option matching ${JSON.stringify(filters)}`);
     }
     await options[0].click();
+    // Wait for the timepicker to close after selection
+    await this.waitForTasksOutsideAngular();
   }
 
   /** Gets the selector that can be used to find the timepicker's panel. */
