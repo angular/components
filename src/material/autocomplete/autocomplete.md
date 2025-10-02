@@ -77,6 +77,19 @@ injection token.
 
 <!-- example(autocomplete-require-selection) -->
 
+### Revert to a given value instead of `null`
+
+Instead of setting the autocomplete value to `null`, the `revertToValue` input can be set to 
+provide a value to be set instead. This is useful in cases where the autocomplete should change
+to a previously known value or default value if nothing is selected, instead of `null`.
+
+Because the value may not present in the filtered options, this does _not_ trigger the
+`selectionChange` event. However, for both reactive and template form controls, the value will
+be updated appropriately. This does mean that it is possible to set the value to something that
+is not present in the options list.
+
+<!-- example(autocomplete-revert-to-value) -->
+
 ### Automatically highlighting the first option
 
 If your use case requires for the first autocomplete option to be highlighted when the user opens
