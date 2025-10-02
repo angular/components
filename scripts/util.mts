@@ -1,5 +1,5 @@
-const path = require('path');
-const shelljs = require('shelljs');
+import {join} from 'path';
+import sh from 'shelljs';
 
 /** Map of common typos in target names. The key is the typo, the value is the correct form. */
 const commonTypos = new Map([['snackbar', 'snack-bar']]);
@@ -13,12 +13,12 @@ const orderedGuessPackages = ['material', 'cdk', 'material-experimental', 'cdk-e
  * Tries to guess the full name of a package, based on a shorthand name.
  * Returns an object with the result of the guess and the names that were attempted.
  */
-function guessPackageName(name, packagesDir) {
+export function guessPackageName(name: string, packagesDir: string) {
   name = correctTypos(name);
 
   // Build up a list of packages that we're going to try.
-  const attempts = [name, ...orderedGuessPackages.map(package => path.join(package, name))];
-  const result = attempts.find(guessName => shelljs.test('-d', path.join(packagesDir, guessName)));
+  const attempts = [name, ...orderedGuessPackages.map(guessPackage => join(guessPackage, name))];
+  const result = attempts.find(guessName => sh.test('-d', join(packagesDir, guessName)));
 
   return {
     result: result ? convertPathToPosix(result) : null,
@@ -27,12 +27,12 @@ function guessPackageName(name, packagesDir) {
 }
 
 /** Converts an arbitrary path to a Posix path. */
-function convertPathToPosix(pathName) {
+export function convertPathToPosix(pathName: string) {
   return pathName.replace(/\\/g, '/');
 }
 
 /** Correct common typos in a target name */
-function correctTypos(target) {
+function correctTypos(target: string) {
   let correctedTarget = target;
   for (const [typo, correction] of commonTypos) {
     correctedTarget = correctedTarget.replace(typo, correction);
@@ -40,8 +40,3 @@ function correctTypos(target) {
 
   return correctedTarget;
 }
-
-module.exports = {
-  guessPackageName,
-  convertPathToPosix,
-};
