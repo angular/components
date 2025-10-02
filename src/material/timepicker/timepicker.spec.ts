@@ -46,6 +46,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[3].click();
       fixture.detectChanges();
+      flushMicrotasks();
       flush();
 
       const value = fixture.componentInstance.input.value()!;
@@ -71,6 +72,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[1].click();
       fixture.detectChanges();
+      flushMicrotasks();
       flush();
 
       expect(getPanel()).toBeFalsy();
@@ -124,6 +126,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[getActiveOptionIndex()].click();
       fixture.detectChanges();
+      flushMicrotasks();
       flush();
 
       expect(getPanel()).toBeFalsy();
@@ -868,6 +871,7 @@ describe('MatTimepicker', () => {
 
       const event = dispatchKeyboardEvent(input, 'keydown', ENTER);
       fixture.detectChanges();
+      flushMicrotasks();
       flush();
 
       expect(input.value).toBe('1:30 AM');
@@ -972,6 +976,7 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[5].click();
       fixture.detectChanges();
+      flushMicrotasks();
 
       expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(true);
@@ -1012,6 +1017,7 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       getOptions()[5].click();
       fixture.detectChanges();
+      flushMicrotasks();
 
       expectSameTime(control.value, createTime(2, 30));
       expect(control.dirty).toBe(false);
