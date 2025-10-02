@@ -109,7 +109,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     get currentView(): MatCalendarView;
     set currentView(value: MatCalendarView);
     dateClass: MatCalendarCellClassFunction<D>;
-    dateFilter: (date: D) => boolean;
+    dateFilter?: ((date: D) => boolean) | null;
     _dateSelected(event: MatCalendarUserEvent<D | null>): void;
     _dragEnded(event: MatCalendarUserEvent<DateRange<D> | null>): void;
     _dragStarted(event: MatCalendarUserEvent<D>): void;
@@ -373,7 +373,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implem
 // @public
 export interface MatDatepickerControl<D> {
     // (undocumented)
-    dateFilter: DateFilterFn<D>;
+    dateFilter: DateFilterFn<D> | null | undefined;
     // (undocumented)
     disabled: boolean;
     // (undocumented)
@@ -398,12 +398,12 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> i
     protected _ariaOwns: i0.WritableSignal<string | null>;
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
-    get dateFilter(): DateFilterFn<D | null>;
-    set dateFilter(value: DateFilterFn<D | null>);
+    get dateFilter(): DateFilterFn<D | null> | null | undefined;
+    set dateFilter(value: DateFilterFn<D | null> | null | undefined);
     // (undocumented)
     _datepicker: MatDatepickerPanel<MatDatepickerControl<D>, D | null, D>;
     getConnectedOverlayOrigin(): ElementRef;
-    protected _getDateFilter(): DateFilterFn<D | null>;
+    protected _getDateFilter(): DateFilterFn<D | null> | null | undefined;
     _getMaxDate(): D | null;
     _getMinDate(): D | null;
     getOverlayLabelId(): string | null;
@@ -534,8 +534,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     comparisonEnd: D | null;
     comparisonStart: D | null;
     controlType: string;
-    get dateFilter(): DateFilterFn<D>;
-    set dateFilter(value: DateFilterFn<D>);
+    get dateFilter(): DateFilterFn<D> | null | undefined;
+    set dateFilter(value: DateFilterFn<D> | null | undefined);
     get describedByIds(): string[];
     readonly disableAutomaticLabeling = true;
     get disabled(): boolean;
@@ -673,7 +673,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     // (undocumented)
     _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
-    dateFilter: (date: D) => boolean;
+    dateFilter: ((date: D) => boolean) | null | undefined;
     _dateSelected(event: MatCalendarUserEvent<number>): void;
     readonly dragEnded: EventEmitter<MatCalendarUserEvent<DateRange<D> | null>>;
     protected _dragEnded(event: MatCalendarUserEvent<D | null>): void;
@@ -731,7 +731,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     // (undocumented)
     _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
-    dateFilter: (date: D) => boolean;
+    dateFilter: ((date: D) => boolean) | null | undefined;
     _focusActiveCell(): void;
     _focusActiveCellAfterViewChecked(): void;
     // (undocumented)
@@ -820,7 +820,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     // (undocumented)
     _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
-    dateFilter: (date: D) => boolean;
+    dateFilter: ((date: D) => boolean) | null | undefined;
     _focusActiveCell(): void;
     _focusActiveCellAfterViewChecked(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
