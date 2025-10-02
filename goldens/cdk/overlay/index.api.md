@@ -89,7 +89,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     push: boolean;
     scrollStrategy: ScrollStrategy;
     transformOriginSelector: string;
-    viewportMargin: number;
+    viewportMargin: ViewportMargin;
     width: number | string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
@@ -241,7 +241,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withPush(canPush?: boolean): this;
     withScrollableContainers(scrollables: CdkScrollable[]): this;
     withTransformOriginOn(selector: string): this;
-    withViewportMargin(margin: number): this;
+    withViewportMargin(margin: ViewportMargin): this;
 }
 
 // @public
@@ -543,6 +543,14 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
 
 // @public
 export type VerticalConnectionPos = 'top' | 'center' | 'bottom';
+
+// @public
+export type ViewportMargin = number | {
+    top?: number;
+    bottom?: number;
+    start?: number;
+    end?: number;
+};
 
 // @public
 export class ViewportRuler implements OnDestroy {
