@@ -297,9 +297,9 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       }
     });
     // Emit the selected event after the current execution cycle to ensure the form control is updated first
-    setTimeout(() => {
+    Promise.resolve().then(() => {
       this.selected.emit({value: option.value, source: this});
-    }, 0);
+    });
     this._input()?.focus();
   }
 
