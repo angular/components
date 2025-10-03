@@ -296,6 +296,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
         current.deselect(false);
       }
     });
+    // Notify the input first so it can sync up the form control before emitting to `selected`.
+    this._input()?._timepickerValueAssigned(option.value);
     this.selected.emit({value: option.value, source: this});
     this._input()?.focus();
   }
