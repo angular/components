@@ -39,7 +39,6 @@ const TEMPLATE_PATH = '/assets/stackblitz/';
  * file from the boilerplate.
  */
 export const TEMPLATE_FILES = [
-  '.gitignore',
   '.stackblitzrc',
   'angular.json',
   'karma.conf.js',
