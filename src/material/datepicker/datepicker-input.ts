@@ -119,7 +119,7 @@ export class MatDatepickerInput<D>
   get dateFilter() {
     return this._dateFilter;
   }
-  set dateFilter(value: DateFilterFn<D | null>) {
+  set dateFilter(value: DateFilterFn<D | null> | null | undefined) {
     const wasMatchingValue = this._matchesFilter(this.value);
     this._dateFilter = value;
 
@@ -127,7 +127,7 @@ export class MatDatepickerInput<D>
       this._validatorOnChange();
     }
   }
-  private _dateFilter: DateFilterFn<D | null>;
+  private _dateFilter: DateFilterFn<D | null> | null | undefined;
 
   /** The combined form control validator for this input. */
   protected _validator: ValidatorFn | null;
