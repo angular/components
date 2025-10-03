@@ -100,6 +100,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     registerOnValidatorChange(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
     readonly timepicker: InputSignal<MatTimepicker<D>>;
+    _timepickerValueAssigned(value: D | null): void;
     validate(control: AbstractControl): ValidationErrors | null;
     readonly value: ModelSignal<D | null>;
     writeValue(value: any): void;
