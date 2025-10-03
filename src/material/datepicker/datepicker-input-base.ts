@@ -203,7 +203,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   abstract _getMaxDate(): D | null;
 
   /** Gets the date filter function. Used for validation. */
-  protected abstract _getDateFilter(): DateFilterFn<D> | undefined;
+  protected abstract _getDateFilter(): DateFilterFn<D> | null | undefined;
 
   /** Registers a date selection model with the input. */
   _registerModel(model: MatDateSelectionModel<S, D>): void {

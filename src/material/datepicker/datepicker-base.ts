@@ -346,7 +346,7 @@ export interface MatDatepickerControl<D> {
   min: D | null;
   max: D | null;
   disabled: boolean;
-  dateFilter: DateFilterFn<D>;
+  dateFilter: DateFilterFn<D> | null | undefined;
   getConnectedOverlayOrigin(): ElementRef;
   getOverlayLabelId(): string | null;
   stateChanges: Observable<void>;
@@ -545,7 +545,7 @@ export abstract class MatDatepickerBase<
     return this.datepickerInput && this.datepickerInput.max;
   }
 
-  _getDateFilter(): DateFilterFn<D> {
+  _getDateFilter(): DateFilterFn<D> | null | undefined {
     return this.datepickerInput && this.datepickerInput.dateFilter;
   }
 
