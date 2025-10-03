@@ -53,9 +53,6 @@ export const TEMPLATE_FILES = [
   'src/test.ts',
 ];
 
-const PROJECT_TAGS = ['angular', 'material', 'cdk', 'web', 'example'];
-const PROJECT_TEMPLATE = 'node';
-
 /**
  * Type describing an in-memory file dictionary, representing a
  * directory and its contents.
@@ -82,7 +79,7 @@ export class StackBlitzWriter {
     // and the file requests can cause excessive change detections.
     return this._ngZone.runOutsideAngular(async () => {
       const files = await this._buildInMemoryFileDictionary(data, exampleId, isTest);
-      const exampleMainFile = `src/app/${data.indexFilename}`;
+      const exampleMainFile = `src/example/${data.indexFilename}`;
 
       return () => {
         this._openStackBlitz({
@@ -112,8 +109,8 @@ export class StackBlitzWriter {
         title,
         files,
         description,
-        template: PROJECT_TEMPLATE,
-        tags: PROJECT_TAGS,
+        template: 'node',
+        tags: ['angular', 'material', 'cdk', 'web', 'example'],
       },
       {openFile},
     );
