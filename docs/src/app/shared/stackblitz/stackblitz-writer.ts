@@ -49,7 +49,7 @@ export const TEMPLATE_FILES = [
   'tsconfig.spec.json',
   'src/index.html',
   'src/main.ts',
-  'src/styles.scss',
+  'src/styles.css',
   'src/test.ts',
 ];
 
