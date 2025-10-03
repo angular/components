@@ -133,7 +133,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  @Input() dateFilter: ((date: D) => boolean) | null | undefined;
 
   /** Function that can be used to add custom CSS classes to date cells. */
   @Input() dateClass: MatCalendarCellClassFunction<D>;
