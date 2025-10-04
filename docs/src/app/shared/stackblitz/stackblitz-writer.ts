@@ -39,7 +39,6 @@ const TEMPLATE_PATH = '/assets/stackblitz/';
  * file from the boilerplate.
  */
 export const TEMPLATE_FILES = [
-  '.stackblitzrc',
   'angular.json',
   'karma.conf.js',
   'package.json',
@@ -87,6 +86,7 @@ export class StackBlitzWriter {
           title: `Angular Components - ${data.description}`,
           description: `${data.description}\n\nAuto-generated from: https://material.angular.dev`,
           openFile: exampleMainFile,
+          startScript: isTest ? 'test' : 'start',
         });
       };
     });
@@ -98,11 +98,13 @@ export class StackBlitzWriter {
     description,
     openFile,
     files,
+    startScript,
   }: {
     title: string;
     description: string;
     openFile: string;
     files: FileDictionary;
+    startScript: string;
   }): void {
     stackblitz.openProject(
       {
@@ -112,7 +114,10 @@ export class StackBlitzWriter {
         template: 'node',
         tags: ['angular', 'material', 'cdk', 'web', 'example'],
       },
-      {openFile},
+      {
+        openFile,
+        startScript,
+      },
     );
   }
 
@@ -199,11 +204,6 @@ export class StackBlitzWriter {
       fileContent = fileContent
         .replace(/material-docs-example/g, data.selectorName)
         .replace(/\${title}/g, data.description);
-    } else if (fileName === '.stackblitzrc') {
-      fileContent = fileContent.replace(
-        /\${startCommand}/,
-        isTest ? 'npm run test' : 'npm run start',
-      );
     } else if (fileName === 'src/main.ts') {
       const mainComponentName = data.componentNames[0];
 
