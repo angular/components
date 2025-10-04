@@ -113,7 +113,8 @@ describe('StackBlitzWriter', () => {
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);
     expect(openProjectSpy).toHaveBeenCalledWith(jasmine.objectContaining({files: expectedFiles}), {
-      openFile: 'src/app/test.ts',
+      openFile: 'src/example/test.ts',
+      startScript: 'start',
     });
   }));
 });
