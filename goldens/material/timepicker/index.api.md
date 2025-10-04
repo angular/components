@@ -99,13 +99,14 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     registerOnTouched(fn: () => void): void;
     registerOnValidatorChange(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
+    readonly shouldDisplayUnavailableItems: InputSignalWithTransform<boolean, unknown>;
     readonly timepicker: InputSignal<MatTimepicker<D>>;
     _timepickerValueAssigned(value: D | null): void;
     validate(control: AbstractControl): ValidationErrors | null;
     readonly value: ModelSignal<D | null>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "shouldDisplayUnavailableItems": { "alias": "matDisplayUnavailableItems"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerInput<any>, never>;
 }
@@ -122,6 +123,7 @@ export class MatTimepickerModule {
 
 // @public
 export interface MatTimepickerOption<D = unknown> {
+    disabled?: boolean;
     label: string;
     value: D;
 }
