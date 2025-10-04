@@ -28,12 +28,9 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": ["src/assets"],
-            "styles": ["src/styles.scss"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/"]
-            },
+            "styles": ["src/styles.css", "@angular/material/prebuilt-themes/azure-blue.css"],
             "scripts": []
           },
           "configurations": {
@@ -92,12 +89,9 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": ["src/assets"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/"]
-            },
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles.css", "@angular/material/prebuilt-themes/azure-blue.css"],
             "scripts": []
           }
         }

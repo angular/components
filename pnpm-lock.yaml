@@ -402,7 +402,7 @@ importers:
         specifier: workspace:*
         version: link:../src/youtube-player
       '@stackblitz/sdk':
-        specifier: ^1.5.2
+        specifier: ^1.11.0
         version: 1.11.0
       moment:
         specifier: ^2.29.1

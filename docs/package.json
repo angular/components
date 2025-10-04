@@ -46,7 +46,7 @@
     "@angular/router": "catalog:",
     "@angular/ssr": "catalog:",
     "@angular/youtube-player": "workspace:*",
-    "@stackblitz/sdk": "^1.5.2",
+    "@stackblitz/sdk": "^1.11.0",
     "moment": "^2.29.1",
     "path-normalize": "^7.0.0",
     "rxjs": "catalog:",
