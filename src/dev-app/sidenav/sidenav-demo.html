@@ -26,6 +26,16 @@
       End Side Sidenav
       <br>
       <button matButton (click)="end.close()">Close</button>
+      <mat-form-field>
+        <mat-label>What color?</mat-label>
+        <mat-select #whatColor>
+          <mat-option></mat-option>
+          <mat-option value="black">Black</mat-option>
+          <mat-option value="cyan">Cyan</mat-option>
+          <mat-option value="magenta">Magenta</mat-option>
+          <mat-option value="yellow">Yellow</mat-option>
+        </mat-select>
+      </mat-form-field>
       @for (c of fillerContent; track c) {
         <div class="demo-filler-content">Filler Content</div>
       }
