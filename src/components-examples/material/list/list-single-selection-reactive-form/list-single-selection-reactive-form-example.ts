@@ -6,12 +6,13 @@ interface Shoes {
   value: string;
   name: string;
 }
+
 /**
  * @title List with single selection using Reactive forms
  */
 @Component({
   selector: 'list-single-selection-reactive-form-example',
-  templateUrl: 'list-single-selection-form-example.html',
+  templateUrl: 'list-single-selection-reactive-form-example.html',
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 export class ListSingleSelectionReactiveFormExample {
