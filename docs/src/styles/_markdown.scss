@@ -74,14 +74,20 @@
       overflow-x: auto;
       padding: 20px;
       white-space: pre-wrap;
-
       border: solid 1px var(--mat-sys-outline-variant);
       border-radius: 12px;
+      position: relative;
 
       code {
         background: transparent;
         padding: 0;
         font-size: 100%;
+      }
+
+      code-block-copy-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
       }
     }
 
