@@ -38,6 +38,7 @@ import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 import {DeprecatedFieldComponent} from './deprecated-tooltip';
 import {ModuleImportCopyButton} from './module-import-copy-button';
+import {CodeBlockCopyButton} from './code-block-copy-button/code-block-copy-button';
 
 @Injectable({providedIn: 'root'})
 class DocFetcher {
@@ -160,6 +161,9 @@ export class DocViewer implements OnDestroy {
     // Create icon buttons to copy module import
     this._createCopyIconForModule();
 
+    // Create icon button for code block
+    this._createCopyButtonsForCodeBlocks();
+
     // Resolving and creating components dynamically in Angular happens synchronously, but since
     // we want to emit the output if the components are actually rendered completely, we wait
     // until the Angular zone becomes stable.
@@ -262,6 +266,32 @@ export class DocViewer implements OnDestroy {
 
       if (moduleImport) {
         moduleImportOutlet.instance.import = moduleImport;
+      }
+
+      this._portalHosts.push(elementPortalOutlet);
+    });
+  }
+
+  _createCopyButtonsForCodeBlocks() {
+    // Query all <pre> tags that contain <code> elements (markdown code blocks)
+    const codeBlockElements = this._elementRef.nativeElement.querySelectorAll(
+      '.docs-markdown pre:has(code)',
+    );
+
+    [...codeBlockElements].forEach((element: HTMLElement) => {
+      // Extract the text content from the code block
+      const codeElement = element.querySelector('code');
+      const codeSnippet = codeElement?.textContent || '';
+
+      const elementPortalOutlet = new DomPortalOutlet(element, this._appRef, this._injector);
+      const codeBlockCopyButtonPortal = new ComponentPortal(
+        CodeBlockCopyButton,
+        this._viewContainerRef,
+      );
+      const codeBlockCopyButtonOutlet = elementPortalOutlet.attach(codeBlockCopyButtonPortal);
+
+      if (codeSnippet) {
+        codeBlockCopyButtonOutlet.instance.code = codeSnippet;
       }
 
       this._portalHosts.push(elementPortalOutlet);
