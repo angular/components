@@ -1,12 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
-import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {MatButtonModule} from '@angular/material/button';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatDatepickerIntl, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import 'moment/locale/fr';
-import 'moment/locale/ja';
 
 /** @title Datepicker with different locale */
 @Component({
@@ -18,10 +16,10 @@ import 'moment/locale/ja';
     // the component level here, due to limitations of our example generation script.
     {provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
 
-    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // Luxon can be provided globally to your app by adding `provideLuxonDateAdapter`
     // to your app config. We provide it at the component level here, due to limitations
     // of our example generation script.
-    provideMomentDateAdapter(),
+    provideLuxonDateAdapter(),
   ],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
