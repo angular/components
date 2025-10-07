@@ -14,6 +14,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 
 // @public @deprecated
 export type ArrowViewState = SortDirection | 'hint' | 'active';
@@ -73,6 +74,7 @@ export interface MatSortable {
 export interface MatSortDefaultOptions {
     arrowPosition?: SortHeaderArrowPosition;
     disableClear?: boolean;
+    icons?: SortHeaderIcons;
 }
 
 // @public
@@ -83,6 +85,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     arrowPosition: SortHeaderArrowPosition;
     // (undocumented)
     _columnDef: MatSortHeaderColumnDef | null;
+    get defaultIcons(): SortHeaderIcons | undefined;
     disableClear: boolean;
     disabled: boolean;
     _getAriaSortAttribute(): "none" | "ascending" | "descending";
@@ -110,10 +113,11 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     _sort: MatSort;
     get sortActionDescription(): string;
     set sortActionDescription(value: string);
+    readonly sortIconsTemplate: i0.InputSignal<TemplateRef<any> | null>;
     start: SortDirection;
     _toggleOnInteraction(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "id": { "alias": "mat-sort-header"; "required": false; }; "arrowPosition": { "alias": "arrowPosition"; "required": false; }; "start": { "alias": "start"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "sortActionDescription": { "alias": "sortActionDescription"; "required": false; }; "disableClear": { "alias": "disableClear"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "id": { "alias": "mat-sort-header"; "required": false; }; "arrowPosition": { "alias": "arrowPosition"; "required": false; }; "start": { "alias": "start"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "sortActionDescription": { "alias": "sortActionDescription"; "required": false; }; "disableClear": { "alias": "disableClear"; "required": false; }; "sortIconsTemplate": { "alias": "matSortIconsTemplate"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, never>;
 }
@@ -148,6 +152,13 @@ export type SortDirection = 'asc' | 'desc' | '';
 
 // @public
 export type SortHeaderArrowPosition = 'before' | 'after';
+
+// @public
+export interface SortHeaderIcons {
+    ascending: string;
+    default?: string;
+    descending: string;
+}
 
 // (No @packageDocumentation comment for this package)
 

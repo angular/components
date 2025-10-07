@@ -26,6 +26,7 @@ import {
   getSortHeaderMissingIdError,
   getSortInvalidDirectionError,
 } from './sort-errors';
+import {SortHeaderIcons} from './sort-header-icons';
 
 /** Position of the arrow that displays when sorted. */
 export type SortHeaderArrowPosition = 'before' | 'after';
@@ -57,6 +58,11 @@ export interface MatSortDefaultOptions {
   disableClear?: boolean;
   /** Position of the arrow that displays when sorted. */
   arrowPosition?: SortHeaderArrowPosition;
+  /**
+   * Icons used for the sort indicator.
+   * Optional - unspecified ones fall back to the framework default arrow.
+   */
+  icons?: SortHeaderIcons;
 }
 
 /** Injection token to be used to override the default options for `mat-sort`. */

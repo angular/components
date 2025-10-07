@@ -1,0 +1,10 @@
+.mat-sort-header-container {
+  align-items: center;
+}
+
+sup {
+  font-size: 7px;
+  top: -3px;
+  position: absolute;
+  display: block;
+}

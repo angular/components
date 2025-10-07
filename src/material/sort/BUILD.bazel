@@ -69,6 +69,7 @@ ng_project(
         "sort-direction.ts",
         "sort-errors.ts",
         "sort-header.ts",
+        "sort-header-icons.ts",
         "sort-header-intl.ts",
         "sort-module.ts",
     ],
@@ -77,12 +78,14 @@ ng_project(
         ":css",
     ],
     deps = [
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
         "//src/material/core",
+        "//src/material/icon",
     ],
 )
 

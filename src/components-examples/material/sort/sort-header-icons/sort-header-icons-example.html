@@ -1,0 +1,19 @@
+<table matSort (matSortChange)="sortData($event)">
+  <tr>
+    <th mat-sort-header="name">Dessert (100g)</th>
+    <th mat-sort-header="calories">Calories</th>
+    <th mat-sort-header="fat">Fat (g)</th>
+    <th mat-sort-header="carbs">Carbs (g)</th>
+    <th mat-sort-header="protein">Protein (g)</th>
+  </tr>
+
+  @for (dessert of sortedData; track dessert) {
+    <tr>
+      <td>{{dessert.name}}</td>
+      <td>{{dessert.calories}}</td>
+      <td>{{dessert.fat}}</td>
+      <td>{{dessert.carbs}}</td>
+      <td>{{dessert.protein}}</td>
+    </tr>
+  }
+</table>

@@ -70,6 +70,54 @@ $fallbacks: m3-sort.get-tokens();
   }
 }
 
+.mat-sort-header-icon-slot {
+  $timing: 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  width: 12px;
+  height: 12px;
+  position: relative;
+  transition: opacity $timing;
+  opacity: 0;
+  overflow: visible;
+  color: token-utils.slot(sort-arrow-color, $fallbacks);
+
+  // stylelint-disable max-line-length
+  .mat-sort-header.cdk-keyboard-focused .mat-sort-header-container:not(.mat-sort-header-has-idle-icon) &,
+  .mat-sort-header.cdk-program-focused .mat-sort-header-container:not(.mat-sort-header-has-idle-icon) &,
+  .mat-sort-header:hover .mat-sort-header-container:not(.mat-sort-header-has-idle-icon):not(.mat-sort-header-sorted) & {
+    opacity: 0.54;
+  }
+  // stylelint-enable max-line-length
+
+  .mat-sort-header-container.mat-sort-header-has-idle-icon &,
+  .mat-sort-header:not(.mat-sort-header-has-idle-icon) .mat-sort-header-sorted & {
+    opacity: 1;
+  }
+
+  .mat-sort-header-animations-disabled & {
+    transition-duration: 0ms;
+  }
+
+  & > mat-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+  }
+
+  &,
+  [dir='rtl'] .mat-sort-header-position-before & {
+    margin: 0 0 0 6px;
+  }
+
+  .mat-sort-header-position-before &,
+  [dir='rtl'] & {
+    margin: 0 6px 0 0;
+  }
+}
+
 .mat-sort-header-arrow {
   $timing: 225ms cubic-bezier(0.4, 0, 0.2, 1);
   height: 12px;

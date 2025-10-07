@@ -21,7 +21,10 @@ import {
   inject,
   signal,
   ChangeDetectorRef,
+  TemplateRef,
+  input,
 } from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {merge, Subscription} from 'rxjs';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
@@ -35,6 +38,7 @@ import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_animationsDisabled, _StructuralStylesLoader} from '../core';
+import {MatIcon} from '../icon';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -89,6 +93,7 @@ interface MatSortHeaderColumnDef {
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, MatIcon],
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
   _intl = inject(MatSortHeaderIntl);
@@ -96,10 +101,11 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   _columnDef = inject<MatSortHeaderColumnDef>('MAT_SORT_HEADER_COLUMN_DEF' as any, {
     optional: true,
   });
-  private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _focusMonitor = inject(FocusMonitor);
-  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _ariaDescriber = inject(AriaDescriber, {optional: true});
+  private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly _focusMonitor = inject(FocusMonitor);
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _ariaDescriber = inject(AriaDescriber, {optional: true});
+  private readonly _defaultOptions = inject(MAT_SORT_DEFAULT_OPTIONS, {optional: true});
   private _renderChanges: Subscription | undefined;
   protected _animationsDisabled = _animationsDisabled();
 
@@ -150,6 +156,19 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input({transform: booleanAttribute})
   disableClear: boolean;
+
+  /**
+   * Template for the sort icons.
+   * `{ isDisabled: boolean; direction: 'asc' | 'desc' | ''; isSorted: boolean }` passed as context.
+   */
+  readonly sortIconsTemplate = input<TemplateRef<any> | null>(null, {
+    alias: 'matSortIconsTemplate',
+  });
+
+  /** Icons used by `mat-sort-header`. */
+  get defaultIcons() {
+    return this._defaultOptions?.icons;
+  }
 
   constructor(...args: unknown[]);
 

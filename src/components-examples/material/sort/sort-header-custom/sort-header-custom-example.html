@@ -1,0 +1,25 @@
+<ng-template #sortIconsTemplate let-sortHeader>
+  @if (!sortHeader.isDisabled && sortHeader.isSorted) {
+    <sup>{{ sortHeader.direction === 'desc' ? 'Z-A' : 'A-Z' }}</sup>
+  }
+</ng-template>
+
+<table matSort (matSortChange)="sortData($event)">
+  <tr>
+    <th mat-sort-header="name" [matSortIconsTemplate]="sortIconsTemplate">Dessert (100g)</th>
+    <th mat-sort-header="calories" [matSortIconsTemplate]="sortIconsTemplate">Calories</th>
+    <th mat-sort-header="fat" [matSortIconsTemplate]="sortIconsTemplate">Fat (g)</th>
+    <th mat-sort-header="carbs" [matSortIconsTemplate]="sortIconsTemplate">Carbs (g)</th>
+    <th mat-sort-header="protein" [matSortIconsTemplate]="sortIconsTemplate">Protein (g)</th>
+  </tr>
+
+  @for (dessert of sortedData; track dessert) {
+    <tr>
+      <td>{{dessert.name}}</td>
+      <td>{{dessert.calories}}</td>
+      <td>{{dessert.fat}}</td>
+      <td>{{dessert.carbs}}</td>
+      <td>{{dessert.protein}}</td>
+    </tr>
+  }
+</table>
