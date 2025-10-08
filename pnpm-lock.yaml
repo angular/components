@@ -231,8 +231,8 @@ importers:
         specifier: ^5.6.0
         version: 5.11.0
       jasmine-core:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-reporters:
         specifier: ^2.5.2
         version: 2.5.2
@@ -445,8 +445,8 @@ importers:
         specifier: ^14.0.0
         version: 14.17.0(@types/node@22.18.8)(bufferutil@4.0.9)(encoding@0.1.13)
       jasmine-core:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-spec-reporter:
         specifier: 7.0.0
         version: 7.0.0
@@ -467,7 +467,7 @@ importers:
         version: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
       karma-jasmine-html-reporter:
         specifier: ^2.0.0
-        version: 2.1.0(jasmine-core@5.11.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
+        version: 2.1.0(jasmine-core@5.12.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
       light-server:
         specifier: ^2.9.1
         version: 2.9.1(bufferutil@4.0.9)
@@ -16483,9 +16483,9 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.11.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.12.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
     dependencies:
-      jasmine-core: 5.11.0
+      jasmine-core: 5.12.0
       karma: 6.4.4(bufferutil@4.0.9)
       karma-jasmine: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
 
