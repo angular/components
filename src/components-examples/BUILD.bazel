@@ -68,7 +68,7 @@ ng_package(
         ":node_modules/@angular/cdk-experimental",
         ":node_modules/@angular/material",
         ":node_modules/@angular/material-experimental",
-        ":node_modules/@angular/material-moment-adapter",
+        ":node_modules/@angular/material-luxon-adapter",
     ],
     replace_prefixes = {
         "docs-content/": "/",
