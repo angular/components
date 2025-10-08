@@ -39,6 +39,13 @@ by default it will use the id of the column.
 
 <!-- example(table-sorting) -->
 
+#### Customizing the icon
+
+You can set your own icon for a `mat-sort-header` by projecting in an element with the
+`matSortHeaderIcon` attribute.
+
+<!-- example(sort-custom-icon) -->
+
 ### Accessibility
 
 When you apply `MatSortHeader` to a header cell element, the component wraps the content of the
@@ -55,4 +62,4 @@ remedy this, use the `matSortChange` event on the `MatSort` directive to announc
 updates with the `LiveAnnouncer` service from `@angular/cdk/a11y`.
 
 If your application contains many tables and sort headers, consider creating a custom
-directives to consistently apply `sortActionDescription` and announce sort state changes. 
+directives to consistently apply `sortActionDescription` and announce sort state changes.
