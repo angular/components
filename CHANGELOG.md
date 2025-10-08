@@ -1,3 +1,8 @@
+<a name="21.0.0-next.8"></a>
+# 21.0.0-next.8 "osmium-summit" (2025-10-08)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.7"></a>
 # 21.0.0-next.7 "selenium-summit" (2025-10-08)
 ### cdk
