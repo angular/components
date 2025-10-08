@@ -114,7 +114,7 @@ $fallbacks: m3-sort.get-tokens();
     animation-duration: 0ms;
   }
 
-  svg {
+  > svg, [matSortHeaderIcon] {
     // Even though this is 24x24, the actual `path` inside ends up being 12x12.
     width: 24px;
     height: 24px;
