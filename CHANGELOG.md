@@ -1,3 +1,19 @@
+<a name="20.2.8"></a>
+# 20.2.8 "strontium-summit" (2025-10-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6d61babe7](https://github.com/angular/components/commit/6d61babe77a6a6f0c464b498ee773561b795663f) | fix | **datepicker:** error due to synchronous change detection |
+| [e43dcabd0](https://github.com/angular/components/commit/e43dcabd005239a380ffef50cfea374b24a67735) | fix | **datepicker:** make date filter nullable ([#31980](https://github.com/angular/components/pull/31980)) |
+| [f30c1c6c3](https://github.com/angular/components/commit/f30c1c6c3f6490ddf21ba668d4065c4d5f89f26f) | fix | **radio:** Hovering over label of a radio will show the pointer cursor ([#32015](https://github.com/angular/components/pull/32015)) |
+| [de3f9e566](https://github.com/angular/components/commit/de3f9e5662edae3c19f44a89ee1ee34555eba147) | fix | **timepicker:** assign form control value before emitting events ([#31981](https://github.com/angular/components/pull/31981)) |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2d1f8d068](https://github.com/angular/components/commit/2d1f8d068e18fa1e0044e0dd4c968c3fa6761e10) | fix | parse time string containing only hours ([#31978](https://github.com/angular/components/pull/31978)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.6"></a>
 # 21.0.0-next.6 "carbon-flamingo" (2025-10-01)
 ## Breaking Changes
