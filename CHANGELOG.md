@@ -1,3 +1,24 @@
+<a name="21.0.0-next.7"></a>
+# 21.0.0-next.7 "selenium-summit" (2025-10-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [82cd076bf](https://github.com/angular/components/commit/82cd076bfb3084e258f8e20af6cac570349822ce) | feat | **overlay:** Allow passing separate X and Y values for the viewportMargin ([#29563](https://github.com/angular/components/pull/29563)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [527fc3718](https://github.com/angular/components/commit/527fc3718326fe0f0fd32a4e7c6130627d0e9cce) | feat | **bottom-sheet:** add injector to MatBottomSheetConfig ([#31965](https://github.com/angular/components/pull/31965)) |
+| [3665b433e](https://github.com/angular/components/commit/3665b433ea3c30c0ad612ee717cde67d5b73e103) | fix | **datepicker:** error due to synchronous change detection |
+| [2d5942cb0](https://github.com/angular/components/commit/2d5942cb0fe86f9c3d26b1925b1d4390cfc6613b) | fix | **datepicker:** make date filter nullable ([#31980](https://github.com/angular/components/pull/31980)) |
+| [05d71e53a](https://github.com/angular/components/commit/05d71e53a16f7cdb19b96e208601a64e1389fa8a) | fix | **menu:** fix divider color property ([#31815](https://github.com/angular/components/pull/31815)) |
+| [c848d24db](https://github.com/angular/components/commit/c848d24dbb9bc468b47b107ae6a82ce32ded8502) | fix | **timepicker:** assign form control value before emitting events ([#31981](https://github.com/angular/components/pull/31981)) |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b61d8841a](https://github.com/angular/components/commit/b61d8841ad70cced4ca6098bd0187d68ac00e486) | fix | parse time string containing only hours ([#31978](https://github.com/angular/components/pull/31978)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.8"></a>
 # 20.2.8 "strontium-summit" (2025-10-08)
 ### material
