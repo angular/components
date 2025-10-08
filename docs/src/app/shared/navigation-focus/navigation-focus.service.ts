@@ -6,17 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, inject} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {filter, skip} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NavigationFocusService implements OnDestroy {
+export class NavigationFocusService {
   private _router = inject(Router);
-  private _subscriptions = new Subscription();
   private _navigationFocusRequests: HTMLElement[] = [];
   private _skipLinkFocusRequests: HTMLElement[] = [];
   private _skipLinkHref: string | null | undefined;
@@ -27,24 +26,18 @@ export class NavigationFocusService implements OnDestroy {
   readonly softNavigations = this.navigationEndEvents.pipe(skip(1));
 
   constructor() {
-    this._subscriptions.add(
-      this.softNavigations.subscribe(() => {
-        // focus if url does not have fragment
-        if (!this._router.url.split('#')[1]) {
-          setTimeout(() => {
-            if (this._navigationFocusRequests.length) {
-              this._navigationFocusRequests[this._navigationFocusRequests.length - 1].focus({
-                preventScroll: true,
-              });
-            }
-          }, 100);
-        }
-      }),
-    );
-  }
-
-  ngOnDestroy() {
-    this._subscriptions.unsubscribe();
+    this.softNavigations.pipe(takeUntilDestroyed()).subscribe(() => {
+      // focus if url does not have fragment
+      if (!this._router.url.split('#')[1]) {
+        setTimeout(() => {
+          if (this._navigationFocusRequests.length) {
+            this._navigationFocusRequests[this._navigationFocusRequests.length - 1].focus({
+              preventScroll: true,
+            });
+          }
+        }, 100);
+      }
+    });
   }
 
   requestFocusOnNavigation(el: HTMLElement) {
