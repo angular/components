@@ -20,11 +20,9 @@ import {
   InjectionToken,
   Injector,
   input,
-  InputSignal,
   InputSignalWithTransform,
   OnDestroy,
   output,
-  OutputEmitterRef,
   Signal,
   signal,
   TemplateRef,
@@ -55,6 +53,7 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {ENTER, ESCAPE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {Subscription} from 'rxjs';
 import {
   generateOptions,
   MAT_TIMEPICKER_CONFIG,
@@ -62,7 +61,7 @@ import {
   parseInterval,
   validateAdapter,
 } from './util';
-import {Subscription} from 'rxjs';
+import {MatTimepickerOptionTemplate} from './timepicker-option';
 
 /** Event emitted when a value is selected in the timepicker. */
 export interface MatTimepickerSelected<D> {
@@ -129,31 +128,33 @@ export interface MatTimepickerConnectedInput<D> {
   ],
 })
 export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
-  private _dir = inject(Directionality, {optional: true});
-  private _viewContainerRef = inject(ViewContainerRef);
-  private _injector = inject(Injector);
-  private _defaultConfig = inject(MAT_TIMEPICKER_CONFIG, {optional: true});
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
-  private _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
-  protected _animationsDisabled = _animationsDisabled();
+  private readonly _dir = inject(Directionality, {optional: true});
+  private readonly _viewContainerRef = inject(ViewContainerRef);
+  private readonly _injector = inject(Injector);
+  private readonly _defaultConfig = inject(MAT_TIMEPICKER_CONFIG, {optional: true});
+  private readonly _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private readonly _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
+  private readonly _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
+  protected readonly _animationsDisabled = _animationsDisabled();
 
-  private _isOpen = signal(false);
-  private _activeDescendant = signal<string | null>(null);
+  private readonly _isOpen = signal(false);
+  private readonly _activeDescendant = signal<string | null>(null);
 
-  private _input = signal<MatTimepickerConnectedInput<D> | null>(null);
+  private readonly _input = signal<MatTimepickerConnectedInput<D> | null>(null);
   private _overlayRef: OverlayRef | null = null;
   private _portal: TemplatePortal<unknown> | null = null;
   private _optionsCacheKey: string | null = null;
   private _localeChanges: Subscription;
   private _onOpenRender: AfterRenderRef | null = null;
 
-  protected _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
   protected _timeOptions: readonly MatTimepickerOption<D>[] = [];
-  protected _options = viewChildren(MatOption);
-  protected _optionTemplate = contentChild<TemplateRef<MatTimepickerOption<D>>>(TemplateRef);
+  protected readonly _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
+  protected readonly _options = viewChildren(MatOption);
+  protected readonly _optionTemplate = contentChild<MatTimepickerOptionTemplate<D>>(
+    MatTimepickerOptionTemplate,
+  );
 
-  private _keyManager = new ActiveDescendantKeyManager(this._options, this._injector)
+  private readonly _keyManager = new ActiveDescendantKeyManager(this._options, this._injector)
     .withHomeAndEnd(true)
     .withPageUpDown(true)
     .withVerticalOrientation(true);
@@ -172,48 +173,43 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
    * Array of pre-defined options that the user can select from, as an alternative to using the
    * `interval` input. An error will be thrown if both `options` and `interval` are specified.
    */
-  readonly options: InputSignal<readonly MatTimepickerOption<D>[] | null> = input<
-    readonly MatTimepickerOption<D>[] | null
-  >(null);
+  readonly options = input<readonly MatTimepickerOption<D>[] | null>(null);
 
   /** Whether the timepicker is open. */
-  readonly isOpen: Signal<boolean> = this._isOpen.asReadonly();
+  readonly isOpen = this._isOpen.asReadonly();
 
   /** Emits when the user selects a time. */
-  readonly selected: OutputEmitterRef<MatTimepickerSelected<D>> = output();
+  readonly selected = output<MatTimepickerSelected<D>>();
 
   /** Emits when the timepicker is opened. */
-  readonly opened: OutputEmitterRef<void> = output();
+  readonly opened = output();
 
   /** Emits when the timepicker is closed. */
-  readonly closed: OutputEmitterRef<void> = output();
+  readonly closed = output();
 
   /** ID of the active descendant option. */
-  readonly activeDescendant: Signal<string | null> = this._activeDescendant.asReadonly();
+  readonly activeDescendant = this._activeDescendant.asReadonly();
 
   /** Unique ID of the timepicker's panel */
-  readonly panelId: string = inject(_IdGenerator).getId('mat-timepicker-panel-');
+  readonly panelId = inject(_IdGenerator).getId('mat-timepicker-panel-');
 
   /** Whether ripples within the timepicker should be disabled. */
-  readonly disableRipple: InputSignalWithTransform<boolean, unknown> = input(
-    this._defaultConfig?.disableRipple ?? false,
-    {
-      transform: booleanAttribute,
-    },
-  );
+  readonly disableRipple = input(this._defaultConfig?.disableRipple ?? false, {
+    transform: booleanAttribute,
+  });
 
   /** ARIA label for the timepicker panel. */
-  readonly ariaLabel: InputSignal<string | null> = input<string | null>(null, {
+  readonly ariaLabel = input<string | null>(null, {
     alias: 'aria-label',
   });
 
   /** ID of the label element for the timepicker panel. */
-  readonly ariaLabelledby: InputSignal<string | null> = input<string | null>(null, {
+  readonly ariaLabelledby = input<string | null>(null, {
     alias: 'aria-labelledby',
   });
 
   /** Whether the timepicker is currently disabled. */
-  readonly disabled: Signal<boolean> = computed(() => !!this._input()?.disabled());
+  readonly disabled = computed(() => !!this._input()?.disabled());
 
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {

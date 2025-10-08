@@ -3,7 +3,7 @@
   <input matInput [matTimepicker]="picker">
   <mat-timepicker-toggle matIconSuffix [for]="picker"/>
   <mat-timepicker #picker>
-    <ng-template let-option>
+    <ng-template matTimepickerOption let-option>
       <mat-icon>
         {{ (dateAdapter.compareTime(option.value, sunrise) > 0 && dateAdapter.compareTime(option.value, sunset) < 0) ? 'sunny' : 'bedtime' }}
       </mat-icon>

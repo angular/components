@@ -68,6 +68,7 @@ ng_project(
         "timepicker.ts",
         "timepicker-input.ts",
         "timepicker-module.ts",
+        "timepicker-option.ts",
         "timepicker-toggle.ts",
         "util.ts",
     ],

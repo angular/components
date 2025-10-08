@@ -14,7 +14,7 @@
       <mat-option
         [value]="option.value"
         (onSelectionChange)="_selectValue($event.source)">
-        <ng-container [ngTemplateOutlet]="_optionTemplate() || defaultOptionTemplate"
+        <ng-container [ngTemplateOutlet]="_optionTemplate()?.template || defaultOptionTemplate"
                       [ngTemplateOutletContext]="{ $implicit: option }">
         </ng-container>
       </mat-option>
