@@ -2,4 +2,9 @@
 // wrapping layer to the mdc-snackbar__surface, it should also include flex display.
 .mat-mdc-simple-snack-bar {
   display: flex;
+
+  .mat-mdc-snack-bar-label {
+    max-height: 50vh;
+    overflow: auto;
+  }
 }
