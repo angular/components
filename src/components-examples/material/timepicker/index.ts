@@ -5,4 +5,5 @@ export {TimepickerValidationExample} from './timepicker-validation/timepicker-va
 export {TimepickerOptionsExample} from './timepicker-options/timepicker-options-example';
 export {TimepickerCustomIconExample} from './timepicker-custom-icon/timepicker-custom-icon-example';
 export {TimepickerLocaleExample} from './timepicker-locale/timepicker-locale-example';
+export {TimepickerOptionTemplateExample} from './timepicker-option-template/timepicker-option-template-example';
 export {TimepickerHarnessExample} from './timepicker-harness/timepicker-harness-example';

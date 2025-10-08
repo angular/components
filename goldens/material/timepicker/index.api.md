@@ -56,6 +56,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly options: InputSignal<readonly MatTimepickerOption<D>[] | null>;
     // (undocumented)
     protected _options: Signal<readonly MatOption<any>[]>;
+    // (undocumented)
+    protected _optionTemplate: Signal<TemplateRef<MatTimepickerOption<D>> | undefined>;
     readonly panelId: string;
     // (undocumented)
     protected _panelTemplate: Signal<TemplateRef<unknown>>;
@@ -65,7 +67,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     // (undocumented)
     protected _timeOptions: readonly MatTimepickerOption<D>[];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, ["_optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepicker<any>, never>;
 }

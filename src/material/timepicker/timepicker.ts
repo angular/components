@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   effect,
   ElementRef,
   inject,
@@ -33,6 +34,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {
   _animationsDisabled,
   DateAdapter,
@@ -118,7 +120,7 @@ export interface MatTimepickerConnectedInput<D> {
   styleUrl: 'timepicker.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [MatOption],
+  imports: [NgTemplateOutlet, MatOption],
   providers: [
     {
       provide: MAT_OPTION_PARENT_COMPONENT,
@@ -149,6 +151,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   protected _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
   protected _timeOptions: readonly MatTimepickerOption<D>[] = [];
   protected _options = viewChildren(MatOption);
+  protected _optionTemplate = contentChild<TemplateRef<MatTimepickerOption<D>>>(TemplateRef);
 
   private _keyManager = new ActiveDescendantKeyManager(this._options, this._injector)
     .withHomeAndEnd(true)

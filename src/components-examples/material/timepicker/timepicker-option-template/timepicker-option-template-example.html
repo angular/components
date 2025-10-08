@@ -1,0 +1,13 @@
+<mat-form-field>
+  <mat-label>Pick a time</mat-label>
+  <input matInput [matTimepicker]="picker">
+  <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+  <mat-timepicker #picker>
+    <ng-template let-option>
+      <mat-icon>
+        {{ (dateAdapter.compareTime(option.value, sunrise) > 0 && dateAdapter.compareTime(option.value, sunset) < 0) ? 'sunny' : 'bedtime' }}
+      </mat-icon>
+      {{ option.label }}
+    </ng-template>
+  </mat-timepicker>
+</mat-form-field>
