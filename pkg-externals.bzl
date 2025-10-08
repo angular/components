@@ -44,8 +44,6 @@ PKG_EXTERNALS = [
     "axe-core",
     "kagekiri",
     "moment",
-    "moment/locale/fr",
-    "moment/locale/ja",
     "luxon",
     "date-fns",
     "protractor",

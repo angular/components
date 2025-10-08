@@ -18,7 +18,7 @@
           "options": {
             "sourceMap": true,
             "preserveSymlinks": true,
-            "allowedCommonJsDependencies": ["moment", "path-normalize"],
+            "allowedCommonJsDependencies": ["path-normalize"],
             "outputPath": "dist/material-angular-io",
             "index": "src/index.html",
             "browser": "src/main.ts",

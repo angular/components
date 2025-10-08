@@ -383,9 +383,9 @@ importers:
       '@angular/material-experimental':
         specifier: workspace:*
         version: link:../src/material-experimental
-      '@angular/material-moment-adapter':
+      '@angular/material-luxon-adapter':
         specifier: workspace:*
-        version: link:../src/material-moment-adapter
+        version: link:../src/material-luxon-adapter
       '@angular/platform-browser':
         specifier: 'catalog:'
         version: 21.0.0-next.6(@angular/common@21.0.0-next.6(@angular/compiler-cli@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(typescript@5.9.2))(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@6.6.7)(zone.js@0.15.1))(rxjs@6.6.7))(@angular/compiler-cli@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(typescript@5.9.2))(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@6.6.7)(zone.js@0.15.1))
@@ -404,9 +404,9 @@ importers:
       '@stackblitz/sdk':
         specifier: ^1.11.0
         version: 1.11.0
-      moment:
-        specifier: ^2.29.1
-        version: 2.30.1
+      luxon:
+        specifier: ^3.0.0
+        version: 3.7.2
       path-normalize:
         specifier: ^7.0.0
         version: 7.0.0
@@ -570,9 +570,9 @@ importers:
       '@angular/material-experimental':
         specifier: workspace:*
         version: link:../material-experimental
-      '@angular/material-moment-adapter':
+      '@angular/material-luxon-adapter':
         specifier: workspace:*
-        version: link:../material-moment-adapter
+        version: link:../material-luxon-adapter
 
   src/dev-app:
     devDependencies:

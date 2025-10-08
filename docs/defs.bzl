@@ -24,7 +24,7 @@ DEPS = [
     "//docs:node_modules/@angular/cdk-experimental",
     "//docs:node_modules/@angular/material",
     "//docs:node_modules/@angular/material-experimental",
-    "//docs:node_modules/@angular/material-moment-adapter",
+    "//docs:node_modules/@angular/material-luxon-adapter",
     "//docs:node_modules/@angular/youtube-player",
 ]
 
