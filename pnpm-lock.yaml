@@ -132,8 +132,8 @@ importers:
         specifier: 'catalog:'
         version: 20.3.4(@angular/compiler-cli@20.3.4(@angular/compiler@20.3.4)(typescript@5.9.2))(@angular/compiler@20.3.4)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#650ac6faed7c4d83a70a7d9418f30bd383c520cb
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/650ac6faed7c4d83a70a7d9418f30bd383c520cb(@modelcontextprotocol/sdk@1.19.1)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#e877c7e4fe14a67d425f5af705bf583fbbba9967
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e877c7e4fe14a67d425f5af705bf583fbbba9967(@modelcontextprotocol/sdk@1.19.1)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 20.3.4(28c1b1a5e89beb4e5e4c79a9723e3fb0)
@@ -965,9 +965,9 @@ packages:
       '@angular/compiler': 20.3.4
       '@angular/compiler-cli': 20.3.4
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/650ac6faed7c4d83a70a7d9418f30bd383c520cb':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/650ac6faed7c4d83a70a7d9418f30bd383c520cb}
-    version: 0.0.0-26b2c129c4e494126cc9c42d10a273a26e766244
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e877c7e4fe14a67d425f5af705bf583fbbba9967':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e877c7e4fe14a67d425f5af705bf583fbbba9967}
+    version: 0.0.0-56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
     hasBin: true
 
   '@angular/platform-browser-dynamic@20.3.4':
@@ -8156,6 +8156,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.3:
+    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@0.17.2:
     resolution: {integrity: sha512-UJYB6wFSJE3G00nEivR5rgWp8c2xXvJ3OPWPhmuteU0IKj8nKbG3DrjiOmLwpnHGYWAVwA69zmTm++YG0Hmwww==}
     engines: {node: '>= 0.8.0'}
@@ -9887,7 +9892,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/650ac6faed7c4d83a70a7d9418f30bd383c520cb(@modelcontextprotocol/sdk@1.19.1)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/e877c7e4fe14a67d425f5af705bf583fbbba9967(@modelcontextprotocol/sdk@1.19.1)':
     dependencies:
       '@actions/core': 1.11.1
       '@google-cloud/spanner': 8.0.0(supports-color@10.2.2)
@@ -9935,7 +9940,7 @@ snapshots:
       minimatch: 10.0.3
       multimatch: 7.0.0
       nock: 14.0.10
-      semver: 7.7.2
+      semver: 7.7.3
       supports-color: 10.2.2
       tsx: 4.20.6
       typed-graphqlify: 3.1.6
@@ -10753,7 +10758,7 @@ snapshots:
   '@conventional-changelog/git-client@1.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.2.0)':
     dependencies:
       '@types/semver': 7.7.1
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       conventional-commits-filter: 5.0.0
       conventional-commits-parser: 6.2.0
@@ -12253,7 +12258,7 @@ snapshots:
     dependencies:
       '@pnpm/crypto.hash': 1000.2.1
       '@pnpm/types': 1000.8.0
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@pnpm/graceful-fs@1000.0.1':
     dependencies:
@@ -18188,6 +18193,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.2: {}
+
+  semver@7.7.3: {}
 
   send@0.17.2:
     dependencies:
