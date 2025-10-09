@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/setup@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Build
@@ -33,11 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/setup@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Tests
@@ -54,11 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/setup@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@26b2c129c4e494126cc9c42d10a273a26e766244
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@56543b10ddb9941c76b4413cc24ec3fa7a43cf5c
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Lighthouse Audit
