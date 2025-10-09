@@ -10,7 +10,7 @@ import {MatTimepickerInputHarness} from './timepicker-input-harness';
 describe('MatTimepickerInputHarness', () => {
   let fixture: ComponentFixture<TimepickerInputHarnessTest>;
   let loader: HarnessLoader;
-  let adapter: DateAdapter<Date>;
+  let adapter: DateAdapter<Date, string, Intl.DateTimeFormatOptions, null>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({providers: [provideNativeDateAdapter()]});
@@ -82,7 +82,7 @@ describe('MatTimepickerInputHarness', () => {
     spyOn(adapter, 'format').and.returnValue('FORMATTED_VALUE');
     spyOn(adapter, 'isValid').and.callFake(value => validValues.includes(value));
     spyOn(adapter, 'deserialize').and.callFake(value =>
-      validValues.includes(value) ? value : null,
+      validValues.includes(value) ? value : (null as any),
     );
     spyOn(adapter, 'getValidDateOrNull').and.callFake((value: Date) =>
       adapter.isValid(value) ? value : null,

@@ -55,7 +55,12 @@ import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datep
   providers: [{provide: MatFormFieldControl, useExisting: MatDateRangeInput}],
   imports: [CdkMonitorFocus],
 })
-export class MatDateRangeInput<D>
+export class MatDateRangeInput<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
   implements
     MatFormFieldControl<DateRange<D>>,
     MatDatepickerControl<D>,
@@ -66,7 +71,10 @@ export class MatDateRangeInput<D>
 {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
   private _formField = inject<_MatFormFieldPartial>(MAT_FORM_FIELD, {optional: true});
 
   private _closedSubscription = Subscription.EMPTY;

@@ -18,7 +18,7 @@ const JAN = 0,
   DEC = 11;
 
 describe('DateFnsAdapter', () => {
-  let adapter: DateAdapter<Date, Locale>;
+  let adapter: DateAdapter<Date, Locale, string, string | string[]>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({imports: [DateFnsModule]});

@@ -59,7 +59,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 
 /** Adapts Luxon Dates for use with Angular Material. */
 @Injectable()
-export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
+export class LuxonDateAdapter extends DateAdapter<
+  LuxonDateTime,
+  string,
+  string,
+  string | string[]
+> {
   private _useUTC: boolean;
   private _firstDayOfWeek: number | undefined;
   private _defaultOutputCalendar: LuxonCalendarSystem;
@@ -69,7 +74,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   constructor() {
     super();
 
-    const dateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+    const dateLocale = inject<string>(MAT_DATE_LOCALE, {optional: true});
     const options = inject<MatLuxonDateAdapterOptions>(MAT_LUXON_DATE_ADAPTER_OPTIONS, {
       optional: true,
     });

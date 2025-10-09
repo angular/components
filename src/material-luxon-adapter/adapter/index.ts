@@ -7,7 +7,7 @@
  */
 
 import {NgModule, Provider} from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import {LuxonDateAdapter} from './luxon-date-adapter';
 import {MAT_LUXON_DATE_FORMATS} from './luxon-date-formats';
 
@@ -29,9 +29,7 @@ export class LuxonDateModule {}
 })
 export class MatLuxonDateModule {}
 
-export function provideLuxonDateAdapter(
-  formats: MatDateFormats = MAT_LUXON_DATE_FORMATS,
-): Provider[] {
+export function provideLuxonDateAdapter(formats = MAT_LUXON_DATE_FORMATS): Provider[] {
   return [
     {
       provide: DateAdapter,

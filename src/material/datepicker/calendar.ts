@@ -60,11 +60,22 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatIconButton, MatTooltip],
 })
-export class MatCalendarHeader<D> {
+export class MatCalendarHeader<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+> {
   private _intl = inject(MatDatepickerIntl);
   calendar = inject<MatCalendar<D>>(MatCalendar);
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  )!;
   private _periodButtonText: string;
   private _periodButtonDescription: string;
   private _periodButtonLabel: string;
@@ -258,9 +269,22 @@ export class MatCalendarHeader<D> {
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
   imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
-export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true});
+export class MatCalendar<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
+  implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges
+{
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  );
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 

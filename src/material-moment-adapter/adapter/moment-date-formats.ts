@@ -7,8 +7,12 @@
  */
 
 import {MatDateFormats} from '@angular/material/core';
+import {MomentFormatSpecification} from 'moment';
 
-export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
+export const MAT_MOMENT_DATE_FORMATS: MatDateFormats<
+  string | undefined,
+  MomentFormatSpecification
+> = {
   parse: {
     dateInput: 'l',
     timeInput: 'LT',

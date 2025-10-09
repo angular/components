@@ -17,7 +17,6 @@ import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
-import { ModelSignal } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -34,7 +33,7 @@ export const MAT_TIMEPICKER_CONFIG: InjectionToken<MatTimepickerConfig>;
 export const MAT_TIMEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
-export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
+export class MatTimepicker<D, L = any, DisplayFormatType = string, ParseFormatType = DisplayFormatType> implements OnDestroy, MatOptionParentComponent {
     constructor();
     readonly activeDescendant: Signal<string | null>;
     // (undocumented)
@@ -60,14 +59,14 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     // (undocumented)
     protected _panelTemplate: Signal<TemplateRef<unknown>>;
     registerInput(input: MatTimepickerConnectedInput<D>): void;
-    readonly selected: OutputEmitterRef<MatTimepickerSelected<D>>;
+    readonly selected: OutputEmitterRef<MatTimepickerSelected<D, L, DisplayFormatType, ParseFormatType>>;
     protected _selectValue(option: MatOption<D>): void;
     // (undocumented)
     protected _timeOptions: readonly MatTimepickerOption<D>[];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any, any, any, any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepicker<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepicker<any, any, any, any>, never>;
 }
 
 // @public
@@ -89,7 +88,7 @@ export interface MatTimepickerConnectedInput<D> {
 }
 
 // @public
-export class MatTimepickerInput<D> implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy {
+export class MatTimepickerInput<D, L = any, DisplayFormatType = string, ParseFormatType = DisplayFormatType> implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy {
     constructor();
     protected readonly _ariaActiveDescendant: Signal<string | null>;
     protected readonly _ariaControls: Signal<string | null>;
@@ -111,15 +110,15 @@ export class MatTimepickerInput<D> implements MatTimepickerConnectedInput<D>, Co
     registerOnTouched(fn: () => void): void;
     registerOnValidatorChange(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
-    readonly timepicker: InputSignal<MatTimepicker<D>>;
+    readonly timepicker: i0.InputSignal<MatTimepicker<D, L, DisplayFormatType, ParseFormatType>>;
     timepickerValueAssigned(value: D | null): void;
     validate(control: AbstractControl): ValidationErrors | null;
-    readonly value: ModelSignal<D | null>;
+    readonly value: i0.ModelSignal<D | null>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any, any, any, any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerInput<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerInput<any, any, any, any>, never>;
 }
 
 // @public (undocumented)
@@ -139,9 +138,9 @@ export interface MatTimepickerOption<D = unknown> {
 }
 
 // @public
-export interface MatTimepickerSelected<D> {
+export interface MatTimepickerSelected<D, L = any, DisplayFormatType = string, ParseFormatType = DisplayFormatType> {
     // (undocumented)
-    source: MatTimepicker<D>;
+    source: MatTimepicker<D, L, DisplayFormatType, ParseFormatType>;
     // (undocumented)
     value: D;
 }

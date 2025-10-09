@@ -82,9 +82,14 @@ export function parseInterval(value: number | string | null): number | null {
  * @param max Time at which to stop generating the options.
  * @param interval Amount of seconds between each option.
  */
-export function generateOptions<D>(
-  adapter: DateAdapter<D>,
-  formats: MatDateFormats,
+export function generateOptions<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+>(
+  adapter: DateAdapter<D, L, DisplayFormatType, ParseFormatType>,
+  formats: MatDateFormats<DisplayFormatType, ParseFormatType>,
   min: D,
   max: D,
   interval: number,
@@ -97,7 +102,10 @@ export function generateOptions<D>(
     adapter.compareTime(current, max) < 1 &&
     adapter.isValid(current)
   ) {
-    options.push({value: current, label: adapter.format(current, formats.display.timeOptionLabel)});
+    options.push({
+      value: current,
+      label: adapter.format(current, formats.display.timeOptionLabel!),
+    });
     current = adapter.addSeconds(current, interval);
   }
 
@@ -106,8 +114,8 @@ export function generateOptions<D>(
 
 /** Checks whether a date adapter is set up correctly for use with the timepicker. */
 export function validateAdapter(
-  adapter: DateAdapter<unknown> | null,
-  formats: MatDateFormats | null,
+  adapter: DateAdapter<unknown, unknown, unknown, unknown> | null,
+  formats: MatDateFormats<unknown, unknown> | null,
 ) {
   function missingAdapterError(provider: string) {
     return Error(
