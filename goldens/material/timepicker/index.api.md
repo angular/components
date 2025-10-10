@@ -59,7 +59,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly panelId: string;
     // (undocumented)
     protected _panelTemplate: Signal<TemplateRef<unknown>>;
-    registerInput(input: MatTimepickerInput<D>): void;
+    registerInput(input: MatTimepickerConnectedInput<D>): void;
     readonly selected: OutputEmitterRef<MatTimepickerSelected<D>>;
     protected _selectValue(option: MatOption<D>): void;
     // (undocumented)
@@ -77,7 +77,19 @@ export interface MatTimepickerConfig {
 }
 
 // @public
-export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
+export interface MatTimepickerConnectedInput<D> {
+    disabled: Signal<boolean>;
+    focus(): void;
+    getLabelId(): string | null;
+    getOverlayOrigin(): ElementRef<HTMLElement>;
+    max: Signal<D | null>;
+    min: Signal<D | null>;
+    timepickerValueAssigned(value: D | null): void;
+    value: Signal<D | null>;
+}
+
+// @public
+export class MatTimepickerInput<D> implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy {
     constructor();
     protected readonly _ariaActiveDescendant: Signal<string | null>;
     protected readonly _ariaControls: Signal<string | null>;
@@ -85,7 +97,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     readonly disabled: Signal<boolean>;
     readonly disabledInput: InputSignalWithTransform<boolean, unknown>;
     focus(): void;
-    _getLabelId(): string | null;
+    getLabelId(): string | null;
     getOverlayOrigin(): ElementRef<HTMLElement>;
     protected _handleBlur(): void;
     protected _handleInput(event: Event): void;
@@ -100,7 +112,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     registerOnValidatorChange(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
     readonly timepicker: InputSignal<MatTimepicker<D>>;
-    _timepickerValueAssigned(value: D | null): void;
+    timepickerValueAssigned(value: D | null): void;
     validate(control: AbstractControl): ValidationErrors | null;
     readonly value: ModelSignal<D | null>;
     writeValue(value: any): void;
