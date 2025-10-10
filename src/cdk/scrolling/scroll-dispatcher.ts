@@ -8,7 +8,15 @@
 
 import {coerceElement} from '../coercion';
 import {Platform} from '../platform';
-import {ElementRef, Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {
+  DOCUMENT,
+  ElementRef,
+  Injectable,
+  NgZone,
+  OnDestroy,
+  RendererFactory2,
+  inject,
+} from '@angular/core';
 import {of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import type {CdkScrollable} from './scrollable';
@@ -25,7 +33,9 @@ export class ScrollDispatcher implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _document = inject(DOCUMENT);
   private _cleanupGlobalListener: (() => void) | undefined;
+  private _lastScrollFromDocument = false;
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -87,7 +97,15 @@ export class ScrollDispatcher implements OnDestroy {
     return new Observable((observer: Observer<CdkScrollable | void>) => {
       if (!this._cleanupGlobalListener) {
         this._cleanupGlobalListener = this._ngZone.runOutsideAngular(() =>
-          this._renderer.listen('document', 'scroll', () => this._scrolled.next()),
+          this._renderer.listen(
+            'document',
+            'scroll',
+            (event: Event) => {
+              this._lastScrollFromDocument = event.target === this._document;
+              this._scrolled.next();
+            },
+            {capture: true},
+          ),
         );
       }
 
@@ -105,6 +123,7 @@ export class ScrollDispatcher implements OnDestroy {
         this._scrolledCount--;
 
         if (!this._scrolledCount) {
+          this._lastScrollFromDocument = false;
           this._cleanupGlobalListener?.();
           this._cleanupGlobalListener = undefined;
         }
@@ -132,7 +151,12 @@ export class ScrollDispatcher implements OnDestroy {
     const ancestors = this.getAncestorScrollContainers(elementOrElementRef);
 
     return this.scrolled(auditTimeInMs).pipe(
-      filter(target => !target || ancestors.indexOf(target) > -1),
+      filter(target => {
+        // The document is using capturing for its `scroll` event which means that we'll usually
+        // get two events here. This is what we want in most cases, but for the ancestor scrolling
+        // we actually want to know the exact ancestor that was scrolled.
+        return target ? ancestors.indexOf(target) > -1 : this._lastScrollFromDocument;
+      }),
     );
   }
 
