@@ -162,7 +162,7 @@ mat-expansion-panel {
 .demo-elevation {
   height: 40px;
   width: 300px;
-  margin: 32px;
+  margin: 32px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +182,7 @@ mat-expansion-panel {
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
   font: var(--mat-sys-body-medium);
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: var(--mat-sys-corner-small);
   box-shadow: var(--mat-sys-level3);
   padding: 16px;
 
