@@ -36,7 +36,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {MAT_FORM_FIELD} from '../form-field';
-import {MatTimepicker} from './timepicker';
+import {MatTimepicker, MatTimepickerConnectedInput} from './timepicker';
 import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
@@ -80,7 +80,9 @@ import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
     },
   ],
 })
-export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
+export class MatTimepickerInput<D>
+  implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy
+{
   private _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
@@ -258,7 +260,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   }
 
   /** Gets the ID of the input's label. */
-  _getLabelId(): string | null {
+  getLabelId(): string | null {
     return this._formField?.getLabelId() || null;
   }
 
@@ -318,7 +320,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   }
 
   /** Called by the timepicker to sync up the user-selected value. */
-  _timepickerValueAssigned(value: D | null) {
+  timepickerValueAssigned(value: D | null) {
     if (!this._dateAdapter.sameTime(value, this.value())) {
       this._assignUserSelection(value, true);
       this._formatValue(value);

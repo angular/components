@@ -53,7 +53,6 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {ENTER, ESCAPE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import type {MatTimepickerInput} from './timepicker-input';
 import {
   generateOptions,
   MAT_TIMEPICKER_CONFIG,
@@ -80,6 +79,33 @@ export const MAT_TIMEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
     },
   },
 );
+
+/** Represents an input that is connected to a `mat-timepicker`. */
+export interface MatTimepickerConnectedInput<D> {
+  /** Current value of the input. */
+  value: Signal<D | null>;
+
+  /** Minimum allowed time. */
+  min: Signal<D | null>;
+
+  /** Maximum allowed time. */
+  max: Signal<D | null>;
+
+  /** Whether the input is disabled. */
+  disabled: Signal<boolean>;
+
+  /** Focuses the input. */
+  focus(): void;
+
+  /** Gets the element to which to connect the timepicker overlay. */
+  getOverlayOrigin(): ElementRef<HTMLElement>;
+
+  /** Gets the ID of the input's label. */
+  getLabelId(): string | null;
+
+  /** Callback invoked when the timepicker assigns a value. */
+  timepickerValueAssigned(value: D | null): void;
+}
 
 /**
  * Renders out a listbox that can be used to select a time of day.
@@ -113,7 +139,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);
 
-  private _input = signal<MatTimepickerInput<D> | null>(null);
+  private _input = signal<MatTimepickerConnectedInput<D> | null>(null);
   private _overlayRef: OverlayRef | null = null;
   private _portal: TemplatePortal<unknown> | null = null;
   private _optionsCacheKey: string | null = null;
@@ -269,7 +295,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   }
 
   /** Registers an input with the timepicker. */
-  registerInput(input: MatTimepickerInput<D>): void {
+  registerInput(input: MatTimepickerConnectedInput<D>): void {
     const currentInput = this._input();
 
     if (currentInput && input !== currentInput && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -297,7 +323,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       }
     });
     // Notify the input first so it can sync up the form control before emitting to `selected`.
-    this._input()?._timepickerValueAssigned(option.value);
+    this._input()?.timepickerValueAssigned(option.value);
     this.selected.emit({value: option.value, source: this});
     this._input()?.focus();
   }
@@ -307,7 +333,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     if (this.ariaLabel()) {
       return null;
     }
-    return this.ariaLabelledby() || this._input()?._getLabelId() || null;
+    return this.ariaLabelledby() || this._input()?.getLabelId() || null;
   }
 
   /** Handles animation events coming from the panel. */
