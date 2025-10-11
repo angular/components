@@ -10,11 +10,23 @@
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Filter by type</mat-label>
-    <mat-select [value]="typeFilter()" (selectionChange)="typeFilter.set($event.value)">
+    <mat-select [(value)]="typeFilter">
       @for (type of types; track $index) {
         <mat-option [value]="type">{{type | titlecase}}</mat-option>
       }
     </mat-select>
+    @if (typeFilter()) {
+      <button matSuffix matIconButton aria-label="Clear type filter" matTooltip="Clear type filter"
+              (click)="typeFilter.set(null); $event.stopPropagation()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Filter by system token</mat-label>
+    <input #systemTokenInput matInput [value]="systemTokenFilter()"
+           (input)="systemTokenFilter.set(systemTokenInput.value)"/>
   </mat-form-field>
 
   <button mat-button (click)="reset()">Reset filters</button>
