@@ -19,7 +19,7 @@ const JAN = 1,
   DEC = 12;
 
 describe('LuxonDateAdapter', () => {
-  let adapter: DateAdapter<DateTime>;
+  let adapter: DateAdapter<DateTime, string, string, string | string[]>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({imports: [LuxonDateModule]});

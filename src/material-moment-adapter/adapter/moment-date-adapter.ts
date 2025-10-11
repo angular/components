@@ -55,7 +55,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 
 /** Adapts Moment.js Dates for use with Angular Material. */
 @Injectable()
-export class MomentDateAdapter extends DateAdapter<Moment> {
+export class MomentDateAdapter extends DateAdapter<
+  Moment,
+  string,
+  string,
+  MomentFormatSpecification
+> {
   private _options = inject<MatMomentDateAdapterOptions>(MAT_MOMENT_DATE_ADAPTER_OPTIONS, {
     optional: true,
   });
@@ -176,14 +181,14 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this._createMoment().locale(this.locale);
   }
 
-  parse(value: unknown, parseFormat: string | string[]): Moment | null {
+  parse(value: unknown, parseFormat: MomentFormatSpecification): Moment | null {
     if (value && typeof value == 'string') {
       return this._createMoment(value, parseFormat, this.locale);
     }
     return value ? this._createMoment(value).locale(this.locale) : null;
   }
 
-  format(date: Moment, displayFormat: string): string {
+  format(date: Moment, displayFormat: string | undefined): string {
     date = this.clone(date);
     if (!this.isValid(date) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('MomentDateAdapter: Cannot format invalid date.');
@@ -274,7 +279,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return date.seconds();
   }
 
-  override parseTime(value: unknown, parseFormat: string | string[]): Moment | null {
+  override parseTime(value: unknown, parseFormat: MomentFormatSpecification): Moment | null {
     return this.parse(value, parseFormat);
   }
 
