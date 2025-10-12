@@ -33,16 +33,6 @@ export class MatChipEditInputHarness extends ComponentHarness {
   /** Sets the value of the input. */
   async setValue(value: string): Promise<void> {
     const host = await this.host();
-
-    // @breaking-change 16.0.0 Remove this null check once `setContenteditableValue`
-    // becomes a required method.
-    if (!host.setContenteditableValue) {
-      throw new Error(
-        'Cannot set chip edit input value, because test ' +
-          'element does not implement the `setContenteditableValue` method.',
-      );
-    }
-
     return host.setContenteditableValue(value);
   }
 }
