@@ -1,0 +1,78 @@
+<div class="example-grid-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="enableSelection">Enable Selection</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Row Wrap</mat-label>
+    <mat-select [(value)]="rowWrap">
+      <mat-option value="nowrap">No Wrap</mat-option>
+      <mat-option value="loop">Loop</mat-option>
+      <mat-option value="continuous">Continuous</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Col Wrap</mat-label>
+    <mat-select [(value)]="colWrap">
+      <mat-option value="nowrap">No Wrap</mat-option>
+      <mat-option value="loop">Loop</mat-option>
+      <mat-option value="continuous">Continuous</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus Strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-grid-container">
+  <table
+    ngGrid
+    class="example-grid"
+    [rowWrap]="rowWrap"
+    [colWrap]="colWrap"
+    [focusMode]="focusMode"
+    [disabled]="disabled.value"
+    [skipDisabled]="skipDisabled.value"
+    [enableSelection]="enableSelection.value"
+    #grid="ngGrid"
+  >
+    @for (row of gridData; track row) {
+      <tr ngGridRow>
+        @for (cell of row; track cell) {
+          <td
+            class="example-grid-cell example-stateful example-selectable"
+            ngGridCell
+            [rowSpan]="cell.rowSpan ?? 1"
+            [colSpan]="cell.colSpan ?? 1"
+            [disabled]="cell.disabled"
+          ></td>
+        }
+      </tr>
+    }
+  </table>
+
+  <ul>
+    <li>
+      <button (click)="regenerateGrid()">Regenerate Grid</button>
+    </li>
+    <li>Home: first cell in the row</li>
+    <li>End: last cell in the row</li>
+    <li>Crtl + Home: very first cell</li>
+    <li>Ctrl + End: very last cell</li>
+    <li>Shift + Space: select a row</li>
+    <li>Ctrl + Space: select a col</li>
+    <li>Shift + Arrow: expand selection</li>
+    <li>Ctrl + A: select all</li>
+    <li>
+      Internal coords:
+      ({{grid.pattern.gridBehavior.focusBehavior.activeCoords().row
+      }}, {{grid.pattern.gridBehavior.focusBehavior.activeCoords().col}})
+    </li>
+  </ul>
+</div>

@@ -13,7 +13,7 @@
 }
 
 .example-stateful:focus,
-[aria-activedescendant]:focus-within .example-stateful.cdk-active {
+[aria-activedescendant]:focus-within .example-stateful[data-active='true'] {
   background: color-mix(
     in srgb,
     var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),

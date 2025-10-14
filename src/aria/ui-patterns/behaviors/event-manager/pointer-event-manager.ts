@@ -70,7 +70,7 @@ export class PointerEventManager<T extends PointerEvent> extends EventManager<T>
       };
     }
 
-    if (typeof args[0] === 'number' && typeof args[1] === 'function') {
+    if (args.length === 2) {
       return {
         button: MouseButton.Main,
         modifiers: args[0] as ModifierInputs,
