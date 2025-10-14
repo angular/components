@@ -881,7 +881,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
       styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
-      styles.width = styles.height = '10000px';
+      styles.width = styles.height = '100%';
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
