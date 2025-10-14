@@ -209,6 +209,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input({alias: 'cdkConnectedOverlayGrowAfterOpen', transform: booleanAttribute})
   growAfterOpen: boolean = false;
 
+  /** Whether or not the overlay should attach a backdrop. */
+  @Input('cdkConnectedOverlayInsertAfter')
+  insertOverlayAfter?: ElementRef;
+
   /** Whether the overlay can be pushed on-screen if none of the provided positions fit. */
   @Input({alias: 'cdkConnectedOverlayPush', transform: booleanAttribute}) push: boolean = false;
 
@@ -327,6 +331,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,
       disposeOnNavigation: this.disposeOnNavigation,
+      insertOverlayAfter: this.insertOverlayAfter,
     });
 
     if (this.width || this.width === 0) {

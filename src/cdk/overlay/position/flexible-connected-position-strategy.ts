@@ -581,6 +581,14 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayStartY = pos.overlayY == 'top' ? 0 : -overlayRect.height;
     }
 
+    // Adjust the overly position when it is placed inline relative to its parent.
+    const insertOverlayAfter = this._overlayRef.getConfig().insertOverlayAfter;
+    if (insertOverlayAfter) {
+      const rect = insertOverlayAfter!.nativeElement.parentElement.getBoundingClientRect();
+      overlayStartX -= rect.left;
+      overlayStartY -= rect.top;
+    }
+
     // The (x, y) coordinates of the overlay.
     return {
       x: originPoint.x + overlayStartX,
@@ -889,10 +897,25 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
       styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
-      styles.width = styles.height = '100%';
+
+      if (this._overlayRef.getConfig().insertOverlayAfter) {
+        styles.width = coerceCssPixelValue(boundingBoxRect.width);
+        styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      } else {
+        // TODO(andreyd): can most likley remove this for common case
+        styles.width = styles.height = '100%';
+      }
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
+
+      // Adjust the overly position when it is placed inline relative to its parent.
+      const insertOverlayAfter = this._overlayRef.getConfig().insertOverlayAfter;
+      if (insertOverlayAfter) {
+        const rect = insertOverlayAfter!.nativeElement.parentElement.getBoundingClientRect();
+        boundingBoxRect.left -= rect.left;
+        boundingBoxRect.top -= rect.top;
+      }
 
       styles.height = coerceCssPixelValue(boundingBoxRect.height);
       styles.top = coerceCssPixelValue(boundingBoxRect.top);
