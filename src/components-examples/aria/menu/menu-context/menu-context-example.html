@@ -1,0 +1,41 @@
+<div class="example-context-menu-container" (contextmenu)="open($event)">
+  Right-click for context menu
+</div>
+
+<div
+  menu
+  #contextMenu
+  (click)="close($event)"
+  (focusout)="close($event)"
+  class="example-context-menu"
+>
+  <div menu-item value="Cut">
+    <span menu-item-icon>content_cut</span>
+    <span menu-item-text>Cut</span>
+    <span menu-item-shortcut>⌘X</span>
+  </div>
+
+  <div menu-item value="Copy">
+    <span menu-item-icon>content_copy</span>
+    <span menu-item-text>Copy</span>
+    <span menu-item-shortcut>⌘C</span>
+  </div>
+
+  <div menu-item value="Paste" [submenu]="pasteMenu" #pasteItem="ngMenuItem">
+    <span menu-item-icon>content_paste</span>
+    <span menu-item-text>Paste</span>
+    <span menu-item-icon class="example-arrow">arrow_right</span>
+  </div>
+
+  <div menu #pasteMenu="ngMenu" [parent]="pasteItem">
+    <div menu-item value="Paste as plain text">
+      <span menu-item-text>Paste as plain text</span>
+      <span menu-item-shortcut>⌘⇧V</span>
+    </div>
+
+    <div menu-item value="Paste without formatting">
+      <span menu-item-text>Paste without formatting</span>
+      <span menu-item-shortcut>⌘⇧V</span>
+    </div>
+  </div>
+</div>
