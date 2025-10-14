@@ -97,7 +97,7 @@ export class ListFocus<T extends ListFocusItem> {
   }
 
   /** Moves focus to the given item if it is focusable. */
-  focus(item: T): boolean {
+  focus(item: T, opts?: {focusElement?: boolean}): boolean {
     if (this.isListDisabled() || !this.isFocusable(item)) {
       return false;
     }
@@ -105,7 +105,11 @@ export class ListFocus<T extends ListFocusItem> {
     this.prevActiveItem.set(this.inputs.activeItem());
     this.inputs.activeItem.set(item);
 
-    this.inputs.focusMode() === 'roving' ? item.element().focus() : this.inputs.element()?.focus();
+    if (opts?.focusElement || opts?.focusElement === undefined) {
+      this.inputs.focusMode() === 'roving'
+        ? item.element().focus()
+        : this.inputs.element()?.focus();
+    }
 
     return true;
   }

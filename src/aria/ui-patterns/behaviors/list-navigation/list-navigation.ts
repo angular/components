@@ -29,13 +29,13 @@ export class ListNavigation<T extends ListNavigationItem> {
   constructor(readonly inputs: ListNavigationInputs<T> & {focusManager: ListFocus<T>}) {}
 
   /** Navigates to the given item. */
-  goto(item?: T): boolean {
-    return item ? this.inputs.focusManager.focus(item) : false;
+  goto(item?: T, opts?: {focusElement?: boolean}): boolean {
+    return item ? this.inputs.focusManager.focus(item, opts) : false;
   }
 
   /** Navigates to the next item in the list. */
-  next(): boolean {
-    return this._advance(1);
+  next(opts?: {focusElement?: boolean}): boolean {
+    return this._advance(1, opts);
   }
 
   /** Peeks the next item in the list. */
@@ -44,8 +44,8 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   /** Navigates to the previous item in the list. */
-  prev(): boolean {
-    return this._advance(-1);
+  prev(opts?: {focusElement?: boolean}): boolean {
+    return this._advance(-1, opts);
   }
 
   /** Peeks the previous item in the list. */
@@ -54,26 +54,26 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   /** Navigates to the first item in the list. */
-  first(): boolean {
+  first(opts?: {focusElement?: boolean}): boolean {
     const item = this.inputs.items().find(i => this.inputs.focusManager.isFocusable(i));
-    return item ? this.goto(item) : false;
+    return item ? this.goto(item, opts) : false;
   }
 
   /** Navigates to the last item in the list. */
-  last(): boolean {
+  last(opts?: {focusElement?: boolean}): boolean {
     const items = this.inputs.items();
     for (let i = items.length - 1; i >= 0; i--) {
       if (this.inputs.focusManager.isFocusable(items[i])) {
-        return this.goto(items[i]);
+        return this.goto(items[i], opts);
       }
     }
     return false;
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */
-  private _advance(delta: 1 | -1): boolean {
+  private _advance(delta: 1 | -1, opts?: {focusElement?: boolean}): boolean {
     const item = this._peek(delta);
-    return item ? this.goto(item) : false;
+    return item ? this.goto(item, opts) : false;
   }
 
   /** Peeks the next or previous focusable item in the list based on the given delta. */
