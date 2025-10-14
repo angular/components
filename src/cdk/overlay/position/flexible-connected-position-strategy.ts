@@ -41,7 +41,7 @@ export type FlexibleConnectedPositionStrategyOrigin =
       height?: number;
     });
 
-/** Refinment of `DOMRect` when only width/height and position (l, r, t, b) are needed. */
+/** Refinement of `DOMRect` when only width/height and position (l, r, t, b) are needed. */
 type Rect = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
 /** Further refinement of above for when only the dimensions are needed. */
@@ -881,7 +881,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
       styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
-      styles.width = styles.height = '100%';
+      styles.width = styles.height = '10000px';
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
