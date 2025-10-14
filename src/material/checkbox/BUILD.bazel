@@ -68,6 +68,7 @@ sass_binary(
     deps = [
         ":checkbox_common",
         ":m2",
+        "//src/cdk:sass_lib",
         "//src/material/core/style:layout_common",
         "//src/material/core/tokens:token_utils",
     ],
