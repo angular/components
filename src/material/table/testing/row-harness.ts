@@ -17,6 +17,7 @@ import {
   MatCellHarness,
   MatFooterCellHarness,
   MatHeaderCellHarness,
+  MatNoDataCellHarness,
 } from './cell-harness';
 import {CellHarnessFilters, RowHarnessFilters} from './table-harness-filters';
 
@@ -116,6 +117,29 @@ export class MatFooterRowHarness extends _MatRowHarnessBase<
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with<T extends MatFooterRowHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: RowHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
+  }
+}
+
+/** Harness for interacting with an Angular Material table "no data" row. */
+export class MatNoDataRowHarness extends _MatRowHarnessBase<
+  typeof MatHeaderCellHarness,
+  MatHeaderCellHarness
+> {
+  /** The selector for the host element of a `MatNoDataRowHarness` instance. */
+  static hostSelector = '.mat-mdc-no-data-row';
+  protected _cellHarness = MatNoDataCellHarness;
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a table header row with specific
+   * attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatNoDataRowHarness>(
     this: ComponentHarnessConstructor<T>,
     options: RowHarnessFilters = {},
   ): HarnessPredicate<T> {
