@@ -11,7 +11,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
-import {Tree, TreeItem, TreeItemGroup, TreeItemGroupContent} from '@angular/aria/tree';
+import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {NODES, TreeNode} from '../tree-data';
 
 /** @title Configurable Tree. */
@@ -31,7 +31,6 @@ import {NODES, TreeNode} from '../tree-data';
     Tree,
     TreeItem,
     TreeItemGroup,
-    TreeItemGroupContent,
   ],
 })
 export class TreeConfigurableExample {

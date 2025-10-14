@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {TreeItemGroup, TreeItemGroupContent, Tree, TreeItem} from './tree';
+export {TreeItemGroup, Tree, TreeItem} from './tree';

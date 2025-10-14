@@ -42,19 +42,21 @@ export class DeferredContentAware {
  */
 @Directive()
 export class DeferredContent {
-  private readonly _deferredContentAware = inject(DeferredContentAware);
+  private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
   private readonly _templateRef = inject(TemplateRef);
   private readonly _viewContainerRef = inject(ViewContainerRef);
   private _isRendered = false;
 
+  readonly deferredContentAware = signal(this._deferredContentAware);
+
   constructor() {
     afterRenderEffect(() => {
-      if (this._deferredContentAware.contentVisible()) {
+      if (this.deferredContentAware()?.contentVisible()) {
         if (this._isRendered) return;
         this._viewContainerRef.clear();
         this._viewContainerRef.createEmbeddedView(this._templateRef);
         this._isRendered = true;
-      } else if (!this._deferredContentAware.preserveContent()) {
+      } else if (!this.deferredContentAware()?.preserveContent()) {
         this._viewContainerRef.clear();
         this._isRendered = false;
       }

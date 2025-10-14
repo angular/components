@@ -4,7 +4,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tree, TreeItem, TreeItemGroup, TreeItemGroupContent} from './tree';
+import {Tree, TreeItem, TreeItemGroup} from './tree';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -19,7 +19,6 @@ describe('Tree', () => {
   let treeElement: HTMLElement;
   let treeInstance: Tree<string>;
   let treeItemElements: HTMLElement[];
-  let treeItemGroupElements: HTMLElement[];
 
   const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
     const event = new KeyboardEvent('keydown', {key, bubbles: true, ...modifierKeys});
@@ -67,12 +66,10 @@ describe('Tree', () => {
   function defineTestVariables() {
     const treeDebugElement = fixture.debugElement.query(By.directive(Tree));
     const treeItemDebugElements = fixture.debugElement.queryAll(By.directive(TreeItem));
-    const treeItemGroupDebugElements = fixture.debugElement.queryAll(By.directive(TreeItemGroup));
 
     treeElement = treeDebugElement.nativeElement as HTMLElement;
     treeInstance = treeDebugElement.componentInstance as Tree<string>;
     treeItemElements = treeItemDebugElements.map(debugEl => debugEl.nativeElement);
-    treeItemGroupElements = treeItemGroupDebugElements.map(debugEl => debugEl.nativeElement);
   }
 
   function updateTree(
@@ -131,10 +128,6 @@ describe('Tree', () => {
     return treeItemElements.find(el => el.getAttribute('data-value') === String(value));
   }
 
-  function getTreeItemGroupElementByValue(value: string): HTMLElement | undefined {
-    return treeItemGroupElements.find(el => el.getAttribute('data-group-for') === String(value));
-  }
-
   function getFocusedTreeItemValue(): string | undefined {
     let item: HTMLElement | undefined;
     if (testComponent.focusMode() === 'roving') {
@@ -185,14 +178,6 @@ describe('Tree', () => {
         expect(getTreeItemElementByValue('berries')!.getAttribute('role')).toBe('treeitem');
         expect(getTreeItemElementByValue('strawberry')!.getAttribute('role')).toBe('treeitem');
         expect(getTreeItemElementByValue('blueberry')!.getAttribute('role')).toBe('treeitem');
-      });
-
-      it('should correctly set the role attribute to "group" for TreeItemGroup', () => {
-        expandAll();
-
-        expect(getTreeItemGroupElementByValue('fruits')!.getAttribute('role')).toBe('group');
-        expect(getTreeItemGroupElementByValue('vegetables')!.getAttribute('role')).toBe('group');
-        expect(getTreeItemGroupElementByValue('berries')!.getAttribute('role')).toBe('group');
       });
 
       it('should set aria-orientation to "vertical" by default', () => {
@@ -261,12 +246,6 @@ describe('Tree', () => {
         expect(strawberry.getAttribute('aria-level')).toBe('3');
         expect(strawberry.getAttribute('aria-setsize')).toBe('2');
         expect(strawberry.getAttribute('aria-posinset')).toBe('1');
-      });
-
-      it('should set aria-owns on expandable items pointing to their group id', () => {
-        const fruitsItem = getTreeItemElementByValue('fruits')!;
-        const group = getTreeItemGroupElementByValue('fruits')!;
-        expect(fruitsItem.getAttribute('aria-owns')).toBe(group!.id);
       });
     });
 
@@ -1359,12 +1338,11 @@ interface TestTreeNode<V = string> {
       >
         {{ node.label }}
         @if (node.children !== undefined && node.children!.length > 0) {
-          <ul
-            ngTreeItemGroup
-            [ownedBy]="treeItem"
-            [attr.data-group-for]="node.value"
-            #group="ngTreeItemGroup">
-            <ng-template ngTreeItemGroupContent>
+          <ul role="group">
+            <ng-template
+              ngTreeItemGroup
+              [ownedBy]="treeItem"
+              #group="ngTreeItemGroup">
               @for (node of node.children; track node.value) {
                 <ng-template [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: group }" />
               }
@@ -1374,7 +1352,7 @@ interface TestTreeNode<V = string> {
       </li>
     </ng-template>
   `,
-  imports: [Tree, TreeItem, TreeItemGroup, TreeItemGroupContent, NgTemplateOutlet],
+  imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 class TestTreeComponent {
   nodes = signal<TestTreeNode[]>([
