@@ -1,0 +1,29 @@
+<div class="example-grid-controls">
+  <mat-checkbox [formControl]="sort">Sort Alphabetically</mat-checkbox>
+</div>
+
+<div class="example-pill-list-container">
+  <div ngGrid class="example-pill-list" colWrap="continuous" #grid="ngGrid">
+    @for (item of sortedItems(); track item; let i = $index) {
+      <div ngGridRow class="example-pill">
+        <div ngGridCell class="example-pill-label example-stateful example-grid-cell">
+          {{item.label}}
+        </div>
+        <div ngGridCell class="example-pill-action example-stateful example-grid-cell">
+          <button ngGridCellWidget class="example-pill-button" (click)="removeItem(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+  <div class="example-pill-input-container">
+    <input
+      name="pill-input"
+      class="example-pill-input"
+      (keyup.enter)="addItem(inputEl)"
+      placeholder="Add an animal"
+      #inputEl
+    />
+  </div>
+</div>
