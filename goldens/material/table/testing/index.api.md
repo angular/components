@@ -59,6 +59,20 @@ export class MatHeaderRowHarness extends _MatRowHarnessBase<typeof MatHeaderCell
 }
 
 // @public
+export class MatNoDataCellHarness extends _MatCellHarnessBase {
+    static hostSelector: string;
+    static with(options?: CellHarnessFilters): HarnessPredicate<MatNoDataCellHarness>;
+}
+
+// @public
+export class MatNoDataRowHarness extends _MatRowHarnessBase<typeof MatHeaderCellHarness, MatHeaderCellHarness> {
+    // (undocumented)
+    protected _cellHarness: typeof MatNoDataCellHarness;
+    static hostSelector: string;
+    static with<T extends MatNoDataRowHarness>(this: ComponentHarnessConstructor<T>, options?: RowHarnessFilters): HarnessPredicate<T>;
+}
+
+// @public
 export class MatRowHarness extends _MatRowHarnessBase<typeof MatCellHarness, MatCellHarness> {
     // (undocumented)
     protected _cellHarness: typeof MatCellHarness;
@@ -89,6 +103,7 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
     getCellTextByIndex(): Promise<string[][]>;
     getFooterRows(filter?: RowHarnessFilters): Promise<MatFooterRowHarness[]>;
     getHeaderRows(filter?: RowHarnessFilters): Promise<MatHeaderRowHarness[]>;
+    getNoDataRow(filter?: RowHarnessFilters): Promise<MatNoDataRowHarness | null>;
     getRows(filter?: RowHarnessFilters): Promise<MatRowHarness[]>;
     // (undocumented)
     _headerRowHarness: typeof MatHeaderRowHarness;
