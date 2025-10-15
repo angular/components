@@ -23,8 +23,8 @@
   </li>
 
   @if (node.children) {
-  <ul ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
-    <ng-template ngTreeItemGroupContent>
+  <ul role="group">
+    <ng-template ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: node.children, parent: group}"

@@ -218,13 +218,12 @@ export class Tree<V> {
     '[attr.aria-current]': 'pattern.current()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-level]': 'pattern.level()',
-    '[attr.aria-owns]': 'ownsId()',
     '[attr.aria-setsize]': 'pattern.setsize()',
     '[attr.aria-posinset]': 'pattern.posinset()',
     '[attr.tabindex]': 'pattern.tabindex()',
   },
 })
-export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
+export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
   /** A reference to the tree item element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -233,9 +232,6 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
 
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
-
-  /** The id of the owned group. */
-  readonly ownsId = computed(() => this._group()?.id);
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -267,9 +263,13 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
   pattern: TreeItemPattern<V>;
 
   constructor() {
-    // Updates the visibility of the owned group.
+    super();
+    this.preserveContent.set(true);
+    // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._group()?.visible.set(this.pattern.expanded());
+      this.tree().pattern instanceof ComboboxTreePattern
+        ? this.contentVisible.set(true)
+        : this.contentVisible.set(this.pattern.expanded());
     });
   }
 
@@ -289,12 +289,7 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
       id: () => this._id,
       tree: treePattern,
       parent: parentPattern,
-      children: computed(
-        () =>
-          this._group()
-            ?.children()
-            .map(item => (item as TreeItem<V>).pattern) ?? [],
-      ),
+      children: computed(() => this._group()?.children() ?? []),
       hasChildren: computed(() => !!this._group()),
     });
   }
@@ -314,60 +309,30 @@ export class TreeItem<V> implements OnInit, OnDestroy, HasElement {
 }
 
 /**
- * Container that designates content as a group.
+ * Contains children tree itmes.
  */
 @Directive({
-  selector: '[ngTreeItemGroup]',
+  selector: 'ng-template[ngTreeItemGroup]',
   exportAs: 'ngTreeItemGroup',
-  hostDirectives: [
-    {
-      directive: DeferredContentAware,
-      inputs: ['preserveContent'],
-    },
-  ],
-  host: {
-    'class': 'ng-treeitem-group',
-    'role': 'group',
-    '[id]': 'id',
-    '[attr.inert]': 'visible() ? null : true',
-  },
+  hostDirectives: [DeferredContent],
 })
-export class TreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
-  /** A reference to the group element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** The DeferredContentAware host directive. */
-  private readonly _deferredContentAware = inject(DeferredContentAware);
+export class TreeItemGroup<V> implements OnInit, OnDestroy {
+  /** The DeferredContent host directive. */
+  private readonly _deferredContent = inject(DeferredContent);
 
   /** All groupable items that are descendants of the group. */
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
-
-  /** Unique ID for the group. */
-  readonly id = inject(_IdGenerator).getId('ng-tree-group-');
-
-  /** Whether the group is visible. */
-  readonly visible = signal(true);
-
   /** Child items within this group. */
-  readonly children = computed(() => [...this._unorderedItems()].sort(sortDirectives));
+  readonly children = computed<TreeItemPattern<V>[]>(() =>
+    [...this._unorderedItems()].sort(sortDirectives).map(c => c.pattern),
+  );
 
   /** Tree item that owns the group. */
   readonly ownedBy = input.required<TreeItem<V>>();
 
-  constructor() {
-    this._deferredContentAware.preserveContent.set(true);
-    // Connect the group's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this.ownedBy().tree().pattern instanceof ComboboxTreePattern
-        ? this._deferredContentAware.contentVisible.set(true)
-        : this._deferredContentAware.contentVisible.set(this.visible());
-    });
-  }
-
   ngOnInit() {
+    this._deferredContent.deferredContentAware.set(this.ownedBy());
     this.ownedBy().register(this);
   }
 
@@ -385,13 +350,3 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 }
-
-/**
- * A structural directive that marks the `ng-template` to be used as the content
- * for a `TreeItemGroup`. This content can be lazily loaded.
- */
-@Directive({
-  selector: 'ng-template[ngTreeItemGroupContent]',
-  hostDirectives: [DeferredContent],
-})
-export class TreeItemGroupContent {}
