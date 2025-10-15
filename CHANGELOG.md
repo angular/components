@@ -1,3 +1,23 @@
+<a name="21.0.0-next.9"></a>
+# 21.0.0-next.9 "plastic-fork" (2025-10-15)
+## Breaking Changes
+### cdk
+- * `TestElement` implementations need to provide a `setContenteditableValue`.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [71d590796c](https://github.com/angular/components/commit/71d590796c8c29a198fefa31864c06ddfd334738) | feat | **sort:** add content projection slot for custom icon ([#32016](https://github.com/angular/components/pull/32016)) |
+| [85f596b3c3](https://github.com/angular/components/commit/85f596b3c32d22541c3825da3479b67832a2f4da) | feat | **table:** add harness for "no data" row ([#32075](https://github.com/angular/components/pull/32075)) |
+| [ff9059d8d1](https://github.com/angular/components/commit/ff9059d8d14b82a465481e51f01582caf6d83b6c) | fix | **checkbox:** use GrayText for disabled colors in high contrast mode ([#32066](https://github.com/angular/components/pull/32066)) |
+| [5f12b26ab3](https://github.com/angular/components/commit/5f12b26ab3abad9acb2a3d008100d06e0fb63ab5) | fix | **snack-bar:** add max height for snack bar ([#32000](https://github.com/angular/components/pull/32000)) |
+| [7dfabca03d](https://github.com/angular/components/commit/7dfabca03d14729926b708e4c86d913bc5b8f735) | fix | **timepicker:** add interface for timepicker input ([#32050](https://github.com/angular/components/pull/32050)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [544438c865](https://github.com/angular/components/commit/544438c865532b30005ef7d03606fc4be4818a39) | fix | **testing:** make setContenteditableValue required ([#32058](https://github.com/angular/components/pull/32058)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.9"></a>
 # 20.2.9 "plastic-spoon" (2025-10-15)
 ### material
