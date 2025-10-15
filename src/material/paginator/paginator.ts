@@ -27,8 +27,9 @@ import {MatSelect} from '../select';
 import {MatIconButton} from '../button';
 import {MatTooltip} from '../tooltip';
 import {MatFormField, MatFormFieldAppearance} from '../form-field';
-import {Observable, ReplaySubject, Subscription} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** The default page size if there is no page size and there are no provided page size options. */
 const DEFAULT_PAGE_SIZE = 50;
@@ -118,7 +119,6 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** ID for the DOM node containing the paginator's items per page label. */
   readonly _pageSizeLabelId = inject(_IdGenerator).getId('mat-paginator-page-size-label-');
 
-  private _intlChanges: Subscription;
   private _isInitialized = false;
   private _initializedStream = new ReplaySubject<void>(1);
 
@@ -203,12 +203,13 @@ export class MatPaginator implements OnInit, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
-    const _intl = this._intl;
     const defaults = inject<MatPaginatorDefaultOptions>(MAT_PAGINATOR_DEFAULT_OPTIONS, {
       optional: true,
     });
 
-    this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
+    this._intl.changes
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this._changeDetectorRef.markForCheck());
 
     if (defaults) {
       const {pageSize, pageSizeOptions, hidePageSize, showFirstLastButtons} = defaults;
@@ -241,7 +242,6 @@ export class MatPaginator implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._initializedStream.complete();
-    this._intlChanges.unsubscribe();
   }
 
   /** Advances to the next page if it exists. */

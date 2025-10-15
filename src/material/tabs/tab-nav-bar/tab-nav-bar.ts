@@ -38,12 +38,13 @@ import {
 import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {MatInkBar, InkBarItem} from '../ink-bar';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {startWith, takeUntil} from 'rxjs/operators';
+import {startWith} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -189,14 +190,14 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     // We need this to run before the `changes` subscription in parent to ensure that the
     // selectedIndex is up-to-date by the time the super class starts looking for it.
     this._items.changes
-      .pipe(startWith(null), takeUntil(this._destroyed))
+      .pipe(startWith(null), takeUntilDestroyed(this._destroyRef))
       .subscribe(() => this.updateActiveLink());
 
     super.ngAfterContentInit();
 
     // Turn the `change` stream into a signal to try and avoid "changed after checked" errors.
-    this._keyManager!.change.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() =>
-      this._focusedItem.set(this._keyManager?.activeItem || null),
+    this._keyManager!.change.pipe(startWith(null), takeUntilDestroyed(this._destroyRef)).subscribe(
+      () => this._focusedItem.set(this._keyManager?.activeItem || null),
     );
   }
 
@@ -357,11 +358,9 @@ export class MatTabLink
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
     }
 
-    this._tabNavBar._fitInkBarToContent
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(fitInkBarToContent => {
-        this.fitInkBarToContent = fitInkBarToContent;
-      });
+    this._tabNavBar._fitInkBarToContent.pipe(takeUntilDestroyed()).subscribe(fitInkBarToContent => {
+      this.fitInkBarToContent = fitInkBarToContent;
+    });
   }
 
   /** Focuses the tab link. */

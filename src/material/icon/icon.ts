@@ -21,12 +21,13 @@ import {
   ViewEncapsulation,
   HostAttributeToken,
   DOCUMENT,
+  DestroyRef,
 } from '@angular/core';
 import {ThemePalette} from '../core';
-import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 import {MatIconRegistry} from './icon-registry';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Default options for `mat-icon`.  */
 export interface MatIconDefaultOptions {
@@ -152,6 +153,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   private _iconRegistry = inject(MatIconRegistry);
   private _location = inject<MatIconLocation>(MAT_ICON_LOCATION);
   private readonly _errorHandler = inject(ErrorHandler);
+  private readonly _destroyRef = inject(DestroyRef);
   private _defaultColor: ThemePalette;
 
   /**
@@ -236,9 +238,6 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   /** Keeps track of the elements and attributes that we've prefixed with the current path. */
   private _elementsWithExternalReferences?: Map<Element, {name: string; value: string}[]>;
 
-  /** Subscription to the current in-progress SVG icon request. */
-  private _currentIconFetch = Subscription.EMPTY;
-
   constructor(...args: unknown[]);
 
   constructor() {
@@ -316,8 +315,6 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._currentIconFetch.unsubscribe();
-
     if (this._elementsWithExternalReferences) {
       this._elementsWithExternalReferences.clear();
     }
@@ -449,7 +446,6 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   private _updateSvgIcon(rawName: string | undefined) {
     this._svgNamespace = null;
     this._svgName = null;
-    this._currentIconFetch.unsubscribe();
 
     if (rawName) {
       const [namespace, iconName] = this._splitIconName(rawName);
@@ -462,9 +458,9 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
         this._svgName = iconName;
       }
 
-      this._currentIconFetch = this._iconRegistry
+      this._iconRegistry
         .getNamedSvgIcon(iconName, namespace)
-        .pipe(take(1))
+        .pipe(take(1), takeUntilDestroyed(this._destroyRef))
         .subscribe(
           svg => this._setSvgElement(svg),
           (err: Error) => {

@@ -8,6 +8,7 @@
 
 import {
   booleanAttribute,
+  DestroyRef,
   Directive,
   DOCUMENT,
   EventEmitter,
@@ -24,11 +25,11 @@ import {
   ViewportRuler,
 } from '@angular/cdk/overlay';
 import {_getEventTarget, _getShadowRoot} from '@angular/cdk/platform';
-import {Subscription} from 'rxjs';
 import {skipWhile} from 'rxjs/operators';
 import {MatMenuPanel} from './menu-panel';
 import {_animationsDisabled} from '../core';
 import {MenuCloseReason} from './menu';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * Trigger that opens a menu whenever the user right-clicks within its host element.
@@ -50,7 +51,7 @@ export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestr
   private _document = inject(DOCUMENT);
   private _viewportRuler = inject(ViewportRuler);
   private _scrollDispatcher = inject(ScrollDispatcher);
-  private _scrollSubscription: Subscription | undefined;
+  private readonly _destroyRef = inject(DestroyRef);
 
   /** References the menu instance that the trigger is associated with. */
   @Input({alias: 'matContextMenuTriggerFor', required: true})
@@ -90,7 +91,6 @@ export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestr
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._scrollSubscription?.unsubscribe();
   }
 
   /** Handler for `contextmenu` events. */
@@ -110,7 +110,6 @@ export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestr
 
   protected override _destroyMenu(reason: MenuCloseReason): void {
     super._destroyMenu(reason);
-    this._scrollSubscription?.unsubscribe();
   }
 
   protected override _getOverlayOrigin() {
@@ -177,16 +176,18 @@ export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestr
     this._initializePoint(event.clientX, event.clientY);
     this._triggerPressedControl = event.ctrlKey;
     super._openMenu(true);
-    this._scrollSubscription?.unsubscribe();
-    this._scrollSubscription = this._scrollDispatcher.scrolled(0).subscribe(() => {
-      // When passing a point to the connected position strategy, the position
-      // won't update as the user is scrolling so we have to do it manually.
-      const position = this._viewportRuler.getViewportScrollPosition();
-      const point = this._point;
-      point.y = point.initialY + (point.initialScrollY - position.top);
-      point.x = point.initialX + (point.initialScrollX - position.left);
-      this._updatePosition();
-    });
+    this._scrollDispatcher
+      .scrolled(0)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        // When passing a point to the connected position strategy, the position
+        // won't update as the user is scrolling so we have to do it manually.
+        const position = this._viewportRuler.getViewportScrollPosition();
+        const point = this._point;
+        point.y = point.initialY + (point.initialScrollY - position.top);
+        point.x = point.initialX + (point.initialScrollX - position.left);
+        this._updatePosition();
+      });
   }
 
   /** Initializes the point representing the origin relative to which the menu will be rendered. */

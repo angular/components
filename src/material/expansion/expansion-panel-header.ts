@@ -21,8 +21,9 @@ import {
   ViewEncapsulation,
   inject,
   HostAttributeToken,
+  DestroyRef,
 } from '@angular/core';
-import {EMPTY, merge, Subscription} from 'rxjs';
+import {EMPTY, merge} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {MatAccordionTogglePosition} from './accordion-base';
 import {
@@ -32,6 +33,7 @@ import {
 } from './expansion-panel';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * Header element of a `<mat-expansion-panel>`.
@@ -63,8 +65,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   private _element = inject(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-
-  private _parentChangeSubscription = Subscription.EMPTY;
+  private readonly _destroyRef = inject(DestroyRef);
 
   constructor(...args: unknown[]);
 
@@ -86,7 +87,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
 
     // Since the toggle state depends on an @Input on the panel, we
     // need to subscribe and trigger change detection manually.
-    this._parentChangeSubscription = merge(
+    merge(
       panel.opened,
       panel.closed,
       accordionHideToggleChange,
@@ -99,7 +100,10 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
 
     // Avoids focus being lost if the panel contained the focused element and was closed.
     panel.closed
-      .pipe(filter(() => panel._containsFocus()))
+      .pipe(
+        filter(() => panel._containsFocus()),
+        takeUntilDestroyed(this._destroyRef),
+      )
       .subscribe(() => this._focusMonitor.focusVia(this._element, 'program'));
 
     if (defaultOptions) {
@@ -217,7 +221,6 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   }
 
   ngOnDestroy() {
-    this._parentChangeSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._element);
   }
 }

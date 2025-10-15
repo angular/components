@@ -19,6 +19,7 @@ import {
   Component,
   ContentChild,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   InjectionToken,
   Input,
@@ -36,8 +37,8 @@ import {
   viewChild,
 } from '@angular/core';
 import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
-import {Subject, Subscription, merge} from 'rxjs';
-import {filter, map, pairwise, startWith, takeUntil} from 'rxjs/operators';
+import {merge} from 'rxjs';
+import {filter, map, pairwise, startWith} from 'rxjs/operators';
 import {ThemePalette, _animationsDisabled} from '../core';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
@@ -56,6 +57,7 @@ import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from './form-field-errors';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -191,6 +193,7 @@ export class MatFormField
 {
   _elementRef = inject(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly _destroyRef = inject(DestroyRef);
   private _platform = inject(Platform);
   private _idGenerator = inject(_IdGenerator);
   private _ngZone = inject(NgZone);
@@ -332,14 +335,11 @@ export class MatFormField
     this._explicitFormFieldControl = value;
   }
 
-  private _destroyed = new Subject<void>();
+  // private _destroyed = new Subject<void>();
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _previousControl: MatFormFieldControl<unknown> | null = null;
   private _previousControlValidatorFn: ValidatorFn | null = null;
-  private _stateChanges: Subscription | undefined;
-  private _valueChanges: Subscription | undefined;
-  private _describedByChanges: Subscription | undefined;
   private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
   protected readonly _animationsDisabled = _animationsDisabled();
 
@@ -422,11 +422,6 @@ export class MatFormField
 
   ngOnDestroy() {
     this._outlineLabelOffsetResizeObserver?.disconnect();
-    this._stateChanges?.unsubscribe();
-    this._valueChanges?.unsubscribe();
-    this._describedByChanges?.unsubscribe();
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 
   /**
@@ -471,15 +466,13 @@ export class MatFormField
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
-    this._stateChanges?.unsubscribe();
-    this._stateChanges = control.stateChanges.subscribe(() => {
+    control.stateChanges.subscribe(() => {
       this._updateFocusState();
       this._changeDetectorRef.markForCheck();
     });
 
     // Updating the `aria-describedby` touches the DOM. Only do it if it actually needs to change.
-    this._describedByChanges?.unsubscribe();
-    this._describedByChanges = control.stateChanges
+    control.stateChanges
       .pipe(
         startWith([undefined, undefined] as const),
         map(() => [control.errorState, control.userAriaDescribedBy] as const),
@@ -490,12 +483,10 @@ export class MatFormField
       )
       .subscribe(() => this._syncDescribedByIds());
 
-    this._valueChanges?.unsubscribe();
-
     // Run change detection if the value changes.
     if (control.ngControl && control.ngControl.valueChanges) {
-      this._valueChanges = control.ngControl.valueChanges
-        .pipe(takeUntil(this._destroyed))
+      control.ngControl.valueChanges
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(() => this._changeDetectorRef.markForCheck());
     }
   }

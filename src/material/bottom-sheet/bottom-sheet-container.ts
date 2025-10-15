@@ -16,9 +16,9 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {_animationsDisabled} from '../core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 const ENTER_ANIMATION = '_mat-bottom-sheet-enter';
 const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
@@ -53,7 +53,6 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
   imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
-  private _breakpointSubscription: Subscription;
   protected _animationsDisabled = _animationsDisabled();
 
   /** The state of the bottom sheet animations. */
@@ -75,8 +74,9 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
 
     const breakpointObserver = inject(BreakpointObserver);
 
-    this._breakpointSubscription = breakpointObserver
+    breakpointObserver
       .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
+      .pipe(takeUntilDestroyed())
       .subscribe(() => {
         const classList = (this._elementRef.nativeElement as HTMLElement).classList;
 
@@ -121,7 +121,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-    this._breakpointSubscription.unsubscribe();
     this._destroyed = true;
   }
 

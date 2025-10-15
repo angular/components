@@ -14,6 +14,7 @@ import {
   Component,
   ContentChild,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   inject,
@@ -34,13 +35,12 @@ import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {_animationsDisabled, ErrorStateMatcher, ThemePalette} from '../core';
 import {Platform} from '@angular/cdk/platform';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {Subscription} from 'rxjs';
-import {takeUntil, map, startWith, switchMap} from 'rxjs/operators';
-
+import {map, startWith, switchMap} from 'rxjs/operators';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'mat-step',
@@ -57,10 +57,10 @@ import {MatStepContent} from './step-content';
     'hidden': '', // Hide the steps so they don't affect the layout.
   },
 })
-export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
+export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit {
   private _errorStateMatcher = inject(ErrorStateMatcher, {skipSelf: true});
   private _viewContainerRef = inject(ViewContainerRef);
-  private _isSelected = Subscription.EMPTY;
+  private readonly _destroyRef = inject(DestroyRef);
 
   /** Content for step label given by `<ng-template matStepLabel>`. */
   // We need an initializer here to avoid a TS error.
@@ -82,7 +82,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   _portal: TemplatePortal;
 
   ngAfterContentInit() {
-    this._isSelected = this._stepper.steps.changes
+    this._stepper.steps.changes
       .pipe(
         switchMap(() => {
           return this._stepper.selectionChange.pipe(
@@ -90,16 +90,13 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
             startWith(this._stepper.selected === this),
           );
         }),
+        takeUntilDestroyed(this._destroyRef),
       )
       .subscribe(isSelected => {
         if (isSelected && this._lazyContent && !this._portal) {
           this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef!);
         }
       });
-  }
-
-  ngOnDestroy() {
-    this._isSelected.unsubscribe();
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
@@ -139,6 +136,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
+  private readonly _destroyRef = inject(DestroyRef);
   private _animationsDisabled = _animationsDisabled();
   private _cleanupTransition: (() => void) | undefined;
   protected _isAnimating = signal(false);
@@ -218,10 +216,12 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     this._icons.forEach(({name, templateRef}) => (this._iconOverrides[name] = templateRef));
 
     // Mark the component for change detection whenever the content children query changes
-    this.steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
+    this.steps.changes
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => this._stateChanged());
 
     // Transition events won't fire if animations are disabled so we simulate them.
-    this.selectedIndexChange.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this.selectedIndexChange.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       const duration = this._getAnimationDuration();
       if (duration === '0ms' || duration === '0s') {
         this._onAnimationDone();
@@ -260,7 +260,7 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     if (typeof queueMicrotask === 'function') {
       let hasEmittedInitial = false;
       this._animatedContainers.changes
-        .pipe(startWith(null), takeUntil(this._destroyed))
+        .pipe(startWith(null), takeUntilDestroyed(this._destroyRef))
         .subscribe(() =>
           queueMicrotask(() => {
             // Simulate the initial `animationDone` event

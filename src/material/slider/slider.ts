@@ -34,7 +34,7 @@ import {
   RippleGlobalOptions,
   ThemePalette,
 } from '../core';
-import {Subscription} from 'rxjs';
+
 import {
   _MatThumb,
   _MatTickMark,
@@ -49,6 +49,7 @@ import {
 } from './slider-interface';
 import {MatSliderVisualThumb} from './slider-thumb';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
@@ -372,9 +373,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** Whether animations have been disabled. */
   _noopAnimations = _animationsDisabled();
 
-  /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
-  private _dirChangeSubscription: Subscription;
-
   /** Observer used to monitor size changes in the slider. */
   private _resizeObserver: ResizeObserver | null;
 
@@ -423,7 +421,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
 
     if (this._dir) {
-      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._dir.change.pipe(takeUntilDestroyed()).subscribe(() => this._onDirChange());
       this._isRtl = this._dir.value === 'rtl';
     }
   }
@@ -499,7 +497,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   }
 
   ngOnDestroy(): void {
-    this._dirChangeSubscription.unsubscribe();
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
   }

@@ -17,6 +17,7 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   Input,
@@ -34,10 +35,9 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '../core';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
 import {MatListBase} from './list-base';
 import {MatListOption, SELECTION_LIST, SelectionList} from './list-option';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 export const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -81,13 +81,11 @@ export class MatSelectionList
   _element = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
+  private readonly _destroyRef = inject(DestroyRef);
 
   private _initialized = false;
   private _keyManager: FocusKeyManager<MatListOption>;
   private _listenerCleanups: (() => void)[] | undefined;
-
-  /** Emits when the list has been destroyed. */
-  private _destroyed = new Subject<void>();
 
   /** Whether the list has been destroyed. */
   private _isDestroyed: boolean;
@@ -207,8 +205,6 @@ export class MatSelectionList
   ngOnDestroy() {
     this._keyManager?.destroy();
     this._listenerCleanups?.forEach(current => current());
-    this._destroyed.next();
-    this._destroyed.complete();
     this._isDestroyed = true;
   }
 
@@ -291,7 +287,7 @@ export class MatSelectionList
 
   /** Watches for changes in the selected state of the options and updates the list accordingly. */
   private _watchForSelectionChange() {
-    this.selectedOptions.changed.pipe(takeUntil(this._destroyed)).subscribe(event => {
+    this.selectedOptions.changed.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(event => {
       // Sync external changes to the model back to the options.
       for (let item of event.added) {
         item.selected = true;
@@ -445,7 +441,7 @@ export class MatSelectionList
     this._keyManager.change.subscribe(activeItemIndex => this._setActiveOption(activeItemIndex));
 
     // If the active item is removed from the list, reset back to the first one.
-    this._items.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this._items.changes.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       const activeItem = this._keyManager.activeItem;
 
       if (!activeItem || this._items.toArray().indexOf(activeItem) === -1) {

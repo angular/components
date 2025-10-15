@@ -20,7 +20,6 @@ import {
   inject,
   DOCUMENT,
 } from '@angular/core';
-import {Subject} from 'rxjs';
 
 /**
  * Injection token that can be used to reference instances of `MatMenuContent`. It serves
@@ -44,9 +43,6 @@ export class MatMenuContent implements OnDestroy {
 
   private _portal: TemplatePortal<any> | undefined;
   private _outlet: DomPortalOutlet | undefined;
-
-  /** Emits when the menu content has been attached. */
-  readonly _attached = new Subject<void>();
 
   constructor(...args: unknown[]);
 
@@ -85,7 +81,6 @@ export class MatMenuContent implements OnDestroy {
     // it needs to check for new menu items and update the `@ContentChild` in `MatMenu`.
     this._changeDetectorRef.markForCheck();
     this._portal.attach(this._outlet, context);
-    this._attached.next();
   }
 
   /**

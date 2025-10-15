@@ -34,11 +34,11 @@ import {
 import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
 import {MatFormFieldControl} from '../form-field';
 import {merge, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
 import {MatChipTextControl} from './chip-text-control';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Change event object that is emitted when the chip grid value has changed. */
 export class MatChipGridChange {
@@ -277,13 +277,13 @@ export class MatChipGrid
   }
 
   ngAfterContentInit() {
-    this.chipBlurChanges.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this.chipBlurChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this._blur();
       this.stateChanges.next();
     });
 
     merge(this.chipFocusChanges, this._chips.changes)
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => this.stateChanges.next());
   }
 

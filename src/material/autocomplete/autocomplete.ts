@@ -12,6 +12,7 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   InjectionToken,
@@ -35,7 +36,7 @@ import {
 } from '../core';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
@@ -116,7 +117,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _defaults = inject<MatAutocompleteDefaultOptions>(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS);
   protected _animationsDisabled = _animationsDisabled();
-  private _activeOptionChanges = Subscription.EMPTY;
+  private readonly _destroyRef = inject(DestroyRef);
 
   /** Manages active item in option list based on key events. */
   _keyManager: ActiveDescendantKeyManager<MatOption>;
@@ -266,7 +267,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options)
       .withWrap()
       .skipPredicate(this._skipPredicate);
-    this._activeOptionChanges = this._keyManager.change.subscribe(index => {
+    this._keyManager.change.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(index => {
       if (this.isOpen) {
         this.optionActivated.emit({source: this, option: this.options.toArray()[index] || null});
       }
@@ -278,7 +279,6 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     this._keyManager?.destroy();
-    this._activeOptionChanges.unsubscribe();
   }
 
   /**

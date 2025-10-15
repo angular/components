@@ -16,20 +16,20 @@ import {
   forwardRef,
   inject,
   Input,
-  OnDestroy,
   Output,
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {startWith, takeUntil} from 'rxjs/operators';
+import {startWith} from 'rxjs/operators';
 import {TAB} from '@angular/cdk/keycodes';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipOption, MatChipSelectionChange} from './chip-option';
 import {MatChipSet} from './chip-set';
 import {MatChipAction} from './chip-action';
 import {MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Change event object that is emitted when the chip listbox value has changed. */
 export class MatChipListboxChange {
@@ -82,10 +82,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipListbox
-  extends MatChipSet
-  implements AfterContentInit, OnDestroy, ControlValueAccessor
-{
+export class MatChipListbox extends MatChipSet implements AfterContentInit, ControlValueAccessor {
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
    * @docs-private
@@ -199,18 +196,20 @@ export class MatChipListbox
   override _chips: QueryList<MatChipOption> = undefined!;
 
   ngAfterContentInit() {
-    this._chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      if (this.value !== undefined) {
-        Promise.resolve().then(() => {
-          this._setSelectionByValue(this.value, false);
-        });
-      }
-      // Update listbox selectable/multiple properties on chips
-      this._syncListboxProperties();
-    });
+    this._chips.changes
+      .pipe(startWith(null), takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        if (this.value !== undefined) {
+          Promise.resolve().then(() => {
+            this._setSelectionByValue(this.value, false);
+          });
+        }
+        // Update listbox selectable/multiple properties on chips
+        this._syncListboxProperties();
+      });
 
-    this.chipBlurChanges.pipe(takeUntil(this._destroyed)).subscribe(() => this._blur());
-    this.chipSelectionChanges.pipe(takeUntil(this._destroyed)).subscribe(event => {
+    this.chipBlurChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this._blur());
+    this.chipSelectionChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(event => {
       if (!this.multiple) {
         this._chips.forEach(chip => {
           if (chip !== event.source) {
