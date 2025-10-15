@@ -5,10 +5,8 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Basic radio group. */
 @Component({
   selector: 'radio-group-standard-example',
-  exportAs: 'RadioStandardExample',
   templateUrl: 'radio-group-standard-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [RadioGroup, RadioButton, FormsModule],
 })
 export class RadioGroupStandardExample {

@@ -12,7 +12,6 @@ import {
   selector: 'accordion-disabled-focusable-example',
   templateUrl: 'accordion-disabled-focusable-example.html',
   styleUrl: '../accordion-examples.css',
-  standalone: true,
   imports: [MatIconModule, AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
 })
 export class AccordionDisabledFocusableExample {

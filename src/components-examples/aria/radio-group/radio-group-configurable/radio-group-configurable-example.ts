@@ -8,10 +8,8 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 /** @title Configurable CDK Radio Group */
 @Component({
   selector: 'radio-group-configurable-example',
-  exportAs: 'RadioConfigurableExample',
   templateUrl: 'radio-group-configurable-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [
     RadioGroup,
     RadioButton,

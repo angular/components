@@ -12,7 +12,6 @@ import {
   selector: 'accordion-multi-expansion-example',
   templateUrl: 'accordion-multi-expansion-example.html',
   styleUrl: '../accordion-examples.css',
-  standalone: true,
   imports: [MatIconModule, AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
 })
 export class AccordionMultiExpansionExample {

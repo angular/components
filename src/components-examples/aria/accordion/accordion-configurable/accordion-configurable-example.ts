@@ -15,10 +15,8 @@ import {
 /** @title Configurable Accordion using UI Patterns. */
 @Component({
   selector: 'accordion-configurable-example',
-  exportAs: 'AccordionConfigurableExample',
   templateUrl: 'accordion-configurable-example.html',
-  styleUrl: '../accordion-examples.css', // Point to shared CSS
-  standalone: true,
+  styleUrl: '../accordion-examples.css',
   imports: [
     ReactiveFormsModule,
     MatIconModule,

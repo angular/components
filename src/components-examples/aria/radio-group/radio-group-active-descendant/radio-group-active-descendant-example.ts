@@ -5,9 +5,7 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Active descendant radio group. */
 @Component({
   selector: 'radio-group-active-descendant-example',
-  exportAs: 'RadioActiveDescendantExample',
   templateUrl: 'radio-group-active-descendant-example.html',
-  standalone: true,
   styleUrl: '../radio-common.css',
   imports: [RadioGroup, RadioButton, FormsModule],
 })

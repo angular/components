@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-disabled-example',
-  exportAs: 'TreeDisabledExample',
   templateUrl: 'tree-disabled-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeDisabledExample {

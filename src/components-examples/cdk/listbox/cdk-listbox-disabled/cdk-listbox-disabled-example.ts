@@ -5,7 +5,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 /** @title Listbox with disabled options. */
 @Component({
   selector: 'cdk-listbox-disabled-example',
-  exportAs: 'cdkListboxDisabledExample',
   templateUrl: 'cdk-listbox-disabled-example.html',
   styleUrl: 'cdk-listbox-disabled-example.css',
   imports: [FormsModule, ReactiveFormsModule, CdkListbox, CdkOption],

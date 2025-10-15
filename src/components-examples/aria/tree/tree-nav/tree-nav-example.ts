@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-nav-example',
-  exportAs: 'TreeNavExample',
   templateUrl: 'tree-nav-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeNavExample {

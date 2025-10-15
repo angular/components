@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-disabled-skipped-example',
-  exportAs: 'TreeDisabledSkippedExample',
   templateUrl: 'tree-disabled-skipped-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeDisabledSkippedExample {

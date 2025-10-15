@@ -7,10 +7,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
  */
 @Component({
   selector: 'listbox-horizontal-example',
-  exportAs: 'ListboxHorizontalExample',
   templateUrl: 'listbox-horizontal-example.html',
   styleUrl: '../listbox-configurable/listbox-configurable-example.css',
-  standalone: true,
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxHorizontalExample {

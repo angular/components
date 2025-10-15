@@ -9,10 +9,8 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
 /** @title Configurable CDK Radio Group */
 @Component({
   selector: 'toolbar-configurable-example',
-  exportAs: 'ToolbarConfigurableExample',
   templateUrl: 'toolbar-configurable-example.html',
   styleUrl: '../toolbar-common.css',
-  standalone: true,
   imports: [
     RadioGroup,
     RadioButton,

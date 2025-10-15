@@ -5,10 +5,8 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Radio group with disabled options that are skipped. */
 @Component({
   selector: 'radio-group-disabled-skipped-example',
-  exportAs: 'RadioDisabledSkippedExample',
   templateUrl: 'radio-group-disabled-skipped-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [RadioGroup, RadioButton, FormsModule],
 })
 export class RadioGroupDisabledSkippedExample {
