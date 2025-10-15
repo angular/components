@@ -1,3 +1,13 @@
+<a name="20.2.9"></a>
+# 20.2.9 "plastic-spoon" (2025-10-15)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af3b961214](https://github.com/angular/components/commit/af3b9612145ed20a3290f773e4fbf51206804145) | fix | **checkbox:** use GrayText for disabled colors in high contrast mode ([#32066](https://github.com/angular/components/pull/32066)) |
+| [a90abb0a77](https://github.com/angular/components/commit/a90abb0a77b77b0ec5188582a1ea4d587508da5e) | fix | **snack-bar:** add max height for snack bar ([#32000](https://github.com/angular/components/pull/32000)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.8"></a>
 # 20.2.8 "strontium-summit" (2025-10-08)
 ### material
