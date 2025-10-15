@@ -12,7 +12,7 @@ import {
   ComboboxPopup,
   ComboboxPopupContainer,
 } from '@angular/aria/combobox';
-import {Tree, TreeItem, TreeItemGroup, TreeItemGroupContent} from '@angular/aria/tree';
+import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -38,7 +38,6 @@ import {NgTemplateOutlet} from '@angular/common';
     Tree,
     TreeItem,
     TreeItemGroup,
-    TreeItemGroupContent,
     NgTemplateOutlet,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

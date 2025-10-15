@@ -8,7 +8,7 @@
 
 import {Component} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {Tree, TreeItem, TreeItemGroup, TreeItemGroupContent} from '@angular/aria/tree';
+import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {TreeNode, NODES} from '../tree-data';
 
 /**
@@ -20,7 +20,7 @@ import {TreeNode, NODES} from '../tree-data';
   templateUrl: 'tree-single-select-follow-focus-example.html',
   styleUrl: '../tree-common.css',
   standalone: true,
-  imports: [Tree, TreeItem, TreeItemGroup, TreeItemGroupContent, NgTemplateOutlet],
+  imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeSingleSelectFollowFocusExample {
   nodes: TreeNode[] = NODES;

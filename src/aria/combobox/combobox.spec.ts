@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
 import {Listbox, Option} from '../listbox';
 import {runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tree, TreeItem, TreeItemGroup, TreeItemGroupContent} from '../tree';
+import {Tree, TreeItem, TreeItemGroup} from '../tree';
 import {NgTemplateOutlet} from '@angular/common';
 
 describe('Combobox', () => {
@@ -1083,8 +1083,8 @@ class ComboboxListboxExample {
     </li>
 
     @if (node.children) {
-      <ul ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
-        <ng-template ngTreeItemGroupContent>
+      <ul role="group">
+        <ng-template ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
           <ng-template
             [ngTemplateOutlet]="treeNodes"
             [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
@@ -1102,7 +1102,6 @@ class ComboboxListboxExample {
     Tree,
     TreeItem,
     TreeItemGroup,
-    TreeItemGroupContent,
     NgTemplateOutlet,
   ],
 })
