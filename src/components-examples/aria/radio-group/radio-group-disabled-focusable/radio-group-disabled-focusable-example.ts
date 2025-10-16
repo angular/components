@@ -5,10 +5,8 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Radio group with disabled options that are focusable. */
 @Component({
   selector: 'radio-group-disabled-focusable-example',
-  exportAs: 'RadioDisabledFocusableExample',
   templateUrl: 'radio-group-disabled-focusable-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [RadioGroup, RadioButton, FormsModule],
 })
 export class RadioGroupDisabledFocusableExample {

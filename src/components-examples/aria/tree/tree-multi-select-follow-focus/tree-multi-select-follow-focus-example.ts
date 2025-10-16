@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-multi-select-follow-focus-example',
-  exportAs: 'TreeMultiSelectFollowFocusExample',
   templateUrl: 'tree-multi-select-follow-focus-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeMultiSelectFollowFocusExample {

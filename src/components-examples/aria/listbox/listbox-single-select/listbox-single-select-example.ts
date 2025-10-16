@@ -5,10 +5,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
 /** @title Listbox with single selection. */
 @Component({
   selector: 'listbox-single-select-example',
-  exportAs: 'ListboxSingleSelectExample',
   templateUrl: 'listbox-single-select-example.html',
-  styleUrl: '../listbox-configurable/listbox-configurable-example.css', // Reuse common styles
-  standalone: true,
+  styleUrl: '../listbox-configurable/listbox-configurable-example.css',
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxSingleSelectExample {

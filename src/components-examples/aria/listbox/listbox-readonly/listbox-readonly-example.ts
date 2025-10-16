@@ -7,10 +7,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
  */
 @Component({
   selector: 'listbox-readonly-example',
-  exportAs: 'ListboxReadonlyExample',
   templateUrl: 'listbox-readonly-example.html',
   styleUrl: '../listbox-configurable/listbox-configurable-example.css',
-  standalone: true,
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxReadonlyExample {

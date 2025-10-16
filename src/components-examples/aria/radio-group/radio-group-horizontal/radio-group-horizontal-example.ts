@@ -5,10 +5,8 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Horizontal radio group. */
 @Component({
   selector: 'radio-group-horizontal-example',
-  exportAs: 'RadioHorizontalExample',
   templateUrl: 'radio-group-horizontal-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [RadioGroup, RadioButton, FormsModule],
 })
 export class RadioGroupHorizontalExample {

@@ -5,7 +5,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 /** @title Listbox with value binding. */
 @Component({
   selector: 'cdk-listbox-value-binding-example',
-  exportAs: 'cdkListboxValueBindingExample',
   templateUrl: 'cdk-listbox-value-binding-example.html',
   styleUrl: 'cdk-listbox-value-binding-example.css',
   imports: [CdkListbox, CdkOption, JsonPipe],

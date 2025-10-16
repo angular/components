@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-single-select-example',
-  exportAs: 'TreeSingleSelectExample',
   templateUrl: 'tree-single-select-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeSingleSelectExample {

@@ -7,10 +7,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
  */
 @Component({
   selector: 'listbox-disabled-example',
-  exportAs: 'ListboxDisabledExample',
   templateUrl: 'listbox-disabled-example.html',
   styleUrl: '../listbox-configurable/listbox-configurable-example.css',
-  standalone: true,
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxDisabledExample {
