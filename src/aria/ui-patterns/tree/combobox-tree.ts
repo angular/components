@@ -21,7 +21,7 @@ export class ComboboxTreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
   /** Whether the currently focused item is collapsible. */
-  isItemCollapsible = () => this.activeItem()?.parent() instanceof TreeItemPattern;
+  isItemCollapsible = () => this.inputs.activeItem()?.parent() instanceof TreeItemPattern;
 
   /** The ARIA role for the tree. */
   role = () => 'tree' as const;
@@ -94,7 +94,7 @@ export class ComboboxTreePattern<V>
   collapseItem = () => this.collapse();
 
   /** Whether the specified item or the currently active item is expandable. */
-  isItemExpandable(item: TreeItemPattern<V> | undefined = this.activeItem()) {
+  isItemExpandable(item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) {
     return item ? item.expandable() : false;
   }
 

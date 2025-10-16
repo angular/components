@@ -84,6 +84,30 @@ export class TreeItemPattern<V> implements ExpansionItem {
     return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
   });
 
+  /** A unique identifier for this item. */
+  id: SignalLike<string>;
+
+  /** The value of this item. */
+  value: SignalLike<V>;
+
+  /** A reference to the item element. */
+  element: SignalLike<HTMLElement>;
+
+  /** Whether the item is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** The text used by the typeahead search. */
+  searchTerm: SignalLike<string>;
+
+  /** The tree pattern this item belongs to. */
+  tree: SignalLike<TreePattern<V>>;
+
+  /** The parent item. */
+  parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
+
+  /** The children items. */
+  children: SignalLike<TreeItemPattern<V>[]>;
+
   constructor(readonly inputs: TreeItemInputs<V>) {
     this.id = inputs.id;
     this.value = inputs.value;
