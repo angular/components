@@ -12,6 +12,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         #reactiveInput
         matInput
         [matAutocomplete]="reactiveAuto"
+        [matAutocompleteOverlayInlined]="true"
         [formControl]="stateCtrl"
         (input)="reactiveStates = filterStates(reactiveInput.value)"
         (focus)="reactiveStates = filterStates(reactiveInput.value)">
@@ -71,7 +72,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     @if (true) {
       <mat-form-field [color]="templateStatesTheme">
         <mat-label>State</mat-label>
-        <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
+        <input matInput [matAutocomplete]="tdAuto" [matAutocompleteOverlayInlined]="true" [(ngModel)]="currentState"
           (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
         <mat-autocomplete #tdAuto="matAutocomplete"
           [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator"
@@ -132,6 +133,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <input
         matInput
         [matAutocomplete]="groupedAuto"
+        [matAutocompleteOverlayInlined]="true"
         [(ngModel)]="currentGroupedState"
         (ngModelChange)="filteredGroupedStates = filterStateGroups(currentGroupedState)">
     </mat-form-field>
