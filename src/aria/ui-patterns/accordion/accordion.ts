@@ -116,8 +116,6 @@ export class AccordionTriggerPattern {
     this.id = inputs.id;
     this.element = inputs.element;
     this.value = inputs.value;
-    this.accordionGroup = inputs.accordionGroup;
-    this.accordionPanel = inputs.accordionPanel;
     this.expansionControl = new ExpansionControl({
       ...inputs,
       expansionId: inputs.value,
@@ -148,10 +146,10 @@ export class AccordionTriggerPattern {
   /** The keydown event manager for the accordion trigger. */
   keydown = computed(() => {
     return new KeyboardEventManager()
-      .on(this.prevKey, () => this.accordionGroup().navigation.prev())
-      .on(this.nextKey, () => this.accordionGroup().navigation.next())
-      .on('Home', () => this.accordionGroup().navigation.first())
-      .on('End', () => this.accordionGroup().navigation.last())
+      .on(this.prevKey, () => this.inputs.accordionGroup().navigation.prev())
+      .on(this.nextKey, () => this.inputs.accordionGroup().navigation.next())
+      .on('Home', () => this.inputs.accordionGroup().navigation.first())
+      .on('End', () => this.inputs.accordionGroup().navigation.last())
       .on(' ', () => this.expansionControl.toggle())
       .on('Enter', () => this.expansionControl.toggle());
   });
@@ -162,7 +160,7 @@ export class AccordionTriggerPattern {
       const item = this._getItem(e);
 
       if (item) {
-        this.accordionGroup().navigation.goto(item);
+        this.inputs.accordionGroup().navigation.goto(item);
         this.expansionControl.toggle();
       }
     });
@@ -183,7 +181,7 @@ export class AccordionTriggerPattern {
     const item = this._getItem(event);
 
     if (item && this.inputs.accordionGroup().focusManager.isFocusable(item)) {
-      this.accordionGroup().focusManager.focus(item);
+      this.inputs.accordionGroup().focusManager.focus(item);
     }
   }
 
@@ -193,7 +191,8 @@ export class AccordionTriggerPattern {
     }
 
     const element = e.target.closest('[role="button"]');
-    return this.accordionGroup()
+    return this.inputs
+      .accordionGroup()
       .items()
       .find(i => i.element() === element);
   }
