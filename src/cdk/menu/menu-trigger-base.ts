@@ -90,6 +90,11 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
    */
   menuPosition: ConnectedPosition[];
 
+  /**
+   * Whether to inline the overlay, instead of using the global overlay container.
+   */
+  menuOverlayInlined: boolean;
+
   /** Emits when the attached menu is requested to open */
   readonly opened: EventEmitter<void> = new EventEmitter();
 
