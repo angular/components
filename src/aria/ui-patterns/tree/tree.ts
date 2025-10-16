@@ -7,7 +7,7 @@
  */
 
 import {computed, signal} from '@angular/core';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
@@ -318,6 +318,48 @@ export class TreePattern<V> {
 
     return manager;
   });
+
+  /** A unique identifier for the tree. */
+  id: SignalLike<string>;
+
+  /** Whether the tree is in navigation mode. */
+  nav: SignalLike<boolean>;
+
+  /** The aria-current type. */
+  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+
+  /** All items in the tree, in document order (DFS-like, a flattened list). */
+  allItems: SignalLike<TreeItemPattern<V>[]>;
+
+  /** Whether the tree is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** The currently active item in the tree. */
+  activeItem: WritableSignalLike<TreeItemPattern<V> | undefined> = signal(undefined);
+
+  /** Whether disabled items should be skipped when navigating. */
+  skipDisabled: SignalLike<boolean>;
+
+  /** Whether the focus should wrap when navigating past the first or last item. */
+  wrap: SignalLike<boolean>;
+
+  /** The orientation of the tree. */
+  orientation: SignalLike<'vertical' | 'horizontal'>;
+
+  /** The text direction of the tree. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
+
+  /** Whether multiple items can be selected at the same time. */
+  multi: SignalLike<boolean>;
+
+  /** The selection mode of the tree. */
+  selectionMode: SignalLike<'follow' | 'explicit'>;
+
+  /** The delay in milliseconds to wait before clearing the typeahead buffer. */
+  typeaheadDelay: SignalLike<number>;
+
+  /** The current value of the tree (the selected items). */
+  value: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
     this.id = inputs.id;
