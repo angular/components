@@ -122,13 +122,9 @@ export class GridPattern {
     const manager = new PointerEventManager();
 
     if (this.inputs.enableSelection()) {
-      manager
-        .on(() => {
-          this.dragging.set(false);
-        })
-        .on(Modifier.Shift, () => {
-          this.dragging.set(false);
-        });
+      manager.on([Modifier.Shift, Modifier.None], () => {
+        this.dragging.set(false);
+      });
     }
 
     return manager;

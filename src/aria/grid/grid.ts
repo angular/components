@@ -77,7 +77,7 @@ export class Grid {
   });
 
   /** Whether the focus is in the grid. */
-  private readonly _hasFocus = signal(false);
+  private readonly _isFocused = signal(false);
 
   constructor() {
     afterRenderEffect(() => {
@@ -86,7 +86,7 @@ export class Grid {
 
     afterRenderEffect(() => {
       const activeCell = this.pattern.activeCell();
-      const hasFocus = untracked(() => this._hasFocus());
+      const hasFocus = untracked(() => this._isFocused());
       const isRoving = this.focusMode() === 'roving';
       if (activeCell !== undefined && isRoving && hasFocus) {
         activeCell.element().focus();
@@ -96,12 +96,12 @@ export class Grid {
 
   /** Handles focusin events on the grid. */
   onFocusIn() {
-    this._hasFocus.set(true);
+    this._isFocused.set(true);
   }
 
   /** Handles focusout events on the grid. */
   onFocusOut() {
-    this._hasFocus.set(false);
+    this._isFocused.set(false);
   }
 
   /** Gets the cell pattern for a given element. */
