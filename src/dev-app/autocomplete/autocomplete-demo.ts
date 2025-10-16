@@ -221,7 +221,9 @@ export class AutocompleteDemo {
       <p>Choose a T-shirt size.</p>
       <mat-form-field>
         <mat-label>T-Shirt Size</mat-label>
-        <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentSize" name="size">
+        <input 
+          matInput [matAutocomplete]="tdAuto" [matAutocompleteOverlayInlined]="true" 
+          [(ngModel)]="currentSize" name="size">
         <mat-autocomplete #tdAuto="matAutocomplete">
           @for (size of sizes; track size) {
             <mat-option [value]="size">{{size}}</mat-option>
