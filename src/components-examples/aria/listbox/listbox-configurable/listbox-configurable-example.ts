@@ -9,10 +9,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
 /** @title Configurable Listbox. */
 @Component({
   selector: 'listbox-configurable-example',
-  exportAs: 'ListboxConfigurableExample',
   templateUrl: 'listbox-configurable-example.html',
   styleUrl: 'listbox-configurable-example.css',
-  standalone: true,
   imports: [
     Listbox,
     Option,

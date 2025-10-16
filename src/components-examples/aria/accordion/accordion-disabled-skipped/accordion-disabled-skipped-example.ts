@@ -12,7 +12,6 @@ import {
   selector: 'accordion-disabled-skipped-example',
   templateUrl: 'accordion-disabled-skipped-example.html',
   styleUrl: '../accordion-examples.css',
-  standalone: true,
   imports: [MatIconModule, AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
 })
 export class AccordionDisabledSkippedExample {

@@ -12,7 +12,6 @@ import {
   selector: 'accordion-disabled-example',
   templateUrl: 'accordion-disabled-example.html',
   styleUrl: '../accordion-examples.css',
-  standalone: true,
   imports: [MatIconModule, AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
 })
 export class AccordionDisabledExample {

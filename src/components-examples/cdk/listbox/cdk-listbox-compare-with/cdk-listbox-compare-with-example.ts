@@ -15,7 +15,6 @@ const formatter = new Intl.DateTimeFormat(undefined, {
 /** @title Listbox with complex object as values. */
 @Component({
   selector: 'cdk-listbox-compare-with-example',
-  exportAs: 'cdkListboxCompareWithExample',
   templateUrl: 'cdk-listbox-compare-with-example.html',
   styleUrl: 'cdk-listbox-compare-with-example.css',
   imports: [CdkListbox, CdkOption, JsonPipe],

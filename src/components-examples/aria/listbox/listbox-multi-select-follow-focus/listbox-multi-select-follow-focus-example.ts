@@ -7,10 +7,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
  */
 @Component({
   selector: 'listbox-multi-select-follow-focus-example',
-  exportAs: 'ListboxMultiSelectFollowFocusExample',
   templateUrl: 'listbox-multi-select-follow-focus-example.html',
   styleUrl: '../listbox-configurable/listbox-configurable-example.css',
-  standalone: true,
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxMultiSelectFollowFocusExample {

@@ -8,10 +8,8 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 /** @title Configurable Tabs. */
 @Component({
   selector: 'tabs-configurable-example',
-  exportAs: 'TabsConfigurableExample',
   templateUrl: 'tabs-configurable-example.html',
   styleUrls: ['../tabs-common.css'],
-  standalone: true,
   imports: [
     Tabs,
     TabList,

@@ -5,10 +5,8 @@ import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 /** @title Disabled radio group. */
 @Component({
   selector: 'radio-group-disabled-example',
-  exportAs: 'RadioDisabledExample',
   templateUrl: 'radio-group-disabled-example.html',
   styleUrl: '../radio-common.css',
-  standalone: true,
   imports: [RadioGroup, RadioButton, FormsModule],
 })
 export class RadioGroupDisabledExample {

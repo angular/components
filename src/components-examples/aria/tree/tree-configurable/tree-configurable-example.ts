@@ -17,10 +17,8 @@ import {NODES, TreeNode} from '../tree-data';
 /** @title Configurable Tree. */
 @Component({
   selector: 'tree-configurable-example',
-  exportAs: 'TreeConfigurableExample',
   templateUrl: 'tree-configurable-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -7,10 +7,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
  */
 @Component({
   selector: 'listbox-active-descendant-example',
-  exportAs: 'ListboxActiveDescendantExample',
   templateUrl: 'listbox-active-descendant-example.html',
   styleUrl: '../listbox-configurable/listbox-configurable-example.css',
-  standalone: true,
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxActiveDescendantExample {

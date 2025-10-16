@@ -16,10 +16,8 @@ import {TreeNode, NODES} from '../tree-data';
  */
 @Component({
   selector: 'tree-active-descendant-example',
-  exportAs: 'TreeActiveDescendantExample',
   templateUrl: 'tree-active-descendant-example.html',
   styleUrl: '../tree-common.css',
-  standalone: true,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeActiveDescendantExample {

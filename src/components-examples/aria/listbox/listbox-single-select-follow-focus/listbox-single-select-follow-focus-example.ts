@@ -5,10 +5,8 @@ import {MatPseudoCheckbox} from '@angular/material/core';
 /** @title Listbox with single selection and selection follows focus. */
 @Component({
   selector: 'listbox-single-select-follow-focus-example',
-  exportAs: 'ListboxSingleSelectFollowFocusExample',
   templateUrl: 'listbox-single-select-follow-focus-example.html',
-  styleUrl: '../listbox-configurable/listbox-configurable-example.css', // Reuse common styles
-  standalone: true,
+  styleUrl: '../listbox-configurable/listbox-configurable-example.css',
   imports: [Listbox, Option, MatPseudoCheckbox],
 })
 export class ListboxSingleSelectFollowFocusExample {
