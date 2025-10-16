@@ -19,8 +19,8 @@ type ExactlyOneKey<T, K extends keyof T = keyof T> = {
 /** Represents a directional change in the grid, either by row or by column. */
 type Delta = ExactlyOneKey<{row: -1 | 1; col: -1 | 1}>;
 
-/** */
-export const Direction: Record<'Up' | 'Down' | 'Left' | 'Right', Delta> = {
+/** Constants for the four cardinal directions. */
+export const direction: Record<'Up' | 'Down' | 'Left' | 'Right', Delta> = {
   Up: {row: -1},
   Down: {row: 1},
   Left: {col: -1},
@@ -67,13 +67,17 @@ export class GridNavigation<T extends GridNavigationCell> {
     return this.inputs.gridFocus.focusCoordinates(coords);
   }
 
-  /** */
+  /**
+   * Gets the coordinates of the next focusable cell in a given direction, without changing focus.
+   */
   peek(direction: Delta, fromCoords: RowCol): RowCol | undefined {
     const wrap = direction.row !== undefined ? this.inputs.rowWrap() : this.inputs.colWrap();
     return this._peekDirectional(direction, fromCoords, wrap);
   }
 
-  /** */
+  /**
+   * Navigates to the next focusable cell in a given direction.
+   */
   advance(direction: Delta): boolean {
     const nextCoords = this.peek(direction, this.inputs.gridFocus.activeCoords());
     return !!nextCoords && this.gotoCoords(nextCoords);
@@ -89,8 +93,8 @@ export class GridNavigation<T extends GridNavigationCell> {
       col: -1,
     };
     return row === undefined
-      ? this._peekDirectional(Direction.Right, fromCoords, 'continuous')
-      : this._peekDirectional(Direction.Right, fromCoords, 'nowrap');
+      ? this._peekDirectional(direction.Right, fromCoords, 'continuous')
+      : this._peekDirectional(direction.Right, fromCoords, 'nowrap');
   }
 
   /**
@@ -112,8 +116,8 @@ export class GridNavigation<T extends GridNavigationCell> {
       col: this.inputs.grid.maxColCount(),
     };
     return row === undefined
-      ? this._peekDirectional(Direction.Left, fromCoords, 'continuous')
-      : this._peekDirectional(Direction.Left, fromCoords, 'nowrap');
+      ? this._peekDirectional(direction.Left, fromCoords, 'continuous')
+      : this._peekDirectional(direction.Left, fromCoords, 'nowrap');
   }
 
   /**
@@ -138,7 +142,6 @@ export class GridNavigation<T extends GridNavigationCell> {
     const maxColCount = this.inputs.grid.maxColCount();
     const rowDelta = delta.row ?? 0;
     const colDelta = delta.col ?? 0;
-    const generalDelta = delta.row ?? delta.col;
     let nextCoords = {...fromCoords};
 
     for (let step = 0; step < this._maxSteps(); step++) {
@@ -151,6 +154,7 @@ export class GridNavigation<T extends GridNavigationCell> {
       if (wrap === 'nowrap' && isWrapping) return;
 
       if (wrap === 'continuous') {
+        const generalDelta = delta.row ?? delta.col;
         const rowStep = isWrapping ? generalDelta : rowDelta;
         const colStep = isWrapping ? generalDelta : colDelta;
 

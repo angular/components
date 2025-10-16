@@ -13,41 +13,41 @@ import {Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
 
-/** */
+/** Represents the required inputs for the grid pattern. */
 export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'cells'> {
-  /** */
+  /** The rows that make up the grid. */
   rows: SignalLike<GridRowPattern[]>;
 
-  /** */
+  /** A function that returns the grid cell associated with a given element. */
   getCell: (e: Element) => GridCellPattern | undefined;
 }
 
-/** */
+/** The UI pattern for a grid, handling keyboard navigation, focus, and selection. */
 export class GridPattern {
-  /** */
+  /** The underlying grid behavior that this pattern is built on. */
   readonly gridBehavior: Grid<GridCellPattern>;
 
-  /** */
+  /** The cells in the grid. */
   readonly cells = computed(() => this.gridBehavior.data.cells());
 
-  /** */
+  /** The tab index for the grid. */
   readonly tabIndex = computed(() => this.gridBehavior.gridTabIndex());
 
-  /** */
+  /** Whether the grid is disabled. */
   readonly disabled = computed(() => this.gridBehavior.gridDisabled());
 
-  /** */
+  /** The ID of the currently active descendant cell. */
   readonly activeDescendant = computed(() => this.gridBehavior.activeDescendant());
 
-  /** */
+  /** The currently active cell. */
   readonly activeCell = computed(() => this.gridBehavior.focusBehavior.activeCell());
 
-  /** */
+  /** Whether grid navigation is currently paused by a cell (e.g. an input field). */
   readonly pauseGridNavigation = computed(() =>
     this.gridBehavior.data.flattenCells().some(c => c.pauseGridNavigation()),
   );
 
-  /** */
+  /** Whether the user is currently dragging to select a range of cells. */
   readonly dragging = signal<boolean>(false);
 
   /** The keydown event manager for the grid. */
@@ -117,7 +117,7 @@ export class GridPattern {
     return manager;
   });
 
-  /** */
+  /** The pointerup event manager for the grid. */
   readonly pointerup = computed(() => {
     const manager = new PointerEventManager();
 
