@@ -17,6 +17,7 @@ import {
   OnDestroy,
   Output,
   Renderer2,
+  booleanAttribute,
 } from '@angular/core';
 import {OverlayRef} from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
@@ -66,6 +67,17 @@ export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentIn
   /** Data to be passed along to any lazily-rendered content. */
   @Input('matMenuTriggerData')
   override menuData: any;
+
+  /**
+   * Whether to inline the overlay, instead of using the global overlay container.
+   */
+  @Input({alias: 'matMenuTriggerOverlayInlined', transform: booleanAttribute})
+  get menuOverlayInlined(): boolean {
+    return this._menuOverlayInlined;
+  }
+  set menuOverlayInlined(menuOverlayInlined: boolean) {
+    this._menuOverlayInlined = menuOverlayInlined;
+  }
 
   /**
    * Whether focus should be restored when the menu is closed.
