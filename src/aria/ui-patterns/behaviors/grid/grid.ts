@@ -10,7 +10,12 @@ import {computed, linkedSignal} from '@angular/core';
 import {SignalLike} from '../signal-like/signal-like';
 import {GridData, BaseGridCell, GridDataInputs, RowCol} from './grid-data';
 import {GridFocus, GridFocusCell, GridFocusInputs} from './grid-focus';
-import {GridNavigation, GridNavigationCell, GridNavigationInputs} from './grid-navigation';
+import {
+  Direction,
+  GridNavigation,
+  GridNavigationCell,
+  GridNavigationInputs,
+} from './grid-navigation';
 import {GridSelectionCell, GridSelectionInputs, GridSelection} from './grid-selection';
 
 /** A type that represents a cell in a grid, combining all cell-related interfaces. */
@@ -86,12 +91,12 @@ export class Grid<T extends GridCell> {
 
   /** Navigates to the cell above the currently active cell. */
   up(): boolean {
-    return this.navigationBehavior.up();
+    return this.navigationBehavior.advance(Direction.Up);
   }
 
   /** Extends the selection to the cell above the selection anchor. */
   rangeSelectUp(): void {
-    const coords = this.navigationBehavior.peekUp(this.selectionAnchor());
+    const coords = this.navigationBehavior.peek(Direction.Up, this.selectionAnchor());
     if (coords === undefined) return;
 
     this._rangeSelectCoords(coords);
@@ -99,12 +104,12 @@ export class Grid<T extends GridCell> {
 
   /** Navigates to the cell below the currently active cell. */
   down(): boolean {
-    return this.navigationBehavior.down();
+    return this.navigationBehavior.advance(Direction.Down);
   }
 
   /** Extends the selection to the cell below the selection anchor. */
   rangeSelectDown(): void {
-    const coords = this.navigationBehavior.peekDown(this.selectionAnchor());
+    const coords = this.navigationBehavior.peek(Direction.Down, this.selectionAnchor());
     if (coords === undefined) return;
 
     this._rangeSelectCoords(coords);
@@ -112,12 +117,12 @@ export class Grid<T extends GridCell> {
 
   /** Navigates to the cell to the left of the currently active cell. */
   left(): boolean {
-    return this.navigationBehavior.left();
+    return this.navigationBehavior.advance(Direction.Left);
   }
 
   /** Extends the selection to the cell to the left of the selection anchor. */
   rangeSelectLeft(): void {
-    const coords = this.navigationBehavior.peekLeft(this.selectionAnchor());
+    const coords = this.navigationBehavior.peek(Direction.Left, this.selectionAnchor());
     if (coords === undefined) return;
 
     this._rangeSelectCoords(coords);
@@ -125,12 +130,12 @@ export class Grid<T extends GridCell> {
 
   /** Navigates to the cell to the right of the currently active cell. */
   right(): boolean {
-    return this.navigationBehavior.right();
+    return this.navigationBehavior.advance(Direction.Right);
   }
 
   /** Extends the selection to the cell to the right of the selection anchor. */
   rangeSelectRight(): void {
-    const coords = this.navigationBehavior.peekRight(this.selectionAnchor());
+    const coords = this.navigationBehavior.peek(Direction.Right, this.selectionAnchor());
     if (coords === undefined) return;
 
     this._rangeSelectCoords(coords);

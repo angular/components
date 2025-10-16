@@ -19,6 +19,14 @@ type ExactlyOneKey<T, K extends keyof T = keyof T> = {
 /** Represents a directional change in the grid, either by row or by column. */
 type Delta = ExactlyOneKey<{row: -1 | 1; col: -1 | 1}>;
 
+/** */
+export const Direction: Record<'Up' | 'Down' | 'Left' | 'Right', Delta> = {
+  Up: {row: -1},
+  Down: {row: 1},
+  Left: {col: -1},
+  Right: {col: 1},
+} as const;
+
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
 export interface GridNavigationCell extends GridFocusCell {}
 
@@ -59,47 +67,15 @@ export class GridNavigation<T extends GridNavigationCell> {
     return this.inputs.gridFocus.focusCoordinates(coords);
   }
 
-  /** Gets the coordinates of the cell above the given coordinates. */
-  peekUp(fromCoords: RowCol): RowCol | undefined {
-    return this._peekDirectional({row: -1}, fromCoords, this.inputs.rowWrap());
+  /** */
+  peek(direction: Delta, fromCoords: RowCol): RowCol | undefined {
+    const wrap = direction.row !== undefined ? this.inputs.rowWrap() : this.inputs.colWrap();
+    return this._peekDirectional(direction, fromCoords, wrap);
   }
 
-  /** Navigates to the item above the current item. */
-  up(): boolean {
-    const nextCoords = this.peekUp(this.inputs.gridFocus.activeCoords());
-    return !!nextCoords && this.gotoCoords(nextCoords);
-  }
-
-  /** Gets the coordinates of the cell below the given coordinates. */
-  peekDown(fromCoords: RowCol): RowCol | undefined {
-    return this._peekDirectional({row: 1}, fromCoords, this.inputs.rowWrap());
-  }
-
-  /** Navigates to the item below the current item. */
-  down(): boolean {
-    const nextCoords = this.peekDown(this.inputs.gridFocus.activeCoords());
-    return !!nextCoords && this.gotoCoords(nextCoords);
-  }
-
-  /** Gets the coordinates of the cell to the left of the given coordinates. */
-  peekLeft(fromCoords: RowCol): RowCol | undefined {
-    return this._peekDirectional({col: -1}, fromCoords, this.inputs.colWrap());
-  }
-
-  /** Navigates to the item to the left of the current item. */
-  left(): boolean {
-    const nextCoords = this.peekLeft(this.inputs.gridFocus.activeCoords());
-    return !!nextCoords && this.gotoCoords(nextCoords);
-  }
-
-  /** Gets the coordinates of the cell to the right of the given coordinates. */
-  peekRight(fromCoords: RowCol): RowCol | undefined {
-    return this._peekDirectional({col: 1}, fromCoords, this.inputs.colWrap());
-  }
-
-  /** Navigates to the item to the right of the current item. */
-  right(): boolean {
-    const nextCoords = this.peekRight(this.inputs.gridFocus.activeCoords());
+  /** */
+  advance(direction: Delta): boolean {
+    const nextCoords = this.peek(direction, this.inputs.gridFocus.activeCoords());
     return !!nextCoords && this.gotoCoords(nextCoords);
   }
 
@@ -108,14 +84,13 @@ export class GridNavigation<T extends GridNavigationCell> {
    * If a row is not provided, searches the entire grid.
    */
   peekFirst(row?: number): RowCol | undefined {
-    const delta: Delta = {col: 1};
-    const startCoords = {
+    const fromCoords = {
       row: row ?? 0,
       col: -1,
     };
     return row === undefined
-      ? this._peekContinuous(delta, startCoords)
-      : this._peek(delta, startCoords);
+      ? this._peekDirectional(Direction.Right, fromCoords, 'continuous')
+      : this._peekDirectional(Direction.Right, fromCoords, 'nowrap');
   }
 
   /**
@@ -132,14 +107,13 @@ export class GridNavigation<T extends GridNavigationCell> {
    * If a row is not provided, searches the entire grid.
    */
   peekLast(row?: number): RowCol | undefined {
-    const delta: Delta = {col: -1};
-    const startCoords = {
+    const fromCoords = {
       row: row ?? this.inputs.grid.maxRowCount() - 1,
       col: this.inputs.grid.maxColCount(),
     };
     return row === undefined
-      ? this._peekContinuous(delta, startCoords)
-      : this._peek(delta, startCoords);
+      ? this._peekDirectional(Direction.Left, fromCoords, 'continuous')
+      : this._peekDirectional(Direction.Left, fromCoords, 'nowrap');
   }
 
   /**
@@ -152,130 +126,6 @@ export class GridNavigation<T extends GridNavigationCell> {
   }
 
   /**
-   * Finds the next focusable cell in a given direction, with continuous wrapping.
-   * This means that when the end of a row/column is reached, it wraps to the
-   * beginning of the next/previous row/column.
-   */
-  private _peekContinuous(delta: Delta, startCoords: RowCol): RowCol | undefined {
-    const startCell = this.inputs.grid.getCell(startCoords);
-    const maxRowCount = this.inputs.grid.maxRowCount();
-    const maxColCount = this.inputs.grid.maxColCount();
-    const rowDelta = delta.row ?? 0;
-    const colDelta = delta.col ?? 0;
-    const generalDelta = delta.row ?? delta.col;
-    let nextCoords = {...startCoords};
-
-    for (let step = 0; step < this._maxSteps(); step++) {
-      const isWrapping =
-        nextCoords.col + colDelta < 0 ||
-        nextCoords.col + colDelta >= maxColCount ||
-        nextCoords.row + rowDelta < 0 ||
-        nextCoords.row + rowDelta >= maxRowCount;
-      const rowStep = isWrapping ? generalDelta : rowDelta;
-      const colStep = isWrapping ? generalDelta : colDelta;
-
-      nextCoords = {
-        row: (nextCoords.row + rowStep + maxRowCount) % maxRowCount,
-        col: (nextCoords.col + colStep + maxColCount) % maxColCount,
-      };
-
-      // Back to original coordinates.
-      if (nextCoords.row === startCoords.row && nextCoords.col === startCoords.col) {
-        return undefined;
-      }
-
-      const nextCell = this.inputs.grid.getCell(nextCoords);
-      if (
-        nextCell !== undefined &&
-        nextCell !== startCell &&
-        this.inputs.gridFocus.isFocusable(nextCell)
-      ) {
-        return nextCoords;
-      }
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Finds the next focusable cell in a given direction, with loop wrapping.
-   * This means that when the end of a row/column is reached, it wraps to the
-   * beginning of the same row/column.
-   */
-  private _peekLoop(delta: Delta, startCoords: RowCol): RowCol | undefined {
-    const startCell = this.inputs.grid.getCell(startCoords);
-    const maxRowCount = this.inputs.grid.maxRowCount();
-    const maxColCount = this.inputs.grid.maxColCount();
-    const rowDelta = delta.row ?? 0;
-    const colDelta = delta.col ?? 0;
-    let nextCoords = {...startCoords};
-
-    for (let step = 0; step < this._maxSteps(); step++) {
-      nextCoords = {
-        row: (nextCoords.row + rowDelta + maxRowCount) % maxRowCount,
-        col: (nextCoords.col + colDelta + maxColCount) % maxColCount,
-      };
-
-      // Back to original coordinates.
-      if (nextCoords.row === startCoords.row && nextCoords.col === startCoords.col) {
-        return undefined;
-      }
-
-      const nextCell = this.inputs.grid.getCell(nextCoords);
-      if (
-        nextCell !== undefined &&
-        nextCell !== startCell &&
-        this.inputs.gridFocus.isFocusable(nextCell)
-      ) {
-        return nextCoords;
-      }
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Finds the next focusable cell in a given direction, without wrapping.
-   * This means that when the end of a row/column is reached, it stops.
-   */
-  private _peek(delta: Delta, startCoords: RowCol): RowCol | undefined {
-    const startCell = this.inputs.grid.getCell(startCoords);
-    const maxRowCount = this.inputs.grid.maxRowCount();
-    const maxColCount = this.inputs.grid.maxColCount();
-    const rowDelta = delta.row ?? 0;
-    const colDelta = delta.col ?? 0;
-    let nextCoords = {...startCoords};
-
-    for (let step = 0; step < this._maxSteps(); step++) {
-      nextCoords = {
-        row: nextCoords.row + rowDelta,
-        col: nextCoords.col + colDelta,
-      };
-
-      // Out of boundary.
-      if (
-        nextCoords.row < 0 ||
-        nextCoords.row >= maxRowCount ||
-        nextCoords.col < 0 ||
-        nextCoords.col >= maxColCount
-      ) {
-        return undefined;
-      }
-
-      const nextCell = this.inputs.grid.getCell(nextCoords);
-      if (
-        nextCell !== undefined &&
-        nextCell !== startCell &&
-        this.inputs.gridFocus.isFocusable(nextCell)
-      ) {
-        return nextCoords;
-      }
-    }
-
-    return undefined;
-  }
-
-  /**
    * Finds the next focusable cell in a given direction based on the wrapping behavior.
    */
   private _peekDirectional(
@@ -283,13 +133,55 @@ export class GridNavigation<T extends GridNavigationCell> {
     fromCoords: RowCol,
     wrap: 'continuous' | 'loop' | 'nowrap',
   ): RowCol | undefined {
-    switch (wrap) {
-      case 'nowrap':
-        return this._peek(delta, fromCoords);
-      case 'loop':
-        return this._peekLoop(delta, fromCoords);
-      case 'continuous':
-        return this._peekContinuous(delta, fromCoords);
+    const fromCell = this.inputs.grid.getCell(fromCoords);
+    const maxRowCount = this.inputs.grid.maxRowCount();
+    const maxColCount = this.inputs.grid.maxColCount();
+    const rowDelta = delta.row ?? 0;
+    const colDelta = delta.col ?? 0;
+    const generalDelta = delta.row ?? delta.col;
+    let nextCoords = {...fromCoords};
+
+    for (let step = 0; step < this._maxSteps(); step++) {
+      const isWrapping =
+        nextCoords.col + colDelta < 0 ||
+        nextCoords.col + colDelta >= maxColCount ||
+        nextCoords.row + rowDelta < 0 ||
+        nextCoords.row + rowDelta >= maxRowCount;
+
+      if (wrap === 'nowrap' && isWrapping) return;
+
+      if (wrap === 'continuous') {
+        const rowStep = isWrapping ? generalDelta : rowDelta;
+        const colStep = isWrapping ? generalDelta : colDelta;
+
+        nextCoords = {
+          row: (nextCoords.row + rowStep + maxRowCount) % maxRowCount,
+          col: (nextCoords.col + colStep + maxColCount) % maxColCount,
+        };
+      }
+
+      if (wrap === 'loop') {
+        nextCoords = {
+          row: (nextCoords.row + rowDelta + maxRowCount) % maxRowCount,
+          col: (nextCoords.col + colDelta + maxColCount) % maxColCount,
+        };
+      }
+
+      // Back to original coordinates.
+      if (nextCoords.row === fromCoords.row && nextCoords.col === fromCoords.col) {
+        return undefined;
+      }
+
+      const nextCell = this.inputs.grid.getCell(nextCoords);
+      if (
+        nextCell !== undefined &&
+        nextCell !== fromCell &&
+        this.inputs.gridFocus.isFocusable(nextCell)
+      ) {
+        return nextCoords;
+      }
     }
+
+    return undefined;
   }
 }
