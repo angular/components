@@ -225,6 +225,12 @@ export class MatAutocompleteTrigger
   @Input('matAutocompletePosition') position: 'auto' | 'above' | 'below' = 'auto';
 
   /**
+   * Whether to inline the overlay, instead of using the global overlay container.
+   */
+  @Input({alias: 'matAutocompleteOverlayInlined', transform: booleanAttribute})
+  overlayInlined: boolean;
+
+  /**
    * Reference relative to which to position the autocomplete panel.
    * Defaults to the autocomplete trigger element.
    */
@@ -894,6 +900,7 @@ export class MatAutocompleteTrigger
       backdropClass: this._defaults?.backdropClass || 'cdk-overlay-transparent-backdrop',
       panelClass: this._overlayPanelClass,
       disableAnimations: this._animationsDisabled,
+      insertOverlayAfter: this.overlayInlined ? this._getConnectedElement() : undefined,
     });
   }
 
