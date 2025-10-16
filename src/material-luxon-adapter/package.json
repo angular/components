@@ -14,7 +14,7 @@
   "peerDependencies": {
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
-    "luxon": "^3.0.0"
+    "luxon": "^3.7.2"
   },
   "devDependencies": {
     "@angular/material": "workspace:*"

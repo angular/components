@@ -47,7 +47,7 @@
     "@angular/ssr": "catalog:",
     "@angular/youtube-player": "workspace:*",
     "@stackblitz/sdk": "^1.11.0",
-    "luxon": "^3.0.0",
+    "luxon": "^3.7.2",
     "path-normalize": "^7.0.0",
     "rxjs": "catalog:",
     "tslib": "^2.3.0",
