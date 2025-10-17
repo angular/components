@@ -625,6 +625,27 @@ describe('MatMdcInput without forms', () => {
     expect(input.getAttribute('aria-describedby')).toBe(`initial ${hintId}`);
   }));
 
+  it('should show outline label correctly based on initial condition to false', fakeAsync(() => {
+    const fixture = TestBed.createComponent(MatInputOutlineWithConditionalLabel);
+    fixture.detectChanges();
+    tick(16);
+
+    const notchedOutline: HTMLElement = fixture.debugElement.query(
+      By.css('.mdc-notched-outline'),
+    ).nativeElement;
+
+    expect(notchedOutline.classList).toContain('mdc-notched-outline--no-label');
+    expect(notchedOutline.classList).not.toContain('mdc-notched-outline--upgraded');
+
+    fixture.componentInstance.showLabel = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(16);
+
+    expect(notchedOutline.classList).not.toContain('mdc-notched-outline--no-label');
+    expect(notchedOutline.classList).toContain('mdc-notched-outline--upgraded');
+  }));
+
   it('supports user binding to aria-describedby', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatInputWithSubscriptAndAriaDescribedBy);
 
@@ -2168,6 +2189,22 @@ class MatInputWithLabelAndPlaceholder {
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
   appearance: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <mat-form-field appearance="outline">
+    @if(showLabel) {
+      <mat-label>My Label</mat-label>
+    }
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  `,
+  imports: [MatInputModule],
+})
+class MatInputOutlineWithConditionalLabel {
+  @ViewChild(MatFormField) formField: MatFormField;
+  showLabel: boolean = false;
 }
 
 @Component({
