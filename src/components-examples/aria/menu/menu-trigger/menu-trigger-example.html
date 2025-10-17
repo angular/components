@@ -1,0 +1,63 @@
+<button
+  ngMenuTrigger
+  [submenu]="formatMenu"
+  aria-label="Open menu"
+  #trigger="ngMenuTrigger"
+  class="example-menu-trigger"
+>
+  <span aria-hidden="true" class="material-symbols-outlined">more_vert</span>
+</button>
+
+<div menu [parent]="trigger" #formatMenu="ngMenu">
+  <div menu-item value="Mark as read">
+    <span menu-item-icon>mark_email_read</span>
+    <span menu-item-text>Mark as read</span>
+  </div>
+
+  <div menu-item value="Snooze">
+    <span menu-item-icon>snooze</span>
+    <span menu-item-text>Snooze</span>
+  </div>
+
+  <div role="separator" aria-orientation="horizontal" class="example-menu-item-separator"></div>
+
+  <div menu-item value="Categorize" #categorizeItem="ngMenuItem" [submenu]=" categorizeMenu">
+    <span menu-item-icon>category</span>
+    <span menu-item-text>Categorize</span>
+    <span menu-item-icon class="example-arrow">arrow_right</span>
+  </div>
+
+  <div menu [parent]="categorizeItem" #categorizeMenu="ngMenu">
+    <div menu-item value="Mark as important">
+      <span menu-item-icon>label_important</span>
+      <span menu-item-text>Mark as important</span>
+    </div>
+
+    <div menu-item value="Star">
+      <span menu-item-icon>star</span>
+      <span menu-item-text>Star</span>
+    </div>
+
+    <div menu-item value="Label">
+      <span menu-item-icon>label</span>
+      <span menu-item-text>Label</span>
+    </div>
+  </div>
+
+  <div role="separator" aria-orientation="horizontal" class="example-menu-item-separator"></div>
+
+  <div menu-item value="Archive">
+    <span menu-item-icon>archive</span>
+    <span menu-item-text>Archive</span>
+  </div>
+
+  <div menu-item value="Report spam">
+    <span menu-item-icon>report</span>
+    <span menu-item-text>Report spam</span>
+  </div>
+
+  <div menu-item value="Delete">
+    <span menu-item-icon>delete</span>
+    <span menu-item-text>Delete</span>
+  </div>
+</div>

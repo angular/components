@@ -72,7 +72,7 @@ export class ListboxPattern<V> {
   dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
 
   /** The regexp used to decide if a key should trigger typeahead. */
-  typeaheadRegexp = /^.$/; // TODO: Ignore spaces?
+  typeaheadRegexp = /^.$/;
 
   /** The keydown event manager for the listbox. */
   keydown = computed(() => {
