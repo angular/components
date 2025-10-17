@@ -1,0 +1,38 @@
+<div class="example-grid-controls">
+  <mat-checkbox [formControl]="sort">Sort Alphabetically</mat-checkbox>
+</div>
+
+<div class="example-pill-list-container">
+  <div ngGrid class="example-pill-list" colWrap="continuous" #grid="ngGrid">
+    @for (item of sortedItems(); track item; let i = $index) {
+      <div ngGridRow class="example-pill">
+        <div ngGridCell class="example-pill-label example-stateful example-grid-cell">
+          {{item.label}}
+        </div>
+        <div ngGridCell class="example-pill-action example-stateful example-grid-cell">
+          <button ngGridCellWidget class="example-pill-button" (click)="removeItem(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+    <div ngGridRow>
+      <div ngGridCell class="example-stateful example-grid-cell" [colSpan]="2">
+        <input
+          ngGridCellWidget
+          [pauseGridNavigation]="inputEl.value.length > 0"
+          name="pill-input"
+          class="example-pill-input"
+          (keyup.enter)="addItem($event)"
+          placeholder="New animal"
+          #inputEl
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="example-pill-list-notes">
+  <li>Grid navigation paused when input is not empty.</li>
+  <li>Navigation is currently: {{grid.pattern.pauseGridNavigation() ? 'Off' : 'On'}}</li>
+</ul>

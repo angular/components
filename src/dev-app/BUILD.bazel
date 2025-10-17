@@ -27,6 +27,7 @@ ng_project(
         "//src/cdk/overlay",
         "//src/dev-app/aria-accordion",
         "//src/dev-app/aria-combobox",
+        "//src/dev-app/aria-grid",
         "//src/dev-app/aria-listbox",
         "//src/dev-app/aria-menu",
         "//src/dev-app/aria-radio-group",

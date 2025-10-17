@@ -64,6 +64,7 @@ export class DevAppLayout {
     {name: 'CDK Dialog', route: '/cdk-dialog'},
     {name: 'Aria Accordion', route: '/aria-accordion'},
     {name: 'Aria Combobox', route: '/aria-combobox'},
+    {name: 'Aria Grid', route: '/aria-grid'},
     {name: 'Aria Listbox', route: '/aria-listbox'},
     {name: 'Aria Menu', route: '/aria-menu'},
     {name: 'Aria Radio Group', route: '/aria-radio-group'},

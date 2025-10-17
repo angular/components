@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-grid",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "grid-demo.html",
+        "grid-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/aria/grid",
+    ],
+)
