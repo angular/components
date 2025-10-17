@@ -213,8 +213,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.10
       firebase-tools:
-        specifier: 14.19.1
-        version: 14.19.1(@types/node@22.18.8)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.20.0
+        version: 14.20.0(@types/node@22.18.8)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -433,8 +433,8 @@ importers:
         specifier: ^1.12.1
         version: 1.26.0
       '@types/jasmine':
-        specifier: 5.1.9
-        version: 5.1.9
+        specifier: 5.1.11
+        version: 5.1.11
       '@types/node':
         specifier: ^22.14.1
         version: 22.18.8
@@ -5422,8 +5422,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.19.1:
-    resolution: {integrity: sha512-ZUmmlH9n8Ny+d4Dzzo59usCqTe5vVGbyeyXg6Zp0gsut5oa56jJY0Eyod5UZ2RTkdO/vEfhYwzE0dYFhhkGOuQ==}
+  firebase-tools@14.20.0:
+    resolution: {integrity: sha512-8zduD1/tpm8tEf4V6dOdveLHVttPUdnubZeZksdvRcetJuffNuU+Ugr4/JsObhxJP0n0Npb2MvPMHln6xKHMXw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -15360,7 +15360,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@14.19.1(@types/node@22.18.8)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@14.20.0(@types/node@22.18.8)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.6(@types/node@22.18.8)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -15368,8 +15368,8 @@ snapshots:
       '@electric-sql/pglite-tools': 0.2.15(@electric-sql/pglite@0.3.10)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.8.6(@types/node@22.18.8)
-      '@modelcontextprotocol/sdk': 1.19.1
+      '@inquirer/prompts': 7.9.0(@types/node@22.18.8)
+      '@modelcontextprotocol/sdk': 1.20.0
       abort-controller: 3.0.0
       ajv: 8.17.1
       ajv-formats: 3.0.1
