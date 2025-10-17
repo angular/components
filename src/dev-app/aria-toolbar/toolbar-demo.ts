@@ -7,11 +7,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {ToolbarBasicHorizontalExample} from '@angular/components-examples/aria/toolbar';
 import {ToolbarConfigurableExample} from '@angular/components-examples/aria/toolbar';
 
 @Component({
   templateUrl: 'toolbar-demo.html',
-  imports: [ToolbarConfigurableExample],
+  imports: [ToolbarBasicHorizontalExample, ToolbarConfigurableExample],
   styleUrl: './toolbar-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
