@@ -97,6 +97,7 @@ export class MenuTrigger<V> {
     '[attr.data-visible]': 'uiPattern.isVisible()',
     '(keydown)': 'uiPattern.onKeydown($event)',
     '(mouseover)': 'uiPattern.onMouseOver($event)',
+    '(mouseout)': 'uiPattern.onMouseOut($event)',
     '(focusout)': 'uiPattern.onFocusOut($event)',
     '(focusin)': 'uiPattern.onFocusIn()',
     '(click)': 'uiPattern.onClick($event)',
@@ -130,9 +131,6 @@ export class Menu<V> {
 
   /** The unique ID of the menu. */
   readonly id = input<string>(Math.random().toString(36).substring(2, 10));
-
-  /** The value of the menu. */
-  readonly value = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input<boolean>(true);
