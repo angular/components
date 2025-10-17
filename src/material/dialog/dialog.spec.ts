@@ -1017,8 +1017,15 @@ describe('MatDialog', () => {
     it('should determine whether closing via the backdrop is allowed', fakeAsync(() => {
       let canClose = false;
       const closedSpy = jasmine.createSpy('closed spy');
-      const ref = dialog.open(PizzaMsg, {
-        closePredicate: () => canClose,
+      const ref = dialog.open<PizzaMsg, PizzaData, PizzaResult>(PizzaMsg, {
+        data: {myData: 'my data'},
+        closePredicate: (result, config, componentInstance) => {
+            expect(result?.myResult).toBe('');
+            expect(config.data).toBe({myData: 'my data'});
+            expect(componentInstance?.dialogRef).toBeInstanceOf(MatDialogRef);
+
+            return canClose;
+        },
         viewContainerRef: testViewContainerRef,
       });
 
@@ -2302,12 +2309,20 @@ class ComponentWithTemplateRef {
   }
 }
 
+type PizzaData = {
+    myData?: string;
+}
+
+type PizzaResult = {
+    myResult: string;
+}
+
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
 })
 class PizzaMsg {
-  dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
+  dialogRef = inject<MatDialogRef<PizzaMsg, PizzaResult>>(MatDialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);
 }
