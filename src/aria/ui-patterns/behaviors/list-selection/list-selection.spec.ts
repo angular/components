@@ -13,6 +13,7 @@ import {ListFocus} from '../list-focus/list-focus';
 
 type TestItem = ListSelectionItem<number> & {
   disabled: WritableSignal<boolean>;
+  selectable: WritableSignal<boolean>;
 };
 type TestInputs = Partial<ListSelectionInputs<TestItem, number>> & {
   numItems?: number;
@@ -40,6 +41,7 @@ function getItems(length: number): Signal<TestItem[]> {
         value: signal(i),
         id: signal(`${i}`),
         disabled: signal(false),
+        selectable: signal(true),
         element: signal({focus: () => {}} as HTMLElement),
         index: signal(i),
       };
@@ -83,6 +85,14 @@ describe('List Selection', () => {
       expect(selection.inputs.value()).toEqual([]);
     });
 
+    it('should not select non-selectable items', () => {
+      const selection = getSelection();
+      const items = selection.inputs.items() as TestItem[];
+      items[0].selectable.set(false);
+      selection.select(); // []
+      expect(selection.inputs.value()).toEqual([]);
+    });
+
     it('should do nothing to already selected items', () => {
       const selection = getSelection();
       selection.select(); // [0]
@@ -106,6 +116,15 @@ describe('List Selection', () => {
       selection.deselect(); // [0]
       expect(selection.inputs.value()).toEqual([0]);
     });
+
+    it('should not deselect non-selectable items', () => {
+      const selection = getSelection();
+      const items = selection.inputs.items() as TestItem[];
+      selection.select(); // [0]
+      items[0].selectable.set(false);
+      selection.deselect(); // [0]
+      expect(selection.inputs.value()).toEqual([0]);
+    });
   });
 
   describe('#toggle', () => {
@@ -120,6 +139,14 @@ describe('List Selection', () => {
       selection.select(); // [0]
       selection.toggle(); // []
       expect(selection.inputs.value().length).toBe(0);
+    });
+
+    it('should not toggle non-selectable items', () => {
+      const selection = getSelection();
+      const items = selection.inputs.items() as TestItem[];
+      items[0].selectable.set(false);
+      selection.toggle(); // []
+      expect(selection.inputs.value()).toEqual([]);
     });
   });
 
@@ -145,6 +172,14 @@ describe('List Selection', () => {
       selection.toggleOne(); // [1]
       expect(selection.inputs.value()).toEqual([1]);
     });
+
+    it('should not toggle non-selectable items', () => {
+      const selection = getSelection();
+      const items = selection.inputs.items() as TestItem[];
+      items[0].selectable.set(false);
+      selection.toggleOne(); // []
+      expect(selection.inputs.value()).toEqual([]);
+    });
   });
 
   describe('#selectAll', () => {
@@ -158,6 +193,14 @@ describe('List Selection', () => {
       const selection = getSelection({multi: signal(false)});
       selection.selectAll();
       expect(selection.inputs.value()).toEqual([]);
+    });
+
+    it('should not select non-selectable items', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      items[1].selectable.set(false);
+      selection.selectAll();
+      expect(selection.inputs.value()).toEqual([0, 2, 3, 4]);
     });
   });
 
@@ -174,6 +217,15 @@ describe('List Selection', () => {
       selection.inputs.value.update(() => [5]);
       selection.deselectAll();
       expect(selection.inputs.value().length).toBe(0);
+    });
+
+    it('should not deselect non-selectable items', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      selection.selectAll(); // [0, 1, 2, 3, 4]
+      items[1].selectable.set(false);
+      selection.deselectAll(); // [1]
+      expect(selection.inputs.value()).toEqual([1]);
     });
   });
 
@@ -200,6 +252,16 @@ describe('List Selection', () => {
       selection.toggleAll();
       expect(selection.inputs.value()).toEqual([]);
     });
+
+    it('should ignore non-selectable items when determining if all items are selected', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      items[0].selectable.set(false);
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([1, 2, 3, 4]);
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([]);
+    });
   });
 
   describe('#selectOne', () => {
@@ -218,6 +280,14 @@ describe('List Selection', () => {
       items[0].disabled.set(true);
 
       selection.select(); // []
+      expect(selection.inputs.value()).toEqual([]);
+    });
+
+    it('should not select non-selectable items', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      items[0].selectable.set(false);
+      selection.selectOne(); // []
       expect(selection.inputs.value()).toEqual([]);
     });
 
@@ -313,6 +383,16 @@ describe('List Selection', () => {
       expect(selection.inputs.value()).toEqual([0, 2]);
     });
 
+    it('should not select a non-selectable item', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      items[1].selectable.set(false);
+      selection.select(); // [0]
+      selection.inputs.focusManager.focus(items[2]);
+      selection.selectRange(); // [0, 2]
+      expect(selection.inputs.value()).toEqual([0, 2]);
+    });
+
     it('should not deselect a disabled item', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
@@ -327,6 +407,21 @@ describe('List Selection', () => {
       selection.selectRange(); // [0, 1, 2]
       expect(selection.inputs.value()).toEqual([1, 0, 2]);
 
+      selection.inputs.focusManager.focus(items[0]);
+      selection.selectRange(); // [0, 1]
+      expect(selection.inputs.value()).toEqual([1, 0]);
+    });
+
+    it('should not deselect a non-selectable item', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+      selection.select(items[1]); // [1]
+      items[1].selectable.set(false);
+      selection.select(); // [0, 1]
+      expect(selection.inputs.value()).toEqual([1, 0]);
+      selection.inputs.focusManager.focus(items[2]);
+      selection.selectRange(); // [0, 1, 2]
+      expect(selection.inputs.value()).toEqual([1, 0, 2]);
       selection.inputs.focusManager.focus(items[0]);
       selection.selectRange(); // [0, 1]
       expect(selection.inputs.value()).toEqual([1, 0]);

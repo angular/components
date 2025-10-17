@@ -245,6 +245,9 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   /** Whether the tree item is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the tree item is selectable. */
+  readonly selectable = input<boolean>(true);
+
   /** Optional label for typeahead. Defaults to the element's textContent. */
   readonly label = input<string>();
 

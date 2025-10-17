@@ -13,7 +13,7 @@ import type {ToolbarPattern} from './toolbar';
 
 /** Represents the required inputs for a toolbar widget in a toolbar. */
 export interface ToolbarWidgetInputs<V>
-  extends Omit<ListItem<V>, 'searchTerm' | 'value' | 'index'> {
+  extends Omit<ListItem<V>, 'searchTerm' | 'value' | 'index' | 'selectable'> {
   /** A reference to the parent toolbar. */
   toolbar: SignalLike<ToolbarPattern<V>>;
 }
@@ -39,6 +39,9 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
 
   /** The value associated with the widget. */
   readonly value = () => '' as V; // Unused because toolbar does not support selection.
+
+  /** Whether the widget is selectable. */
+  readonly selectable = () => true; // Unused because toolbar does not support selection.
 
   /** The position of the widget within the toolbar. */
   readonly index = computed(() => this.toolbar().inputs.items().indexOf(this) ?? -1);

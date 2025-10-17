@@ -14,6 +14,9 @@ import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focu
 export interface ListSelectionItem<V> extends ListFocusItem {
   /** The value of the item. */
   value: SignalLike<V>;
+
+  /** Whether the item is selectable. */
+  selectable: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a collection that contains selectable items. */
@@ -47,7 +50,12 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   select(item?: ListSelectionItem<V>, opts = {anchor: true}) {
     item = item ?? (this.inputs.focusManager.inputs.activeItem() as ListSelectionItem<V>);
 
-    if (!item || item.disabled() || this.inputs.value().includes(item.value())) {
+    if (
+      !item ||
+      item.disabled() ||
+      !item.selectable() ||
+      this.inputs.value().includes(item.value())
+    ) {
       return;
     }
 
@@ -66,7 +74,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   deselect(item?: T | null) {
     item = item ?? this.inputs.focusManager.inputs.activeItem();
 
-    if (item && !item.disabled()) {
+    if (item && !item.disabled() && item.selectable()) {
       this.inputs.value.update(values => values.filter(value => value !== item.value()));
     }
   }
@@ -131,7 +139,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   toggleAll() {
     const selectableValues = this.inputs
       .items()
-      .filter(i => !i.disabled())
+      .filter(i => !i.disabled() && i.selectable())
       .map(i => i.value());
 
     selectableValues.every(i => this.inputs.value().includes(i))
@@ -142,7 +150,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   /** Sets the selection to only the current active item. */
   selectOne() {
     const item = this.inputs.focusManager.inputs.activeItem();
-    if (item && item.disabled()) {
+    if (item && (item.disabled() || !item.selectable())) {
       return;
     }
 

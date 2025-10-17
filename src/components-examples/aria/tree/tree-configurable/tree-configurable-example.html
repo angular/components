@@ -53,6 +53,7 @@
     [value]="node.value"
     [label]="node.name"
     [disabled]="node.disabled"
+    [selectable]="!nav.value || !node.children"
     #treeItem="ngTreeItem"
     class="example-tree-item example-selectable example-stateful"
   >

@@ -191,6 +191,7 @@ function getTreePattern(
         value: signal(node.value),
         id: signal('tree-item-' + tree.allItems().length),
         disabled: signal(false),
+        selectable: signal(true),
         searchTerm: signal(node.value),
         tree: signal(tree),
         parent: signal(parent),
