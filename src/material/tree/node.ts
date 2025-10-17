@@ -26,7 +26,7 @@ import {
 import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
 
 /**
- * Determinte if argument TreeKeyManager is the NoopTreeKeyManager. This function is safe to use with SSR.
+ * Determine if argument TreeKeyManager is the NoopTreeKeyManager. This function is safe to use with SSR.
  */
 function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
   keyManager: TreeKeyManagerStrategy<T>,

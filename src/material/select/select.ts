@@ -62,6 +62,7 @@ import {
   Renderer2,
   Injector,
   signal,
+  DestroyRef,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -85,13 +86,14 @@ import {
 } from '../core';
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '../form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
   getMatSelectNonFunctionValueError,
 } from './select-errors';
 import {NgClass} from '@angular/common';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -198,6 +200,7 @@ export class MatSelect
     ControlValueAccessor,
     MatFormFieldControl<any>
 {
+  protected readonly _destroyRef = inject(DestroyRef);
   protected _viewportRuler = inject(ViewportRuler);
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   readonly _elementRef = inject(ElementRef);
@@ -313,9 +316,6 @@ export class MatSelect
    * Used to detect if it has changed.
    */
   private _previousControl: AbstractControl | null | undefined;
-
-  /** Emits whenever the component is destroyed. */
-  protected readonly _destroy = new Subject<void>();
 
   /** Tracks the error state of the select. */
   private _errorStateTracker: _ErrorStateTracker;
@@ -633,7 +633,7 @@ export class MatSelect
     this.stateChanges.next();
     this._viewportRuler
       .change()
-      .pipe(takeUntil(this._destroy))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {
         if (this.panelOpen) {
           this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
@@ -648,15 +648,17 @@ export class MatSelect
 
     this._initKeyManager();
 
-    this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
+    this._selectionModel.changed.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(event => {
       event.added.forEach(option => option.select());
       event.removed.forEach(option => option.deselect());
     });
 
-    this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
-      this._resetOptions();
-      this._initializeSelection();
-    });
+    this.options.changes
+      .pipe(startWith(null), takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._resetOptions();
+        this._initializeSelection();
+      });
   }
 
   ngDoCheck() {
@@ -709,8 +711,6 @@ export class MatSelect
   ngOnDestroy() {
     this._cleanupDetach?.();
     this._keyManager?.destroy();
-    this._destroy.next();
-    this._destroy.complete();
     this.stateChanges.complete();
     this._clearFromModal();
   }
@@ -1267,9 +1267,8 @@ export class MatSelect
 
   /** Drops current option subscriptions and IDs and resets from scratch. */
   private _resetOptions(): void {
-    const changedOrDestroyed = merge(this.options.changes, this._destroy);
-
-    this.optionSelectionChanges.pipe(takeUntil(changedOrDestroyed)).subscribe(event => {
+    // Subscribe to selection changes
+    this.optionSelectionChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(event => {
       this._onSelect(event.source, event.isUserInput);
 
       if (event.isUserInput && !this.multiple && this._panelOpen) {
@@ -1278,14 +1277,10 @@ export class MatSelect
       }
     });
 
-    // Listen to changes in the internal state of the options and react accordingly.
-    // Handles cases like the labels of the selected options changing.
+    // Subscribe to internal state changes of each option
     merge(...this.options.map(option => option._stateChanges))
-      .pipe(takeUntil(changedOrDestroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {
-        // `_stateChanges` can fire as a result of a change in the label's DOM value which may
-        // be the result of an expression changing. We have to use `detectChanges` in order
-        // to avoid "changed after checked" errors (see #14793).
         this._changeDetectorRef.detectChanges();
         this.stateChanges.next();
       });
