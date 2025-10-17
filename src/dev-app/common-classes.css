@@ -60,8 +60,8 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-[aria-disabled='true']:focus-within,
-[aria-activedescendant]:focus-within {
+.example-listbox[aria-disabled='true']:focus-within,
+.example-listbox[aria-activedescendant]:focus-within {
   outline: var(--mat-sys-primary) solid 1px;
 }
 
