@@ -65,7 +65,7 @@
     "@types/google.maps": "^3.54.10",
     "@types/youtube": "0.1.2",
     "date-fns": "^4.1.0",
-    "luxon": "^3.0.0",
+    "luxon": "^3.7.2",
     "moment": "^2.29.1",
     "rxjs": "catalog:",
     "rxjs-tslint-rules": "^4.34.8",
