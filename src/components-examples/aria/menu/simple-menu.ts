@@ -29,15 +29,21 @@ export class SimpleMenu {
     const parentEl = parent.element;
     const parentRect = parentEl.getBoundingClientRect();
 
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    const top = parentRect.y + scrollY - 5;
+    const bottom = parentRect.y + scrollY + parentRect.height + 6;
+
     if (parent.parent instanceof MenuBar) {
-      this.menu.element.style.left = `${parentRect.left}px`;
-      this.menu.element.style.top = `${parentRect.bottom + 6}px`;
+      this.menu.element.style.left = `${parentRect.left + scrollX}px`;
+      this.menu.element.style.top = `${bottom}px`;
     } else if (parent instanceof MenuTrigger) {
-      this.menu.element.style.left = `${parentRect.left}px`;
-      this.menu.element.style.top = `${parentRect.bottom + 2}px`;
+      this.menu.element.style.left = `${parentRect.left + scrollX}px`;
+      this.menu.element.style.top = `${parentRect.bottom + scrollY + 2}px`;
     } else {
-      this.menu.element.style.left = `${parentRect.right + 6}px`;
-      this.menu.element.style.top = `${parentRect.top - 5}px`;
+      this.menu.element.style.left = `${parentRect.right + scrollX + 6}px`;
+      this.menu.element.style.top = `${top}px`;
     }
   }
 }

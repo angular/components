@@ -21,6 +21,10 @@
   border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 40%, transparent);
 }
 
+.example-menu[popover] {
+  position: absolute;
+}
+
 .example-menu-bar {
   display: flex;
   cursor: pointer;
