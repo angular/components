@@ -21,7 +21,8 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
 }
 
 /** The inputs for the MenuPattern class. */
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'disabled'> {
+export interface MenuInputs<V>
+  extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value' | 'disabled'> {
   /** The unique ID of the menu. */
   id: SignalLike<string>;
 
@@ -147,7 +148,11 @@ export class MenuPattern<V> {
 
   constructor(public readonly inputs: MenuInputs<V>) {
     this.id = inputs.id;
-    this.listBehavior = new List<MenuItemPattern<V>, V>({...inputs, disabled: () => false});
+    this.listBehavior = new List<MenuItemPattern<V>, V>({
+      ...inputs,
+      value: signal([]),
+      disabled: () => false,
+    });
   }
 
   /** Sets the default state for the menu. */
@@ -189,12 +194,38 @@ export class MenuPattern<V> {
     this.listBehavior.goto(item, {focusElement: this.shouldFocus()});
   }
 
+  /** Handles mouseout events for the menu. */
+  onMouseOut(event: MouseEvent) {
+    if (this.isFocused()) {
+      return;
+    }
+
+    const root = this.root();
+    const parent = this.inputs.parent();
+    const relatedTarget = event.relatedTarget as Node | null;
+
+    if (!root || !parent || parent instanceof MenuTriggerPattern) {
+      return;
+    }
+
+    const grandparent = parent.inputs.parent();
+
+    if (!grandparent || grandparent instanceof MenuBarPattern) {
+      return;
+    }
+
+    if (!grandparent.inputs.element()?.contains(relatedTarget)) {
+      parent.close();
+    }
+  }
+
   /** Handles click events for the menu. */
   onClick(event: MouseEvent) {
     const relatedTarget = event.target as Node | null;
     const item = this.inputs.items().find(i => i.element()?.contains(relatedTarget));
 
     if (item) {
+      item.open();
       this.listBehavior.goto(item);
       this.submit(item);
     }
@@ -284,6 +315,7 @@ export class MenuPattern<V> {
 
       if (!item.submenu() && isMenu) {
         root.inputs.activeItem()?.close({refocus: true});
+        root?.inputs.onSubmit?.(item.value());
       }
     }
   }
@@ -322,6 +354,10 @@ export class MenuPattern<V> {
 
     if (root instanceof MenuBarPattern) {
       root.close();
+    }
+
+    if (root instanceof MenuPattern) {
+      root.inputs.activeItem()?.close({refocus: true});
     }
   }
 }
