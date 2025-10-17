@@ -20,7 +20,7 @@ import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The required inputs to tabs. */
 export interface TabInputs
-  extends Omit<ListItem<string>, 'searchTerm' | 'index'>,
+  extends Omit<ListItem<string>, 'searchTerm' | 'index' | 'selectable'>,
     Omit<ExpansionItem, 'expansionId' | 'expandable'> {
   /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
@@ -48,6 +48,9 @@ export class TabPattern {
 
   /** The html element that should receive focus. */
   readonly element: SignalLike<HTMLElement>;
+
+  /** Whether the tab is selectable. */
+  readonly selectable = () => true;
 
   /** The text used by the typeahead search. */
   readonly searchTerm = () => ''; // Unused because tabs do not support typeahead.

@@ -57,6 +57,7 @@ interface TestTreeItem<V> {
   value: V;
   children?: TestTreeItem<V>[];
   disabled: boolean;
+  selectable: boolean;
 }
 
 describe('Tree Pattern', () => {
@@ -84,6 +85,7 @@ describe('Tree Pattern', () => {
           value: signal(node.value),
           element: signal(element),
           disabled: signal(node.disabled),
+          selectable: signal(node.selectable),
           searchTerm: signal(String(node.value)),
           parent: signal(parent),
           hasChildren: signal((node.children ?? []).length > 0),
@@ -118,16 +120,18 @@ describe('Tree Pattern', () => {
     {
       value: 'Item 0',
       children: [
-        {value: 'Item 0-0', disabled: false},
-        {value: 'Item 0-1', disabled: false},
+        {value: 'Item 0-0', disabled: false, selectable: true},
+        {value: 'Item 0-1', disabled: false, selectable: true},
       ],
       disabled: false,
+      selectable: true,
     },
-    {value: 'Item 1', disabled: false},
+    {value: 'Item 1', disabled: false, selectable: true},
     {
       value: 'Item 2',
-      children: [{value: 'Item 2-0', disabled: false}],
+      children: [{value: 'Item 2-0', disabled: false, selectable: true}],
       disabled: false,
+      selectable: true,
     },
   ];
 
@@ -228,6 +232,15 @@ describe('Tree Pattern', () => {
         treeInputs.currentType.set('step');
         expect(item0.current()).toBeUndefined();
         expect(item1.current()).toBe('step');
+      });
+
+      it('should have undefined current state when non-selectable', () => {
+        const {allItems, itemPatternInputsMap} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        treeInputs.value.set(['Item 0']);
+        expect(item0.current()).toBe('page');
+        itemPatternInputsMap.get(item0.id())!.selectable.set(false);
+        expect(item0.current()).toBeUndefined();
       });
     });
   });
@@ -374,9 +387,9 @@ describe('Tree Pattern', () => {
     it('should skip disabled items when skipDisabled is true', () => {
       treeInputs.skipDisabled.set(true);
       const localTreeExample: TestTreeItem<string>[] = [
-        {value: 'Item A', disabled: false},
-        {value: 'Item B', disabled: true},
-        {value: 'Item C', disabled: false},
+        {value: 'Item A', disabled: false, selectable: true},
+        {value: 'Item B', disabled: true, selectable: true},
+        {value: 'Item C', disabled: false, selectable: true},
       ];
       const {tree, allItems} = createTree(localTreeExample, treeInputs);
       const itemA = getItemByValue(allItems(), 'Item A');
@@ -391,9 +404,9 @@ describe('Tree Pattern', () => {
     it('should not skip disabled items when skipDisabled is false', () => {
       treeInputs.skipDisabled.set(false);
       const localTreeExample: TestTreeItem<string>[] = [
-        {value: 'Item A', disabled: false},
-        {value: 'Item B', disabled: true},
-        {value: 'Item C', disabled: false},
+        {value: 'Item A', disabled: false, selectable: true},
+        {value: 'Item B', disabled: true, selectable: true},
+        {value: 'Item C', disabled: false, selectable: true},
       ];
       const {tree, allItems} = createTree(localTreeExample, treeInputs);
       const itemA = getItemByValue(allItems(), 'Item A');
@@ -453,6 +466,14 @@ describe('Tree Pattern', () => {
         treeInputs.value.set(['Item 1']);
         expect(item0.selected()).toBe(false);
         expect(item1.selected()).toBe(true);
+      });
+
+      it('should have undefined selected state when non-selectable', () => {
+        const {allItems, itemPatternInputsMap} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        treeInputs.value.set(['Item 0']);
+        itemPatternInputsMap.get(item0.id())!.selectable.set(false);
+        expect(item0.selected()).toBeUndefined();
       });
 
       it('should select an item on navigation', () => {
@@ -683,11 +704,27 @@ describe('Tree Pattern', () => {
 
       it('should not select disabled items on Shift + ArrowUp / ArrowDown', () => {
         const localTreeData: TestTreeItem<string>[] = [
-          {value: 'A', disabled: false},
-          {value: 'B', disabled: true},
-          {value: 'C', disabled: false},
+          {value: 'A', disabled: false, selectable: true},
+          {value: 'B', disabled: true, selectable: true},
+          {value: 'C', disabled: false, selectable: true},
         ];
         treeInputs.skipDisabled.set(false);
+        const {tree, allItems} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(allItems(), 'A');
+
+        tree.listBehavior.goto(itemA);
+        tree.onKeydown(shift());
+        tree.onKeydown(down({shift: true}));
+        tree.onKeydown(down({shift: true}));
+        expect(tree.inputs.value()).toEqual(['A', 'C']);
+      });
+
+      it('should not select non-selectable items on Shift + ArrowUp / ArrowDown', () => {
+        const localTreeData: TestTreeItem<string>[] = [
+          {value: 'A', disabled: false, selectable: true},
+          {value: 'B', disabled: false, selectable: false},
+          {value: 'C', disabled: false, selectable: true},
+        ];
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(allItems(), 'A');
 
@@ -841,15 +878,30 @@ describe('Tree Pattern', () => {
 
       it('should not select disabled items on navigation', () => {
         const localTreeData: TestTreeItem<string>[] = [
-          {value: 'A', disabled: false},
-          {value: 'B', disabled: true},
-          {value: 'C', disabled: false},
+          {value: 'A', disabled: false, selectable: true},
+          {value: 'B', disabled: true, selectable: true},
+          {value: 'C', disabled: false, selectable: true},
         ];
         treeInputs.skipDisabled.set(true);
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         treeInputs.value.set(['A']);
         tree.listBehavior.goto(getItemByValue(allItems(), 'A'));
 
+        tree.onKeydown(down());
+        expect(tree.inputs.value()).toEqual(['C']);
+      });
+
+      it('should not select non-selectable items on navigation', () => {
+        const localTreeData: TestTreeItem<string>[] = [
+          {value: 'A', disabled: false, selectable: true},
+          {value: 'B', disabled: false, selectable: false},
+          {value: 'C', disabled: false, selectable: true},
+        ];
+        const {tree, allItems} = createTree(localTreeData, treeInputs);
+        treeInputs.value.set(['A']);
+        tree.listBehavior.goto(getItemByValue(allItems(), 'A'));
+
+        tree.onKeydown(down());
         tree.onKeydown(down());
         expect(tree.inputs.value()).toEqual(['C']);
       });
@@ -1090,13 +1142,25 @@ describe('Tree Pattern', () => {
       });
 
       it('should not select disabled items on click', () => {
-        const localTreeData: TestTreeItem<string>[] = [{value: 'A', disabled: true}];
+        const localTreeData: TestTreeItem<string>[] = [
+          {value: 'A', disabled: true, selectable: true},
+        ];
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(allItems(), 'A');
 
         tree.onPointerdown(createClickEvent(itemA.element()));
         expect(tree.inputs.value()).toEqual([]);
         expect(tree.activeItem()).toBe(itemA);
+      });
+
+      it('should not select non-selectable items on click', () => {
+        const localTreeData: TestTreeItem<string>[] = [
+          {value: 'A', disabled: false, selectable: false},
+        ];
+        const {tree, allItems} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(allItems(), 'A');
+        tree.onPointerdown(createClickEvent(itemA.element()));
+        expect(tree.inputs.value()).toEqual([]);
       });
     });
   });
@@ -1358,8 +1422,8 @@ describe('Tree Pattern', () => {
 
     it('should set activeIndex to the first visible focusable item if no selection', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: false},
-        {value: 'B', disabled: false},
+        {value: 'A', disabled: false, selectable: true},
+        {value: 'B', disabled: false, selectable: true},
       ];
       const {tree, allItems} = createTree(localTreeData, treeInputs);
 
@@ -1369,8 +1433,8 @@ describe('Tree Pattern', () => {
 
     it('should set activeIndex to the first visible focusable disabled item if skipDisabled is false and no selection', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: true},
-        {value: 'B', disabled: false},
+        {value: 'A', disabled: true, selectable: true},
+        {value: 'B', disabled: false, selectable: true},
       ];
       treeInputs.skipDisabled.set(false);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
@@ -1381,9 +1445,9 @@ describe('Tree Pattern', () => {
 
     it('should set activeIndex to the first selected visible focusable item', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: false},
-        {value: 'B', disabled: false},
-        {value: 'C', disabled: false},
+        {value: 'A', disabled: false, selectable: true},
+        {value: 'B', disabled: false, selectable: true},
+        {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['B']);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
@@ -1394,9 +1458,9 @@ describe('Tree Pattern', () => {
 
     it('should prioritize the first selected item in visible order', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: false},
-        {value: 'B', disabled: false},
-        {value: 'C', disabled: false},
+        {value: 'A', disabled: false, selectable: true},
+        {value: 'B', disabled: false, selectable: true},
+        {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['C', 'A']);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
@@ -1407,9 +1471,9 @@ describe('Tree Pattern', () => {
 
     it('should skip a selected disabled item if skipDisabled is true', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: false},
-        {value: 'B', disabled: true},
-        {value: 'C', disabled: false},
+        {value: 'A', disabled: false, selectable: true},
+        {value: 'B', disabled: true, selectable: true},
+        {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['B']);
       treeInputs.skipDisabled.set(true);
@@ -1421,9 +1485,9 @@ describe('Tree Pattern', () => {
 
     it('should select a selected disabled item if skipDisabled is false', () => {
       const localTreeData: TestTreeItem<string>[] = [
-        {value: 'A', disabled: false},
-        {value: 'B', disabled: true},
-        {value: 'C', disabled: false},
+        {value: 'A', disabled: false, selectable: true},
+        {value: 'B', disabled: true, selectable: true},
+        {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['B']);
       treeInputs.skipDisabled.set(false);

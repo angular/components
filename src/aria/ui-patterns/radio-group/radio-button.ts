@@ -12,7 +12,8 @@ import {ListItem} from '../behaviors/list/list';
 import type {RadioGroupPattern} from './radio-group';
 
 /** Represents the required inputs for a radio button in a radio group. */
-export interface RadioButtonInputs<V> extends Omit<ListItem<V>, 'searchTerm' | 'index'> {
+export interface RadioButtonInputs<V>
+  extends Omit<ListItem<V>, 'searchTerm' | 'index' | 'selectable'> {
   /** A reference to the parent radio group. */
   group: SignalLike<RadioGroupPattern<V> | undefined>;
 }
@@ -37,6 +38,9 @@ export class RadioButtonPattern<V> {
   readonly selected: SignalLike<boolean> = computed(
     () => !!this.group()?.listBehavior.inputs.value().includes(this.value()),
   );
+
+  /** Whether the radio button is selectable. */
+  readonly selectable = () => true;
 
   /** Whether the radio button is disabled. */
   readonly disabled: SignalLike<boolean>;

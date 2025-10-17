@@ -27,11 +27,34 @@ export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'> {
   tree: SignalLike<TreePattern<V>>;
 }
 
-export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
 /**
  * Represents an item in a Tree.
  */
-export class TreeItemPattern<V> implements ExpansionItem {
+export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
+  /** A unique identifier for this item. */
+  readonly id: SignalLike<string>;
+
+  /** The value of this item. */
+  readonly value: SignalLike<V>;
+
+  /** A reference to the item element. */
+  readonly element: SignalLike<HTMLElement>;
+
+  /** Whether the item is disabled. */
+  readonly disabled: SignalLike<boolean>;
+
+  /** The text used by the typeahead search. */
+  readonly searchTerm: SignalLike<string>;
+
+  /** The tree pattern this item belongs to. */
+  readonly tree: SignalLike<TreePattern<V>>;
+
+  /** The parent item. */
+  readonly parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
+
+  /** The children items. */
+  readonly children: SignalLike<TreeItemPattern<V>[]>;
+
   /** The position of this item among its siblings. */
   readonly index = computed(() => this.tree().visibleItems().indexOf(this));
 
@@ -46,6 +69,9 @@ export class TreeItemPattern<V> implements ExpansionItem {
 
   /** Whether the item is expandable. It's expandable if children item exist. */
   readonly expandable: SignalLike<boolean>;
+
+  /** Whether the item is selectable. */
+  readonly selectable: SignalLike<boolean>;
 
   /** The level of the current item in a tree. */
   readonly level: SignalLike<number> = computed(() => this.parent().level() + 1);
@@ -69,44 +95,26 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly tabindex = computed(() => this.tree().listBehavior.getItemTabindex(this));
 
   /** Whether the item is selected. */
-  readonly selected = computed(() => {
+  readonly selected: SignalLike<boolean | undefined> = computed(() => {
     if (this.tree().nav()) {
+      return undefined;
+    }
+    if (!this.selectable()) {
       return undefined;
     }
     return this.tree().value().includes(this.value());
   });
 
   /** The current type of this item. */
-  readonly current = computed(() => {
+  readonly current: SignalLike<string | undefined> = computed(() => {
     if (!this.tree().nav()) {
+      return undefined;
+    }
+    if (!this.selectable()) {
       return undefined;
     }
     return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
   });
-
-  /** A unique identifier for this item. */
-  id: SignalLike<string>;
-
-  /** The value of this item. */
-  value: SignalLike<V>;
-
-  /** A reference to the item element. */
-  element: SignalLike<HTMLElement>;
-
-  /** Whether the item is disabled. */
-  disabled: SignalLike<boolean>;
-
-  /** The text used by the typeahead search. */
-  searchTerm: SignalLike<string>;
-
-  /** The tree pattern this item belongs to. */
-  tree: SignalLike<TreePattern<V>>;
-
-  /** The parent item. */
-  parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
-
-  /** The children items. */
-  children: SignalLike<TreeItemPattern<V>[]>;
 
   constructor(readonly inputs: TreeItemInputs<V>) {
     this.id = inputs.id;
@@ -119,6 +127,7 @@ export class TreeItemPattern<V> implements ExpansionItem {
     this.parent = inputs.parent;
     this.children = inputs.children;
     this.expandable = inputs.hasChildren;
+    this.selectable = inputs.selectable;
     this.expansion = new ExpansionControl({
       ...inputs,
       expandable: this.expandable,
@@ -175,7 +184,7 @@ export class TreePattern<V> {
   readonly expanded = () => true;
 
   /** The tabindex of the tree. */
-  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
+  readonly tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
   readonly activedescendant = computed(() => this.listBehavior.activedescendant());

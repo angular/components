@@ -13,6 +13,7 @@
       [value]="node.value"
       [label]="node.name"
       [disabled]="node.disabled"
+      [selectable]="!node.children"
       #treeItem="ngTreeItem"
       class="example-tree-item example-selectable example-stateful"
       href="#{{ node.name }}"

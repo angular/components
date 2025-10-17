@@ -72,6 +72,7 @@ export class ComboboxTreePattern<V>
   /** Unfocuses the currently focused item in the tree. */
   unfocus = () => this.listBehavior.unfocus();
 
+  // TODO: handle non-selectable parent nodes.
   /** Selects the specified item in the tree or the current active item if not provided. */
   select = (item?: TreeItemPattern<V>) => this.listBehavior.select(item);
 

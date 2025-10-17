@@ -20,7 +20,7 @@ interface ListboxPattern<V> {
 }
 
 /** Represents the required inputs for an option in a listbox. */
-export interface OptionInputs<V> extends Omit<ListItem<V>, 'index'> {
+export interface OptionInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
   listbox: SignalLike<ListboxPattern<V> | undefined>;
 }
 
@@ -40,6 +40,9 @@ export class OptionPattern<V> {
 
   /** Whether the option is selected. */
   selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));
+
+  /** Whether the option is selectable. */
+  selectable = () => true;
 
   /** Whether the option is disabled. */
   disabled: SignalLike<boolean>;
