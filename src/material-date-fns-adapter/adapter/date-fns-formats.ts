@@ -8,7 +8,7 @@
 
 import {MatDateFormats} from '@angular/material/core';
 
-export const MAT_DATE_FNS_FORMATS: MatDateFormats = {
+export const MAT_DATE_FNS_FORMATS: MatDateFormats<string, string | string[]> = {
   parse: {
     dateInput: 'P',
     timeInput: 'p',

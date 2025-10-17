@@ -61,9 +61,18 @@ export const yearsPerRow = 4;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
-export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
+export class MatMultiYearView<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
+  implements AfterContentInit, OnDestroy
+{
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(DateAdapter, {
+    optional: true,
+  })!;
   private _dir = inject(Directionality, {optional: true});
   private _rerenderSubscription = Subscription.EMPTY;
 
@@ -405,8 +414,13 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   }
 }
 
-export function isSameMultiYearView<D>(
-  dateAdapter: DateAdapter<D>,
+export function isSameMultiYearView<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+>(
+  dateAdapter: DateAdapter<D, L, DisplayFormatType, ParseFormatType>,
   date1: D,
   date2: D,
   minDate: D | null,
@@ -426,8 +440,13 @@ export function isSameMultiYearView<D>(
  * So we compute how many years are between the active year and the *slot* where our
  * "startingYear" will render when paged into view.
  */
-export function getActiveOffset<D>(
-  dateAdapter: DateAdapter<D>,
+export function getActiveOffset<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+>(
+  dateAdapter: DateAdapter<D, L, DisplayFormatType, ParseFormatType>,
   activeDate: D,
   minDate: D | null,
   maxDate: D | null,
@@ -440,8 +459,13 @@ export function getActiveOffset<D>(
  * We pick a "starting" year such that either the maximum year would be at the end
  * or the minimum year would be at the beginning of a page.
  */
-function getStartingYear<D>(
-  dateAdapter: DateAdapter<D>,
+function getStartingYear<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+>(
+  dateAdapter: DateAdapter<D, L, DisplayFormatType, ParseFormatType>,
   minDate: D | null,
   maxDate: D | null,
 ): number {
