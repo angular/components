@@ -7,8 +7,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {ToolbarBasicHorizontalExample} from '@angular/components-examples/aria/toolbar';
-import {ToolbarConfigurableExample} from '@angular/components-examples/aria/toolbar';
+import {
+  ToolbarBasicHorizontalExample,
+  ToolbarConfigurableExample,
+} from '@angular/components-examples/aria/toolbar';
 
 @Component({
   templateUrl: 'toolbar-demo.html',
