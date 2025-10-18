@@ -8,23 +8,25 @@
       color: var(--mat-sys-primary);
     }
 
-    h1 {
-      display: inline-block;
-      font-size: 32px;
+    h1,
+    h2,
+    h3 {
       font-weight: 400;
       margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 32px;
     }
 
     h2 {
       font-size: 28px;
-      margin: 32px 0 16px;
-      font-weight: 400;
     }
 
     h3 {
       font-size: 24px;
-      margin: 32px 0 16px;
-      font-weight: 400;
     }
 
     h4 {
@@ -44,7 +46,9 @@
       font-weight: 400;
     }
 
-    p, ul, ol {
+    p,
+    ul,
+    ol {
       font-size: 16px;
       line-height: 28px;
     }
@@ -90,13 +94,15 @@
   }
 
   .docs-header-link {
+    // Align header link to the right of the header text.
+    [header-link] {
+      order: 2;
+    }
+
     header-link {
-      // deduct -30px so the anchor icon will be positioned outside the content
-      margin-left: -30px;
-      // Slight margin to try and center the icon better.
-      margin-top: 2px;
-      display: inline-block;
-      vertical-align: middle;
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
 
       // stylelint-disable-next-line material/no-prefixes
       user-select: none;
@@ -117,5 +123,4 @@
       visibility: visible;
     }
   }
-
 }
