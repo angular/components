@@ -1,6 +1,6 @@
 .example-radio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
   gap: 20px;
 }
 
@@ -17,4 +17,8 @@
 
 h4 {
   height: 36px;
+}
+
+.example-toolbar-container {
+  width: 100%;
 }
