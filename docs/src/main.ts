@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {provideHttpClient} from '@angular/common/http';
 import {ErrorHandler, provideZoneChangeDetection} from '@angular/core';
 
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
@@ -32,7 +31,6 @@ bootstrapApplication(MaterialDocsApp, {
         anchorScrolling: 'enabled',
       }),
     ),
-    provideHttpClient(),
     provideZoneChangeDetection(),
   ],
 }).catch(err => console.error(err));
