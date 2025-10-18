@@ -12,11 +12,11 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {
   DOWN_ARROW,
   ENTER,
+  hasModifierKey,
   LEFT_ARROW,
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-  hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
@@ -34,6 +34,7 @@ import {
   HostAttributeToken,
   inject,
   InjectionToken,
+  Injector,
   Input,
   OnDestroy,
   OnInit,
@@ -45,6 +46,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Control} from '@angular/forms/signals';
 import {_animationsDisabled, _StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '../core';
 
 /**
@@ -141,11 +143,22 @@ export class MatButtonToggleChange {
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
   private _changeDetector = inject(ChangeDetectorRef);
   private _dir = inject(Directionality, {optional: true});
+  private _injector = inject(Injector);
 
   private _multiple = false;
   private _disabled = false;
   private _disabledInteractive = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
+
+  private _cachedSignalFormsControl: Control<unknown> | null;
+  private get _signalFormsControl() {
+    // Lazily inject to avoid circular DI dependency.
+    this._cachedSignalFormsControl = this._injector.get(Control, null, {
+      optional: true,
+      self: true,
+    });
+    return this._cachedSignalFormsControl;
+  }
 
   /**
    * Reference to the raw value that the consumer tried to assign. The real
@@ -178,7 +191,8 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** `name` attribute for the underlying `input` element. */
   @Input()
   get name(): string {
-    return this._name;
+    // When using signal forms, prefer the signal forms name.
+    return this._signalFormsControl?.state().name() ?? this._name;
   }
   set name(value: string) {
     this._name = value;
