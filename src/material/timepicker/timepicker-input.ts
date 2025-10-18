@@ -36,7 +36,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {MAT_FORM_FIELD} from '../form-field';
-import {MatTimepicker} from './timepicker';
+import {MatTimepicker, MatTimepickerConnectedInput} from './timepicker';
 import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
@@ -80,7 +80,9 @@ import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
     },
   ],
 })
-export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
+export class MatTimepickerInput<D>
+  implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy
+{
   private _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
@@ -258,7 +260,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   }
 
   /** Gets the ID of the input's label. */
-  _getLabelId(): string | null {
+  getLabelId(): string | null {
     return this._formField?.getLabelId() || null;
   }
 
@@ -317,6 +319,14 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     }
   }
 
+  /** Called by the timepicker to sync up the user-selected value. */
+  timepickerValueAssigned(value: D | null) {
+    if (!this._dateAdapter.sameTime(value, this.value())) {
+      this._assignUserSelection(value, true);
+      this._formatValue(value);
+    }
+  }
+
   /** Sets up the code that watches for changes in the value and adjusts the input. */
   private _respondToValueChanges(): void {
     effect(() => {
@@ -346,12 +356,6 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       const timepicker = this.timepicker();
       timepicker.registerInput(this);
       timepicker.closed.subscribe(() => this._onTouched?.());
-      timepicker.selected.subscribe(({value}) => {
-        if (!this._dateAdapter.sameTime(value, this.value())) {
-          this._assignUserSelection(value, true);
-          this._formatValue(value);
-        }
-      });
     });
   }
 
@@ -371,8 +375,10 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
    * @param propagateToAccessor Whether the value should be propagated to the ControlValueAccessor.
    */
   private _assignUserSelection(selection: D | null, propagateToAccessor: boolean) {
+    let toAssign: D | null;
+
     if (selection == null || !this._isValid(selection)) {
-      this.value.set(selection);
+      toAssign = selection;
     } else {
       // If a datepicker and timepicker are writing to the same object and the user enters an
       // invalid time into the timepicker, we may end up clearing their selection from the
@@ -384,12 +390,15 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       const hours = adapter.getHours(selection);
       const minutes = adapter.getMinutes(selection);
       const seconds = adapter.getSeconds(selection);
-      this.value.set(target ? adapter.setTime(target, hours, minutes, seconds) : selection);
+      toAssign = target ? adapter.setTime(target, hours, minutes, seconds) : selection;
     }
 
+    // Propagate to the form control before emitting to `valueChange`.
     if (propagateToAccessor) {
-      this._onChange?.(this.value());
+      this._onChange?.(toAssign);
     }
+
+    this.value.set(toAssign);
   }
 
   /** Formats the current value and assigns it to the input. */

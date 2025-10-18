@@ -25,6 +25,8 @@
     "types": ["jasmine"],
     "baseUrl": ".",
     "paths": {
+      "@angular/aria": ["./src/aria"],
+      "@angular/aria/*": ["./src/aria/*"],
       "@angular/cdk": ["./src/cdk"],
       "@angular/cdk/*": ["./src/cdk/*"],
       "@angular/material/*": ["./src/material/*"],

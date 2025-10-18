@@ -46,14 +46,10 @@ const MIN_A11Y_SCORES_PER_PAGE = {
   'components/button/examples': 75,
 };
 
-/**
- * @type {{minScores: {performance: number, accessibility: number, 'best-practices': number, pwa: number, seo: number}, url: string}[]}
- */
 const MIN_SCORES_PER_PAGE = [
   {
     url: '',
     minScores: {
-      pwa: 0,
       performance: 25, // Intentionally low because Ligthouse is flaky.
       seo: 90,
       'best-practices': 90,
@@ -66,10 +62,6 @@ const MIN_SCORES_PER_PAGE = [
   })),
 ];
 
-/**
- * @param {{performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}} scores
- * @returns string scores formatted as described in the docs of lighthouse-audit.mjs's _main()
- */
 function formatScores(scores) {
   let formattedScores = '';
   Object.keys(scores).map((key, index) => {

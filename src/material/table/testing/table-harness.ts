@@ -15,6 +15,7 @@ import {
 import {
   MatFooterRowHarness,
   MatHeaderRowHarness,
+  MatNoDataRowHarness,
   MatRowHarness,
   MatRowHarnessColumnsText,
 } from './row-harness';
@@ -62,6 +63,11 @@ export class MatTableHarness extends ContentContainerComponentHarness<string> {
   /** Gets all the footer rows in a table. */
   async getFooterRows(filter: RowHarnessFilters = {}): Promise<MatFooterRowHarness[]> {
     return this.locatorForAll(this._footerRowHarness.with(filter))();
+  }
+
+  /** Gets the "no data" row in the table, if any. */
+  async getNoDataRow(filter: RowHarnessFilters = {}): Promise<MatNoDataRowHarness | null> {
+    return this.locatorForOptional(MatNoDataRowHarness.with(filter))();
   }
 
   /** Gets the text inside the entire table organized by rows. */

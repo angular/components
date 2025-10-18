@@ -1,7 +1,7 @@
 <table class="mat-calendar-table" role="grid">
   <thead class="mat-calendar-table-header">
     <tr>
-      @for (day of _weekdays; track day.id) {
+      @for (day of _weekdays(); track day.id) {
         <th scope="col">
           <span class="cdk-visually-hidden">{{day.long}}</span>
           <span aria-hidden="true">{{day.narrow}}</span>
@@ -11,16 +11,16 @@
     <tr aria-hidden="true"><th class="mat-calendar-table-header-divider" colspan="7"></th></tr>
   </thead>
   <tbody mat-calendar-body
-         [label]="_monthLabel"
-         [rows]="_weeks"
-         [todayValue]="_todayDate!"
-         [startValue]="_rangeStart!"
-         [endValue]="_rangeEnd!"
-         [comparisonStart]="_comparisonRangeStart"
-         [comparisonEnd]="_comparisonRangeEnd"
-         [previewStart]="_previewStart"
-         [previewEnd]="_previewEnd"
-         [isRange]="_isRange"
+         [label]="_monthLabel()"
+         [rows]="_weeks()"
+         [todayValue]="_todayDate()!"
+         [startValue]="_rangeStart()!"
+         [endValue]="_rangeEnd()!"
+         [comparisonStart]="_comparisonRangeStart()"
+         [comparisonEnd]="_comparisonRangeEnd()"
+         [previewStart]="_previewStart()"
+         [previewEnd]="_previewEnd()"
+         [isRange]="_isRange()"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
          [startDateAccessibleName]="startDateAccessibleName"

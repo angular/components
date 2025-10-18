@@ -8,6 +8,6 @@ ng_app(
     deps = [
         "//docs:node_modules/@angular/components-examples",
         "//docs:node_modules/@stackblitz/sdk",
-        "//docs:node_modules/moment",
+        "//docs:node_modules/luxon",
     ],
 )

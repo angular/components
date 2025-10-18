@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@angular/aria": "workspace:*",
     "@angular/cdk": "workspace:*",
     "@angular/cdk-experimental": "workspace:*",
     "@angular/material": "workspace:*",

@@ -1,3 +1,112 @@
+<a name="21.0.0-next.9"></a>
+# 21.0.0-next.9 "plastic-fork" (2025-10-15)
+## Breaking Changes
+### cdk
+- * `TestElement` implementations need to provide a `setContenteditableValue`.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [71d590796c](https://github.com/angular/components/commit/71d590796c8c29a198fefa31864c06ddfd334738) | feat | **sort:** add content projection slot for custom icon ([#32016](https://github.com/angular/components/pull/32016)) |
+| [85f596b3c3](https://github.com/angular/components/commit/85f596b3c32d22541c3825da3479b67832a2f4da) | feat | **table:** add harness for "no data" row ([#32075](https://github.com/angular/components/pull/32075)) |
+| [ff9059d8d1](https://github.com/angular/components/commit/ff9059d8d14b82a465481e51f01582caf6d83b6c) | fix | **checkbox:** use GrayText for disabled colors in high contrast mode ([#32066](https://github.com/angular/components/pull/32066)) |
+| [5f12b26ab3](https://github.com/angular/components/commit/5f12b26ab3abad9acb2a3d008100d06e0fb63ab5) | fix | **snack-bar:** add max height for snack bar ([#32000](https://github.com/angular/components/pull/32000)) |
+| [7dfabca03d](https://github.com/angular/components/commit/7dfabca03d14729926b708e4c86d913bc5b8f735) | fix | **timepicker:** add interface for timepicker input ([#32050](https://github.com/angular/components/pull/32050)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [544438c865](https://github.com/angular/components/commit/544438c865532b30005ef7d03606fc4be4818a39) | fix | **testing:** make setContenteditableValue required ([#32058](https://github.com/angular/components/pull/32058)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="20.2.9"></a>
+# 20.2.9 "plastic-spoon" (2025-10-15)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af3b961214](https://github.com/angular/components/commit/af3b9612145ed20a3290f773e4fbf51206804145) | fix | **checkbox:** use GrayText for disabled colors in high contrast mode ([#32066](https://github.com/angular/components/pull/32066)) |
+| [a90abb0a77](https://github.com/angular/components/commit/a90abb0a77b77b0ec5188582a1ea4d587508da5e) | fix | **snack-bar:** add max height for snack bar ([#32000](https://github.com/angular/components/pull/32000)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.0-next.8"></a>
+# 21.0.0-next.8 "osmium-summit" (2025-10-08)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.0-next.7"></a>
+# 21.0.0-next.7 "selenium-summit" (2025-10-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [82cd076bf](https://github.com/angular/components/commit/82cd076bfb3084e258f8e20af6cac570349822ce) | feat | **overlay:** Allow passing separate X and Y values for the viewportMargin ([#29563](https://github.com/angular/components/pull/29563)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [527fc3718](https://github.com/angular/components/commit/527fc3718326fe0f0fd32a4e7c6130627d0e9cce) | feat | **bottom-sheet:** add injector to MatBottomSheetConfig ([#31965](https://github.com/angular/components/pull/31965)) |
+| [3665b433e](https://github.com/angular/components/commit/3665b433ea3c30c0ad612ee717cde67d5b73e103) | fix | **datepicker:** error due to synchronous change detection |
+| [2d5942cb0](https://github.com/angular/components/commit/2d5942cb0fe86f9c3d26b1925b1d4390cfc6613b) | fix | **datepicker:** make date filter nullable ([#31980](https://github.com/angular/components/pull/31980)) |
+| [05d71e53a](https://github.com/angular/components/commit/05d71e53a16f7cdb19b96e208601a64e1389fa8a) | fix | **menu:** fix divider color property ([#31815](https://github.com/angular/components/pull/31815)) |
+| [c848d24db](https://github.com/angular/components/commit/c848d24dbb9bc468b47b107ae6a82ce32ded8502) | fix | **timepicker:** assign form control value before emitting events ([#31981](https://github.com/angular/components/pull/31981)) |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b61d8841a](https://github.com/angular/components/commit/b61d8841ad70cced4ca6098bd0187d68ac00e486) | fix | parse time string containing only hours ([#31978](https://github.com/angular/components/pull/31978)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="20.2.8"></a>
+# 20.2.8 "strontium-summit" (2025-10-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6d61babe7](https://github.com/angular/components/commit/6d61babe77a6a6f0c464b498ee773561b795663f) | fix | **datepicker:** error due to synchronous change detection |
+| [e43dcabd0](https://github.com/angular/components/commit/e43dcabd005239a380ffef50cfea374b24a67735) | fix | **datepicker:** make date filter nullable ([#31980](https://github.com/angular/components/pull/31980)) |
+| [f30c1c6c3](https://github.com/angular/components/commit/f30c1c6c3f6490ddf21ba668d4065c4d5f89f26f) | fix | **radio:** Hovering over label of a radio will show the pointer cursor ([#32015](https://github.com/angular/components/pull/32015)) |
+| [de3f9e566](https://github.com/angular/components/commit/de3f9e5662edae3c19f44a89ee1ee34555eba147) | fix | **timepicker:** assign form control value before emitting events ([#31981](https://github.com/angular/components/pull/31981)) |
+### material-date-fns-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2d1f8d068](https://github.com/angular/components/commit/2d1f8d068e18fa1e0044e0dd4c968c3fa6761e10) | fix | parse time string containing only hours ([#31978](https://github.com/angular/components/pull/31978)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.0-next.6"></a>
+# 21.0.0-next.6 "carbon-flamingo" (2025-10-01)
+## Breaking Changes
+### material
+- * `AnimationCurves` has been removed.
+  * `AnimationDurations` has been removed.
+  * `NativeDateAdapter.useUtcForDisplay` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f9e7eff127](https://github.com/angular/components/commit/f9e7eff127447a685126f3c942571653aa245728) | feat | **combobox:** introduce new signals-based combobox ([#31872](https://github.com/angular/components/pull/31872)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef70029820](https://github.com/angular/components/commit/ef70029820423ff7ba6a5a1a372c24a0583a03f2) | feat | **chips:** allow for modifiers to be specified on separator keys ([#31914](https://github.com/angular/components/pull/31914)) |
+| [1b06a8ea80](https://github.com/angular/components/commit/1b06a8ea8033a9cadffb52102aa74cc4f768adb1) | fix | **core:** remove deprecated APIs for v21 ([#31924](https://github.com/angular/components/pull/31924)) |
+| [81eeff4bed](https://github.com/angular/components/commit/81eeff4beddbadd6518aca123182ae271be80819) | fix | **menu:** prevent child menu reopening while parent is animating away ([#31958](https://github.com/angular/components/pull/31958)) |
+| [813f66b839](https://github.com/angular/components/commit/813f66b839d1684c3d5342e55ba61e948c979fab) | fix | **menu:** switch internal state to signals ([#31934](https://github.com/angular/components/pull/31934)) |
+| [131c7ff804](https://github.com/angular/components/commit/131c7ff80420a9501618be1cb1c4b168cd286c4a) | fix | **paginator:** trim extraneous announcements ([#31943](https://github.com/angular/components/pull/31943)) |
+| [6fba2049c3](https://github.com/angular/components/commit/6fba2049c36b86659a1713baf965da8651b6aae4) | fix | **select:** rotate arrow while open ([#31936](https://github.com/angular/components/pull/31936)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [667a007d0d](https://github.com/angular/components/commit/667a007d0d4017d14eadb2db4b5c0665efa1c2b9) | fix | **scrolling:** Fix undefined error when documentElement.style is undefined ([#31904](https://github.com/angular/components/pull/31904)) |
+| [2918e2804a](https://github.com/angular/components/commit/2918e2804a4563c64a20822605424d66de7adb91) | fix | **scrolling:** prevent subpixel gaps in virtual scroll viewport ([#31940](https://github.com/angular/components/pull/31940)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="20.2.7"></a>
+# 20.2.7 "ceramic-nebula" (2025-10-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85ed6550c2](https://github.com/angular/components/commit/85ed6550c2a3f8199350dcb1fb7d6f775dc2ba61) | fix | **menu:** prevent child menu reopening while parent is animating away ([#31958](https://github.com/angular/components/pull/31958)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.5"></a>
 # 21.0.0-next.5 "hungry-kiwi" (2025-09-24)
 ## Breaking Changes

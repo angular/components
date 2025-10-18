@@ -11,8 +11,8 @@
 <div class="mat-sort-header-container mat-focus-indicator"
      [class.mat-sort-header-sorted]="_isSorted()"
      [class.mat-sort-header-position-before]="arrowPosition === 'before'"
-     [class.mat-sort-header-descending]="this._sort.direction === 'desc'"
-     [class.mat-sort-header-ascending]="this._sort.direction === 'asc'"
+     [class.mat-sort-header-descending]="_sort.direction === 'desc'"
+     [class.mat-sort-header-ascending]="_sort.direction === 'asc'"
      [class.mat-sort-header-recently-cleared-ascending]="_recentlyCleared() === 'asc'"
      [class.mat-sort-header-recently-cleared-descending]="_recentlyCleared() === 'desc'"
      [class.mat-sort-header-animations-disabled]="_animationsDisabled"
@@ -32,9 +32,11 @@
   <!-- Disable animations while a current animation is running -->
   @if (_renderArrow()) {
     <div class="mat-sort-header-arrow">
-      <svg viewBox="0 -960 960 960" focusable="false" aria-hidden="true">
-        <path d="M440-240v-368L296-464l-56-56 240-240 240 240-56 56-144-144v368h-80Z"/>
-      </svg>
+      <ng-content select="[matSortHeaderIcon]">
+        <svg viewBox="0 -960 960 960" focusable="false" aria-hidden="true">
+          <path d="M440-240v-368L296-464l-56-56 240-240 240 240-56 56-144-144v368h-80Z"/>
+        </svg>
+      </ng-content>
     </div>
   }
 </div>

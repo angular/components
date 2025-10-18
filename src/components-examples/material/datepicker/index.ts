@@ -19,7 +19,7 @@ export {DatepickerHarnessExample} from './datepicker-harness/datepicker-harness-
 export {DatepickerInlineCalendarExample} from './datepicker-inline-calendar/datepicker-inline-calendar-example';
 export {DatepickerLocaleExample} from './datepicker-locale/datepicker-locale-example';
 export {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
-export {DatepickerMomentExample} from './datepicker-moment/datepicker-moment-example';
+export {DatepickerLuxonExample} from './datepicker-luxon/datepicker-luxon-example';
 export {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
 export {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
 export {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';

@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-menu",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "menu-demo.html",
+        ":menu-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)

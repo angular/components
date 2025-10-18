@@ -1,3 +1,4 @@
+@use '@angular/cdk';
 @use '../core/style/layout-common';
 @use './m3-checkbox';
 @use '../core/tokens/token-utils';
@@ -44,6 +45,10 @@ $fallbacks: m3-checkbox.get-tokens();
     label {
       cursor: default;
       color: token-utils.slot(checkbox-disabled-label-color, $fallbacks);
+
+      @include cdk.high-contrast {
+        color: GrayText;
+      }
     }
   }
 

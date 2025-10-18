@@ -9,6 +9,8 @@
 import {Injectable, inject} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
+export const TITLE_SEPARATOR = ' • ';
+
 /**
  * Service responsible for setting the title that appears above the components and guide pages.
  */
@@ -26,7 +28,7 @@ export class ComponentPageTitle {
   set title(title: string) {
     this._title = title;
     if (title !== '') {
-      title = `${title} | Angular Material`;
+      title = `${title} ${TITLE_SEPARATOR} Angular Material`;
     } else {
       title = this._originalTitle;
     }

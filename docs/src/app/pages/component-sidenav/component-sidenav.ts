@@ -6,21 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-  forwardRef,
-  inject,
-  viewChild,
-} from '@angular/core';
+import {Component, ViewEncapsulation, forwardRef, inject, viewChild} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
 import {ActivatedRoute, Routes, RouterOutlet, RouterLinkActive, RouterLink} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
@@ -37,6 +29,7 @@ import {
   ComponentViewer,
 } from '../component-viewer/component-viewer';
 import {ComponentStyling} from '../component-viewer/component-styling';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
 // way. This includes hiding the sidenav, defaulting it to open, changing the mode from over to
@@ -63,14 +56,13 @@ const SMALL_WIDTH_BREAKPOINT = 959;
     AsyncPipe,
   ],
 })
-export class ComponentSidenav implements OnInit, OnDestroy {
+export class ComponentSidenav {
   docItems = inject(DocumentationItems);
   private _navigationFocusService = inject(NavigationFocusService);
 
   readonly sidenav = viewChild(MatSidenav);
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
-  private _subscriptions = new Subscription();
 
   constructor() {
     const breakpoints = inject(BreakpointObserver);
@@ -81,23 +73,19 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     this.isScreenSmall = breakpoints
       .observe(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`)
       .pipe(map(breakpoint => breakpoint.matches));
-  }
 
-  ngOnInit() {
-    this._subscriptions.add(
-      this._navigationFocusService.navigationEndEvents
-        .pipe(map(() => this.isScreenSmall))
-        .subscribe(shouldCloseSideNav => {
-          const sidenav = this.sidenav();
-          if (shouldCloseSideNav && sidenav) {
-            sidenav.close();
-          }
-        }),
-    );
-  }
-
-  ngOnDestroy() {
-    this._subscriptions.unsubscribe();
+    // Close the sidenav on navigation when the screen is small.
+    this._navigationFocusService.navigationEndEvents
+      .pipe(
+        takeUntilDestroyed(),
+        map(() => this.isScreenSmall),
+      )
+      .subscribe(shouldCloseSideNav => {
+        const sidenav = this.sidenav();
+        if (shouldCloseSideNav && sidenav) {
+          sidenav.close();
+        }
+      });
   }
 
   toggleSidenav(): void {

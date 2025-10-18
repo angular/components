@@ -306,7 +306,7 @@
 
   // Sets the border radius to extra small. Use for components that need a small amount of rounding,
   // such as a chip. In Angular Material, this is used for the shape of a snackbar and a tooltip.
-  .mat-corner-extra-sm {
+  .mat-corner-xs {
     border-radius: var(--mat-sys-corner-extra-small);
   }
 

@@ -1,6 +1,7 @@
 # Packages which are versioned together on npm
 ANGULAR_COMPONENTS_SCOPED_PACKAGES = ["@angular/%s" % p for p in [
     "material",
+    "aria",
     "cdk",
     "cdk-experimental",
     "material-experimental",

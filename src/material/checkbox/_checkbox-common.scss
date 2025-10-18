@@ -63,10 +63,6 @@ $_fallback-size: 40px;
   .mdc-checkbox--disabled {
     cursor: default;
     pointer-events: none;
-
-    @include cdk.high-contrast {
-      opacity: 0.5;
-    }
   }
 
   .mdc-checkbox__background {
@@ -107,12 +103,20 @@ $_fallback-size: 40px;
 
   .mdc-checkbox--disabled .mdc-checkbox__background {
     border-color: token-utils.slot(checkbox-disabled-unselected-icon-color, $fallbacks);
+
+    @include cdk.high-contrast {
+      border-color: GrayText;
+    }
   }
 
   .mdc-checkbox__native-control:disabled:checked ~ .mdc-checkbox__background,
   .mdc-checkbox__native-control:disabled:indeterminate ~ .mdc-checkbox__background {
     background-color: token-utils.slot(checkbox-disabled-selected-icon-color, $fallbacks);
     border-color: transparent;
+
+    @include cdk.high-contrast {
+      border-color: GrayText;
+    }
   }
 
   // stylelint-disable selector-combinator-space-before
@@ -149,6 +153,10 @@ $_fallback-size: 40px;
     .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background,
     .mdc-checkbox__background {
       border-color: token-utils.slot(checkbox-disabled-unselected-icon-color, $fallbacks);
+
+      @include cdk.high-contrast {
+        border-color: GrayText;
+      }
     }
 
     .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
@@ -183,7 +191,7 @@ $_fallback-size: 40px;
         color: token-utils.slot(checkbox-disabled-selected-checkmark-color, $fallbacks);
 
         @include cdk.high-contrast {
-          color: CanvasText;
+          color: GrayText;
         }
       }
     }
@@ -220,6 +228,10 @@ $_fallback-size: 40px;
     &, &.mat-mdc-checkbox-disabled-interactive {
       .mdc-checkbox__mixedmark {
         border-color: token-utils.slot(checkbox-disabled-selected-checkmark-color, $fallbacks);
+
+        @include cdk.high-contrast {
+          border-color: GrayText;
+        }
       }
     }
   }

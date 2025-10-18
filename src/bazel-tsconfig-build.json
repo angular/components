@@ -34,6 +34,7 @@
     "types": [],
     "skipLibCheck": true,
     "paths": {
+      "@angular/aria/*": ["./aria/*"],
       "@angular/cdk-experimental/*": ["./cdk-experimental/*"],
       "@angular/cdk/*": ["./cdk/*"],
       "@angular/components-examples": ["./components-examples"],

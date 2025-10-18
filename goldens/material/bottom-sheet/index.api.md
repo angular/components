@@ -15,6 +15,7 @@ import * as i1 from '@angular/cdk/dialog';
 import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -58,6 +59,7 @@ export class MatBottomSheetConfig<D = any> {
     disableClose?: boolean;
     hasBackdrop?: boolean;
     height?: string;
+    injector?: Injector;
     maxHeight?: number | string;
     minHeight?: number | string;
     panelClass?: string | string[];

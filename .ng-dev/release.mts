@@ -18,6 +18,7 @@ import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-o
  * appear in the changelog.
  */
 export const releasePackages = [
+  'aria',
   'cdk',
   'material',
   'google-maps',

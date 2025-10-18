@@ -6,14 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-  inject,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation, inject} from '@angular/core';
 import {StyleManager} from '../style-manager';
 import {DocsSiteTheme, ThemeStorage} from './theme-storage/theme-storage';
 import {MatIconButton} from '@angular/material/button';
@@ -21,7 +14,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {map} from 'rxjs/operators';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
@@ -33,13 +26,12 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatTooltip, MatMenu, MatMenuItem, MatMenuTrigger, MatIcon],
 })
-export class ThemePicker implements OnInit, OnDestroy {
-  styleManager = inject(StyleManager);
-  private _themeStorage = inject(ThemeStorage);
-  private _activatedRoute = inject(ActivatedRoute);
-  private _liveAnnouncer = inject(LiveAnnouncer);
+export class ThemePicker {
+  readonly styleManager = inject(StyleManager);
+  private readonly _themeStorage = inject(ThemeStorage);
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _liveAnnouncer = inject(LiveAnnouncer);
 
-  private _queryParamSubscription = Subscription.EMPTY;
   currentTheme: DocsSiteTheme | undefined;
 
   // The below colors need to align with the themes defined in theme-picker.scss
@@ -72,6 +64,17 @@ export class ThemePicker implements OnInit, OnDestroy {
   ];
 
   constructor() {
+    this._activatedRoute.queryParamMap
+      .pipe(
+        map((params: ParamMap) => params.get('theme')),
+        takeUntilDestroyed(),
+      )
+      .subscribe((themeName: string | null) => {
+        if (themeName) {
+          this.selectTheme(themeName);
+        }
+      });
+
     const themeName = this._themeStorage.getStoredThemeName();
     if (themeName) {
       this.selectTheme(themeName);
@@ -82,20 +85,6 @@ export class ThemePicker implements OnInit, OnDestroy {
         }
       });
     }
-  }
-
-  ngOnInit() {
-    this._queryParamSubscription = this._activatedRoute.queryParamMap
-      .pipe(map((params: ParamMap) => params.get('theme')))
-      .subscribe((themeName: string | null) => {
-        if (themeName) {
-          this.selectTheme(themeName);
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this._queryParamSubscription.unsubscribe();
   }
 
   selectTheme(themeName: string) {

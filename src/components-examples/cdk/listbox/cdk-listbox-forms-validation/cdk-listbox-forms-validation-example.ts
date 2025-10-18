@@ -8,7 +8,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 /** @title Listbox with forms validation. */
 @Component({
   selector: 'cdk-listbox-forms-validation-example',
-  exportAs: 'cdkListboxFormsValidationExample',
   templateUrl: 'cdk-listbox-forms-validation-example.html',
   styleUrl: 'cdk-listbox-forms-validation-example.css',
   imports: [CdkListbox, FormsModule, ReactiveFormsModule, CdkOption, AsyncPipe, JsonPipe],

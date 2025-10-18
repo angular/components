@@ -1156,6 +1156,75 @@ describe('MatTimepicker', () => {
       expect(input.disabled).toBe(true);
       expect(fixture.componentInstance.input.disabled()).toBe(true);
     });
+
+    it('should emit to valueChange before assigning control value when typing', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.input.value.subscribe(value => {
+        eventValue = value;
+        controlValue = control.value;
+      });
+
+      typeInElement(getInput(fixture), '1:37 PM');
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
+
+    it('should emit to valueChange before assigning control value when clicking an option', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.input.value.subscribe(value => {
+        eventValue = value;
+        controlValue = control.value;
+      });
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      getOptions()[5].click();
+      fixture.detectChanges();
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
+
+    it('should emit to selected event before assigning control value when clicking an option', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.timepicker.selected.subscribe(event => {
+        eventValue = event.value;
+        controlValue = control.value;
+      });
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      getOptions()[5].click();
+      fixture.detectChanges();
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
   });
 
   describe('timepicker toggle', () => {
@@ -1410,6 +1479,7 @@ class TimepickerTwoWayBinding {
 })
 class TimepickerWithForms {
   @ViewChild(MatTimepickerInput) input: MatTimepickerInput<Date>;
+  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
   readonly control = new FormControl<Date | null>(null, [Validators.required]);
   readonly min = signal<Date | null>(null);
   readonly max = signal<Date | null>(null);

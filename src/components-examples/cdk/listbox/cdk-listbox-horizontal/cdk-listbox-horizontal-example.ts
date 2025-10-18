@@ -4,7 +4,6 @@ import {CdkListbox, CdkOption} from '@angular/cdk/listbox';
 /** @title Horizontal listbox */
 @Component({
   selector: 'cdk-listbox-horizontal-example',
-  exportAs: 'cdkListboxhorizontalExample',
   templateUrl: 'cdk-listbox-horizontal-example.html',
   styleUrl: 'cdk-listbox-horizontal-example.css',
   imports: [CdkListbox, CdkOption],

@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {InjectionToken, Injector, ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
-import {InjectionToken, ViewContainerRef} from '@angular/core';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -22,6 +22,12 @@ export const MAT_BOTTOM_SHEET_DATA = new InjectionToken<any>('MatBottomSheetData
 export class MatBottomSheetConfig<D = any> {
   /** The view container to place the overlay for the bottom sheet into. */
   viewContainerRef?: ViewContainerRef;
+
+  /**
+   * Injector used for the instantiation of the component to be attached. If provided,
+   * takes precedence over the injector indirectly provided by `ViewContainerRef`.
+   */
+  injector?: Injector;
 
   /** Extra CSS classes to be added to the bottom sheet container. */
   panelClass?: string | string[];

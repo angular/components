@@ -713,9 +713,7 @@ export function crossEnvironmentSpecs(
       const element = await harness.contenteditable();
       expect(await element.text()).not.toBe('hello');
 
-      // @breaking-change 16.0.0 Remove non-null assertion once `setContenteditableValue`
-      // becomes a required method.
-      await element.setContenteditableValue!('hello');
+      await element.setContenteditableValue('hello');
 
       expect(await element.text()).toBe('hello');
     });

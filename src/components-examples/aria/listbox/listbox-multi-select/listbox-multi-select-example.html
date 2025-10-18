@@ -1,0 +1,25 @@
+<!-- Multi Select -->
+<div class="example-container">
+  <ul
+    ngListbox
+    [multi]="true"
+    selectionMode="explicit"
+    class="example-listbox example-parent"
+    aria-labelledby="multi-select-label"
+  >
+    <label class="example-label" id="multi-select-label">Multi Select Fruits</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-option example-stateful example-selectable"
+        [value]="fruit"
+        ngOption
+        #option="ngOption"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>
