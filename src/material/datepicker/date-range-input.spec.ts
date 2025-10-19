@@ -19,7 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../core';
+import {ErrorStateMatcher, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {MatFormField, MatFormFieldModule, MatLabel} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatDateRangeInput} from './date-range-input';
@@ -36,11 +36,11 @@ describe('MatDateRangeInput', () => {
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
-        MatNativeDateModule,
         component,
       ],
       providers: [
         ...providers,
+        provideNativeDateAdapter(),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
     });

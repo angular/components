@@ -23,7 +23,7 @@ import {
 import {Component, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MAT_DATE_FORMATS, MatNativeDateModule} from '../core';
+import {MAT_DATE_FORMATS, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {MatCalendarCellClassFunction, MatCalendarUserEvent} from './calendar-body';
 import {
@@ -41,8 +41,8 @@ describe('MatMonthView', () => {
       dir = signal<Direction>('ltr');
 
       TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
         providers: [
+          provideNativeDateAdapter(),
           provideFakeDirectionality(dir),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
@@ -798,8 +798,8 @@ describe('MatMonthView', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatNativeDateModule],
         providers: [
+          provideNativeDateAdapter(),
           provideFakeDirectionality('ltr'),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
           {
