@@ -144,6 +144,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** The ARIA role of the popup associated with the combobox. */
   hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
 
+  /** Whether the combobox is interactive. */
+  isInteractive = computed(() => !this.inputs.disabled() && !this.inputs.readonly());
+
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
     if (!this.expanded()) {
@@ -215,21 +218,21 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles keydown events for the combobox. */
   onKeydown(event: KeyboardEvent) {
-    if (!this.inputs.disabled() && !this.inputs.readonly()) {
+    if (this.isInteractive()) {
       this.keydown().handle(event);
     }
   }
 
   /** Handles pointerup events for the combobox. */
   onPointerup(event: PointerEvent) {
-    if (!this.inputs.disabled() && !this.inputs.readonly()) {
+    if (this.isInteractive()) {
       this.pointerup().handle(event);
     }
   }
 
   /** Handles input events for the combobox. */
   onInput(event: Event) {
-    if (this.inputs.disabled() || this.inputs.readonly()) {
+    if (!this.isInteractive()) {
       return;
     }
 

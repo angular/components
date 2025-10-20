@@ -73,10 +73,10 @@ export class Combobox<V> {
   private _hasBeenFocused = signal(false);
 
   /** Whether the combobox is disabled. */
-  readonly isDisabled = input(false);
+  readonly disabled = input(false);
 
   /** Whether the combobox is read-only. */
-  readonly isReadonly = input(false);
+  readonly readonly = input(false);
 
   /** The value of the first matching item in the popup. */
   readonly firstMatch = input<V | undefined>(undefined);
@@ -85,8 +85,8 @@ export class Combobox<V> {
   readonly pattern = new ComboboxPattern<any, V>({
     ...this,
     textDirection: this.textDirection,
-    disabled: this.isDisabled,
-    readonly: this.isReadonly,
+    disabled: this.disabled,
+    readonly: this.readonly,
     inputValue: signal(''),
     inputEl: signal(undefined),
     containerEl: () => this._elementRef.nativeElement,
