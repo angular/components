@@ -14,6 +14,7 @@ ts_project(
         "//src/aria/ui-patterns/behaviors/signal-like",
         "//src/aria/ui-patterns/combobox",
         "//src/aria/ui-patterns/listbox",
+        "//src/aria/ui-patterns/menu",
         "//src/aria/ui-patterns/radio-group",
         "//src/aria/ui-patterns/tabs",
         "//src/aria/ui-patterns/toolbar",

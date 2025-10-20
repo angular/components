@@ -1,0 +1,38 @@
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "menu",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/ui-patterns",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":menu",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/axe-core",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

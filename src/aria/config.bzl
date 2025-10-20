@@ -4,6 +4,7 @@ ARIA_ENTRYPOINTS = [
     "combobox",
     "deferred-content",
     "listbox",
+    "menu",
     "radio-group",
     "tabs",
     "toolbar",

@@ -1,0 +1,61 @@
+<div ngMenu class="example-menu">
+  <span id="security-label" class="example-menu-heading">SECURITY</span>
+
+  <div role="group" aria-labelledby="security-label">
+    <div menu-item value="Change password">
+      <span menu-item-icon>lock_open</span>
+      <span menu-item-text>Change password</span>
+    </div>
+
+    <div menu-item value="Two-factor authentication">
+      <span menu-item-icon>security_key</span>
+      <span menu-item-text>Two-factor authentication</span>
+    </div>
+
+    <div menu-item value="Reset" [submenu]="updateMenu" #updateItem="ngMenuItem">
+      <span menu-item-icon>refresh</span>
+      <span menu-item-text>Reset</span>
+      <span menu-item-icon class="example-arrow">arrow_right</span>
+    </div>
+
+    <div menu #updateMenu="ngMenu" [parent]="updateItem">
+      <div menu-item value="Email address">
+        <span menu-item-icon>email</span>
+        <span menu-item-text>Email address</span>
+      </div>
+
+      <div menu-item value="Phone number">
+        <span menu-item-icon>phone</span>
+        <span menu-item-text>Phone number</span>
+      </div>
+
+      <div menu-item value="Password">
+        <span menu-item-icon>vpn_key</span>
+        <span menu-item-text>Password</span>
+      </div>
+    </div>
+  </div>
+
+  <div role="separator" class="example-menu-item-separator"></div>
+
+  <span id="help-label" class="example-menu-heading">HELP</span>
+
+  <div role="group" aria-labelledby="help-label">
+    <div menu-item value="Support">
+      <span menu-item-icon>help</span>
+      <span menu-item-text>Support</span>
+    </div>
+
+    <div menu-item value="Feedback">
+      <span menu-item-icon>feedback</span>
+      <span menu-item-text>Feedback</span>
+    </div>
+  </div>
+
+  <div role="separator" class="example-menu-item-separator"></div>
+
+  <div menu-item value="Logout">
+    <span menu-item-icon>logout</span>
+    <span menu-item-text>Logout</span>
+  </div>
+</div>

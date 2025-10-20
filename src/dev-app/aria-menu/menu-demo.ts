@@ -7,11 +7,18 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  MenuBarExample,
+  MenuContextExample,
+  MenuTriggerExample,
+  MenuStandaloneExample,
+} from '@angular/components-examples/aria/menu';
 
 @Component({
   templateUrl: 'menu-demo.html',
   styleUrl: 'menu-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MenuBarExample, MenuContextExample, MenuTriggerExample, MenuStandaloneExample],
 })
 export class MenuDemo {}

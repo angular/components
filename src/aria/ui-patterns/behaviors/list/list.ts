@@ -24,13 +24,14 @@ import {
   ListTypeaheadItem,
 } from '../list-typeahead/list-typeahead';
 
-/** The selection operations that the list can perform. */
-interface SelectOptions {
+/** The operations that the list can perform after navigation. */
+interface NavOptions {
   toggle?: boolean;
   select?: boolean;
   selectOne?: boolean;
   selectRange?: boolean;
   anchor?: boolean;
+  focusElement?: boolean;
 }
 
 /** Represents an item in the list. */
@@ -105,28 +106,28 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Navigates to the first option in the list. */
-  first(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationBehavior.first());
+  first(opts?: NavOptions) {
+    this._navigate(opts, () => this.navigationBehavior.first(opts));
   }
 
   /** Navigates to the last option in the list. */
-  last(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationBehavior.last());
+  last(opts?: NavOptions) {
+    this._navigate(opts, () => this.navigationBehavior.last(opts));
   }
 
   /** Navigates to the next option in the list. */
-  next(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationBehavior.next());
+  next(opts?: NavOptions) {
+    this._navigate(opts, () => this.navigationBehavior.next(opts));
   }
 
   /** Navigates to the previous option in the list. */
-  prev(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationBehavior.prev());
+  prev(opts?: NavOptions) {
+    this._navigate(opts, () => this.navigationBehavior.prev(opts));
   }
 
   /** Navigates to the given item in the list. */
-  goto(item: T, opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationBehavior.goto(item));
+  goto(item: T, opts?: NavOptions) {
+    this._navigate(opts, () => this.navigationBehavior.goto(item, opts));
   }
 
   /** Removes focus from the list. */
@@ -140,7 +141,7 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Handles typeahead search navigation for the list. */
-  search(char: string, opts?: SelectOptions) {
+  search(char: string, opts?: NavOptions) {
     this._navigate(opts, () => this.typeaheadBehavior.search(char));
   }
 
@@ -190,7 +191,7 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Handles updating selection for the list. */
-  updateSelection(opts: SelectOptions = {anchor: true}) {
+  updateSelection(opts: NavOptions = {anchor: true}) {
     if (opts.toggle) {
       this.selectionBehavior.toggle();
     }
@@ -217,7 +218,7 @@ export class List<T extends ListItem<V>, V> {
    * Handles boilerplate calling of focus & selection operations. Also ensures these
    * additional operations are only called if the navigation operation moved focus to a new option.
    */
-  private _navigate(opts: SelectOptions = {}, operation: () => boolean) {
+  private _navigate(opts: NavOptions = {}, operation: () => boolean) {
     if (opts?.selectRange) {
       this._wrap.set(false);
       this.selectionBehavior.rangeStartIndex.set(this._anchorIndex());
