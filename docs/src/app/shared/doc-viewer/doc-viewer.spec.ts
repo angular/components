@@ -1,5 +1,4 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {Component, provideZoneChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
@@ -20,7 +19,6 @@ describe('DocViewer', () => {
       providers: [
         {provide: Clipboard, useValue: clipboardSpy},
         provideRouter([]),
-        provideHttpClient(),
         provideHttpClientTesting(),
         provideZoneChangeDetection(),
       ],

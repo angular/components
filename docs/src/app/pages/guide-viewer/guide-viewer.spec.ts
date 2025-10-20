@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {ActivatedRoute, provideRouter} from '@angular/router';
 import {GuideViewer} from './guide-viewer';
-import {provideHttpClient} from '@angular/common/http';
 
 const guideItemsId = 'getting-started';
 
@@ -21,11 +20,7 @@ describe('GuideViewer', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        provideHttpClient(),
-      ],
+      providers: [provideRouter([]), {provide: ActivatedRoute, useValue: mockActivatedRoute}],
     });
   });
 

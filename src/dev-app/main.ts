@@ -9,7 +9,6 @@
 // Load `$localize` for examples using it.
 import '@angular/localize/init';
 
-import {provideHttpClient} from '@angular/common/http';
 import {
   provideZonelessChangeDetection,
   // tslint:disable-next-line:no-zone-dependencies -- Allow manual testing of dev-app with zones
@@ -51,7 +50,6 @@ function bootstrap(): void {
     providers: [
       provideRouter(DEV_APP_ROUTES),
       provideNativeDateAdapter(),
-      provideHttpClient(),
       {
         provide: MATERIAL_ANIMATIONS,
         useValue: {
