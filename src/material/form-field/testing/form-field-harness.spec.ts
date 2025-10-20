@@ -8,7 +8,7 @@ import {MatError, MatFormField, MatHint, MatLabel, MatPrefix, MatSuffix} from '.
 import {MatAutocomplete, MatAutocompleteTrigger} from '../../autocomplete';
 import {MatInput} from '../../input';
 import {MatSelect} from '../../select';
-import {MATERIAL_ANIMATIONS, MatNativeDateModule, MatOption} from '../../core';
+import {MATERIAL_ANIMATIONS, provideNativeDateAdapter, MatOption} from '../../core';
 import {
   MatDateRangeInput,
   MatDateRangePicker,
@@ -30,8 +30,11 @@ describe('MatFormFieldHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, FormFieldHarnessTest, MatDatepickerModule],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      imports: [FormFieldHarnessTest, MatDatepickerModule],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);
@@ -344,7 +347,6 @@ describe('MatFormFieldHarness', () => {
   `,
   imports: [
     ReactiveFormsModule,
-    MatNativeDateModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatDatepicker,

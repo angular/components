@@ -42,7 +42,7 @@ import {
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
-import {MATERIAL_ANIMATIONS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '../core';
+import {MATERIAL_ANIMATIONS, MAT_DATE_LOCALE, provideNativeDateAdapter} from '../core';
 import {MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {DEC, JAN, JUL, JUN, SEP} from '../testing';
@@ -61,13 +61,8 @@ describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
 
   // Creates a test component fixture.
-  function createComponent<T>(
-    component: Type<T>,
-    imports: Type<any>[] = [],
-    providers: Provider[] = [],
-  ): ComponentFixture<T> {
+  function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports,
       providers: [
         ...providers,
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -77,14 +72,14 @@ describe('MatDatepicker', () => {
     return TestBed.createComponent(component);
   }
 
-  describe('with MatNativeDateModule', () => {
+  describe('with native adapter', () => {
     describe('standard datepicker', () => {
       let fixture: ComponentFixture<StandardDatepicker>;
       let testComponent: StandardDatepicker;
       let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
+        fixture = createComponent(StandardDatepicker, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -499,20 +494,17 @@ describe('MatDatepicker', () => {
         const scrolledSubject = new Subject();
 
         // Stub out a `CloseScrollStrategy` so we can trigger a detachment via the `OverlayRef`.
-        fixture = createComponent(
-          StandardDatepicker,
-          [MatNativeDateModule],
-          [
-            {
-              provide: ScrollDispatcher,
-              useValue: {scrolled: () => scrolledSubject},
-            },
-            {
-              provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-              useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
-            },
-          ],
-        );
+        fixture = createComponent(StandardDatepicker, [
+          provideNativeDateAdapter(),
+          {
+            provide: ScrollDispatcher,
+            useValue: {scrolled: () => scrolledSubject},
+          },
+          {
+            provide: MAT_DATEPICKER_SCROLL_STRATEGY,
+            useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
+          },
+        ]);
 
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
@@ -674,14 +666,14 @@ describe('MatDatepicker', () => {
 
     describe('datepicker with too many inputs', () => {
       it('should throw when multiple inputs registered', fakeAsync(() => {
-        const fixture = createComponent(MultiInputDatepicker, [MatNativeDateModule]);
+        const fixture = createComponent(MultiInputDatepicker, [provideNativeDateAdapter()]);
         expect(() => fixture.detectChanges()).toThrow();
       }));
     });
 
     describe('datepicker that is assigned to input at a later point', () => {
       it('should not throw on ALT + DOWN_ARROW for input without datepicker', fakeAsync(() => {
-        const fixture = createComponent(DelayedDatepicker, [MatNativeDateModule]);
+        const fixture = createComponent(DelayedDatepicker, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         expect(() => {
@@ -693,7 +685,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should handle value changes when a datepicker is assigned after init', fakeAsync(() => {
-        const fixture = createComponent(DelayedDatepicker, [MatNativeDateModule]);
+        const fixture = createComponent(DelayedDatepicker, [provideNativeDateAdapter()]);
         const testComponent: DelayedDatepicker = fixture.componentInstance;
         const toSelect = new Date(2017, JAN, 1);
         fixture.detectChanges();
@@ -724,7 +716,7 @@ describe('MatDatepicker', () => {
       let testComponent: NoInputDatepicker;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(NoInputDatepicker, [MatNativeDateModule]);
+        fixture = createComponent(NoInputDatepicker, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -749,7 +741,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithStartAt;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithStartAt, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithStartAt, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -770,7 +762,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithStartViewYear;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithStartViewYear, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithStartViewYear, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -823,7 +815,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithStartViewMultiYear;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithStartViewMultiYear, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithStartViewMultiYear, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -877,7 +869,7 @@ describe('MatDatepicker', () => {
       let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithNgModel, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithNgModel, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         model = fixture.debugElement
@@ -1059,7 +1051,7 @@ describe('MatDatepicker', () => {
       let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithFormControl, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithFormControl, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -1175,7 +1167,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithToggle;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithToggle, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithToggle, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -1300,7 +1292,7 @@ describe('MatDatepicker', () => {
 
         fixture.destroy();
         TestBed.resetTestingModule();
-        fixture = createComponent(DatepickerWithToggleInShadowDom, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithToggleInShadowDom, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
 
@@ -1452,7 +1444,7 @@ describe('MatDatepicker', () => {
 
     describe('datepicker with custom mat-datepicker-toggle icon', () => {
       it('should be able to override the mat-datepicker-toggle icon', fakeAsync(() => {
-        const fixture = createComponent(DatepickerWithCustomIcon, [MatNativeDateModule]);
+        const fixture = createComponent(DatepickerWithCustomIcon, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle .custom-icon'))
@@ -1467,7 +1459,9 @@ describe('MatDatepicker', () => {
 
     describe('datepicker with tabindex on mat-datepicker-toggle', () => {
       it('should forward the tabindex to the underlying button', () => {
-        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [
+          provideNativeDateAdapter(),
+        ]);
         fixture.detectChanges();
 
         const button = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
@@ -1476,7 +1470,9 @@ describe('MatDatepicker', () => {
       });
 
       it('should remove the tabindex from the mat-datepicker-toggle host', () => {
-        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [
+          provideNativeDateAdapter(),
+        ]);
         fixture.detectChanges();
 
         const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
@@ -1490,7 +1486,7 @@ describe('MatDatepicker', () => {
       let testComponent: FormFieldDatepicker;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(FormFieldDatepicker, [MatNativeDateModule]);
+        fixture = createComponent(FormFieldDatepicker, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
       }));
@@ -1580,7 +1576,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithMinAndMaxValidation;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithMinAndMaxValidation, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithMinAndMaxValidation, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         flush();
 
@@ -1746,7 +1742,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithFilterAndValidation;
 
       beforeEach(() => {
-        fixture = createComponent(DatepickerWithFilterAndValidation, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithFilterAndValidation, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -1843,7 +1839,7 @@ describe('MatDatepicker', () => {
       let inputEl: HTMLInputElement;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithChangeAndInputEvents, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithChangeAndInputEvents, [provideNativeDateAdapter()]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -1966,7 +1962,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithISOStrings;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithISOStrings, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithISOStrings, [provideNativeDateAdapter()]);
         flush();
         testComponent = fixture.componentInstance;
       }));
@@ -1993,7 +1989,7 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithEvents;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithEvents, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithEvents, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         flush();
         testComponent = fixture.componentInstance;
@@ -2026,7 +2022,7 @@ describe('MatDatepicker', () => {
       let input: HTMLInputElement;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerOpeningOnFocus, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerOpeningOnFocus, [provideNativeDateAdapter()]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         input = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -2075,11 +2071,10 @@ describe('MatDatepicker', () => {
 
     describe('datepicker directionality', () => {
       it('should pass along the directionality to the popup', fakeAsync(() => {
-        const fixture = createComponent(
-          StandardDatepicker,
-          [MatNativeDateModule],
-          [provideFakeDirectionality('rtl')],
-        );
+        const fixture = createComponent(StandardDatepicker, [
+          provideNativeDateAdapter(),
+          provideFakeDirectionality('rtl'),
+        ]);
 
         fixture.detectChanges();
         fixture.componentInstance.datepicker.open();
@@ -2093,11 +2088,10 @@ describe('MatDatepicker', () => {
 
       it('should update the popup direction if the directionality value changes', fakeAsync(() => {
         const dir = signal<Direction>('ltr');
-        const fixture = createComponent(
-          StandardDatepicker,
-          [MatNativeDateModule],
-          [provideFakeDirectionality(dir)],
-        );
+        const fixture = createComponent(StandardDatepicker, [
+          provideNativeDateAdapter(),
+          provideFakeDirectionality(dir),
+        ]);
 
         fixture.detectChanges();
         fixture.componentInstance.datepicker.open();
@@ -2123,11 +2117,10 @@ describe('MatDatepicker', () => {
       }));
 
       it('should pass along the directionality to the dialog in touch mode', fakeAsync(() => {
-        const fixture = createComponent(
-          StandardDatepicker,
-          [MatNativeDateModule],
-          [provideFakeDirectionality('rtl')],
-        );
+        const fixture = createComponent(StandardDatepicker, [
+          provideNativeDateAdapter(),
+          provideFakeDirectionality('rtl'),
+        ]);
 
         fixture.componentInstance.touch = true;
         fixture.changeDetectorRef.markForCheck();
@@ -2154,13 +2147,17 @@ describe('MatDatepicker', () => {
   describe('datepicker directives without a datepicker', () => {
     it('should not throw on init if toggle does not have a datepicker', () => {
       expect(() => {
-        const fixture = createComponent(DatepickerToggleWithNoDatepicker, [MatNativeDateModule]);
+        const fixture = createComponent(DatepickerToggleWithNoDatepicker, [
+          provideNativeDateAdapter(),
+        ]);
         fixture.detectChanges();
       }).not.toThrow();
     });
 
     it('should not set aria-haspopup if toggle does not have a datepicker', () => {
-      const fixture = createComponent(DatepickerToggleWithNoDatepicker, [MatNativeDateModule]);
+      const fixture = createComponent(DatepickerToggleWithNoDatepicker, [
+        provideNativeDateAdapter(),
+      ]);
       fixture.detectChanges();
       const toggle = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
 
@@ -2168,7 +2165,9 @@ describe('MatDatepicker', () => {
     });
 
     it('should not set aria-expanded if toggle does not have a datepicker', () => {
-      const fixture = createComponent(DatepickerToggleWithNoDatepicker, [MatNativeDateModule]);
+      const fixture = createComponent(DatepickerToggleWithNoDatepicker, [
+        provideNativeDateAdapter(),
+      ]);
       fixture.detectChanges();
       const toggle = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
 
@@ -2177,13 +2176,17 @@ describe('MatDatepicker', () => {
 
     it('should not throw on init if input does not have a datepicker', () => {
       expect(() => {
-        const fixture = createComponent(DatepickerInputWithNoDatepicker, [MatNativeDateModule]);
+        const fixture = createComponent(DatepickerInputWithNoDatepicker, [
+          provideNativeDateAdapter(),
+        ]);
         fixture.detectChanges();
       }).not.toThrow();
     });
 
     it('should not set aria-haspopup if input does not have a datepicker', () => {
-      const fixture = createComponent(DatepickerInputWithNoDatepicker, [MatNativeDateModule]);
+      const fixture = createComponent(DatepickerInputWithNoDatepicker, [
+        provideNativeDateAdapter(),
+      ]);
       fixture.detectChanges();
       const toggle = fixture.nativeElement.querySelector('input');
 
@@ -2197,7 +2200,7 @@ describe('MatDatepicker', () => {
     let input: HTMLElement;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
+      fixture = createComponent(StandardDatepicker, [provideNativeDateAdapter()]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       input = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -2315,11 +2318,10 @@ describe('MatDatepicker', () => {
     let input: HTMLInputElement;
 
     beforeEach(() => {
-      fixture = createComponent(
-        DatepickerWithi18n,
-        [MatNativeDateModule, NativeDateModule],
-        [{provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
-      );
+      fixture = createComponent(DatepickerWithi18n, [
+        provideNativeDateAdapter(),
+        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+      ]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
@@ -2351,7 +2353,7 @@ describe('MatDatepicker', () => {
     let testComponent: DatepickerWithCustomHeader;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(DatepickerWithCustomHeader, [MatNativeDateModule]);
+      fixture = createComponent(DatepickerWithCustomHeader, [provideNativeDateAdapter()]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
     }));
@@ -2382,7 +2384,9 @@ describe('MatDatepicker', () => {
   });
 
   it('should not trigger validators if new date object for same date is set for `min`', () => {
-    const fixture = createComponent(DatepickerInputWithCustomValidator, [MatNativeDateModule]);
+    const fixture = createComponent(DatepickerInputWithCustomValidator, [
+      provideNativeDateAdapter(),
+    ]);
     fixture.detectChanges();
     const minDate = new Date(2019, 0, 1);
     const validator = fixture.componentInstance.validator;
@@ -2401,7 +2405,9 @@ describe('MatDatepicker', () => {
   });
 
   it('should not trigger validators if new date object for same date is set for `max`', () => {
-    const fixture = createComponent(DatepickerInputWithCustomValidator, [MatNativeDateModule]);
+    const fixture = createComponent(DatepickerInputWithCustomValidator, [
+      provideNativeDateAdapter(),
+    ]);
     fixture.detectChanges();
     const maxDate = new Date(2120, 0, 1);
     const validator = fixture.componentInstance.validator;
@@ -2420,7 +2426,7 @@ describe('MatDatepicker', () => {
   });
 
   it('should not emit to `stateChanges` if new date object for same date is set for `min`', () => {
-    const fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
+    const fixture = createComponent(StandardDatepicker, [provideNativeDateAdapter()]);
     fixture.detectChanges();
 
     const minDate = new Date(2019, 0, 1);
@@ -2441,7 +2447,7 @@ describe('MatDatepicker', () => {
   });
 
   it('should not emit to `stateChanges` if new date object for same date is set for `max`', () => {
-    const fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
+    const fixture = createComponent(StandardDatepicker, [provideNativeDateAdapter()]);
     fixture.detectChanges();
 
     const maxDate = new Date(2120, 0, 1);
@@ -2466,7 +2472,7 @@ describe('MatDatepicker', () => {
     let testComponent: PanelClassDatepicker;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(PanelClassDatepicker, [MatNativeDateModule]);
+      fixture = createComponent(PanelClassDatepicker, [provideNativeDateAdapter()]);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;

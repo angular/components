@@ -3,7 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {DateAdapter, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
+import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
 import {MatDatepickerModule} from '../../datepicker';
 import {MatFormFieldModule} from '../../form-field';
 import {MatInputModule} from '../../input';
@@ -16,8 +16,10 @@ describe('MatDatepickerInputHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
     fixture = TestBed.createComponent(DatepickerInputHarnessTest);
     fixture.detectChanges();
@@ -214,13 +216,7 @@ describe('MatDatepickerInputHarness', () => {
 
     <input id="no-datepicker" [matDatepicker]="null!">
   `,
-  imports: [
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-  ],
+  imports: [MatDatepickerModule, MatFormFieldModule, MatInputModule, FormsModule],
 })
 class DatepickerInputHarnessTest {
   date: Date | null = null;

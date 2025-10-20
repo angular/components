@@ -3,7 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
+import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
 import {
   MatDatepickerModule,
   MatDateRangeInput,
@@ -25,8 +25,11 @@ describe('matDateRangeInputHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule, FormsModule, DateRangeInputHarnessTest],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      imports: [MatDatepickerModule, FormsModule, DateRangeInputHarnessTest],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
     fixture = TestBed.createComponent(DateRangeInputHarnessTest);
     fixture.detectChanges();
@@ -279,7 +282,6 @@ describe('matDateRangeInputHarness', () => {
     </mat-form-field>
   `,
   imports: [
-    MatNativeDateModule,
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
