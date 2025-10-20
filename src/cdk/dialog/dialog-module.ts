@@ -29,9 +29,4 @@ export class DialogModule {}
 // See: https://github.com/angular/components/issues/30663.
 // Note: These exports need to be stable and shouldn't be renamed unnecessarily because
 // consuming libraries might have references to them in their own partial compilation output.
-export {
-  CdkPortal as ɵɵCdkPortal,
-  CdkPortalOutlet as ɵɵCdkPortalOutlet,
-  TemplatePortalDirective as ɵɵTemplatePortalDirective,
-  PortalHostDirective as ɵɵPortalHostDirective,
-} from '../portal';
+export {CdkPortal as ɵɵCdkPortal, CdkPortalOutlet as ɵɵCdkPortalOutlet} from '../portal';

@@ -45,22 +45,6 @@ export class CdkPortal extends TemplatePortal {
 }
 
 /**
- * @deprecated Use `CdkPortal` instead.
- * @breaking-change 9.0.0
- */
-@Directive({
-  selector: '[cdk-portal], [portal]',
-  exportAs: 'cdkPortal',
-  providers: [
-    {
-      provide: CdkPortal,
-      useExisting: TemplatePortalDirective,
-    },
-  ],
-})
-export class TemplatePortalDirective extends CdkPortal {}
-
-/**
  * Possible attached references to the CdkPortalOutlet.
  */
 export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any> | null;
@@ -234,25 +218,8 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   }
 }
 
-/**
- * @deprecated Use `CdkPortalOutlet` instead.
- * @breaking-change 9.0.0
- */
-@Directive({
-  selector: '[cdkPortalHost], [portalHost]',
-  exportAs: 'cdkPortalHost',
-  inputs: [{name: 'portal', alias: 'cdkPortalHost'}],
-  providers: [
-    {
-      provide: CdkPortalOutlet,
-      useExisting: PortalHostDirective,
-    },
-  ],
-})
-export class PortalHostDirective extends CdkPortalOutlet {}
-
 @NgModule({
-  imports: [CdkPortal, CdkPortalOutlet, TemplatePortalDirective, PortalHostDirective],
-  exports: [CdkPortal, CdkPortalOutlet, TemplatePortalDirective, PortalHostDirective],
+  imports: [CdkPortal, CdkPortalOutlet],
+  exports: [CdkPortal, CdkPortalOutlet],
 })
 export class PortalModule {}
