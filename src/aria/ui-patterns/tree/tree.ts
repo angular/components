@@ -275,13 +275,13 @@ export class TreePattern<V> {
     if (!this.followFocus() && this.inputs.multi()) {
       manager
         .on(this.dynamicSpaceKey, () => list.toggle())
-        .on('Enter', () => list.toggle())
+        .on('Enter', () => list.toggle(), {preventDefault: !this.nav()})
         .on([Modifier.Ctrl, Modifier.Meta], 'A', () => list.toggleAll());
     }
 
     if (!this.followFocus() && !this.inputs.multi()) {
       manager.on(this.dynamicSpaceKey, () => list.selectOne());
-      manager.on('Enter', () => list.selectOne());
+      manager.on('Enter', () => list.selectOne(), {preventDefault: !this.nav()});
     }
 
     if (this.inputs.multi() && this.followFocus()) {
