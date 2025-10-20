@@ -14,6 +14,7 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//src/aria/radio-group",
         "//src/aria/toolbar",
+        "//src/cdk/a11y",
         "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/select",
