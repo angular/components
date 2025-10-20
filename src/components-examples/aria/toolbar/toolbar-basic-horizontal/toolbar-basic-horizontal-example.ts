@@ -11,7 +11,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   imports: [RadioButton, RadioGroup, Toolbar, ToolbarWidget],
 })
 export class ToolbarBasicHorizontalExample {
-  constructor(private liveAnnouncer: LiveAnnouncer) {}
+  constructor(private _liveAnnouncer: LiveAnnouncer) {}
   alignments = [
     {value: 'left', label: 'Left'},
     {value: 'center', label: 'Center'},
@@ -19,10 +19,10 @@ export class ToolbarBasicHorizontalExample {
   ];
   format(tool: string) {
     console.log(`Tool activated: ${tool}`);
-    this.liveAnnouncer.announce(`${tool} applied`, 'polite');
+    this._liveAnnouncer.announce(`${tool} applied`, 'polite');
   }
   test(action: string) {
     console.log(`Action triggered: ${action}`);
-    this.liveAnnouncer.announce(`${action} button activated`, 'polite');
+    this._liveAnnouncer.announce(`${action} button activated`, 'polite');
   }
 }
