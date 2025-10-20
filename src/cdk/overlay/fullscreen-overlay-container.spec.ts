@@ -2,7 +2,6 @@ import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, ViewChild, ViewContainerRef, inject, DOCUMENT, Injector} from '@angular/core';
 import {CdkPortal} from '../portal';
 import {OverlayContainer, FullscreenOverlayContainer, createOverlayRef} from './index';
-import {TemplatePortalDirective} from '../portal/portal-directives';
 
 describe('FullscreenOverlayContainer', () => {
   let injector: Injector;
@@ -106,8 +105,8 @@ describe('FullscreenOverlayContainer', () => {
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
-  template: `<ng-template cdk-portal>Cake</ng-template>`,
-  imports: [TemplatePortalDirective],
+  template: `<ng-template cdkPortal>Cake</ng-template>`,
+  imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);
