@@ -30,6 +30,15 @@ export interface ComboboxInputs<T extends ListItem<V>, V> {
 
   /** The value of the first matching item in the popup. */
   firstMatch: SignalLike<V | undefined>;
+
+  /** Whether the combobox is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** Whether the combobox is read-only. */
+  readonly: SignalLike<boolean>;
+
+  /** Whether the combobox is in a right-to-left context. */
+  textDirection: SignalLike<'rtl' | 'ltr'>;
 }
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
@@ -119,10 +128,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   isFocused = signal(false);
 
   /** The key used to navigate to the previous item in the list. */
-  expandKey = computed(() => 'ArrowRight'); // TODO: RTL support.
+  expandKey = computed(() => (this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight'));
 
   /** The key used to navigate to the next item in the list. */
-  collapseKey = computed(() => 'ArrowLeft'); // TODO: RTL support.
+  collapseKey = computed(() =>
+    this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft',
+  );
 
   /** The ID of the popup associated with the combobox. */
   popupId = computed(() => this.inputs.popupControls()?.id() || null);
@@ -204,16 +215,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles keydown events for the combobox. */
   onKeydown(event: KeyboardEvent) {
-    this.keydown().handle(event);
+    if (!this.inputs.disabled() && !this.inputs.readonly()) {
+      this.keydown().handle(event);
+    }
   }
 
   /** Handles pointerup events for the combobox. */
   onPointerup(event: PointerEvent) {
-    this.pointerup().handle(event);
+    if (!this.inputs.disabled() && !this.inputs.readonly()) {
+      this.pointerup().handle(event);
+    }
   }
 
   /** Handles input events for the combobox. */
   onInput(event: Event) {
+    if (this.inputs.disabled() || this.inputs.readonly()) {
+      return;
+    }
+
     const inputEl = this.inputs.inputEl();
 
     if (!inputEl) {
@@ -233,12 +252,17 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
+  /** Handles focus in events for the combobox. */
   onFocusIn() {
     this.isFocused.set(true);
   }
 
   /** Handles focus out events for the combobox. */
   onFocusOut(event: FocusEvent) {
+    if (this.inputs.disabled() || this.inputs.readonly()) {
+      return;
+    }
+
     if (
       !(event.relatedTarget instanceof HTMLElement) ||
       !this.inputs.containerEl()?.contains(event.relatedTarget)
@@ -261,6 +285,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
+  /** The first matching item in the combobox. */
   firstMatch = computed(() => {
     // TODO(wagnermaciel): Consider whether we should not provide this default behavior for the
     // listbox. Instead, we may want to allow users to have no match so that typing does not focus
@@ -275,6 +300,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .find(i => i.value() === this.inputs.firstMatch());
   });
 
+  /** Handles filtering logic for the combobox. */
   onFilter() {
     // TODO(wagnermaciel)
     // When the user first interacts with the combobox, the popup will lazily render for the first
@@ -315,6 +341,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
+  /** Highlights the currently selected item in the combobox. */
   highlight() {
     const inputEl = this.inputs.inputEl();
     const item = this.inputs.popupControls()?.getSelectedItem();
@@ -374,11 +401,13 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this._navigate(() => this.inputs.popupControls()?.last());
   }
 
+  /** Collapses the currently focused item in the combobox. */
   collapseItem() {
     const controls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
     this._navigate(() => controls?.collapseItem());
   }
 
+  /** Expands the currently focused item in the combobox. */
   expandItem() {
     const controls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
     this._navigate(() => controls?.expandItem());
