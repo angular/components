@@ -49,7 +49,7 @@ export interface MenuTriggerInputs<V> {
 }
 
 /** The inputs for the MenuItemPattern class. */
-export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index'> {
+export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
   /** A reference to the parent menu or menu trigger. */
   parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
 
@@ -635,6 +635,9 @@ export class MenuItemPattern<V> implements ListItem<V> {
   /** The submenu associated with the menu item. */
   submenu: SignalLike<MenuPattern<V> | undefined>;
 
+  /** Whether the menu item is selectable. */
+  selectable: SignalLike<boolean>;
+
   constructor(readonly inputs: MenuItemInputs<V>) {
     this.id = inputs.id;
     this.value = inputs.value;
@@ -642,6 +645,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
     this.disabled = inputs.disabled;
     this.submenu = this.inputs.submenu;
     this.searchTerm = inputs.searchTerm;
+    this.selectable = computed(() => !this.submenu());
   }
 
   /** Opens the submenu. */
