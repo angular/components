@@ -166,21 +166,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last())
-      .on('Escape', () => {
-        // TODO(wagnermaciel): We may want to fold this logic into the close() method.
-        if (this.inputs.filterMode() === 'highlight' && popupControls.activeId()) {
-          popupControls.unfocus();
-          popupControls.clearSelection();
-
-          const inputEl = this.inputs.inputEl();
-          if (inputEl) {
-            inputEl.value = this.inputs.inputValue!();
-          }
-        } else {
-          this.close();
-          this.inputs.popupControls()?.clearSelection();
-        }
-      }) // TODO: When filter mode is 'highlight', escape should revert to the last committed value.
+      .on('Escape', () => this.close({reset: true}))
       .on('Enter', () => this.select({commit: true, close: true}));
 
     if (popupControls.role() === 'tree') {
@@ -367,9 +353,29 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   /** Closes the combobox. */
-  close() {
-    this.expanded.set(false);
-    this.inputs.popupControls()?.unfocus();
+  close(opts?: {reset: boolean}) {
+    if (!opts?.reset) {
+      this.expanded.set(false);
+      this.inputs.popupControls()?.unfocus();
+      return;
+    }
+
+    const popupControls = this.inputs.popupControls();
+
+    if (this.inputs.filterMode() === 'highlight' && popupControls?.activeId()) {
+      popupControls.unfocus();
+      popupControls.clearSelection();
+
+      const inputEl = this.inputs.inputEl();
+      if (inputEl) {
+        inputEl.value = this.inputs.inputValue!();
+      }
+
+      return;
+    }
+
+    this.close();
+    this.inputs.popupControls()?.clearSelection();
   }
 
   /** Opens the combobox. */
