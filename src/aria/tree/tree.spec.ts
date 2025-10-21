@@ -114,6 +114,7 @@ describe('Tree', () => {
           if (config.label !== undefined) node.label = config.label;
           if (config.children !== undefined) node.children = config.children;
           if (config.disabled !== undefined) node.disabled = config.disabled;
+          if (config.selectable !== undefined) node.selectable = config.selectable;
           updateTree({nodes: newNodes});
           return;
         }
@@ -309,6 +310,16 @@ describe('Tree', () => {
         expect(appleItem.getAttribute('aria-current')).toBe('location');
       });
 
+      it('should not set aria-current when not selectable', () => {
+        expandAll();
+        updateTree({nav: true, value: ['apple']});
+        const appleItem = getTreeItemElementByValue('apple')!;
+        expect(appleItem.getAttribute('aria-current')).toBe('page');
+
+        updateTreeItemByValue('apple', {selectable: false});
+        expect(appleItem.hasAttribute('aria-current')).toBe(false);
+      });
+
       it('should not set aria-selected when nav="true"', () => {
         expandAll();
 
@@ -318,6 +329,16 @@ describe('Tree', () => {
 
         updateTree({nav: false});
         expect(appleItem.getAttribute('aria-selected')).toBe('true');
+      });
+
+      it('should not set aria-selected when not selectable', () => {
+        expandAll();
+        updateTree({value: ['apple']});
+        const appleItem = getTreeItemElementByValue('apple')!;
+        expect(appleItem.getAttribute('aria-selected')).toBe('true');
+
+        updateTreeItemByValue('apple', {selectable: false});
+        expect(appleItem.hasAttribute('aria-selected')).toBe(false);
       });
     });
 
@@ -492,6 +513,18 @@ describe('Tree', () => {
             click(appleEl);
             expect(treeInstance.value()).toEqual(['banana']);
           });
+
+          describe('selectable=false', () => {
+            it('should not select an item on click', () => {
+              updateTree({value: ['banana']});
+              updateTreeItemByValue('apple', {selectable: false});
+              const appleEl = getTreeItemElementByValue('apple')!;
+
+              click(appleEl);
+              expect(treeInstance.value()).not.toContain('apple');
+              expect(treeInstance.value()).toContain('banana');
+            });
+          });
         });
 
         describe('selectionMode="follow"', () => {
@@ -560,6 +593,39 @@ describe('Tree', () => {
               'broccoli',
             ]);
           });
+
+          describe('selectable=false', () => {
+            it('should not select a range with shift+click if an item is not selectable', () => {
+              updateTreeItemByValue('banana', {selectable: false});
+              const appleEl = getTreeItemElementByValue('apple')!;
+              const berriesEl = getTreeItemElementByValue('berries')!;
+
+              click(appleEl);
+              shiftClick(berriesEl);
+
+              expect(treeInstance.value()).not.toContain('banana');
+              expect(treeInstance.value()).toContain('apple');
+              expect(treeInstance.value()).toContain('berries');
+            });
+
+            it('should not toggle selection of an item on simple click', () => {
+              updateTreeItemByValue('apple', {selectable: false});
+              const appleEl = getTreeItemElementByValue('apple')!;
+
+              click(appleEl);
+              expect(treeInstance.value()).not.toContain('apple');
+            });
+
+            it('should not add to selection with ctrl+click', () => {
+              updateTree({value: ['banana']});
+              updateTreeItemByValue('apple', {selectable: false});
+              const appleEl = getTreeItemElementByValue('apple')!;
+
+              ctrlClick(appleEl);
+              expect(treeInstance.value()).not.toContain('apple');
+              expect(treeInstance.value()).toContain('banana');
+            });
+          });
         });
       });
     });
@@ -606,6 +672,20 @@ describe('Tree', () => {
 
             enter();
             expect(treeInstance.value()).toEqual(['grains']);
+          });
+
+          describe('selectable=false', () => {
+            it('should not select the focused item with Enter', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              enter();
+              expect(treeInstance.value()).toEqual([]);
+            });
+
+            it('should not select the focused item with Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space();
+              expect(treeInstance.value()).toEqual([]);
+            });
           });
         });
 
@@ -737,6 +817,35 @@ describe('Tree', () => {
             up({ctrlKey: true});
             expect(treeInstance.value()).toEqual(['fruits']);
           });
+
+          describe('selectable=false', () => {
+            it('should not toggle selection of the focused item with Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space();
+              expect(treeInstance.value()).toEqual([]);
+            });
+
+            it('should not extend selection with Shift+ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              shift();
+              down({shiftKey: true});
+              down({shiftKey: true});
+              expect(treeInstance.value()).not.toContain('vegetables');
+              expect(treeInstance.value().sort()).toEqual(['fruits', 'grains']);
+            });
+
+            it('Ctrl+A should not select non-selectable items', () => {
+              expandAll();
+              updateTreeItemByValue('apple', {selectable: false});
+              updateTreeItemByValue('carrot', {selectable: false});
+              keydown('A', {ctrlKey: true});
+              const value = treeInstance.value();
+              expect(value).not.toContain('apple');
+              expect(value).not.toContain('carrot');
+              expect(value).toContain('banana');
+              expect(value).toContain('broccoli');
+            });
+          });
         });
 
         describe('selectionMode="follow"', () => {
@@ -862,6 +971,37 @@ describe('Tree', () => {
             type('V');
             expect(treeInstance.value()).toEqual(['vegetables']);
             expect(getFocusedTreeItemValue()).toBe('vegetables');
+          });
+
+          describe('selectable=false', () => {
+            it('should not select an item on ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              down();
+              expect(treeInstance.value()).not.toContain('vegetables');
+              expect(treeInstance.value()).toEqual([]);
+            });
+
+            it('should not toggle selection of the focused item on Ctrl+Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space({ctrlKey: true});
+              expect(treeInstance.value()).toEqual([]);
+            });
+
+            it('should not extend selection with Shift+ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              shift();
+              down({shiftKey: true});
+              down({shiftKey: true});
+              expect(treeInstance.value()).not.toContain('vegetables');
+              expect(treeInstance.value().sort()).toEqual(['fruits', 'grains']);
+            });
+
+            it('typeahead should not select the focused item', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              type('v');
+              expect(getFocusedTreeItemValue()).toBe('vegetables');
+              expect(treeInstance.value()).not.toContain('vegetables');
+            });
           });
 
           it('should not select disabled items during Shift+ArrowKey navigation even if skipDisabled is false', () => {
@@ -1302,6 +1442,7 @@ interface TestTreeNode<V = string> {
   value: V;
   label: string;
   disabled?: boolean;
+  selectable?: boolean;
   children?: TestTreeNode<V>[];
 }
 
@@ -1332,6 +1473,7 @@ interface TestTreeNode<V = string> {
         [value]="node.value"
         [label]="node.label"
         [disabled]="!!node.disabled"
+        [selectable]="node.selectable ?? true"
         [parent]="parent"
         [attr.data-value]="node.value"
         #treeItem="ngTreeItem"

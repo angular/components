@@ -12,6 +12,7 @@ import {fakeAsync, tick} from '@angular/core/testing';
 
 type TestItem<V> = ListItem<V> & {
   disabled: WritableSignal<boolean>;
+  selectable: WritableSignal<boolean>;
   searchTerm: WritableSignal<string>;
   value: WritableSignal<V>;
 };
@@ -44,6 +45,7 @@ describe('List Behavior', () => {
       id: signal(`item-${index}`),
       element: signal(document.createElement('div')),
       disabled: signal(false),
+      selectable: signal(true),
       searchTerm: signal(String(value)),
       index: signal(index),
     }));
@@ -240,10 +242,22 @@ describe('List Behavior', () => {
         expect(list.inputs.value()).toEqual(['Apricot']);
       });
 
+      it('should not select a non-selectable item when navigating with selectOne:true', () => {
+        items[1].selectable.set(false);
+        list.next({selectOne: true});
+        expect(list.inputs.value()).toEqual([]);
+      });
+
       it('should toggle an item when navigating with toggle:true', () => {
         list.goto(items[1], {selectOne: true});
         expect(list.inputs.value()).toEqual(['Apricot']);
 
+        list.goto(items[1], {toggle: true});
+        expect(list.inputs.value()).toEqual([]);
+      });
+
+      it('should not toggle a non-selectable item when navigating with toggle:true', () => {
+        items[1].selectable.set(false);
         list.goto(items[1], {toggle: true});
         expect(list.inputs.value()).toEqual([]);
       });
@@ -279,6 +293,12 @@ describe('List Behavior', () => {
         expect(list.inputs.value()).toEqual(['Apricot']);
       });
 
+      it('should not select a non-selectable item with toggle:true', () => {
+        items[1].selectable.set(false);
+        list.next({toggle: true});
+        expect(list.inputs.value()).toEqual([]);
+      });
+
       it('should allow multiple selected items', () => {
         list.next({toggle: true});
         list.next({toggle: true});
@@ -306,6 +326,13 @@ describe('List Behavior', () => {
 
       it('should not select disabled items in a range', () => {
         items[1].disabled.set(true);
+        list.anchor(0);
+        list.goto(items[3], {selectRange: true});
+        expect(list.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry']);
+      });
+
+      it('should not select non-selectable items in a range', () => {
+        items[1].selectable.set(false);
         list.anchor(0);
         list.goto(items[3], {selectRange: true});
         expect(list.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry']);
@@ -346,6 +373,13 @@ describe('List Behavior', () => {
       const {list} = getDefaultPatterns({multi: signal(false)});
       list.search('b', {selectOne: true});
       expect(list.inputs.value()).toEqual(['Banana']);
+    });
+
+    it('should not select a non-selectable item via typeahead', () => {
+      const {list, items} = getDefaultPatterns({multi: signal(false)});
+      items[2].selectable.set(false); // 'Banana'
+      list.search('b', {selectOne: true});
+      expect(list.inputs.value()).toEqual([]);
     });
   });
 });
