@@ -12,6 +12,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/aria/deferred-content",
         "//src/aria/ui-patterns",
+        "//src/cdk/bidi",
     ],
 )
 

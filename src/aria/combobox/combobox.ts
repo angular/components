@@ -24,6 +24,8 @@ import {
   ComboboxListboxControls,
   ComboboxTreeControls,
 } from '@angular/aria/ui-patterns';
+import {Directionality} from '@angular/cdk/bidi';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 @Directive({
   selector: '[ngCombobox]',
@@ -44,6 +46,14 @@ import {
   },
 })
 export class Combobox<V> {
+  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
+  private readonly _directionality = inject(Directionality);
+
+  /** A signal wrapper for directionality. */
+  protected textDirection = toSignal(this._directionality.change, {
+    initialValue: this._directionality.value,
+  });
+
   /** The element that the combobox is attached to. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -59,15 +69,24 @@ export class Combobox<V> {
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
 
-  /** The value of the first matching item in the popup. */
-  firstMatch = input<V | undefined>(undefined);
-
   /** Whether the listbox has received focus yet. */
   private _hasBeenFocused = signal(false);
+
+  /** Whether the combobox is disabled. */
+  readonly disabled = input(false);
+
+  /** Whether the combobox is read-only. */
+  readonly readonly = input(false);
+
+  /** The value of the first matching item in the popup. */
+  readonly firstMatch = input<V | undefined>(undefined);
 
   /** The combobox ui pattern. */
   readonly pattern = new ComboboxPattern<any, V>({
     ...this,
+    textDirection: this.textDirection,
+    disabled: this.disabled,
+    readonly: this.readonly,
     inputValue: signal(''),
     inputEl: signal(undefined),
     containerEl: () => this._elementRef.nativeElement,

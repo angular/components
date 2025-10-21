@@ -97,6 +97,9 @@ function getComboboxPattern(
   const inputValue = signal('');
 
   const combobox = new ComboboxPattern<any, string>({
+    disabled: signal(inputs.disabled ?? false),
+    readonly: signal(inputs.readonly ?? false),
+    textDirection: signal(inputs.textDirection ?? 'ltr'),
     popupControls: signal(undefined), // will be set later
     inputEl,
     containerEl,
@@ -348,6 +351,13 @@ describe('Combobox with Listbox Pattern', () => {
       combobox.onFocusOut(event);
 
       expect(combobox.expanded()).toBe(true);
+    });
+
+    it('should not expand when disabled', () => {
+      const {combobox, inputEl} = getPatterns({disabled: true});
+      expect(combobox.expanded()).toBe(false);
+      combobox.onPointerup(clickInput(inputEl));
+      expect(combobox.expanded()).toBe(false);
     });
   });
 
