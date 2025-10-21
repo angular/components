@@ -339,13 +339,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     const inputEl = this.inputs.inputEl();
     const item = this.inputs.popupControls()?.getSelectedItem();
 
-    console.log('Highlighting item called with:', item?.searchTerm());
-
     if (!inputEl || !item) {
       return;
     }
-
-    console.log('Highlighting item:', item.searchTerm());
 
     const isHighlightable = item
       .searchTerm()
