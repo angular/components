@@ -424,6 +424,28 @@ describe('Combobox', () => {
           expect(inputElement.selectionEnd).toBe(7);
         }));
 
+        it('should not insert a completion string on backspace', fakeAsync(() => {
+          focus();
+          input('New');
+          tick();
+
+          expect(inputElement.value).toBe('New Hampshire');
+          expect(inputElement.selectionStart).toBe(3);
+          expect(inputElement.selectionEnd).toBe(13);
+        }));
+
+        it('should insert a completion string even if the items are not changed', fakeAsync(() => {
+          focus();
+          input('New');
+          tick();
+
+          input('New ');
+          tick();
+          expect(inputElement.value).toBe('New Hampshire');
+          expect(inputElement.selectionStart).toBe(4);
+          expect(inputElement.selectionEnd).toBe(13);
+        }));
+
         it('should commit the selected option on focusout', () => {
           focus();
           input('Cali');
