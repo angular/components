@@ -1,0 +1,20 @@
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "grid",
+    srcs = [
+        "cell.ts",
+        "grid.ts",
+        "row.ts",
+        "widget.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/ui-patterns/behaviors/event-manager",
+        "//src/aria/ui-patterns/behaviors/grid",
+        "//src/aria/ui-patterns/behaviors/list",
+        "//src/aria/ui-patterns/behaviors/signal-like",
+    ],
+)

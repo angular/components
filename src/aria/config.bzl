@@ -3,6 +3,7 @@ ARIA_ENTRYPOINTS = [
     "accordion",
     "combobox",
     "deferred-content",
+    "grid",
     "listbox",
     "menu",
     "radio-group",

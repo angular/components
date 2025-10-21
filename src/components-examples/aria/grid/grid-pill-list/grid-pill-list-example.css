@@ -1,0 +1,65 @@
+.example-pill-list-container {
+  padding: 10px;
+  border: 1px solid;
+  max-width: 800px;
+}
+
+.example-pill-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.example-pill {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  height: 32px;
+}
+
+.example-pill-label {
+  border: 1px solid;
+  border-right-width: 0;
+  border-radius: 1rem 0 0 1rem;
+  padding: 4px 4px 4px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 4rem;
+}
+
+.example-pill-action {
+  border: 1px solid;
+  border-radius: 0 1rem 1rem 0;
+  padding: 4px 12px 4px 8px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.example-pill-button {
+  border-width: 0;
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.example-pill-input-container {
+  display: flex;
+}
+
+.example-pill-input {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid;
+  height: 32px;
+  padding: 4px;
+  margin-top: 4px;
+  background: transparent;
+  flex: 1;
+}

@@ -1,0 +1,23 @@
+.example-grid-controls {
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.example-grid-controls-select {
+  padding: 8px;
+}
+
+.example-grid-cell[data-active='true'] {
+  outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 4px;
+}
+
+.example-grid-cell[data-active='true']:focus-within,
+[aria-activedescendant]:focus-within .example-grid-cell[data-active='true'] {
+  outline: 3px dashed var(--mat-sys-tertiary);
+  outline-offset: 3px;
+}
+
+.example-grid-cell[aria-disabled='true'] {
+  border: 1px dashed var(--mat-sys-outline-variant);
+}

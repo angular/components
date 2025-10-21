@@ -1,0 +1,143 @@
+<table class="example-grid-controls" ngGrid>
+  <tr ngGridRow>
+    <td ngGridCell>
+      <mat-checkbox
+        ngGridCellWidget
+        (focusin)="cb1.focus()"
+        [formControl]="disabled"
+        #cb1="matCheckbox"
+        >Disabled</mat-checkbox
+      >
+    </td>
+    <td ngGridCell>
+      <mat-checkbox
+        ngGridCellWidget
+        (focusin)="cb2.focus()"
+        [formControl]="skipDisabled"
+        #cb2="matCheckbox"
+        >Skip Disabled</mat-checkbox
+      >
+    </td>
+    <td ngGridCell>
+      <mat-checkbox
+        ngGridCellWidget
+        (focusin)="cb3.focus()"
+        [formControl]="enableSelection"
+        #cb3="matCheckbox"
+        >Enable Selection</mat-checkbox
+      >
+    </td>
+  </tr>
+
+  <tr ngGridRow>
+    <td ngGridCell>
+      <mat-form-field
+        ngGridCellWidget
+        (keydown.enter)="s1.focus()"
+        (keydown.escape)="c1.focus()"
+        [(activate)]="s1.focused"
+        #c1="ngGridCellWidget"
+        class="example-grid-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Row Wrap</mat-label>
+        <mat-select [(value)]="rowWrap" #s1>
+          <mat-option value="nowrap">No Wrap</mat-option>
+          <mat-option value="loop">Loop</mat-option>
+          <mat-option value="continuous">Continuous</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+    <td ngGridCell>
+      <mat-form-field
+        ngGridCellWidget
+        (keydown.enter)="s2.focus()"
+        (keydown.escape)="c2.focus()"
+        [(activate)]="s2.focused"
+        #c2="ngGridCellWidget"
+        class="example-grid-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Col Wrap</mat-label>
+        <mat-select ngGridCellWidget [(value)]="colWrap" #s2>
+          <mat-option value="nowrap">No Wrap</mat-option>
+          <mat-option value="loop">Loop</mat-option>
+          <mat-option value="continuous">Continuous</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+    <td ngGridCell>
+      <mat-form-field
+        ngGridCellWidget
+        (keydown.enter)="s3.focus()"
+        (keydown.escape)="c3.focus()"
+        [(activate)]="s3.focused"
+        #c3="ngGridCellWidget"
+        class="example-grid-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Focus Strategy</mat-label>
+        <mat-select ngGridCellWidget [(value)]="focusMode" #s3>
+          <mat-option value="roving">Roving</mat-option>
+          <mat-option value="activedescendant">Active Descendant</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </tr>
+</table>
+
+<div class="example-grid-container">
+  <table
+    ngGrid
+    class="example-grid"
+    [rowWrap]="rowWrap"
+    [colWrap]="colWrap"
+    [focusMode]="focusMode"
+    [disabled]="disabled.value"
+    [skipDisabled]="skipDisabled.value"
+    [enableSelection]="enableSelection.value"
+    #grid="ngGrid"
+  >
+    @for (row of gridData; track row) {
+      <tr ngGridRow>
+        @for (cell of row; track cell) {
+          <td
+            class="example-grid-cell example-stateful example-selectable"
+            ngGridCell
+            [rowSpan]="cell.rowSpan ?? 1"
+            [colSpan]="cell.colSpan ?? 1"
+            [disabled]="cell.disabled"
+          ></td>
+        }
+      </tr>
+    }
+  </table>
+
+  <ul>
+    <li>
+      <button (click)="regenerateGrid()">Regenerate Grid</button>
+    </li>
+    <li>Home: first cell in the row</li>
+    <li>End: last cell in the row</li>
+    <li>Crtl + Home: very first cell</li>
+    <li>Ctrl + End: very last cell</li>
+    <li>Shift + Space: select a row</li>
+    <li>Ctrl + Space: select a col</li>
+    <li>Shift + Arrow: expand selection</li>
+    <li>Ctrl + A: select all</li>
+    <li>
+      Internal coords: ({{grid.pattern.gridBehavior.focusBehavior.activeCoords().row
+
+
+
+
+
+
+
+      }}, {{grid.pattern.gridBehavior.focusBehavior.activeCoords().col}})
+    </li>
+  </ul>
+</div>
