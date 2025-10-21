@@ -18,7 +18,7 @@ bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "0e04a5443e783ef983c84314e311e68410dd82e1",
+    commit = "6a699bf3e896690e2923cf3ade29fbd4e492e366",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
