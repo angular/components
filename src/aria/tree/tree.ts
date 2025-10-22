@@ -20,6 +20,7 @@ import {
   OnInit,
   OnDestroy,
   untracked,
+  afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -267,7 +268,11 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   constructor() {
     super();
-    this.preserveContent.set(true);
+    afterNextRender(() => {
+      if (this.tree().pattern instanceof ComboboxTreePattern) {
+        this.preserveContent.set(true);
+      }
+    });
     // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
       this.tree().pattern instanceof ComboboxTreePattern
