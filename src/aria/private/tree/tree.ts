@@ -80,7 +80,9 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
   readonly expanded = computed(() => this.expansion.isExpanded());
 
   /** Whether this item is visible. */
-  readonly visible = computed(() => this.parent().expanded());
+  readonly visible: SignalLike<boolean> = computed(
+    () => this.parent().expanded() && this.parent().visible(),
+  );
 
   /** The number of items under the same parent at the same level. */
   readonly setsize = computed(() => this.parent().children().length);
@@ -182,6 +184,9 @@ export class TreePattern<V> {
 
   /** The root is always expanded. */
   readonly expanded = () => true;
+
+  /** The roow is always visible. */
+  readonly visible = () => true;
 
   /** The tabindex of the tree. */
   readonly tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
