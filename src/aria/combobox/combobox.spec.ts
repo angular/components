@@ -242,17 +242,17 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should clear the completion string and not close on escape when a completion is present', () => {
+      it('should close then clear the completion string', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
         input('A');
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('A');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        expect(inputElement.value).toBe('Alabama');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
         escape();
-        expect(inputElement.value).toBe('A');
+        expect(inputElement.value).toBe(''); // clear input
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
@@ -929,17 +929,17 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should clear the completion string and not close on escape when a completion is present', () => {
+      it('should close then clear the completion string', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
         input('Mar');
         expect(inputElement.value).toBe('March');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('Mar');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        expect(inputElement.value).toBe('March');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
         escape();
-        expect(inputElement.value).toBe('Mar');
+        expect(inputElement.value).toBe(''); // clear input
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
