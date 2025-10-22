@@ -1189,15 +1189,44 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute visible state', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
+      const {allItems} = createTree(
+        [
+          {
+            value: 'Item 0',
+            children: [
+              {
+                value: 'Item 0-0',
+                children: [{value: 'Item 0-0-0', disabled: false, selectable: true}],
+                disabled: false,
+                selectable: true,
+              },
+              {
+                value: 'Item 0-1',
+                disabled: false,
+                selectable: true,
+              },
+            ],
+            disabled: false,
+            selectable: true,
+          },
+        ],
+        treeInputs,
+      );
       const item0 = getItemByValue(allItems(), 'Item 0');
       const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+      const item0_0_0 = getItemByValue(allItems(), 'Item 0-0-0');
 
       expect(item0_0.visible()).toBe(false);
+      expect(item0_0_0.visible()).toBe(false);
       item0.expansion.open();
       expect(item0_0.visible()).toBe(true);
+      expect(item0_0_0.visible()).toBe(false);
+      item0_0.expansion.open();
+      expect(item0_0.visible()).toBe(true);
+      expect(item0_0_0.visible()).toBe(true);
       item0.expansion.close();
       expect(item0_0.visible()).toBe(false);
+      expect(item0_0_0.visible()).toBe(false);
     });
 
     it('should correctly compute expanded state', () => {
