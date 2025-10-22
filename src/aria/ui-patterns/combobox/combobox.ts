@@ -152,7 +152,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (!this.expanded()) {
       return new KeyboardEventManager()
         .on('ArrowDown', () => this.open({first: true}))
-        .on('ArrowUp', () => this.open({last: true}));
+        .on('ArrowUp', () => this.open({last: true}))
+        .on('Escape', () => this.close({reset: true}));
     }
 
     const popupControls = this.inputs.popupControls();
@@ -366,20 +367,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     const popupControls = this.inputs.popupControls();
 
-    if (this.inputs.filterMode() === 'highlight' && popupControls?.activeId()) {
-      popupControls.unfocus();
-      popupControls.clearSelection();
+    if (!this.expanded()) {
+      this.inputs.inputValue?.set('');
+      popupControls?.clearSelection();
 
       const inputEl = this.inputs.inputEl();
+
       if (inputEl) {
-        inputEl.value = this.inputs.inputValue!();
+        inputEl.value = '';
       }
+    } else if (this.expanded()) {
+      this.close();
 
-      return;
+      const selectedItem = popupControls?.getSelectedItem();
+
+      if (selectedItem?.searchTerm() !== this.inputs.inputValue!()) {
+        popupControls?.clearSelection();
+      }
     }
-
-    this.close();
-    this.inputs.popupControls()?.clearSelection();
   }
 
   /** Opens the combobox. */
