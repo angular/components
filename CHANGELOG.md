@@ -1,3 +1,12 @@
+<a name="20.2.10"></a>
+# 20.2.10 "aleutite-anchovy" (2025-10-22)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b2cd596d3](https://github.com/angular/components/commit/b2cd596d315585c1f8b895c64230b49aecd3e6f8) | fix | **core:** differentiate container colors in m2 ([#32076](https://github.com/angular/components/pull/32076)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.9"></a>
 # 20.2.9 "plastic-spoon" (2025-10-15)
 ### material
