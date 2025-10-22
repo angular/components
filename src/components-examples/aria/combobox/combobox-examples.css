@@ -147,3 +147,14 @@ ul[role='group'] {
 .example-tree-item[aria-selected='true'] .example-selected-icon {
   visibility: visible;
 }
+
+[ngCombobox][aria-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+[ngCombobox][aria-disabled='true'] input.example-combobox-input {
+  color: var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-surface); 
+}
