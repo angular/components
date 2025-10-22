@@ -245,11 +245,13 @@ describe('Combobox', () => {
       it('should close then clear the completion string', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
-        input('A');
+        input('Ala');
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
         expect(inputElement.value).toBe('Alabama');
+        expect(inputElement.selectionEnd).toBe(7);
+        expect(inputElement.selectionStart).toBe(3);
         expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
         escape();
         expect(inputElement.value).toBe(''); // clear input
@@ -460,15 +462,15 @@ describe('Combobox', () => {
     // TODO(wagnermaciel): Add unit tests for disabled options.
 
     describe('Filtering', () => {
-      beforeEach(() => setupCombobox());
-
       it('should lazily render options', () => {
+        setupCombobox();
         expect(getOptions().length).toBe(0);
         focus();
         expect(getOptions().length).toBe(50);
       });
 
       it('should filter the options based on the input value', () => {
+        setupCombobox();
         focus();
         input('New');
 
@@ -481,6 +483,7 @@ describe('Combobox', () => {
       });
 
       it('should show no options if nothing matches', () => {
+        setupCombobox();
         focus();
         input('xyz');
         const options = getOptions();
@@ -488,6 +491,7 @@ describe('Combobox', () => {
       });
 
       it('should show all options when the input is cleared', () => {
+        setupCombobox();
         focus();
         input('Alabama');
         expect(getOptions().length).toBe(1);
