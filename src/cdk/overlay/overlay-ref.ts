@@ -117,17 +117,23 @@ export class OverlayRef implements PortalOutlet {
   attach(portal: Portal<any>): any {
     // Insert the host into the DOM before attaching the portal, otherwise
     // the animations module will skip animations on repeat attachments.
-    if (!this._host.parentElement && this._previousHostParent) {
-      this._previousHostParent.appendChild(this._host);
+    if (!this._host.parentElement) {
+      const hasAttachedHost = this._positionStrategy?.attachHost?.(this._host);
+
+      if (!hasAttachedHost && this._previousHostParent) {
+        this._previousHostParent.appendChild(this._host);
+      }
     }
 
     const attachResult = this._portalOutlet.attach(portal);
+    this._positionStrategy?.attach(this);
 
-    if (this._positionStrategy) {
-      this._positionStrategy.attach(this);
+    const hasUpdatedStackingOrder = this._positionStrategy?.updateStackingOrder?.(this._host);
+
+    if (!hasUpdatedStackingOrder) {
+      this._updateStackingOrder();
     }
 
-    this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
 
@@ -426,9 +432,16 @@ export class OverlayRef implements PortalOutlet {
       this._toggleClasses(this._backdropRef.element, this._config.backdropClass, true);
     }
 
-    // Insert the backdrop before the pane in the DOM order,
-    // in order to handle stacked overlays properly.
-    this._host.parentElement!.insertBefore(this._backdropRef.element, this._host);
+    const strategyAttached = this._positionStrategy?.attachBackdrop?.(
+      this._backdropRef.element,
+      this._host,
+    );
+
+    if (!strategyAttached) {
+      // Insert the backdrop before the pane in the DOM order,
+      // in order to handle stacked overlays properly.
+      this._host.parentElement!.insertBefore(this._backdropRef.element, this._host);
+    }
 
     // Add class to fade-in the backdrop after one frame.
     if (!this._animationsDisabled && typeof requestAnimationFrame !== 'undefined') {
