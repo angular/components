@@ -35,32 +35,41 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
   };
 
   /** Configures this event manager to handle events with a specific key and no modifiers. */
-  on(key: KeyCode, handler: EventHandler<T>): this;
+  on(key: KeyCode, handler: EventHandler<T>, options?: Partial<EventHandlerOptions>): this;
 
   /**  Configures this event manager to handle events with a specific modifer and key combination. */
-  on(modifiers: ModifierInputs, key: KeyCode, handler: EventHandler<T>): this;
+  on(
+    modifiers: ModifierInputs,
+    key: KeyCode,
+    handler: EventHandler<T>,
+    options?: Partial<EventHandlerOptions>,
+  ): this;
 
   on(...args: any[]) {
-    const {modifiers, key, handler} = this._normalizeInputs(...args);
+    const {modifiers, key, handler, options} = this._normalizeInputs(...args);
 
     this.configs.push({
       handler: handler,
       matcher: event => this._isMatch(event, key, modifiers),
       ...this.options,
+      ...options,
     });
 
     return this;
   }
 
   private _normalizeInputs(...args: any[]) {
-    const key = args.length === 3 ? args[1] : args[0];
-    const handler = args.length === 3 ? args[2] : args[1];
-    const modifiers = args.length === 3 ? args[0] : Modifier.None;
+    const withModifiers = Array.isArray(args[0]) || args[0] in Modifier;
+    const modifiers = withModifiers ? args[0] : Modifier.None;
+    const key = withModifiers ? args[1] : args[0];
+    const handler = withModifiers ? args[2] : args[1];
+    const options = withModifiers ? args[3] : args[2];
 
     return {
       key: key as KeyCode,
       handler: handler as EventHandler<T>,
       modifiers: modifiers as ModifierInputs,
+      options: (options ?? {}) as Partial<EventHandlerOptions>,
     };
   }
 
