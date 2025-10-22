@@ -222,7 +222,14 @@ export function createRepositionScrollStrategy(injector: Injector, config?: Repo
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     constructor(connectedTo: FlexibleConnectedPositionStrategyOrigin, _viewportRuler: ViewportRuler, _document: Document, _platform: Platform, _overlayContainer: OverlayContainer);
     apply(): void;
+    asPopover(isPopover: boolean): this;
     attach(overlayRef: OverlayRef): void;
+    attachBackdrop(backdrop: HTMLElement, host: HTMLElement): boolean;
+    attachHost(host: HTMLElement): boolean;
+    createStructure(): {
+        pane: HTMLDivElement;
+        host: HTMLDivElement;
+    } | null;
     // (undocumented)
     detach(): void;
     dispose(): void;
@@ -232,6 +239,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     _preferredPositions: ConnectionPositionPair[];
     reapplyLastPosition(): void;
     setOrigin(origin: FlexibleConnectedPositionStrategyOrigin): this;
+    updateStackingOrder(): boolean;
     withDefaultOffsetX(offset: number): this;
     withDefaultOffsetY(offset: number): this;
     withFlexibleDimensions(flexibleDimensions?: boolean): this;
@@ -459,8 +467,15 @@ export interface OverlaySizeConfig {
 export interface PositionStrategy {
     apply(): void;
     attach(overlayRef: OverlayRef): void;
+    attachBackdrop?(backdrop: HTMLElement, host: HTMLElement): boolean;
+    attachHost?(host: HTMLElement): boolean;
+    createStructure?(): {
+        pane: HTMLElement;
+        host: HTMLElement;
+    } | null;
     detach?(): void;
     dispose(): void;
+    updateStackingOrder?(host: HTMLElement): boolean;
 }
 
 // @public
