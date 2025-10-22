@@ -499,6 +499,31 @@ describe('Combobox', () => {
         input('');
         expect(getOptions().length).toBe(50);
       });
+
+      it('should determine the highlighted state on open', () => {
+        setupCombobox({filterMode: 'highlight'});
+        focus();
+        input('N');
+        expect(inputElement.value).toBe('Nebraska');
+        expect(inputElement.selectionEnd).toBe(8);
+        expect(inputElement.selectionStart).toBe(1);
+        expect(getOptions().length).toBe(8);
+
+        escape(); // close
+        inputElement.selectionStart = 2; // Change highlighting
+        down(); // open
+
+        expect(inputElement.value).toBe('Nebraska');
+        expect(inputElement.selectionEnd).toBe(8);
+        expect(inputElement.selectionStart).toBe(2);
+        expect(getOptions().length).toBe(6);
+
+        escape(); // close
+        inputElement.selectionStart = 3; // Change highlighting
+        down(); // open
+
+        expect(getOptions().length).toBe(1);
+      });
     });
 
     // describe('with programmatic value changes', () => {

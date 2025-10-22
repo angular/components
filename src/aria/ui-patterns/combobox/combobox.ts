@@ -391,6 +391,17 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   open(nav?: {first?: boolean; last?: boolean}) {
     this.expanded.set(true);
 
+    const inputEl = this.inputs.inputEl();
+
+    if (inputEl) {
+      const isHighlighting = inputEl.selectionStart !== inputEl.value.length;
+      this.inputs.inputValue?.set(inputEl.value.slice(0, inputEl.selectionStart || 0));
+
+      if (!isHighlighting) {
+        this.highlightedItem.set(undefined);
+      }
+    }
+
     if (nav?.first) {
       this.first();
     }
