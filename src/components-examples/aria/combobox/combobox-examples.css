@@ -156,5 +156,5 @@ ul[role='group'] {
 
 [ngCombobox][aria-disabled='true'] input.example-combobox-input {
   color: var(--mat-sys-on-surface-variant);
-  background-color: var(--mat-sys-surface); 
+  background-color: var(--mat-sys-surface);
 }
