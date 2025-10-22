@@ -185,6 +185,29 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // block scrolling on a page that doesn't have a scrollbar in the first place.
     overflow-y: scroll;
   }
+
+  .cdk-overlay-popover {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    outline: 0;
+    overflow: visible;
+    position: fixed;
+    pointer-events: none;
+
+    // These are important so the overlay can be measured before it's fully inserted.
+    width: 100%;
+    height: 100%;
+
+    // Chrome sets a user agent style of `inset: 0` which combined
+    // with `align-self` can break the positioning (see #29809).
+    inset: auto;
+
+    .cdk-overlay-backdrop {
+      position: fixed;
+    }
+  }
 }
 
 /// Emits structural styles required for cdk/overlay to function.
