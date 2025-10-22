@@ -1,3 +1,32 @@
+<a name="21.0.0-next.10"></a>
+# 21.0.0-next.10 "alforsite-antibody" (2025-10-22)
+## Breaking Changes
+### cdk
+- * `TemplatePortalDirective` has been removed. Use `CdkPortal` instead.
+  * `PortalHostDirective` has been removed. Use `CdkPortalOutlet` instead.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [83d9b02bb](https://github.com/angular/components/commit/83d9b02bbfd9f59b6e681c574deb0c0b3451b87b) | fix | **core:** differentiate container colors in m2 ([#32076](https://github.com/angular/components/pull/32076)) |
+| [18cedc737](https://github.com/angular/components/commit/18cedc7375bf0ab0590c9a984e5d380d52610ccc) | fix | **core:** rename corner extra-small to xs ([#32101](https://github.com/angular/components/pull/32101)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [03c5d34db](https://github.com/angular/components/commit/03c5d34dbd684a37a608cf9d33e20c293163919c) | fix | **portal:** remove deprecated directives ([#32117](https://github.com/angular/components/pull/32117)) |
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a821a3ef0](https://github.com/angular/components/commit/a821a3ef07d99d5ce8631469cd818929b9c0559b) | feat | **grid:** create the aria grid ([#32092](https://github.com/angular/components/pull/32092)) |
+| [f9d3cde14](https://github.com/angular/components/commit/f9d3cde14984c6da006e09e8e79809247e017a65) | feat | **menu:** create the aria menu ([#32080](https://github.com/angular/components/pull/32080)) |
+| [a0b580027](https://github.com/angular/components/commit/a0b5800277c206127999e21eda77ef003c066aee) | feat | **toolbar:** adds skip disabled toolbar example to dev-app ([#32127](https://github.com/angular/components/pull/32127)) |
+| [5396c4347](https://github.com/angular/components/commit/5396c43474fe272ad5e21366c027cd1ae0c6d593) | feat | **toolbar:** adds toolbar basic vertical example to dev-app ([#32126](https://github.com/angular/components/pull/32126)) |
+| [ba9f79be5](https://github.com/angular/components/commit/ba9f79be528c6228e50a73809ec62efcbfc7afc6) | feat | **toolbar:** adds toolbar-basic-horizontal-example to dev-app ([#32106](https://github.com/angular/components/pull/32106)) |
+| [0b03c6e96](https://github.com/angular/components/commit/0b03c6e96485f83447ed3451070be138bf21d4e6) | fix | **combobox:** add missing apis ([#32124](https://github.com/angular/components/pull/32124)) |
+| [3d1cafbdd](https://github.com/angular/components/commit/3d1cafbdd3839c12d5298f216abaef59f717f04c) | fix | **menu:** add selectable to inputs ([#32131](https://github.com/angular/components/pull/32131)) |
+| [afe4d063d](https://github.com/angular/components/commit/afe4d063dd8f3dc5932519761693e7a79de77dc1) | fix | **ui-patterns:** internal conformance fixes ([#32102](https://github.com/angular/components/pull/32102)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.10"></a>
 # 20.2.10 "aleutite-anchovy" (2025-10-22)
 ### material
