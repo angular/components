@@ -8,6 +8,7 @@
 
 import {
   ComboboxAutoSelectExample,
+  ComboboxDisabledExample,
   ComboboxHighlightExample,
   ComboboxManualExample,
   ComboboxTreeAutoSelectExample,
@@ -26,6 +27,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     ComboboxTreeManualExample,
     ComboboxTreeAutoSelectExample,
     ComboboxTreeHighlightExample,
+    ComboboxDisabledExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

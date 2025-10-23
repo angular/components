@@ -1,0 +1,17 @@
+<div ngCombobox #combobox="ngCombobox" [disabled]="true" class="example-combobox-container">
+  <div class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon" aria-hidden="true">search</span>
+    <input
+      ngComboboxInput
+      placeholder="Search is disabled"
+      aria-label="Search is disabled"
+      [(value)]="searchString"
+      class="example-combobox-input"
+    />
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template ngComboboxPopupContainer>
+    </ng-template>
+  </div>
+</div>
