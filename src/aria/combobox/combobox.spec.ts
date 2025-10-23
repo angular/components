@@ -52,13 +52,18 @@ describe('Combobox', () => {
     const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
     const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
 
-    function setupCombobox(opts: {filterMode?: 'manual' | 'auto-select' | 'highlight'} = {}) {
+    function setupCombobox(
+      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
+    ) {
       TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxListboxExample);
       const testComponent = fixture.componentInstance;
 
       if (opts.filterMode) {
         testComponent.filterMode.set(opts.filterMode);
+      }
+      if (opts.readonly) {
+        testComponent.readonly.set(true);
       }
 
       fixture.detectChanges();
@@ -526,6 +531,35 @@ describe('Combobox', () => {
       });
     });
 
+    describe('Readonly', () => {
+      beforeEach(() => setupCombobox({readonly: true}));
+
+      it('should close on selection', () => {
+        focus();
+        down();
+        click(getOption('Alabama')!);
+        expect(inputElement.value).toBe('Alabama');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on escape', () => {
+        focus();
+        down();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should clear selection on escape when closed', () => {
+        focus();
+        down();
+        enter();
+        expect(inputElement.value).toBe('Alabama');
+        escape();
+        expect(inputElement.value).toBe('');
+      });
+    });
+
     // describe('with programmatic value changes', () => {
     //   // TODO(wagnermaciel): Figure out if there's a way to automatically update the
     //   // input value when the popup value signal is updated programmatically.
@@ -590,13 +624,18 @@ describe('Combobox', () => {
     const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
     const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
 
-    function setupCombobox(opts: {filterMode?: 'manual' | 'auto-select' | 'highlight'} = {}) {
+    function setupCombobox(
+      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
+    ) {
       TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxTreeExample);
       const testComponent = fixture.componentInstance;
 
       if (opts.filterMode) {
         testComponent.filterMode.set(opts.filterMode);
+      }
+      if (opts.readonly) {
+        testComponent.readonly.set(true);
       }
 
       fixture.detectChanges();
@@ -1053,6 +1092,40 @@ describe('Combobox', () => {
         expect(getTreeItem('August')!.getAttribute('aria-selected')).toBe('true');
       });
     });
+
+    describe('Readonly', () => {
+      beforeEach(() => setupCombobox({readonly: true}));
+
+      it('should close on selection', () => {
+        focus();
+        down();
+        right();
+        right();
+        enter();
+        expect(inputElement.value).toBe('December');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on escape', () => {
+        focus();
+        down();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should clear selection on escape when closed', () => {
+        focus();
+        down();
+        right();
+        right();
+        enter();
+        expect(inputElement.value).toBe('December');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        escape();
+        expect(inputElement.value).toBe('');
+      });
+    });
   });
 });
 
@@ -1061,6 +1134,7 @@ describe('Combobox', () => {
 <div
   ngCombobox
   #combobox="ngCombobox"
+  [readonly]="readonly()"
   [filterMode]="filterMode()"
 >
   <input
@@ -1087,11 +1161,10 @@ describe('Combobox', () => {
   imports: [Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer, Listbox, Option],
 })
 class ComboboxListboxExample {
-  value = signal<string[]>([]);
-
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
-
+  readonly = signal(false);
   searchString = signal('');
+  value = signal<string[]>([]);
+  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -1103,6 +1176,7 @@ class ComboboxListboxExample {
 <div
   ngCombobox
   #combobox="ngCombobox"
+  [readonly]="readonly()"
   [firstMatch]="firstMatch()"
   [filterMode]="filterMode()"
 >
@@ -1157,13 +1231,11 @@ class ComboboxListboxExample {
   ],
 })
 class ComboboxTreeExample {
-  value = signal<string[]>([]);
-
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
-
+  readonly = signal(false);
   searchString = signal('');
-
+  value = signal<string[]>([]);
   nodes = computed(() => this.filterTreeNodes(TREE_NODES));
+  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
 
   firstMatch = computed<string | undefined>(() => {
     const flatNodes = this.flattenTreeNodes(this.nodes());

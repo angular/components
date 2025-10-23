@@ -278,7 +278,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   constructor() {
     super();
     afterNextRender(() => {
-      if (this.tree().pattern instanceof ComboboxTreePattern) {
+      if (this.tree()._pattern instanceof ComboboxTreePattern) {
         this.preserveContent.set(true);
       }
     });

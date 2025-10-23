@@ -144,16 +144,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** The ARIA role of the popup associated with the combobox. */
   hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
 
-  /** Whether the combobox is interactive. */
-  isInteractive = computed(() => !this.inputs.disabled() && !this.inputs.readonly());
+  /** Whether the combobox is read-only. */
+  readonly = computed(() => this.inputs.readonly() || null);
 
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
     if (!this.expanded()) {
-      return new KeyboardEventManager()
+      const manager = new KeyboardEventManager()
         .on('ArrowDown', () => this.open({first: true}))
         .on('ArrowUp', () => this.open({last: true}))
         .on('Escape', () => this.close({reset: true}));
+
+      if (this.readonly()) {
+        manager
+          .on('Enter', () => this.open({selected: true}))
+          .on(' ', () => this.open({selected: true}));
+      }
+
+      return manager;
     }
 
     const popupControls = this.inputs.popupControls();
@@ -169,6 +177,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('End', () => this.last())
       .on('Escape', () => this.close({reset: true}))
       .on('Enter', () => this.select({commit: true, close: true}));
+
+    if (this.readonly()) {
+      manager.on(' ', () => this.select({commit: true, close: true}));
+    }
 
     if (popupControls.role() === 'tree') {
       const treeControls = popupControls as ComboboxTreeControls<T, V>;
@@ -196,7 +208,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       }
 
       if (e.target === this.inputs.inputEl()) {
-        this.open();
+        if (this.readonly()) {
+          this.expanded() ? this.close() : this.open({selected: true});
+        } else {
+          this.open();
+        }
       }
     }),
   );
@@ -205,21 +221,21 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles keydown events for the combobox. */
   onKeydown(event: KeyboardEvent) {
-    if (this.isInteractive()) {
+    if (!this.inputs.disabled()) {
       this.keydown().handle(event);
     }
   }
 
   /** Handles pointerup events for the combobox. */
   onPointerup(event: PointerEvent) {
-    if (this.isInteractive()) {
+    if (!this.inputs.disabled()) {
       this.pointerup().handle(event);
     }
   }
 
   /** Handles input events for the combobox. */
   onInput(event: Event) {
-    if (!this.isInteractive()) {
+    if (this.inputs.disabled() || this.inputs.readonly()) {
       return;
     }
 
@@ -253,7 +269,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles focus out events for the combobox. */
   onFocusOut(event: FocusEvent) {
-    if (this.inputs.disabled() || this.inputs.readonly()) {
+    if (this.inputs.disabled()) {
       return;
     }
 
@@ -385,18 +401,23 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         popupControls?.clearSelection();
       }
     }
+
+    this.close();
+
+    if (!this.readonly()) {
+      this.inputs.popupControls()?.clearSelection();
+    }
   }
 
   /** Opens the combobox. */
-  open(nav?: {first?: boolean; last?: boolean}) {
+  open(nav?: {first?: boolean; last?: boolean; selected?: boolean}) {
     this.expanded.set(true);
 
     const inputEl = this.inputs.inputEl();
 
-    if (inputEl) {
+    if (inputEl && this.inputs.filterMode() === 'highlight') {
       const isHighlighting = inputEl.selectionStart !== inputEl.value.length;
       this.inputs.inputValue?.set(inputEl.value.slice(0, inputEl.selectionStart || 0));
-
       if (!isHighlighting) {
         this.highlightedItem.set(undefined);
       }
@@ -407,6 +428,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
     if (nav?.last) {
       this.last();
+    }
+    if (nav?.selected) {
+      const selectedItem = this.inputs.popupControls()?.getSelectedItem();
+      selectedItem ? this.inputs.popupControls()?.focus(selectedItem) : this.first();
     }
   }
 
