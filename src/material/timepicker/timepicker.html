@@ -1,3 +1,5 @@
+<ng-template #defaultOptionTemplate let-option>{{ option.label }}</ng-template>
+
 <ng-template #panelTemplate>
   <div
     role="listbox"
@@ -11,7 +13,11 @@
     @for (option of _timeOptions; track option.value) {
       <mat-option
         [value]="option.value"
-        (onSelectionChange)="_selectValue($event.source)">{{option.label}}</mat-option>
+        (onSelectionChange)="_selectValue($event.source)">
+        <ng-container [ngTemplateOutlet]="_optionTemplate()?.template || defaultOptionTemplate"
+                      [ngTemplateOutletContext]="{ $implicit: option }">
+        </ng-container>
+      </mat-option>
     }
   </div>
 </ng-template>
