@@ -20,6 +20,7 @@ import {
   model,
   Signal,
 } from '@angular/core';
+import {Directionality} from '@angular/cdk/bidi';
 import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
 /** A directive that provides grid-based navigation and selection behavior. */
@@ -51,6 +52,9 @@ export class Grid {
   private readonly _rowPatterns: Signal<GridRowPattern[]> = computed(() =>
     this._rows().map(r => r.pattern),
   );
+
+  /** Text direction. */
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
