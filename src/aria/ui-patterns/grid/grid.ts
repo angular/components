@@ -180,13 +180,8 @@ export class GridPattern {
   }
 
   /** Handles focusin events on the grid. */
-  onFocusIn(event: FocusEvent) {
+  onFocusIn() {
     this.isFocused.set(true);
-
-    const cell = this.inputs.getCell(event.target as Element);
-    if (!cell) return;
-
-    this.gridBehavior.gotoCell(cell);
   }
 
   /** Indicates maybe the losing focus is caused by row/cell deletion. */
