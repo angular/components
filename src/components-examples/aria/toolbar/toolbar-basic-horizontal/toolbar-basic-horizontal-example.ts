@@ -17,10 +17,15 @@ export class ToolbarBasicHorizontalExample {
     {value: 'center', label: 'Center'},
     {value: 'right', label: 'Right'},
   ];
+
+  // Control for which radio options are individually disabled
+  disabledOptions: string[] = ['center'];
+
   format(tool: string) {
     console.log(`Tool activated: ${tool}`);
     this._liveAnnouncer.announce(`${tool} applied`, 'polite');
   }
+
   test(action: string) {
     console.log(`Action triggered: ${action}`);
     this._liveAnnouncer.announce(`${action} button activated`, 'polite');

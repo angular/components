@@ -27,7 +27,11 @@
             aria-label="Select text alignment"
         >
             @for (alignment of alignments; track alignment) {
-            <li ngRadioButton [value]="alignment.value" class="example-radio-button">
+            <li
+              ngRadioButton
+              [value]="alignment.value"
+              [disabled]="disabledOptions.includes(alignment.value)"
+              class="example-radio-button">
                 <span class="example-radio-indicator"></span>
                 <span>{{ alignment.label }}</span>
             </li>
