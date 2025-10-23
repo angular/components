@@ -1,0 +1,43 @@
+<div class="example-container">
+    <div ngToolbar class="example-toolbar" dir="rtl" aria-label="RTL Toolbar Text Formatting Tools">
+        <button
+            ngToolbarWidget
+            class="example-radio-button"
+            (click)="format('bold')"
+            (keydown.enter)="format('bold')">
+            Bold
+        </button>
+        <button
+            ngToolbarWidget
+            class="example-radio-button"
+            (click)="format('italic')"
+            (keydown.enter)="format('italic')">
+            Italic
+        </button>
+        <button
+            ngToolbarWidget
+            class="example-radio-button"
+            (click)="format('underline')"
+            (keydown.enter)="format('underline')">
+            Underline
+        </button>
+        <ul
+            ngRadioGroup
+            class="example-radio-group"
+            aria-label="Select text alignment"
+        >
+            @for (alignment of alignments; track alignment) {
+            <li ngRadioButton [value]="alignment.value" class="example-radio-button">
+                <span class="example-radio-indicator"></span>
+                <span>{{ alignment.label }}</span>
+            </li>
+            }
+        </ul>
+        <button
+            ngToolbarWidget
+            class="example-radio-button"
+            [disabled]="true">
+            Disabled Action
+        </button>
+    </div>
+</div>

@@ -11,6 +11,7 @@ import {
   ToolbarBasicHorizontalExample,
   ToolbarBasicVerticalExample,
   ToolbarConfigurableExample,
+  ToolbarRtlExample,
   ToolbarSkipDisabledExample,
 } from '@angular/components-examples/aria/toolbar';
 
@@ -20,6 +21,7 @@ import {
     ToolbarBasicHorizontalExample,
     ToolbarBasicVerticalExample,
     ToolbarConfigurableExample,
+    ToolbarRtlExample,
     ToolbarSkipDisabledExample,
   ],
   styleUrl: './toolbar-demo.css',
