@@ -147,6 +147,7 @@ export class ComboboxInput {
 
     /** Focuses & selects the first item in the combobox if the user changes the input value. */
     afterRenderEffect(() => {
+      this.value();
       this.combobox.popup()?.controls()?.items();
       untracked(() => this.combobox._pattern.onFilter());
     });
