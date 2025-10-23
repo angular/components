@@ -119,6 +119,7 @@ export class Combobox<V> {
     '[attr.aria-controls]': 'combobox.pattern.popupId()',
     '[attr.aria-haspopup]': 'combobox.pattern.hasPopup()',
     '[attr.aria-autocomplete]': 'combobox.pattern.autocomplete()',
+    '[attr.readonly]': 'combobox.pattern.readonly()',
   },
 })
 export class ComboboxInput {

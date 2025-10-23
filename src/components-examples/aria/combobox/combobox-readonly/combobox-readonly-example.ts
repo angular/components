@@ -12,70 +12,40 @@ import {
   ComboboxPopup,
   ComboboxPopupContainer,
 } from '@angular/aria/combobox';
-import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
+import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
-  computed,
   ElementRef,
   signal,
   viewChild,
 } from '@angular/core';
-import {TREE_NODES, TreeNode} from '../data';
-import {NgTemplateOutlet} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-/** @title Combobox with tree popup and highlight filtering. */
+/** @title Readonly combobox. */
 @Component({
-  selector: 'combobox-tree-highlight-example',
-  templateUrl: 'combobox-tree-highlight-example.html',
+  selector: 'combobox-readonly-example',
+  templateUrl: 'combobox-readonly-example.html',
   styleUrl: '../combobox-examples.css',
   imports: [
     Combobox,
     ComboboxInput,
     ComboboxPopup,
     ComboboxPopupContainer,
-    Tree,
-    TreeItem,
-    TreeItemGroup,
-    NgTemplateOutlet,
+    Listbox,
+    Option,
+    FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxTreeHighlightExample {
+export class ComboboxReadonlyExample {
   popover = viewChild<ElementRef>('popover');
-  tree = viewChild<Tree<TreeNode>>(Tree);
+  listbox = viewChild<Listbox<any>>(Listbox);
   combobox = viewChild<Combobox<any>>(Combobox);
 
+  options = () => states;
   searchString = signal('');
-
-  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
-
-  firstMatch = computed<string | undefined>(() => {
-    const flatNodes = this.flattenTreeNodes(this.nodes());
-    const node = flatNodes.find(n => this.isMatch(n));
-    return node?.name;
-  });
-
-  flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
-    return nodes.flatMap(node => {
-      return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
-    });
-  }
-
-  filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
-    return nodes.reduce((acc, node) => {
-      const children = node.children ? this.filterTreeNodes(node.children) : undefined;
-      if (this.isMatch(node) || (children && children.length > 0)) {
-        acc.push({...node, children});
-      }
-      return acc;
-    }, [] as TreeNode[]);
-  }
-
-  isMatch(node: TreeNode) {
-    return node.name.toLowerCase().includes(this.searchString().toLowerCase());
-  }
 
   constructor() {
     afterRenderEffect(() => {
@@ -84,7 +54,7 @@ export class ComboboxTreeHighlightExample {
       combobox.pattern.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
 
       // TODO(wagnermaciel): Make this easier for developers to do.
-      this.tree()?.pattern.inputs.activeItem()?.element().scrollIntoView({block: 'nearest'});
+      this.listbox()?.pattern.inputs.activeItem()?.element().scrollIntoView({block: 'nearest'});
     });
   }
 
@@ -104,3 +74,5 @@ export class ComboboxTreeHighlightExample {
     popover.nativeElement.showPopover();
   }
 }
+
+const states = ['Option 1', 'Option 2', 'Option 3'];
