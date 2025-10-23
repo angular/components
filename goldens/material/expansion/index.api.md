@@ -95,7 +95,9 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     _headerId: string;
     get hideToggle(): boolean;
     set hideToggle(value: boolean);
-    readonly _inputChanges: Subject<SimpleChanges>;
+    readonly _inputChanges: Subject<{
+        [propName: string]: i0.SimpleChange<any>;
+    }>;
     _lazyContent: MatExpansionPanelContent;
     // (undocumented)
     static ngAcceptInputType_hideToggle: unknown;
