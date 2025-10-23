@@ -10,6 +10,9 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {MatDrawerMode, MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
@@ -17,7 +20,16 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'sidenav-demo',
   templateUrl: 'sidenav-demo.html',
   styleUrl: 'sidenav-demo.css',
-  imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatToolbarModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidenavDemo {
