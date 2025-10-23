@@ -242,17 +242,19 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should clear the completion string and not close on escape when a completion is present', () => {
+      it('should close then clear the completion string', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
-        input('A');
+        input('Ala');
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('A');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        expect(inputElement.value).toBe('Alabama');
+        expect(inputElement.selectionEnd).toBe(7);
+        expect(inputElement.selectionStart).toBe(3);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
         escape();
-        expect(inputElement.value).toBe('A');
+        expect(inputElement.value).toBe(''); // clear input
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
@@ -424,6 +426,28 @@ describe('Combobox', () => {
           expect(inputElement.selectionEnd).toBe(7);
         }));
 
+        it('should not insert a completion string on backspace', fakeAsync(() => {
+          focus();
+          input('New');
+          tick();
+
+          expect(inputElement.value).toBe('New Hampshire');
+          expect(inputElement.selectionStart).toBe(3);
+          expect(inputElement.selectionEnd).toBe(13);
+        }));
+
+        it('should insert a completion string even if the items are not changed', fakeAsync(() => {
+          focus();
+          input('New');
+          tick();
+
+          input('New ');
+          tick();
+          expect(inputElement.value).toBe('New Hampshire');
+          expect(inputElement.selectionStart).toBe(4);
+          expect(inputElement.selectionEnd).toBe(13);
+        }));
+
         it('should commit the selected option on focusout', () => {
           focus();
           input('Cali');
@@ -438,15 +462,15 @@ describe('Combobox', () => {
     // TODO(wagnermaciel): Add unit tests for disabled options.
 
     describe('Filtering', () => {
-      beforeEach(() => setupCombobox());
-
       it('should lazily render options', () => {
+        setupCombobox();
         expect(getOptions().length).toBe(0);
         focus();
         expect(getOptions().length).toBe(50);
       });
 
       it('should filter the options based on the input value', () => {
+        setupCombobox();
         focus();
         input('New');
 
@@ -459,6 +483,7 @@ describe('Combobox', () => {
       });
 
       it('should show no options if nothing matches', () => {
+        setupCombobox();
         focus();
         input('xyz');
         const options = getOptions();
@@ -466,12 +491,38 @@ describe('Combobox', () => {
       });
 
       it('should show all options when the input is cleared', () => {
+        setupCombobox();
         focus();
         input('Alabama');
         expect(getOptions().length).toBe(1);
 
         input('');
         expect(getOptions().length).toBe(50);
+      });
+
+      it('should determine the highlighted state on open', () => {
+        setupCombobox({filterMode: 'highlight'});
+        focus();
+        input('N');
+        expect(inputElement.value).toBe('Nebraska');
+        expect(inputElement.selectionEnd).toBe(8);
+        expect(inputElement.selectionStart).toBe(1);
+        expect(getOptions().length).toBe(8);
+
+        escape(); // close
+        inputElement.selectionStart = 2; // Change highlighting
+        down(); // open
+
+        expect(inputElement.value).toBe('Nebraska');
+        expect(inputElement.selectionEnd).toBe(8);
+        expect(inputElement.selectionStart).toBe(2);
+        expect(getOptions().length).toBe(6);
+
+        escape(); // close
+        inputElement.selectionStart = 3; // Change highlighting
+        down(); // open
+
+        expect(getOptions().length).toBe(1);
       });
     });
 
@@ -907,17 +958,17 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should clear the completion string and not close on escape when a completion is present', () => {
+      it('should close then clear the completion string', () => {
         fixture.componentInstance.filterMode.set('highlight');
         focus();
         input('Mar');
         expect(inputElement.value).toBe('March');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
-        expect(inputElement.value).toBe('Mar');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        expect(inputElement.value).toBe('March');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
         escape();
-        expect(inputElement.value).toBe('Mar');
+        expect(inputElement.value).toBe(''); // clear input
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
