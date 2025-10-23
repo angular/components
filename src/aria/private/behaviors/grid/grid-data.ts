@@ -41,9 +41,6 @@ export class GridData<T extends BaseGridCell> {
   /** The two-dimensional array of cells that represents the grid. */
   readonly cells: SignalLike<T[][]>;
 
-  /** The number of rows in the grid. */
-  readonly rowCount = computed<number>(() => this.cells().length);
-
   /** The maximum number of rows in the grid, accounting for row spans. */
   readonly maxRowCount = computed<number>(() => Math.max(...this._rowCountByCol().values(), 0));
 

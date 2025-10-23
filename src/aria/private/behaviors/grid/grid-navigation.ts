@@ -174,6 +174,13 @@ export class GridNavigation<T extends GridNavigationCell> {
         };
       }
 
+      if (wrap === 'nowrap') {
+        nextCoords = {
+          row: nextCoords.row + rowDelta,
+          col: nextCoords.col + colDelta,
+        };
+      }
+
       // Back to original coordinates.
       if (nextCoords.row === fromCoords.row && nextCoords.col === fromCoords.col) {
         return undefined;
