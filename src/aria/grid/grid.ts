@@ -36,7 +36,7 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(pointermove)': '_pattern.onPointermove($event)',
     '(pointerup)': '_pattern.onPointerup($event)',
-    '(focusin)': '_pattern.onFocusIn($event)',
+    '(focusin)': '_pattern.onFocusIn()',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
