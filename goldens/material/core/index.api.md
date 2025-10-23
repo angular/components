@@ -41,7 +41,7 @@ export function _animationsDisabled(): boolean;
 export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>, optionGroups: QueryList<MatOptgroup>): number;
 
 // @public
-export abstract class DateAdapter<D, L = any> {
+export abstract class DateAdapter<D, L = any, DisplayFormatType = string, ParseFormatType = DisplayFormatType> {
     abstract addCalendarDays(date: D, days: number): D;
     abstract addCalendarMonths(date: D, months: number): D;
     abstract addCalendarYears(date: D, years: number): D;
@@ -51,8 +51,8 @@ export abstract class DateAdapter<D, L = any> {
     compareDate(first: D, second: D): number;
     compareTime(first: D, second: D): number;
     abstract createDate(year: number, month: number, date: number): D;
-    deserialize(value: any): D | null;
-    abstract format(date: D, displayFormat: any): string;
+    deserialize(value: unknown): D | null;
+    abstract format(date: D, displayFormat: DisplayFormatType): string;
     abstract getDate(date: D): number;
     abstract getDateNames(): string[];
     abstract getDayOfWeek(date: D): number;
@@ -68,14 +68,14 @@ export abstract class DateAdapter<D, L = any> {
     abstract getYear(date: D): number;
     abstract getYearName(date: D): string;
     abstract invalid(): D;
-    abstract isDateInstance(obj: any): boolean;
+    abstract isDateInstance(obj: unknown): obj is D;
     abstract isValid(date: D): boolean;
     protected locale: L;
     readonly localeChanges: Observable<void>;
     // (undocumented)
     protected readonly _localeChanges: Subject<void>;
-    abstract parse(value: any, parseFormat: any): D | null;
-    parseTime(value: any, parseFormat: any): D | null;
+    abstract parse(value: unknown, parseFormat: ParseFormatType): D | null;
+    parseTime(value: unknown, parseFormat: ParseFormatType): D | null;
     sameDate(first: D | null, second: D | null): boolean;
     sameTime(first: D | null, second: D | null): boolean;
     setLocale(locale: L): void;
@@ -117,13 +117,13 @@ export function _getAnimationsState(): 'enabled' | 'di-disabled' | 'reduced-moti
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public (undocumented)
-export const MAT_DATE_FORMATS: InjectionToken<MatDateFormats>;
+export const MAT_DATE_FORMATS: InjectionToken<MatDateFormats<string, string>>;
 
 // @public
 export const MAT_DATE_LOCALE: InjectionToken<{}>;
 
 // @public (undocumented)
-export const MAT_NATIVE_DATE_FORMATS: MatDateFormats;
+export const MAT_NATIVE_DATE_FORMATS: MatDateFormats<Intl.DateTimeFormatOptions, null>;
 
 // @public
 export const MAT_OPTGROUP: InjectionToken<MatOptgroup>;
@@ -135,19 +135,19 @@ export const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponen
 export const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
 // @public (undocumented)
-export type MatDateFormats = {
+export type MatDateFormats<DisplayFormatType = string, ParseFormatType = DisplayFormatType> = {
     parse: {
-        dateInput: any;
-        timeInput?: any;
+        dateInput: ParseFormatType;
+        timeInput: ParseFormatType;
     };
     display: {
-        dateInput: any;
-        monthLabel?: any;
-        monthYearLabel: any;
-        dateA11yLabel: any;
-        monthYearA11yLabel: any;
-        timeInput?: any;
-        timeOptionLabel?: any;
+        dateInput: DisplayFormatType;
+        monthLabel?: DisplayFormatType;
+        monthYearLabel: DisplayFormatType;
+        dateA11yLabel: DisplayFormatType;
+        monthYearA11yLabel: DisplayFormatType;
+        timeInput?: DisplayFormatType;
+        timeOptionLabel?: DisplayFormatType;
     };
 };
 
@@ -365,7 +365,7 @@ export class MatRippleModule {
 }
 
 // @public
-export class NativeDateAdapter extends DateAdapter<Date> {
+export class NativeDateAdapter extends DateAdapter<Date, string | Intl.Locale, Intl.DateTimeFormatOptions, null> {
     constructor(...args: unknown[]);
     // (undocumented)
     addCalendarDays(date: Date, days: number): Date;
@@ -379,9 +379,9 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     clone(date: Date): Date;
     // (undocumented)
     createDate(year: number, month: number, date: number): Date;
-    deserialize(value: any): Date | null;
+    deserialize(value: unknown): Date | null;
     // (undocumented)
-    format(date: Date, displayFormat: Object): string;
+    format(date: Date, displayFormat: Intl.DateTimeFormatOptions): string;
     // (undocumented)
     getDate(date: Date): number;
     // (undocumented)
@@ -411,13 +411,13 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     invalid(): Date;
     // (undocumented)
-    isDateInstance(obj: any): obj is Date;
+    isDateInstance(obj: unknown): obj is Date;
     // (undocumented)
     isValid(date: Date): boolean;
     // (undocumented)
-    parse(value: any, parseFormat?: any): Date | null;
+    parse(value: unknown, _parseFormat?: null): Date | null;
     // (undocumented)
-    parseTime(userValue: any, parseFormat?: any): Date | null;
+    parseTime(userValue: unknown, _parseFormat?: null): Date | null;
     // (undocumented)
     setTime(target: Date, hours: number, minutes: number, seconds: number): Date;
     // (undocumented)
@@ -441,7 +441,7 @@ export class NativeDateModule {
 }
 
 // @public (undocumented)
-export function provideNativeDateAdapter(formats?: MatDateFormats): Provider[];
+export function provideNativeDateAdapter(formats?: MatDateFormats<Intl.DateTimeFormatOptions, null>): Provider[];
 
 // @public
 export interface RippleAnimationConfig {

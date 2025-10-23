@@ -57,10 +57,22 @@ import {DateRange} from './date-selection-model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
-export class MatYearView<D> implements AfterContentInit, OnDestroy {
+export class MatYearView<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
+  implements AfterContentInit, OnDestroy
+{
   readonly _changeDetectorRef = inject(ChangeDetectorRef);
-  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
-  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  )!;
+  _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(DateAdapter, {
+    optional: true,
+  })!;
   private _dir = inject(Directionality, {optional: true});
 
   private _rerenderSubscription = Subscription.EMPTY;

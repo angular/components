@@ -38,6 +38,7 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MAT_OPTION_PARENT_COMPONENT,
+  MatDateFormats,
   MatOption,
   MatOptionParentComponent,
 } from '../core';
@@ -63,9 +64,14 @@ import {
 import {Subscription} from 'rxjs';
 
 /** Event emitted when a value is selected in the timepicker. */
-export interface MatTimepickerSelected<D> {
+export interface MatTimepickerSelected<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+> {
   value: D;
-  source: MatTimepicker<D>;
+  source: MatTimepicker<D, L, DisplayFormatType, ParseFormatType>;
 }
 
 /** Injection token used to configure the behavior of the timepicker dropdown while scrolling. */
@@ -126,13 +132,26 @@ export interface MatTimepickerConnectedInput<D> {
     },
   ],
 })
-export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
+export class MatTimepicker<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
+  implements OnDestroy, MatOptionParentComponent
+{
   private _dir = inject(Directionality, {optional: true});
   private _viewContainerRef = inject(ViewContainerRef);
   private _injector = inject(Injector);
   private _defaultConfig = inject(MAT_TIMEPICKER_CONFIG, {optional: true});
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  )!;
   private _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
   protected _animationsDisabled = _animationsDisabled();
 
@@ -177,7 +196,9 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   readonly isOpen: Signal<boolean> = this._isOpen.asReadonly();
 
   /** Emits when the user selects a time. */
-  readonly selected: OutputEmitterRef<MatTimepickerSelected<D>> = output();
+  readonly selected: OutputEmitterRef<
+    MatTimepickerSelected<D, L, DisplayFormatType, ParseFormatType>
+  > = output();
 
   /** Emits when the timepicker is opened. */
   readonly opened: OutputEmitterRef<void> = output();
@@ -409,7 +430,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       const min = input?.min() || adapter.setTime(adapter.today(), 0, 0, 0);
       const max = input?.max() || adapter.setTime(adapter.today(), 23, 59, 0);
       const cacheKey =
-        interval + '/' + adapter.format(min, timeFormat) + '/' + adapter.format(max, timeFormat);
+        interval + '/' + adapter.format(min, timeFormat!) + '/' + adapter.format(max, timeFormat!);
 
       // Don't re-generate the options if the inputs haven't changed.
       if (cacheKey !== this._optionsCacheKey) {

@@ -18,7 +18,12 @@ export const MAT_DATE_LOCALE = new InjectionToken<{}>('MAT_DATE_LOCALE', {
 const NOT_IMPLEMENTED = 'Method not implemented';
 
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
-export abstract class DateAdapter<D, L = any> {
+export abstract class DateAdapter<
+  D,
+  L = any,
+  DisplayFormatType = string,
+  ParseFormatType = DisplayFormatType,
+> {
   /** The locale to use for all dates. */
   protected locale: L;
   protected readonly _localeChanges = new Subject<void>();
@@ -124,7 +129,7 @@ export abstract class DateAdapter<D, L = any> {
    *     (type is implementation-dependent).
    * @returns The parsed date.
    */
-  abstract parse(value: any, parseFormat: any): D | null;
+  abstract parse(value: unknown, parseFormat: ParseFormatType): D | null;
 
   /**
    * Formats a date as a string according to the given format.
@@ -132,7 +137,7 @@ export abstract class DateAdapter<D, L = any> {
    * @param displayFormat The format to use to display the date as a string.
    * @returns The formatted date string.
    */
-  abstract format(date: D, displayFormat: any): string;
+  abstract format(date: D, displayFormat: DisplayFormatType): string;
 
   /**
    * Adds the given number of years to the date. Years are counted as if flipping 12 pages on the
@@ -177,7 +182,7 @@ export abstract class DateAdapter<D, L = any> {
    * @param obj The object to check
    * @returns Whether the object is a date instance.
    */
-  abstract isDateInstance(obj: any): boolean;
+  abstract isDateInstance(obj: unknown): obj is D;
 
   /**
    * Checks whether the given date is valid.
@@ -233,7 +238,7 @@ export abstract class DateAdapter<D, L = any> {
    * @param parseFormat The expected format of the value being parsed
    *     (type is implementation-dependent).
    */
-  parseTime(value: any, parseFormat: any): D | null {
+  parseTime(value: unknown, parseFormat: ParseFormatType): D | null {
     throw new Error(NOT_IMPLEMENTED);
   }
 
@@ -268,9 +273,9 @@ export abstract class DateAdapter<D, L = any> {
    * @returns The deserialized date object, either a valid date, null if the value can be
    *     deserialized into a null date (e.g. the empty string), or an invalid date.
    */
-  deserialize(value: any): D | null {
+  deserialize(value: unknown): D | null {
     if (value == null || (this.isDateInstance(value) && this.isValid(value))) {
-      return value;
+      return value as D | null;
     }
     return this.invalid();
   }
