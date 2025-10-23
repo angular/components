@@ -70,7 +70,7 @@ export class ComboboxHighlightExample {
 
     if (comboboxRect) {
       popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom}px`;
+      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
       popoverEl.style.left = `${comboboxRect.left - 1}px`;
     }
 

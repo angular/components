@@ -13,6 +13,7 @@ import {
   ComboboxTreeAutoSelectExample,
   ComboboxTreeHighlightExample,
   ComboboxTreeManualExample,
+  ComboboxReadonlyExample,
 } from '@angular/components-examples/aria/combobox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
@@ -26,6 +27,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     ComboboxTreeManualExample,
     ComboboxTreeAutoSelectExample,
     ComboboxTreeHighlightExample,
+    ComboboxReadonlyExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

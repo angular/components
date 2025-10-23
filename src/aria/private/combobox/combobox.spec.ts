@@ -585,6 +585,35 @@ describe('Combobox with Listbox Pattern', () => {
       });
     });
   });
+
+  describe('Readonly mode', () => {
+    it('should select and close on selection', () => {
+      const {combobox, listbox, inputEl} = getPatterns({readonly: true});
+      combobox.onPointerup(clickOption(listbox.inputs.items(), 2));
+      expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
+      expect(listbox.inputs.value()).toEqual(['Banana']);
+      expect(inputEl.value).toBe('Banana');
+      expect(combobox.expanded()).toBe(false);
+    });
+
+    it('should close on escape', () => {
+      const {combobox} = getPatterns({readonly: true});
+      combobox.onKeydown(down());
+      expect(combobox.expanded()).toBe(true);
+      combobox.onKeydown(escape());
+      expect(combobox.expanded()).toBe(false);
+    });
+
+    it('should clear selection on escape when already closed', () => {
+      const {combobox, listbox} = getPatterns({readonly: true});
+      combobox.onPointerup(clickOption(listbox.inputs.items(), 2));
+      expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
+      expect(listbox.inputs.value()).toEqual(['Banana']);
+      combobox.onKeydown(escape());
+      expect(listbox.getSelectedItem()).toBe(undefined);
+      expect(listbox.inputs.value()).toEqual([]);
+    });
+  });
 });
 
 describe('Combobox with Tree Pattern', () => {
@@ -892,6 +921,38 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.selectionStart).toBe(1);
         expect(inputEl.selectionEnd).toBe(5);
       });
+    });
+  });
+
+  describe('Readonly mode', () => {
+    it('should select and close on selection', () => {
+      const {combobox, tree, inputEl} = getPatterns({readonly: true});
+      combobox.onPointerup(clickInput(inputEl));
+      expect(combobox.expanded()).toBe(true);
+      combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
+      expect(tree.inputs.value()).toEqual(['Fruit']);
+      expect(inputEl.value).toBe('Fruit');
+      expect(combobox.expanded()).toBe(false);
+    });
+
+    it('should close on escape', () => {
+      const {combobox} = getPatterns({readonly: true});
+      combobox.onKeydown(down());
+      expect(combobox.expanded()).toBe(true);
+      combobox.onKeydown(escape());
+      expect(combobox.expanded()).toBe(false);
+    });
+
+    it('should clear selection on escape when already closed', () => {
+      const {combobox, tree, inputEl} = getPatterns({readonly: true});
+      combobox.onPointerup(clickInput(inputEl));
+      combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
+      expect(tree.inputs.value()).toEqual(['Fruit']);
+      expect(inputEl.value).toBe('Fruit');
+      expect(combobox.expanded()).toBe(false);
+      combobox.onKeydown(escape());
+      expect(tree.inputs.value()).toEqual([]);
+      expect(inputEl.value).toBe('');
     });
   });
 });

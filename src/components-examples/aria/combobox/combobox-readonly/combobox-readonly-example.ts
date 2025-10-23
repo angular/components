@@ -17,17 +17,16 @@ import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
-  computed,
   ElementRef,
   signal,
   viewChild,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
-/** @title Combobox with manual selection. */
+/** @title Readonly combobox. */
 @Component({
-  selector: 'combobox-manual-example',
-  templateUrl: 'combobox-manual-example.html',
+  selector: 'combobox-readonly-example',
+  templateUrl: 'combobox-readonly-example.html',
   styleUrl: '../combobox-examples.css',
   imports: [
     Combobox,
@@ -40,24 +39,22 @@ import {FormsModule} from '@angular/forms';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxManualExample {
+export class ComboboxReadonlyExample {
   popover = viewChild<ElementRef>('popover');
   listbox = viewChild<Listbox<any>>(Listbox);
   combobox = viewChild<Combobox<any>>(Combobox);
 
+  options = () => states;
   searchString = signal('');
-
-  options = computed(() =>
-    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
-  );
 
   constructor() {
     afterRenderEffect(() => {
       const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      combobox._pattern.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
 
-      this.listbox()?.scrollActiveItemIntoView();
+      // TODO(wagnermaciel): Make this easier for developers to do.
+      this.listbox()?._pattern.inputs.activeItem()?.element().scrollIntoView({block: 'nearest'});
     });
   }
 
@@ -65,7 +62,7 @@ export class ComboboxManualExample {
     const popover = this.popover()!;
     const combobox = this.combobox()!;
 
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+    const comboboxRect = combobox._pattern.inputs.inputEl()?.getBoundingClientRect();
     const popoverEl = popover.nativeElement;
 
     if (comboboxRect) {
@@ -78,55 +75,4 @@ export class ComboboxManualExample {
   }
 }
 
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-];
+const states = ['Option 1', 'Option 2', 'Option 3'];
