@@ -206,7 +206,7 @@ $fallbacks: m3-slider.get-tokens();
   height: $height-ref;
   border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
 
-  box-shadow: token-utils.slot(slider-handle-elevation, $fallbacks);
+  box-shadow: token-utils.slot(slider-handle-elevation-shadow, $fallbacks);
   background-color: token-utils.slot(slider-handle-color, $fallbacks);
   border-color: token-utils.slot(slider-handle-color, $fallbacks);
   border-radius: token-utils.slot(slider-handle-shape, $fallbacks);
