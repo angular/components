@@ -597,7 +597,7 @@ describe('Combobox with Listbox Pattern', () => {
     });
 
     it('should close on escape', () => {
-      const {combobox, listbox} = getPatterns({readonly: true});
+      const {combobox} = getPatterns({readonly: true});
       combobox.onKeydown(down());
       expect(combobox.expanded()).toBe(true);
       combobox.onKeydown(escape());
