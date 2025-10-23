@@ -37,6 +37,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
     },
   ],
   host: {
+    '[attr.aria-disabled]': 'disabled()',
     '[attr.data-expanded]': 'pattern.expanded()',
     '(input)': 'pattern.onInput($event)',
     '(keydown)': 'pattern.onKeydown($event)',
@@ -119,6 +120,7 @@ export class Combobox<V> {
     '[attr.aria-controls]': 'combobox.pattern.popupId()',
     '[attr.aria-haspopup]': 'combobox.pattern.hasPopup()',
     '[attr.aria-autocomplete]': 'combobox.pattern.autocomplete()',
+    '[disabled]': 'combobox.disabled()',
   },
 })
 export class ComboboxInput {
