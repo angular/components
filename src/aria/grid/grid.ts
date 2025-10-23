@@ -184,7 +184,7 @@ export class GridCell {
   private readonly _row = inject(GridRow);
 
   /** A unique identifier for the cell. */
-  private readonly _id = inject(_IdGenerator).getId('ng-grid-cell-');
+  private readonly _id = inject(_IdGenerator).getId('ng-grid-cell-', true);
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);

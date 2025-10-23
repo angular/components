@@ -185,7 +185,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   private readonly _toolbar = inject(Toolbar);
 
   /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-', true);
 
   /** A unique identifier for the widget. */
   readonly id = computed(() => this._generatedId);
@@ -236,7 +236,7 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
   private readonly _toolbar = inject(Toolbar, {optional: true});
 
   /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-group-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-group-', true);
 
   /** A unique identifier for the widget. */
   readonly id = computed(() => this._generatedId);

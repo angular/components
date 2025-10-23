@@ -295,7 +295,7 @@ export interface Highlightable extends ListKeyManagerOption {
 
 // @public
 export class _IdGenerator {
-    getId(prefix: string): string;
+    getId(prefix: string, randomize?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_IdGenerator, never>;
     // (undocumented)
