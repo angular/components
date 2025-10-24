@@ -1,34 +1,28 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
-    name = "menu",
+ts_project(
+    name = "list-navigation",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/private",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
+        "//src/aria/private/behaviors/list-focus",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 
 ng_project(
     name = "unit_test_sources",
     testonly = True,
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
-    ),
+    srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":menu",
+        ":list-navigation",
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/axe-core",
-        "//src/cdk/testing/private",
+        "//src/aria/private/behaviors/list-focus:unit_test_sources",
     ],
 )
 

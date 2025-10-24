@@ -1,20 +1,20 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ts_project(
     name = "tree",
     srcs = [
-        "index.ts",
+        "combobox-tree.ts",
         "tree.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/combobox",
-        "//src/aria/deferred-content",
-        "//src/aria/private",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
+        "//src/aria/private/behaviors/event-manager",
+        "//src/aria/private/behaviors/expansion",
+        "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/signal-like",
+        "//src/aria/private/combobox",
     ],
 )
 
@@ -26,9 +26,9 @@ ng_project(
     ],
     deps = [
         ":tree",
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
+        "//src/aria/private/behaviors/signal-like",
+        "//src/cdk/keycodes",
         "//src/cdk/testing/private",
     ],
 )

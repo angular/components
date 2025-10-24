@@ -18,7 +18,6 @@ export const commitMessage: CommitMessageConfig = {
     'aria/tabs',
     'aria/toolbar',
     'aria/tree',
-    'aria/ui-patterns',
     'cdk-experimental/column-resize',
     'cdk-experimental/popover-edit',
     'cdk-experimental/scrolling',

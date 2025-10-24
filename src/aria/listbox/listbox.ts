@@ -19,7 +19,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '@angular/aria/ui-patterns';
+import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';

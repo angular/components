@@ -23,7 +23,7 @@ import {
   ComboboxPattern,
   ComboboxListboxControls,
   ComboboxTreeControls,
-} from '@angular/aria/ui-patterns';
+} from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 
