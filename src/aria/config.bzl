@@ -10,7 +10,7 @@ ARIA_ENTRYPOINTS = [
     "tabs",
     "toolbar",
     "tree",
-    "ui-patterns",
+    "private",
 ]
 
 # List of all entry-point targets of the Angular Aria package.

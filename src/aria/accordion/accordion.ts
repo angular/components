@@ -26,7 +26,7 @@ import {
   AccordionGroupPattern,
   AccordionPanelPattern,
   AccordionTriggerPattern,
-} from '@angular/aria/ui-patterns';
+} from '@angular/aria/private';
 
 /**
  * Represents the content panel of an accordion item. It is controlled by an

@@ -26,7 +26,7 @@ import {
   MenuItemPattern,
   MenuPattern,
   MenuTriggerPattern,
-} from '@angular/aria/ui-patterns';
+} from '@angular/aria/private';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
 

@@ -1,0 +1,24 @@
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "private",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/private/accordion",
+        "//src/aria/private/behaviors/signal-like",
+        "//src/aria/private/combobox",
+        "//src/aria/private/grid",
+        "//src/aria/private/listbox",
+        "//src/aria/private/menu",
+        "//src/aria/private/radio-group",
+        "//src/aria/private/tabs",
+        "//src/aria/private/toolbar",
+        "//src/aria/private/tree",
+    ],
+)
