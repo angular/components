@@ -13,7 +13,6 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';

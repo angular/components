@@ -13,7 +13,6 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
@@ -280,6 +279,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     set hideSingleSelectionIndicator(value: boolean);
     get id(): string;
     set id(value: string);
+    get inlineOverlayAfter(): ElementRef | undefined;
     _isRtl(): boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
     get multiple(): boolean;
@@ -296,6 +296,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     static ngAcceptInputType_hideSingleSelectionIndicator: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
+    // (undocumented)
+    static ngAcceptInputType_overlayInlined: unknown;
     // (undocumented)
     static ngAcceptInputType_required: unknown;
     // (undocumented)
@@ -327,6 +329,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     options: QueryList<MatOption>;
     readonly optionSelectionChanges: Observable<MatOptionSelectionChange>;
     protected _overlayDir: CdkConnectedOverlay;
+    overlayInlined: boolean;
     // (undocumented)
     _overlayPanelClass: string | string[];
     _overlayWidth: string | number;
@@ -341,7 +344,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     get placeholder(): string;
     set placeholder(value: string);
     _positions: ConnectedPosition[];
-    _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
+    _preferredOverlayOrigin: ElementRef | undefined;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => {}): void;
     get required(): boolean;
@@ -372,7 +375,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     protected _viewportRuler: ViewportRuler;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disableOptionCentering": { "alias": "disableOptionCentering"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "canSelectNullableOptions": { "alias": "canSelectNullableOptions"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelect, "mat-select", ["matSelect"], { "userAriaDescribedBy": { "alias": "aria-describedby"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disableOptionCentering": { "alias": "disableOptionCentering"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "value": { "alias": "value"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "typeaheadDebounceInterval": { "alias": "typeaheadDebounceInterval"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "id": { "alias": "id"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "canSelectNullableOptions": { "alias": "canSelectNullableOptions"; "required": false; }; "overlayInlined": { "alias": "overlayInlined"; "required": false; }; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, never>;
 }

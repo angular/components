@@ -11,7 +11,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
                       [class.demo-drinks-width-large]="drinksWidth === '400px'">
         <mat-label>Drink</mat-label>
         <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
-          [disabled]="drinksDisabled" #drinkControl="ngModel">
+          [disabled]="drinksDisabled" overlayInlined #drinkControl="ngModel">
           <mat-option [disabled]="drinksOptionsDisabled === 'all'">None</mat-option>
           @for (drink of drinks; track drink; let index = $index) {
             <mat-option [value]="drink.value"
@@ -73,7 +73,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-content>
       <mat-form-field [color]="pokemonTheme">
         <mat-label>Pokemon</mat-label>
-        <mat-select multiple [(ngModel)]="currentPokemon"
+        <mat-select multiple overlayInlined [(ngModel)]="currentPokemon"
           [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
           @for (creature of pokemon; track creature) {
             <mat-option [value]="creature.value" [disabled]="pokemonOptionsDisabled">
@@ -108,7 +108,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-content>
       <mat-form-field>
         <mat-label>Digimon</mat-label>
-        <mat-select [(value)]="currentDigimon">
+        <mat-select overlayInlined [(value)]="currentDigimon">
           <mat-option>None</mat-option>
           @for (creature of digimon; track creature) {
             <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
@@ -129,7 +129,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-content>
       <mat-form-field>
         <mat-label>Pokemon</mat-label>
-        <mat-select [(ngModel)]="currentPokemonFromGroup">
+        <mat-select overlayInlined [(ngModel)]="currentPokemonFromGroup">
           @for (group of pokemonGroups; track group) {
             <mat-optgroup [label]="group.name" [disabled]="group.disabled">
               @for (creature of group.pokemon; track creature) {
@@ -151,6 +151,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-select [(ngModel)]="currentDrinkObject"
                     [required]="drinkObjectRequired"
                     [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
+                    overlayInlined
                     #drinkObjectControl="ngModel">
           @for (drink of drinks; track drink) {
             <mat-option [value]="drink" [disabled]="drink.disabled">{{ drink.viewValue }}</mat-option>
@@ -179,7 +180,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <p>
         <mat-form-field appearance="fill">
           <mat-label>Fill</mat-label>
-          <mat-select [(value)]="currentAppearanceValue">
+          <mat-select overlayInlined [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
             @for (creature of digimon; track creature) {
               <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
@@ -191,7 +192,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <p>
         <mat-form-field appearance="outline">
           <mat-label>Outline</mat-label>
-          <mat-select [(value)]="currentAppearanceValue">
+          <mat-select overlayInlined [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
             @for (creature of digimon; track creature) {
               <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
@@ -212,7 +213,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-card-content>
           <mat-form-field>
             <mat-label>Food I would like to eat</mat-label>
-            <mat-select [formControl]="foodControl">
+            <mat-select overlayInlined [formControl]="foodControl">
               @for (food of foods; track food) {
                 <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
               }
@@ -238,7 +239,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-card-content>
           <mat-form-field>
             <mat-label>Starter pokemon</mat-label>
-            <mat-select (selectionChange)="latestChangeEvent = $event">
+            <mat-select overlayInlined (selectionChange)="latestChangeEvent = $event">
               @for (creature of pokemon; track creature) {
                 <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
               }
@@ -387,7 +388,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <p class="demo-narrow-sandwich">
       <mat-form-field>
         <mat-label>Bread</mat-label>
-        <mat-select [(ngModel)]="sandwichBread"
+        <mat-select overlayInlined [(ngModel)]="sandwichBread"
           [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
           @for (bread of breads; track bread) {
             <mat-option [value]="bread.value">{{ bread.viewValue }}</mat-option>
@@ -396,7 +397,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       </mat-form-field>
       <mat-form-field>
         <mat-label>Meat</mat-label>
-        <mat-select [(ngModel)]="sandwichMeat"
+        <mat-select overlayInlined [(ngModel)]="sandwichMeat"
           [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
           @for (meat of meats; track meat) {
             <mat-option [value]="meat.value">{{ meat.viewValue }}</mat-option>
@@ -405,7 +406,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       </mat-form-field>
       <mat-form-field>
         <mat-label>Cheese</mat-label>
-        <mat-select [(ngModel)]="sandwichCheese"
+        <mat-select overlayInlined [(ngModel)]="sandwichCheese"
           [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
           @for (cheese of cheeses; track cheese) {
             <mat-option [value]="cheese.value">{{ cheese.viewValue }}</mat-option>

@@ -17,6 +17,7 @@ import {
   OnDestroy,
   Renderer2,
   SimpleChanges,
+  booleanAttribute,
 } from '@angular/core';
 import {InputModalityDetector} from '../a11y';
 import {Directionality} from '../bidi';
@@ -68,6 +69,7 @@ import {eventDispatchesNativeClick} from './event-detection';
   inputs: [
     {name: 'menuTemplateRef', alias: 'cdkMenuTriggerFor'},
     {name: 'menuPosition', alias: 'cdkMenuPosition'},
+    {name: 'menuOverlayInlined', alias: 'cdkMenuOverlayInlined', transform: booleanAttribute},
     {name: 'menuData', alias: 'cdkMenuTriggerData'},
   ],
   outputs: ['opened: cdkMenuOpened', 'closed: cdkMenuClosed'],
@@ -276,6 +278,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
       positionStrategy: this._getOverlayPositionStrategy(),
       scrollStrategy: this.menuScrollStrategy(),
       direction: this._directionality || undefined,
+      insertOverlayAfter: this.menuOverlayInlined ? this._elementRef : undefined,
     });
   }
 

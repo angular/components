@@ -104,6 +104,11 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
   /** Data that will be passed to the menu panel. */
   abstract menuData: any;
 
+  /**
+   * Whether to inline the overlay, instead of using the global overlay container.
+   */
+  protected _menuOverlayInlined: boolean;
+
   /** Whether focus should be restored when the menu is closed. */
   abstract restoreFocus: boolean;
 
@@ -367,6 +372,7 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir || 'ltr',
       disableAnimations: this._animationsDisabled,
+      insertOverlayAfter: this._menuOverlayInlined ? this._element : undefined,
     });
   }
 

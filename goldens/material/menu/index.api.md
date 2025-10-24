@@ -274,6 +274,10 @@ export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentIn
     readonly menuClosed: EventEmitter<void>;
     menuData: any;
     readonly menuOpened: EventEmitter<void>;
+    get menuOverlayInlined(): boolean;
+    set menuOverlayInlined(menuOverlayInlined: boolean);
+    // (undocumented)
+    static ngAcceptInputType_menuOverlayInlined: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -288,7 +292,7 @@ export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentIn
     triggersSubmenu(): boolean;
     updatePosition(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatMenuTrigger, "[mat-menu-trigger-for], [matMenuTriggerFor]", ["matMenuTrigger"], { "_deprecatedMatMenuTriggerFor": { "alias": "mat-menu-trigger-for"; "required": false; }; "menu": { "alias": "matMenuTriggerFor"; "required": false; }; "menuData": { "alias": "matMenuTriggerData"; "required": false; }; "restoreFocus": { "alias": "matMenuTriggerRestoreFocus"; "required": false; }; }, { "menuOpened": "menuOpened"; "onMenuOpen": "onMenuOpen"; "menuClosed": "menuClosed"; "onMenuClose": "onMenuClose"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatMenuTrigger, "[mat-menu-trigger-for], [matMenuTriggerFor]", ["matMenuTrigger"], { "_deprecatedMatMenuTriggerFor": { "alias": "mat-menu-trigger-for"; "required": false; }; "menu": { "alias": "matMenuTriggerFor"; "required": false; }; "menuData": { "alias": "matMenuTriggerData"; "required": false; }; "menuOverlayInlined": { "alias": "matMenuTriggerOverlayInlined"; "required": false; }; "restoreFocus": { "alias": "matMenuTriggerRestoreFocus"; "required": false; }; }, { "menuOpened": "menuOpened"; "onMenuOpen": "onMenuOpen"; "menuClosed": "menuClosed"; "onMenuClose": "onMenuClose"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenuTrigger, never>;
 }

@@ -216,6 +216,8 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     getMenu(): Menu | undefined;
     _handleClick(): void;
     // (undocumented)
+    static ngAcceptInputType_menuOverlayInlined: unknown;
+    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -224,7 +226,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     toggle(): void;
     _toggleOnKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuOverlayInlined": { "alias": "cdkMenuOverlayInlined"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuTrigger, never>;
 }
@@ -240,6 +242,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected isElementInsideMenuStack(element: Element): boolean;
     isOpen(): boolean;
     menuData: unknown;
+    menuOverlayInlined: boolean;
     menuPosition: ConnectedPosition[];
     protected readonly menuScrollStrategy: () => ScrollStrategy;
     protected readonly menuStack: MenuStack;
