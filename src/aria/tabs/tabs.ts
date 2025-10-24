@@ -24,7 +24,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabListPattern, TabPanelPattern, TabPattern} from '@angular/aria/ui-patterns';
+import {TabListPattern, TabPanelPattern, TabPattern} from '@angular/aria/private';
 
 interface HasElement {
   element: Signal<HTMLElement>;
