@@ -21,4 +21,19 @@ export interface PositionStrategy {
 
   /** Cleans up any DOM modifications made by the position strategy, if necessary. */
   dispose(): void;
+
+  /**
+   * Creates the structure of the overlay. If not provided,
+   * structure will be created inside the overlay container.
+   */
+  createStructure?(): {pane: HTMLElement; host: HTMLElement} | null;
+
+  /** Attaches the host element to the DOM. */
+  attachHost?(host: HTMLElement): boolean;
+
+  /** Attaches the backdrop element to the host. */
+  attachBackdrop?(backdrop: HTMLElement, host: HTMLElement): boolean;
+
+  /** Updates the stacking order of the overlay. */
+  updateStackingOrder?(host: HTMLElement): boolean;
 }

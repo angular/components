@@ -40,6 +40,7 @@ export class BlockScrollStrategy implements ScrollStrategy {
 // @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     constructor(...args: unknown[]);
+    asPopover: boolean;
     readonly attach: EventEmitter<void>;
     attachOverlay(): void;
     backdropClass: string | string[];
@@ -57,6 +58,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     lockPosition: boolean;
     minHeight: number | string;
     minWidth: number | string;
+    // (undocumented)
+    static ngAcceptInputType_asPopover: unknown;
     // (undocumented)
     static ngAcceptInputType_disposeOnNavigation: unknown;
     // (undocumented)
@@ -92,7 +95,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     viewportMargin: ViewportMargin;
     width: number | string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; "asPopover": { "alias": "cdkConnectedOverlayAsPopover"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkConnectedOverlay, never>;
 }
@@ -222,7 +225,14 @@ export function createRepositionScrollStrategy(injector: Injector, config?: Repo
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     constructor(connectedTo: FlexibleConnectedPositionStrategyOrigin, _viewportRuler: ViewportRuler, _document: Document, _platform: Platform, _overlayContainer: OverlayContainer);
     apply(): void;
+    asPopover(isPopover: boolean): this;
     attach(overlayRef: OverlayRef): void;
+    attachBackdrop(backdrop: HTMLElement, host: HTMLElement): boolean;
+    attachHost(host: HTMLElement): boolean;
+    createStructure(): {
+        pane: HTMLDivElement;
+        host: HTMLDivElement;
+    } | null;
     // (undocumented)
     detach(): void;
     dispose(): void;
@@ -232,6 +242,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     _preferredPositions: ConnectionPositionPair[];
     reapplyLastPosition(): void;
     setOrigin(origin: FlexibleConnectedPositionStrategyOrigin): this;
+    updateStackingOrder(): boolean;
     withDefaultOffsetX(offset: number): this;
     withDefaultOffsetY(offset: number): this;
     withFlexibleDimensions(flexibleDimensions?: boolean): this;
@@ -459,8 +470,15 @@ export interface OverlaySizeConfig {
 export interface PositionStrategy {
     apply(): void;
     attach(overlayRef: OverlayRef): void;
+    attachBackdrop?(backdrop: HTMLElement, host: HTMLElement): boolean;
+    attachHost?(host: HTMLElement): boolean;
+    createStructure?(): {
+        pane: HTMLElement;
+        host: HTMLElement;
+    } | null;
     detach?(): void;
     dispose(): void;
+    updateStackingOrder?(host: HTMLElement): boolean;
 }
 
 // @public

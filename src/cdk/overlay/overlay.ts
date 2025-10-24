@@ -47,17 +47,26 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
   const idGenerator = injector.get(_IdGenerator);
   const appRef = injector.get(ApplicationRef);
   const directionality = injector.get(Directionality);
+  const overlayConfig = new OverlayConfig(config);
+  const customStructure = overlayConfig.positionStrategy?.createStructure?.();
 
-  const host = doc.createElement('div');
-  const pane = doc.createElement('div');
+  let pane: HTMLElement;
+  let host: HTMLElement;
+
+  if (customStructure) {
+    pane = customStructure.pane;
+    host = customStructure.host;
+  } else {
+    host = doc.createElement('div');
+    pane = doc.createElement('div');
+    host.appendChild(pane);
+    overlayContainer.getContainerElement().appendChild(host);
+  }
 
   pane.id = idGenerator.getId('cdk-overlay-');
   pane.classList.add('cdk-overlay-pane');
-  host.appendChild(pane);
-  overlayContainer.getContainerElement().appendChild(host);
 
   const portalOutlet = new DomPortalOutlet(pane, appRef, injector);
-  const overlayConfig = new OverlayConfig(config);
   const renderer =
     injector.get(Renderer2, null, {optional: true}) ||
     injector.get(RendererFactory2).createRenderer(null, null);

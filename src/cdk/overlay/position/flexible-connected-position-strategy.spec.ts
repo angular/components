@@ -33,6 +33,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
   let overlayRef: OverlayRef;
   let viewport: ViewportRuler;
   let injector: Injector;
+  let portal: ComponentPortal<TestOverlay>;
 
   beforeEach(() => {
     injector = TestBed.inject(Injector);
@@ -50,7 +51,8 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   function attachOverlay(config: OverlayConfig) {
     overlayRef = createOverlayRef(injector, config);
-    overlayRef.attach(new ComponentPortal(TestOverlay));
+    portal = new ComponentPortal(TestOverlay);
+    overlayRef.attach(portal);
     TestBed.inject(ApplicationRef).tick();
   }
 
@@ -125,7 +127,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     origin.remove();
   });
 
-  it('should for the virtual keyboard offset when positioning the overlay', () => {
+  it('should account for the virtual keyboard offset when positioning the overlay', () => {
     const originElement = createPositionedBlockElement();
     document.body.appendChild(originElement);
 
@@ -2949,6 +2951,70 @@ describe('FlexibleConnectedPositionStrategy', () => {
       overlayRef.updatePosition();
 
       expect(overlayClassList).toContain('custom-panel-class');
+    });
+  });
+
+  describe('DOM location', () => {
+    let positionStrategy: FlexibleConnectedPositionStrategy;
+    let containerElement: HTMLElement;
+    let originElement: HTMLElement;
+
+    beforeEach(() => {
+      containerElement = overlayContainer.getContainerElement();
+      originElement = createPositionedBlockElement();
+      document.body.appendChild(originElement);
+
+      positionStrategy = createFlexibleConnectedPositionStrategy(
+        injector,
+        originElement,
+      ).withPositions([
+        {
+          overlayX: 'start',
+          overlayY: 'top',
+          originX: 'start',
+          originY: 'bottom',
+        },
+      ]);
+    });
+
+    afterEach(() => {
+      originElement.remove();
+    });
+
+    it('should place the overlay inside the overlay container by default', () => {
+      attachOverlay({positionStrategy});
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(true);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBeFalsy();
+    });
+
+    it('should be able to opt into placing the overlay inside an adjacent popover element', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      positionStrategy.asPopover(true);
+      attachOverlay({positionStrategy});
+
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
+      expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBe('manual');
+    });
+
+    it('should re-attach the popover next to the origin element', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      positionStrategy.asPopover(true);
+      attachOverlay({positionStrategy});
+      expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
+
+      overlayRef.detach();
+      TestBed.inject(ApplicationRef).tick();
+      expect(overlayRef.hostElement.parentNode).toBeFalsy();
+
+      overlayRef.attach(portal);
+      expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
     });
   });
 });
