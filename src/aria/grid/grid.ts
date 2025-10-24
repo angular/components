@@ -20,7 +20,7 @@ import {
   model,
   Signal,
 } from '@angular/core';
-import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../ui-patterns';
+import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
 /** A directive that provides grid-based navigation and selection behavior. */
 @Directive({

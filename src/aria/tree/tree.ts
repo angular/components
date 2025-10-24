@@ -25,7 +25,7 @@ import {
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
-import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '@angular/aria/ui-patterns';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '@angular/aria/private';
 import {ComboboxPopup} from '../combobox';
 
 interface HasElement {

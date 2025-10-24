@@ -11,7 +11,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/combobox",
-        "//src/aria/ui-patterns",
+        "//src/aria/private",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],

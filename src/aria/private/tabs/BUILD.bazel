@@ -1,19 +1,19 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ts_project(
     name = "tabs",
     srcs = [
-        "index.ts",
         "tabs.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/deferred-content",
-        "//src/aria/private",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
+        "//src/aria/private/behaviors/event-manager",
+        "//src/aria/private/behaviors/expansion",
+        "//src/aria/private/behaviors/label",
+        "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 
@@ -26,7 +26,8 @@ ng_project(
     deps = [
         ":tabs",
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
+        "//src/aria/private/behaviors/signal-like",
+        "//src/cdk/keycodes",
         "//src/cdk/testing/private",
     ],
 )
