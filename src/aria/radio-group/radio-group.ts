@@ -26,7 +26,7 @@ import {
   RadioGroupPattern,
   ToolbarRadioGroupInputs,
   ToolbarRadioGroupPattern,
-} from '@angular/aria/ui-patterns';
+} from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {ToolbarWidgetGroup} from '@angular/aria/toolbar';

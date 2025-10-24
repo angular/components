@@ -2,31 +2,26 @@ load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
-    name = "toolbar",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+ts_project(
+    name = "label",
+    srcs = [
+        "label.ts",
+    ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/private",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = [
-        "toolbar.spec.ts",
+        "label.spec.ts",
     ],
     deps = [
-        ":toolbar",
+        ":label",
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing/private",
     ],
 )
 
