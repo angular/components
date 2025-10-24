@@ -221,7 +221,7 @@ export class RadioButton<V> {
   private readonly _radioGroup = inject(RadioGroup);
 
   /** A unique identifier for the radio button. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-radio-button-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-radio-button-', true);
 
   /** A unique identifier for the radio button. */
   readonly id = computed(() => this._generatedId);
