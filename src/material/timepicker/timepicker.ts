@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -60,7 +61,7 @@ import {
   parseInterval,
   validateAdapter,
 } from './util';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Event emitted when a value is selected in the timepicker. */
 export interface MatTimepickerSelected<D> {
@@ -127,6 +128,7 @@ export interface MatTimepickerConnectedInput<D> {
   ],
 })
 export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
+  private readonly _destroyRef = inject(DestroyRef);
   private _dir = inject(Directionality, {optional: true});
   private _viewContainerRef = inject(ViewContainerRef);
   private _injector = inject(Injector);
@@ -143,7 +145,6 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _overlayRef: OverlayRef | null = null;
   private _portal: TemplatePortal<unknown> | null = null;
   private _optionsCacheKey: string | null = null;
-  private _localeChanges: Subscription;
   private _onOpenRender: AfterRenderRef | null = null;
 
   protected _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
@@ -307,7 +308,6 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   ngOnDestroy(): void {
     this._keyManager.destroy();
-    this._localeChanges.unsubscribe();
     this._onOpenRender?.destroy();
     this._overlayRef?.dispose();
   }
@@ -486,7 +486,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   /** Sets up the logic that updates the timepicker when the locale changes. */
   private _handleLocaleChanges(): void {
     // Re-generate the options list if the locale changes.
-    this._localeChanges = this._dateAdapter.localeChanges.subscribe(() => {
+    this._dateAdapter.localeChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this._optionsCacheKey = null;
 
       if (this.isOpen()) {

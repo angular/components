@@ -17,6 +17,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectorRef,
+  DestroyRef,
   Directive,
   ElementRef,
   EventEmitter,
@@ -35,6 +36,7 @@ import {
 import {EMPTY, Observable, Observer, Subject, merge, of as observableOf, timer} from 'rxjs';
 import {debounceTime, filter, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = {
@@ -71,6 +73,7 @@ export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRe
 export abstract class MatPaginatedTabHeader
   implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
 {
+  protected readonly _destroyRef = inject(DestroyRef);
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   private _viewportRuler = inject(ViewportRuler);
@@ -96,9 +99,6 @@ export abstract class MatPaginatedTabHeader
 
   /** Whether the header should scroll to the selected index after the view has been checked. */
   private _selectedIndexChanged = false;
-
-  /** Emits when the component is destroyed. */
-  protected readonly _destroyed = new Subject<void>();
 
   /** Whether the controls for pagination should be displayed */
   _showPaginationControls = false;
@@ -200,11 +200,13 @@ export abstract class MatPaginatedTabHeader
     // re-align.
     const resize = this._sharedResizeObserver
       .observe(this._elementRef.nativeElement)
-      .pipe(debounceTime(32), takeUntil(this._destroyed));
+      .pipe(debounceTime(32), takeUntilDestroyed(this._destroyRef));
     // Note: We do not actually need to watch these events for proper functioning of the tabs,
     // the resize events above should capture any viewport resize that we care about. However,
     // removing this is fairly breaking for screenshot tests, so we're leaving it here for now.
-    const viewportResize = this._viewportRuler.change(150).pipe(takeUntil(this._destroyed));
+    const viewportResize = this._viewportRuler
+      .change(150)
+      .pipe(takeUntilDestroyed(this._destroyRef));
 
     const realign = () => {
       this.updatePagination();
@@ -230,7 +232,7 @@ export abstract class MatPaginatedTabHeader
     // On dir change or resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
     merge(dirChange, viewportResize, resize, this._items.changes, this._itemsResized())
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {
         // We need to defer this to give the browser some time to recalculate
         // the element dimensions. The call has to be wrapped in `NgZone.run`,
@@ -316,8 +318,6 @@ export abstract class MatPaginatedTabHeader
   ngOnDestroy() {
     this._eventCleanups.forEach(cleanup => cleanup());
     this._keyManager?.destroy();
-    this._destroyed.next();
-    this._destroyed.complete();
     this._stopScrolling.complete();
   }
 
@@ -639,12 +639,10 @@ export abstract class MatPaginatedTabHeader
 
     // Start a timer after the delay and keep firing based on the interval.
     timer(HEADER_SCROLL_DELAY, HEADER_SCROLL_INTERVAL)
-      // Keep the timer going until something tells it to stop or the component is destroyed.
-      .pipe(takeUntil(merge(this._stopScrolling, this._destroyed)))
+      .pipe(takeUntilDestroyed(this._destroyRef), takeUntil(merge(this._stopScrolling)))
       .subscribe(() => {
         const {maxScrollDistance, distance} = this._scrollHeader(direction);
 
-        // Stop the timer if we've reached the start or the end.
         if (distance === 0 || distance >= maxScrollDistance) {
           this._stopInterval();
         }
