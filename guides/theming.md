@@ -458,6 +458,81 @@ structure and CSS classes are considered private implementation details that may
 change at any time. CSS variables used by the Angular Material components should
 be defined through the `overrides` API instead of defined explicitly.
 
+## Strong focus indicators
+
+By default, most components indicate browser focus by changing their background color as described
+by the Material Design specification. This behavior, however, can fall short of accessibility
+requirements, such as [WCAG 4.5:1][], which require a stronger indication of browser focus.
+
+Angular Material supports rendering highly visible outlines on focused elements. Applications can
+enable these strong focus indicators via two Sass mixins:
+`strong-focus-indicators` and `strong-focus-indicators-theme`.
+
+The `strong-focus-indicators` mixin emits structural indicator styles for all components. This mixin
+should be included exactly once in an application, similar to the `core` mixin described above.
+
+The `strong-focus-indicators-theme` mixin emits only the indicator's color styles. This mixin should
+be included once per theme, similar to the theme mixins described above. Additionally, you can use
+this mixin to change the color of the focus indicators in situations in which the default color
+would not contrast sufficiently with the background color.
+
+The following example includes strong focus indicator styles in an application alongside the rest of
+the custom theme API.
+
+```scss
+@use '@angular/material' as mat;
+
+$my-theme: (
+  color: mat.$violet-palette,
+  typography: Roboto,
+  density: 0
+);
+
+@include mat.strong-focus-indicators();
+
+html {
+  color-scheme: light dark;
+  @include mat.theme($my-theme);
+  @include mat.strong-focus-indicators-theme($my-theme);
+}
+```
+
+### Customizing strong focus indicators
+
+You can pass a configuration map to `strong-focus-indicators` to customize the appearance of the
+indicators. This configuration includes `border-style`, `border-width`, and `border-radius`.
+
+You also can customize the color of indicators with `strong-focus-indicators-theme`. This mixin
+accepts either a theme, as described earlier in this guide, or a CSS color value. When providing a
+theme, the indicators will use the default hue of the primary palette.
+
+The following example includes strong focus indicator styles with custom settings alongside the rest
+of the custom theme API.
+
+```scss
+@use '@angular/material' as mat;
+
+@include mat.strong-focus-indicators((
+  border-style: dotted,
+  border-width: 4px,
+  border-radius: 2px,
+));
+
+html {
+  color-scheme: light dark;
+
+  @include mat.theme((
+    color: mat.$rose-palette,
+    typography: Roboto,
+    density: 0
+  ));
+
+  @include mat.strong-focus-indicators-theme(orange);
+}
+```
+
+[WCAG]: https://www.w3.org/WAI/standards-guidelines/wcag/glance/
+
 ## Shadow DOM
 
 Angular Material assumes that, by default, all theme styles are loaded as global
