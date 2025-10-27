@@ -68,13 +68,13 @@ function sortDirectives(a: HasElement, b: HasElement) {
     'class': 'ng-tree',
     'role': 'tree',
     '[attr.id]': 'id()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-multiselectable]': 'pattern.multi()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '[tabindex]': 'pattern.tabindex()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '[attr.aria-orientation]': '_pattern.orientation()',
+    '[attr.aria-multiselectable]': '_pattern.multi()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
+    '[tabindex]': '_pattern.tabindex()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
   hostDirectives: [{directive: ComboboxPopup}],
@@ -137,7 +137,7 @@ export class Tree<V> {
   );
 
   /** The UI pattern for the tree. */
-  readonly pattern: TreePattern<V>;
+  readonly _pattern: TreePattern<V>;
 
   /** Whether the tree has received focus yet. */
   private _hasFocused = signal(false);
@@ -147,24 +147,24 @@ export class Tree<V> {
       ...this,
       id: this.id,
       allItems: computed(() =>
-        [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
+        [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
       ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
       element: () => this._elementRef.nativeElement,
-      combobox: () => this._popup?.combobox?.pattern,
+      combobox: () => this._popup?.combobox?._pattern,
     };
 
-    this.pattern = this._popup?.combobox
+    this._pattern = this._popup?.combobox
       ? new ComboboxTreePattern<V>(inputs)
       : new TreePattern<V>(inputs);
 
     if (this._popup?.combobox) {
-      this._popup?.controls?.set(this.pattern as ComboboxTreePattern<V>);
+      this._popup?.controls?.set(this._pattern as ComboboxTreePattern<V>);
     }
 
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
-        this.pattern.setDefaultState();
+        this._pattern.setDefaultState();
       }
     });
 
@@ -173,7 +173,7 @@ export class Tree<V> {
       const activeItem = untracked(() => inputs.activeItem());
 
       if (!items.some(i => i === activeItem) && activeItem) {
-        this.pattern.listBehavior.unfocus();
+        this._pattern.listBehavior.unfocus();
       }
     });
 
@@ -210,17 +210,17 @@ export class Tree<V> {
   exportAs: 'ngTreeItem',
   host: {
     'class': 'ng-treeitem',
-    '[attr.data-active]': 'pattern.active()',
+    '[attr.data-active]': '_pattern.active()',
     'role': 'treeitem',
-    '[id]': 'pattern.id()',
-    '[attr.aria-expanded]': 'pattern.expandable() ? pattern.expanded() : null',
-    '[attr.aria-selected]': 'pattern.selected()',
-    '[attr.aria-current]': 'pattern.current()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-level]': 'pattern.level()',
-    '[attr.aria-setsize]': 'pattern.setsize()',
-    '[attr.aria-posinset]': 'pattern.posinset()',
-    '[attr.tabindex]': 'pattern.tabindex()',
+    '[id]': '_pattern.id()',
+    '[attr.aria-expanded]': '_pattern.expandable() ? _pattern.expanded() : null',
+    '[attr.aria-selected]': '_pattern.selected()',
+    '[attr.aria-current]': '_pattern.current()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-level]': '_pattern.level()',
+    '[attr.aria-setsize]': '_pattern.setsize()',
+    '[attr.aria-posinset]': '_pattern.posinset()',
+    '[attr.tabindex]': '_pattern.tabindex()',
   },
 })
 export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
@@ -263,16 +263,16 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   });
 
   /** The UI pattern for this item. */
-  pattern: TreeItemPattern<V>;
+  _pattern: TreeItemPattern<V>;
 
   constructor() {
     super();
     this.preserveContent.set(true);
     // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this.tree().pattern instanceof ComboboxTreePattern
+      this.tree()._pattern instanceof ComboboxTreePattern
         ? this.contentVisible.set(true)
-        : this.contentVisible.set(this.pattern.expanded());
+        : this.contentVisible.set(this._pattern.expanded());
     });
   }
 
@@ -280,14 +280,14 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     this.parent().register(this);
     this.tree().register(this);
 
-    const treePattern = computed(() => this.tree().pattern);
+    const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
       if (this.parent() instanceof Tree) {
         return treePattern();
       }
-      return (this.parent() as TreeItemGroup<V>).ownedBy().pattern;
+      return (this.parent() as TreeItemGroup<V>).ownedBy()._pattern;
     });
-    this.pattern = new TreeItemPattern<V>({
+    this._pattern = new TreeItemPattern<V>({
       ...this,
       id: () => this._id,
       tree: treePattern,
@@ -328,7 +328,7 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
 
   /** Child items within this group. */
   readonly children = computed<TreeItemPattern<V>[]>(() =>
-    [...this._unorderedItems()].sort(sortDirectives).map(c => c.pattern),
+    [...this._unorderedItems()].sort(sortDirectives).map(c => c._pattern),
   );
 
   /** Tree item that owns the group. */

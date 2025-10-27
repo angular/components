@@ -37,12 +37,12 @@ import {toSignal} from '@angular/core/rxjs-interop';
     },
   ],
   host: {
-    '[attr.data-expanded]': 'pattern.expanded()',
-    '(input)': 'pattern.onInput($event)',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerup)': 'pattern.onPointerup($event)',
-    '(focusin)': 'pattern.onFocusIn()',
-    '(focusout)': 'pattern.onFocusOut($event)',
+    '[attr.data-expanded]': '_pattern.expanded()',
+    '(input)': '_pattern.onInput($event)',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerup)': '_pattern.onPointerup($event)',
+    '(focusin)': '_pattern.onFocusIn()',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
 export class Combobox<V> {
@@ -82,7 +82,7 @@ export class Combobox<V> {
   readonly firstMatch = input<V | undefined>(undefined);
 
   /** The combobox ui pattern. */
-  readonly pattern = new ComboboxPattern<any, V>({
+  readonly _pattern = new ComboboxPattern<any, V>({
     ...this,
     textDirection: this.textDirection,
     disabled: this.disabled,
@@ -95,13 +95,13 @@ export class Combobox<V> {
 
   constructor() {
     afterRenderEffect(() => {
-      if (!this._deferredContentAware?.contentVisible() && this.pattern.isFocused()) {
+      if (!this._deferredContentAware?.contentVisible() && this._pattern.isFocused()) {
         this._deferredContentAware?.contentVisible.set(true);
       }
     });
 
     afterRenderEffect(() => {
-      if (!this._hasBeenFocused() && this.pattern.isFocused()) {
+      if (!this._hasBeenFocused() && this._pattern.isFocused()) {
         this._hasBeenFocused.set(true);
       }
     });
@@ -114,11 +114,11 @@ export class Combobox<V> {
   host: {
     'role': 'combobox',
     '[value]': 'value()',
-    '[attr.aria-expanded]': 'combobox.pattern.expanded()',
-    '[attr.aria-activedescendant]': 'combobox.pattern.activedescendant()',
-    '[attr.aria-controls]': 'combobox.pattern.popupId()',
-    '[attr.aria-haspopup]': 'combobox.pattern.hasPopup()',
-    '[attr.aria-autocomplete]': 'combobox.pattern.autocomplete()',
+    '[attr.aria-expanded]': 'combobox._pattern.expanded()',
+    '[attr.aria-activedescendant]': 'combobox._pattern.activedescendant()',
+    '[attr.aria-controls]': 'combobox._pattern.popupId()',
+    '[attr.aria-haspopup]': 'combobox._pattern.hasPopup()',
+    '[attr.aria-autocomplete]': 'combobox._pattern.autocomplete()',
   },
 })
 export class ComboboxInput {
@@ -132,15 +132,15 @@ export class ComboboxInput {
   value = model<string>('');
 
   constructor() {
-    (this.combobox.pattern.inputs.inputEl as WritableSignal<HTMLInputElement>).set(
+    (this.combobox._pattern.inputs.inputEl as WritableSignal<HTMLInputElement>).set(
       this._elementRef.nativeElement,
     );
-    this.combobox.pattern.inputs.inputValue = this.value;
+    this.combobox._pattern.inputs.inputValue = this.value;
 
     /** Focuses & selects the first item in the combobox if the user changes the input value. */
     afterRenderEffect(() => {
       this.combobox.popup()?.controls()?.items();
-      untracked(() => this.combobox.pattern.onFilter());
+      untracked(() => this.combobox._pattern.onFilter());
     });
   }
 }

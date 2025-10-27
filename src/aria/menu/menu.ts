@@ -41,13 +41,13 @@ import {Directionality} from '@angular/cdk/bidi';
   exportAs: 'ngMenuTrigger',
   host: {
     'class': 'ng-menu-trigger',
-    '[attr.tabindex]': 'uiPattern.tabindex()',
-    '[attr.aria-haspopup]': 'uiPattern.hasPopup()',
-    '[attr.aria-expanded]': 'uiPattern.expanded()',
-    '[attr.aria-controls]': 'uiPattern.submenu()?.id()',
-    '(click)': 'uiPattern.onClick()',
-    '(keydown)': 'uiPattern.onKeydown($event)',
-    '(focusout)': 'uiPattern.onFocusOut($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-haspopup]': '_pattern.hasPopup()',
+    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-controls]': '_pattern.submenu()?.id()',
+    '(click)': '_pattern.onClick()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
 export class MenuTrigger<V> {
@@ -66,10 +66,10 @@ export class MenuTrigger<V> {
   onSubmit = output<V>();
 
   /** The menu trigger ui pattern instance. */
-  uiPattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
+  readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     onSubmit: (value: V) => this.onSubmit.emit(value),
     element: computed(() => this._elementRef.nativeElement),
-    submenu: computed(() => this.submenu()?.uiPattern),
+    submenu: computed(() => this.submenu()?._pattern),
   });
 }
 
@@ -95,14 +95,14 @@ export class MenuTrigger<V> {
   host: {
     'role': 'menu',
     'class': 'ng-menu',
-    '[attr.id]': 'uiPattern.id()',
-    '[attr.data-visible]': 'uiPattern.isVisible()',
-    '(keydown)': 'uiPattern.onKeydown($event)',
-    '(mouseover)': 'uiPattern.onMouseOver($event)',
-    '(mouseout)': 'uiPattern.onMouseOut($event)',
-    '(focusout)': 'uiPattern.onFocusOut($event)',
-    '(focusin)': 'uiPattern.onFocusIn()',
-    '(click)': 'uiPattern.onClick($event)',
+    '[attr.id]': '_pattern.id()',
+    '[attr.data-visible]': '_pattern.isVisible()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(mouseover)': '_pattern.onMouseOver($event)',
+    '(mouseout)': '_pattern.onMouseOut($event)',
+    '(focusout)': '_pattern.onFocusOut($event)',
+    '(focusin)': '_pattern.onFocusIn()',
+    '(click)': '_pattern.onClick($event)',
   },
 })
 export class Menu<V> {
@@ -144,7 +144,7 @@ export class Menu<V> {
   readonly parent = input<MenuTrigger<V> | MenuItem<V>>();
 
   /** The menu ui pattern instance. */
-  readonly uiPattern: MenuPattern<V>;
+  readonly _pattern: MenuPattern<V>;
 
   /**
    * The menu items as a writable signal.
@@ -153,18 +153,18 @@ export class Menu<V> {
    * sometimes the items array is empty. The bug can be reproduced by switching this to use a
    * computed and then quickly opening and closing menus in the dev app.
    */
-  readonly items = () => this._items().map(i => i.uiPattern);
+  readonly items = () => this._items().map(i => i._pattern);
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => this.uiPattern.isVisible());
+  isVisible = computed(() => this._pattern.isVisible());
 
   /** A callback function triggered when a menu item is selected. */
   onSubmit = output<V>();
 
   constructor() {
-    this.uiPattern = new MenuPattern({
+    this._pattern = new MenuPattern({
       ...this,
-      parent: computed(() => this.parent()?.uiPattern),
+      parent: computed(() => this.parent()?._pattern),
       multi: () => false,
       skipDisabled: () => false,
       focusMode: () => 'roving',
@@ -180,15 +180,15 @@ export class Menu<V> {
     // update the display property. The result is focus() being called on an element that is not
     // focusable. This simply retries focusing the element after render.
     afterRenderEffect(() => {
-      if (this.uiPattern.isVisible()) {
-        const activeItem = untracked(() => this.uiPattern.inputs.activeItem());
-        this.uiPattern.listBehavior.goto(activeItem!);
+      if (this._pattern.isVisible()) {
+        const activeItem = untracked(() => this._pattern.inputs.activeItem());
+        this._pattern.listBehavior.goto(activeItem!);
       }
     });
 
     afterRenderEffect(() => {
-      if (!this.uiPattern.hasBeenFocused()) {
-        this.uiPattern.setDefaultState();
+      if (!this._pattern.hasBeenFocused()) {
+        this._pattern.setDefaultState();
       }
     });
   }
@@ -197,12 +197,12 @@ export class Menu<V> {
 
   /** Closes the menu. */
   close(opts?: {refocus?: boolean}) {
-    this.uiPattern.inputs.parent()?.close(opts);
+    this._pattern.inputs.parent()?.close(opts);
   }
 
   /** Closes all parent menus. */
   closeAll(opts?: {refocus?: boolean}) {
-    const root = this.uiPattern.root();
+    const root = this._pattern.root();
 
     if (root instanceof MenuTriggerPattern) {
       root.close(opts);
@@ -227,11 +227,11 @@ export class Menu<V> {
   host: {
     'role': 'menubar',
     'class': 'ng-menu-bar',
-    '(keydown)': 'uiPattern.onKeydown($event)',
-    '(mouseover)': 'uiPattern.onMouseOver($event)',
-    '(click)': 'uiPattern.onClick($event)',
-    '(focusin)': 'uiPattern.onFocusIn()',
-    '(focusout)': 'uiPattern.onFocusOut($event)',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(mouseover)': '_pattern.onMouseOver($event)',
+    '(click)': '_pattern.onClick($event)',
+    '(focusin)': '_pattern.onFocusIn()',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
 export class MenuBar<V> {
@@ -265,7 +265,7 @@ export class MenuBar<V> {
   readonly typeaheadDelay = input<number>(0.5);
 
   /** The menu ui pattern instance. */
-  readonly uiPattern: MenuBarPattern<V>;
+  readonly _pattern: MenuBarPattern<V>;
 
   /** The menu items as a writable signal. */
   readonly items = signal<MenuItemPattern<V>[]>([]);
@@ -274,7 +274,7 @@ export class MenuBar<V> {
   onSubmit = output<V>();
 
   constructor() {
-    this.uiPattern = new MenuBarPattern({
+    this._pattern = new MenuBarPattern({
       ...this,
       multi: () => false,
       skipDisabled: () => false,
@@ -287,12 +287,12 @@ export class MenuBar<V> {
     });
 
     afterRenderEffect(() => {
-      this.items.set(this._items().map(i => i.uiPattern));
+      this.items.set(this._items().map(i => i._pattern));
     });
 
     afterRenderEffect(() => {
-      if (!this.uiPattern.hasBeenFocused()) {
-        this.uiPattern.setDefaultState();
+      if (!this._pattern.hasBeenFocused()) {
+        this._pattern.setDefaultState();
       }
     });
   }
@@ -309,12 +309,12 @@ export class MenuBar<V> {
   host: {
     'role': 'menuitem',
     'class': 'ng-menu-item',
-    '[attr.tabindex]': 'uiPattern.tabindex()',
-    '[attr.data-active]': 'uiPattern.isActive()',
-    '[attr.aria-haspopup]': 'uiPattern.hasPopup()',
-    '[attr.aria-expanded]': 'uiPattern.expanded()',
-    '[attr.aria-disabled]': 'uiPattern.disabled()',
-    '[attr.aria-controls]': 'uiPattern.submenu()?.id()',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.data-active]': '_pattern.isActive()',
+    '[attr.aria-haspopup]': '_pattern.hasPopup()',
+    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
 })
 export class MenuItem<V> {
@@ -351,13 +351,13 @@ export class MenuItem<V> {
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
   /** The menu item ui pattern instance. */
-  readonly uiPattern: MenuItemPattern<V> = new MenuItemPattern<V>({
+  readonly _pattern: MenuItemPattern<V> = new MenuItemPattern<V>({
     id: this.id,
     value: this.value,
     element: computed(() => this._elementRef.nativeElement),
     disabled: this.disabled,
     searchTerm: this.searchTerm,
-    parent: computed(() => this.parent?.uiPattern),
-    submenu: computed(() => this.submenu()?.uiPattern),
+    parent: computed(() => this.parent?._pattern),
+    submenu: computed(() => this.submenu()?._pattern),
   });
 }
