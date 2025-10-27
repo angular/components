@@ -18,6 +18,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  input,
   NgZone,
   OnDestroy,
   Output,
@@ -186,6 +187,9 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
    */
   @Input()
   headerPosition: 'top' | 'bottom' = 'top';
+
+  /** The content prefix to use in the stepper header. */
+  readonly headerPrefix = input<TemplateRef<unknown> | null>(null);
 
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>> = {};
