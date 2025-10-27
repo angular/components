@@ -40,6 +40,7 @@
       {"name": ["Object", "assign"], "message": "Use the spread operator instead."},
       {"name": ["*", "asObservable"], "message": "Cast to Observable type instead."},
       {"name": ["*", "removeChild"], "message": "Use `remove` instead instead."},
+      {"name": ["CommonModule"], "message": "Import the necessary symbols directly instead."},
       {"name": ["*", "compileComponents"], "message": "`compileComponents` is not necessary."},
       {
         "name": ["isDevMode"],

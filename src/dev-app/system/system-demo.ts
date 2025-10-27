@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 
@@ -30,7 +29,7 @@ interface ColorGroup {
   selector: 'system-demo',
   templateUrl: 'system-demo.html',
   styleUrls: ['system-demo.css'],
-  imports: [CommonModule, MatCardModule],
+  imports: [MatCardModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemDemo {
