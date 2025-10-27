@@ -183,6 +183,10 @@ export class Listbox<V> {
   onFocus() {
     this._hasFocused.set(true);
   }
+
+  scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
+    this._pattern.inputs.activeItem()?.element().scrollIntoView(options);
+  }
 }
 
 /** A selectable option in a Listbox. */
@@ -232,6 +236,9 @@ export class Option<V> {
 
   /** The text used by the typeahead search. */
   label = input<string>();
+
+  /** Whether the option is selected. */
+  readonly selected = computed(() => this._pattern.selected());
 
   /** The Option UIPattern. */
   readonly _pattern = new OptionPattern<V>({

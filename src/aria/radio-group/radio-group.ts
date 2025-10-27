@@ -238,6 +238,9 @@ export class RadioButton<V> {
   /** Whether the radio button is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the radio button is selected. */
+  readonly selected = computed(() => this._pattern.selected());
+
   /** The RadioButton UIPattern. */
   readonly _pattern = new RadioButtonPattern<V>({
     ...this,
