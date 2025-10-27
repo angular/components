@@ -76,6 +76,21 @@ export class AccordionPanel {
       this._deferredContentAware.contentVisible.set(!this._pattern.hidden());
     });
   }
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.toggle();
+  }
 }
 
 /**
@@ -135,6 +150,21 @@ export class AccordionTrigger {
     accordionGroup: computed(() => this._accordionGroup._pattern),
     accordionPanel: this.accordionPanel,
   });
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this._pattern.expansionControl.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this._pattern.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this._pattern.expansionControl.toggle();
+  }
 }
 
 /**
@@ -203,6 +233,69 @@ export class AccordionGroup {
         }
       }
     });
+  }
+
+  /** Navigates to the first accordion panel. */
+  first() {
+    this._pattern.navigation.first();
+  }
+
+  /** Navigates to the last accordion panel. */
+  last() {
+    this._pattern.navigation.last();
+  }
+
+  /** Navigates to the previous accordion panel. */
+  prev() {
+    this._pattern.navigation.prev();
+  }
+
+  /** Navigates to the next accordion panel. */
+  next() {
+    this._pattern.navigation.next();
+  }
+
+  /** Opens the accordion panel with the specified value. */
+  open(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.open(trigger);
+    }
+  }
+
+  /** Closes the accordion panel with the specified value. */
+  close(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.close(trigger);
+    }
+  }
+
+  /** Toggles the expansion state of the accordion panel with the specified value. */
+  toggle(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.toggle(trigger);
+    }
+  }
+
+  /** Opens all accordion panels if multi-expandable. */
+  openAll() {
+    this._pattern.expansionManager.openAll();
+  }
+
+  /** Closes all accordion panels. */
+  closeAll() {
+    this._pattern.expansionManager.closeAll();
+  }
+
+  _findTriggerPatternByValue(value: string) {
+    const trigger = this._triggers().find(t => t.value() === value);
+
+    return trigger?._pattern;
   }
 }
 
