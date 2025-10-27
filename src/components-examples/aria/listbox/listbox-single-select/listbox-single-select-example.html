@@ -16,7 +16,7 @@
         #option="ngOption"
       >
         <mat-pseudo-checkbox
-          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+          [state]="option._pattern.selected() ? 'checked' : 'unchecked'"
         ></mat-pseudo-checkbox>
         <span>{{ fruit }}</span>
       </li>
