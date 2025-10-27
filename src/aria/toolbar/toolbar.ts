@@ -65,11 +65,11 @@ function sortDirectives(a: HasElement, b: HasElement) {
   host: {
     'role': 'toolbar',
     'class': 'ng-toolbar',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-orientation]': '_pattern.orientation()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
 })
@@ -85,7 +85,7 @@ export class Toolbar<V> {
 
   /** Sorted UIPatterns of the child widgets */
   readonly items = computed(() =>
-    [...this._widgets()].sort(sortDirectives).map(widget => widget.pattern),
+    [...this._widgets()].sort(sortDirectives).map(widget => widget._pattern),
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
@@ -101,7 +101,7 @@ export class Toolbar<V> {
   readonly wrap = input(true, {transform: booleanAttribute});
 
   /** The toolbar UIPattern. */
-  readonly pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
+  readonly _pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
@@ -115,7 +115,7 @@ export class Toolbar<V> {
   constructor() {
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this.pattern.validate();
+        const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
@@ -124,7 +124,7 @@ export class Toolbar<V> {
 
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
-        this.pattern.setDefaultState();
+        this._pattern.setDefaultState();
       }
     });
   }
@@ -169,12 +169,12 @@ export class Toolbar<V> {
   exportAs: 'ngToolbarWidget',
   host: {
     'class': 'ng-toolbar-widget',
-    '[attr.data-active]': 'pattern.active()',
-    '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.data-active]': '_pattern.active()',
+    '[attr.tabindex]': '_pattern.tabindex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[id]': 'pattern.id()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[id]': '_pattern.id()',
   },
 })
 export class ToolbarWidget<V> implements OnInit, OnDestroy {
@@ -191,7 +191,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._toolbar.pattern);
+  readonly toolbar = computed(() => this._toolbar._pattern);
 
   /** A reference to the widget element to be focused on navigation. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -200,10 +200,10 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
-  readonly hardDisabled = computed(() => this.pattern.disabled() && this._toolbar.skipDisabled());
+  readonly hardDisabled = computed(() => this._pattern.disabled() && this._toolbar.skipDisabled());
 
   /** The ToolbarWidget UIPattern. */
-  readonly pattern = new ToolbarWidgetPattern<V>({
+  readonly _pattern = new ToolbarWidgetPattern<V>({
     ...this,
     id: this.id,
     element: this.element,
@@ -242,7 +242,7 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
   readonly id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._toolbar?.pattern);
+  readonly toolbar = computed(() => this._toolbar?._pattern);
 
   /** A reference to the widget element to be focused on navigation. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -254,7 +254,7 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
   readonly controls = signal<ToolbarWidgetGroupControls | undefined>(undefined);
 
   /** The ToolbarWidgetGroup UIPattern. */
-  readonly pattern = new ToolbarWidgetGroupPattern<V>({
+  readonly _pattern = new ToolbarWidgetGroupPattern<V>({
     ...this,
     id: this.id,
     element: this.element,

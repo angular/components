@@ -47,7 +47,7 @@ export class MenuContextExample {
       menu.element.style.top = `${event.clientY}px`;
       menu.element.style.left = `${event.clientX}px`;
 
-      setTimeout(() => menu.uiPattern.first());
+      setTimeout(() => menu._pattern.first());
     }
   }
 }

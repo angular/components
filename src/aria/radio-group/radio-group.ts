@@ -87,13 +87,13 @@ export function mapSignal<T, V>(
   host: {
     'role': 'radiogroup',
     'class': 'ng-radio-group',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-readonly]': 'pattern.readonly()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-readonly]': '_pattern.readonly()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-orientation]': '_pattern.orientation()',
+    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
   hostDirectives: [
@@ -120,7 +120,7 @@ export class RadioGroup<V> {
   protected textDirection = inject(Directionality).valueSignal;
 
   /** The RadioButton UIPatterns of the child RadioButtons. */
-  protected items = computed(() => this._radioButtons().map(radio => radio.pattern));
+  protected items = computed(() => this._radioButtons().map(radio => radio._pattern));
 
   /** Whether the radio group is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -147,7 +147,7 @@ export class RadioGroup<V> {
   });
 
   /** The RadioGroup UIPattern. */
-  readonly pattern: RadioGroupPattern<V>;
+  readonly _pattern: RadioGroupPattern<V>;
 
   /** Whether the radio group has received focus yet. */
   private _hasFocused = signal(false);
@@ -170,17 +170,17 @@ export class RadioGroup<V> {
       toolbar: this._toolbarWidgetGroup.toolbar,
     };
 
-    this.pattern = this._hasToolbar()
+    this._pattern = this._hasToolbar()
       ? new ToolbarRadioGroupPattern<V>(inputs as ToolbarRadioGroupInputs<V>)
       : new RadioGroupPattern<V>(inputs as RadioGroupInputs<V>);
 
     if (this._hasToolbar()) {
-      this._toolbarWidgetGroup.controls.set(this.pattern as ToolbarRadioGroupPattern<V>);
+      this._toolbarWidgetGroup.controls.set(this._pattern as ToolbarRadioGroupPattern<V>);
     }
 
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this.pattern.validate();
+        const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
@@ -189,7 +189,7 @@ export class RadioGroup<V> {
 
     afterRenderEffect(() => {
       if (!this._hasFocused() && !this._hasToolbar()) {
-        this.pattern.setDefaultState();
+        this._pattern.setDefaultState();
       }
     });
   }
@@ -206,11 +206,11 @@ export class RadioGroup<V> {
   host: {
     'role': 'radio',
     'class': 'ng-radio-button',
-    '[attr.data-active]': 'pattern.active()',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-checked]': 'pattern.selected()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[id]': 'pattern.id()',
+    '[attr.data-active]': '_pattern.active()',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-checked]': '_pattern.selected()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[id]': '_pattern.id()',
   },
 })
 export class RadioButton<V> {
@@ -230,7 +230,7 @@ export class RadioButton<V> {
   readonly value = input.required<V>();
 
   /** The parent RadioGroup UIPattern. */
-  readonly group = computed(() => this._radioGroup.pattern);
+  readonly group = computed(() => this._radioGroup._pattern);
 
   /** A reference to the radio button element to be focused on navigation. */
   element = computed(() => this._elementRef.nativeElement);
@@ -239,7 +239,7 @@ export class RadioButton<V> {
   disabled = input(false, {transform: booleanAttribute});
 
   /** The RadioButton UIPattern. */
-  pattern = new RadioButtonPattern<V>({
+  readonly _pattern = new RadioButtonPattern<V>({
     ...this,
     id: this.id,
     value: this.value,

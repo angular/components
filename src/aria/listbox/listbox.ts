@@ -46,14 +46,14 @@ import {ComboboxPopup} from '../combobox';
     'role': 'listbox',
     'class': 'ng-listbox',
     '[attr.id]': 'id()',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-readonly]': 'pattern.readonly()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-multiselectable]': 'pattern.multi()',
-    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-readonly]': '_pattern.readonly()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-orientation]': '_pattern.orientation()',
+    '[attr.aria-multiselectable]': '_pattern.multi()',
+    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
   hostDirectives: [{directive: ComboboxPopup}],
@@ -86,7 +86,7 @@ export class Listbox<V> {
   });
 
   /** The Option UIPatterns of the child Options. */
-  protected items = computed(() => this._options().map(option => option.pattern));
+  protected items = computed(() => this._options().map(option => option._pattern));
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -119,7 +119,7 @@ export class Listbox<V> {
   value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
-  pattern: ListboxPattern<V>;
+  readonly _pattern: ListboxPattern<V>;
 
   /** Whether the listbox has received focus yet. */
   private _hasFocused = signal(false);
@@ -132,20 +132,20 @@ export class Listbox<V> {
       activeItem: signal(undefined),
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
-      combobox: () => this._popup?.combobox?.pattern,
+      combobox: () => this._popup?.combobox?._pattern,
     };
 
-    this.pattern = this._popup?.combobox
+    this._pattern = this._popup?.combobox
       ? new ComboboxListboxPattern<V>(inputs)
       : new ListboxPattern<V>(inputs);
 
     if (this._popup) {
-      this._popup.controls.set(this.pattern as ComboboxListboxPattern<V>);
+      this._popup.controls.set(this._pattern as ComboboxListboxPattern<V>);
     }
 
     afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this.pattern.validate();
+        const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
@@ -154,7 +154,7 @@ export class Listbox<V> {
 
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
-        this.pattern.setDefaultState();
+        this._pattern.setDefaultState();
       }
     });
 
@@ -165,7 +165,7 @@ export class Listbox<V> {
       const activeItem = untracked(() => inputs.activeItem());
 
       if (!items.some(i => i === activeItem) && activeItem) {
-        this.pattern.listBehavior.unfocus();
+        this._pattern.listBehavior.unfocus();
       }
     });
 
@@ -192,11 +192,11 @@ export class Listbox<V> {
   host: {
     'role': 'option',
     'class': 'ng-option',
-    '[attr.data-active]': 'pattern.active()',
-    '[attr.id]': 'pattern.id()',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-selected]': 'pattern.selected()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.data-active]': '_pattern.active()',
+    '[attr.id]': '_pattern.id()',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-selected]': '_pattern.selected()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
   },
 })
 export class Option<V> {
@@ -219,7 +219,7 @@ export class Option<V> {
   protected searchTerm = computed(() => this.label() ?? this.element().textContent);
 
   /** The parent Listbox UIPattern. */
-  protected listbox = computed(() => this._listbox.pattern);
+  protected listbox = computed(() => this._listbox._pattern);
 
   /** A reference to the option element to be focused on navigation. */
   protected element = computed(() => this._elementRef.nativeElement);
@@ -234,7 +234,7 @@ export class Option<V> {
   label = input<string>();
 
   /** The Option UIPattern. */
-  pattern = new OptionPattern<V>({
+  readonly _pattern = new OptionPattern<V>({
     ...this,
     id: this.id,
     value: this.value,

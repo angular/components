@@ -78,7 +78,7 @@
     >
       <mat-pseudo-checkbox
         [disabled]="optionDisabled || listbox.disabled()"
-        [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        [state]="option._pattern.selected() ? 'checked' : 'unchecked'"
       ></mat-pseudo-checkbox>
       <span>{{ fruit }}</span>
     </li>

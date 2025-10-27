@@ -44,9 +44,9 @@ import {
   host: {
     'class': 'ng-accordion-panel',
     'role': 'region',
-    '[attr.id]': 'pattern.id()',
-    '[attr.aria-labelledby]': 'pattern.accordionTrigger()?.id()',
-    '[attr.inert]': 'pattern.hidden() ? true : null',
+    '[attr.id]': '_pattern.id()',
+    '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
+    '[attr.inert]': '_pattern.hidden() ? true : null',
   },
 })
 export class AccordionPanel {
@@ -64,7 +64,7 @@ export class AccordionPanel {
     signal(undefined);
 
   /** The UI pattern instance for this panel. */
-  readonly pattern: AccordionPanelPattern = new AccordionPanelPattern({
+  readonly _pattern: AccordionPanelPattern = new AccordionPanelPattern({
     id: () => this._id,
     value: this.value,
     accordionTrigger: () => this.accordionTrigger(),
@@ -73,7 +73,7 @@ export class AccordionPanel {
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(!this.pattern.hidden());
+      this._deferredContentAware.contentVisible.set(!this._pattern.hidden());
     });
   }
 }
@@ -87,17 +87,17 @@ export class AccordionPanel {
   exportAs: 'ngAccordionTrigger',
   host: {
     'class': 'ng-accordion-trigger',
-    '[attr.data-active]': 'pattern.active()',
+    '[attr.data-active]': '_pattern.active()',
     'role': 'button',
-    '[id]': 'pattern.id()',
-    '[attr.aria-expanded]': 'pattern.expanded()',
-    '[attr.aria-controls]': 'pattern.controls()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
+    '[id]': '_pattern.id()',
+    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-controls]': '_pattern.controls()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
-    '(focusin)': 'pattern.onFocus($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(focusin)': '_pattern.onFocus($event)',
   },
 })
 export class AccordionTrigger {
@@ -121,18 +121,18 @@ export class AccordionTrigger {
    *
    * TODO(ok7sai): Consider move this to UI patterns.
    */
-  readonly hardDisabled = computed(() => this.pattern.disabled() && this.pattern.tabindex() < 0);
+  readonly hardDisabled = computed(() => this._pattern.disabled() && this._pattern.tabindex() < 0);
 
   /** The accordion panel pattern controlled by this trigger. This is set by AccordionGroup. */
   readonly accordionPanel: WritableSignal<AccordionPanelPattern | undefined> = signal(undefined);
 
   /** The UI pattern instance for this trigger. */
-  readonly pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
+  readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
     id: () => this._id,
     value: this.value,
     disabled: this.disabled,
     element: () => this._elementRef.nativeElement,
-    accordionGroup: computed(() => this._accordionGroup.pattern),
+    accordionGroup: computed(() => this._accordionGroup._pattern),
     accordionPanel: this.accordionPanel,
   });
 }
@@ -177,12 +177,12 @@ export class AccordionGroup {
   wrap = input(false, {transform: booleanAttribute});
 
   /** The UI pattern instance for this accordion group. */
-  readonly pattern: AccordionGroupPattern = new AccordionGroupPattern({
+  readonly _pattern: AccordionGroupPattern = new AccordionGroupPattern({
     ...this,
     // TODO(ok7sai): Consider making `activeItem` an internal state in the pattern and call
     // `setDefaultState` in the CDK.
     activeItem: signal(undefined),
-    items: computed(() => this._triggers().map(trigger => trigger.pattern)),
+    items: computed(() => this._triggers().map(trigger => trigger._pattern)),
     expandedIds: this.value,
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
@@ -197,9 +197,9 @@ export class AccordionGroup {
 
       for (const trigger of triggers) {
         const panel = panels.find(p => p.value() === trigger.value());
-        trigger.accordionPanel.set(panel?.pattern);
+        trigger.accordionPanel.set(panel?._pattern);
         if (panel) {
-          panel.accordionTrigger.set(trigger.pattern);
+          panel.accordionTrigger.set(trigger._pattern);
         }
       }
     });

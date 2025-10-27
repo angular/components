@@ -29,15 +29,15 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
   host: {
     'class': 'grid',
     'role': 'grid',
-    '[tabindex]': 'pattern.tabIndex()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-activedescendant]': 'pattern.activeDescendant()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
-    '(pointermove)': 'pattern.onPointermove($event)',
-    '(pointerup)': 'pattern.onPointerup($event)',
-    '(focusin)': 'pattern.onFocusIn($event)',
-    '(focusout)': 'pattern.onFocusOut($event)',
+    '[tabindex]': '_pattern.tabIndex()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(pointermove)': '_pattern.onPointermove($event)',
+    '(pointerup)': '_pattern.onPointerup($event)',
+    '(focusin)': '_pattern.onFocusIn($event)',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
 export class Grid {
@@ -49,7 +49,7 @@ export class Grid {
 
   /** The UI patterns for the rows in the grid. */
   private readonly _rowPatterns: Signal<GridRowPattern[]> = computed(() =>
-    this._rows().map(r => r.pattern),
+    this._rows().map(r => r._pattern),
   );
 
   /** The host native element. */
@@ -74,15 +74,15 @@ export class Grid {
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
   /** The UI pattern for the grid. */
-  readonly pattern = new GridPattern({
+  readonly _pattern = new GridPattern({
     ...this,
     rows: this._rowPatterns,
     getCell: e => this._getCell(e),
   });
 
   constructor() {
-    afterRenderEffect(() => this.pattern.resetStateEffect());
-    afterRenderEffect(() => this.pattern.focusEffect());
+    afterRenderEffect(() => this._pattern.resetStateEffect());
+    afterRenderEffect(() => this._pattern.focusEffect());
   }
 
   /** Gets the cell pattern for a given element. */
@@ -123,14 +123,14 @@ export class GridRow {
 
   /** The UI patterns for the cells in this row. */
   private readonly _cellPatterns: Signal<GridCellPattern[]> = computed(() =>
-    this._cells().map(c => c.pattern),
+    this._cells().map(c => c._pattern),
   );
 
   /** The parent grid. */
   private readonly _grid = inject(Grid);
 
   /** The parent grid UI pattern. */
-  readonly grid = computed(() => this._grid.pattern);
+  readonly grid = computed(() => this._grid._pattern);
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -142,7 +142,7 @@ export class GridRow {
   readonly rowIndex = input<number>();
 
   /** The UI pattern for the grid row. */
-  readonly pattern = new GridRowPattern({
+  readonly _pattern = new GridRowPattern({
     ...this,
     cells: this._cellPatterns,
   });
@@ -155,17 +155,17 @@ export class GridRow {
   host: {
     'class': 'grid-cell',
     '[attr.role]': 'role()',
-    '[attr.id]': 'pattern.id()',
-    '[attr.rowspan]': 'pattern.rowSpan()',
-    '[attr.colspan]': 'pattern.colSpan()',
-    '[attr.data-active]': 'pattern.active()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-rowspan]': 'pattern.rowSpan()',
-    '[attr.aria-colspan]': 'pattern.colSpan()',
-    '[attr.aria-rowindex]': 'pattern.ariaRowIndex()',
-    '[attr.aria-colindex]': 'pattern.ariaColIndex()',
-    '[attr.aria-selected]': 'pattern.ariaSelected()',
-    '[tabindex]': 'pattern.tabIndex()',
+    '[attr.id]': '_pattern.id()',
+    '[attr.rowspan]': '_pattern.rowSpan()',
+    '[attr.colspan]': '_pattern.colSpan()',
+    '[attr.data-active]': '_pattern.active()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-rowspan]': '_pattern.rowSpan()',
+    '[attr.aria-colspan]': '_pattern.colSpan()',
+    '[attr.aria-rowindex]': '_pattern.ariaRowIndex()',
+    '[attr.aria-colindex]': '_pattern.ariaColIndex()',
+    '[attr.aria-selected]': '_pattern.ariaSelected()',
+    '[tabindex]': '_pattern.tabIndex()',
   },
 })
 export class GridCell {
@@ -177,7 +177,7 @@ export class GridCell {
 
   /** The UI pattern for the widget in this cell. */
   private readonly _widgetPattern: Signal<GridCellWidgetPattern | undefined> = computed(
-    () => this._widgets()?.pattern,
+    () => this._widgets()?._pattern,
   );
 
   /** The parent row. */
@@ -214,11 +214,11 @@ export class GridCell {
   readonly selectable = input<boolean>(true);
 
   /** The UI pattern for the grid cell. */
-  readonly pattern = new GridCellPattern({
+  readonly _pattern = new GridCellPattern({
     ...this,
     id: () => this._id,
     grid: this._row.grid,
-    row: () => this._row.pattern,
+    row: () => this._row._pattern,
     widget: this._widgetPattern,
   });
 }
@@ -229,8 +229,8 @@ export class GridCell {
   exportAs: 'ngGridCellWidget',
   host: {
     'class': 'grid-cell-widget',
-    '[attr.data-active]': 'pattern.active()',
-    '[tabindex]': 'pattern.tabIndex()',
+    '[attr.data-active]': '_pattern.active()',
+    '[tabindex]': '_pattern.tabIndex()',
   },
 })
 export class GridCellWidget {
@@ -247,9 +247,9 @@ export class GridCellWidget {
   readonly activate = model<boolean>(false);
 
   /** The UI pattern for the grid cell widget. */
-  readonly pattern = new GridCellWidgetPattern({
+  readonly _pattern = new GridCellWidgetPattern({
     ...this,
-    cell: () => this._cell.pattern,
+    cell: () => this._cell._pattern,
   });
 
   /** Focuses the widget. */
