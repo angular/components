@@ -8,6 +8,7 @@
 
 import {
   afterRenderEffect,
+  computed,
   contentChild,
   Directive,
   ElementRef,
@@ -37,7 +38,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
     },
   ],
   host: {
-    '[attr.data-expanded]': '_pattern.expanded()',
+    '[attr.data-expanded]': 'expanded()',
     '(input)': '_pattern.onInput($event)',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerup)': '_pattern.onPointerup($event)',
@@ -80,6 +81,12 @@ export class Combobox<V> {
 
   /** The value of the first matching item in the popup. */
   readonly firstMatch = input<V | undefined>(undefined);
+
+  /** Whether the combobox is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Input element connected to the combobox, if any. */
+  readonly inputElement = computed(() => this._pattern.inputs.inputEl());
 
   /** The combobox ui pattern. */
   readonly _pattern = new ComboboxPattern<any, V>({

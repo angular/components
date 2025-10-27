@@ -55,10 +55,9 @@ export class ComboboxManualExample {
     afterRenderEffect(() => {
       const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox._pattern.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
 
-      // TODO(wagnermaciel): Make this easier for developers to do.
-      this.listbox()?._pattern.inputs.activeItem()?.element().scrollIntoView({block: 'nearest'});
+      this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
@@ -66,7 +65,7 @@ export class ComboboxManualExample {
     const popover = this.popover()!;
     const combobox = this.combobox()!;
 
-    const comboboxRect = combobox._pattern.inputs.inputEl()?.getBoundingClientRect();
+    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
     const popoverEl = popover.nativeElement;
 
     if (comboboxRect) {
