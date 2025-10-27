@@ -78,6 +78,7 @@ def ng_package(
         }),
         visibility = visibility,
         rollup_runtime_deps = [
+            "//:node_modules/@babel/core",
             "//:node_modules/@rollup/plugin-commonjs",
             "//:node_modules/@rollup/plugin-node-resolve",
             "//:node_modules/magic-string",
