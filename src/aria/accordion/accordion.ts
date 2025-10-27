@@ -80,6 +80,21 @@ export class AccordionPanel {
       this._deferredContentAware.contentVisible.set(this.visible());
     });
   }
+
+  /** Expands this item. */
+  expand() {
+    this.accordionTrigger()?.expansionControl.open();
+  }
+
+  /** Collapses this item. */
+  collapse() {
+    this.accordionTrigger()?.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle() {
+    this.accordionTrigger()?.expansionControl.toggle();
+  }
 }
 
 /**
@@ -145,6 +160,21 @@ export class AccordionTrigger {
     accordionGroup: computed(() => this._accordionGroup._pattern),
     accordionPanel: this.accordionPanel,
   });
+
+  /** Expands this item. */
+  expand() {
+    this._pattern.expansionControl.open();
+  }
+
+  /** Collapses this item. */
+  collapse() {
+    this._pattern.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle() {
+    this._pattern.expansionControl.toggle();
+  }
 }
 
 /**
@@ -213,6 +243,16 @@ export class AccordionGroup {
         }
       }
     });
+  }
+
+  /** Expands all accordion panels if multi-expandable. */
+  expandAll() {
+    this._pattern.expansionManager.openAll();
+  }
+
+  /** Collapses all accordion panels. */
+  collapseAll() {
+    this._pattern.expansionManager.closeAll();
   }
 }
 
