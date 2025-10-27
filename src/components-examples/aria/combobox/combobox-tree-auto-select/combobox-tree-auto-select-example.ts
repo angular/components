@@ -81,10 +81,8 @@ export class ComboboxTreeAutoSelectExample {
     afterRenderEffect(() => {
       const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox._pattern.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
-
-      // TODO(wagnermaciel): Make this easier for developers to do.
-      this.tree()?._pattern.inputs.activeItem()?.element().scrollIntoView({block: 'nearest'});
+      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      this.tree()?.scrollActiveItemIntoView();
     });
   }
 
@@ -92,7 +90,7 @@ export class ComboboxTreeAutoSelectExample {
     const popover = this.popover()!;
     const combobox = this.combobox()!;
 
-    const comboboxRect = combobox._pattern.inputs.inputEl()?.getBoundingClientRect();
+    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
     const popoverEl = popover.nativeElement;
 
     if (comboboxRect) {

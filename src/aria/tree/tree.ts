@@ -201,6 +201,10 @@ export class Tree<V> {
     this._unorderedItems().delete(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
+
+  scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
+    this._pattern.inputs.activeItem()?.element().scrollIntoView(options);
+  }
 }
 
 /**
