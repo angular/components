@@ -83,7 +83,7 @@ export class Tabs {
 
   /** The TabPanel UIPattern of the child TabPanels. */
   unorderedTabpanels = computed(() =>
-    [...this._unorderedPanels()].map(tabpanel => tabpanel.pattern),
+    [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
   );
 
   register(child: TabList | TabPanel) {
@@ -120,12 +120,12 @@ export class Tabs {
   host: {
     'role': 'tablist',
     'class': 'ng-tablist',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '(keydown)': 'pattern.onKeydown($event)',
-    '(pointerdown)': 'pattern.onPointerdown($event)',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-orientation]': '_pattern.orientation()',
+    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
 })
@@ -149,7 +149,7 @@ export class TabList implements OnInit, OnDestroy {
 
   /** The Tab UIPatterns of the child Tabs. */
   readonly tabs = computed(() =>
-    [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab.pattern),
+    [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab._pattern),
   );
 
   /** Whether the tablist is vertically or horizontally oriented. */
@@ -174,7 +174,7 @@ export class TabList implements OnInit, OnDestroy {
   readonly selectedTab = model<string | undefined>();
 
   /** The TabList UIPattern. */
-  readonly pattern: TabListPattern = new TabListPattern({
+  readonly _pattern: TabListPattern = new TabListPattern({
     ...this,
     items: this.tabs,
     value: this._selection,
@@ -190,7 +190,7 @@ export class TabList implements OnInit, OnDestroy {
 
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
-        this.pattern.setDefaultState();
+        this._pattern.setDefaultState();
       }
     });
   }
@@ -225,12 +225,12 @@ export class TabList implements OnInit, OnDestroy {
   host: {
     'role': 'tab',
     'class': 'ng-tab',
-    '[attr.data-active]': 'pattern.active()',
-    '[attr.id]': 'pattern.id()',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-selected]': 'pattern.selected()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
-    '[attr.aria-controls]': 'pattern.controls()',
+    '[attr.data-active]': '_pattern.active()',
+    '[attr.id]': '_pattern.id()',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-selected]': '_pattern.selected()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-controls]': '_pattern.controls()',
   },
 })
 export class Tab implements HasElement, OnInit, OnDestroy {
@@ -250,7 +250,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The parent TabList UIPattern. */
-  readonly tablist = computed(() => this._tabList.pattern);
+  readonly tablist = computed(() => this._tabList._pattern);
 
   /** The TabPanel UIPattern associated with the tab */
   readonly tabpanel = computed(() =>
@@ -264,7 +264,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   readonly value = input.required<string>();
 
   /** The Tab UIPattern. */
-  readonly pattern: TabPattern = new TabPattern({
+  readonly _pattern: TabPattern = new TabPattern({
     ...this,
     id: () => this._id,
     tablist: this.tablist,
@@ -295,10 +295,10 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   host: {
     'role': 'tabpanel',
     'class': 'ng-tabpanel',
-    '[attr.id]': 'pattern.id()',
-    '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.inert]': 'pattern.hidden() ? true : null',
-    '[attr.aria-labelledby]': 'pattern.labelledBy()',
+    '[attr.id]': '_pattern.id()',
+    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.aria-labelledby]': '_pattern.labelledBy()',
   },
   hostDirectives: [
     {
@@ -324,14 +324,14 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly value = input.required<string>();
 
   /** The TabPanel UIPattern. */
-  readonly pattern: TabPanelPattern = new TabPanelPattern({
+  readonly _pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
     id: () => this._id,
     tab: this.tab,
   });
 
   constructor() {
-    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(!this.pattern.hidden()));
+    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(!this._pattern.hidden()));
   }
 
   ngOnInit() {
