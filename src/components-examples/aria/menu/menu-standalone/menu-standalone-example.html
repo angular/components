@@ -13,13 +13,13 @@
         <span ng-menu-item-text>Two-factor authentication</span>
       </div>
 
-      <div ng-menu-item value="Reset" [submenu]="updateMenu" #updateItem="ngMenuItem">
+      <div ng-menu-item value="Reset" [submenu]="updateMenu">
         <span ng-menu-item-icon>refresh</span>
         <span ng-menu-item-text>Reset</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu #updateMenu="ngMenu" [parent]="updateItem">
+      <div ng-menu #updateMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Email address">
             <span ng-menu-item-icon>email</span>

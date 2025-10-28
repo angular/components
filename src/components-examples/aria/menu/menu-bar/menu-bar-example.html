@@ -1,7 +1,7 @@
 <div ng-menu-bar>
-  <div ng-menu-bar-item value="File" [submenu]="fileMenu" #fileItem="ngMenuItem">File</div>
+  <div ng-menu-bar-item value="File" [submenu]="fileMenu">File</div>
 
-  <div ng-menu [parent]="fileItem" #fileMenu="ngMenu">
+  <div ng-menu #fileMenu="ngMenu">
     <ng-template ngMenuContent>
       <div ng-menu-item value="New">
         <span ng-menu-item-icon>article</span>
@@ -22,13 +22,13 @@
 
       <div role="separator" class="example-menu-item-separator"></div>
 
-      <div ng-menu-item value="Share" #shareItem="ngMenuItem" [submenu]="shareMenu">
+      <div ng-menu-item value="Share" [submenu]="shareMenu">
         <span ng-menu-item-icon>person_add</span>
         <span ng-menu-item-text>Share</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu [parent]="shareItem" #shareMenu="ngMenu">
+      <div ng-menu #shareMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Share with others">
             <span ng-menu-item-icon>person_add</span>
@@ -66,9 +66,9 @@
     </ng-template>
   </div>
 
-  <div ng-menu-bar-item value="Edit" #editItem="ngMenuItem" [submenu]="editMenu">Edit</div>
+  <div ng-menu-bar-item value="Edit" [submenu]="editMenu">Edit</div>
 
-  <div ng-menu [parent]="editItem" #editMenu="ngMenu">
+  <div ng-menu #editMenu="ngMenu">
     <ng-template ngMenuContent>
       <div ng-menu-item value="Undo">
         <span ng-menu-item-icon>undo</span>
@@ -112,9 +112,9 @@
     </ng-template>
   </div>
 
-  <div ng-menu-bar-item value="View" #viewItem="ngMenuItem" [submenu]="viewMenu">View</div>
+  <div ng-menu-bar-item value="View" [submenu]="viewMenu">View</div>
 
-  <div ng-menu [parent]="viewItem" #viewMenu="ngMenu">
+  <div ng-menu #viewMenu="ngMenu">
     <ng-template ngMenuContent>
       <div ng-menu-item value="Show print layout" [disabled]="true">
         <span ng-menu-item-icon>check</span>
@@ -146,17 +146,17 @@
     </ng-template>
   </div>
 
-  <div ng-menu-bar-item value="Insert" [submenu]="insertMenu" #insertItem="ngMenuItem">Insert</div>
+  <div ng-menu-bar-item value="Insert" [submenu]="insertMenu">Insert</div>
 
-  <div ng-menu [parent]="insertItem" #insertMenu="ngMenu">
+  <div ng-menu #insertMenu="ngMenu">
     <ng-template ngMenuContent>
-      <div ng-menu-item value="Image" #imageItem="ngMenuItem" [submenu]="imageMenu">
+      <div ng-menu-item value="Image" [submenu]="imageMenu">
         <span ng-menu-item-icon>image</span>
         <span ng-menu-item-text>Image</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu [parent]="imageItem" #imageMenu="ngMenu">
+      <div ng-menu #imageMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Upload from computer">
             <span ng-menu-item-icon>upload</span>
@@ -180,13 +180,13 @@
         <span ng-menu-item-text>Table</span>
       </div>
 
-      <div ng-menu-item value="Chart" #chartItem="ngMenuItem" [submenu]="chartMenu">
+      <div ng-menu-item value="Chart" [submenu]="chartMenu">
         <span ng-menu-item-icon>insert_chart</span>
         <span ng-menu-item-text>Chart</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu [parent]="chartItem" #chartMenu="ngMenu">
+      <div ng-menu #chartMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Bar">
             <span ng-menu-item-icon>bar_chart</span>
@@ -217,17 +217,17 @@
     </ng-template>
   </div>
 
-  <div ng-menu-bar-item value="Format" [submenu]="formatMenu" #formatItem="ngMenuItem">Format</div>
+  <div ng-menu-bar-item value="Format" [submenu]="formatMenu">Format</div>
 
-  <div ng-menu [parent]="formatItem" #formatMenu="ngMenu">
+  <div ng-menu #formatMenu="ngMenu">
     <ng-template ngMenuContent>
-      <div ng-menu-item value="Text" [submenu]="textMenu" #textItem="ngMenuItem">
+      <div ng-menu-item value="Text" [submenu]="textMenu">
         <span ng-menu-item-icon>format_bold</span>
         <span ng-menu-item-text>Text</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu #textMenu="ngMenu" [parent]="textItem">
+      <div ng-menu #textMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Bold">
             <span ng-menu-item-icon>format_bold</span>
@@ -255,12 +255,12 @@
 
           <div role="separator" class="example-menu-item-separator"></div>
 
-          <div ng-menu-item value="Size" [submenu]="sizeMenu" #sizeItem="ngMenuItem">
+          <div ng-menu-item value="Size" [submenu]="sizeMenu">
             <span ng-menu-item-text>Size</span>
             <span ng-menu-item-icon class="example-arrow">arrow_right</span>
           </div>
 
-          <div ng-menu #sizeMenu="ngMenu" [parent]="sizeItem">
+          <div ng-menu #sizeMenu="ngMenu">
             <ng-template ngMenuContent>
               <div ng-menu-item value="Increase font size">
                 <span ng-menu-item-text>Increase font size</span>
@@ -280,14 +280,14 @@
         ng-menu-item
         value="Paragraph styles"
         [submenu]="paragraphMenu"
-        #paragraphItem="ngMenuItem"
+       
       >
         <span ng-menu-item-icon>format_align_justify</span>
         <span ng-menu-item-text>Paragraph styles</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu #paragraphMenu="ngMenu" [parent]="paragraphItem">
+      <div ng-menu #paragraphMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Normal text">Normal text</div>
           <div ng-menu-item value="Heading 1">Heading 1</div>
@@ -295,13 +295,13 @@
         </ng-template>
       </div>
 
-      <div ng-menu-item [submenu]="alignMenu" value="Align & indent" #alignItem="ngMenuItem">
+      <div ng-menu-item [submenu]="alignMenu" value="Align & indent">
         <span ng-menu-item-icon>format_indent_increase</span>
         <span ng-menu-item-text>Align & indent</span>
         <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div ng-menu #alignMenu="ngMenu" [parent]="alignItem">
+      <div ng-menu #alignMenu="ngMenu">
         <ng-template ngMenuContent>
           <div ng-menu-item value="Align left">
             <span ng-menu-item-icon>format_align_left</span>

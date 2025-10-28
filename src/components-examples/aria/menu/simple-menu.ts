@@ -3,7 +3,7 @@ import {afterRenderEffect, Directive, effect, inject} from '@angular/core';
 
 @Directive({
   selector: '[ng-menu]',
-  hostDirectives: [{directive: Menu, inputs: ['parent']}],
+  hostDirectives: [{directive: Menu}],
   host: {
     class: 'example-menu',
     popover: 'manual',

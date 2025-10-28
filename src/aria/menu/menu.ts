@@ -11,6 +11,7 @@ import {
   computed,
   contentChildren,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
@@ -71,6 +72,10 @@ export class MenuTrigger<V> {
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),
   });
+
+  constructor() {
+    effect(() => this.menu()?.parent.set(this));
+  }
 }
 
 /**
@@ -150,7 +155,7 @@ export class Menu<V> {
   readonly typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
 
   /** A reference to the parent menu item or menu trigger. */
-  readonly parent = input<MenuTrigger<V> | MenuItem<V>>();
+  readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
 
   /** The menu ui pattern instance. */
   readonly _pattern: MenuPattern<V>;
@@ -373,6 +378,10 @@ export class MenuItem<V> {
     parent: computed(() => this.parent?._pattern),
     submenu: computed(() => this.submenu()?._pattern),
   });
+
+  constructor() {
+    effect(() => this.submenu()?.parent.set(this));
+  }
 }
 
 /** Defers the rendering of the menu content. */

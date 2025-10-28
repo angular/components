@@ -2,13 +2,12 @@
   ngMenuTrigger
   [menu]="formatMenu"
   aria-label="Open menu"
-  #trigger="ngMenuTrigger"
   class="example-menu-trigger"
 >
   <span aria-hidden="true" class="material-symbols-outlined">more_vert</span>
 </button>
 
-<div ng-menu [parent]="trigger" #formatMenu="ngMenu">
+<div ng-menu #formatMenu="ngMenu">
   <ng-template ngMenuContent>
     <div ng-menu-item value="Mark as read">
       <span ng-menu-item-icon>mark_email_read</span>
@@ -22,13 +21,13 @@
 
     <div role="separator" aria-orientation="horizontal" class="example-menu-item-separator"></div>
 
-    <div ng-menu-item value="Categorize" #categorizeItem="ngMenuItem" [submenu]=" categorizeMenu">
+    <div ng-menu-item value="Categorize" [submenu]=" categorizeMenu">
       <span ng-menu-item-icon>category</span>
       <span ng-menu-item-text>Categorize</span>
       <span ng-menu-item-icon class="example-arrow">arrow_right</span>
     </div>
 
-    <div ng-menu [parent]="categorizeItem" #categorizeMenu="ngMenu">
+    <div ng-menu #categorizeMenu="ngMenu">
       <ng-template ngMenuContent>
         <div ng-menu-item value="Mark as important">
           <span ng-menu-item-icon>label_important</span>

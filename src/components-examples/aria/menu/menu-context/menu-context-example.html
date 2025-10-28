@@ -22,13 +22,13 @@
       <span ng-menu-item-shortcut>⌘C</span>
     </div>
 
-    <div ng-menu-item value="Paste" [submenu]="pasteMenu" #pasteItem="ngMenuItem">
+    <div ng-menu-item value="Paste" [submenu]="pasteMenu">
       <span ng-menu-item-icon>content_paste</span>
       <span ng-menu-item-text>Paste</span>
       <span ng-menu-item-icon class="example-arrow">arrow_right</span>
     </div>
 
-    <div ng-menu #pasteMenu="ngMenu" [parent]="pasteItem">
+    <div ng-menu #pasteMenu="ngMenu">
       <ng-template ngMenuContent>
         <div ng-menu-item value="Paste as plain text">
           <span ng-menu-item-text>Paste as plain text</span>
