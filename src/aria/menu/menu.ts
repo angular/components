@@ -83,6 +83,16 @@ export class MenuTrigger<V> {
   constructor() {
     effect(() => this.menu()?.parent.set(this));
   }
+
+  /** Opens the menu focusing on the first menu item. */
+  open() {
+    this._pattern.open({first: true});
+  }
+
+  /** Closes the menu. */
+  close() {
+    this._pattern.close();
+  }
 }
 
 /**
@@ -220,24 +230,9 @@ export class Menu<V> {
     });
   }
 
-  // TODO(wagnermaciel): Author close, closeAll, and open methods for each directive.
-
   /** Closes the menu. */
-  close(opts?: {refocus?: boolean}) {
-    this._pattern.inputs.parent()?.close(opts);
-  }
-
-  /** Closes all parent menus. */
-  closeAll(opts?: {refocus?: boolean}) {
-    const root = this._pattern.root();
-
-    if (root instanceof MenuTriggerPattern) {
-      root.close(opts);
-    }
-
-    if (root instanceof MenuPattern || root instanceof MenuBarPattern) {
-      root.inputs.activeItem()?.close(opts);
-    }
+  close() {
+    this._pattern.close();
   }
 }
 
@@ -318,6 +313,11 @@ export class MenuBar<V> {
       }
     });
   }
+
+  /** Closes the menubar. */
+  close() {
+    this._pattern.close();
+  }
 }
 
 /**
@@ -395,6 +395,16 @@ export class MenuItem<V> {
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+  }
+
+  /** Opens the submenu focusing on the first menu item. */
+  open() {
+    this._pattern.open({first: true});
+  }
+
+  /** Closes the submenu. */
+  close() {
+    this._pattern.close();
   }
 }
 
