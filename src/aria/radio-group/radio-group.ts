@@ -125,8 +125,8 @@ export class RadioGroup<V> {
   /** Whether the radio group is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
 
-  /** Whether disabled items in the group should be skipped when navigating. */
-  readonly skipDisabled = input(true, {transform: booleanAttribute});
+  /** Whether disabled items in the group should be focusable. */
+  readonly softDisabled = input(false, {transform: booleanAttribute});
 
   /** The focus strategy used by the radio group. */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');

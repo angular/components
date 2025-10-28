@@ -97,8 +97,8 @@ export class Listbox<V> {
   /** Whether focus should wrap when navigating. */
   wrap = input(true, {transform: booleanAttribute});
 
-  /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled = input(true, {transform: booleanAttribute});
+  /** Whether to allow disabled items in the list to receive focus. */
+  softDisabled = input(false, {transform: booleanAttribute});
 
   /** The focus strategy used by the list. */
   focusMode = input<'roving' | 'activedescendant'>('roving');

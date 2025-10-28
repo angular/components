@@ -36,7 +36,7 @@ describe('AccordionGroup', () => {
     multiExpandable?: boolean;
     disabledGroup?: boolean;
     disabledItemValues?: string[];
-    skipDisabled?: boolean;
+    softDisabled?: boolean;
     wrap?: boolean;
   }
 
@@ -52,8 +52,8 @@ describe('AccordionGroup', () => {
     if (opts.disabledGroup !== undefined) {
       testComponent.disabledGroup.set(opts.disabledGroup);
     }
-    if (opts.skipDisabled !== undefined) {
-      testComponent.skipDisabled.set(opts.skipDisabled);
+    if (opts.softDisabled !== undefined) {
+      testComponent.softDisabled.set(opts.softDisabled);
     }
     if (opts.wrap !== undefined) {
       testComponent.wrap.set(opts.wrap);
@@ -342,17 +342,17 @@ describe('AccordionGroup', () => {
       });
     });
 
-    describe('skipDisabled behavior', () => {
-      it('should skip disabled items if skipDisabled=true', () => {
-        configureAccordionComponent({skipDisabled: true, disabledItemValues: ['item-2']});
+    describe('softDisabled behavior', () => {
+      it('should skip disabled items if softDisabled=false', () => {
+        configureAccordionComponent({softDisabled: false, disabledItemValues: ['item-2']});
 
         expect(isTriggerActive(triggerElements[0])).toBeTrue();
         downArrowKey(triggerElements[0]);
         expect(isTriggerActive(triggerElements[2])).toBeTrue();
       });
 
-      it('should focus disabled items if skipDisabled=false', () => {
-        configureAccordionComponent({skipDisabled: false, disabledItemValues: ['item-2']});
+      it('should focus disabled items if softDisabled=true', () => {
+        configureAccordionComponent({softDisabled: true, disabledItemValues: ['item-2']});
 
         expect(isTriggerActive(triggerElements[0])).toBeTrue();
         downArrowKey(triggerElements[0]);
@@ -385,7 +385,7 @@ describe('AccordionGroup', () => {
       [(value)]="value"
       [multiExpandable]="multiExpandable()"
       [disabled]="disabledGroup()"
-      [skipDisabled]="skipDisabled()"
+      [softDisabled]="softDisabled()"
       [wrap]="wrap()"
     >
       @for (item of items(); track item.value) {
@@ -419,7 +419,7 @@ class AccordionGroupExample {
   value = model<string[]>([]);
   multiExpandable = signal(false);
   disabledGroup = signal(false);
-  skipDisabled = signal(true);
+  softDisabled = signal(false);
   wrap = signal(false);
 
   disableItem(itemValue: string, disabled: boolean) {

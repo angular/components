@@ -166,7 +166,7 @@ export class Menu<V> {
       ...this,
       parent: computed(() => this.parent()?._pattern),
       multi: () => false,
-      skipDisabled: () => false,
+      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'vertical',
       selectionMode: () => 'explicit',
@@ -277,7 +277,7 @@ export class MenuBar<V> {
     this._pattern = new MenuBarPattern({
       ...this,
       multi: () => false,
-      skipDisabled: () => false,
+      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',

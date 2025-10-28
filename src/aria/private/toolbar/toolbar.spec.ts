@@ -103,7 +103,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         wrap: signal(false),
       };
       widgetInputs = [
@@ -172,14 +172,14 @@ describe('Toolbar Pattern', () => {
       expect(toolbarInputs.activeItem()).toBe(items[3]);
     });
 
-    it('should skip a disabled toolbar widget when skipDisabled is true', () => {
+    it('should skip a disabled toolbar widget when softDisabled is false', () => {
       widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
       expect(toolbarInputs.activeItem()).toBe(items[2]);
     });
 
-    it('should not skip disabled items when skipDisabled is false', () => {
-      toolbarInputs.skipDisabled.set(false);
+    it('should not skip disabled items when softDisabled is true', () => {
+      toolbarInputs.softDisabled.set(true);
       widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
       expect(toolbarInputs.activeItem()).toBe(items[1]);
@@ -216,7 +216,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         wrap: signal(false),
       };
       const widgetInputs = [
@@ -261,7 +261,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         wrap: signal(false),
       };
       widgetInputs = [
@@ -329,7 +329,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         wrap: signal(false),
       };
       const widgetInputs = [

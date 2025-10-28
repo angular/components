@@ -2,7 +2,7 @@
   <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
-  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
   <mat-checkbox [formControl]="nav">Nav Mode</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
@@ -34,7 +34,7 @@
   [selectionMode]="selectionMode"
   [focusMode]="focusMode"
   [wrap]="wrap.value"
-  [skipDisabled]="skipDisabled.value"
+  [softDisabled]="softDisabled.value"
   [nav]="nav.value"
   [(value)]="selectedValues"
   #tree="ngTree"

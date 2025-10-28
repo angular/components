@@ -80,14 +80,14 @@ describe('List Typeahead', () => {
 
     it('should skip disabled items', () => {
       items[1].disabled.set(true);
-      (typeahead.inputs.skipDisabled as WritableSignal<boolean>).set(true);
+      (typeahead.inputs.softDisabled as WritableSignal<boolean>).set(false);
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
     });
 
     it('should not skip disabled items', () => {
       items[1].disabled.set(true);
-      (typeahead.inputs.skipDisabled as WritableSignal<boolean>).set(false);
+      (typeahead.inputs.softDisabled as WritableSignal<boolean>).set(true);
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
     });

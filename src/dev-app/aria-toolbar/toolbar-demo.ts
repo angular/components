@@ -12,7 +12,7 @@ import {
   ToolbarBasicVerticalExample,
   ToolbarConfigurableExample,
   ToolbarRtlExample,
-  ToolbarSkipDisabledExample,
+  ToolbarSoftDisabledExample,
 } from '@angular/components-examples/aria/toolbar';
 
 @Component({
@@ -22,7 +22,7 @@ import {
     ToolbarBasicVerticalExample,
     ToolbarConfigurableExample,
     ToolbarRtlExample,
-    ToolbarSkipDisabledExample,
+    ToolbarSoftDisabledExample,
   ],
   styleUrl: './toolbar-demo.css',
   encapsulation: ViewEncapsulation.None,
