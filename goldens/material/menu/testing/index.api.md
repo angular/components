@@ -62,6 +62,7 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
 
 // @public
 export interface MenuHarnessFilters extends BaseHarnessFilters {
+    triggerIconName?: string | RegExp;
     triggerText?: string | RegExp;
 }
 
