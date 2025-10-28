@@ -11,6 +11,7 @@ ts_project(
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
+        "//src/material/icon/testing",
     ],
 )
 
@@ -31,6 +32,7 @@ ts_project(
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
+        "//src/material/icon",
         "//src/material/menu",
     ],
 )
