@@ -142,9 +142,6 @@ export class Menu<V> {
     initialValue: this._directionality.value,
   });
 
-  /** The submenu associated with the menu. */
-  readonly submenu = input<Menu<V> | undefined>(undefined);
-
   /** The unique ID of the menu. */
   readonly id = input<string>(Math.random().toString(36).substring(2, 10));
 
