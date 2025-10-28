@@ -213,8 +213,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.11
       firebase-tools:
-        specifier: 14.20.0
-        version: 14.20.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.22.0
+        version: 14.22.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -258,8 +258,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       magic-string:
-        specifier: 0.30.19
-        version: 0.30.19
+        specifier: 0.30.21
+        version: 0.30.21
       marked:
         specifier: ^16.0.0
         version: 16.4.1
@@ -5480,6 +5480,11 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
+  firebase-tools@14.22.0:
+    resolution: {integrity: sha512-ZudDdmP0pFR6jztKHoAFcIE19Qo2izfoMvbLxf7pvd5HY/MknVnhL+87mopWZGGv3Cmfc/gsUOcNW60n/my8cw==}
+    engines: {node: '>=20.0.0 || >=22.0.0'}
+    hasBin: true
+
   firebase@12.4.0:
     resolution: {integrity: sha512-/chNgDQ6ppPPGOQO4jctxOa/5JeQxuhaxA7Y90K0I+n/wPfoO8mRveedhVUdo7ExLcWUivnnow/ouSLYSI5Icw==}
 
@@ -6935,6 +6940,9 @@ packages:
 
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
+
+  magic-string@0.30.21:
+    resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
   make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
@@ -12861,7 +12869,7 @@ snapshots:
       estree-walker: 2.0.2
       fdir: 6.5.0(picomatch@4.0.3)
       is-reference: 1.2.1
-      magic-string: 0.30.19
+      magic-string: 0.30.21
       picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.52.5
@@ -15422,6 +15430,97 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  firebase-tools@14.22.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+    dependencies:
+      '@apphosting/build': 0.1.6(@types/node@22.18.12)(typescript@5.9.2)
+      '@apphosting/common': 0.0.8
+      '@electric-sql/pglite': 0.3.11
+      '@electric-sql/pglite-tools': 0.2.16(@electric-sql/pglite@0.3.11)
+      '@google-cloud/cloud-sql-connector': 1.8.4
+      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
+      '@inquirer/prompts': 7.9.0(@types/node@22.18.12)
+      '@modelcontextprotocol/sdk': 1.20.1
+      abort-controller: 3.0.0
+      ajv: 8.17.1
+      ajv-formats: 3.0.1
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      body-parser: 1.20.3
+      chokidar: 3.6.0
+      cjson: 0.3.3
+      cli-table3: 0.6.5
+      colorette: 2.0.20
+      commander: 5.1.0
+      configstore: 5.0.1
+      cors: 2.8.5
+      cross-env: 7.0.3
+      cross-spawn: 7.0.6
+      csv-parse: 5.6.0
+      deep-equal-in-any-order: 2.1.0
+      exegesis: 4.3.0
+      exegesis-express: 4.0.0
+      express: 4.21.2
+      filesize: 6.4.0
+      form-data: 4.0.4
+      fs-extra: 10.1.0
+      fuzzy: 0.1.3
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      glob: 10.4.5
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      ignore: 7.0.5
+      js-yaml: 3.14.1
+      jsonwebtoken: 9.0.2
+      leven: 3.1.0
+      libsodium-wrappers: 0.7.15
+      lodash: 4.17.21
+      lsofi: 1.0.0
+      marked: 13.0.3
+      marked-terminal: 7.3.0(marked@13.0.3)
+      mime: 2.6.0
+      minimatch: 3.1.2
+      morgan: 1.10.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      open: 6.4.0
+      ora: 5.4.1
+      p-limit: 3.1.0
+      pg: 8.16.3
+      pg-gateway: 0.3.0-beta.4
+      pglite-2: '@electric-sql/pglite@0.2.17'
+      portfinder: 1.0.38
+      progress: 2.0.3
+      proxy-agent: 6.5.0
+      retry: 0.13.1
+      semver: 7.7.3
+      sql-formatter: 15.6.10
+      stream-chain: 2.2.5
+      stream-json: 1.9.1
+      superstatic: 9.2.0(encoding@0.1.13)
+      tar: 6.2.1
+      tcp-port-used: 1.0.2
+      tmp: 0.2.5
+      triple-beam: 1.4.1
+      universal-analytics: 0.5.3
+      update-notifier-cjs: 5.1.7(encoding@0.1.13)
+      uuid: 8.3.2
+      winston: 3.18.3
+      winston-transport: 4.9.0
+      ws: 7.5.10(bufferutil@4.0.9)
+      yaml: 2.8.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - bare-abort-controller
+      - bufferutil
+      - encoding
+      - pg-native
+      - react-native-b4a
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   firebase@12.4.0:
     dependencies:
       '@firebase/ai': 2.4.0(@firebase/app-types@0.9.3)(@firebase/app@0.14.4)
@@ -15729,7 +15828,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -17129,6 +17228,10 @@ snapshots:
   luxon@3.7.2: {}
 
   magic-string@0.30.19:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.5
+
+  magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
@@ -18586,7 +18689,7 @@ snapshots:
 
   rollup-plugin-dts@6.2.3(rollup@4.52.5)(typescript@5.9.2):
     dependencies:
-      magic-string: 0.30.19
+      magic-string: 0.30.21
       rollup: 4.52.5
       typescript: 5.9.2
     optionalDependencies:
