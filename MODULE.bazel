@@ -5,8 +5,8 @@ module(
 )
 
 bazel_dep(name = "yq.bzl", version = "0.3.1")
-bazel_dep(name = "rules_nodejs", version = "6.5.2")
-bazel_dep(name = "aspect_rules_js", version = "2.6.2")
+bazel_dep(name = "rules_nodejs", version = "6.6.0")
+bazel_dep(name = "aspect_rules_js", version = "2.7.0")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
 bazel_dep(name = "tar.bzl", version = "0.6.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
@@ -32,7 +32,7 @@ git_override(
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "c3721b6ece2050a59a97562e3b95527a3092b03b",
+    commit = "b97a21c7cead2a07ea1bffa68eaae7f7e08dfc5f",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
