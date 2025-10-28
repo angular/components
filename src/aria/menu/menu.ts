@@ -64,9 +64,6 @@ export class MenuTrigger<V> {
   /** The menu associated with the trigger. */
   menu = input<Menu<V> | undefined>(undefined);
 
-  /** A callback function triggered when a menu item is selected. */
-  onSelect = output<V>();
-
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
