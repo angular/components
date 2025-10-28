@@ -244,43 +244,43 @@ describe('Standalone Menu Pattern', () => {
   describe('Selection', () => {
     it('should select an item on click', () => {
       const items = menu.inputs.items();
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on enter', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on space', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should not select a disabled item', () => {
       const items = menu.inputs.items() as TestMenuItem[];
       items[1].disabled.set(true);
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
     });
   });
 

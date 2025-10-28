@@ -65,7 +65,7 @@ export class MenuTrigger<V> {
   menu = input<Menu<V> | undefined>(undefined);
 
   /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  onSelect = output<V>();
 
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
@@ -170,7 +170,7 @@ export class Menu<V> {
   isVisible = computed(() => this._pattern.isVisible());
 
   /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  onSelect = output<V>();
 
   constructor() {
     this._pattern = new MenuPattern({
@@ -183,7 +183,7 @@ export class Menu<V> {
       selectionMode: () => 'explicit',
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-      onSubmit: (value: V) => this.onSubmit.emit(value),
+      onSelect: (value: V) => this.onSelect.emit(value),
     });
 
     afterRenderEffect(() => {
@@ -286,7 +286,7 @@ export class MenuBar<V> {
   readonly items = signal<MenuItemPattern<V>[]>([]);
 
   /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  onSelect = output<V>();
 
   constructor() {
     this._pattern = new MenuBarPattern({
@@ -296,7 +296,7 @@ export class MenuBar<V> {
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',
-      onSubmit: (value: V) => this.onSubmit.emit(value),
+      onSelect: (value: V) => this.onSelect.emit(value),
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
     });

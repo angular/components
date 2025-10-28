@@ -17,7 +17,7 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
   items: SignalLike<MenuItemPattern<V>[]>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
+  onSelect?: (value: V) => void;
 }
 
 /** The inputs for the MenuPattern class. */
@@ -33,7 +33,7 @@ export interface MenuInputs<V>
   parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
+  onSelect?: (value: V) => void;
 }
 
 /** The inputs for the MenuTriggerPattern class. */
@@ -311,12 +311,12 @@ export class MenuPattern<V> {
 
       if (!item.submenu() && isMenuBar) {
         root.close();
-        root?.inputs.onSubmit?.(item.value());
+        root?.inputs.onSelect?.(item.value());
       }
 
       if (!item.submenu() && isMenu) {
         root.inputs.activeItem()?.close({refocus: true});
-        root?.inputs.onSubmit?.(item.value());
+        root?.inputs.onSelect?.(item.value());
       }
     }
   }
