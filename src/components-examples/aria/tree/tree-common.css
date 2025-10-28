@@ -52,7 +52,6 @@
   transform: scaleX(-1) rotate(90deg);
 }
 
-
 .example-selected-icon {
   visibility: hidden;
   margin-left: auto;
