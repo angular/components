@@ -54,7 +54,7 @@ export class AccordionPanel {
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
   /** A global unique identifier for the panel. */
-  private readonly _id = inject(_IdGenerator).getId('accordion-trigger-');
+  private readonly _id = inject(_IdGenerator).getId('accordion-trigger-', true);
 
   /** A local unique identifier for the panel, used to match with its trigger's value. */
   value = input.required<string>();
@@ -102,7 +102,7 @@ export class AccordionPanel {
 })
 export class AccordionTrigger {
   /** A global unique identifier for the trigger. */
-  private readonly _id = inject(_IdGenerator).getId('ng-accordion-trigger-');
+  private readonly _id = inject(_IdGenerator).getId('ng-accordion-trigger-', true);
 
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);

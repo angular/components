@@ -60,7 +60,7 @@ import {ComboboxPopup} from '../combobox';
 })
 export class Listbox<V> {
   /** A unique identifier for the listbox. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-listbox-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-listbox-', true);
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the listbox. */
@@ -211,7 +211,7 @@ export class Option<V> {
   private readonly _listbox = inject(Listbox);
 
   /** A unique identifier for the option. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-option-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-option-', true);
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the option. */
