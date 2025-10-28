@@ -43,9 +43,6 @@ export interface MenuTriggerInputs<V> {
 
   /** A reference to the submenu associated with the menu trigger. */
   submenu: SignalLike<MenuPattern<V> | undefined>;
-
-  /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
 }
 
 /** The inputs for the MenuItemPattern class. */
@@ -308,8 +305,12 @@ export class MenuPattern<V> {
       const isMenuBar = root instanceof MenuBarPattern;
       const isMenuTrigger = root instanceof MenuTriggerPattern;
 
-      if (!item.submenu() && (isMenuTrigger || isMenuBar)) {
+      if (!item.submenu() && isMenuTrigger) {
         root.close({refocus: true});
+      }
+
+      if (!item.submenu() && isMenuBar) {
+        root.close();
         root?.inputs.onSubmit?.(item.value());
       }
 

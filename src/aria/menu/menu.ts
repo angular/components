@@ -66,8 +66,7 @@ export class MenuTrigger<V> {
   onSubmit = output<V>();
 
   /** The menu trigger ui pattern instance. */
-  readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
-    onSubmit: (value: V) => this.onSubmit.emit(value),
+  _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
     submenu: computed(() => this.submenu()?._pattern),
   });
