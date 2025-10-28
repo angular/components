@@ -87,7 +87,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
 })
 export class Tree<V> {
   /** A unique identifier for the tree. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-tree-');
+  private readonly _generatedId = inject(_IdGenerator).getId('ng-tree-', true);
 
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the tree. */
@@ -238,7 +238,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   private readonly _elementRef = inject(ElementRef);
 
   /** A unique identifier for the tree item. */
-  private readonly _id = inject(_IdGenerator).getId('ng-tree-item-');
+  private readonly _id = inject(_IdGenerator).getId('ng-tree-item-', true);
 
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);

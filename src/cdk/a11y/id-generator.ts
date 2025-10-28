@@ -19,12 +19,14 @@ const counters: Record<string, number> = {};
 @Injectable({providedIn: 'root'})
 export class _IdGenerator {
   private _appId = inject(APP_ID);
+  private static _infix = `a${Math.floor(Math.random() * 100000).toString()}`;
 
   /**
    * Generates a unique ID with a specific prefix.
    * @param prefix Prefix to add to the ID.
+   * @param randomize Add a randomized infix string.
    */
-  getId(prefix: string): string {
+  getId(prefix: string, randomize: boolean = false): string {
     // Omit the app ID if it's the default `ng`. Since the vast majority of pages have one
     // Angular app on them, we can reduce the amount of breakages by not adding it.
     if (this._appId !== 'ng') {
@@ -35,6 +37,6 @@ export class _IdGenerator {
       counters[prefix] = 0;
     }
 
-    return `${prefix}${counters[prefix]++}`;
+    return `${prefix}${randomize ? _IdGenerator._infix + '-' : ''}${counters[prefix]++}`;
   }
 }

@@ -29,6 +29,7 @@ import {
   DeferredContent,
   DeferredContentAware,
 } from '@angular/aria/private';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
 
@@ -134,7 +135,7 @@ export class Menu<V> {
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
   /** The unique ID of the menu. */
-  readonly id = input<string>(Math.random().toString(36).substring(2, 10));
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-', true));
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input<boolean>(true);
@@ -327,7 +328,7 @@ export class MenuItem<V> {
   readonly element: HTMLElement = this._elementRef.nativeElement;
 
   /** The unique ID of the menu item. */
-  readonly id = input<string>(Math.random().toString(36).substring(2, 10));
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-item-', true));
 
   /** The value of the menu item. */
   readonly value = input.required<V>();
