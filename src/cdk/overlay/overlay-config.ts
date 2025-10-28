@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {ElementRef} from '@angular/core';
 import {PositionStrategy} from './position/position-strategy';
 import {Direction, Directionality} from '../bidi';
 import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
@@ -29,6 +30,9 @@ export class OverlayConfig {
 
   /** Whether to disable any built-in animations. */
   disableAnimations?: boolean;
+
+  /** If specified, insert overlay after this element, instead of using the global overlay container. */
+  insertOverlayAfter?: ElementRef;
 
   /** The width of the overlay panel. If a number is provided, pixel units are assumed. */
   width?: number | string;

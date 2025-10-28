@@ -48,13 +48,21 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
   const appRef = injector.get(ApplicationRef);
   const directionality = injector.get(Directionality);
 
+  // Create the overlay pane and a parent which will then be attached to the document.
   const host = doc.createElement('div');
   const pane = doc.createElement('div');
-
   pane.id = idGenerator.getId('cdk-overlay-');
   pane.classList.add('cdk-overlay-pane');
   host.appendChild(pane);
-  overlayContainer.getContainerElement().appendChild(host);
+
+  // Insert after the specified element, or onto the global overlay container.
+  if (config?.insertOverlayAfter) {
+    const element = config.insertOverlayAfter.nativeElement;
+    element.after(host);
+    element.parentElement.style.position = 'relative';
+  } else {
+    overlayContainer.getContainerElement().appendChild(host);
+  }
 
   const portalOutlet = new DomPortalOutlet(pane, appRef, injector);
   const overlayConfig = new OverlayConfig(config);

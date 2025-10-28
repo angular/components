@@ -346,7 +346,7 @@ export class MatSelect
   _keyManager: ActiveDescendantKeyManager<MatOption>;
 
   /** Ideal origin for the overlay panel. */
-  _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
+  _preferredOverlayOrigin: ElementRef | undefined;
 
   /** Width of the overlay panel. */
   _overlayWidth: string | number;
@@ -554,6 +554,12 @@ export class MatSelect
    */
   @Input({transform: booleanAttribute})
   canSelectNullableOptions: boolean = this._defaultOptions?.canSelectNullableOptions ?? false;
+
+  /**
+   * Whether to inline the overlay, instead of using the global overlay container.
+   */
+  @Input({transform: booleanAttribute})
+  overlayInlined: boolean;
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
@@ -946,6 +952,11 @@ export class MatSelect
     }
 
     return this._selectionModel.selected[0].viewValue;
+  }
+
+  /** Whether to inline the overlay and after which element. */
+  get inlineOverlayAfter(): ElementRef | undefined {
+    return this.overlayInlined ? this._parentFormField?.getConnectedOverlayOrigin() : undefined;
   }
 
   /** Refreshes the error state of the select. */

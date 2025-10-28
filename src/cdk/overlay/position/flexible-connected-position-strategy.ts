@@ -42,8 +42,11 @@ export type FlexibleConnectedPositionStrategyOrigin =
       height?: number;
     });
 
-/** Equivalent of `DOMRect` without some of the properties we don't care about. */
-type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
+/** Refinement of `DOMRect` when only width/height and position (l, r, t, b) are needed. */
+type Rect = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
+
+/** Further refinement of above for when only the dimensions are needed. */
+type Dimensions = Omit<Rect, 'left' | 'top' | 'right' | 'bottom'>;
 
 /**
  * Creates a flexible position strategy.
@@ -95,17 +98,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Whether the overlay position is locked. */
   private _positionLocked = false;
 
-  /** Cached origin dimensions */
-  private _originRect: Dimensions;
+  /** Cached origin placement and dimentsions. */
+  private _originRect: Rect;
 
-  /** Cached overlay dimensions */
-  private _overlayRect: Dimensions;
+  /** Cached overlay placement and dimensions */
+  private _overlayRect: Rect;
 
-  /** Cached viewport dimensions */
-  private _viewportRect: Dimensions;
+  /** Cached viewport placement and dimensions */
+  private _viewportRect: Rect;
 
-  /** Cached container dimensions */
-  private _containerRect: Dimensions;
+  /** Cached container placement and dimensions */
+  private _containerRect: Rect;
 
   /** Amount of space that must be maintained between the overlay and the right edge of the viewport. */
   private _viewportMargin: ViewportMargin = 0;
@@ -514,11 +517,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /**
    * Gets the (x, y) coordinate of a connection point on the origin based on a relative position.
    */
-  private _getOriginPoint(
-    originRect: Dimensions,
-    containerRect: Dimensions,
-    pos: ConnectedPosition,
-  ): Point {
+  private _getOriginPoint(originRect: Rect, containerRect: Rect, pos: ConnectedPosition): Point {
     let x: number;
     if (pos.originX == 'center') {
       // Note: when centering we should always use the `left`
@@ -582,6 +581,14 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayStartY = pos.overlayY == 'top' ? 0 : -overlayRect.height;
     }
 
+    // Adjust the overly position when it is placed inline relative to its parent.
+    const insertOverlayAfter = this._overlayRef.getConfig().insertOverlayAfter;
+    if (insertOverlayAfter) {
+      const rect = insertOverlayAfter!.nativeElement.parentElement.getBoundingClientRect();
+      overlayStartX -= rect.left;
+      overlayStartY -= rect.top;
+    }
+
     // The (x, y) coordinates of the overlay.
     return {
       x: originPoint.x + overlayStartX,
@@ -592,7 +599,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Gets how well an overlay at the given point will fit within the viewport. */
   private _getOverlayFit(
     point: Point,
-    rawOverlayRect: Dimensions,
+    rawOverlayRect: Rect,
     viewport: Dimensions,
     position: ConnectedPosition,
   ): OverlayFit {
@@ -637,7 +644,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @param point The (x, y) coordinates of the overlay at some position.
    * @param viewport The geometry of the viewport.
    */
-  private _canFitWithFlexibleDimensions(fit: OverlayFit, point: Point, viewport: Dimensions) {
+  private _canFitWithFlexibleDimensions(fit: OverlayFit, point: Point, viewport: Rect) {
     if (this._hasFlexibleDimensions) {
       const availableHeight = viewport.bottom - point.y;
       const availableWidth = viewport.right - point.x;
@@ -667,7 +674,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   private _pushOverlayOnScreen(
     start: Point,
-    rawOverlayRect: Dimensions,
+    rawOverlayRect: Rect,
     scrollPosition: ViewportScrollPosition,
   ): Point {
     // If the position is locked and we've pushed the overlay already, reuse the previous push
@@ -890,10 +897,25 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
       styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
-      styles.width = styles.height = '100%';
+
+      if (this._overlayRef.getConfig().insertOverlayAfter) {
+        styles.width = coerceCssPixelValue(boundingBoxRect.width);
+        styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      } else {
+        // TODO(andreyd): can most likley remove this for common case
+        styles.width = styles.height = '100%';
+      }
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
+
+      // Adjust the overly position when it is placed inline relative to its parent.
+      const insertOverlayAfter = this._overlayRef.getConfig().insertOverlayAfter;
+      if (insertOverlayAfter) {
+        const rect = insertOverlayAfter!.nativeElement.parentElement.getBoundingClientRect();
+        boundingBoxRect.left -= rect.left;
+        boundingBoxRect.top -= rect.top;
+      }
 
       styles.height = coerceCssPixelValue(boundingBoxRect.height);
       styles.top = coerceCssPixelValue(boundingBoxRect.top);
@@ -1113,7 +1135,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Narrows the given viewport rect by the current _viewportMargin. */
-  private _getNarrowedViewportRect(): Dimensions {
+  private _getNarrowedViewportRect(): Rect {
     // We recalculate the viewport rect here ourselves, rather than using the ViewportRuler,
     // because we want to use the `clientWidth` and `clientHeight` as the base. The difference
     // being that the client properties don't include the scrollbar, as opposed to `innerWidth`
@@ -1231,7 +1253,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Returns the DOMRect of the current origin. */
-  private _getOriginRect(): Dimensions {
+  private _getOriginRect(): Rect {
     const origin = this._origin;
 
     if (origin instanceof ElementRef) {
@@ -1353,7 +1375,7 @@ function getPixelValue(input: number | string | null | undefined): number | null
  * deviations in the `DOMRect` returned by the browser (e.g. when zoomed in with a percentage
  * size, see #21350).
  */
-function getRoundedBoundingClientRect(clientRect: Dimensions): Dimensions {
+function getRoundedBoundingClientRect(clientRect: Rect): Rect {
   return {
     top: Math.floor(clientRect.top),
     right: Math.floor(clientRect.right),
