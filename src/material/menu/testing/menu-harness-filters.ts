@@ -12,6 +12,9 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export interface MenuHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose trigger text matches the given value. */
   triggerText?: string | RegExp;
+
+  /** Only find instances where the trigger contains an icon whose name matches the given value. */
+  triggerIconName?: string | RegExp;
 }
 
 /** A set of criteria that can be used to filter a list of `MatMenuItemHarness` instances. */
