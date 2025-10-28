@@ -29,6 +29,7 @@ import {
 } from '@angular/aria/private';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
+import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 
 /**
  * A trigger for a menu.
@@ -103,8 +104,17 @@ export class MenuTrigger<V> {
     '(focusin)': '_pattern.onFocusIn()',
     '(click)': '_pattern.onClick($event)',
   },
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
 })
 export class Menu<V> {
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
+
   /** The menu items contained in the menu. */
   readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
 
@@ -172,6 +182,10 @@ export class Menu<V> {
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
       onSubmit: (value: V) => this.onSubmit.emit(value),
+    });
+
+    afterRenderEffect(() => {
+      this._deferredContentAware?.contentVisible.set(this._pattern.isVisible());
     });
 
     // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
@@ -360,3 +374,11 @@ export class MenuItem<V> {
     submenu: computed(() => this.submenu()?._pattern),
   });
 }
+
+/** Defers the rendering of the menu content. */
+@Directive({
+  selector: 'ng-template[ngMenuContent]',
+  exportAs: 'ngMenuContent',
+  hostDirectives: [DeferredContent],
+})
+export class MenuContent {}
