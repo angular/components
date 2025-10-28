@@ -320,7 +320,7 @@ export class TabPanel implements OnInit, OnDestroy {
   private readonly _Tabs = inject(Tabs);
 
   /** A global unique identifier for the tab. */
-  private readonly _id = inject(_IdGenerator).getId('ng-tabpanel-');
+  private readonly _id = inject(_IdGenerator).getId('ng-tabpanel-', true);
 
   /** The Tab UIPattern associated with the tabpanel */
   readonly tab = computed(() => this._Tabs.tabs()?.find(tab => tab.value() === this.value()));
