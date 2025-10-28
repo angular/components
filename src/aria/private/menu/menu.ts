@@ -395,6 +395,11 @@ export class MenuPattern<V> {
     }
   }
 
+  /** Closes the menu. */
+  close() {
+    this.inputs.parent()?.close();
+  }
+
   /** Closes the menu and all parent menus. */
   closeAll() {
     const root = this.root();

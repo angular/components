@@ -37,7 +37,7 @@ export class MenuContextExample {
 
   open(event: MouseEvent) {
     const menu = this.menu();
-    menu?.closeAll();
+    menu?._pattern.closeAll();
 
     if (menu) {
       event.preventDefault();
