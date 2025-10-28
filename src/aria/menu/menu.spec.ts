@@ -899,7 +899,7 @@ class StandaloneMenuExample {
 
 @Component({
   template: `
-<button ngMenuTrigger #menuTrigger="ngMenuTrigger" [submenu]="menu">Open menu</button>
+<button ngMenuTrigger #menuTrigger="ngMenuTrigger" [menu]="menu">Open menu</button>
 
 <div ngMenu #menu="ngMenu" [parent]="menuTrigger">
   <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>

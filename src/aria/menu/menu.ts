@@ -44,7 +44,7 @@ import {Directionality} from '@angular/cdk/bidi';
     '[attr.tabindex]': '_pattern.tabindex()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
     '[attr.aria-expanded]': '_pattern.expanded()',
-    '[attr.aria-controls]': '_pattern.submenu()?.id()',
+    '[attr.aria-controls]': '_pattern.menu()?.id()',
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
@@ -59,8 +59,8 @@ export class MenuTrigger<V> {
 
   // TODO(wagnermaciel): See we can remove the need to pass in a submenu.
 
-  /** The submenu associated with the menu trigger. */
-  submenu = input<Menu<V> | undefined>(undefined);
+  /** The menu associated with the trigger. */
+  menu = input<Menu<V> | undefined>(undefined);
 
   /** A callback function triggered when a menu item is selected. */
   onSubmit = output<V>();
@@ -68,7 +68,7 @@ export class MenuTrigger<V> {
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
-    submenu: computed(() => this.submenu()?._pattern),
+    menu: computed(() => this.menu()?._pattern),
   });
 }
 

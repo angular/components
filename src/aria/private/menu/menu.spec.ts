@@ -42,7 +42,7 @@ function getMenuTriggerPattern() {
   const submenu = signal<MenuPattern<string> | undefined>(undefined);
   const trigger = new MenuTriggerPattern<string>({
     element,
-    submenu,
+    menu: submenu,
   });
   return trigger;
 }
@@ -123,10 +123,14 @@ function getMenuPattern(
     }),
   );
 
-  if (parent) {
+  if (parent instanceof MenuTriggerPattern) {
+    (parent.menu as WritableSignal<MenuPattern<string>>).set(menu);
+    parent.inputs.element()?.appendChild(menu.inputs.element()!);
+  } else if (parent instanceof MenuItemPattern) {
     (parent.submenu as WritableSignal<MenuPattern<string>>).set(menu);
     parent.inputs.element()?.appendChild(menu.inputs.element()!);
   }
+
   menu.inputs.activeItem.set(items()[0]);
   return menu;
 }
