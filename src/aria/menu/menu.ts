@@ -83,6 +83,16 @@ export class MenuTrigger<V> {
   onFocusIn() {
     this.hasBeenFocused.set(true);
   }
+
+  /** Opens the menu. */
+  open(opts?: {first?: boolean; last?: boolean}) {
+    this._pattern.open(opts);
+  }
+
+  /** Closes the menu. */
+  close(opts: {refocus?: boolean} = {}) {
+    this._pattern.close(opts);
+  }
 }
 
 /**
@@ -222,24 +232,34 @@ export class Menu<V> {
     });
   }
 
-  // TODO(wagnermaciel): Author close, closeAll, and open methods for each directive.
+  /** Focuses the previous menu item. */
+  prev() {
+    this._pattern.prev();
+  }
+
+  /** Focuses the next menu item. */
+  next() {
+    this._pattern.next();
+  }
+
+  /** Focuses the first menu item. */
+  first() {
+    this._pattern.first();
+  }
+
+  /** Focuses the last menu item. */
+  last() {
+    this._pattern.last();
+  }
 
   /** Closes the menu. */
   close(opts?: {refocus?: boolean}) {
-    this._pattern.inputs.parent()?.close(opts);
+    this._pattern.close(opts);
   }
 
   /** Closes all parent menus. */
   closeAll(opts?: {refocus?: boolean}) {
-    const root = this._pattern.root();
-
-    if (root instanceof MenuTriggerPattern) {
-      root.close(opts);
-    }
-
-    if (root instanceof MenuPattern || root instanceof MenuBarPattern) {
-      root.inputs.activeItem()?.close(opts);
-    }
+    this._pattern.closeAll(opts);
   }
 }
 
@@ -325,6 +345,21 @@ export class MenuBar<V> {
       }
     });
   }
+
+  /** Focuses the previous menu item. */
+  prev() {
+    this._pattern.prev();
+  }
+
+  /** Focuses the next menu item. */
+  next() {
+    this._pattern.next();
+  }
+
+  /** Closes the menubar and refocuses the root menu bar item. */
+  close(opts?: {refocus?: boolean}) {
+    this._pattern.close(opts);
+  }
 }
 
 /**
@@ -401,6 +436,16 @@ export class MenuItem<V> {
   /** Marks the menu item as having been focused. */
   onFocusIn() {
     this.hasBeenFocused.set(true);
+  }
+
+  /** Opens the submenu. */
+  open(opts?: {first?: boolean; last?: boolean}) {
+    this._pattern.open(opts);
+  }
+
+  /** Closes the submenu. */
+  close(opts: {refocus?: boolean} = {}) {
+    this._pattern.close(opts);
   }
 }
 
