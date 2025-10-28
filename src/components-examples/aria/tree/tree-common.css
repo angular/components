@@ -44,6 +44,15 @@
   transform: rotate(90deg);
 }
 
+.example-tree[dir='rtl'] .example-tree-item .example-parent-icon {
+  transform: scaleX(-1);
+}
+
+.example-tree[dir='rtl'] .example-tree-item[aria-expanded='true'] .example-parent-icon {
+  transform: scaleX(-1) rotate(90deg);
+}
+
+
 .example-selected-icon {
   visibility: hidden;
   margin-left: auto;
@@ -56,4 +65,8 @@
 
 li[aria-expanded='false'] + ul[role='group'] {
   display: none;
+}
+
+.example-tree.ng-rtl {
+  background-color: red;
 }
