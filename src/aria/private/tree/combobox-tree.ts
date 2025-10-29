@@ -104,4 +104,10 @@ export class ComboboxTreePattern<V>
 
   /** Collapses all of the tree items. */
   collapseAll = () => this.items().forEach(item => item.expansion.close());
+
+  /** Whether the user is currently typing for typeahead. */
+  isTyping = () => this.listBehavior.isTyping();
+
+  /** Handles typeahead search for the tree. */
+  search = (char: string, opts?: {selectOne?: boolean}) => this.listBehavior.search(char, opts);
 }

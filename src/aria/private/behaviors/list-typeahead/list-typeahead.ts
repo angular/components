@@ -85,10 +85,13 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
    */
   private _getItem() {
     let items = this.focusManager.inputs.items();
-    const after = items.slice(this._startIndex()! + 1);
-    const before = items.slice(0, this._startIndex()!);
-    items = after.concat(before);
-    items.push(this.inputs.items()[this._startIndex()!]);
+
+    if (this._startIndex() !== -1) {
+      const after = items.slice(this._startIndex()! + 1);
+      const before = items.slice(0, this._startIndex()!);
+      items = after.concat(before);
+      items.push(this.inputs.items()[this._startIndex()!]);
+    }
 
     const focusableItems = [];
     for (const item of items) {

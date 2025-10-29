@@ -613,6 +613,36 @@ describe('Combobox with Listbox Pattern', () => {
       expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
       expect(listbox.inputs.value()).toEqual(['Banana']);
     });
+
+    it('should navigate on typeahead', () => {
+      const {combobox, listbox} = getPatterns({readonly: true});
+      expect(listbox.inputs.activeItem()).toBe(undefined);
+      combobox.onKeydown(createKeyboardEvent('keydown', 67, 'C'));
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[5]);
+    });
+
+    it('should select on typeahead and filter mode is auto-select', () => {
+      const {combobox, listbox, inputEl} = getPatterns({readonly: true, filterMode: 'auto-select'});
+      combobox.onKeydown(createKeyboardEvent('keydown', 67, 'C'));
+      expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[5]);
+      expect(listbox.inputs.value()).toEqual(['Cantaloupe']);
+      expect(inputEl.value).toBe('');
+    });
+
+    it('should NOT select on typeahead when filter mode is manual', () => {
+      const {combobox, listbox, inputEl} = getPatterns({readonly: true, filterMode: 'manual'});
+      combobox.onKeydown(createKeyboardEvent('keydown', 67, 'C'));
+      expect(listbox.getSelectedItem()).toBe(undefined);
+      expect(listbox.inputs.value()).toEqual([]);
+      expect(inputEl.value).toBe('');
+    });
+
+    it('should expand on typeahead', () => {
+      const {combobox} = getPatterns({readonly: true});
+      expect(combobox.expanded()).toBe(false);
+      combobox.onKeydown(createKeyboardEvent('keydown', 67, 'C'));
+      expect(combobox.expanded()).toBe(true);
+    });
   });
 });
 
