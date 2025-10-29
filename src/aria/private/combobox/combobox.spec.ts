@@ -604,14 +604,14 @@ describe('Combobox with Listbox Pattern', () => {
       expect(combobox.expanded()).toBe(false);
     });
 
-    it('should clear selection on escape when already closed', () => {
+    it('should NOT clear selection on escape when already closed', () => {
       const {combobox, listbox} = getPatterns({readonly: true});
       combobox.onPointerup(clickOption(listbox.inputs.items(), 2));
       expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
       expect(listbox.inputs.value()).toEqual(['Banana']);
       combobox.onKeydown(escape());
-      expect(listbox.getSelectedItem()).toBe(undefined);
-      expect(listbox.inputs.value()).toEqual([]);
+      expect(listbox.getSelectedItem()).toBe(listbox.inputs.items()[2]);
+      expect(listbox.inputs.value()).toEqual(['Banana']);
     });
   });
 });
@@ -943,7 +943,7 @@ describe('Combobox with Tree Pattern', () => {
       expect(combobox.expanded()).toBe(false);
     });
 
-    it('should clear selection on escape when already closed', () => {
+    it('should NOT clear selection on escape when already closed', () => {
       const {combobox, tree, inputEl} = getPatterns({readonly: true});
       combobox.onPointerup(clickInput(inputEl));
       combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
@@ -951,8 +951,8 @@ describe('Combobox with Tree Pattern', () => {
       expect(inputEl.value).toBe('Fruit');
       expect(combobox.expanded()).toBe(false);
       combobox.onKeydown(escape());
-      expect(tree.inputs.value()).toEqual([]);
-      expect(inputEl.value).toBe('');
+      expect(tree.inputs.value()).toEqual(['Fruit']);
+      expect(inputEl.value).toBe('Fruit');
     });
   });
 });

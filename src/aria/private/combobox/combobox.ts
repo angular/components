@@ -383,7 +383,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     const popupControls = this.inputs.popupControls();
 
-    if (!this.expanded()) {
+    if (!this.expanded() && !this.readonly()) {
       this.inputs.inputValue?.set('');
       popupControls?.clearSelection();
 
