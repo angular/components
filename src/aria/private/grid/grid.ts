@@ -21,6 +21,9 @@ export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'c
   /** The rows that make up the grid. */
   rows: SignalLike<GridRowPattern[]>;
 
+  /** The direction that text is read based on the users locale. */
+  textDirection: SignalLike<'rtl' | 'ltr'>;
+
   /** A function that returns the grid cell associated with a given element. */
   getCell: (e: Element) => GridCellPattern | undefined;
 }
@@ -59,6 +62,16 @@ export class GridPattern {
   /** Whether the user is currently dragging to select a range of cells. */
   readonly dragging = signal(false);
 
+  /** The key for navigating to the previous column. */
+  readonly prevColKey = computed(() =>
+    this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft',
+  );
+
+  /** The key for navigating to the next column. */
+  readonly nextColKey = computed(() =>
+    this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight',
+  );
+
   /** The keydown event manager for the grid. */
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
@@ -70,8 +83,8 @@ export class GridPattern {
     manager
       .on('ArrowUp', () => this.gridBehavior.up())
       .on('ArrowDown', () => this.gridBehavior.down())
-      .on('ArrowLeft', () => this.gridBehavior.left())
-      .on('ArrowRight', () => this.gridBehavior.right())
+      .on(this.prevColKey(), () => this.gridBehavior.left())
+      .on(this.nextColKey(), () => this.gridBehavior.right())
       .on('Home', () => this.gridBehavior.firstInRow())
       .on('End', () => this.gridBehavior.lastInRow())
       .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first())
