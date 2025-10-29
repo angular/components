@@ -147,6 +147,7 @@
     "tsutils": "^3.21.0",
     "typescript": "5.9.2",
     "vrsource-tslint-rules": "6.0.0",
+    "yaml": "^2.8.1",
     "yargs": "^18.0.0",
     "zx": "^8.0.0"
   },
