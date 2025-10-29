@@ -117,23 +117,11 @@ export class OverlayRef implements PortalOutlet {
   attach(portal: Portal<any>): any {
     // Insert the host into the DOM before attaching the portal, otherwise
     // the animations module will skip animations on repeat attachments.
-    if (!this._host.parentElement) {
-      const hasAttachedHost = this._positionStrategy?.attachHost?.(this._host);
-
-      if (!hasAttachedHost && this._previousHostParent) {
-        this._previousHostParent.appendChild(this._host);
-      }
-    }
+    this._attachHost();
 
     const attachResult = this._portalOutlet.attach(portal);
     this._positionStrategy?.attach(this);
-
-    const hasUpdatedStackingOrder = this._positionStrategy?.updateStackingOrder?.(this._host);
-
-    if (!hasUpdatedStackingOrder) {
-      this._updateStackingOrder();
-    }
-
+    this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
 
@@ -415,6 +403,20 @@ export class OverlayRef implements PortalOutlet {
     this._pane.style.pointerEvents = enablePointer ? '' : 'none';
   }
 
+  private _attachHost() {
+    if (!this._host.parentElement) {
+      if (this._config.usePopover && this._positionStrategy?.getPopoverInsertionPoint) {
+        this._positionStrategy.getPopoverInsertionPoint().after(this._host);
+      } else {
+        this._previousHostParent?.appendChild(this._host);
+      }
+    }
+
+    if (this._config.usePopover) {
+      this._host.showPopover();
+    }
+  }
+
   /** Attaches a backdrop for this overlay. */
   private _attachBackdrop() {
     const showingClass = 'cdk-overlay-backdrop-showing';
@@ -432,12 +434,10 @@ export class OverlayRef implements PortalOutlet {
       this._toggleClasses(this._backdropRef.element, this._config.backdropClass, true);
     }
 
-    const strategyAttached = this._positionStrategy?.attachBackdrop?.(
-      this._backdropRef.element,
-      this._host,
-    );
-
-    if (!strategyAttached) {
+    if (this._config.usePopover) {
+      // When using popovers, the backdrop needs to be inside the popover.
+      this._host.prepend(this._backdropRef.element);
+    } else {
       // Insert the backdrop before the pane in the DOM order,
       // in order to handle stacked overlays properly.
       this._host.parentElement!.insertBefore(this._backdropRef.element, this._host);
@@ -461,7 +461,7 @@ export class OverlayRef implements PortalOutlet {
    * in its original DOM position.
    */
   private _updateStackingOrder() {
-    if (this._host.nextSibling) {
+    if (!this._config.usePopover && this._host.nextSibling) {
       this._host.parentNode!.appendChild(this._host);
     }
   }

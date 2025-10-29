@@ -47,34 +47,34 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
   const idGenerator = injector.get(_IdGenerator);
   const appRef = injector.get(ApplicationRef);
   const directionality = injector.get(Directionality);
-  const overlayConfig = new OverlayConfig(config);
-  const customStructure = overlayConfig.positionStrategy?.createStructure?.();
-
-  let pane: HTMLElement;
-  let host: HTMLElement;
-
-  if (customStructure) {
-    pane = customStructure.pane;
-    host = customStructure.host;
-  } else {
-    host = doc.createElement('div');
-    pane = doc.createElement('div');
-    host.appendChild(pane);
-    overlayContainer.getContainerElement().appendChild(host);
-  }
-
-  pane.id = idGenerator.getId('cdk-overlay-');
-  pane.classList.add('cdk-overlay-pane');
-
-  const portalOutlet = new DomPortalOutlet(pane, appRef, injector);
   const renderer =
     injector.get(Renderer2, null, {optional: true}) ||
     injector.get(RendererFactory2).createRenderer(null, null);
 
+  const overlayConfig = new OverlayConfig(config);
+
   overlayConfig.direction = overlayConfig.direction || directionality.value;
+  overlayConfig.usePopover = !!overlayConfig?.usePopover && 'showPopover' in doc.body;
+
+  const pane = doc.createElement('div');
+  const host = doc.createElement('div');
+  pane.id = idGenerator.getId('cdk-overlay-');
+  pane.classList.add('cdk-overlay-pane');
+  host.appendChild(pane);
+
+  if (overlayConfig.usePopover) {
+    host.setAttribute('popover', 'manual');
+    host.classList.add('cdk-overlay-popover');
+  }
+
+  if (overlayConfig.usePopover && overlayConfig.positionStrategy?.getPopoverInsertionPoint) {
+    overlayConfig.positionStrategy.getPopoverInsertionPoint().after(host);
+  } else {
+    overlayContainer.getContainerElement().appendChild(host);
+  }
 
   return new OverlayRef(
-    portalOutlet,
+    new DomPortalOutlet(pane, appRef, injector),
     host,
     pane,
     overlayConfig,
