@@ -1,5 +1,5 @@
 import {Component, viewChild} from '@angular/core';
-import {Menu} from '@angular/aria/menu';
+import {Menu, MenuContent} from '@angular/aria/menu';
 import {
   SimpleMenu,
   SimpleMenuItem,
@@ -21,6 +21,7 @@ import {
     SimpleMenuItemText,
     SimpleMenuItemIcon,
     SimpleMenuItemShortcut,
+    MenuContent,
   ],
 })
 export class MenuContextExample {

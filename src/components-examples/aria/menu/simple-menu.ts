@@ -2,8 +2,8 @@ import {Menu, MenuBar, MenuItem, MenuTrigger} from '@angular/aria/menu';
 import {afterRenderEffect, Directive, effect, inject} from '@angular/core';
 
 @Directive({
-  selector: '[menu]',
-  hostDirectives: [{directive: Menu, inputs: ['parent']}],
+  selector: '[ng-menu]',
+  hostDirectives: [{directive: Menu}],
   host: {
     class: 'example-menu',
     popover: 'manual',
@@ -49,14 +49,14 @@ export class SimpleMenu {
 }
 
 @Directive({
-  selector: '[menu-bar]',
+  selector: '[ng-menu-bar]',
   hostDirectives: [{directive: MenuBar}],
   host: {class: 'example-menu-bar'},
 })
 export class SimpleMenuBar {}
 
 @Directive({
-  selector: '[menu-bar-item]',
+  selector: '[ng-menu-bar-item]',
   hostDirectives: [{directive: MenuItem, inputs: ['value', 'submenu']}],
   host: {class: 'example-menu-bar-item'},
 })
@@ -69,7 +69,7 @@ export class SimpleMenuBarItem {
 }
 
 @Directive({
-  selector: '[menu-item]',
+  selector: '[ng-menu-item]',
   hostDirectives: [{directive: MenuItem, inputs: ['value', 'disabled', 'submenu']}],
   host: {class: 'example-menu-item'},
 })
@@ -82,7 +82,7 @@ export class SimpleMenuItem {
 }
 
 @Directive({
-  selector: '[menu-item-icon]',
+  selector: '[ng-menu-item-icon]',
   host: {
     'aria-hidden': 'true',
     class: 'example-icon material-symbols-outlined',
@@ -91,13 +91,13 @@ export class SimpleMenuItem {
 export class SimpleMenuItemIcon {}
 
 @Directive({
-  selector: '[menu-item-text]',
+  selector: '[ng-menu-item-text]',
   host: {class: 'example-menu-item-text'},
 })
 export class SimpleMenuItemText {}
 
 @Directive({
-  selector: '[menu-item-shortcut]',
+  selector: '[ng-menu-item-shortcut]',
   host: {
     'aria-hidden': 'true',
     class: 'example-menu-item-shortcut',
