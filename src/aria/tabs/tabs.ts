@@ -107,6 +107,17 @@ export class Tabs {
       this._unorderedPanels.set(new Set(this._unorderedPanels()));
     }
   }
+
+  /** Opens the tab panel with the specified value. */
+  open(value: string) {
+    const tab = this._findTabPatternByValue(value);
+
+    tab?.expansion.open();
+  }
+
+  _findTabPatternByValue(value: string) {
+    return this.tabs()?.find(t => t.value() === value);
+  }
 }
 
 /**
@@ -271,6 +282,11 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     tabpanel: this.tabpanel,
     value: this.value,
   });
+
+  /** Opens this tab panel. */
+  open() {
+    this._pattern.expansion.open();
+  }
 
   ngOnInit() {
     this._tabList.register(this);
