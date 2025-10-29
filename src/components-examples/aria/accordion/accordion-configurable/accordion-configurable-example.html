@@ -2,7 +2,7 @@
   <mat-checkbox [formControl]="wrap">Wrap (ArrowKey-only)</mat-checkbox>
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
-  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Expanded Items</mat-label>
@@ -19,7 +19,7 @@
   class="example-accordion-group"
   [multiExpandable]="multi.value"
   [disabled]="disabled.value"
-  [skipDisabled]="skipDisabled.value"
+  [softDisabled]="softDisabled.value"
   [wrap]="wrap.value"
   [(value)]="expandedIds"
 >

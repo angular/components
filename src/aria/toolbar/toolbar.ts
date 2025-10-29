@@ -91,8 +91,8 @@ export class Toolbar<V> {
   /** Whether the toolbar is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
 
-  /** Whether disabled items in the group should be skipped when navigating. */
-  readonly skipDisabled = input(false, {transform: booleanAttribute});
+  /** Whether to allow disabled items to receive focus. */
+  softDisabled = input(true, {transform: booleanAttribute});
 
   /** Whether the toolbar is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -200,7 +200,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
-  readonly hardDisabled = computed(() => this._pattern.disabled() && this._toolbar.skipDisabled());
+  readonly hardDisabled = computed(() => this._pattern.disabled() && !this._toolbar.softDisabled());
 
   /** The ToolbarWidget UIPattern. */
   readonly _pattern = new ToolbarWidgetPattern<V>({

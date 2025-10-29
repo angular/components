@@ -62,7 +62,7 @@ export class RadioGroupConfigurableExample {
 
   // New controls
   readonly = new FormControl(false, {nonNullable: true});
-  skipDisabled = new FormControl(true, {nonNullable: true});
+  softDisabled = new FormControl(false, {nonNullable: true});
   focusMode: 'roving' | 'activedescendant' = 'roving';
 
   // Control for which radio options are individually disabled

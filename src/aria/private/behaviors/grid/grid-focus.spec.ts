@@ -40,7 +40,7 @@ function setupGridFocus(
     grid: gridData,
     focusMode: signal('roving'),
     disabled: signal(false),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     ...gridFocusInputs,
   });
 }
@@ -261,18 +261,18 @@ describe('GridFocus', () => {
       expect(gridFocus.isFocusable(cells[1][1])).toBe(true);
     });
 
-    it('should return false for a disabled cell when skipDisabled is true', () => {
+    it('should return false for a disabled cell when softDisabled is false', () => {
       const cells = createTestGrid(createGridA);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(true)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(false)});
 
       cells[1][1].disabled.set(true);
 
       expect(gridFocus.isFocusable(cells[1][1])).toBe(false);
     });
 
-    it('should return true for a disabled cell when skipDisabled is false', () => {
+    it('should return true for a disabled cell when softDisabled is true', () => {
       const cells = createTestGrid(createGridA);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(false)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(true)});
 
       cells[1][1].disabled.set(true);
 
@@ -292,9 +292,9 @@ describe('GridFocus', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 1});
     });
 
-    it('should not focus a disabled cell if skipDisabled is true', () => {
+    it('should not focus a disabled cell if softDisabled is false', () => {
       const cells = createTestGrid(createGridA);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(true)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(false)});
 
       gridFocus.focusCell(cells[0][0]);
       cells[1][1].disabled.set(true);
@@ -306,9 +306,9 @@ describe('GridFocus', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 0, col: 0});
     });
 
-    it('should focus a disabled cell if skipDisabled is false', () => {
+    it('should focus a disabled cell if softDisabled is true', () => {
       const cells = createTestGrid(createGridA);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(false)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(true)});
 
       cells[1][1].disabled.set(true);
       const result = gridFocus.focusCell(cells[1][1]);
@@ -342,9 +342,9 @@ describe('GridFocus', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 2});
     });
 
-    it('should not focus coordinates of a disabled cell if skipDisabled is true', () => {
+    it('should not focus coordinates of a disabled cell if softDisabled is false', () => {
       const cells = createTestGrid(createGridD);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(true)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(false)});
 
       gridFocus.focusCoordinates({row: 0, col: 0});
       cells[1][0].disabled.set(true); // This cell spans {row: 1, col: 2}
@@ -356,9 +356,9 @@ describe('GridFocus', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 0, col: 0});
     });
 
-    it('should focus coordinates of a disabled cell if skipDisabled is false', () => {
+    it('should focus coordinates of a disabled cell if softDisabled is true', () => {
       const cells = createTestGrid(createGridD);
-      const gridFocus = setupGridFocus(signal(cells), {skipDisabled: signal(false)});
+      const gridFocus = setupGridFocus(signal(cells), {softDisabled: signal(true)});
 
       cells[1][0].disabled.set(true); // This cell spans {row: 1, col: 2}
       const result = gridFocus.focusCoordinates({row: 1, col: 2});

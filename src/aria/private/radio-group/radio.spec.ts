@@ -36,7 +36,7 @@ describe('RadioGroup Pattern', () => {
       element: signal(document.createElement('div')),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
-      skipDisabled: inputs.skipDisabled ?? signal(true),
+      softDisabled: inputs.softDisabled ?? signal(false),
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
@@ -138,8 +138,8 @@ describe('RadioGroup Pattern', () => {
       expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
     });
 
-    it('should skip disabled radios when skipDisabled is true', () => {
-      const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(true)});
+    it('should skip disabled radios when softDisabled is false', () => {
+      const {radioGroup, radioButtons} = getDefaultPatterns({softDisabled: signal(false)});
       radioButtons[1].disabled.set(true);
       radioGroup.onKeydown(down());
       expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
@@ -147,8 +147,8 @@ describe('RadioGroup Pattern', () => {
       expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
-    it('should not skip disabled radios when skipDisabled is false', () => {
-      const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(false)});
+    it('should not skip disabled radios when softDisabled is true', () => {
+      const {radioGroup, radioButtons} = getDefaultPatterns({softDisabled: signal(true)});
       radioButtons[1].disabled.set(true);
       radioGroup.onKeydown(down());
       expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
@@ -213,7 +213,7 @@ describe('RadioGroup Pattern', () => {
 
     it('should not select a disabled radio via keyboard', () => {
       const {radioGroup, radioButtons} = getPatterns(['A', 'B', 'C'], {
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
       });
       radioButtons[1].disabled.set(true);
 
@@ -271,7 +271,7 @@ describe('RadioGroup Pattern', () => {
     });
 
     it('should set the active index to the first focusable radio', () => {
-      const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(true)});
+      const {radioGroup, radioButtons} = getDefaultPatterns({softDisabled: signal(false)});
       radioButtons[0].disabled.set(true);
       radioGroup.setDefaultState();
       expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
@@ -286,7 +286,7 @@ describe('RadioGroup Pattern', () => {
     it('should set the active index to the first focusable radio if selected is disabled', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({
         value: signal(['Cherry']),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       radioButtons[2].disabled.set(true); // Disable Cherry
       radioGroup.setDefaultState();
@@ -295,10 +295,10 @@ describe('RadioGroup Pattern', () => {
   });
 
   describe('validate', () => {
-    it('should report a violation if the selected item is disabled and skipDisabled is true', () => {
+    it('should report a violation if the selected item is disabled and softDisabled is false', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({
         value: signal(['Banana']),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       radioButtons[1].disabled.set(true); // Disable the selected item.
       const violations = radioGroup.validate();

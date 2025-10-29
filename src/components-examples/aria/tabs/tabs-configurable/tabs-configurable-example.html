@@ -1,7 +1,7 @@
 <div class="example-tablist-controls">
   <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
-  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Orientation</mat-label>
@@ -44,7 +44,7 @@
     class="example-tablist"
     [wrap]="wrap.value"
     [disabled]="disabled.value"
-    [skipDisabled]="skipDisabled.value"
+    [softDisabled]="softDisabled.value"
     [orientation]="orientation"
     [focusMode]="focusMode"
     [selectionMode]="selectionMode"

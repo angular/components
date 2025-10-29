@@ -79,7 +79,7 @@ describe('Tabs', () => {
       orientation?: 'horizontal' | 'vertical';
       disabled?: boolean;
       wrap?: boolean;
-      skipDisabled?: boolean;
+      softDisabled?: boolean;
       focusMode?: 'roving' | 'activedescendant';
       selectionMode?: 'follow' | 'explicit';
     } = {},
@@ -89,7 +89,7 @@ describe('Tabs', () => {
     if (options.orientation !== undefined) testComponent.orientation.set(options.orientation);
     if (options.disabled !== undefined) testComponent.disabled.set(options.disabled);
     if (options.wrap !== undefined) testComponent.wrap.set(options.wrap);
-    if (options.skipDisabled !== undefined) testComponent.skipDisabled.set(options.skipDisabled);
+    if (options.softDisabled !== undefined) testComponent.softDisabled.set(options.softDisabled);
     if (options.focusMode !== undefined) testComponent.focusMode.set(options.focusMode);
     if (options.selectionMode !== undefined) testComponent.selectionMode.set(options.selectionMode);
 
@@ -326,15 +326,15 @@ describe('Tabs', () => {
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should skip disabled tabs if skipDisabled is true', () => {
-            updateTabs({skipDisabled: true});
+          it('should skip disabled tabs if softDisabled is false', () => {
+            updateTabs({softDisabled: false});
             expect(isTabFocused(0)).toBe(true);
             right();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should not skip disabled tabs if skipDisabled is false', () => {
-            updateTabs({skipDisabled: false});
+          it('should not skip disabled tabs if softDisabled is true', () => {
+            updateTabs({softDisabled: true});
             tabListElement.focus();
             fixture.detectChanges();
             expect(isTabFocused(0)).toBe(true);
@@ -644,7 +644,7 @@ describe('Tabs', () => {
         ],
         selectedTab: 'tab1',
         selectionMode: 'explicit',
-        skipDisabled: false,
+        softDisabled: true,
       });
       expect(testComponent.selectedTab()).toBe('tab1');
       right();
@@ -680,7 +680,7 @@ describe('Tabs', () => {
           [orientation]="orientation()"
           [disabled]="disabled()"
           [wrap]="wrap()"
-          [skipDisabled]="skipDisabled()"
+          [softDisabled]="softDisabled()"
           [focusMode]="focusMode()"
           [selectionMode]="selectionMode()">
         @for (tabDef of tabsData(); track tabDef.value) {
@@ -723,7 +723,7 @@ class TestTabsComponent {
   orientation = signal<'horizontal' | 'vertical'>('horizontal');
   disabled = signal(false);
   wrap = signal(true);
-  skipDisabled = signal(true);
+  softDisabled = signal(false);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'follow' | 'explicit'>('follow');
 }

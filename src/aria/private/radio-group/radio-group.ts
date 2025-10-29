@@ -164,9 +164,9 @@ export class RadioGroupPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (this.selectedItem()?.disabled() && this.inputs.skipDisabled()) {
+    if (this.selectedItem()?.disabled() && !this.inputs.softDisabled()) {
       violations.push(
-        "Accessibility Violation: The selected radio button is disabled while 'skipDisabled' is true, making the selection unreachable via keyboard.",
+        "Accessibility Violation: The selected radio button is disabled while 'softDisabled' is false, making the selection unreachable via keyboard.",
       );
     }
 

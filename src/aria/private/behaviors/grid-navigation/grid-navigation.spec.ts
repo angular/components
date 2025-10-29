@@ -42,7 +42,7 @@ type TestGridNavInputs = Partial<GridNavigationInputs<TestCell>> &
 function createGridNav(config: TestGridNavInputs): {gridNav: TestGridNav; cells: TestCell[][]} {
   const wrap = signal(true);
   const disabled = signal(false);
-  const skipDisabled = signal(false);
+  const softDisabled = signal(true);
   const focusMode = signal('roving' as const);
   const activeCoords = signal({row: 0, col: 0});
   const wrapBehavior = signal('continuous' as const);
@@ -51,7 +51,7 @@ function createGridNav(config: TestGridNavInputs): {gridNav: TestGridNav; cells:
     disabled,
     focusMode,
     activeCoords,
-    skipDisabled,
+    softDisabled,
     ...config,
   });
 
@@ -60,7 +60,7 @@ function createGridNav(config: TestGridNavInputs): {gridNav: TestGridNav; cells:
     disabled,
     focusMode,
     activeCoords,
-    skipDisabled,
+    softDisabled,
     wrapBehavior,
     gridFocus,
     ...config,
@@ -179,10 +179,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 0, col: 1});
     });
 
-    it('(skip disabled: false) should be able to navigate through disabled cells', () => {
+    it('(soft disabled: true) should be able to navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[0][1].disabled.set(true);
@@ -190,10 +190,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 0, col: 1});
     });
 
-    it('(skip disabled: true) should skip disabled cells', () => {
+    it('(soft disabled: false) should skip disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 2, col: 1}),
       });
       cells[1][1].disabled.set(true);
@@ -201,11 +201,11 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 0, col: 1});
     });
 
-    it('(wrap: false) (skip disabled: true) should not navigate through disabled cells', () => {
+    it('(wrap: false) (soft disabled: false) should not navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
         wrap: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[0][1].disabled.set(true);
@@ -241,7 +241,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 0, col: 1}),
           });
@@ -254,7 +254,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 0, col: 1}),
           });
@@ -293,7 +293,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 0, col: 1}),
           });
@@ -316,7 +316,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 0, col: 1}),
           });
@@ -340,7 +340,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 1}),
           });
@@ -396,10 +396,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 0});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridB,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 2, col: 2}),
         });
         cells[0][2].disabled.set(true);
@@ -458,10 +458,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 3});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridC,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 1, col: 2}),
         });
         cells[0][0].disabled.set(true);
@@ -513,10 +513,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 3, col: 3});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridD,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 3, col: 3}),
         });
 
@@ -558,10 +558,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 1});
     });
 
-    it('(skip disabled: false) should be able to navigate through disabled cells', () => {
+    it('(soft disabled: true) should be able to navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[2][1].disabled.set(true);
@@ -569,10 +569,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 1});
     });
 
-    it('(skip disabled: true) should skip disabled cells', () => {
+    it('(soft disabled: false) should skip disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 0, col: 1}),
       });
       cells[1][1].disabled.set(true);
@@ -580,11 +580,11 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 1});
     });
 
-    it('(wrap: false) (skip disabled: true) should not navigate through disabled cells', () => {
+    it('(wrap: false) (soft disabled: false) should not navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
         wrap: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[2][1].disabled.set(true);
@@ -620,7 +620,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 2, col: 1}),
           });
@@ -633,7 +633,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 2, col: 1}),
           });
@@ -661,7 +661,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 2, col: 1}),
           });
@@ -678,7 +678,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 1}),
           });
@@ -733,10 +733,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 2});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridB,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 0, col: 0}),
         });
         cells[1][0].disabled.set(true);
@@ -789,10 +789,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 0});
     });
 
-    it('(skip disabled: false) should be able to navigate through disabled cells', () => {
+    it('(soft disabled: true) should be able to navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[1][0].disabled.set(true);
@@ -800,10 +800,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 0});
     });
 
-    it('(skip disabled: true) should skip disabled cells', () => {
+    it('(soft disabled: false) should skip disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 2}),
       });
       cells[1][1].disabled.set(true);
@@ -811,11 +811,11 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 0});
     });
 
-    it('(wrap: false) (skip disabled: true) should not navigate through disabled cells', () => {
+    it('(wrap: false) (soft disabled: false) should not navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
         wrap: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[1][0].disabled.set(true);
@@ -851,7 +851,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 1, col: 0}),
           });
@@ -864,7 +864,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 1, col: 0}),
           });
@@ -892,7 +892,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 0}),
           });
@@ -909,7 +909,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 1}),
           });
@@ -973,10 +973,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 2, col: 2});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridC,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 0, col: 3}),
         });
 
@@ -1031,10 +1031,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 2});
     });
 
-    it('(skip disabled: false) should be able to navigate through disabled cells', () => {
+    it('(soft disabled: true) should be able to navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[1][2].disabled.set(true);
@@ -1042,10 +1042,10 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 2});
     });
 
-    it('(skip disabled: true) should skip disabled cells', () => {
+    it('(soft disabled: false) should skip disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 0}),
       });
       cells[1][1].disabled.set(true);
@@ -1053,11 +1053,11 @@ describe('GridNavigation', () => {
       expect(gridNav.inputs.activeCoords()).toEqual({row: 1, col: 2});
     });
 
-    it('(wrap: false) (skip disabled: true) should not navigate through disabled cells', () => {
+    it('(wrap: false) (soft disabled: false) should not navigate through disabled cells', () => {
       const {gridNav, cells} = createGridNav({
         cells: gridA,
         wrap: signal(false),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         activeCoords: signal({row: 1, col: 1}),
       });
       cells[1][2].disabled.set(true);
@@ -1093,7 +1093,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 1, col: 2}),
           });
@@ -1106,7 +1106,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('loop'),
             activeCoords: signal({row: 1, col: 2}),
           });
@@ -1134,7 +1134,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 2}),
           });
@@ -1151,7 +1151,7 @@ describe('GridNavigation', () => {
           const {gridNav, cells} = createGridNav({
             cells: gridA,
             wrap: signal(true),
-            skipDisabled: signal(true),
+            softDisabled: signal(false),
             wrapBehavior: signal('continuous'),
             activeCoords: signal({row: 1, col: 1}),
           });
@@ -1215,10 +1215,10 @@ describe('GridNavigation', () => {
         expect(gridNav.inputs.activeCoords()).toEqual({row: 0, col: 2});
       });
 
-      it('(skip disabled: true) should skip disabled cells', () => {
+      it('(soft disabled: false) should skip disabled cells', () => {
         const {gridNav, cells} = createGridNav({
           cells: gridC,
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           activeCoords: signal({row: 0, col: 0}),
         });
         cells[0][1].disabled.set(true);

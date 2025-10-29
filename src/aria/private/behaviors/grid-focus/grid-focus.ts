@@ -47,8 +47,8 @@ export interface GridFocusInputs<T extends GridFocusCell> {
   /** The coordinates (row and column) of the current active cell. */
   activeCoords: WritableSignalLike<RowCol>;
 
-  /** Whether disabled cells in the grid should be skipped when navigating. */
-  skipDisabled: SignalLike<boolean>;
+  /** Whether disabled cells in the grid should be focusable. */
+  softDisabled: SignalLike<boolean>;
 }
 
 /** Represents coordinates in a grid. */
@@ -163,7 +163,7 @@ export class GridFocus<T extends GridFocusCell> {
 
   /** Returns true if the given cell can be navigated to. */
   isFocusable(cell: T): boolean {
-    return !cell.disabled() || !this.inputs.skipDisabled();
+    return !cell.disabled() || this.inputs.softDisabled();
   }
 
   /** Finds the top-left anchor coordinates of a given cell instance in the grid. */

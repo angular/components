@@ -63,7 +63,7 @@ describe('Tabs Pattern', () => {
       focusMode: signal('roving'),
       disabled: signal(false),
       activeItem: signal(undefined),
-      skipDisabled: signal(true),
+      softDisabled: signal(false),
       items: signal([]),
       value: signal(['tab-1']),
       element: signal(document.createElement('div')),
@@ -230,7 +230,7 @@ describe('Tabs Pattern', () => {
       expect(tabPatterns[1].active()).toBeFalse();
     });
 
-    it('skips the disabled tab when `skipDisabled` is set to true.', () => {
+    it('skips the disabled tab when `softDisabled` is set to false.', () => {
       tabInputs[1].disabled.set(true);
       tabListPattern.onKeydown(right());
       expect(tabPatterns[0].active()).toBeFalse();
@@ -238,8 +238,8 @@ describe('Tabs Pattern', () => {
       expect(tabPatterns[2].active()).toBeTrue();
     });
 
-    it('does not skip the disabled tab when `skipDisabled` is set to false.', () => {
-      tabListInputs.skipDisabled.set(false);
+    it('does not skip the disabled tab when `softDisabled` is set to true.', () => {
+      tabListInputs.softDisabled.set(true);
       tabInputs[1].disabled.set(true);
       tabListPattern.onKeydown(right());
       expect(tabPatterns[0].active()).toBeFalse();

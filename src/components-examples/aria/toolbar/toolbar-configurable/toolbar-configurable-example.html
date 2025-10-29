@@ -1,7 +1,7 @@
 <div class="example-container">
   <h4 class="example-heading">Toolbar Controls</h4>
   <div class="example-toolbar-controls">
-    <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+    <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
     <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
     <mat-checkbox [formControl]="toolbarDisabled">Disabled</mat-checkbox>
     <mat-form-field subscriptSizing="dynamic" appearance="outline">
@@ -42,7 +42,7 @@
 <div
   ngToolbar
   [orientation]="orientation"
-  [skipDisabled]="skipDisabled.value"
+  [softDisabled]="softDisabled.value"
   [wrap]="wrap.value"
   [disabled]="toolbarDisabled.value"
   class="example-toolbar"
