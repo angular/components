@@ -8,6 +8,7 @@ import {
   SimpleMenuItemShortcut,
   SimpleMenuItemText,
 } from '../simple-menu';
+import {MenuContent} from '@angular/aria/menu';
 
 /** @title Menu bar example. */
 @Component({
@@ -24,6 +25,7 @@ import {
     SimpleMenuItemIcon,
     SimpleMenuItemText,
     SimpleMenuItemShortcut,
+    MenuContent,
   ],
 })
 export class MenuBarExample {}

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MenuTrigger} from '@angular/aria/menu';
+import {MenuTrigger, MenuContent} from '@angular/aria/menu';
 import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from '../simple-menu';
 
 /** @title Menu trigger example. */
@@ -9,6 +9,13 @@ import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from
   templateUrl: 'menu-trigger-example.html',
   styleUrl: '../menu-example.css',
   standalone: true,
-  imports: [SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText, MenuTrigger],
+  imports: [
+    MenuContent,
+    MenuTrigger,
+    SimpleMenu,
+    SimpleMenuItem,
+    SimpleMenuItemIcon,
+    SimpleMenuItemText,
+  ],
 })
 export class MenuTriggerExample {}

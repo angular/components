@@ -11,6 +11,7 @@ import {
   computed,
   contentChildren,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
@@ -32,6 +33,7 @@ import {
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
+import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 
 /**
  * A trigger for a menu.
@@ -47,7 +49,7 @@ import {Directionality} from '@angular/cdk/bidi';
     '[attr.tabindex]': '_pattern.tabindex()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
     '[attr.aria-expanded]': '_pattern.expanded()',
-    '[attr.aria-controls]': '_pattern.submenu()?.id()',
+    '[attr.aria-controls]': '_pattern.menu()?.id()',
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
@@ -62,18 +64,18 @@ export class MenuTrigger<V> {
 
   // TODO(wagnermaciel): See we can remove the need to pass in a submenu.
 
-  /** The submenu associated with the menu trigger. */
-  submenu = input<Menu<V> | undefined>(undefined);
-
-  /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  /** The menu associated with the trigger. */
+  menu = input<Menu<V> | undefined>(undefined);
 
   /** The menu trigger ui pattern instance. */
-  readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
-    onSubmit: (value: V) => this.onSubmit.emit(value),
+  _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
-    submenu: computed(() => this.submenu()?._pattern),
+    menu: computed(() => this.menu()?._pattern),
   });
+
+  constructor() {
+    effect(() => this.menu()?.parent.set(this));
+  }
 }
 
 /**
@@ -107,8 +109,17 @@ export class MenuTrigger<V> {
     '(focusin)': '_pattern.onFocusIn()',
     '(click)': '_pattern.onClick($event)',
   },
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
 })
 export class Menu<V> {
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
+
   /** The menu items contained in the menu. */
   readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
 
@@ -131,9 +142,6 @@ export class Menu<V> {
     initialValue: this._directionality.value,
   });
 
-  /** The submenu associated with the menu. */
-  readonly submenu = input<Menu<V> | undefined>(undefined);
-
   /** The unique ID of the menu. */
   readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-', true));
 
@@ -144,7 +152,7 @@ export class Menu<V> {
   readonly typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
 
   /** A reference to the parent menu item or menu trigger. */
-  readonly parent = input<MenuTrigger<V> | MenuItem<V>>();
+  readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
 
   /** The menu ui pattern instance. */
   readonly _pattern: MenuPattern<V>;
@@ -162,7 +170,7 @@ export class Menu<V> {
   isVisible = computed(() => this._pattern.isVisible());
 
   /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  onSelect = output<V>();
 
   constructor() {
     this._pattern = new MenuPattern({
@@ -175,7 +183,11 @@ export class Menu<V> {
       selectionMode: () => 'explicit',
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-      onSubmit: (value: V) => this.onSubmit.emit(value),
+      onSelect: (value: V) => this.onSelect.emit(value),
+    });
+
+    afterRenderEffect(() => {
+      this._deferredContentAware?.contentVisible.set(this._pattern.isVisible());
     });
 
     // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
@@ -274,7 +286,7 @@ export class MenuBar<V> {
   readonly items = signal<MenuItemPattern<V>[]>([]);
 
   /** A callback function triggered when a menu item is selected. */
-  onSubmit = output<V>();
+  onSelect = output<V>();
 
   constructor() {
     this._pattern = new MenuBarPattern({
@@ -284,7 +296,7 @@ export class MenuBar<V> {
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',
-      onSubmit: (value: V) => this.onSubmit.emit(value),
+      onSelect: (value: V) => this.onSelect.emit(value),
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
     });
@@ -363,4 +375,16 @@ export class MenuItem<V> {
     parent: computed(() => this.parent?._pattern),
     submenu: computed(() => this.submenu()?._pattern),
   });
+
+  constructor() {
+    effect(() => this.submenu()?.parent.set(this));
+  }
 }
+
+/** Defers the rendering of the menu content. */
+@Directive({
+  selector: 'ng-template[ngMenuContent]',
+  exportAs: 'ngMenuContent',
+  hostDirectives: [DeferredContent],
+})
+export class MenuContent {}
