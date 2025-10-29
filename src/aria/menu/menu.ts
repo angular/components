@@ -51,6 +51,7 @@ import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-cont
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
+    '(focusin)': 'onFocusIn()',
   },
 })
 export class MenuTrigger<V> {
@@ -65,6 +66,9 @@ export class MenuTrigger<V> {
   /** The menu associated with the trigger. */
   menu = input<Menu<V> | undefined>(undefined);
 
+  /** Whether the menu item has been focused. */
+  readonly hasBeenFocused = signal(false);
+
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
@@ -73,6 +77,11 @@ export class MenuTrigger<V> {
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
+  }
+
+  /** Marks the menu trigger as having been focused. */
+  onFocusIn() {
+    this.hasBeenFocused.set(true);
   }
 }
 
@@ -185,7 +194,14 @@ export class Menu<V> {
     });
 
     afterRenderEffect(() => {
-      this._deferredContentAware?.contentVisible.set(this._pattern.isVisible());
+      const parent = this.parent();
+      if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
+        this._deferredContentAware?.contentVisible.set(true);
+      } else {
+        this._deferredContentAware?.contentVisible.set(
+          this._pattern.isVisible() || !!this.parent()?.hasBeenFocused(),
+        );
+      }
     });
 
     // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
@@ -322,6 +338,7 @@ export class MenuBar<V> {
   host: {
     'role': 'menuitem',
     'class': 'ng-menu-item',
+    '(focusin)': 'onFocusIn()',
     '[attr.tabindex]': '_pattern.tabindex()',
     '[attr.data-active]': '_pattern.isActive()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
@@ -363,6 +380,9 @@ export class MenuItem<V> {
   /** The submenu associated with the menu item. */
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
+  /** Whether the menu item has been focused. */
+  readonly hasBeenFocused = signal(false);
+
   /** The menu item ui pattern instance. */
   readonly _pattern: MenuItemPattern<V> = new MenuItemPattern<V>({
     id: this.id,
@@ -376,6 +396,11 @@ export class MenuItem<V> {
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+  }
+
+  /** Marks the menu item as having been focused. */
+  onFocusIn() {
+    this.hasBeenFocused.set(true);
   }
 }
 
