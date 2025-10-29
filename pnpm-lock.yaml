@@ -213,8 +213,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.11
       firebase-tools:
-        specifier: 14.20.0
-        version: 14.20.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.22.0
+        version: 14.22.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -442,8 +442,8 @@ importers:
         specifier: 0.8.17
         version: 0.8.17
       firebase-tools:
-        specifier: ^14.0.0
-        version: 14.20.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.22.0
+        version: 14.22.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: 5.12.0
         version: 5.12.0
@@ -5294,8 +5294,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@14.20.0:
-    resolution: {integrity: sha512-8zduD1/tpm8tEf4V6dOdveLHVttPUdnubZeZksdvRcetJuffNuU+Ugr4/JsObhxJP0n0Npb2MvPMHln6xKHMXw==}
+  firebase-tools@14.22.0:
+    resolution: {integrity: sha512-ZudDdmP0pFR6jztKHoAFcIE19Qo2izfoMvbLxf7pvd5HY/MknVnhL+87mopWZGGv3Cmfc/gsUOcNW60n/my8cw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -15009,7 +15009,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@14.20.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@14.22.0(@types/node@22.18.12)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.6(@types/node@22.18.12)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
