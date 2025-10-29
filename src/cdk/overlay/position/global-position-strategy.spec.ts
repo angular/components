@@ -7,11 +7,14 @@ import {
   OverlayRef,
   createOverlayRef,
   createGlobalPositionStrategy,
+  GlobalPositionStrategy,
+  OverlayContainer,
 } from '../index';
 
 describe('GlobalPositonStrategy', () => {
   let overlayRef: OverlayRef;
   let injector: Injector;
+  let portal: ComponentPortal<BlankPortal>;
 
   beforeEach(() => {
     injector = TestBed.inject(Injector);
@@ -25,7 +28,7 @@ describe('GlobalPositonStrategy', () => {
   });
 
   function attachOverlay(config: OverlayConfig): OverlayRef {
-    const portal = new ComponentPortal(BlankPortal);
+    portal = new ComponentPortal(BlankPortal);
     overlayRef = createOverlayRef(injector, config);
     overlayRef.attach(portal);
     TestBed.inject(ApplicationRef).tick();
@@ -468,6 +471,50 @@ describe('GlobalPositonStrategy', () => {
     expect(elementStyle.marginLeft).toBe('70px');
     expect(elementStyle.marginRight).toBe('');
     expect(parentStyle.justifyContent).toBe('flex-end');
+  });
+
+  describe('DOM location', () => {
+    let positionStrategy: GlobalPositionStrategy;
+    let containerElement: HTMLElement;
+
+    beforeEach(() => {
+      containerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      positionStrategy = createGlobalPositionStrategy(injector);
+    });
+
+    it('should place the overlay inside the overlay container by default', () => {
+      attachOverlay({positionStrategy, usePopover: false});
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(true);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBeFalsy();
+    });
+
+    it('should be able to opt into placing the overlay inside a popover element', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      attachOverlay({positionStrategy, usePopover: true});
+
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
+      expect(document.body.lastChild).toBe(overlayRef.hostElement);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBe('manual');
+    });
+
+    it('should re-attach the popover at the end of the body', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      attachOverlay({positionStrategy, usePopover: true});
+      expect(document.body.lastChild).toBe(overlayRef.hostElement);
+
+      overlayRef.detach();
+      TestBed.inject(ApplicationRef).tick();
+      expect(overlayRef.hostElement.parentNode).toBeFalsy();
+
+      overlayRef.attach(portal);
+      expect(document.body.lastChild).toBe(overlayRef.hostElement);
+    });
   });
 });
 
