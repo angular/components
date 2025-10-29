@@ -270,7 +270,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
 
 // @public
 export class GlobalPositionStrategy implements PositionStrategy {
-    constructor(injector: Injector);
+    constructor(injector?: Injector);
     apply(): void;
     // (undocumented)
     attach(overlayRef: OverlayRef): void;
