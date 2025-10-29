@@ -89,6 +89,89 @@ export class Grid {
     afterRenderEffect(() => this._pattern.focusEffect());
   }
 
+  /** Navigates to the cell above the currently active cell. */
+  up(): boolean {
+    return this._pattern.gridBehavior.up();
+  }
+
+  /** Navigates to the cell below the currently active cell. */
+  down(): boolean {
+    return this._pattern.gridBehavior.down();
+  }
+
+  /** Navigates to the cell to the left of the currently active cell. */
+  left(): boolean {
+    return this._pattern.gridBehavior.left();
+  }
+
+  /** Navigates to the cell to the right of the currently active cell. */
+  right(): boolean {
+    return this._pattern.gridBehavior.right();
+  }
+
+  /** Navigates to the first focusable cell in the current row. */
+  firstInRow(): boolean {
+    return this._pattern.gridBehavior.firstInRow();
+  }
+
+  /** Navigates to the last focusable cell in the current row. */
+  lastInRow(): boolean {
+    return this._pattern.gridBehavior.lastInRow();
+  }
+
+  /** Navigates to the first focusable cell in the grid. */
+  first(): boolean {
+    return this._pattern.gridBehavior.first();
+  }
+
+  /** Navigates to the last focusable cell in the grid. */
+  last(): boolean {
+    return this._pattern.gridBehavior.last();
+  }
+
+  /** Extends the selection to the cell above the selection anchor. */
+  rangeSelectUp(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectUp();
+    }
+  }
+
+  /** Extends the selection to the cell below the selection anchor. */
+  rangeSelectDown(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectDown();
+    }
+  }
+
+  /** Extends the selection to the cell to the left of the selection anchor. */
+  rangeSelectLeft(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectLeft();
+    }
+  }
+
+  /** Extends the selection to the cell to the right of the selection anchor. */
+  rangeSelectRight(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectRight();
+    }
+  }
+
+  /** Selects all selectable cells in the grid. */
+  selectAll(): void {
+    this._pattern.gridBehavior.selectAll();
+  }
+
+  /** Selects all cells in the current row. */
+  selectRow(): void {
+    this._pattern.gridBehavior.selectRow();
+  }
+
+  /** Selects all cells in the current column. */
+  selectCol(): void {
+    this._pattern.gridBehavior.selectCol();
+  }
+
   /** Gets the cell pattern for a given element. */
   private _getCell(element: Element): GridCellPattern | undefined {
     const cellElement = element.closest('[ngGridCell]');
