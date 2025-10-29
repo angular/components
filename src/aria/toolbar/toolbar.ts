@@ -148,6 +148,41 @@ export class Toolbar<V> {
     }
   }
 
+  /** Navigates to the next widget in the toolbar. */
+  next(): void {
+    this._pattern.next();
+  }
+
+  /** Navigates to the previous widget in the toolbar. */
+  prev(): void {
+    this._pattern.prev();
+  }
+
+  /** Navigates to the first widget in the toolbar. */
+  first(): void {
+    this._pattern.first();
+  }
+
+  /** Navigates to the last widget in the toolbar. */
+  last(): void {
+    this._pattern.last();
+  }
+
+  /** Navigates to the next group in the toolbar. */
+  groupNext() {
+    this._pattern.groupNext();
+  }
+
+  /** Navigates to the previous group in the toolbar. */
+  groupPrev() {
+    this._pattern.groupPrev();
+  }
+
+  /** Triggers the action of the currently active widget. */
+  trigger() {
+    this._pattern.trigger();
+  }
+
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
     const widgetTarget = element.closest('.ng-toolbar-widget');

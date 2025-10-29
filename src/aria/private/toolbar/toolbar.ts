@@ -79,21 +79,21 @@ export class ToolbarPattern<V> {
     const manager = new KeyboardEventManager();
 
     return manager
-      .on(this._nextKey, () => this._next())
-      .on(this._prevKey, () => this._prev())
-      .on(this._altNextKey, () => this._groupNext())
-      .on(this._altPrevKey, () => this._groupPrev())
-      .on(' ', () => this._trigger())
-      .on('Enter', () => this._trigger())
-      .on('Home', () => this._first())
-      .on('End', () => this._last());
+      .on(this._nextKey, () => this.next())
+      .on(this._prevKey, () => this.prev())
+      .on(this._altNextKey, () => this.groupNext())
+      .on(this._altPrevKey, () => this.groupPrev())
+      .on(' ', () => this.trigger())
+      .on('Enter', () => this.trigger())
+      .on('Home', () => this.first())
+      .on('End', () => this.last());
   });
 
   /** The pointerdown event manager for the toolbar. */
   private readonly _pointerdown = computed(() => new PointerEventManager().on(e => this._goto(e)));
 
   /** Navigates to the next widget in the toolbar. */
-  private _next() {
+  next() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetGroupPattern) {
       if (!item.disabled() && !item.controls().isOnLastItem()) {
@@ -111,7 +111,7 @@ export class ToolbarPattern<V> {
   }
 
   /** Navigates to the previous widget in the toolbar. */
-  private _prev() {
+  prev() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetGroupPattern) {
       if (!item.disabled() && !item.controls().isOnFirstItem()) {
@@ -128,20 +128,22 @@ export class ToolbarPattern<V> {
     }
   }
 
-  private _groupNext() {
+  /** Navigates to the next group in the toolbar. */
+  groupNext() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetPattern) return;
     item?.controls().next(true);
   }
 
-  private _groupPrev() {
+  /** Navigates to the previous group in the toolbar. */
+  groupPrev() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetPattern) return;
     item?.controls().prev(true);
   }
 
   /** Triggers the action of the currently active widget. */
-  private _trigger() {
+  trigger() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetGroupPattern) {
       item.controls().trigger();
@@ -149,7 +151,7 @@ export class ToolbarPattern<V> {
   }
 
   /** Navigates to the first widget in the toolbar. */
-  private _first() {
+  first() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetGroupPattern) {
       item.controls().unfocus();
@@ -163,7 +165,7 @@ export class ToolbarPattern<V> {
   }
 
   /** Navigates to the last widget in the toolbar. */
-  private _last() {
+  last() {
     const item = this.inputs.activeItem();
     if (item instanceof ToolbarWidgetGroupPattern) {
       item.controls().unfocus();
