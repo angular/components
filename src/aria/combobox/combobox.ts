@@ -41,7 +41,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
     '[attr.data-expanded]': 'expanded()',
     '(input)': '_pattern.onInput($event)',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerup)': '_pattern.onPointerup($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
