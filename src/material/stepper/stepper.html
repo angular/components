@@ -11,19 +11,16 @@
 @switch (orientation) {
   @case ('horizontal') {
     <div class="mat-horizontal-stepper-wrapper">
-      <div 
-        aria-orientation="horizontal"
-        class="mat-horizontal-stepper-header-container" 
-        role="tablist">
-        @for (step of steps; track step) {
-          <ng-container
-            [ngTemplateOutlet]="stepTemplate"
-            [ngTemplateOutletContext]="{step}"/>
-          @if (!$last) {
-            <div class="mat-stepper-horizontal-line"></div>
-          }
-        }
-      </div>
+      @if (headerPrefix()) {
+        <div class="mat-horizontal-stepper-header-wrapper">
+          <ng-container [ngTemplateOutlet]="headerPrefix()"/>
+          <ng-container [ngTemplateOutlet]="horizontalStepsTemplate"
+            [ngTemplateOutletContext]="{steps}"/>
+        </div>
+      } @else {
+        <ng-container [ngTemplateOutlet]="horizontalStepsTemplate"
+          [ngTemplateOutletContext]="{steps}"/>
+      }
 
       <div class="mat-horizontal-content-container">
         @for (step of steps; track step) {
@@ -44,6 +41,10 @@
 
   @case ('vertical') {
     <div class="mat-vertical-stepper-wrapper">
+      @if (headerPrefix()) {
+        <ng-container [ngTemplateOutlet]="headerPrefix()"/>
+      }
+
       @for (step of steps; track step) {
         <div class="mat-step">
           <ng-container
@@ -101,4 +102,20 @@
     [iconOverrides]="_iconOverrides"
     [disableRipple]="disableRipple || !step.isNavigable()"
     [color]="step.color || color"/>
+</ng-template>
+
+<ng-template #horizontalStepsTemplate let-steps="steps">
+  <div 
+    aria-orientation="horizontal"
+    class="mat-horizontal-stepper-header-container" 
+    role="tablist">
+    @for (step of steps; track step) {
+      <ng-container
+        [ngTemplateOutlet]="stepTemplate"
+        [ngTemplateOutletContext]="{step}"/>
+      @if (!$last) {
+        <div class="mat-stepper-horizontal-line"></div>
+      }
+    }
+  </div>
 </ng-template>

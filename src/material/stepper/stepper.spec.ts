@@ -1561,6 +1561,44 @@ describe('MatStepper', () => {
       expect(fixture.componentInstance.index).toBe(0);
     });
   });
+
+  describe('stepper with header prefix', () => {
+    it('should render the horizontal prefix content before the header', () => {
+      const fixture = createComponent(HorizontalStepperWithHeaderPrefix);
+      fixture.detectChanges();
+
+      const stepperHeaderWrapper = fixture.nativeElement.querySelector(
+        '.mat-horizontal-stepper-header-wrapper',
+      );
+
+      expect(stepperHeaderWrapper.children.length).toBe(2);
+
+      const stepperHeaderWrapperChildrenTags = Array.from(
+        stepperHeaderWrapper.children as HTMLElement[],
+      ).map((child: HTMLElement) => child.tagName);
+      const stepperHeaderPrefix = stepperHeaderWrapper.children[0];
+
+      expect(stepperHeaderWrapperChildrenTags).toEqual(['H2', 'DIV']);
+      expect(stepperHeaderPrefix.textContent).toContain('This is a header prefix');
+    });
+
+    it('should render the vertical prefix content before the first step', () => {
+      const fixture = createComponent(VerticalStepperWithHeaderPrefix);
+      fixture.detectChanges();
+
+      const stepperWrapper = fixture.nativeElement.querySelector('.mat-vertical-stepper-wrapper');
+
+      expect(stepperWrapper.children.length).toBe(4);
+
+      const stepperHeaderWrapperChildrenTags = Array.from(
+        stepperWrapper.children as HTMLElement[],
+      ).map((child: HTMLElement) => child.tagName);
+      const stepperHeaderPrefix = stepperWrapper.children[0];
+
+      expect(stepperHeaderWrapperChildrenTags).toEqual(['H2', 'DIV', 'DIV', 'DIV']);
+      expect(stepperHeaderPrefix.textContent).toContain('This is a header prefix');
+    });
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -2257,4 +2295,40 @@ class HorizontalStepperWithDelayedStep {
 })
 class StepperWithTwoWayBindingOnSelectedIndex {
   index: number = 0;
+}
+
+@Component({
+  template: `
+    <mat-stepper [headerPrefix]="stepHeaderPrefix" linear>
+      <mat-step label="One"></mat-step>
+      <mat-step label="Two"></mat-step>
+      <mat-step label="Three"></mat-step>
+    </mat-stepper>
+
+    <ng-template #stepHeaderPrefix>
+      <h2>This is a header prefix</h2>
+    </ng-template>
+  `,
+  imports: [MatStepperModule],
+})
+class HorizontalStepperWithHeaderPrefix {
+  @ViewChild(MatStepper) stepper: MatStepper;
+}
+
+@Component({
+  template: `
+    <mat-stepper [headerPrefix]="stepHeaderPrefix" orientation="vertical" linear>
+      <mat-step label="One"></mat-step>
+      <mat-step label="Two"></mat-step>
+      <mat-step label="Three"></mat-step>
+    </mat-stepper>
+
+    <ng-template #stepHeaderPrefix>
+      <h2>This is a header prefix</h2>
+    </ng-template>
+  `,
+  imports: [MatStepperModule],
+})
+class VerticalStepperWithHeaderPrefix {
+  @ViewChild(MatStepper) stepper: MatStepper;
 }
