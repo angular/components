@@ -2982,7 +2982,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     it('should place the overlay inside the overlay container by default', () => {
-      attachOverlay({positionStrategy});
+      attachOverlay({positionStrategy, usePopover: false});
       expect(containerElement.contains(overlayRef.hostElement)).toBe(true);
       expect(overlayRef.hostElement.getAttribute('popover')).toBeFalsy();
     });
@@ -2992,8 +2992,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         return;
       }
 
-      positionStrategy.asPopover(true);
-      attachOverlay({positionStrategy});
+      attachOverlay({positionStrategy, usePopover: true});
 
       expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
       expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
@@ -3005,8 +3004,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         return;
       }
 
-      positionStrategy.asPopover(true);
-      attachOverlay({positionStrategy});
+      attachOverlay({positionStrategy, usePopover: true});
       expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
 
       overlayRef.detach();
