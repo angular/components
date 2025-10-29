@@ -41,7 +41,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
 import {validateAdapter} from './util';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {_getEventTarget, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 
 /**
  * Input that can be used to enter time and connect to a `mat-timepicker`.
@@ -265,8 +265,15 @@ export class MatTimepickerInput<D>
   }
 
   /** Handles clicks on the input or the containing form field. */
-  private _handleClick = (): void => {
-    if (!this.disabled() && this.openOnClick()) {
+  private _handleClick = (event: MouseEvent): void => {
+    if (this.disabled() || !this.openOnClick()) {
+      return;
+    }
+
+    const target = _getEventTarget(event) as Node | null;
+    const overlayHost = this.timepicker()._getOverlayHost();
+
+    if (!target || !overlayHost || !overlayHost.contains(target)) {
       this.timepicker().open();
     }
   };

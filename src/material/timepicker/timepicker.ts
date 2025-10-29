@@ -312,6 +312,10 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     this._overlayRef?.dispose();
   }
 
+  _getOverlayHost() {
+    return this._overlayRef?.hostElement;
+  }
+
   /** Selects a specific time value. */
   protected _selectValue(option: MatOption<D>) {
     this.close();
