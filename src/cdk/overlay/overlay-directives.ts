@@ -222,8 +222,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
-  @Input({alias: 'cdkConnectedOverlayAsPopover', transform: booleanAttribute})
-  asPopover: boolean = false;
+  @Input({alias: 'cdkConnectedOverlayUsePopover', transform: booleanAttribute})
+  usePopover: boolean = false;
 
   /** Event emitted when the backdrop is clicked. */
   @Output() readonly backdropClick = new EventEmitter<MouseEvent>();
@@ -331,6 +331,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,
       disposeOnNavigation: this.disposeOnNavigation,
+      usePopover: this.usePopover,
     });
 
     if (this.width || this.width === 0) {
@@ -380,8 +381,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)
       .withLockedPosition(this.lockPosition)
-      .withTransformOriginOn(this.transformOriginSelector)
-      .asPopover(this.asPopover);
+      .withTransformOriginOn(this.transformOriginSelector);
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
