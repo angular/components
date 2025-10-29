@@ -38,8 +38,8 @@ export interface ListFocusInputs<T extends ListFocusItem> {
   /** The active item. */
   activeItem: WritableSignalLike<T | undefined>;
 
-  /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled: SignalLike<boolean>;
+  /** Whether disabled items in the list should be focusable. */
+  softDisabled: SignalLike<boolean>;
 
   element: SignalLike<HTMLElement | undefined>;
 }
@@ -116,6 +116,6 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns true if the given item can be navigated to. */
   isFocusable(item: T): boolean {
-    return !item.disabled() || !this.inputs.skipDisabled();
+    return !item.disabled() || this.inputs.softDisabled();
   }
 }

@@ -53,7 +53,7 @@ describe('Listbox', () => {
     disabled?: boolean;
     readonly?: boolean;
     value?: number[];
-    skipDisabled?: boolean;
+    softDisabled?: boolean;
     focusMode?: 'roving' | 'activedescendant';
     multi?: boolean;
     wrap?: boolean;
@@ -74,7 +74,7 @@ describe('Listbox', () => {
     if (opts?.disabled !== undefined) testComponent.disabled = opts.disabled;
     if (opts?.readonly !== undefined) testComponent.readonly = opts.readonly;
     if (opts?.value !== undefined) testComponent.value = opts.value;
-    if (opts?.skipDisabled !== undefined) testComponent.skipDisabled = opts.skipDisabled;
+    if (opts?.softDisabled !== undefined) testComponent.softDisabled = opts.softDisabled;
     if (opts?.focusMode !== undefined) testComponent.focusMode = opts.focusMode;
     if (opts?.multi !== undefined) testComponent.multi = opts.multi;
     if (opts?.wrap !== undefined) testComponent.wrap = opts.wrap;
@@ -593,22 +593,22 @@ describe('Listbox', () => {
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should skip disabled options with ArrowDown (skipDisabled="true")', () => {
+        it('should skip disabled options with ArrowDown (softDisabled="false")', () => {
           setupListbox({
             focusMode,
             orientation: 'vertical',
-            skipDisabled: true,
+            softDisabled: false,
             disabledOptions: [1, 2],
           });
           down();
           expect(isFocused(3)).toBe(true);
         });
 
-        it('should not skip disabled options with ArrowDown (skipDisabled="false")', () => {
+        it('should not skip disabled options with ArrowDown (softDisabled="true")', () => {
           setupListbox({
             focusMode,
             orientation: 'vertical',
-            skipDisabled: false,
+            softDisabled: true,
             disabledOptions: [1, 2],
           });
           down();
@@ -641,7 +641,7 @@ describe('Listbox', () => {
       });
 
       it('should move focus to the clicked disabled option', () => {
-        setupListbox({focusMode, disabledOptions: [2], skipDisabled: false});
+        setupListbox({focusMode, disabledOptions: [2], softDisabled: true});
         click(2);
         expect(isFocused(2)).toBe(true);
       });
@@ -696,14 +696,14 @@ describe('Listbox', () => {
         expect(isFocused(0)).toBe(true);
       }));
 
-      it('should skip disabled options with typeahead (skipDisabled=true)', () => {
-        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], skipDisabled: true});
+      it('should skip disabled options with typeahead (softDisabled=false)', () => {
+        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], softDisabled: false});
         type('B');
         expect(isFocused(3)).toBe(true);
       });
 
-      it('should focus disabled options with typeahead if skipDisabled=false', () => {
-        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], skipDisabled: false});
+      it('should focus disabled options with typeahead if softDisabled=true', () => {
+        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], softDisabled: true});
         type('B');
         expect(isFocused(2)).toBe(true);
       });
@@ -749,7 +749,7 @@ interface TestOption {
       [readonly]="readonly"
       [focusMode]="focusMode"
       [orientation]="orientation"
-      [skipDisabled]="skipDisabled"
+      [softDisabled]="softDisabled"
       [multi]="multi"
       [wrap]="wrap"
       [selectionMode]="selectionMode"
@@ -773,7 +773,7 @@ class ListboxExample {
   value: number[] = [];
   disabled = false;
   readonly = false;
-  skipDisabled = true;
+  softDisabled = false;
   focusMode: 'roving' | 'activedescendant' = 'roving';
   orientation: 'vertical' | 'horizontal' = 'vertical';
   multi = false;

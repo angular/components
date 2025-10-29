@@ -32,7 +32,7 @@ describe('ToolbarRadioGroup Pattern', () => {
       element: signal(document.createElement('div')),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
-      skipDisabled: inputs.skipDisabled ?? signal(true),
+      softDisabled: inputs.softDisabled ?? signal(false),
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
@@ -79,7 +79,7 @@ describe('ToolbarRadioGroup Pattern', () => {
       orientation: signal('horizontal'),
       textDirection: signal('ltr'),
       disabled: signal(false),
-      skipDisabled: signal(true),
+      softDisabled: signal(false),
       wrap: signal(false),
       getItem: (e: Element) => undefined,
     });

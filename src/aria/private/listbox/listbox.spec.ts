@@ -40,7 +40,7 @@ describe('Listbox Pattern', () => {
       wrap: inputs.wrap ?? signal(true),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
-      skipDisabled: inputs.skipDisabled ?? signal(true),
+      softDisabled: inputs.softDisabled ?? signal(false),
       multi: inputs.multi ?? signal(false),
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
@@ -381,7 +381,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not change the selected state of disabled options on Shift + ArrowUp / ArrowDown', () => {
-        (listbox.inputs.skipDisabled as WritableSignal<boolean>).set(false);
+        (listbox.inputs.softDisabled as WritableSignal<boolean>).set(true);
         options[1].disabled.set(true);
         listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
@@ -545,7 +545,7 @@ describe('Listbox Pattern', () => {
 
       it('should not select disabled options', () => {
         options[2].disabled.set(true);
-        (listbox.inputs.skipDisabled as WritableSignal<boolean>).set(false);
+        (listbox.inputs.softDisabled as WritableSignal<boolean>).set(true);
         expect(listbox.inputs.value()).toEqual(['Apple']);
         listbox.onKeydown(down());
         expect(listbox.inputs.value()).toEqual(['Apricot']);
@@ -714,7 +714,7 @@ describe('Listbox Pattern', () => {
       it('should select a range up to but not including a disabled option on shift + click', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
-          skipDisabled: signal(false),
+          softDisabled: signal(true),
           selectionMode: signal('follow'),
         });
         options[2].disabled.set(true);
@@ -730,7 +730,7 @@ describe('Listbox Pattern', () => {
       it('should do nothing on click if the option is disabled', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           selectionMode: signal('follow'),
         });
         options[2].disabled.set(true);
@@ -796,7 +796,7 @@ describe('Listbox Pattern', () => {
 
     it('should set the active index to the first focusable option', () => {
       const {listbox, options} = getDefaultPatterns({
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       options[0].disabled.set(true);
       listbox.setDefaultState();
@@ -806,7 +806,7 @@ describe('Listbox Pattern', () => {
     it('should set the active index to the first selected option', () => {
       const {listbox} = getDefaultPatterns({
         value: signal(['Banana']),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       listbox.setDefaultState();
       expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[2]);
@@ -815,7 +815,7 @@ describe('Listbox Pattern', () => {
     it('should set the active index to the first focusable selected option', () => {
       const {listbox, options} = getDefaultPatterns({
         value: signal(['Banana', 'Blackberry']),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       options[2].disabled.set(true);
       listbox.setDefaultState();
@@ -825,7 +825,7 @@ describe('Listbox Pattern', () => {
     it('should set the active index to the first option if no selected option is focusable', () => {
       const {listbox, options} = getDefaultPatterns({
         value: signal(['Banana']),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       options[2].disabled.set(true);
       listbox.setDefaultState();

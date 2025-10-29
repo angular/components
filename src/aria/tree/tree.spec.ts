@@ -80,7 +80,7 @@ describe('Tree', () => {
       orientation?: 'horizontal' | 'vertical';
       multi?: boolean;
       wrap?: boolean;
-      skipDisabled?: boolean;
+      softDisabled?: boolean;
       focusMode?: 'roving' | 'activedescendant';
       selectionMode?: 'follow' | 'explicit';
       nav?: boolean;
@@ -93,7 +93,7 @@ describe('Tree', () => {
     if (config.orientation !== undefined) testComponent.orientation.set(config.orientation);
     if (config.multi !== undefined) testComponent.multi.set(config.multi);
     if (config.wrap !== undefined) testComponent.wrap.set(config.wrap);
-    if (config.skipDisabled !== undefined) testComponent.skipDisabled.set(config.skipDisabled);
+    if (config.softDisabled !== undefined) testComponent.softDisabled.set(config.softDisabled);
     if (config.focusMode !== undefined) testComponent.focusMode.set(config.focusMode);
     if (config.selectionMode !== undefined) testComponent.selectionMode.set(config.selectionMode);
     if (config.nav !== undefined) testComponent.nav.set(config.nav);
@@ -1004,10 +1004,10 @@ describe('Tree', () => {
             });
           });
 
-          it('should not select disabled items during Shift+ArrowKey navigation even if skipDisabled is false', () => {
+          it('should not select disabled items during Shift+ArrowKey navigation even if softDisabled is true', () => {
             right(); // Expands fruits
             updateTreeItemByValue('banana', {disabled: true});
-            updateTree({value: ['apple'], skipDisabled: false});
+            updateTree({value: ['apple'], softDisabled: true});
             expect(getFocusedTreeItemValue()).toBe('apple');
 
             keydown('Shift');
@@ -1259,20 +1259,20 @@ describe('Tree', () => {
               expect(isFocused('fruits')).toBe(true);
             });
 
-            it('should skip disabled items with ArrowDown if skipDisabled=true', () => {
+            it('should skip disabled items with ArrowDown if softDisabled=false', () => {
               right(); // Expands fruits
               updateTreeItemByValue('apple', {disabled: true});
-              updateTree({skipDisabled: true});
+              updateTree({softDisabled: false});
 
               expect(isFocused('fruits')).toBe(true);
               down();
               expect(isFocused('banana')).toBe(true);
             });
 
-            it('should not skip disabled items with ArrowDown if skipDisabled=false', () => {
+            it('should not skip disabled items with ArrowDown if softDisabled=true', () => {
               right(); // Expands fruits
               updateTreeItemByValue('apple', {disabled: true});
-              updateTree({skipDisabled: false});
+              updateTree({softDisabled: true});
 
               expect(isFocused('fruits')).toBe(true);
               down();
@@ -1386,9 +1386,9 @@ describe('Tree', () => {
             expect(isFocused('vegetables')).toBe(true);
           });
 
-          it('should move focus to the clicked disabled item if skipDisabled=false', () => {
+          it('should move focus to the clicked disabled item if softDisabled=true', () => {
             updateTreeItemByValue('vegetables', {disabled: true});
-            updateTree({skipDisabled: false});
+            updateTree({softDisabled: true});
             const vegetablesEl = getTreeItemElementByValue('vegetables')!;
             click(vegetablesEl);
             expect(isFocused('vegetables')).toBe(true);
@@ -1418,17 +1418,17 @@ describe('Tree', () => {
             expect(treeInstance.value()).toEqual([]);
           });
 
-          it('should skip disabled items with typeahead if skipDisabled=true', () => {
+          it('should skip disabled items with typeahead if softDisabled=false', () => {
             right(); // Expands fruits
             updateTreeItemByValue('banana', {disabled: true});
-            updateTree({skipDisabled: true});
+            updateTree({softDisabled: false});
             type('B');
             expect(isFocused('berries')).toBe(true);
           });
 
-          it('should focus disabled items with typeahead if skipDisabled=false', () => {
+          it('should focus disabled items with typeahead if softDisabled=true', () => {
             updateTreeItemByValue('vegetables', {disabled: true});
-            updateTree({skipDisabled: false});
+            updateTree({softDisabled: true});
             type('V');
             expect(isFocused('vegetables')).toBe(true);
           });
@@ -1454,7 +1454,7 @@ interface TestTreeNode<V = string> {
       [selectionMode]="selectionMode()"
       [multi]="multi()"
       [wrap]="wrap()"
-      [skipDisabled]="skipDisabled()"
+      [softDisabled]="softDisabled()"
       [orientation]="orientation()"
       [disabled]="disabled()"
       [(value)]="value"
@@ -1530,7 +1530,7 @@ class TestTreeComponent {
   orientation = signal<'vertical' | 'horizontal'>('vertical');
   multi = signal(false);
   wrap = signal(true);
-  skipDisabled = signal(true);
+  softDisabled = signal(false);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);

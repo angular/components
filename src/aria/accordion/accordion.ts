@@ -171,8 +171,8 @@ export class AccordionGroup {
   /** The values of the current selected/expanded accordions. */
   value = model<string[]>([]);
 
-  /** Whether disabled items should be skipped during keyboard navigation. */
-  skipDisabled = input(true, {transform: booleanAttribute});
+  /** Whether to allow disabled items to receive focus. */
+  softDisabled = input(false, {transform: booleanAttribute});
 
   /** Whether keyboard navigation should wrap around from the last item to the first, and vice-versa. */
   wrap = input(false, {transform: booleanAttribute});

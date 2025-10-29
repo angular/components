@@ -3,14 +3,14 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
 import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
-/** @title Skip Disabled Toolbar Example */
+/** @title Soft Disabled Toolbar Example */
 @Component({
-  selector: 'toolbar-skip-disabled-example',
-  templateUrl: 'toolbar-skip-disabled-example.html',
+  selector: 'toolbar-soft-disabled-example',
+  templateUrl: 'toolbar-soft-disabled-example.html',
   styleUrl: '../toolbar-common.css',
   imports: [RadioButton, RadioGroup, Toolbar, ToolbarWidget],
 })
-export class ToolbarSkipDisabledExample {
+export class ToolbarSoftDisabledExample {
   constructor(private _liveAnnouncer: LiveAnnouncer) {}
   alignments = [
     {value: 'left', label: 'Left'},

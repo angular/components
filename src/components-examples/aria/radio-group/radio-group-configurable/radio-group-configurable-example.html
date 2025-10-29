@@ -1,7 +1,7 @@
 <div class="example-radio-controls">
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
   <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
-  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Disabled Radio Options</mat-label>
@@ -34,7 +34,7 @@
   ngRadioGroup
   [disabled]="disabled.value"
   [readonly]="readonly.value"
-  [skipDisabled]="skipDisabled.value"
+  [softDisabled]="softDisabled.value"
   [orientation]="orientation"
   [focusMode]="focusMode"
   class="example-radio-group example-parent"

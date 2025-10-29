@@ -43,7 +43,7 @@ function setupGrid(
     cells,
     focusMode: signal('roving'),
     disabled: signal(false),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     rowWrap: signal<WrapStrategy>('loop'),
     colWrap: signal<WrapStrategy>('loop'),
     enableSelection: signal(true),

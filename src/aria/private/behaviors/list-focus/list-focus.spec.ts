@@ -22,7 +22,7 @@ export function getListFocus(inputs: TestInputs = {}): ListFocus<ListFocusItem> 
   return new ListFocus({
     activeItem: signal(items()[0]),
     disabled: signal(false),
-    skipDisabled: signal(false),
+    softDisabled: signal(true),
     focusMode: signal('roving'),
     element: signal({focus: () => {}} as HTMLElement),
     items: items,
@@ -109,7 +109,7 @@ describe('List Focus', () => {
 
   describe('#isFocusable', () => {
     it('should return true for enabled items', () => {
-      const focusManager = getListFocus({skipDisabled: signal(true)});
+      const focusManager = getListFocus({softDisabled: signal(false)});
       const items = focusManager.inputs.items() as TestItem[];
       expect(focusManager.isFocusable(items[0])).toBeTrue();
       expect(focusManager.isFocusable(items[1])).toBeTrue();
@@ -117,7 +117,7 @@ describe('List Focus', () => {
     });
 
     it('should return false for disabled items', () => {
-      const focusManager = getListFocus({skipDisabled: signal(true)});
+      const focusManager = getListFocus({softDisabled: signal(false)});
       const items = focusManager.inputs.items() as TestItem[];
       items[1].disabled.set(true);
 
@@ -126,8 +126,8 @@ describe('List Focus', () => {
       expect(focusManager.isFocusable(items[2])).toBeTrue();
     });
 
-    it('should return true for disabled items if skip disabled is false', () => {
-      const focusManager = getListFocus({skipDisabled: signal(false)});
+    it('should return true for disabled items if soft disabled is true', () => {
+      const focusManager = getListFocus({softDisabled: signal(true)});
       const items = focusManager.inputs.items() as TestItem[];
       items[1].disabled.set(true);
 

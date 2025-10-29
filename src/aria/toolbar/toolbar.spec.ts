@@ -71,7 +71,7 @@ describe('Toolbar', () => {
       widgetGroupDisabled?: boolean;
       orientation?: 'horizontal' | 'vertical';
       wrap?: boolean;
-      skipDisabled?: boolean;
+      softDisabled?: boolean;
     } = {},
   ) {
     if (config.disabled !== undefined) testComponent.disabled.set(config.disabled);
@@ -79,7 +79,7 @@ describe('Toolbar', () => {
       testComponent.widgetGroupDisabled.set(config.widgetGroupDisabled);
     if (config.orientation !== undefined) testComponent.orientation.set(config.orientation);
     if (config.wrap !== undefined) testComponent.wrap.set(config.wrap);
-    if (config.skipDisabled !== undefined) testComponent.skipDisabled.set(config.skipDisabled);
+    if (config.softDisabled !== undefined) testComponent.softDisabled.set(config.softDisabled);
 
     fixture.detectChanges();
     defineTestVariables();
@@ -202,14 +202,14 @@ describe('Toolbar', () => {
         expect(document.activeElement).toBe(widgetElements[0]);
       });
 
-      it('should skip disabled widgets with arrow keys if skipDisabled=true', () => {
-        updateToolbar({skipDisabled: true});
+      it('should skip disabled widgets with arrow keys if softDisabled=false', () => {
+        updateToolbar({softDisabled: false});
         right();
         expect(document.activeElement).toBe(widgetElements[2]);
       });
 
-      it('should not skip disabled widgets with arrow keys if skipDisabled=false', () => {
-        updateToolbar({skipDisabled: false});
+      it('should not skip disabled widgets with arrow keys if softDisabled=true', () => {
+        updateToolbar({softDisabled: true});
         right();
         expect(document.activeElement).toBe(widgetElements[1]);
       });
@@ -264,14 +264,14 @@ describe('Toolbar', () => {
       expect(document.activeElement).toBe(widgetElements[2]);
     });
 
-    it('should move focus to the clicked disabled widget if skipDisabled=false', () => {
-      updateToolbar({skipDisabled: false});
+    it('should move focus to the clicked disabled widget if softDisabled=true', () => {
+      updateToolbar({softDisabled: true});
       click(widgetElements[1]);
       expect(document.activeElement).toBe(widgetElements[1]);
     });
 
-    it('should not move focus to the clicked disabled widget if skipDisabled=true', () => {
-      updateToolbar({skipDisabled: true});
+    it('should not move focus to the clicked disabled widget if softDisabled=false', () => {
+      updateToolbar({softDisabled: false});
       const initiallyFocused = document.activeElement;
 
       click(widgetElements[1]);
@@ -458,7 +458,7 @@ class TestToolbarWidgetGroup {
       [orientation]="orientation()"
       [disabled]="disabled()"
       [wrap]="wrap()"
-      [skipDisabled]="skipDisabled()"
+      [softDisabled]="softDisabled()"
     >
       <button ngToolbarWidget data-value="widget">Widget Button 1</button>
       <button ngToolbarWidget data-value="widget" [disabled]="true">Widget Button 2</button>
@@ -473,5 +473,5 @@ class TestToolbarComponent {
   disabled = signal(false);
   widgetGroupDisabled = signal(false);
   wrap = signal(true);
-  skipDisabled = signal(true);
+  softDisabled = signal(false);
 }

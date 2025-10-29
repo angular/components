@@ -60,7 +60,7 @@ function getMenuBarPattern(values: string[]) {
     value: signal([]),
     wrap: signal(true),
     typeaheadDelay: signal(0.5),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     focusMode: signal('activedescendant'),
     element: signal(document.createElement('div')),
   });
@@ -97,7 +97,7 @@ function getMenuPattern(
     activeItem: signal(undefined),
     typeaheadDelay: signal(0.5),
     wrap: signal(true),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     multi: signal(false),
     focusMode: signal('activedescendant'),
     textDirection: signal('ltr'),
