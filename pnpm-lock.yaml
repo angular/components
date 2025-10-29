@@ -338,6 +338,9 @@ importers:
       vrsource-tslint-rules:
         specifier: 6.0.0
         version: 6.0.0(tslint@6.1.3(typescript@5.9.2))(typescript@5.9.2)
+      yaml:
+        specifier: ^2.8.1
+        version: 2.8.1
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
