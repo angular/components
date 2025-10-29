@@ -71,6 +71,7 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {
   _animationsDisabled,
   _countGroupLabelsBeforeOption,
@@ -1461,10 +1462,12 @@ export class MatSelect
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
+    const element = this._elementRef.nativeElement;
+
     if (ids.length) {
-      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+      element.setAttribute('aria-describedby', ids.join(' '));
     } else {
-      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+      element.removeAttribute('aria-describedby');
     }
   }
 
@@ -1472,9 +1475,14 @@ export class MatSelect
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  onContainerClick() {
-    this.focus();
-    this.open();
+  onContainerClick(event: MouseEvent) {
+    const target = _getEventTarget(event) as Node | null;
+    const overlayHost = this._overlayDir.overlayRef?.hostElement;
+
+    if (!target || !overlayHost || !overlayHost.contains(target)) {
+      this.focus();
+      this.open();
+    }
   }
 
   /**
