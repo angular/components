@@ -351,8 +351,8 @@ export class TreePattern<V> {
   /** The currently active item in the tree. */
   activeItem: WritableSignalLike<TreeItemPattern<V> | undefined> = signal(undefined);
 
-  /** Whether disabled items should be skipped when navigating. */
-  skipDisabled: SignalLike<boolean>;
+  /** Whether disabled items should be focusable. */
+  softDisabled: SignalLike<boolean>;
 
   /** Whether the focus should wrap when navigating past the first or last item. */
   wrap: SignalLike<boolean>;
@@ -383,7 +383,7 @@ export class TreePattern<V> {
     this.focusMode = inputs.focusMode;
     this.disabled = inputs.disabled;
     this.activeItem = inputs.activeItem;
-    this.skipDisabled = inputs.skipDisabled;
+    this.softDisabled = inputs.softDisabled;
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
     this.textDirection = inputs.textDirection;

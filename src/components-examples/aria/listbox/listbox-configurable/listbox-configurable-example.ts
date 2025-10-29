@@ -33,7 +33,7 @@ export class ListboxConfigurableExample {
   multi = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
   readonly = new FormControl(false, {nonNullable: true});
-  skipDisabled = new FormControl(true, {nonNullable: true});
+  softDisabled = new FormControl(false, {nonNullable: true});
 
   fruits = [
     'Apple',

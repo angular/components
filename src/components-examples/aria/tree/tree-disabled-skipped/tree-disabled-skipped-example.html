@@ -1,4 +1,4 @@
-<ul ngTree [skipDisabled]="true" #tree="ngTree" class="example-tree">
+<ul ngTree [softDisabled]="false" #tree="ngTree" class="example-tree">
   <ng-template
     [ngTemplateOutlet]="treeNodes"
     [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"

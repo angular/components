@@ -51,7 +51,7 @@ function setupGridNavigation(
   const gridFocusInputs: GridFocusInputs = {
     focusMode: signal('roving'),
     disabled: signal(false),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
   };
   const gridFocus = new GridFocus({
     grid: gridData,
@@ -90,7 +90,7 @@ describe('GridNavigation', () => {
     it('should return false if the cell cannot be focused', () => {
       const cells = createTestGrid(createGridA);
       const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
 
       cells[1][1].disabled.set(true);

@@ -147,7 +147,7 @@ describe('Tree Pattern', () => {
         multi: signal(false),
         orientation: signal('vertical'),
         selectionMode: signal('follow'),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
         value: signal([]),
@@ -201,7 +201,7 @@ describe('Tree Pattern', () => {
           multi: signal(false),
           orientation: signal('vertical'),
           selectionMode: signal('follow'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -257,7 +257,7 @@ describe('Tree Pattern', () => {
         multi: signal(false),
         orientation: signal('vertical'),
         selectionMode: signal('explicit'),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
         value: signal([]),
@@ -384,8 +384,8 @@ describe('Tree Pattern', () => {
       expect(tree.activeItem()).toBe(item2);
     });
 
-    it('should skip disabled items when skipDisabled is true', () => {
-      treeInputs.skipDisabled.set(true);
+    it('should skip disabled items when softDisabled is false', () => {
+      treeInputs.softDisabled.set(false);
       const localTreeExample: TestTreeItem<string>[] = [
         {value: 'Item A', disabled: false, selectable: true},
         {value: 'Item B', disabled: true, selectable: true},
@@ -401,8 +401,8 @@ describe('Tree Pattern', () => {
       expect(tree.activeItem()).toBe(itemC);
     });
 
-    it('should not skip disabled items when skipDisabled is false', () => {
-      treeInputs.skipDisabled.set(false);
+    it('should not skip disabled items when softDisabled is true', () => {
+      treeInputs.softDisabled.set(true);
       const localTreeExample: TestTreeItem<string>[] = [
         {value: 'Item A', disabled: false, selectable: true},
         {value: 'Item B', disabled: true, selectable: true},
@@ -443,7 +443,7 @@ describe('Tree Pattern', () => {
           multi: signal(false),
           orientation: signal('vertical'),
           selectionMode: signal('follow'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -511,7 +511,7 @@ describe('Tree Pattern', () => {
           multi: signal(false),
           orientation: signal('vertical'),
           selectionMode: signal('explicit'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -591,7 +591,7 @@ describe('Tree Pattern', () => {
           multi: signal(true),
           orientation: signal('vertical'),
           selectionMode: signal('explicit'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -708,7 +708,7 @@ describe('Tree Pattern', () => {
           {value: 'B', disabled: true, selectable: true},
           {value: 'C', disabled: false, selectable: true},
         ];
-        treeInputs.skipDisabled.set(false);
+        treeInputs.softDisabled.set(true);
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(allItems(), 'A');
 
@@ -767,7 +767,7 @@ describe('Tree Pattern', () => {
           multi: signal(true),
           orientation: signal('vertical'),
           selectionMode: signal('follow'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -882,7 +882,7 @@ describe('Tree Pattern', () => {
           {value: 'B', disabled: true, selectable: true},
           {value: 'C', disabled: false, selectable: true},
         ];
-        treeInputs.skipDisabled.set(true);
+        treeInputs.softDisabled.set(false);
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         treeInputs.value.set(['A']);
         tree.listBehavior.goto(getItemByValue(allItems(), 'A'));
@@ -934,7 +934,7 @@ describe('Tree Pattern', () => {
           multi: signal(false),
           orientation: signal('vertical'),
           selectionMode: signal('follow'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -976,7 +976,7 @@ describe('Tree Pattern', () => {
           multi: signal(false),
           orientation: signal('vertical'),
           selectionMode: signal('explicit'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -1031,7 +1031,7 @@ describe('Tree Pattern', () => {
           multi: signal(true),
           orientation: signal('vertical'),
           selectionMode: signal('explicit'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -1081,7 +1081,7 @@ describe('Tree Pattern', () => {
           multi: signal(true),
           orientation: signal('vertical'),
           selectionMode: signal('follow'),
-          skipDisabled: signal(true),
+          softDisabled: signal(false),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
           value: signal([]),
@@ -1177,7 +1177,7 @@ describe('Tree Pattern', () => {
         multi: signal(false),
         orientation: signal('vertical'),
         selectionMode: signal('explicit'),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
         value: signal([]),
@@ -1438,7 +1438,7 @@ describe('Tree Pattern', () => {
         multi: signal(false),
         orientation: signal('vertical'),
         selectionMode: signal('explicit'),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
         value: signal([]),
@@ -1460,12 +1460,12 @@ describe('Tree Pattern', () => {
       expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
-    it('should set activeIndex to the first visible focusable disabled item if skipDisabled is false and no selection', () => {
+    it('should set activeIndex to the first visible focusable disabled item if softDisabled is true and no selection', () => {
       const localTreeData: TestTreeItem<string>[] = [
         {value: 'A', disabled: true, selectable: true},
         {value: 'B', disabled: false, selectable: true},
       ];
-      treeInputs.skipDisabled.set(false);
+      treeInputs.softDisabled.set(true);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
@@ -1498,28 +1498,28 @@ describe('Tree Pattern', () => {
       expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
-    it('should skip a selected disabled item if skipDisabled is true', () => {
+    it('should skip a selected disabled item if softDisabled is false', () => {
       const localTreeData: TestTreeItem<string>[] = [
         {value: 'A', disabled: false, selectable: true},
         {value: 'B', disabled: true, selectable: true},
         {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['B']);
-      treeInputs.skipDisabled.set(true);
+      treeInputs.softDisabled.set(false);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
       expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
-    it('should select a selected disabled item if skipDisabled is false', () => {
+    it('should select a selected disabled item if softDisabled is true', () => {
       const localTreeData: TestTreeItem<string>[] = [
         {value: 'A', disabled: false, selectable: true},
         {value: 'B', disabled: true, selectable: true},
         {value: 'C', disabled: false, selectable: true},
       ];
       treeInputs.value.set(['B']);
-      treeInputs.skipDisabled.set(false);
+      treeInputs.softDisabled.set(true);
       const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();

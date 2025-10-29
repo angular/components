@@ -53,7 +53,7 @@ export class AccordionGroupPattern {
     this.multiExpandable = inputs.multiExpandable;
     this.items = inputs.items;
     this.expandedIds = inputs.expandedIds;
-    this.skipDisabled = inputs.skipDisabled;
+    this.softDisabled = inputs.softDisabled;
     this.focusManager = new ListFocus({
       ...inputs,
       focusMode,

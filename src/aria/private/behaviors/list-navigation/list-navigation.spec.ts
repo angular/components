@@ -73,7 +73,7 @@ describe('List Navigation', () => {
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(true)});
+      const nav = getNavigation({softDisabled: signal(false)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
       nav.next(); // 0 -> 2
@@ -81,7 +81,7 @@ describe('List Navigation', () => {
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(false)});
+      const nav = getNavigation({softDisabled: signal(true)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
       nav.next(); // 0 -> 1
@@ -91,7 +91,7 @@ describe('List Navigation', () => {
     it('should wrap and skip disabled items', () => {
       const nav = getNavigation({
         wrap: signal(true),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       const items = nav.inputs.items() as TestItem[];
       items[2].disabled.set(true);
@@ -105,7 +105,7 @@ describe('List Navigation', () => {
     });
 
     it('should do nothing if other items are disabled', () => {
-      const nav = getNavigation({skipDisabled: signal(true)});
+      const nav = getNavigation({softDisabled: signal(false)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
       items[2].disabled.set(true);
@@ -150,7 +150,7 @@ describe('List Navigation', () => {
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(true)});
+      const nav = getNavigation({softDisabled: signal(false)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -159,7 +159,7 @@ describe('List Navigation', () => {
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(false)});
+      const nav = getNavigation({softDisabled: signal(true)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -170,7 +170,7 @@ describe('List Navigation', () => {
     it('should wrap and skip disabled items', () => {
       const nav = getNavigation({
         wrap: signal(true),
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
@@ -182,7 +182,7 @@ describe('List Navigation', () => {
 
     it('should do nothing if other items are disabled', () => {
       const nav = getNavigation({
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -209,7 +209,7 @@ describe('List Navigation', () => {
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(true)});
+      const nav = getNavigation({softDisabled: signal(false)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
       items[0].disabled.set(true);
@@ -218,7 +218,7 @@ describe('List Navigation', () => {
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation({skipDisabled: signal(false)});
+      const nav = getNavigation({softDisabled: signal(true)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
       items[0].disabled.set(true);
@@ -236,7 +236,7 @@ describe('List Navigation', () => {
 
     it('should skip disabled items', () => {
       const nav = getNavigation({
-        skipDisabled: signal(true),
+        softDisabled: signal(false),
       });
       const items = nav.inputs.items() as TestItem[];
       items[4].disabled.set(true);
@@ -246,7 +246,7 @@ describe('List Navigation', () => {
 
     it('should not skip disabled items', () => {
       const nav = getNavigation({
-        skipDisabled: signal(false),
+        softDisabled: signal(true),
       });
       const items = nav.inputs.items() as TestItem[];
       items[4].disabled.set(true);
