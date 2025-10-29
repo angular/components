@@ -120,7 +120,7 @@
     "karma-jasmine": "^5.0.0",
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
-    "magic-string": "0.30.19",
+    "magic-string": "0.30.21",
     "marked": "^16.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",
