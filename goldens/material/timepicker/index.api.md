@@ -46,6 +46,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly disabled: Signal<boolean>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
     protected _getAriaLabelledby(): string | null;
+    // (undocumented)
+    _getOverlayHost(): HTMLElement | undefined;
     protected _handleAnimationEnd(event: AnimationEvent): void;
     readonly interval: InputSignalWithTransform<number | null, number | string | null>;
     readonly isOpen: Signal<boolean>;
