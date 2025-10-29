@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injector} from '@angular/core';
+import {DOCUMENT, Injector} from '@angular/core';
 import {OverlayRef} from '../overlay-ref';
 import {PositionStrategy} from './position-strategy';
 
@@ -17,10 +17,8 @@ const wrapperClass = 'cdk-global-overlay-wrapper';
  * Creates a global position strategy.
  * @param injector Injector used to resolve dependencies for the strategy.
  */
-export function createGlobalPositionStrategy(_injector: Injector): GlobalPositionStrategy {
-  // Note: `injector` is unused, but we may need it in
-  // the future which would introduce a breaking change.
-  return new GlobalPositionStrategy();
+export function createGlobalPositionStrategy(injector: Injector): GlobalPositionStrategy {
+  return new GlobalPositionStrategy(injector);
 }
 
 /**
@@ -41,6 +39,13 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _width = '';
   private _height = '';
   private _isDisposed = false;
+  private _document: Document;
+
+  constructor(injector?: Injector) {
+    // TODO(crisbeto): injector should be required, but some internal apps
+    // don't go through `createGlobalPositionStrategy` so they don't provide it.
+    this._document = injector?.get(DOCUMENT) || document;
+  }
 
   attach(overlayRef: OverlayRef): void {
     const config = overlayRef.getConfig();
@@ -268,5 +273,10 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
     this._overlayRef = null!;
     this._isDisposed = true;
+  }
+
+  /** @docs-private */
+  getPopoverInsertionPoint(): Element {
+    return this._document.body.lastChild as Element;
   }
 }
