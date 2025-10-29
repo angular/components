@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Menu, MenuBar, MenuItem, MenuTrigger} from './menu';
+export {Menu, MenuBar, MenuContent, MenuItem, MenuTrigger} from './menu';

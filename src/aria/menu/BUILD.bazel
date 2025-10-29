@@ -11,6 +11,7 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/aria/deferred-content",
         "//src/aria/private",
         "//src/cdk/a11y",
         "//src/cdk/bidi",

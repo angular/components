@@ -151,49 +151,49 @@ describe('Standalone Menu Pattern', () => {
 
     it('should select an item on click', () => {
       const banana = getItem('Banana');
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
 
       click(banana!);
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Banana');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Banana');
     });
 
     it('should select an item on enter', () => {
       const banana = getItem('Banana');
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
 
       keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
       expect(document.activeElement).toBe(banana);
 
       keydown(banana!, 'Enter');
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Banana');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Banana');
     });
 
     it('should select an item on space', () => {
       const banana = getItem('Banana');
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
 
       keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
       expect(document.activeElement).toBe(banana);
 
       keydown(banana!, ' ');
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Banana');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Banana');
     });
 
     it('should not select a disabled item', () => {
       const cherry = getItem('Cherry');
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
 
       click(cherry!);
-      expect(fixture.componentInstance.onSubmit).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.onSelect).not.toHaveBeenCalled();
 
       keydown(document.activeElement!, 'End');
       expect(document.activeElement).toBe(cherry);
 
       keydown(cherry!, 'Enter');
-      expect(fixture.componentInstance.onSubmit).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.onSelect).not.toHaveBeenCalled();
 
       keydown(cherry!, ' ');
-      expect(fixture.componentInstance.onSubmit).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.onSelect).not.toHaveBeenCalled();
     });
   });
 
@@ -316,18 +316,18 @@ describe('Standalone Menu Pattern', () => {
     }));
 
     it('should close on selecting an item on click', () => {
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
       click(getItem('Berries')!); // open submenu
       expect(isSubmenuExpanded()).toBe(true);
 
       click(getItem('Blueberry')!);
 
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Blueberry');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
     it('should close on selecting an item on enter', () => {
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
@@ -341,12 +341,12 @@ describe('Standalone Menu Pattern', () => {
 
       keydown(blueberry!, 'Enter');
 
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Blueberry');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
     it('should close on selecting an item on space', () => {
-      spyOn(fixture.componentInstance, 'onSubmit');
+      spyOn(fixture.componentInstance, 'onSelect');
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
@@ -360,7 +360,7 @@ describe('Standalone Menu Pattern', () => {
 
       keydown(blueberry!, ' ');
 
-      expect(fixture.componentInstance.onSubmit).toHaveBeenCalledWith('Blueberry');
+      expect(fixture.componentInstance.onSelect).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
@@ -877,12 +877,12 @@ describe('Menu Bar Pattern', () => {
 
 @Component({
   template: `
-<div ngMenu (onSubmit)="onSubmit($event)">
+<div ngMenu (onSelect)="onSelect($event)">
   <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
   <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-  <div ngMenuItem value='Berries' searchTerm='Berries' #berriesItem="ngMenuItem" [submenu]="berriesMenu">Berries</div>
+  <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu [parent]="berriesItem" #berriesMenu="ngMenu">
+  <div ngMenu #berriesMenu="ngMenu">
     <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
     <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
     <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
@@ -894,19 +894,19 @@ describe('Menu Bar Pattern', () => {
   imports: [Menu, MenuItem],
 })
 class StandaloneMenuExample {
-  onSubmit(value: string) {}
+  onSelect(value: string) {}
 }
 
 @Component({
   template: `
-<button ngMenuTrigger #menuTrigger="ngMenuTrigger" [submenu]="menu">Open menu</button>
+<button ngMenuTrigger [menu]="menu">Open menu</button>
 
-<div ngMenu #menu="ngMenu" [parent]="menuTrigger">
+<div ngMenu #menu="ngMenu">
   <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
   <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-  <div ngMenuItem value='Berries' searchTerm='Berries' #berriesItem="ngMenuItem" [submenu]="berriesMenu">Berries</div>
+  <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu [parent]="berriesItem" #berriesMenu="ngMenu">
+  <div ngMenu #berriesMenu="ngMenu">
     <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
     <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
     <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
@@ -923,24 +923,24 @@ class MenuTriggerExample {}
   template: `
 <div ngMenuBar>
   <div ngMenuItem value='File' searchTerm='File'>File</div>
-  <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu" #editItem="ngMenuItem">Edit</div>
+  <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu">Edit</div>
 
-  <div ngMenu [parent]="editItem" #editMenu="ngMenu">
+  <div ngMenu #editMenu="ngMenu">
     <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
     <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
   </div>
 
-  <div ngMenuItem #viewItem="ngMenuItem" [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
+  <div ngMenuItem [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
 
-  <div ngMenu [parent]="viewItem" #viewMenu="ngMenu">
+  <div ngMenu #viewMenu="ngMenu">
     <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
     <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
     <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
   </div>
 
-  <div ngMenuItem #helpItem="ngMenuItem" [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
+  <div ngMenuItem [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
 
-  <div ngMenu [parent]="helpItem" #helpMenu="ngMenu">
+  <div ngMenu #helpMenu="ngMenu">
     <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
     <div ngMenuItem value='About' searchTerm='About'>About</div>
   </div>
