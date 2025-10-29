@@ -194,9 +194,14 @@ export class Menu<V> {
     });
 
     afterRenderEffect(() => {
-      this._deferredContentAware?.contentVisible.set(
-        this._pattern.isVisible() || !!this.parent()?.hasBeenFocused(),
-      );
+      const parent = this.parent();
+      if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
+        this._deferredContentAware?.contentVisible.set(true);
+      } else {
+        this._deferredContentAware?.contentVisible.set(
+          this._pattern.isVisible() || !!this.parent()?.hasBeenFocused(),
+        );
+      }
     });
 
     // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
