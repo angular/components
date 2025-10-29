@@ -401,7 +401,8 @@ export class Dialog implements OnDestroy {
           sibling !== overlayContainer &&
           sibling.nodeName !== 'SCRIPT' &&
           sibling.nodeName !== 'STYLE' &&
-          !sibling.hasAttribute('aria-live')
+          !sibling.hasAttribute('aria-live') &&
+          !sibling.hasAttribute('popover')
         ) {
           this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
           sibling.setAttribute('aria-hidden', 'true');
