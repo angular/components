@@ -220,14 +220,14 @@ export class Tree<V> {
   exportAs: 'ngTreeItem',
   host: {
     'class': 'ng-treeitem',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     'role': 'treeitem',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_pattern.expandable() ? _pattern.expanded() : null',
-    '[attr.aria-selected]': '_pattern.selected()',
+    '[attr.aria-expanded]': 'expanded()',
+    '[attr.aria-selected]': 'selected()',
     '[attr.aria-current]': '_pattern.current()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-level]': '_pattern.level()',
+    '[attr.aria-level]': 'level()',
     '[attr.aria-setsize]': '_pattern.setsize()',
     '[attr.aria-posinset]': '_pattern.posinset()',
     '[attr.tabindex]': '_pattern.tabIndex()',
@@ -271,6 +271,23 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     }
     return (this.parent() as TreeItemGroup<V>).ownedBy().tree();
   });
+
+  /** Whether the item is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether this item is currently expanded, returning null if not expandable. */
+  readonly expanded = computed(() =>
+    this._pattern.expandable() ? this._pattern.expanded() : null,
+  );
+
+  /** The level of the current item in a tree. */
+  readonly level = computed(() => this._pattern.level());
+
+  /** Whether the item is selected. */
+  readonly selected = computed(() => this._pattern.selected());
+
+  /** Whether this item is visible due to all of its parents being expanded. */
+  readonly visible = computed(() => this._pattern.visible());
 
   /** The UI pattern for this item. */
   _pattern: TreeItemPattern<V>;
