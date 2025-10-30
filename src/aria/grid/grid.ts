@@ -30,9 +30,9 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
   host: {
     'class': 'grid',
     'role': 'grid',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabindex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '[attr.aria-activedescendant]': 'activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(pointermove)': '_pattern.onPointermove($event)',
@@ -76,6 +76,24 @@ export class Grid {
 
   /** The wrapping behavior for keyboard navigation along the column axis. */
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
+
+  /** The currently active cell. */
+  readonly activeCell = computed(() => this._pattern.activeCell());
+
+  /** The ID of the currently active descendant cell. */
+  readonly activeDescendant = computed(() => this._pattern.activeDescendant());
+
+  /** Whether the user is currently dragging to select a range of cells. */
+  readonly dragging = computed(() => this._pattern.dragging());
+
+  /** Whether the focus is in the grid. */
+  readonly isFocused = computed(() => this._pattern.isFocused());
+
+  /** Whether to pause grid navigation. */
+  readonly pauseNavigation = computed(() => this._pattern.pauseNavigation());
+
+  /** The tab index for the grid. */
+  readonly tabindex = computed(() => this._pattern.tabIndex());
 
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
