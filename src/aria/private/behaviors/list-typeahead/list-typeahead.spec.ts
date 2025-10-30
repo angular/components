@@ -8,7 +8,6 @@
 
 import {Signal, signal, WritableSignal} from '@angular/core';
 import {ListTypeaheadItem, ListTypeahead, ListTypeaheadInputs} from './list-typeahead';
-import {fakeAsync, tick} from '@angular/core/testing';
 import {getListFocus} from '../list-focus/list-focus.spec';
 import {ListFocus} from '../list-focus/list-focus';
 
@@ -68,15 +67,15 @@ describe('List Typeahead', () => {
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(3);
     });
 
-    it('should reset after a delay', fakeAsync(() => {
+    it('should reset after a delay', async () => {
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
 
-      tick(500);
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
-    }));
+    });
 
     it('should skip disabled items', () => {
       items[1].disabled.set(true);

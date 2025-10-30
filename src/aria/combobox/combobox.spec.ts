@@ -1,5 +1,5 @@
 import {Component, computed, DebugElement, signal} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
 import {Listbox, Option} from '../listbox';
@@ -421,37 +421,33 @@ describe('Combobox', () => {
           expect(fixture.componentInstance.value()).toEqual(['California']);
         });
 
-        it('should insert a highlighted completion string on input', fakeAsync(() => {
+        it('should insert a highlighted completion string on input', () => {
           focus();
           input('A');
-          tick();
 
           expect(inputElement.value).toBe('Alabama');
           expect(inputElement.selectionStart).toBe(1);
           expect(inputElement.selectionEnd).toBe(7);
-        }));
+        });
 
-        it('should not insert a completion string on backspace', fakeAsync(() => {
+        it('should not insert a completion string on backspace', () => {
           focus();
           input('New');
-          tick();
 
           expect(inputElement.value).toBe('New Hampshire');
           expect(inputElement.selectionStart).toBe(3);
           expect(inputElement.selectionEnd).toBe(13);
-        }));
+        });
 
-        it('should insert a completion string even if the items are not changed', fakeAsync(() => {
+        it('should insert a completion string even if the items are not changed', () => {
           focus();
           input('New');
-          tick();
 
           input('New ');
-          tick();
           expect(inputElement.value).toBe('New Hampshire');
           expect(inputElement.selectionStart).toBe(4);
           expect(inputElement.selectionEnd).toBe(13);
-        }));
+        });
 
         it('should commit the selected option on focusout', () => {
           focus();
@@ -937,15 +933,14 @@ describe('Combobox', () => {
           expect(fixture.componentInstance.value()).toEqual(['September']);
         });
 
-        it('should insert a highlighted completion string on input', fakeAsync(() => {
+        it('should insert a highlighted completion string on input', () => {
           focus();
           input('Feb');
-          tick();
 
           expect(inputElement.value).toBe('February');
           expect(inputElement.selectionStart).toBe(3);
           expect(inputElement.selectionEnd).toBe(8);
-        }));
+        });
 
         it('should commit the selected option on focusout', () => {
           focus();
