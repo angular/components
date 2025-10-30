@@ -46,7 +46,7 @@ import {
     'role': 'region',
     '[attr.id]': '_pattern.id()',
     '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
-    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.inert]': 'hidden() ? true : null',
   },
 })
 export class AccordionPanel {
@@ -58,6 +58,9 @@ export class AccordionPanel {
 
   /** A local unique identifier for the panel, used to match with its trigger's value. */
   value = input.required<string>();
+
+  /** Whether the accordion panel is hidden. True if the associated trigger is not expanded. */
+  readonly hidden = computed(() => this._pattern.hidden());
 
   /** The parent accordion trigger pattern that controls this panel. This is set by AccordionGroup. */
   readonly accordionTrigger: WritableSignal<AccordionTriggerPattern | undefined> =
@@ -73,8 +76,23 @@ export class AccordionPanel {
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(!this._pattern.hidden());
+      this._deferredContentAware.contentVisible.set(!this.hidden());
     });
+  }
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this.accordionTrigger()?.expansionControl.toggle();
   }
 }
 
@@ -87,14 +105,14 @@ export class AccordionPanel {
   exportAs: 'ngAccordionTrigger',
   host: {
     'class': 'ng-accordion-trigger',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     'role': 'button',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.controls()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-disabled]': 'disabled()',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': 'tabindex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': '_pattern.onFocus($event)',
@@ -116,6 +134,18 @@ export class AccordionTrigger {
   /** Whether the trigger is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the trigger is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the trigger is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** The index of the trigger within its accordion group. */
+  readonly index = computed(() => this._pattern.index());
+
+  /** The tabindex of the trigger. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
+
   /**
    * Whether this trigger is completely inaccessible.
    *
@@ -135,6 +165,21 @@ export class AccordionTrigger {
     accordionGroup: computed(() => this._accordionGroup._pattern),
     accordionPanel: this.accordionPanel,
   });
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this._pattern.expansionControl.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this._pattern.expansionControl.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this._pattern.expansionControl.toggle();
+  }
 }
 
 /**
@@ -203,6 +248,69 @@ export class AccordionGroup {
         }
       }
     });
+  }
+
+  /** Navigates to the first accordion panel. */
+  first() {
+    this._pattern.navigation.first();
+  }
+
+  /** Navigates to the last accordion panel. */
+  last() {
+    this._pattern.navigation.last();
+  }
+
+  /** Navigates to the previous accordion panel. */
+  prev() {
+    this._pattern.navigation.prev();
+  }
+
+  /** Navigates to the next accordion panel. */
+  next() {
+    this._pattern.navigation.next();
+  }
+
+  /** Opens the accordion panel with the specified value. */
+  open(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.open(trigger);
+    }
+  }
+
+  /** Closes the accordion panel with the specified value. */
+  close(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.close(trigger);
+    }
+  }
+
+  /** Toggles the expansion state of the accordion panel with the specified value. */
+  toggle(itemValue: string) {
+    const trigger = this._findTriggerPatternByValue(itemValue);
+
+    if (trigger) {
+      this._pattern.expansionManager.toggle(trigger);
+    }
+  }
+
+  /** Opens all accordion panels if multi-expandable. */
+  openAll() {
+    this._pattern.expansionManager.openAll();
+  }
+
+  /** Closes all accordion panels. */
+  closeAll() {
+    this._pattern.expansionManager.closeAll();
+  }
+
+  _findTriggerPatternByValue(value: string) {
+    const trigger = this._triggers().find(t => t.value() === value);
+
+    return trigger?._pattern;
   }
 }
 
