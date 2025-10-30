@@ -19,7 +19,6 @@ import {
   inject,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatAutocompleteTrigger} from '../autocomplete';
 import {MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS, SeparatorKey} from './tokens';
 import {MatChipGrid} from './chip-grid';
@@ -46,7 +45,7 @@ export interface MatChipInputEvent {
  * May be placed inside or outside of a `<mat-chip-grid>`.
  */
 @Directive({
-  selector: 'input[matChipInputFor]:not([matAutocomplete])',
+  selector: 'input[matChipInputFor]',
   exportAs: 'matChipInput, matChipInputFor',
   host: {
     // TODO: eventually we should remove `mat-input-element` from here since it comes from the
@@ -243,7 +242,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   }
 
   /** Checks whether a keycode is one of the configured separators. */
-  protected _isSeparatorKey(event: KeyboardEvent): boolean {
+  private _isSeparatorKey(event: KeyboardEvent): boolean {
     if (!this.separatorKeyCodes) {
       return false;
     }
@@ -275,31 +274,5 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Gets the value to set on the `readonly` attribute. */
   protected _getReadonlyAttribute(): string | null {
     return this.readonly || (this.disabled && this.disabledInteractive) ? 'true' : null;
-  }
-}
-
-/**
- * Directive that adds chip-specific behaviors to an autocomplete input element inside
- * `<mat-form-field>`.
- * May be placed inside or outside of a `<mat-chip-grid>`.
- */
-@Directive({
-  selector: 'input[matChipInputFor][matAutocomplete]',
-  exportAs: 'matChipInput, matChipInputFor',
-})
-export class MatChipAutocompleteInput extends MatChipInput {
-  private readonly _autocompleteTrigger = inject(MatAutocompleteTrigger);
-
-  /** Checks to see if the (chipEnd) event needs to be emitted. */
-  override _emitChipEnd(event?: KeyboardEvent) {
-    if (
-      (!event || (super._isSeparatorKey(event) && !event.repeat)) &&
-      this._autocompleteTrigger.autocomplete.isOpen &&
-      this._autocompleteTrigger.activeOption
-    ) {
-      event?.preventDefault();
-    } else {
-      super._emitChipEnd(event);
-    }
   }
 }
