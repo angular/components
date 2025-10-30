@@ -30,9 +30,9 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
   host: {
     'class': 'grid',
     'role': 'grid',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabindex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '[attr.aria-activedescendant]': 'activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(pointermove)': '_pattern.onPointermove($event)',
@@ -77,6 +77,24 @@ export class Grid {
   /** The wrapping behavior for keyboard navigation along the column axis. */
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
+  /** The currently active cell. */
+  readonly activeCell = computed(() => this._pattern.activeCell());
+
+  /** The ID of the currently active descendant cell. */
+  readonly activeDescendant = computed(() => this._pattern.activeDescendant());
+
+  /** Whether the user is currently dragging to select a range of cells. */
+  readonly dragging = computed(() => this._pattern.dragging());
+
+  /** Whether the focus is in the grid. */
+  readonly isFocused = computed(() => this._pattern.isFocused());
+
+  /** Whether to pause grid navigation. */
+  readonly pauseNavigation = computed(() => this._pattern.pauseNavigation());
+
+  /** The tab index for the grid. */
+  readonly tabindex = computed(() => this._pattern.tabIndex());
+
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -87,6 +105,89 @@ export class Grid {
   constructor() {
     afterRenderEffect(() => this._pattern.resetStateEffect());
     afterRenderEffect(() => this._pattern.focusEffect());
+  }
+
+  /** Navigates to the cell above the currently active cell. */
+  up(): boolean {
+    return this._pattern.gridBehavior.up();
+  }
+
+  /** Navigates to the cell below the currently active cell. */
+  down(): boolean {
+    return this._pattern.gridBehavior.down();
+  }
+
+  /** Navigates to the cell to the left of the currently active cell. */
+  left(): boolean {
+    return this._pattern.gridBehavior.left();
+  }
+
+  /** Navigates to the cell to the right of the currently active cell. */
+  right(): boolean {
+    return this._pattern.gridBehavior.right();
+  }
+
+  /** Navigates to the first focusable cell in the current row. */
+  firstInRow(): boolean {
+    return this._pattern.gridBehavior.firstInRow();
+  }
+
+  /** Navigates to the last focusable cell in the current row. */
+  lastInRow(): boolean {
+    return this._pattern.gridBehavior.lastInRow();
+  }
+
+  /** Navigates to the first focusable cell in the grid. */
+  first(): boolean {
+    return this._pattern.gridBehavior.first();
+  }
+
+  /** Navigates to the last focusable cell in the grid. */
+  last(): boolean {
+    return this._pattern.gridBehavior.last();
+  }
+
+  /** Extends the selection to the cell above the selection anchor. */
+  rangeSelectUp(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectUp();
+    }
+  }
+
+  /** Extends the selection to the cell below the selection anchor. */
+  rangeSelectDown(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectDown();
+    }
+  }
+
+  /** Extends the selection to the cell to the left of the selection anchor. */
+  rangeSelectLeft(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectLeft();
+    }
+  }
+
+  /** Extends the selection to the cell to the right of the selection anchor. */
+  rangeSelectRight(): void {
+    if (this._pattern.inputs.enableSelection()) {
+      this._pattern.gridBehavior.rangeSelectRight();
+    }
+  }
+
+  /** Selects all selectable cells in the grid. */
+  selectAll(): void {
+    this._pattern.gridBehavior.selectAll();
+  }
+
+  /** Selects all cells in the current row. */
+  selectRow(): void {
+    this._pattern.gridBehavior.selectRow();
+  }
+
+  /** Selects all cells in the current column. */
+  selectCol(): void {
+    this._pattern.gridBehavior.selectCol();
   }
 
   /** Gets the cell pattern for a given element. */
