@@ -44,9 +44,9 @@ import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-cont
   exportAs: 'ngMenuTrigger',
   host: {
     'class': 'ng-menu-trigger',
-    '[attr.tabindex]': '_pattern.tabindex()',
-    '[attr.aria-haspopup]': '_pattern.hasPopup()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.tabindex]': 'tabindex()',
+    '[attr.aria-haspopup]': 'hasPopup()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.menu()?.id()',
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
@@ -69,6 +69,15 @@ export class MenuTrigger<V> {
   /** Whether the menu item has been focused. */
   readonly hasBeenFocused = signal(false);
 
+  /** Whether the menu is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the menu trigger has a popup. */
+  readonly hasPopup = computed(() => this._pattern.hasPopup());
+
+  /** The tabindex of the menu trigger. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
+
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     element: computed(() => this._elementRef.nativeElement),
@@ -82,6 +91,16 @@ export class MenuTrigger<V> {
   /** Marks the menu trigger as having been focused. */
   onFocusIn() {
     this.hasBeenFocused.set(true);
+  }
+
+  /** Opens the menu. */
+  open(opts?: {first?: boolean; last?: boolean}) {
+    this._pattern.open(opts);
+  }
+
+  /** Closes the menu. */
+  close(opts: {refocus?: boolean} = {}) {
+    this._pattern.close(opts);
   }
 }
 
@@ -108,7 +127,7 @@ export class MenuTrigger<V> {
     'role': 'menu',
     'class': 'ng-menu',
     '[attr.id]': '_pattern.id()',
-    '[attr.data-visible]': '_pattern.isVisible()',
+    '[attr.data-visible]': 'isVisible()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(mouseout)': '_pattern.onMouseOut($event)',
@@ -173,8 +192,14 @@ export class Menu<V> {
    */
   readonly items = () => this._items().map(i => i._pattern);
 
+  /** Whether the menu or any of its child elements are currently focused. */
+  readonly isFocused = computed(() => this._pattern.isFocused());
+
+  /** Whether the menu has received focus. */
+  readonly hasBeenFocused = computed(() => this._pattern.hasBeenFocused());
+
   /** Whether the menu is visible. */
-  isVisible = computed(() => this._pattern.isVisible());
+  readonly isVisible = computed(() => this._pattern.isVisible());
 
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
@@ -222,24 +247,34 @@ export class Menu<V> {
     });
   }
 
-  // TODO(wagnermaciel): Author close, closeAll, and open methods for each directive.
+  /** Focuses the previous menu item. */
+  prev() {
+    this._pattern.prev();
+  }
+
+  /** Focuses the next menu item. */
+  next() {
+    this._pattern.next();
+  }
+
+  /** Focuses the first menu item. */
+  first() {
+    this._pattern.first();
+  }
+
+  /** Focuses the last menu item. */
+  last() {
+    this._pattern.last();
+  }
 
   /** Closes the menu. */
   close(opts?: {refocus?: boolean}) {
-    this._pattern.inputs.parent()?.close(opts);
+    this._pattern.close(opts);
   }
 
   /** Closes all parent menus. */
   closeAll(opts?: {refocus?: boolean}) {
-    const root = this._pattern.root();
-
-    if (root instanceof MenuTriggerPattern) {
-      root.close(opts);
-    }
-
-    if (root instanceof MenuPattern || root instanceof MenuBarPattern) {
-      root.inputs.activeItem()?.close(opts);
-    }
+    this._pattern.closeAll(opts);
   }
 }
 
@@ -293,6 +328,12 @@ export class MenuBar<V> {
   /** The delay in seconds before the typeahead buffer is cleared. */
   readonly typeaheadDelay = input<number>(0.5);
 
+  /** Whether the menubar or any of its child elements are currently focused. */
+  readonly isFocused = computed(() => this._pattern.isFocused());
+
+  /** Whether the menu has received focus. */
+  readonly hasBeenFocused = computed(() => this._pattern.hasBeenFocused());
+
   /** The menu ui pattern instance. */
   readonly _pattern: MenuBarPattern<V>;
 
@@ -325,6 +366,21 @@ export class MenuBar<V> {
       }
     });
   }
+
+  /** Focuses the previous menu item. */
+  prev() {
+    this._pattern.prev();
+  }
+
+  /** Focuses the next menu item. */
+  next() {
+    this._pattern.next();
+  }
+
+  /** Closes the menubar and refocuses the root menu bar item. */
+  close(opts?: {refocus?: boolean}) {
+    this._pattern.close(opts);
+  }
 }
 
 /**
@@ -339,11 +395,11 @@ export class MenuBar<V> {
     'role': 'menuitem',
     'class': 'ng-menu-item',
     '(focusin)': 'onFocusIn()',
-    '[attr.tabindex]': '_pattern.tabindex()',
-    '[attr.data-active]': '_pattern.isActive()',
-    '[attr.aria-haspopup]': '_pattern.hasPopup()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.tabindex]': 'tabindex()',
+    '[attr.data-active]': 'isActive()',
+    '[attr.aria-haspopup]': 'hasPopup()',
+    '[attr.aria-expanded]': 'expanded()',
+    '[attr.aria-disabled]': 'disabled()',
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
 })
@@ -380,8 +436,20 @@ export class MenuItem<V> {
   /** The submenu associated with the menu item. */
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
+  /** Whether the menu item is active. */
+  readonly isActive = computed(() => this._pattern.isActive());
+
   /** Whether the menu item has been focused. */
   readonly hasBeenFocused = signal(false);
+
+  /** Whether the menuis expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the menu item has a popup. */
+  readonly hasPopup = computed(() => this._pattern.hasPopup());
+
+  /** The tabindex of the menu item. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
 
   /** The menu item ui pattern instance. */
   readonly _pattern: MenuItemPattern<V> = new MenuItemPattern<V>({
@@ -401,6 +469,16 @@ export class MenuItem<V> {
   /** Marks the menu item as having been focused. */
   onFocusIn() {
     this.hasBeenFocused.set(true);
+  }
+
+  /** Opens the submenu. */
+  open(opts?: {first?: boolean; last?: boolean}) {
+    this._pattern.open(opts);
+  }
+
+  /** Closes the submenu. */
+  close(opts: {refocus?: boolean} = {}) {
+    this._pattern.close(opts);
   }
 }
 

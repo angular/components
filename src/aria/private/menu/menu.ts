@@ -136,7 +136,7 @@ export class MenuPattern<V> {
       .on('Home', () => this.first())
       .on('End', () => this.last())
       .on('Enter', () => this.trigger())
-      .on('Escape', () => this.closeAll())
+      .on('Escape', () => this.closeAll({refocus: true}))
       .on(this._expandKey, () => this.expand())
       .on(this._collapseKey, () => this.collapse())
       .on(this.dynamicSpaceKey, () => this.trigger())
@@ -345,12 +345,17 @@ export class MenuPattern<V> {
     }
   }
 
+  /** Closes the menu. */
+  close(opts?: {refocus?: boolean}) {
+    this.inputs.parent()?.close(opts);
+  }
+
   /** Closes the menu and all parent menus. */
-  closeAll() {
+  closeAll(opts?: {refocus?: boolean}) {
     const root = this.root();
 
     if (root instanceof MenuTriggerPattern) {
-      root.close({refocus: true});
+      root.close(opts);
     }
 
     if (root instanceof MenuBarPattern) {
@@ -358,7 +363,7 @@ export class MenuPattern<V> {
     }
 
     if (root instanceof MenuPattern) {
-      root.inputs.activeItem()?.close({refocus: true});
+      root.inputs.activeItem()?.close(opts);
     }
   }
 }
@@ -496,8 +501,10 @@ export class MenuBarPattern<V> {
   }
 
   /** Closes the menubar and refocuses the root menu bar item. */
-  close() {
-    this.inputs.activeItem()?.close({refocus: this.isFocused()});
+  close(opts?: {refocus?: boolean}) {
+    opts ??= {refocus: this.isFocused()};
+
+    this.inputs.activeItem()?.close(opts);
   }
 }
 
