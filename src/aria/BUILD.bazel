@@ -47,7 +47,6 @@ copy_to_directory(
         "//src/aria/grid:json_api",
         "//src/aria/listbox:json_api",
         "//src/aria/menu:json_api",
-        "//src/aria/radio-group:json_api",
         "//src/aria/tabs:json_api",
         "//src/aria/toolbar:json_api",
         "//src/aria/tree:json_api",
