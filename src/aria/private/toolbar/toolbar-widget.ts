@@ -23,7 +23,7 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
   readonly id: SignalLike<string>;
 
   /** The html element that should receive focus. */
-  readonly element: SignalLike<HTMLElement>;
+  readonly element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the widget is disabled. */
   readonly disabled: SignalLike<boolean>;

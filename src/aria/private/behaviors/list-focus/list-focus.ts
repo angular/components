@@ -15,7 +15,7 @@ export interface ListFocusItem {
   id: SignalLike<string>;
 
   /** The html element that should receive focus. */
-  element: SignalLike<HTMLElement>;
+  element: SignalLike<HTMLElement | undefined>;
 
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
@@ -112,7 +112,7 @@ export class ListFocus<T extends ListFocusItem> {
 
     if (opts?.focusElement || opts?.focusElement === undefined) {
       this.inputs.focusMode() === 'roving'
-        ? item.element().focus()
+        ? item.element()?.focus()
         : this.inputs.element()?.focus();
     }
 

@@ -238,13 +238,13 @@ describe('Toolbar Pattern', () => {
     });
 
     it('should set the active item on pointerdown', () => {
-      toolbar.onPointerdown(click(items[1].element()));
+      toolbar.onPointerdown(click(items[1].element()!));
       expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should not set the active item on pointerdown if the toolbar is disabled', () => {
       toolbarInputs.disabled.set(true);
-      toolbar.onPointerdown(click(items[1].element()));
+      toolbar.onPointerdown(click(items[1].element()!));
       expect(toolbarInputs.activeItem()).toBe(items[0]);
     });
   });

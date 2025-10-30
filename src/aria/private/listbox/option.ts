@@ -57,7 +57,7 @@ export class OptionPattern<V> {
   tabIndex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
 
   /** The html element that should receive focus. */
-  element: SignalLike<HTMLElement>;
+  element: SignalLike<HTMLElement | undefined>;
 
   constructor(args: OptionInputs<V>) {
     this.id = args.id;

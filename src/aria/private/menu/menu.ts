@@ -248,7 +248,7 @@ export class MenuPattern<V> {
     if (parent instanceof MenuItemPattern) {
       const grandparent = parent.inputs.parent();
       const siblings = grandparent?.inputs.items().filter(i => i !== parent);
-      const item = siblings?.find(i => i.element().contains(relatedTarget));
+      const item = siblings?.find(i => i.element()?.contains(relatedTarget));
 
       if (item) {
         return;
@@ -602,7 +602,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   searchTerm: SignalLike<string>;
 
   /** The element of the menu item. */
-  element: SignalLike<HTMLElement>;
+  element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the menu item is active. */
   isActive = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
