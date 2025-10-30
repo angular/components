@@ -220,6 +220,69 @@ export class Tree<V> {
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element().scrollIntoView(options);
   }
+
+  /** Navigates to the first tree item. */
+  first() {
+    this._pattern.listBehavior.first({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the last tree item. */
+  last() {
+    this._pattern.listBehavior.last({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the previous tree item. */
+  prev() {
+    this._pattern.listBehavior.prev({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the next tree item. */
+  next() {
+    this._pattern.listBehavior.next({selectOne: this.followFocus()});
+  }
+
+  /** Opens the tree item with the specified value. */
+  open(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.open(item);
+    }
+  }
+
+  /** Closes the tree item with the specified value. */
+  close(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.close(item);
+    }
+  }
+
+  /** Toggles the expansion state of the tree item with the specified value. */
+  toggle(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.toggle(item);
+    }
+  }
+
+  /** Opens all tree items if multi-expandable. */
+  openAll() {
+    this._pattern.expansionManager.openAll();
+  }
+
+  /** Closes all tree items. */
+  closeAll() {
+    this._pattern.expansionManager.closeAll();
+  }
+
+  _findItemPatternByValue(value: string) {
+    const item = [...this._unorderedItems()].find(i => i.value() === value);
+
+    return item?._pattern;
+  }
 }
 
 /**
@@ -361,6 +424,21 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   unregister() {
     this._group.set(undefined);
+  }
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this._pattern.expansion.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this._pattern.expansion.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this._pattern.expansion.toggle();
   }
 }
 
