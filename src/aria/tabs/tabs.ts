@@ -230,10 +230,10 @@ export class TabList implements OnInit, OnDestroy {
   host: {
     'role': 'tab',
     'class': 'ng-tab',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-selected]': '_pattern.selected()',
+    '[attr.aria-selected]': 'selected()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-controls]': '_pattern.controls()',
   },
@@ -267,6 +267,15 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 
   /** A local unique identifier for the tab. */
   readonly value = input.required<string>();
+
+  /** Whether the tab is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the tab is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the tab is selected. */
+  readonly selected = computed(() => this._pattern.selected());
 
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
@@ -302,7 +311,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     'class': 'ng-tabpanel',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.inert]': '!visible() ? true : null',
     '[attr.aria-labelledby]': '_pattern.labelledBy()',
   },
   hostDirectives: [
@@ -328,6 +337,9 @@ export class TabPanel implements OnInit, OnDestroy {
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();
 
+  /** Whether the tab panel is visible. */
+  readonly visible = computed(() => !this._pattern.hidden());
+
   /** The TabPanel UIPattern. */
   readonly _pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
@@ -336,7 +348,7 @@ export class TabPanel implements OnInit, OnDestroy {
   });
 
   constructor() {
-    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(!this._pattern.hidden()));
+    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(this.visible()));
   }
 
   ngOnInit() {
