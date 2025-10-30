@@ -131,10 +131,10 @@ export class Tabs {
   host: {
     'role': 'tablist',
     'class': 'ng-tablist',
-    '[attr.tabindex]': '_pattern.tabindex()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-orientation]': '_pattern.orientation()',
-    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
+    '[attr.tabindex]': 'tabindex()',
+    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-orientation]': 'orientation()',
+    '[attr.aria-activedescendant]': 'activedescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
@@ -183,6 +183,15 @@ export class TabList implements OnInit, OnDestroy {
 
   /** The current selected tab. */
   readonly selectedTab = model<string | undefined>();
+
+  /** The id of the current active tab. */
+  readonly activedescendant = computed(() => this._pattern.activedescendant());
+
+  /** Whether selection should follow focus. */
+  readonly followFocus = computed(() => this._pattern.followFocus());
+
+  /** The tabindex of the tablist. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
 
   /** The TabList UIPattern. */
   readonly _pattern: TabListPattern = new TabListPattern({
@@ -236,11 +245,11 @@ export class TabList implements OnInit, OnDestroy {
   host: {
     'role': 'tab',
     'class': 'ng-tab',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
-    '[attr.tabindex]': '_pattern.tabindex()',
-    '[attr.aria-selected]': '_pattern.selected()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.tabindex]': 'tabindex()',
+    '[attr.aria-selected]': 'selected()',
+    '[attr.aria-disabled]': 'disabled()',
     '[attr.aria-controls]': '_pattern.controls()',
   },
 })
@@ -273,6 +282,18 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 
   /** A local unique identifier for the tab. */
   readonly value = input.required<string>();
+
+  /** Whether the tab is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the tab is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the tab is selected. */
+  readonly selected = computed(() => this._pattern.selected());
+
+  /** The tabindex of the tab. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
 
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
@@ -312,8 +333,8 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     'role': 'tabpanel',
     'class': 'ng-tabpanel',
     '[attr.id]': '_pattern.id()',
-    '[attr.tabindex]': '_pattern.tabindex()',
-    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.tabindex]': 'tabindex()',
+    '[attr.inert]': 'hidden() ? true : null',
     '[attr.aria-labelledby]': '_pattern.labelledBy()',
   },
   hostDirectives: [
@@ -338,6 +359,12 @@ export class TabPanel implements OnInit, OnDestroy {
 
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();
+
+  /** Whether the tab panel is hidden. */
+  readonly hidden = computed(() => this._pattern.hidden());
+
+  /** The tabindex of the tab panel. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
 
   /** The TabPanel UIPattern. */
   readonly _pattern: TabPanelPattern = new TabPanelPattern({
