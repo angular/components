@@ -185,7 +185,7 @@ export class TreePattern<V> {
   /** The root is always expanded. */
   readonly expanded = () => true;
 
-  /** The roow is always visible. */
+  /** The root is always visible. */
   readonly visible = () => true;
 
   /** The tab index of the tree. */
