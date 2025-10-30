@@ -1,3 +1,12 @@
+<a name="21.0.0-rc.0"></a>
+# 21.0.0-rc.0 "material light" (2025-10-30)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [378f4cf0ba](https://github.com/angular/components/commit/378f4cf0ba66af1d9f34aee9f7be03e7ce22c053) | fix | **menu:** add filter for trigger icon name ([#32188](https://github.com/angular/components/pull/32188)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.10"></a>
 # 21.0.0-next.10 "alforsite-antibody" (2025-10-22)
 ## Breaking Changes
