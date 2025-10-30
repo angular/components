@@ -1,3 +1,12 @@
+<a name="20.2.11"></a>
+# 20.2.11 "test" (2025-10-30)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b751456cd](https://github.com/angular/components/commit/b751456cd9c8821a70145c142a14bdaaee605657) | fix | **menu:** add filter for trigger icon name ([#32188](https://github.com/angular/components/pull/32188)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.10"></a>
 # 20.2.10 "aleutite-anchovy" (2025-10-22)
 ### material
