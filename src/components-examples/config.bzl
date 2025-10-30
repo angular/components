@@ -44,7 +44,6 @@ ALL_EXAMPLES = [
     "//src/components-examples/aria/accordion",
     "//src/components-examples/aria/combobox",
     "//src/components-examples/aria/listbox",
-    "//src/components-examples/aria/radio-group",
     "//src/components-examples/aria/tabs",
     "//src/components-examples/aria/toolbar",
     "//src/components-examples/aria/tree",

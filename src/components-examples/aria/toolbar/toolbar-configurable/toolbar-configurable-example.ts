@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {RadioGroup, RadioButton} from '@angular/aria/radio-group';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -12,8 +11,6 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
   templateUrl: 'toolbar-configurable-example.html',
   styleUrl: '../toolbar-common.css',
   imports: [
-    RadioGroup,
-    RadioButton,
     Toolbar,
     ToolbarWidget,
     MatCheckboxModule,
