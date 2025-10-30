@@ -1,6 +1,6 @@
 import {Component, DebugElement, signal} from '@angular/core';
 import {Listbox, Option} from './listbox';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
@@ -686,15 +686,16 @@ describe('Listbox', () => {
         expect(optionElements[4].getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should reset search term after typeaheadDelay', fakeAsync(() => {
+      it('should reset search term after typeaheadDelay', async () => {
         setupListbox({options: getOptions(), focusMode, typeaheadDelay: 0.1});
 
         type('A');
         expect(isFocused(1)).toBe(true);
-        tick(100);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         type('A');
         expect(isFocused(0)).toBe(true);
-      }));
+      });
 
       it('should skip disabled options with typeahead (softDisabled=false)', () => {
         setupListbox({options: getOptions(), focusMode, disabledOptions: [2], softDisabled: false});

@@ -1,5 +1,5 @@
 import {Component, DebugElement} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Menu, MenuBar, MenuItem, MenuTrigger} from './menu';
 
@@ -102,15 +102,15 @@ describe('Standalone Menu Pattern', () => {
     });
 
     describe('Typeahead', () => {
-      it('should move the active item to the next item that starts with the typed character', fakeAsync(() => {
+      it('should move the active item to the next item that starts with the typed character', () => {
         const apple = getItem('Apple');
         const banana = getItem('Banana');
 
         keydown(apple!, 'b');
         expect(document.activeElement).toBe(banana);
-      }));
+      });
 
-      it('should support multi-character typeahead', fakeAsync(() => {
+      it('should support multi-character typeahead', () => {
         const apple = getItem('Apple');
         const banana = getItem('Banana');
         const berries = getItem('Berries');
@@ -118,13 +118,11 @@ describe('Standalone Menu Pattern', () => {
         keydown(apple!, 'b');
         expect(document.activeElement).toBe(banana);
 
-        tick(100);
         keydown(document.activeElement!, 'e');
-
         expect(document.activeElement).toBe(berries);
-      }));
+      });
 
-      it('should wrap when reaching the end of the list during typeahead', fakeAsync(() => {
+      it('should wrap when reaching the end of the list during typeahead', () => {
         const apple = getItem('Apple');
         const cherry = getItem('Cherry');
 
@@ -135,14 +133,14 @@ describe('Standalone Menu Pattern', () => {
         // Type 'a', which should wrap to 'Apple'
         keydown(document.activeElement!, 'a');
         expect(document.activeElement).toBe(apple);
-      }));
+      });
 
-      it('should not move the active item if no item matches the typed character', fakeAsync(() => {
+      it('should not move the active item if no item matches the typed character', () => {
         const apple = getItem('Apple');
 
         keydown(apple!, 'z');
         expect(document.activeElement).toBe(apple);
-      }));
+      });
     });
   });
 
@@ -308,12 +306,11 @@ describe('Standalone Menu Pattern', () => {
       expect(document.activeElement).toBe(berries);
     });
 
-    it('should open submenu on mouseover', fakeAsync(() => {
+    it('should open submenu on mouseover', () => {
       const berries = getItem('Berries');
       mouseover(berries!);
-      tick();
       expect(isSubmenuExpanded()).toBe(true);
-    }));
+    });
 
     it('should close on selecting an item on click', () => {
       spyOn(fixture.componentInstance, 'onSelect');
@@ -385,34 +382,30 @@ describe('Standalone Menu Pattern', () => {
       externalElement.remove();
     });
 
-    it('should close an unfocused submenu on mouse out', fakeAsync(() => {
+    it('should close an unfocused submenu on mouse out', () => {
       const berries = getItem('Berries');
       const submenu = getSubmenu();
 
       mouseover(berries!);
-      tick();
       expect(isSubmenuExpanded()).toBe(true);
 
       mouseout(berries!);
       mouseout(submenu!);
-      tick(500);
 
       expect(isSubmenuExpanded()).toBe(false);
-    }));
+    });
 
-    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', fakeAsync(() => {
+    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', () => {
       const berries = getItem('Berries');
       const submenu = getSubmenu();
 
       mouseover(berries!);
-      tick();
       expect(isSubmenuExpanded()).toBe(true);
 
       mouseout(berries!);
       mouseover(submenu!);
-      tick(500);
       expect(isSubmenuExpanded()).toBe(true);
-    }));
+    });
   });
 });
 

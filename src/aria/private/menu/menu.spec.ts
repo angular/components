@@ -10,7 +10,6 @@ import {signal, WritableSignal} from '@angular/core';
 import {MenuPattern, MenuBarPattern, MenuItemPattern, MenuTriggerPattern} from './menu';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
-import {fakeAsync, tick} from '@angular/core/testing';
 
 // Test types
 type TestMenuItem = MenuItemPattern<string> & {
@@ -177,22 +176,26 @@ describe('Standalone Menu Pattern', () => {
     });
 
     describe('Typeahead', () => {
-      it('should move the active item to the next item that starts with the typed character', fakeAsync(() => {
+      function delay(amount: number) {
+        return new Promise(resolve => setTimeout(resolve, amount));
+      }
+
+      it('should move the active item to the next item that starts with the typed character', async () => {
         const menu = getMenuPattern(undefined, ['Apple', 'Banana', 'Cherry']);
         const items = menu.inputs.items();
 
         const b = createKeyboardEvent('keydown', 66, 'b');
         menu.onKeydown(b);
-        tick(500);
+        await delay(500);
         expect(menu.inputs.activeItem()).toBe(items[1]);
 
         const c = createKeyboardEvent('keydown', 67, 'c');
         menu.onKeydown(c);
-        tick(500);
+        await delay(500);
         expect(menu.inputs.activeItem()).toBe(items[2]);
-      }));
+      });
 
-      it('should support multi-character typeahead', fakeAsync(() => {
+      it('should support multi-character typeahead', async () => {
         const menu = getMenuPattern(undefined, ['Cabbage', 'Chard', 'Cherry', 'Cilantro']);
 
         const c = createKeyboardEvent('keydown', 67, 'c');
@@ -208,36 +211,36 @@ describe('Standalone Menu Pattern', () => {
         menu.onKeydown(e);
         expect(menu.inputs.activeItem()?.value()).toBe('Cherry');
 
-        tick(500);
+        await delay(500);
         menu.onKeydown(c);
         expect(menu.inputs.activeItem()?.value()).toBe('Cilantro');
-      }));
+      });
 
-      it('should wrap when reaching the end of the list during typeahead', fakeAsync(() => {
+      it('should wrap when reaching the end of the list during typeahead', async () => {
         const menu = getMenuPattern(undefined, ['Apple', 'Banana', 'Avocado']);
         const items = menu.inputs.items();
         menu.inputs.activeItem.set(items[1]);
 
         const a = createKeyboardEvent('keydown', 65, 'a');
         menu.onKeydown(a);
-        tick(500);
+        await delay(500);
         expect(menu.inputs.activeItem()).toBe(items[2]);
 
         menu.onKeydown(a);
-        tick(500);
+        await delay(500);
         expect(menu.inputs.activeItem()).toBe(items[0]);
-      }));
+      });
 
-      it('should not move the active item if no item matches the typed character', fakeAsync(() => {
+      it('should not move the active item if no item matches the typed character', async () => {
         const menu = getMenuPattern(undefined, ['Apple', 'Banana', 'Cherry']);
         const items = menu.inputs.items();
         menu.inputs.activeItem.set(items[0]);
 
         const z = createKeyboardEvent('keydown', 90, 'z');
         menu.onKeydown(z);
-        tick(500);
+        await delay(500);
         expect(menu.inputs.activeItem()).toBe(items[0]);
-      }));
+      });
     });
   });
 
