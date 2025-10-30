@@ -11,7 +11,7 @@ import {
   dispatchMouseEvent,
   patchElementFocus,
 } from '@angular/cdk/testing/private';
-import {Location} from '@angular/common';
+import {AsyncPipe, Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
@@ -39,6 +39,7 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 import {
   MAT_DIALOG_DATA,
@@ -1239,6 +1240,14 @@ describe('MatDialog', () => {
         .toBe(firstButton);
     }),
   );
+
+  it('should be able to use afterOpened in the template while animations are disabled', async () => {
+    const ref = dialog.open(DialogWithAfterOpenSubscription);
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    expect(ref.componentInstance.animations.animationsDisabled).toBe(true);
+    expect(overlayContainerElement.textContent).toContain('The dialog is now open!');
+  });
 
   describe('hasBackdrop option', () => {
     it('should have a backdrop', () => {
@@ -2450,3 +2459,15 @@ class ModuleBoundDialogChildComponent {
   providers: [ModuleBoundDialogService],
 })
 class ModuleBoundDialogModule {}
+
+@Component({
+  template: `{{message | async}}`,
+  imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DialogWithAfterOpenSubscription {
+  dialogRef = inject(MatDialogRef);
+  animations = inject(MATERIAL_ANIMATIONS);
+
+  protected message = this.dialogRef.afterOpened().pipe(map(() => 'The dialog is now open!'));
+}
