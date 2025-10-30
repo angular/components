@@ -207,4 +207,97 @@ describe('GridSelection', () => {
       expect(validCellIds.length).toBe(allCellIds.length - 2);
     });
   });
+
+  describe('undo', () => {
+    it('should undo a select operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+
+      gridSelection.select({row: 1, col: 1});
+      expect(cells[1][1].selected()).toBe(true);
+
+      gridSelection.undo();
+      expect(cells[1][1].selected()).toBe(false);
+    });
+
+    it('should undo a deselect operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+      cells[1][1].selected.set(true);
+
+      gridSelection.deselect({row: 1, col: 1});
+      expect(cells[1][1].selected()).toBe(false);
+
+      gridSelection.undo();
+      expect(cells[1][1].selected()).toBe(true);
+    });
+
+    it('should undo a toggle operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+      cells[0][0].selected.set(true);
+
+      gridSelection.toggle({row: 0, col: 0}, {row: 0, col: 1});
+      expect(cells[0][0].selected()).toBe(false);
+      expect(cells[0][1].selected()).toBe(true);
+
+      gridSelection.undo();
+      expect(cells[0][0].selected()).toBe(true);
+      expect(cells[0][1].selected()).toBe(false);
+    });
+
+    it('should undo a selectAll operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+
+      gridSelection.selectAll();
+      expect(cells.flat().every(c => c.selected())).toBe(true);
+
+      gridSelection.undo();
+      expect(cells.flat().every(c => !c.selected())).toBe(true);
+    });
+
+    it('should undo a deselectAll operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+      cells.flat().forEach(c => c.selected.set(true));
+
+      gridSelection.deselectAll();
+      expect(cells.flat().every(c => !c.selected())).toBe(true);
+
+      gridSelection.undo();
+      expect(cells.flat().every(c => c.selected())).toBe(true);
+    });
+
+    it('should do nothing if there is nothing to undo', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+      cells[1][1].selected.set(true);
+
+      gridSelection.undo();
+      expect(cells[1][1].selected()).toBe(true);
+    });
+
+    it('should only undo the last operation', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+
+      gridSelection.select({row: 0, col: 0});
+      gridSelection.select({row: 1, col: 1});
+      expect(cells[1][1].selected()).toBe(true);
+
+      gridSelection.undo();
+      expect(cells[0][0].selected()).toBe(true);
+      expect(cells[1][1].selected()).toBe(false);
+    });
+
+    it('should do nothing after undoing once', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridSelection} = setupGridSelection(signal(cells));
+      gridSelection.select({row: 1, col: 1});
+      gridSelection.undo();
+      gridSelection.undo();
+      expect(cells[1][1].selected()).toBe(false);
+    });
+  });
 });

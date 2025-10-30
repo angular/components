@@ -9,6 +9,7 @@
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {GridFocus, GridFocusCell, GridFocusInputs} from './grid-focus';
 import {GridData, RowCol} from './grid-data';
+import {signal} from '@angular/core';
 
 /** Represents a cell in a grid that can be selected. */
 export interface GridSelectionCell extends GridFocusCell {
@@ -33,50 +34,58 @@ interface GridSelectionDeps<T extends GridSelectionCell> {
 
 /** Controls selection for a grid of items. */
 export class GridSelection<T extends GridSelectionCell> {
+  /** The list of cells that were changed in the last selection operation. */
+  private readonly _undoList: WritableSignalLike<[T, boolean][]> = signal([]);
+
   constructor(readonly inputs: GridSelectionInputs & GridSelectionDeps<T>) {}
+
+  /** Reverts the last selection change. */
+  undo(): void {
+    for (const [cell, oldState] of this._undoList()) {
+      cell.selected.set(oldState);
+    }
+    this._undoList.set([]);
+  }
 
   /** Selects one or more cells in a given range. */
   select(fromCoords: RowCol, toCoords?: RowCol): void {
-    for (const cell of this._validCells(fromCoords, toCoords ?? fromCoords)) {
-      cell.selected.set(true);
-    }
+    this._updateState(fromCoords, toCoords ?? fromCoords, () => true);
   }
 
   /** Deselects one or more cells in a given range. */
   deselect(fromCoords: RowCol, toCoords?: RowCol): void {
-    for (const cell of this._validCells(fromCoords, toCoords ?? fromCoords)) {
-      cell.selected.set(false);
-    }
+    this._updateState(fromCoords, toCoords ?? fromCoords, () => false);
   }
 
   /** Toggles the selection state of one or more cells in a given range. */
   toggle(fromCoords: RowCol, toCoords?: RowCol): void {
-    for (const cell of this._validCells(fromCoords, toCoords ?? fromCoords)) {
-      cell.selected.update(state => !state);
-    }
+    this._updateState(fromCoords, toCoords ?? fromCoords, oldState => !oldState);
   }
 
   /** Selects all valid cells in the grid. */
   selectAll(): void {
-    for (const cell of this._validCells(
+    this._updateState(
       {row: 0, col: 0},
       {row: this.inputs.grid.maxRowCount(), col: this.inputs.grid.maxColCount()},
-    )) {
-      cell.selected.set(true);
-    }
+      () => true,
+    );
   }
 
   /** Deselects all valid cells in the grid. */
   deselectAll(): void {
-    for (const cell of this._validCells(
+    this._updateState(
       {row: 0, col: 0},
       {row: this.inputs.grid.maxRowCount(), col: this.inputs.grid.maxColCount()},
-    )) {
-      cell.selected.set(false);
-    }
+      () => false,
+    );
   }
 
-  /** A generator that yields all valid (selectable and not disabled) cells within a given range. */
+  /** Whether a cell is selctable. */
+  isSelectable(cell: T) {
+    return cell.selectable() && !cell.disabled();
+  }
+
+  /** A generator that yields all cells within a given range. */
   *_validCells(fromCoords: RowCol, toCoords: RowCol): Generator<T> {
     const startRow = Math.min(fromCoords.row, toCoords.row);
     const startCol = Math.min(fromCoords.col, toCoords.col);
@@ -87,12 +96,29 @@ export class GridSelection<T extends GridSelectionCell> {
       for (let col = startCol; col < endCol + 1; col++) {
         const cell = this.inputs.grid.getCell({row, col});
         if (cell === undefined) continue;
-        if (!cell.selectable()) continue;
-        if (cell.disabled()) continue;
+        if (!this.isSelectable(cell)) continue;
         if (visited.has(cell)) continue;
         visited.add(cell);
         yield cell;
       }
     }
+  }
+
+  /**
+   * Updates the selection state of cells in a given range and preserves previous changes
+   * to a undo list.
+   */
+  private _updateState(
+    fromCoords: RowCol,
+    toCoords: RowCol,
+    stateFn: (oldState: boolean) => boolean,
+  ): void {
+    const undoList: [T, boolean][] = [];
+    for (const cell of this._validCells(fromCoords, toCoords)) {
+      const oldState = cell.selected();
+      undoList.push([cell, oldState]);
+      cell.selected.set(stateFn(oldState));
+    }
+    this._undoList.set(undoList);
   }
 }
