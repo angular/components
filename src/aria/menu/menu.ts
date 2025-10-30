@@ -45,8 +45,8 @@ import {Directionality} from '@angular/cdk/bidi';
   host: {
     'class': 'ng-menu-trigger',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-haspopup]': '_pattern.hasPopup()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-haspopup]': 'hasPopup()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.menu()?.id()',
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
@@ -69,6 +69,12 @@ export class MenuTrigger<V> {
 
   /** Whether the menu item has been focused. */
   readonly hasBeenFocused = signal(false);
+
+  /** Whether the menu is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the menu trigger has a popup. */
+  readonly hasPopup = computed(() => this._pattern.hasPopup());
 
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
@@ -110,7 +116,7 @@ export class MenuTrigger<V> {
     'role': 'menu',
     'class': 'ng-menu',
     '[attr.id]': '_pattern.id()',
-    '[attr.data-visible]': '_pattern.isVisible()',
+    '[attr.data-visible]': 'isVisible()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(mouseout)': '_pattern.onMouseOut($event)',
@@ -171,7 +177,7 @@ export class Menu<V> {
   readonly items = () => this._items().map(i => i._pattern);
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => this._pattern.isVisible());
+  readonly isVisible = computed(() => this._pattern.isVisible());
 
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
@@ -335,9 +341,9 @@ export class MenuBar<V> {
     'class': 'ng-menu-item',
     '(focusin)': 'onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.data-active]': '_pattern.isActive()',
-    '[attr.aria-haspopup]': '_pattern.hasPopup()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.data-active]': 'isActive()',
+    '[attr.aria-haspopup]': 'hasPopup()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
@@ -375,8 +381,14 @@ export class MenuItem<V> {
   /** The submenu associated with the menu item. */
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
-  /** Whether the menu item has been focused. */
-  readonly hasBeenFocused = signal(false);
+  /** Whether the menu item is active. */
+  readonly isActive = computed(() => this._pattern.isActive());
+
+  /** Whether the menu is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** Whether the menu item has a popup. */
+  readonly hasPopup = computed(() => this._pattern.hasPopup());
 
   /** The menu item ui pattern instance. */
   readonly _pattern: MenuItemPattern<V> = new MenuItemPattern<V>({
