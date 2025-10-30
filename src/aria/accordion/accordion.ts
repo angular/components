@@ -47,7 +47,7 @@ import {
     'role': 'region',
     '[attr.id]': '_pattern.id()',
     '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
-    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.inert]': '!visible() ? true : null',
   },
 })
 export class AccordionPanel {
@@ -59,6 +59,9 @@ export class AccordionPanel {
 
   /** A local unique identifier for the panel, used to match with its trigger's value. */
   value = input.required<string>();
+
+  /** Whether the accordion panel is visible. True if the associated trigger is expanded. */
+  readonly visible = computed(() => !this._pattern.hidden());
 
   /** The parent accordion trigger pattern that controls this panel. This is set by AccordionGroup. */
   readonly accordionTrigger: WritableSignal<AccordionTriggerPattern | undefined> =
@@ -74,7 +77,7 @@ export class AccordionPanel {
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(!this._pattern.hidden());
+      this._deferredContentAware.contentVisible.set(this.visible());
     });
   }
 }
@@ -88,10 +91,10 @@ export class AccordionPanel {
   exportAs: 'ngAccordionTrigger',
   host: {
     'class': 'ng-accordion-trigger',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     'role': 'button',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.controls()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.disabled]': 'hardDisabled() ? true : null',
@@ -116,6 +119,12 @@ export class AccordionTrigger {
 
   /** Whether the trigger is disabled. */
   disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the trigger is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the trigger is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
 
   /**
    * Whether this trigger is completely inaccessible.
