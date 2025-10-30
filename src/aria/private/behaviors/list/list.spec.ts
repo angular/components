@@ -8,7 +8,6 @@
 
 import {signal, WritableSignal} from '@angular/core';
 import {List, ListItem, ListInputs} from './list';
-import {fakeAsync, tick} from '@angular/core/testing';
 
 type TestItem<V> = ListItem<V> & {
   disabled: WritableSignal<boolean>;
@@ -341,7 +340,11 @@ describe('List Behavior', () => {
   });
 
   describe('Typeahead', () => {
-    it('should navigate to an item via typeahead', fakeAsync(() => {
+    function delay(amount: number) {
+      return new Promise(resolve => setTimeout(resolve, amount));
+    }
+
+    it('should navigate to an item via typeahead', async () => {
       const {list} = getDefaultPatterns();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.search('b');
@@ -350,24 +353,23 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[3]); // Blackberry
       list.search('u');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[4]); // Blueberry
-
-      tick(500); // Default delay
+      await delay(500);
 
       list.search('c');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[5]); // Cantaloupe
-    }));
+    });
 
-    it('should respect typeaheadDelay', fakeAsync(() => {
+    it('should respect typeaheadDelay', async () => {
       const {list} = getDefaultPatterns({typeaheadDelay: signal(0.1)});
       list.search('b');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[2]); // Banana
-      tick(50); // Less than delay
+      await delay(50); // Less than delay
       list.search('l');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[3]); // Blackberry
-      tick(101); // More than delay
+      await delay(101); // More than delay
       list.search('c');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[5]); // Cantaloupe
-    }));
+    });
 
     it('should select an item via typeahead', () => {
       const {list} = getDefaultPatterns({multi: signal(false)});
