@@ -55,30 +55,6 @@
   >
     Pear
   </button>
-  <ul
-    ngRadioGroup
-    [disabled]="disabled.value"
-    [readonly]="readonly.value"
-    class="example-radio-group"
-    aria-label="Select your favorite fruit"
-  >
-    @for (fruit of fruits; track fruit) {
-      @let optionDisabled = disabledOptions.includes(fruit);
-      <li ngRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
-        <span class="example-radio-indicator"></span>
-        <span>{{ fruit }}</span>
-      </li>
-    }
-  </ul>
-  <ul ngRadioGroup class="example-radio-group" aria-label="Select your favorite fruit">
-    @for (fruit of fruits; track fruit) {
-      @let optionDisabled = disabledOptions.includes(fruit);
-      <li ngRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
-        <span class="example-radio-indicator"></span>
-        <span>{{ fruit }}</span>
-      </li>
-    }
-  </ul>
   <button
     ngToolbarWidget
     class="example-radio-button"
