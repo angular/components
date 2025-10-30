@@ -91,7 +91,7 @@ export class GridConfigurableExample {
   focusMode: 'roving' | 'activedescendant' = 'roving';
 
   disabled = new FormControl(false, {nonNullable: true});
-  skipDisabled = new FormControl(true, {nonNullable: true});
+  softDisabled = new FormControl(false, {nonNullable: true});
   enableSelection = new FormControl(false, {nonNullable: true});
 
   gridData: Cell[][] = generateValidGrid(10, 10);

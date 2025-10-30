@@ -17,7 +17,7 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
   items: SignalLike<MenuItemPattern<V>[]>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
+  onSelect?: (value: V) => void;
 }
 
 /** The inputs for the MenuPattern class. */
@@ -33,7 +33,7 @@ export interface MenuInputs<V>
   parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
+  onSelect?: (value: V) => void;
 }
 
 /** The inputs for the MenuTriggerPattern class. */
@@ -41,11 +41,8 @@ export interface MenuTriggerInputs<V> {
   /** A reference to the menu trigger element. */
   element: SignalLike<HTMLElement | undefined>;
 
-  /** A reference to the submenu associated with the menu trigger. */
-  submenu: SignalLike<MenuPattern<V> | undefined>;
-
-  /** Callback function triggered when a menu item is selected. */
-  onSubmit?: (value: V) => void;
+  /** A reference to the menu associated with the trigger. */
+  menu: SignalLike<MenuPattern<V> | undefined>;
 }
 
 /** The inputs for the MenuItemPattern class. */
@@ -308,14 +305,18 @@ export class MenuPattern<V> {
       const isMenuBar = root instanceof MenuBarPattern;
       const isMenuTrigger = root instanceof MenuTriggerPattern;
 
-      if (!item.submenu() && (isMenuTrigger || isMenuBar)) {
+      if (!item.submenu() && isMenuTrigger) {
         root.close({refocus: true});
-        root?.inputs.onSubmit?.(item.value());
+      }
+
+      if (!item.submenu() && isMenuBar) {
+        root.close();
+        root?.inputs.onSelect?.(item.value());
       }
 
       if (!item.submenu() && isMenu) {
         root.inputs.activeItem()?.close({refocus: true});
-        root?.inputs.onSubmit?.(item.value());
+        root?.inputs.onSelect?.(item.value());
       }
     }
   }
@@ -511,11 +512,11 @@ export class MenuTriggerPattern<V> {
   /** Whether the menu trigger has a popup. */
   hasPopup = () => true;
 
-  /** The submenu associated with the trigger. */
-  submenu: SignalLike<MenuPattern<V> | undefined>;
+  /** The menu associated with the trigger. */
+  menu: SignalLike<MenuPattern<V> | undefined>;
 
   /** The tabindex of the menu trigger. */
-  tabindex = computed(() => (this.expanded() && this.submenu()?.inputs.activeItem() ? -1 : 0));
+  tabindex = computed(() => (this.expanded() && this.menu()?.inputs.activeItem() ? -1 : 0));
 
   /** Handles keyboard events for the menu trigger. */
   keydownManager = computed(() => {
@@ -528,7 +529,7 @@ export class MenuTriggerPattern<V> {
   });
 
   constructor(readonly inputs: MenuTriggerInputs<V>) {
-    this.submenu = this.inputs.submenu;
+    this.menu = this.inputs.menu;
   }
 
   /** Handles keyboard events for the menu trigger. */
@@ -549,7 +550,7 @@ export class MenuTriggerPattern<V> {
     if (
       this.expanded() &&
       !element?.contains(relatedTarget) &&
-      !this.inputs.submenu()?.inputs.element()?.contains(relatedTarget)
+      !this.inputs.menu()?.inputs.element()?.contains(relatedTarget)
     ) {
       this.close();
     }
@@ -560,22 +561,22 @@ export class MenuTriggerPattern<V> {
     this.expanded.set(true);
 
     if (opts?.first) {
-      this.inputs.submenu()?.first();
+      this.inputs.menu()?.first();
     } else if (opts?.last) {
-      this.inputs.submenu()?.last();
+      this.inputs.menu()?.last();
     }
   }
 
   /** Closes the menu. */
   close(opts: {refocus?: boolean} = {}) {
     this.expanded.set(false);
-    this.submenu()?.listBehavior.unfocus();
+    this.menu()?.listBehavior.unfocus();
 
     if (opts.refocus) {
       this.inputs.element()?.focus();
     }
 
-    let menuitems = this.inputs.submenu()?.inputs.items() ?? [];
+    let menuitems = this.inputs.menu()?.inputs.items() ?? [];
 
     while (menuitems.length) {
       const menuitem = menuitems.pop();

@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.18.3"
+    "pnpm": "10.20.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -105,7 +105,7 @@
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.30.0",
     "esbuild": "^0.25.0",
-    "firebase-tools": "14.20.0",
+    "firebase-tools": "14.22.0",
     "fs-extra": "^11.0.0",
     "glob": "^11.0.3",
     "highlight.js": "^11.0.0",
@@ -120,7 +120,7 @@
     "karma-jasmine": "^5.0.0",
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
-    "magic-string": "0.30.19",
+    "magic-string": "0.30.21",
     "marked": "^16.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",
@@ -147,6 +147,7 @@
     "tsutils": "^3.21.0",
     "typescript": "5.9.2",
     "vrsource-tslint-rules": "6.0.0",
+    "yaml": "^2.8.1",
     "yargs": "^18.0.0",
     "zx": "^8.0.0"
   },

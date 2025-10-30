@@ -30,8 +30,8 @@ export class ToolbarPattern<V> {
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
-  /** Whether disabled items in the group should be skipped when navigating. */
-  readonly skipDisabled: SignalLike<boolean>;
+  /** Whether disabled items in the group should be focusable. */
+  readonly softDisabled: SignalLike<boolean>;
 
   /** Whether the toolbar is disabled. */
   readonly disabled = computed(() => this.listBehavior.disabled());
@@ -191,7 +191,7 @@ export class ToolbarPattern<V> {
 
   constructor(readonly inputs: ToolbarInputs<V>) {
     this.orientation = inputs.orientation;
-    this.skipDisabled = inputs.skipDisabled;
+    this.softDisabled = inputs.softDisabled;
 
     this.listBehavior = new List({
       ...inputs,

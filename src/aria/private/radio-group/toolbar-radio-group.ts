@@ -25,7 +25,7 @@ export class ToolbarRadioGroupPattern<V>
   constructor(override readonly inputs: ToolbarRadioGroupInputs<V>) {
     if (!!inputs.toolbar()) {
       inputs.orientation = inputs.toolbar()!.orientation;
-      inputs.skipDisabled = inputs.toolbar()!.skipDisabled;
+      inputs.softDisabled = inputs.toolbar()!.softDisabled;
     }
 
     super(inputs);

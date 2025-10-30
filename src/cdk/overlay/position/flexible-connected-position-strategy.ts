@@ -95,9 +95,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Whether the overlay position is locked. */
   private _positionLocked = false;
 
-  /** Whether the overlay is using popovers for positioning. */
-  private _popoverEnabled = false;
-
   /** Cached origin dimensions */
   private _originRect: Dimensions;
 
@@ -514,71 +511,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this;
   }
 
-  /**
-   * Configures that the overlay should be rendered inside a native popover. This has the benefit
-   * if co-locating the overlay with the trigger and being better for accessibility.
-   * @param isPopover Whether the overlay should be a popover.
-   */
-  asPopover(isPopover: boolean): this {
-    this._popoverEnabled = isPopover && 'showPopover' in this._document.body;
-    return this;
-  }
-
   /** @docs-private */
-  createStructure() {
-    if (!this._popoverEnabled) {
-      return null;
+  getPopoverInsertionPoint(): Element {
+    const origin = this._origin;
+
+    if (origin instanceof ElementRef) {
+      return origin.nativeElement;
+    } else if (origin instanceof Element) {
+      return origin;
     }
-
-    const pane = this._document.createElement('div');
-    const host = this._document.createElement('div');
-    host.setAttribute('popover', 'manual');
-    host.classList.add('cdk-overlay-popover');
-    host.appendChild(pane);
-    this.attachHost(host);
-    return {pane, host};
-  }
-
-  /** @docs-private */
-  attachHost(host: HTMLElement): boolean {
-    if (!this._popoverEnabled) {
-      return false;
-    }
-
-    if (!host.parentNode) {
-      let originEl: Element | null;
-
-      if (this._origin instanceof ElementRef) {
-        originEl = this._origin.nativeElement;
-      } else if (typeof Element !== 'undefined' && this._origin instanceof Element) {
-        originEl = this._origin;
-      } else {
-        originEl = null;
-      }
-
-      if (originEl) {
-        originEl.after(host);
-      } else {
-        document.body.appendChild(host);
-      }
-    }
-
-    host.showPopover();
-    return true;
-  }
-
-  /** @docs-private */
-  attachBackdrop(backdrop: HTMLElement, host: HTMLElement): boolean {
-    if (this._popoverEnabled) {
-      host.prepend(backdrop);
-    }
-    return this._popoverEnabled;
-  }
-
-  /** @docs-private */
-  updateStackingOrder(): boolean {
-    // We don't need to update the stacking order since popovers handle it for us.
-    return this._popoverEnabled;
+    return document.body.lastChild as Element;
   }
 
   /**

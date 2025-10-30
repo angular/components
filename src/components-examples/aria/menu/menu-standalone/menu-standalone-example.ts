@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Menu} from '@angular/aria/menu';
+import {Menu, MenuContent} from '@angular/aria/menu';
 import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from '../simple-menu';
 
 /**
@@ -11,6 +11,6 @@ import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from
   templateUrl: 'menu-standalone-example.html',
   styleUrl: '../menu-example.css',
   standalone: true,
-  imports: [Menu, SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText],
+  imports: [Menu, MenuContent, SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText],
 })
 export class MenuStandaloneExample {}

@@ -1,300 +1,329 @@
-<div menu-bar>
-  <div menu-bar-item value="File" [submenu]="fileMenu" #fileItem="ngMenuItem">File</div>
+<div ng-menu-bar>
+  <div ng-menu-bar-item value="File" [submenu]="fileMenu">File</div>
 
-  <div menu [parent]="fileItem" #fileMenu="ngMenu">
-    <div menu-item value="New">
-      <span menu-item-icon>article</span>
-      <span menu-item-text>New</span>
-      <span menu-item-shortcut>⌘N</span>
-    </div>
-
-    <div menu-item value="Open">
-      <span menu-item-icon>folder</span>
-      <span menu-item-text>Open</span>
-      <span menu-item-shortcut>⌘O</span>
-    </div>
-
-    <div menu-item value="Make a copy">
-      <span menu-item-icon>file_copy</span>
-      <span menu-item-text>Make a copy</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Share" #shareItem="ngMenuItem" [submenu]="shareMenu">
-      <span menu-item-icon>person_add</span>
-      <span menu-item-text>Share</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu [parent]="shareItem" #shareMenu="ngMenu">
-      <div menu-item value="Share with others">
-        <span menu-item-icon>person_add</span>
-        <span menu-item-text>Share with others</span>
+  <div ng-menu #fileMenu="ngMenu">
+    <ng-template ngMenuContent>
+      <div ng-menu-item value="New">
+        <span ng-menu-item-icon>article</span>
+        <span ng-menu-item-text>New</span>
+        <span ng-menu-item-shortcut>⌘N</span>
       </div>
 
-      <div menu-item value="Publish to web">
-        <span menu-item-icon>public</span>
-        <span menu-item-text>Publish to web</span>
-      </div>
-    </div>
-
-    <div menu-item value="Download">
-      <span menu-item-icon>download</span>
-      <span menu-item-text>Download</span>
-    </div>
-
-    <div menu-item value="Print">
-      <span menu-item-icon>print</span>
-      <span menu-item-text>Print</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Rename">
-      <span menu-item-icon>edit</span>
-      <span menu-item-text>Rename</span>
-    </div>
-
-    <div menu-item value="Delete">
-      <span menu-item-icon>delete</span>
-      <span menu-item-text>Move to trash</span>
-    </div>
-  </div>
-
-  <div menu-bar-item value="Edit" #editItem="ngMenuItem" [submenu]="editMenu">Edit</div>
-
-  <div menu [parent]="editItem" #editMenu="ngMenu">
-    <div menu-item value="Undo">
-      <span menu-item-icon>undo</span>
-      <span menu-item-text>Undo</span>
-      <span menu-item-shortcut>⌘Z</span>
-    </div>
-
-    <div menu-item value="Redo">
-      <span menu-item-icon>redo</span>
-      <span menu-item-text>Redo</span>
-      <span menu-item-shortcut>⌘Y</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Cut">
-      <span menu-item-icon>content_cut</span>
-      <span menu-item-text>Cut</span>
-      <span menu-item-shortcut>⌘X</span>
-    </div>
-
-    <div menu-item value="Copy">
-      <span menu-item-icon>content_copy</span>
-      <span menu-item-text>Copy</span>
-      <span menu-item-shortcut>⌘C</span>
-    </div>
-
-    <div menu-item value="Paste">
-      <span menu-item-icon>content_paste</span>
-      <span menu-item-text>Paste</span>
-      <span menu-item-shortcut>⌘V</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Find and replace">
-      <span menu-item-icon>find_replace</span>
-      <span menu-item-text>Find and replace</span>
-      <span menu-item-shortcut>⇧⌘H</span>
-    </div>
-  </div>
-
-  <div menu-bar-item value="View" #viewItem="ngMenuItem" [submenu]="viewMenu">View</div>
-
-  <div menu [parent]="viewItem" #viewMenu="ngMenu">
-    <div menu-item value="Show print layout" [disabled]="true">
-      <span menu-item-icon>check</span>
-      <span menu-item-text>Show print layout</span>
-    </div>
-
-    <div menu-item value="Show ruler" [disabled]="true">
-      <span menu-item-icon>check</span>
-      <span menu-item-text>Show ruler</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Zoom in">
-      <span menu-item-text>Zoom in</span>
-      <span menu-item-shortcut>⌘+</span>
-    </div>
-
-    <div menu-item value="Zoom out">
-      <span menu-item-text>Zoom out</span>
-      <span menu-item-shortcut>⌘-</span>
-    </div>
-
-    <div role="separator" class="example-menu-item-separator"></div>
-
-    <div menu-item value="Full screen">
-      <span menu-item-text>Full screen</span>
-    </div>
-  </div>
-
-  <div menu-bar-item value="Insert" [submenu]="insertMenu" #insertItem="ngMenuItem">Insert</div>
-
-  <div menu [parent]="insertItem" #insertMenu="ngMenu">
-    <div menu-item value="Image" #imageItem="ngMenuItem" [submenu]="imageMenu">
-      <span menu-item-icon>image</span>
-      <span menu-item-text>Image</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu [parent]="imageItem" #imageMenu="ngMenu">
-      <div menu-item value="Upload from computer">
-        <span menu-item-icon>upload</span>
-        <span menu-item-text>Upload from computer</span>
+      <div ng-menu-item value="Open">
+        <span ng-menu-item-icon>folder</span>
+        <span ng-menu-item-text>Open</span>
+        <span ng-menu-item-shortcut>⌘O</span>
       </div>
 
-      <div menu-item value="Search the web">
-        <span menu-item-icon>search</span>
-        <span menu-item-text>Search the web</span>
-      </div>
-
-      <div menu-item value="By URL">
-        <span menu-item-icon>link</span>
-        <span menu-item-text>By URL</span>
-      </div>
-    </div>
-
-    <div menu-item value="Table">
-      <span menu-item-icon>table_chart</span>
-      <span menu-item-text>Table</span>
-    </div>
-
-    <div menu-item value="Chart" #chartItem="ngMenuItem" [submenu]="chartMenu">
-      <span menu-item-icon>insert_chart</span>
-      <span menu-item-text>Chart</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu [parent]="chartItem" #chartMenu="ngMenu">
-      <div menu-item value="Bar">
-        <span menu-item-icon>bar_chart</span>
-        <span menu-item-text>Bar</span>
-      </div>
-
-      <div menu-item value="Column">
-        <span menu-item-icon>insert_chart</span>
-        <span menu-item-text>Column</span>
-      </div>
-
-      <div menu-item value="Line">
-        <span menu-item-icon>show_chart</span>
-        <span menu-item-text>Line</span>
-      </div>
-
-      <div menu-item value="Pie">
-        <span menu-item-icon>pie_chart</span>
-        <span menu-item-text>Pie</span>
-      </div>
-    </div>
-
-    <div menu-item value="Horizontal line">
-      <span menu-item-icon>horizontal_rule</span>
-      <span menu-item-text>Horizontal line</span>
-    </div>
-  </div>
-
-  <div menu-bar-item value="Format" [submenu]="formatMenu" #formatItem="ngMenuItem">Format</div>
-
-  <div menu [parent]="formatItem" #formatMenu="ngMenu">
-    <div menu-item value="Text" [submenu]="textMenu" #textItem="ngMenuItem">
-      <span menu-item-icon>format_bold</span>
-      <span menu-item-text>Text</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu #textMenu="ngMenu" [parent]="textItem">
-      <div menu-item value="Bold">
-        <span menu-item-icon>format_bold</span>
-        <span menu-item-text>Bold</span>
-        <span menu-item-shortcut>⌘B</span>
-      </div>
-
-      <div menu-item value="Italic">
-        <span menu-item-icon>format_italic</span>
-        <span menu-item-text>Italic</span>
-        <span menu-item-shortcut>⌘I</span>
-      </div>
-
-      <div menu-item value="Underline">
-        <span menu-item-icon>format_underlined</span>
-        <span menu-item-text>Underline</span>
-        <span menu-item-shortcut>⌘U</span>
-      </div>
-
-      <div menu-item value="Strikethrough">
-        <span menu-item-icon>strikethrough_s</span>
-        <span menu-item-text>Strikethrough</span>
-        <span menu-item-shortcut>⇧⌘X</span>
+      <div ng-menu-item value="Make a copy">
+        <span ng-menu-item-icon>file_copy</span>
+        <span ng-menu-item-text>Make a copy</span>
       </div>
 
       <div role="separator" class="example-menu-item-separator"></div>
 
-      <div menu-item value="Size" [submenu]="sizeMenu" #sizeItem="ngMenuItem">
-        <span menu-item-text>Size</span>
-        <span menu-item-icon class="example-arrow">arrow_right</span>
+      <div ng-menu-item value="Share" [submenu]="shareMenu">
+        <span ng-menu-item-icon>person_add</span>
+        <span ng-menu-item-text>Share</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
       </div>
 
-      <div menu #sizeMenu="ngMenu" [parent]="sizeItem">
-        <div menu-item value="Increase font size">
-          <span menu-item-text>Increase font size</span>
-          <span menu-item-shortcut>⇧⌘.</span>
-        </div>
+      <div ng-menu #shareMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Share with others">
+            <span ng-menu-item-icon>person_add</span>
+            <span ng-menu-item-text>Share with others</span>
+          </div>
 
-        <div menu-item value="Decrease font size">
-          <span menu-item-text>Decrease font size</span>
-          <span menu-item-shortcut>⇧⌘,</span>
-        </div>
-      </div>
-    </div>
-
-    <div menu-item value="Paragraph styles" [submenu]="paragraphMenu" #paragraphItem="ngMenuItem">
-      <span menu-item-icon>format_align_justify</span>
-      <span menu-item-text>Paragraph styles</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu #paragraphMenu="ngMenu" [parent]="paragraphItem">
-      <div menu-item value="Normal text">Normal text</div>
-      <div menu-item value="Heading 1">Heading 1</div>
-      <div menu-item value="Heading 2">Heading 2</div>
-    </div>
-
-    <div menu-item [submenu]="alignMenu" value="Align & indent" #alignItem="ngMenuItem">
-      <span menu-item-icon>format_indent_increase</span>
-      <span menu-item-text>Align & indent</span>
-      <span menu-item-icon class="example-arrow">arrow_right</span>
-    </div>
-
-    <div menu #alignMenu="ngMenu" [parent]="alignItem">
-      <div menu-item value="Align left">
-        <span menu-item-icon>format_align_left</span>
-        <span menu-item-text>Align left</span>
+          <div ng-menu-item value="Publish to web">
+            <span ng-menu-item-icon>public</span>
+            <span ng-menu-item-text>Publish to web</span>
+          </div>
+        </ng-template>
       </div>
 
-      <div menu-item value="Align center">
-        <span menu-item-icon>format_align_center</span>
-        <span menu-item-text>Align center</span>
+      <div ng-menu-item value="Download">
+        <span ng-menu-item-icon>download</span>
+        <span ng-menu-item-text>Download</span>
       </div>
 
-      <div menu-item value="Align right">
-        <span menu-item-icon>format_align_right</span>
-        <span menu-item-text>Align right</span>
+      <div ng-menu-item value="Print">
+        <span ng-menu-item-icon>print</span>
+        <span ng-menu-item-text>Print</span>
       </div>
 
-      <div menu-item value="Justify">
-        <span menu-item-icon>format_align_justify</span>
-        <span menu-item-text>Justify</span>
+      <div role="separator" class="example-menu-item-separator"></div>
+
+      <div ng-menu-item value="Rename">
+        <span ng-menu-item-icon>edit</span>
+        <span ng-menu-item-text>Rename</span>
       </div>
-    </div>
+
+      <div ng-menu-item value="Delete">
+        <span ng-menu-item-icon>delete</span>
+        <span ng-menu-item-text>Move to trash</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div ng-menu-bar-item value="Edit" [submenu]="editMenu">Edit</div>
+
+  <div ng-menu #editMenu="ngMenu">
+    <ng-template ngMenuContent>
+      <div ng-menu-item value="Undo">
+        <span ng-menu-item-icon>undo</span>
+        <span ng-menu-item-text>Undo</span>
+        <span ng-menu-item-shortcut>⌘Z</span>
+      </div>
+
+      <div ng-menu-item value="Redo">
+        <span ng-menu-item-icon>redo</span>
+        <span ng-menu-item-text>Redo</span>
+        <span ng-menu-item-shortcut>⌘Y</span>
+      </div>
+
+      <div role="separator" class="example-menu-item-separator"></div>
+
+      <div ng-menu-item value="Cut">
+        <span ng-menu-item-icon>content_cut</span>
+        <span ng-menu-item-text>Cut</span>
+        <span ng-menu-item-shortcut>⌘X</span>
+      </div>
+
+      <div ng-menu-item value="Copy">
+        <span ng-menu-item-icon>content_copy</span>
+        <span ng-menu-item-text>Copy</span>
+        <span ng-menu-item-shortcut>⌘C</span>
+      </div>
+
+      <div ng-menu-item value="Paste">
+        <span ng-menu-item-icon>content_paste</span>
+        <span ng-menu-item-text>Paste</span>
+        <span ng-menu-item-shortcut>⌘V</span>
+      </div>
+
+      <div role="separator" class="example-menu-item-separator"></div>
+
+      <div ng-menu-item value="Find and replace">
+        <span ng-menu-item-icon>find_replace</span>
+        <span ng-menu-item-text>Find and replace</span>
+        <span ng-menu-item-shortcut>⇧⌘H</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div ng-menu-bar-item value="View" [submenu]="viewMenu">View</div>
+
+  <div ng-menu #viewMenu="ngMenu">
+    <ng-template ngMenuContent>
+      <div ng-menu-item value="Show print layout" [disabled]="true">
+        <span ng-menu-item-icon>check</span>
+        <span ng-menu-item-text>Show print layout</span>
+      </div>
+
+      <div ng-menu-item value="Show ruler" [disabled]="true">
+        <span ng-menu-item-icon>check</span>
+        <span ng-menu-item-text>Show ruler</span>
+      </div>
+
+      <div role="separator" class="example-menu-item-separator"></div>
+
+      <div ng-menu-item value="Zoom in">
+        <span ng-menu-item-text>Zoom in</span>
+        <span ng-menu-item-shortcut>⌘+</span>
+      </div>
+
+      <div ng-menu-item value="Zoom out">
+        <span ng-menu-item-text>Zoom out</span>
+        <span ng-menu-item-shortcut>⌘-</span>
+      </div>
+
+      <div role="separator" class="example-menu-item-separator"></div>
+
+      <div ng-menu-item value="Full screen">
+        <span ng-menu-item-text>Full screen</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div ng-menu-bar-item value="Insert" [submenu]="insertMenu">Insert</div>
+
+  <div ng-menu #insertMenu="ngMenu">
+    <ng-template ngMenuContent>
+      <div ng-menu-item value="Image" [submenu]="imageMenu">
+        <span ng-menu-item-icon>image</span>
+        <span ng-menu-item-text>Image</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #imageMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Upload from computer">
+            <span ng-menu-item-icon>upload</span>
+            <span ng-menu-item-text>Upload from computer</span>
+          </div>
+
+          <div ng-menu-item value="Search the web">
+            <span ng-menu-item-icon>search</span>
+            <span ng-menu-item-text>Search the web</span>
+          </div>
+
+          <div ng-menu-item value="By URL">
+            <span ng-menu-item-icon>link</span>
+            <span ng-menu-item-text>By URL</span>
+          </div>
+        </ng-template>
+      </div>
+
+      <div ng-menu-item value="Table">
+        <span ng-menu-item-icon>table_chart</span>
+        <span ng-menu-item-text>Table</span>
+      </div>
+
+      <div ng-menu-item value="Chart" [submenu]="chartMenu">
+        <span ng-menu-item-icon>insert_chart</span>
+        <span ng-menu-item-text>Chart</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #chartMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Bar">
+            <span ng-menu-item-icon>bar_chart</span>
+            <span ng-menu-item-text>Bar</span>
+          </div>
+
+          <div ng-menu-item value="Column">
+            <span ng-menu-item-icon>insert_chart</span>
+            <span ng-menu-item-text>Column</span>
+          </div>
+
+          <div ng-menu-item value="Line">
+            <span ng-menu-item-icon>show_chart</span>
+            <span ng-menu-item-text>Line</span>
+          </div>
+
+          <div ng-menu-item value="Pie">
+            <span ng-menu-item-icon>pie_chart</span>
+            <span ng-menu-item-text>Pie</span>
+          </div>
+        </ng-template>
+      </div>
+
+      <div ng-menu-item value="Horizontal line">
+        <span ng-menu-item-icon>horizontal_rule</span>
+        <span ng-menu-item-text>Horizontal line</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div ng-menu-bar-item value="Format" [submenu]="formatMenu">Format</div>
+
+  <div ng-menu #formatMenu="ngMenu">
+    <ng-template ngMenuContent>
+      <div ng-menu-item value="Text" [submenu]="textMenu">
+        <span ng-menu-item-icon>format_bold</span>
+        <span ng-menu-item-text>Text</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #textMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Bold">
+            <span ng-menu-item-icon>format_bold</span>
+            <span ng-menu-item-text>Bold</span>
+            <span ng-menu-item-shortcut>⌘B</span>
+          </div>
+
+          <div ng-menu-item value="Italic">
+            <span ng-menu-item-icon>format_italic</span>
+            <span ng-menu-item-text>Italic</span>
+            <span ng-menu-item-shortcut>⌘I</span>
+          </div>
+
+          <div ng-menu-item value="Underline">
+            <span ng-menu-item-icon>format_underlined</span>
+            <span ng-menu-item-text>Underline</span>
+            <span ng-menu-item-shortcut>⌘U</span>
+          </div>
+
+          <div ng-menu-item value="Strikethrough">
+            <span ng-menu-item-icon>strikethrough_s</span>
+            <span ng-menu-item-text>Strikethrough</span>
+            <span ng-menu-item-shortcut>⇧⌘X</span>
+          </div>
+
+          <div role="separator" class="example-menu-item-separator"></div>
+
+          <div ng-menu-item value="Size" [submenu]="sizeMenu">
+            <span ng-menu-item-text>Size</span>
+            <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+          </div>
+
+          <div ng-menu #sizeMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ng-menu-item value="Increase font size">
+                <span ng-menu-item-text>Increase font size</span>
+                <span ng-menu-item-shortcut>⇧⌘.</span>
+              </div>
+
+              <div ng-menu-item value="Decrease font size">
+                <span ng-menu-item-text>Decrease font size</span>
+                <span ng-menu-item-shortcut>⇧⌘,</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+      </div>
+
+      <div
+        ng-menu-item
+        value="Paragraph styles"
+        [submenu]="paragraphMenu"
+       
+      >
+        <span ng-menu-item-icon>format_align_justify</span>
+        <span ng-menu-item-text>Paragraph styles</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #paragraphMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Normal text">Normal text</div>
+          <div ng-menu-item value="Heading 1">Heading 1</div>
+          <div ng-menu-item value="Heading 2">Heading 2</div>
+        </ng-template>
+      </div>
+
+      <div ng-menu-item [submenu]="alignMenu" value="Align & indent">
+        <span ng-menu-item-icon>format_indent_increase</span>
+        <span ng-menu-item-text>Align & indent</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #alignMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Align left">
+            <span ng-menu-item-icon>format_align_left</span>
+            <span ng-menu-item-text>Align left</span>
+          </div>
+
+          <div ng-menu-item value="Align center">
+            <span ng-menu-item-icon>format_align_center</span>
+            <span ng-menu-item-text>Align center</span>
+          </div>
+
+          <div ng-menu-item value="Align right">
+            <span ng-menu-item-icon>format_align_right</span>
+            <span ng-menu-item-text>Align right</span>
+          </div>
+
+          <div ng-menu-item value="Justify">
+            <span ng-menu-item-icon>format_align_justify</span>
+            <span ng-menu-item-text>Justify</span>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
   </div>
 </div>

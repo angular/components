@@ -20,6 +20,7 @@ import {
   model,
   Signal,
 } from '@angular/core';
+import {Directionality} from '@angular/cdk/bidi';
 import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
 /** A directive that provides grid-based navigation and selection behavior. */
@@ -52,6 +53,9 @@ export class Grid {
     this._rows().map(r => r._pattern),
   );
 
+  /** Text direction. */
+  readonly textDirection = inject(Directionality).valueSignal;
+
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
 
@@ -61,8 +65,8 @@ export class Grid {
   /** Whether the grid is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** Whether to skip disabled items during navigation. */
-  readonly skipDisabled = input(true, {transform: booleanAttribute});
+  /** Whether to allow disabled items to receive focus. */
+  readonly softDisabled = input(false, {transform: booleanAttribute});
 
   /** The focus strategy used by the grid. */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');

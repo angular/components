@@ -35,7 +35,7 @@ export class AccordionConfigurableExample {
   wrap = new FormControl(true, {nonNullable: true});
   multi = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
-  skipDisabled = new FormControl(true, {nonNullable: true});
+  softDisabled = new FormControl(true, {nonNullable: true});
   expandedIds = model<string[]>(['item1']);
 
   // Example items

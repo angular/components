@@ -30,8 +30,8 @@ export interface GridFocusInputs {
   /** Whether the grid is disabled. */
   disabled: SignalLike<boolean>;
 
-  /** Whether disabled cells in the grid should be skipped when navigating. */
-  skipDisabled: SignalLike<boolean>;
+  /** Whether disabled cells in the grid should be focusable. */
+  softDisabled: SignalLike<boolean>;
 }
 
 /** Dependencies for the `GridFocus` class. */
@@ -118,7 +118,7 @@ export class GridFocus<T extends GridFocusCell> {
 
   /** Returns true if the given cell can be navigated to. */
   isFocusable(cell: T): boolean {
-    return !cell.disabled() || !this.inputs.skipDisabled();
+    return !cell.disabled() || this.inputs.softDisabled();
   }
 
   /** Focuses the given cell. */

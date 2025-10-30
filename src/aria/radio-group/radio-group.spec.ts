@@ -37,7 +37,7 @@ describe('RadioGroup', () => {
     disabled?: boolean;
     readonly?: boolean;
     value?: number | null;
-    skipDisabled?: boolean;
+    softDisabled?: boolean;
     focusMode?: 'roving' | 'activedescendant';
     disabledOptions?: number[];
     options?: TestOption[];
@@ -62,8 +62,8 @@ describe('RadioGroup', () => {
     if (opts?.value !== undefined) {
       testComponent.value = opts.value;
     }
-    if (opts?.skipDisabled !== undefined) {
-      testComponent.skipDisabled = opts.skipDisabled;
+    if (opts?.softDisabled !== undefined) {
+      testComponent.softDisabled = opts.softDisabled;
     }
     if (opts?.focusMode !== undefined) {
       testComponent.focusMode = opts.focusMode;
@@ -376,22 +376,22 @@ describe('RadioGroup', () => {
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should skip disabled radio buttons (skipDisabled="true")', () => {
+        it('should skip disabled radio buttons when softDisabled is false', () => {
           setupRadioGroup({
             focusMode,
             orientation: 'vertical',
-            skipDisabled: true,
+            softDisabled: false,
             disabledOptions: [1, 2],
           });
           down();
           expect(isFocused(3)).toBe(true);
         });
 
-        it('should not skip disabled radio buttons (skipDisabled="false")', () => {
+        it('should not skip disabled radio buttons (softDisabled="true")', () => {
           setupRadioGroup({
             focusMode,
             orientation: 'vertical',
-            skipDisabled: false,
+            softDisabled: true,
             disabledOptions: [1, 2],
           });
           down();
@@ -414,22 +414,22 @@ describe('RadioGroup', () => {
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should skip disabled radio buttons (skipDisabled="true")', () => {
+        it('should skip disabled radio buttons (softDisabled="false")', () => {
           setupRadioGroup({
             focusMode,
             orientation: 'horizontal',
-            skipDisabled: true,
+            softDisabled: false,
             disabledOptions: [1, 2],
           });
           right();
           expect(isFocused(3)).toBe(true);
         });
 
-        it('should not skip disabled radio buttons (skipDisabled="false")', () => {
+        it('should not skip disabled radio buttons (softDisabled="true")', () => {
           setupRadioGroup({
             focusMode,
             orientation: 'horizontal',
-            skipDisabled: false,
+            softDisabled: true,
             disabledOptions: [1, 2],
           });
           right();
@@ -454,7 +454,7 @@ describe('RadioGroup', () => {
           it('should skip disabled radio buttons when navigating', () => {
             setupRadioGroup({
               focusMode,
-              skipDisabled: true,
+              softDisabled: false,
               textDirection: 'rtl',
               disabledOptions: [1, 2],
               orientation: 'horizontal',
@@ -473,14 +473,14 @@ describe('RadioGroup', () => {
         expect(isFocused(3)).toBe(true);
       });
 
-      it('should move focus to the clicked radio button if the group is disabled (skipDisabled="true")', () => {
-        setupRadioGroup({focusMode, skipDisabled: true, disabled: true});
+      it('should not move focus to the clicked radio button if the group is disabled (softDisabled="false")', () => {
+        setupRadioGroup({focusMode, softDisabled: false, disabled: true});
         click(3);
         expect(isFocused(3)).toBe(false);
       });
 
-      it('should not move focus to the clicked radio button if the group is disabled (skipDisabled="false")', () => {
-        setupRadioGroup({focusMode, skipDisabled: true, disabled: true});
+      it('should not move focus to the clicked radio button if the group is disabled (softDisabled="true")', () => {
+        setupRadioGroup({focusMode, softDisabled: true, disabled: true});
         click(3);
         expect(isFocused(0)).toBe(false);
       });
@@ -508,9 +508,9 @@ describe('RadioGroup', () => {
     });
 
     describe('bad accessibility violations', () => {
-      it('should report when the selected radio button is disabled and skipDisabled is true', () => {
+      it('should report when the selected radio button is disabled and softDisabled is false', () => {
         spyOn(console, 'error');
-        setupRadioGroup({value: 1, skipDisabled: true, disabledOptions: [1]});
+        setupRadioGroup({value: 1, softDisabled: false, disabledOptions: [1]});
         expect(console.error).toHaveBeenCalled();
       });
     });
@@ -531,7 +531,7 @@ interface TestOption {
       [readonly]="readonly"
       [focusMode]="focusMode"
       [orientation]="orientation"
-      [skipDisabled]="skipDisabled"
+      [softDisabled]="softDisabled"
       ngRadioGroup>
       @for (option of options(); track option.value) {
         <div ngRadioButton [value]="option.value" [disabled]="option.disabled">{{ option.label }}</div>
@@ -552,7 +552,7 @@ class RadioGroupExample {
   value: number | null = null;
   disabled = false;
   readonly = false;
-  skipDisabled = true;
+  softDisabled = false;
   focusMode: 'roving' | 'activedescendant' = 'roving';
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 }

@@ -24,7 +24,7 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
   ],
 })
 export class ToolbarConfigurableExample {
-  skipDisabled = new FormControl(false, {nonNullable: true});
+  softDisabled = new FormControl(true, {nonNullable: true});
   wrap = new FormControl(true, {nonNullable: true});
   toolbarDisabled = new FormControl(false, {nonNullable: true});
   orientation: 'vertical' | 'horizontal' = 'horizontal';

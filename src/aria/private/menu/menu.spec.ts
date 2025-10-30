@@ -42,7 +42,7 @@ function getMenuTriggerPattern() {
   const submenu = signal<MenuPattern<string> | undefined>(undefined);
   const trigger = new MenuTriggerPattern<string>({
     element,
-    submenu,
+    menu: submenu,
   });
   return trigger;
 }
@@ -60,7 +60,7 @@ function getMenuBarPattern(values: string[]) {
     value: signal([]),
     wrap: signal(true),
     typeaheadDelay: signal(0.5),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     focusMode: signal('activedescendant'),
     element: signal(document.createElement('div')),
   });
@@ -97,7 +97,7 @@ function getMenuPattern(
     activeItem: signal(undefined),
     typeaheadDelay: signal(0.5),
     wrap: signal(true),
-    skipDisabled: signal(true),
+    softDisabled: signal(false),
     multi: signal(false),
     focusMode: signal('activedescendant'),
     textDirection: signal('ltr'),
@@ -123,10 +123,14 @@ function getMenuPattern(
     }),
   );
 
-  if (parent) {
+  if (parent instanceof MenuTriggerPattern) {
+    (parent.menu as WritableSignal<MenuPattern<string>>).set(menu);
+    parent.inputs.element()?.appendChild(menu.inputs.element()!);
+  } else if (parent instanceof MenuItemPattern) {
     (parent.submenu as WritableSignal<MenuPattern<string>>).set(menu);
     parent.inputs.element()?.appendChild(menu.inputs.element()!);
   }
+
   menu.inputs.activeItem.set(items()[0]);
   return menu;
 }
@@ -240,43 +244,43 @@ describe('Standalone Menu Pattern', () => {
   describe('Selection', () => {
     it('should select an item on click', () => {
       const items = menu.inputs.items();
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on enter', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on space', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSubmit).toHaveBeenCalledWith('b');
+      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
     });
 
     it('should not select a disabled item', () => {
       const items = menu.inputs.items() as TestMenuItem[];
       items[1].disabled.set(true);
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSubmit = jasmine.createSpy('onSubmit');
+      menu.inputs.onSelect = jasmine.createSpy('onSelect');
 
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSubmit).not.toHaveBeenCalled();
+      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
     });
   });
 

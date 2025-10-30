@@ -316,7 +316,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     ngOnInit(): void;
     _onBlur(): void;
     _onChange: (value: any) => void;
-    onContainerClick(): void;
+    onContainerClick(event: MouseEvent): void;
     // (undocumented)
     _onFocus(): void;
     _onTouched: () => void;

@@ -13,9 +13,9 @@
       <mat-checkbox
         ngGridCellWidget
         (focusin)="cb2.focus()"
-        [formControl]="skipDisabled"
+        [formControl]="softDisabled"
         #cb2="matCheckbox"
-        >Skip Disabled</mat-checkbox
+        >Soft Disabled</mat-checkbox
       >
     </td>
     <td ngGridCell>
@@ -97,7 +97,7 @@
     [colWrap]="colWrap"
     [focusMode]="focusMode"
     [disabled]="disabled.value"
-    [skipDisabled]="skipDisabled.value"
+    [softDisabled]="softDisabled.value"
     [enableSelection]="enableSelection.value"
     #grid="ngGrid"
   >

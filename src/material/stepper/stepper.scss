@@ -19,10 +19,16 @@ $fallbacks: m3-stepper.get-tokens();
   background: token-utils.slot(stepper-container-color, $fallbacks);
 }
 
+.mat-horizontal-stepper-header-wrapper {
+  align-items: center;
+  display: flex;
+}
+
 .mat-horizontal-stepper-header-container {
   white-space: nowrap;
   display: flex;
   align-items: center;
+  flex-grow: 1;
 
   .mat-stepper-label-position-bottom & {
     align-items: flex-start;
