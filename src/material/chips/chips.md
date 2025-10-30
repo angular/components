@@ -65,6 +65,9 @@ Users can press delete to remove a chip. Pressing delete triggers the `removed` 
 
 A `<mat-chip-grid>` can be combined with `<mat-autocomplete>` to enable free-form chip input with suggestions.
 
+> _Please note: when using `MatChipsModule` together with `MatAutocompleteModule`, the order in which modules are imported matters._
+> _To ensure correct behavior (e.g., preventing adding typed text when autocomplete option is selected via keyboard), make sure to import `MatAutocompleteModule` before `MatChipsModule`._
+
 <!-- example(chips-autocomplete) -->
 
 ### Icons
@@ -141,7 +144,7 @@ The chips components support 3 user interaction patterns, each with its own cont
 
 `<mat-chip-grid>` and `<mat-chip-row>` : These elements implement a grid accessibility pattern. Use them as part of a free form input that allows users to enter text to add chips.
 
-Note : be sure to have the input element be a sibling of mat-chip-grid to ensure accessibility of the input element by accessibility devices such as Voice Control. It is also recommended to apply an appropriate `aria-label` to the input to optimize accessibility of the input.
+> _Please note: be sure to have the input element be a sibling of `mat-chip-grid` to ensure accessibility of the input element by accessibility devices such as Voice Control. It is also recommended to apply an appropriate `aria-label` to the input to optimize accessibility of the input._
 
 ```html
 <mat-form-field>

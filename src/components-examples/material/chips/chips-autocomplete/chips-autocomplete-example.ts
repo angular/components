@@ -2,8 +2,11 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {ChangeDetectionStrategy, Component, computed, inject, model, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
-import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {
+  MatAutocompleteModule,
+  type MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
+import {type MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 
@@ -14,7 +17,9 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'chips-autocomplete-example',
   templateUrl: 'chips-autocomplete-example.html',
   styleUrl: 'chips-autocomplete-example.css',
-  imports: [MatFormFieldModule, MatChipsModule, MatIconModule, MatAutocompleteModule, FormsModule],
+  // Make sure to import `MatAutocompleteModule` before `MatChipsModule` to prevent adding typed
+  // text when autocomplete option is selected via keyboard).
+  imports: [MatFormFieldModule, MatAutocompleteModule, MatChipsModule, MatIconModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsAutocompleteExample {
