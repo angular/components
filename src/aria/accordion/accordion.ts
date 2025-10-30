@@ -46,7 +46,7 @@ import {
     'role': 'region',
     '[attr.id]': '_pattern.id()',
     '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
-    '[attr.inert]': '_pattern.hidden() ? true : null',
+    '[attr.inert]': 'hidden() ? true : null',
   },
 })
 export class AccordionPanel {
@@ -58,6 +58,9 @@ export class AccordionPanel {
 
   /** A local unique identifier for the panel, used to match with its trigger's value. */
   value = input.required<string>();
+
+  /** Whether the accordion panel is hidden. True if the associated trigger is not expanded. */
+  readonly hidden = computed(() => this._pattern.hidden());
 
   /** The parent accordion trigger pattern that controls this panel. This is set by AccordionGroup. */
   readonly accordionTrigger: WritableSignal<AccordionTriggerPattern | undefined> =
@@ -73,7 +76,7 @@ export class AccordionPanel {
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(!this._pattern.hidden());
+      this._deferredContentAware.contentVisible.set(!this.hidden());
     });
   }
 
@@ -102,14 +105,14 @@ export class AccordionPanel {
   exportAs: 'ngAccordionTrigger',
   host: {
     'class': 'ng-accordion-trigger',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     'role': 'button',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.controls()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-disabled]': 'disabled()',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': 'tabindex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': '_pattern.onFocus($event)',
@@ -130,6 +133,18 @@ export class AccordionTrigger {
 
   /** Whether the trigger is disabled. */
   disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the trigger is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the trigger is expanded. */
+  readonly expanded = computed(() => this._pattern.expanded());
+
+  /** The index of the trigger within its accordion group. */
+  readonly index = computed(() => this._pattern.index());
+
+  /** The tabindex of the trigger. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
 
   /**
    * Whether this trigger is completely inaccessible.
