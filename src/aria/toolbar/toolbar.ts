@@ -169,7 +169,7 @@ export class Toolbar<V> {
   exportAs: 'ngToolbarWidget',
   host: {
     'class': 'ng-toolbar-widget',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.tabindex]': '_pattern.tabindex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
@@ -201,6 +201,12 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 
   /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
   readonly hardDisabled = computed(() => this._pattern.disabled() && !this._toolbar.softDisabled());
+
+  /** Whether the widget is currently the active one (focused). */
+  readonly active = computed(() => this._pattern.active);
+
+  /** The position of the widget within the toolbar. */
+  readonly index = computed(() => this._pattern.index);
 
   /** The ToolbarWidget UIPattern. */
   readonly _pattern = new ToolbarWidgetPattern<V>({
@@ -252,6 +258,9 @@ export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
 
   /** The controls that can be performed on the widget group. */
   readonly controls = signal<ToolbarWidgetGroupControls | undefined>(undefined);
+
+  /** The position of the widget within the toolbar. */
+  readonly index = computed(() => this._pattern.index);
 
   /** The ToolbarWidgetGroup UIPattern. */
   readonly _pattern = new ToolbarWidgetGroupPattern<V>({
