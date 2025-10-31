@@ -411,8 +411,8 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       path-normalize:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       rxjs:
         specifier: 'catalog:'
         version: 6.6.7
@@ -7486,9 +7486,9 @@ packages:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
 
-  path-normalize@7.0.0:
-    resolution: {integrity: sha512-ttsn1Iao7U+gCe54LSWDyXSfHJvXitn23ymuF/OyJokUQH1ukfjQJQUOwsySKPaphm8DzkjWSvtHL0yALFoJng==}
-    engines: {node: '>=16.0.0'}
+  path-normalize@8.0.0:
+    resolution: {integrity: sha512-ts9hlR9BiWspmSP8uWO09VYF2gDK329MCs2DJXPPbJa+A+2jb0nxrAJGYAvv3yCllQsh6maviOBnvPswwAsnKg==}
+    engines: {node: '>=24.0.0'}
 
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
@@ -17674,7 +17674,7 @@ snapshots:
 
   path-key@3.1.1: {}
 
-  path-normalize@7.0.0: {}
+  path-normalize@8.0.0: {}
 
   path-parse@1.0.7: {}
 
