@@ -12,6 +12,7 @@ import { EmbeddedViewRef } from '@angular/core';
 import { EnvironmentInjector } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Location as Location_2 } from '@angular/common';
 import { NgIterable } from '@angular/core';
@@ -36,6 +37,9 @@ export class BlockScrollStrategy implements ScrollStrategy {
     disable(): void;
     enable(): void;
 }
+
+// @public
+export const CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG: InjectionToken<CdkConnectedOverlayConfig>;
 
 // @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {

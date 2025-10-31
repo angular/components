@@ -17,6 +17,7 @@ export {
   CdkOverlayOrigin,
   CdkConnectedOverlay,
   CdkConnectedOverlayConfig,
+  CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG,
 } from './overlay-directives';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
 export {OverlayRef, OverlaySizeConfig} from './overlay-ref';
