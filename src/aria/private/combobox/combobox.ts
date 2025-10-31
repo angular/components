@@ -87,6 +87,12 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
 
   /** Sets the value of the combobox based on the selected item. */
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
+
+  /** Handles typeahead search for the popup. */
+  search: (char: string, opts?: {selectOne?: boolean}) => void;
+
+  /** Whether the user is currently typing for typeahead purposes. */
+  isTyping: SignalLike<boolean>;
 }
 
 export interface ComboboxTreeControls<T extends ListItem<V>, V>
@@ -147,6 +153,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is read-only. */
   readonly = computed(() => this.inputs.readonly() || null);
 
+  /** Represents the space key. Does nothing when the user is actively using typeahead. */
+  dynamicSpaceKey = computed(() => (this.inputs.popupControls()?.isTyping() ? '' : ' '));
+
+  /** The regexp used to decide if a key should trigger typeahead. */
+  typeaheadRegexp = /^.$/;
+
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
     if (!this.expanded()) {
@@ -157,8 +169,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
       if (this.readonly()) {
         manager
+          .on(' ', () => this.open({selected: true}))
           .on('Enter', () => this.open({selected: true}))
-          .on(' ', () => this.open({selected: true}));
+          .on(this.typeaheadRegexp, e => this.search(e.key));
       }
 
       return manager;
@@ -179,7 +192,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('Enter', () => this.select({commit: true, close: true}));
 
     if (this.readonly()) {
-      manager.on(' ', () => this.select({commit: true, close: true}));
+      manager
+        .on(this.typeaheadRegexp, e => this.search(e.key))
+        .on(this.dynamicSpaceKey, () => this.select({commit: true, close: true}));
     }
 
     if (popupControls.role() === 'tree') {
@@ -197,8 +212,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     return manager;
   });
 
-  /** The pointerup event manager for the combobox. */
-  pointerup = computed(() =>
+  /** The click event manager for the combobox. */
+  click = computed(() =>
     new PointerEventManager().on(e => {
       const item = this.inputs.popupControls()?.getItem(e);
 
@@ -226,10 +241,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
-  /** Handles pointerup events for the combobox. */
-  onPointerup(event: PointerEvent) {
+  /** Handles click events for the combobox. */
+  onClick(event: PointerEvent) {
     if (!this.inputs.disabled()) {
-      this.pointerup().handle(event);
+      this.click().handle(event);
     }
   }
 
@@ -351,6 +366,16 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
+  /** Handles typeahead search for the combobox. */
+  search(char: string) {
+    if (!this.expanded()) {
+      this.open();
+    }
+
+    const selectOne = this.inputs.filterMode() !== 'manual';
+    this.inputs.popupControls()?.search(char, {selectOne});
+  }
+
   /** Highlights the currently selected item in the combobox. */
   highlight() {
     const inputEl = this.inputs.inputEl();
@@ -383,7 +408,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     const popupControls = this.inputs.popupControls();
 
-    if (!this.expanded()) {
+    if (!this.expanded() && !this.readonly()) {
       this.inputs.inputValue?.set('');
       popupControls?.clearSelection();
 

@@ -33,7 +33,7 @@ describe('Combobox', () => {
 
     const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
       focus();
-      element.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, ...eventInit}));
+      element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
       fixture.detectChanges();
     };
 
@@ -546,13 +546,13 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should clear selection on escape when closed', () => {
+      it('should NOT clear selection on escape when closed', () => {
         focus();
         down();
         enter();
         expect(inputElement.value).toBe('Alabama');
         escape();
-        expect(inputElement.value).toBe('');
+        expect(inputElement.value).toBe('Alabama');
       });
     });
 
@@ -599,7 +599,7 @@ describe('Combobox', () => {
 
     const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
       focus();
-      element.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, ...eventInit}));
+      element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
       fixture.detectChanges();
     };
 
@@ -1109,7 +1109,7 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should clear selection on escape when closed', () => {
+      it('should NOT clear selection on escape when closed', () => {
         focus();
         down();
         right();
@@ -1118,7 +1118,7 @@ describe('Combobox', () => {
         expect(inputElement.value).toBe('December');
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
         escape();
-        expect(inputElement.value).toBe('');
+        expect(inputElement.value).toBe('December');
       });
     });
   });

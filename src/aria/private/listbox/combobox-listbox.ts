@@ -87,4 +87,10 @@ export class ComboboxListboxPattern<V>
 
   /** Sets the value of the combobox listbox. */
   setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
+
+  /** Whether the user is currently typing for typeahead. */
+  isTyping = () => this.listBehavior.isTyping();
+
+  /** Handles typeahead search for the listbox. */
+  search = (char: string, opts?: {selectOne?: boolean}) => this.listBehavior.search(char, opts);
 }
