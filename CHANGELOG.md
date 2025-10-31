@@ -1,3 +1,20 @@
+<a name="21.0.0-rc.0"></a>
+# 21.0.0-rc.0 "leather shoes" (2025-10-31)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0e4bf076b1](https://github.com/angular/components/commit/0e4bf076b163da2600a159ab084ad200d47296ac) | fix | **overlay:** hide native backdrop |
+| [84f8f10ba8](https://github.com/angular/components/commit/84f8f10ba871463e4f71a529a6bb0212093dc19b) | fix | **overlay:** make it easier to set default for overlay directive |
+| [a4dc30ce8e](https://github.com/angular/components/commit/a4dc30ce8e2b397fcec5d585b6f0e3faa3835f5f) | fix | **overlay:** simplify matching the overlay to the trigger width |
+| [8d00344f20](https://github.com/angular/components/commit/8d00344f200452971209075913e96804afa6f619) | fix | **overlay:** simplify public API of overlay directive |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [47bdfb2007](https://github.com/angular/components/commit/47bdfb200769847292a1f07c22f52f96a0892874) | fix | **dialog:** afterOpened emitting too early when animations are disabled ([#32211](https://github.com/angular/components/pull/32211)) |
+| [378f4cf0ba](https://github.com/angular/components/commit/378f4cf0ba66af1d9f34aee9f7be03e7ce22c053) | fix | **menu:** add filter for trigger icon name ([#32188](https://github.com/angular/components/pull/32188)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.10"></a>
 # 21.0.0-next.10 "alforsite-antibody" (2025-10-22)
 ## Breaking Changes
