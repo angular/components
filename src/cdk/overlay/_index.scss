@@ -204,6 +204,11 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // with `align-self` can break the positioning (see #29809).
     inset: auto;
 
+    // For the time being we're using our `.cdk-overlay-backdrop` element instead of the native one.
+    &::backdrop {
+      display: none;
+    }
+
     .cdk-overlay-backdrop {
       position: fixed;
     }
