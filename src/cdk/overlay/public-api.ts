@@ -13,7 +13,11 @@ export * from './overlay-module';
 export * from './dispatchers/index';
 export {Overlay, createOverlayRef} from './overlay';
 export {OverlayContainer} from './overlay-container';
-export {CdkOverlayOrigin, CdkConnectedOverlay} from './overlay-directives';
+export {
+  CdkOverlayOrigin,
+  CdkConnectedOverlay,
+  CdkConnectedOverlayConfig,
+} from './overlay-directives';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
 export {OverlayRef, OverlaySizeConfig} from './overlay-ref';
 export {ViewportRuler} from '../scrolling';
