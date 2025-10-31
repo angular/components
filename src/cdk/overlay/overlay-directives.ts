@@ -96,6 +96,14 @@ export class CdkOverlayOrigin {
   constructor() {}
 }
 
+/**
+ * Injection token that can be used to configure the
+ * default options for the `CdkConnectedOverlay` directive.
+ */
+export const CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG = new InjectionToken<CdkConnectedOverlayConfig>(
+  'cdk-connected-overlay-default-config',
+);
+
 /** Object used to configure the `CdkConnectedOverlay` directive. */
 export interface CdkConnectedOverlayConfig {
   origin?: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
@@ -283,9 +291,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   constructor() {
     const templateRef = inject<TemplateRef<any>>(TemplateRef);
     const viewContainerRef = inject(ViewContainerRef);
+    const defaultConfig = inject(CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG, {optional: true});
 
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
     this.scrollStrategy = this._scrollStrategyFactory();
+
+    if (defaultConfig) {
+      this._assignConfig(defaultConfig);
+    }
   }
 
   /** The associated overlay reference. */
