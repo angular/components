@@ -69,11 +69,11 @@ function sortDirectives(a: HasElement, b: HasElement) {
     'class': 'ng-tree',
     'role': 'tree',
     '[attr.id]': 'id()',
-    '[attr.aria-orientation]': '_pattern.orientation()',
-    '[attr.aria-multiselectable]': '_pattern.multi()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
-    '[tabindex]': '_pattern.tabindex()',
+    '[attr.aria-orientation]': 'orientation()',
+    '[attr.aria-multiselectable]': 'multi()',
+    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-activedescendant]': 'activedescendant()',
+    '[tabindex]': 'tabindex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
@@ -131,6 +131,21 @@ export class Tree<V> {
 
   /** Whether the tree is in navigation mode. */
   readonly nav = input(false);
+
+  /** The id of the current active item. */
+  readonly activedescendant = computed(() => this._pattern.activedescendant());
+
+  /** The direct children of the root (top-level tree items). */
+  readonly children = computed(() => this._pattern.children());
+
+  /** Whether the tree selection follows focus. */
+  readonly followFocus = computed(() => this._pattern.followFocus());
+
+  /** The tabindex of the tree. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
+
+  /** All currently visible tree items. An item is visible if their parent is expanded. */
+  readonly visibleItems = computed(() => this._pattern.visible());
 
   /** The aria-current type. */
   readonly currentType = input<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>(
@@ -205,6 +220,69 @@ export class Tree<V> {
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element().scrollIntoView(options);
   }
+
+  /** Navigates to the first tree item. */
+  first() {
+    this._pattern.listBehavior.first({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the last tree item. */
+  last() {
+    this._pattern.listBehavior.last({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the previous tree item. */
+  prev() {
+    this._pattern.listBehavior.prev({selectOne: this.followFocus()});
+  }
+
+  /** Navigates to the next tree item. */
+  next() {
+    this._pattern.listBehavior.next({selectOne: this.followFocus()});
+  }
+
+  /** Opens the tree item with the specified value. */
+  open(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.open(item);
+    }
+  }
+
+  /** Closes the tree item with the specified value. */
+  close(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.close(item);
+    }
+  }
+
+  /** Toggles the expansion state of the tree item with the specified value. */
+  toggle(itemValue: string) {
+    const item = this._findItemPatternByValue(itemValue);
+
+    if (item) {
+      this._pattern.expansionManager.toggle(item);
+    }
+  }
+
+  /** Opens all tree items if multi-expandable. */
+  openAll() {
+    this._pattern.expansionManager.openAll();
+  }
+
+  /** Closes all tree items. */
+  closeAll() {
+    this._pattern.expansionManager.closeAll();
+  }
+
+  _findItemPatternByValue(value: string) {
+    const item = [...this._unorderedItems()].find(i => i.value() === value);
+
+    return item?._pattern;
+  }
 }
 
 /**
@@ -215,17 +293,17 @@ export class Tree<V> {
   exportAs: 'ngTreeItem',
   host: {
     'class': 'ng-treeitem',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     'role': 'treeitem',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_pattern.expandable() ? _pattern.expanded() : null',
-    '[attr.aria-selected]': '_pattern.selected()',
-    '[attr.aria-current]': '_pattern.current()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-level]': '_pattern.level()',
-    '[attr.aria-setsize]': '_pattern.setsize()',
-    '[attr.aria-posinset]': '_pattern.posinset()',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.aria-expanded]': 'expanded()',
+    '[attr.aria-selected]': 'selected()',
+    '[attr.aria-current]': 'current()',
+    '[attr.aria-disabled]': 'disabled()',
+    '[attr.aria-level]': 'level()',
+    '[attr.aria-setsize]': 'setsize()',
+    '[attr.aria-posinset]': 'posinset()',
+    '[attr.tabindex]': 'tabindex()',
   },
 })
 export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
@@ -266,6 +344,35 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     }
     return (this.parent() as TreeItemGroup<V>).ownedBy().tree();
   });
+
+  /** Whether the item is active. */
+  readonly active = computed(() => this._pattern.active());
+
+  /** The current type of this item. */
+  readonly current = computed(() => this._pattern.current());
+
+  /** Whether this item is currently expanded, returning null if not expandable. */
+  readonly expanded = computed(() =>
+    this._pattern.expandable() ? this._pattern.expanded() : null,
+  );
+
+  /** The level of the current item in a tree. */
+  readonly level = computed(() => this._pattern.level());
+
+  /** The position of this item among its siblings (1-based). */
+  readonly posinset = computed(() => this._pattern.posinset());
+
+  /** Whether the item is selected. */
+  readonly selected = computed(() => this._pattern.selected());
+
+  /** The number of items under the same parent at the same level. */
+  readonly setsize = computed(() => this._pattern.setsize());
+
+  /** The tabindex of the item. */
+  readonly tabindex = computed(() => this._pattern.tabindex());
+
+  /** Whether this item is visible. */
+  readonly visible = computed(() => this._pattern.visible());
 
   /** The UI pattern for this item. */
   _pattern: TreeItemPattern<V>;
@@ -317,6 +424,21 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   unregister() {
     this._group.set(undefined);
+  }
+
+  /** Opens this item. */
+  open(itemValue: string) {
+    this._pattern.expansion.open();
+  }
+
+  /** Closes this item. */
+  close(itemValue: string) {
+    this._pattern.expansion.close();
+  }
+
+  /** Toggles the expansion state of this item. */
+  toggle(itemValue: string) {
+    this._pattern.expansion.toggle();
   }
 }
 
