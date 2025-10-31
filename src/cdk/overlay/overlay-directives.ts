@@ -96,6 +96,33 @@ export class CdkOverlayOrigin {
   constructor() {}
 }
 
+/** Object used to configure the `CdkConnectedOverlay` directive. */
+export interface CdkConnectedOverlayConfig {
+  origin?: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
+  positions?: ConnectedPosition[];
+  positionStrategy?: FlexibleConnectedPositionStrategy;
+  offsetX?: number;
+  offsetY?: number;
+  width?: number | string;
+  height?: number | string;
+  minWidth?: number | string;
+  minHeight?: number | string;
+  backdropClass?: string | string[];
+  panelClass?: string | string[];
+  viewportMargin?: ViewportMargin;
+  scrollStrategy?: ScrollStrategy;
+  disableClose?: boolean;
+  transformOriginSelector?: string;
+  hasBackdrop?: boolean;
+  lockPosition?: boolean;
+  flexibleDimensions?: boolean;
+  growAfterOpen?: boolean;
+  push?: boolean;
+  disposeOnNavigation?: boolean;
+  usePopover?: boolean;
+  matchWidth?: boolean;
+}
+
 /**
  * Directive to facilitate declarative creation of an
  * Overlay using a FlexibleConnectedPositionStrategy.
@@ -118,7 +145,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory = inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY);
-  private _disposeOnNavigation = false;
   private _ngZone = inject(NgZone);
 
   /** Origin for the connected overlay. */
@@ -214,16 +240,19 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the overlay should be disposed of when the user goes backwards/forwards in history. */
   @Input({alias: 'cdkConnectedOverlayDisposeOnNavigation', transform: booleanAttribute})
-  get disposeOnNavigation(): boolean {
-    return this._disposeOnNavigation;
-  }
-  set disposeOnNavigation(value: boolean) {
-    this._disposeOnNavigation = value;
-  }
+  disposeOnNavigation: boolean = false;
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
   @Input({alias: 'cdkConnectedOverlayUsePopover', transform: booleanAttribute})
   usePopover: boolean = false;
+
+  /** Shorthand for setting multiple overlay options at once. */
+  @Input('cdkConnectedOverlay')
+  set _config(value: string | CdkConnectedOverlayConfig) {
+    if (typeof value !== 'string') {
+      this._assignConfig(value);
+    }
+  }
 
   /** Event emitted when the backdrop is clicked. */
   @Output() readonly backdropClick = new EventEmitter<MouseEvent>();
@@ -419,19 +448,21 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
-    } else {
-      // Update the overlay size, in case the directive's inputs have changed
-      this._overlayRef.getConfig().hasBackdrop = this.hasBackdrop;
     }
 
-    if (!this._overlayRef!.hasAttached()) {
-      this._overlayRef!.attach(this._templatePortal);
+    const ref = this._overlayRef!;
+
+    // Update the overlay size, in case the directive's inputs have changed
+    ref.getConfig().hasBackdrop = this.hasBackdrop;
+
+    if (!ref.hasAttached()) {
+      ref.attach(this._templatePortal);
     }
 
     if (this.hasBackdrop) {
-      this._backdropSubscription = this._overlayRef!.backdropClick().subscribe(event => {
-        this.backdropClick.emit(event);
-      });
+      this._backdropSubscription = ref
+        .backdropClick()
+        .subscribe(event => this.backdropClick.emit(event));
     } else {
       this._backdropSubscription.unsubscribe();
     }
@@ -461,5 +492,30 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._backdropSubscription.unsubscribe();
     this._positionSubscription.unsubscribe();
     this.open = false;
+  }
+
+  private _assignConfig(config: CdkConnectedOverlayConfig) {
+    this.origin = config.origin ?? this.origin;
+    this.positions = config.positions ?? this.positions;
+    this.positionStrategy = config.positionStrategy ?? this.positionStrategy;
+    this.offsetX = config.offsetX ?? this.offsetX;
+    this.offsetY = config.offsetY ?? this.offsetY;
+    this.width = config.width ?? this.width;
+    this.height = config.height ?? this.height;
+    this.minWidth = config.minWidth ?? this.minWidth;
+    this.minHeight = config.minHeight ?? this.minHeight;
+    this.backdropClass = config.backdropClass ?? this.backdropClass;
+    this.panelClass = config.panelClass ?? this.panelClass;
+    this.viewportMargin = config.viewportMargin ?? this.viewportMargin;
+    this.scrollStrategy = config.scrollStrategy ?? this.scrollStrategy;
+    this.disableClose = config.disableClose ?? this.disableClose;
+    this.transformOriginSelector = config.transformOriginSelector ?? this.transformOriginSelector;
+    this.hasBackdrop = config.hasBackdrop ?? this.hasBackdrop;
+    this.lockPosition = config.lockPosition ?? this.lockPosition;
+    this.flexibleDimensions = config.flexibleDimensions ?? this.flexibleDimensions;
+    this.growAfterOpen = config.growAfterOpen ?? this.growAfterOpen;
+    this.push = config.push ?? this.push;
+    this.disposeOnNavigation = config.disposeOnNavigation ?? this.disposeOnNavigation;
+    this.usePopover = config.usePopover ?? this.usePopover;
   }
 }

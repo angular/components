@@ -44,12 +44,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     attachOverlay(): void;
     backdropClass: string | string[];
     readonly backdropClick: EventEmitter<MouseEvent>;
+    set _config(value: string | CdkConnectedOverlayConfig);
     readonly detach: EventEmitter<void>;
     detachOverlay(): void;
     get dir(): Direction;
     disableClose: boolean;
-    get disposeOnNavigation(): boolean;
-    set disposeOnNavigation(value: boolean);
+    disposeOnNavigation: boolean;
     flexibleDimensions: boolean;
     growAfterOpen: boolean;
     hasBackdrop: boolean;
@@ -95,9 +95,59 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     viewportMargin: ViewportMargin;
     width: number | string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; "usePopover": { "alias": "cdkConnectedOverlayUsePopover"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; "usePopover": { "alias": "cdkConnectedOverlayUsePopover"; "required": false; }; "_config": { "alias": "cdkConnectedOverlay"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkConnectedOverlay, never>;
+}
+
+// @public
+export interface CdkConnectedOverlayConfig {
+    // (undocumented)
+    backdropClass?: string | string[];
+    // (undocumented)
+    disableClose?: boolean;
+    // (undocumented)
+    disposeOnNavigation?: boolean;
+    // (undocumented)
+    flexibleDimensions?: boolean;
+    // (undocumented)
+    growAfterOpen?: boolean;
+    // (undocumented)
+    hasBackdrop?: boolean;
+    // (undocumented)
+    height?: number | string;
+    // (undocumented)
+    lockPosition?: boolean;
+    // (undocumented)
+    matchWidth?: boolean;
+    // (undocumented)
+    minHeight?: number | string;
+    // (undocumented)
+    minWidth?: number | string;
+    // (undocumented)
+    offsetX?: number;
+    // (undocumented)
+    offsetY?: number;
+    // (undocumented)
+    origin?: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
+    // (undocumented)
+    panelClass?: string | string[];
+    // (undocumented)
+    positions?: ConnectedPosition[];
+    // (undocumented)
+    positionStrategy?: FlexibleConnectedPositionStrategy;
+    // (undocumented)
+    push?: boolean;
+    // (undocumented)
+    scrollStrategy?: ScrollStrategy;
+    // (undocumented)
+    transformOriginSelector?: string;
+    // (undocumented)
+    usePopover?: boolean;
+    // (undocumented)
+    viewportMargin?: ViewportMargin;
+    // (undocumented)
+    width?: number | string;
 }
 
 // @public
