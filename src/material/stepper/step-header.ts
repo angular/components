@@ -18,7 +18,6 @@ import {
   AfterViewInit,
   inject,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
 import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
@@ -27,6 +26,7 @@ import {_StructuralStylesLoader, MatRipple, ThemePalette} from '../core';
 import {MatIcon} from '../icon';
 import {NgTemplateOutlet} from '@angular/common';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'mat-step-header',
@@ -45,8 +45,6 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
   _intl = inject(MatStepperIntl);
   private _focusMonitor = inject(FocusMonitor);
-
-  private _intlSubscription: Subscription;
 
   /** State of the given step. */
   @Input() state: StepState;
@@ -93,7 +91,7 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     styleLoader.load(_StructuralStylesLoader);
     styleLoader.load(_VisuallyHiddenLoader);
     const changeDetectorRef = inject(ChangeDetectorRef);
-    this._intlSubscription = this._intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+    this._intl.changes.pipe(takeUntilDestroyed()).subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngAfterViewInit() {
@@ -101,7 +99,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
   }
 
   ngOnDestroy() {
-    this._intlSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
