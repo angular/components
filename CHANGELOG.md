@@ -1,3 +1,12 @@
+<a name="20.2.11"></a>
+# 20.2.11 "material lion" (2025-10-31)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b751456cd9](https://github.com/angular/components/commit/b751456cd9c8821a70145c142a14bdaaee605657) | fix | **menu:** add filter for trigger icon name ([#32188](https://github.com/angular/components/pull/32188)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-next.10"></a>
 # 21.0.0-next.10 "alforsite-antibody" (2025-10-22)
 ## Breaking Changes
