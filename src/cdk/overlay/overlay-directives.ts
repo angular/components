@@ -246,6 +246,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input({alias: 'cdkConnectedOverlayUsePopover', transform: booleanAttribute})
   usePopover: boolean = false;
 
+  /** Whether the overlay should match the trigger's width. */
+  @Input({alias: 'cdkConnectedOverlayMatchWidth', transform: booleanAttribute})
+  matchWidth: boolean = false;
+
   /** Shorthand for setting multiple overlay options at once. */
   @Input('cdkConnectedOverlay')
   set _config(value: string | CdkConnectedOverlayConfig) {
@@ -306,7 +310,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     if (this._position) {
       this._updatePositionStrategy(this._position);
       this._overlayRef?.updateSize({
-        width: this.width,
+        width: this._getWidth(),
         minWidth: this.minWidth,
         height: this.height,
         minHeight: this.minHeight,
@@ -362,10 +366,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       disposeOnNavigation: this.disposeOnNavigation,
       usePopover: this.usePopover,
     });
-
-    if (this.width || this.width === 0) {
-      overlayConfig.width = this.width;
-    }
 
     if (this.height || this.height === 0) {
       overlayConfig.height = this.height;
@@ -444,6 +444,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     return null;
   }
 
+  private _getWidth() {
+    if (this.width) {
+      return this.width;
+    }
+
+    // Null check `getBoundingClientRect` in case this is called during SSR.
+    return this.matchWidth ? this._getOriginElement()?.getBoundingClientRect?.().width : undefined;
+  }
+
   /** Attaches the overlay. */
   attachOverlay() {
     if (!this._overlayRef) {
@@ -454,6 +463,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
     // Update the overlay size, in case the directive's inputs have changed
     ref.getConfig().hasBackdrop = this.hasBackdrop;
+    ref.updateSize({width: this._getWidth()});
 
     if (!ref.hasAttached()) {
       ref.attach(this._templatePortal);
@@ -517,5 +527,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this.push = config.push ?? this.push;
     this.disposeOnNavigation = config.disposeOnNavigation ?? this.disposeOnNavigation;
     this.usePopover = config.usePopover ?? this.usePopover;
+    this.matchWidth = config.matchWidth ?? this.matchWidth;
   }
 }
