@@ -20,7 +20,16 @@ export interface GridSelectionCell extends GridFocusCell {
 }
 
 /** Represents the required inputs for a grid that has selectable cells. */
-export interface GridSelectionInputs extends GridFocusInputs {}
+export interface GridSelectionInputs extends GridFocusInputs {
+  /** Whether selection is enabled for the grid. */
+  enableSelection: SignalLike<boolean>;
+
+  /** Whether multiple cell in the grid can be selected at once. */
+  multi: SignalLike<boolean>;
+
+  /** The selection strategy used by the grid. */
+  selectionMode: SignalLike<'follow' | 'explicit'>;
+}
 
 /** Dependencies for the `GridSelection` class. */
 interface GridSelectionDeps<T extends GridSelectionCell> {

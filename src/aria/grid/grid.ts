@@ -77,6 +77,12 @@ export class Grid {
   /** The wrapping behavior for keyboard navigation along the column axis. */
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
+  /** Whether multiple cells in the grid can be selected at once. */
+  readonly multi = input(false, {transform: booleanAttribute});
+
+  /** The selection strategy used by the grid. */
+  readonly selectionMode = input<'follow' | 'explicit'>('follow');
+
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -163,6 +169,7 @@ export class GridRow {
     '[attr.rowspan]': '_pattern.rowSpan()',
     '[attr.colspan]': '_pattern.colSpan()',
     '[attr.data-active]': '_pattern.active()',
+    '[attr.data-anchor]': '_pattern.anchor()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-rowspan]': '_pattern.rowSpan()',
     '[attr.aria-colspan]': '_pattern.colSpan()',

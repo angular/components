@@ -9,7 +9,7 @@
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
-import {Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
+import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
 
@@ -48,6 +48,13 @@ export class GridPattern {
   /** The currently active cell. */
   readonly activeCell = computed(() => this.gridBehavior.focusBehavior.activeCell());
 
+  /** The current selection anchor cell. */
+  readonly anchorCell: SignalLike<GridCellPattern | undefined> = computed(() =>
+    this.inputs.enableSelection() && this.inputs.multi()
+      ? this.gridBehavior.selectionAnchorCell()
+      : undefined,
+  );
+
   /** Whether to pause grid navigation. */
   readonly pauseNavigation = computed(() =>
     this.gridBehavior.data
@@ -80,25 +87,59 @@ export class GridPattern {
       return manager;
     }
 
-    manager
-      .on('ArrowUp', () => this.gridBehavior.up())
-      .on('ArrowDown', () => this.gridBehavior.down())
-      .on(this.prevColKey(), () => this.gridBehavior.left())
-      .on(this.nextColKey(), () => this.gridBehavior.right())
-      .on('Home', () => this.gridBehavior.firstInRow())
-      .on('End', () => this.gridBehavior.lastInRow())
-      .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first())
-      .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last());
-
-    if (this.inputs.enableSelection()) {
+    // Navigation without selection.
+    if (!this.inputs.enableSelection()) {
       manager
-        .on(Modifier.Shift, 'ArrowUp', () => this.gridBehavior.rangeSelectUp())
-        .on(Modifier.Shift, 'ArrowDown', () => this.gridBehavior.rangeSelectDown())
-        .on(Modifier.Shift, 'ArrowLeft', () => this.gridBehavior.rangeSelectLeft())
-        .on(Modifier.Shift, 'ArrowRight', () => this.gridBehavior.rangeSelectRight())
-        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => this.gridBehavior.selectAll())
-        .on([Modifier.Shift], ' ', () => this.gridBehavior.selectRow())
-        .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.gridBehavior.selectCol());
+        .on('ArrowUp', () => this.gridBehavior.up())
+        .on('ArrowDown', () => this.gridBehavior.down())
+        .on(this.prevColKey(), () => this.gridBehavior.left())
+        .on(this.nextColKey(), () => this.gridBehavior.right())
+        .on('Home', () => this.gridBehavior.firstInRow())
+        .on('End', () => this.gridBehavior.lastInRow())
+        .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first())
+        .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last());
+    }
+
+    // Navigation with selection.
+    if (this.inputs.enableSelection()) {
+      const opts: NavOptions = {
+        selectOne: this.inputs.selectionMode() === 'follow',
+      };
+
+      manager
+        .on('ArrowUp', () => this.gridBehavior.up(opts))
+        .on('ArrowDown', () => this.gridBehavior.down(opts))
+        .on(this.prevColKey(), () => this.gridBehavior.left(opts))
+        .on(this.nextColKey(), () => this.gridBehavior.right(opts))
+        .on('Home', () => this.gridBehavior.firstInRow(opts))
+        .on('End', () => this.gridBehavior.lastInRow(opts))
+        .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first(opts))
+        .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last(opts));
+
+      if (this.inputs.multi()) {
+        manager
+          .on(Modifier.Shift, 'ArrowUp', () => this.gridBehavior.up({anchor: true}))
+          .on(Modifier.Shift, 'ArrowDown', () => this.gridBehavior.down({anchor: true}))
+          .on(Modifier.Shift, this.prevColKey(), () => this.gridBehavior.left({anchor: true}))
+          .on(Modifier.Shift, this.nextColKey(), () => this.gridBehavior.right({anchor: true}))
+          .on(Modifier.Shift, 'Home', () => this.gridBehavior.first({anchor: true}))
+          .on(Modifier.Shift, 'End', () => this.gridBehavior.last({anchor: true}))
+          .on([Modifier.Ctrl, Modifier.Meta], 'A', () => this.gridBehavior.selectAll())
+          .on([Modifier.Shift], ' ', () => this.gridBehavior.selectRow())
+          .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.gridBehavior.selectCol());
+
+        if (this.inputs.selectionMode() === 'explicit') {
+          manager
+            .on('Enter', () => this.gridBehavior.toggle())
+            .on(' ', () => this.gridBehavior.toggle());
+        }
+      } else {
+        if (this.inputs.selectionMode() === 'explicit') {
+          manager
+            .on('Enter', () => this.gridBehavior.toggleOne())
+            .on(' ', () => this.gridBehavior.toggleOne());
+        }
+      }
     }
 
     return manager;
@@ -108,32 +149,50 @@ export class GridPattern {
   readonly pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    manager.on(e => {
-      const cell = this.inputs.getCell(e.target as Element);
-      if (!cell) return;
+    // Navigation without selection.
+    if (!this.inputs.enableSelection()) {
+      manager.on(e => {
+        const cell = this.inputs.getCell(e.target as Element);
+        if (!cell) return;
 
-      this.gridBehavior.gotoCell(cell);
+        this.gridBehavior.gotoCell(cell);
+      });
+    }
 
-      if (this.inputs.enableSelection()) {
-        this.dragging.set(true);
-      }
-    });
-
+    // Navigation with selection.
     if (this.inputs.enableSelection()) {
-      manager
-        .on([Modifier.Ctrl, Modifier.Meta], e => {
-          const cell = this.inputs.getCell(e.target as Element);
-          if (!cell) return;
+      manager.on(e => {
+        const cell = this.inputs.getCell(e.target as Element);
+        if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
-          this.gridBehavior.toggleSelect(cell);
-        })
-        .on(Modifier.Shift, e => {
-          const cell = this.inputs.getCell(e.target as Element);
-          if (!cell) return;
-
-          this.gridBehavior.rangeSelect(cell);
-          this.dragging.set(true);
+        this.gridBehavior.gotoCell(cell, {
+          selectOne: this.inputs.selectionMode() === 'follow',
+          toggleOne: this.inputs.selectionMode() === 'explicit' && !this.inputs.multi(),
+          toggle: this.inputs.selectionMode() === 'explicit' && this.inputs.multi(),
         });
+
+        if (this.inputs.multi()) {
+          this.dragging.set(true);
+        }
+      });
+
+      if (this.inputs.multi()) {
+        manager
+          .on([Modifier.Ctrl, Modifier.Meta], e => {
+            const cell = this.inputs.getCell(e.target as Element);
+            if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
+
+            this.gridBehavior.gotoCell(cell, {toggle: true});
+            this.dragging.set(true);
+          })
+          .on(Modifier.Shift, e => {
+            const cell = this.inputs.getCell(e.target as Element);
+            if (!cell) return;
+
+            this.gridBehavior.gotoCell(cell, {anchor: true});
+            this.dragging.set(true);
+          });
+      }
     }
 
     return manager;
@@ -144,7 +203,7 @@ export class GridPattern {
     const manager = new PointerEventManager();
 
     if (this.inputs.enableSelection()) {
-      manager.on([Modifier.Shift, Modifier.None], () => {
+      manager.on([Modifier.Shift, Modifier.Ctrl, Modifier.Meta, Modifier.None], () => {
         this.dragging.set(false);
       });
     }
@@ -182,7 +241,7 @@ export class GridPattern {
     const cell = this.inputs.getCell(event.target as Element);
     if (!cell) return;
 
-    this.gridBehavior.rangeSelect(cell);
+    this.gridBehavior.gotoCell(cell, {anchor: true});
   }
 
   /** Handles pointerup events on the grid. */

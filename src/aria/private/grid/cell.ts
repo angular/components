@@ -77,6 +77,11 @@ export class GridCellPattern implements GridCell {
   /** Whether the cell is active. */
   readonly active = computed(() => this.inputs.grid().activeCell() === this);
 
+  /** Whether the cell is a selection anchor. */
+  readonly anchor: SignalLike<true | undefined> = computed(() =>
+    this.inputs.grid().anchorCell() === this ? true : undefined,
+  );
+
   /** The internal tab index calculation for the cell. */
   private readonly _tabIndex: SignalLike<-1 | 0> = computed(() =>
     this.inputs.grid().gridBehavior.cellTabIndex(this),

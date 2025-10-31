@@ -73,9 +73,14 @@ export class GridNavigation<T extends GridNavigationCell> {
   /**
    * Gets the coordinates of the next focusable cell in a given direction, without changing focus.
    */
-  peek(direction: Delta, fromCoords: RowCol, wrap?: WrapStrategy): RowCol | undefined {
+  peek(
+    direction: Delta,
+    fromCoords: RowCol,
+    wrap?: WrapStrategy,
+    allowDisabled?: boolean,
+  ): RowCol | undefined {
     wrap = wrap ?? (direction.row !== undefined ? this.inputs.rowWrap() : this.inputs.colWrap());
-    return this._peekDirectional(direction, fromCoords, wrap);
+    return this._peekDirectional(direction, fromCoords, wrap, allowDisabled);
   }
 
   /**
@@ -90,14 +95,14 @@ export class GridNavigation<T extends GridNavigationCell> {
    * Gets the coordinates of the first focusable cell.
    * If a row is not provided, searches the entire grid.
    */
-  peekFirst(row?: number): RowCol | undefined {
+  peekFirst(row?: number, allowDisabled?: boolean): RowCol | undefined {
     const fromCoords = {
       row: row ?? 0,
       col: -1,
     };
     return row === undefined
-      ? this._peekDirectional(direction.Right, fromCoords, 'continuous')
-      : this._peekDirectional(direction.Right, fromCoords, 'nowrap');
+      ? this._peekDirectional(direction.Right, fromCoords, 'continuous', allowDisabled)
+      : this._peekDirectional(direction.Right, fromCoords, 'nowrap', allowDisabled);
   }
 
   /**
@@ -113,14 +118,14 @@ export class GridNavigation<T extends GridNavigationCell> {
    * Gets the coordinates of the last focusable cell.
    * If a row is not provided, searches the entire grid.
    */
-  peekLast(row?: number): RowCol | undefined {
+  peekLast(row?: number, allowDisabled?: boolean): RowCol | undefined {
     const fromCoords = {
       row: row ?? this.inputs.grid.maxRowCount() - 1,
       col: this.inputs.grid.maxColCount(),
     };
     return row === undefined
-      ? this._peekDirectional(direction.Left, fromCoords, 'continuous')
-      : this._peekDirectional(direction.Left, fromCoords, 'nowrap');
+      ? this._peekDirectional(direction.Left, fromCoords, 'continuous', allowDisabled)
+      : this._peekDirectional(direction.Left, fromCoords, 'nowrap', allowDisabled);
   }
 
   /**
@@ -139,6 +144,7 @@ export class GridNavigation<T extends GridNavigationCell> {
     delta: Delta,
     fromCoords: RowCol,
     wrap: 'continuous' | 'loop' | 'nowrap',
+    allowDisabled: boolean = false,
   ): RowCol | undefined {
     const fromCell = this.inputs.grid.getCell(fromCoords);
     const maxRowCount = this.inputs.grid.maxRowCount();
@@ -190,7 +196,7 @@ export class GridNavigation<T extends GridNavigationCell> {
       if (
         nextCell !== undefined &&
         nextCell !== fromCell &&
-        this.inputs.gridFocus.isFocusable(nextCell)
+        (allowDisabled || this.inputs.gridFocus.isFocusable(nextCell))
       ) {
         return nextCoords;
       }

@@ -1,4 +1,4 @@
-<table class="example-grid-controls" ngGrid>
+<table class="example-grid-controls" ngGrid colWrap="continuous">
   <tr ngGridRow>
     <td ngGridCell>
       <mat-checkbox
@@ -25,6 +25,15 @@
         [formControl]="enableSelection"
         #cb3="matCheckbox"
         >Enable Selection</mat-checkbox
+      >
+    </td>
+    <td ngGridCell>
+      <mat-checkbox
+        ngGridCellWidget
+        (focusin)="cb4.focus()"
+        [formControl]="multi"
+        #cb4="matCheckbox"
+        >Multi</mat-checkbox
       >
     </td>
   </tr>
@@ -86,6 +95,45 @@
         </mat-select>
       </mat-form-field>
     </td>
+    <td ngGridCell>
+      <mat-form-field
+        ngGridCellWidget
+        (keydown.enter)="s4.focus()"
+        (keydown.escape)="c4.focus()"
+        [(activate)]="s4.focused"
+        #c4="ngGridCellWidget"
+        class="example-grid-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Selection Strategy</mat-label>
+        <mat-select ngGridCellWidget [(value)]="selectionMode" #s4>
+          <mat-option value="explicit">Explicit</mat-option>
+          <mat-option value="follow">Follow Focus</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </tr>
+  <tr ngGridRow>
+    <td ngGridCell>
+      <mat-form-field
+        ngGridCellWidget
+        (keydown.enter)="s5.focus()"
+        (keydown.escape)="c5.focus()"
+        [(activate)]="s5.focused"
+        #c5="ngGridCellWidget"
+        class="example-grid-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Example Options</mat-label>
+        <mat-select ngGridCellWidget [(value)]="exampleOptions" #s5 multiple>
+          <mat-option value="rowSpan">Row Span</mat-option>
+          <mat-option value="colSpan">Col Span</mat-option>
+          <mat-option value="disable">Disabled</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
   </tr>
 </table>
 
@@ -99,6 +147,8 @@
     [disabled]="disabled.value"
     [softDisabled]="softDisabled.value"
     [enableSelection]="enableSelection.value"
+    [selectionMode]="selectionMode"
+    [multi]="multi.value"
     #grid="ngGrid"
   >
     @for (row of gridData; track row) {
@@ -117,9 +167,6 @@
   </table>
 
   <ul>
-    <li>
-      <button (click)="regenerateGrid()">Regenerate Grid</button>
-    </li>
     <li>Home: first cell in the row</li>
     <li>End: last cell in the row</li>
     <li>Crtl + Home: very first cell</li>
