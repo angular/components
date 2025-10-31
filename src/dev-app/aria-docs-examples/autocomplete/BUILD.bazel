@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "autocomplete-docs-demo",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "autocomplete-docs-demo.html",
+        "autocomplete-docs-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/aria/accordion",
+        "//src/components-examples/aria/combobox",
+        "//src/components-examples/aria/grid",
+        "//src/components-examples/aria/listbox",
+        "//src/components-examples/aria/menu",
+        "//src/components-examples/aria/tabs",
+        "//src/components-examples/aria/toolbar",
+        "//src/components-examples/aria/tree",
+    ],
+)
