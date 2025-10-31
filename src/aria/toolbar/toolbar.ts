@@ -168,7 +168,7 @@ export class Toolbar<V> {
   exportAs: 'ngToolbarWidget',
   host: {
     'class': 'ng-toolbar-widget',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
