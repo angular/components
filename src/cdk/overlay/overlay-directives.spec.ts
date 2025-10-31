@@ -626,6 +626,19 @@ describe('Overlay directives', () => {
 
       expect(target.style.transformOrigin).toContain('left bottom');
     });
+
+    it('should match the trigger width', () => {
+      const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLElement;
+      trigger.style.width = '128px';
+
+      fixture.componentInstance.matchWidth = true;
+      fixture.componentInstance.isOpen = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.style.width).toBe('128px');
+    });
   });
 
   describe('outputs', () => {
@@ -742,11 +755,11 @@ describe('Overlay directives', () => {
 
 @Component({
   template: `
-  <button cdk-overlay-origin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
-  <button cdk-overlay-origin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
+  <button cdkOverlayOrigin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
+  <button cdkOverlayOrigin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
   <button id="nonDirectiveTrigger" #nonDirectiveTrigger>Toggle menu</button>
 
-  <ng-template cdk-connected-overlay
+  <ng-template cdkConnectedOverlay
             [cdkConnectedOverlayOpen]="isOpen"
             [cdkConnectedOverlayWidth]="width"
             [cdkConnectedOverlayHeight]="height"
@@ -771,7 +784,8 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayMinWidth]="minWidth"
             [cdkConnectedOverlayMinHeight]="minHeight"
             [cdkConnectedOverlayPositions]="positionOverrides"
-            [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector">
+            [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector"
+            [cdkConnectedOverlayMatchWidth]="matchWidth">
     <p>Menu content</p>
   </ng-template>`,
   imports: [OverlayModule],
@@ -809,12 +823,14 @@ class ConnectedOverlayDirectiveTest {
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
   transformOriginSelector: string;
+  matchWidth = false;
 }
 
 @Component({
   template: `
-  <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
-  <ng-template cdk-connected-overlay>Menu content</ng-template>`,
+    <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">Toggle menu</button>
+    <ng-template cdk-connected-overlay>Menu content</ng-template>
+  `,
   imports: [OverlayModule],
 })
 class ConnectedOverlayPropertyInitOrder {
