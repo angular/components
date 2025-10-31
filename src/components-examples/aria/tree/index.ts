@@ -6,5 +6,6 @@ export {TreeDisabledSkippedExample} from './tree-disabled-skipped/tree-disabled-
 export {TreeMultiSelectExample} from './tree-multi-select/tree-multi-select-example';
 export {TreeMultiSelectFollowFocusExample} from './tree-multi-select-follow-focus/tree-multi-select-follow-focus-example';
 export {TreeNavExample} from './tree-nav/tree-nav-example';
+export {TreeRtlActiveDescendantExample} from './tree-rtl-active-descendant/tree-rtl-active-descendant-example';
 export {TreeSingleSelectExample} from './tree-single-select/tree-single-select-example';
 export {TreeSingleSelectFollowFocusExample} from './tree-single-select-follow-focus/tree-single-select-follow-focus-example';
