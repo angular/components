@@ -1,55 +1,68 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Direction} from '@angular/cdk/bidi';
-import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
-
-interface ModifierKeys {
-  ctrlKey?: boolean;
-  shiftKey?: boolean;
-  altKey?: boolean;
-  metaKey?: boolean;
-}
+import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 
 describe('Toolbar', () => {
-  let fixture: ComponentFixture<TestToolbarComponent>;
-  let testComponent: TestToolbarComponent;
+  let fixture: ComponentFixture<ToolbarExample>;
   let toolbarElement: HTMLElement;
-  let widgetElements: HTMLElement[];
-  let testWidgetGroupInstance: TestToolbarWidgetGroup;
 
-  const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
-    const event = new KeyboardEvent('keydown', {key, bubbles: true, ...modifierKeys});
-    toolbarElement.dispatchEvent(event);
+  const keydown = (key: string, target?: HTMLElement, modifierKeys: {} = {}) => {
+    const eventTarget = target || toolbarElement;
+    eventTarget.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key,
+        bubbles: true,
+        ...modifierKeys,
+      }),
+    );
     fixture.detectChanges();
-    defineTestVariables();
   };
 
-  const pointerDown = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, ...eventInit}));
+  const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
+    element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
     fixture.detectChanges();
-    defineTestVariables();
   };
 
-  const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
-  const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
-  const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
-  const right = (modifierKeys?: ModifierKeys) => keydown('ArrowRight', modifierKeys);
-  const home = (modifierKeys?: ModifierKeys) => keydown('Home', modifierKeys);
-  const end = (modifierKeys?: ModifierKeys) => keydown('End', modifierKeys);
-  const enter = (modifierKeys?: ModifierKeys) => keydown('Enter', modifierKeys);
-  const space = (modifierKeys?: ModifierKeys) => keydown(' ', modifierKeys);
-  const click = (target: HTMLElement) => pointerDown(target);
+  const right = (target?: HTMLElement, modifierKeys?: {}) =>
+    keydown('ArrowRight', target, modifierKeys);
+  const left = (target?: HTMLElement, modifierKeys?: {}) =>
+    keydown('ArrowLeft', target, modifierKeys);
+  const up = (target?: HTMLElement, modifierKeys?: {}) => keydown('ArrowUp', target, modifierKeys);
+  const down = (target?: HTMLElement, modifierKeys?: {}) =>
+    keydown('ArrowDown', target, modifierKeys);
+  const home = (target?: HTMLElement, modifierKeys?: {}) => keydown('Home', target, modifierKeys);
+  const end = (target?: HTMLElement, modifierKeys?: {}) => keydown('End', target, modifierKeys);
 
-  function setupTestToolbar(textDirection: Direction = 'ltr') {
+  function setupToolbar(
+    opts: {
+      orientation?: 'vertical' | 'horizontal';
+      softDisabled?: boolean;
+      disabled?: boolean;
+      wrap?: boolean;
+      textDirection?: 'ltr' | 'rtl';
+    } = {},
+  ) {
     TestBed.configureTestingModule({
-      imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup, TestToolbarComponent],
-      providers: [provideFakeDirectionality(textDirection)],
+      imports: [ToolbarExample],
+      providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
     });
+    fixture = TestBed.createComponent(ToolbarExample);
+    const testComponent = fixture.componentInstance as ToolbarExample;
 
-    fixture = TestBed.createComponent(TestToolbarComponent);
-    testComponent = fixture.componentInstance;
+    if (opts.orientation) {
+      testComponent.orientation.set(opts.orientation);
+    }
+    if (opts.softDisabled !== undefined) {
+      testComponent.softDisabled.set(opts.softDisabled);
+    }
+    if (opts.disabled !== undefined) {
+      testComponent.disabled.set(opts.disabled);
+    }
+    if (opts.wrap !== undefined) {
+      testComponent.wrap.set(opts.wrap);
+    }
 
     fixture.detectChanges();
     defineTestVariables();
@@ -57,421 +70,571 @@ describe('Toolbar', () => {
 
   function defineTestVariables() {
     const toolbarDebugElement = fixture.debugElement.query(By.directive(Toolbar));
-    const widgetDebugElements = fixture.debugElement.queryAll(By.css('[data-value="widget"]'));
-    const testWidgetGroupElement = fixture.debugElement.query(By.directive(TestToolbarWidgetGroup));
-
     toolbarElement = toolbarDebugElement.nativeElement as HTMLElement;
-    widgetElements = widgetDebugElements.map(debugEl => debugEl.nativeElement);
-    testWidgetGroupInstance = testWidgetGroupElement.componentInstance as TestToolbarWidgetGroup;
   }
 
-  function updateToolbar(
-    config: {
-      disabled?: boolean;
-      widgetGroupDisabled?: boolean;
-      orientation?: 'horizontal' | 'vertical';
-      wrap?: boolean;
-      softDisabled?: boolean;
-    } = {},
-  ) {
-    if (config.disabled !== undefined) testComponent.disabled.set(config.disabled);
-    if (config.widgetGroupDisabled !== undefined)
-      testComponent.widgetGroupDisabled.set(config.widgetGroupDisabled);
-    if (config.orientation !== undefined) testComponent.orientation.set(config.orientation);
-    if (config.wrap !== undefined) testComponent.wrap.set(config.wrap);
-    if (config.softDisabled !== undefined) testComponent.softDisabled.set(config.softDisabled);
-
-    fixture.detectChanges();
-    defineTestVariables();
+  function getWidgetEl(text: string): HTMLElement | null {
+    const widgets = getWidgetEls();
+    return widgets.find(widget => widget.textContent?.trim() === text) || null;
   }
 
-  describe('ARIA attributes and roles', () => {
-    describe('default configuration', () => {
-      beforeEach(() => {
-        setupTestToolbar();
+  function getWidgetEls(): HTMLElement[] {
+    return fixture.debugElement
+      .queryAll(By.directive(ToolbarWidget))
+      .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+  }
+
+  afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
+
+  describe('Navigation', () => {
+    describe('with horizontal orientation', () => {
+      it('should navigate on click', () => {
+        setupToolbar();
+        const item3 = getWidgetEl('item 3')!;
+        click(item3);
+        expect(document.activeElement).toBe(item3);
       });
 
-      it('should correctly set the role attribute to "toolbar" for Toolbar', () => {
-        expect(toolbarElement.getAttribute('role')).toBe('toolbar');
-      });
+      describe('with ltr text direction', () => {
+        beforeEach(() => setupToolbar());
 
-      it('should set aria-orientation to "horizontal" by default', () => {
-        expect(toolbarElement.getAttribute('aria-orientation')).toBe('horizontal');
-      });
-
-      it('should set aria-disabled to "false" by default for the toolbar', () => {
-        expect(toolbarElement.getAttribute('aria-disabled')).toBe('false');
-      });
-
-      it('should set aria-disabled to "false" by default for widgets', () => {
-        expect(widgetElements[0].getAttribute('aria-disabled')).toBe('false');
-        expect(widgetElements[1].getAttribute('aria-disabled')).toBe('true');
-        expect(widgetElements[2].getAttribute('aria-disabled')).toBe('false');
-      });
-
-      it('should set initial focus (tabindex="0") on the first non-disabled widget', () => {
-        expect(widgetElements[0].getAttribute('tabindex')).toBe('0');
-        expect(widgetElements[1].getAttribute('tabindex')).toBe('-1');
-        expect(widgetElements[2].getAttribute('tabindex')).toBe('-1');
-      });
-
-      it('should not have aria-activedescendant by default', () => {
-        expect(toolbarElement.hasAttribute('aria-activedescendant')).toBe(false);
-      });
-    });
-
-    describe('custom configuration', () => {
-      beforeEach(() => {
-        setupTestToolbar();
-      });
-
-      it('should set aria-orientation to "vertical"', () => {
-        updateToolbar({orientation: 'vertical'});
-        expect(toolbarElement.getAttribute('aria-orientation')).toBe('vertical');
-      });
-
-      it('should set aria-disabled to "true" for the toolbar', () => {
-        updateToolbar({disabled: true});
-        expect(toolbarElement.getAttribute('aria-disabled')).toBe('true');
-      });
-
-      it('should set aria-disabled to "true" for all widgets when toolbar is disabled', () => {
-        updateToolbar({disabled: true});
-        expect(widgetElements[0].getAttribute('aria-disabled')).toBe('true');
-        expect(widgetElements[1].getAttribute('aria-disabled')).toBe('true');
-        expect(widgetElements[2].getAttribute('aria-disabled')).toBe('true');
-      });
-    });
-  });
-
-  describe('keyboard navigation', () => {
-    describe('LTR', () => {
-      beforeEach(() => {
-        setupTestToolbar('ltr');
-        updateToolbar({widgetGroupDisabled: true});
-      });
-
-      describe('vertical orientation', () => {
-        beforeEach(() => {
-          updateToolbar({orientation: 'vertical'});
+        it('should navigate next on ArrowRight', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
+          right();
+          expect(document.activeElement).toBe(getWidgetEl('item 1'));
         });
 
-        it('should move focus to the next widget on ArrowDown', () => {
-          down();
-          expect(document.activeElement).toBe(widgetElements[1]);
+        it('should navigate prev on ArrowLeft', () => {
+          const item1 = getWidgetEl('item 1')!;
+          click(item1);
+          left();
+          expect(document.activeElement).toBe(getWidgetEl('item 0'));
         });
 
-        it('should move focus to the previous widget on ArrowUp', () => {
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
           down();
-          expect(document.activeElement).toBe(widgetElements[1]);
+          expect(document.activeElement).toBe(item0);
+        });
 
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
           up();
-          expect(document.activeElement).toBe(widgetElements[0]);
-        });
-      });
-
-      describe('horizontal orientation', () => {
-        beforeEach(() => {
-          updateToolbar({orientation: 'horizontal'});
+          expect(document.activeElement).toBe(item0);
         });
 
-        it('should move focus to the next widget on ArrowRight', () => {
-          right();
-          expect(document.activeElement).toBe(widgetElements[1]);
-        });
-
-        it('should move focus to the previous widget on ArrowLeft', () => {
-          right();
-          expect(document.activeElement).toBe(widgetElements[1]);
-
-          left();
-          expect(document.activeElement).toBe(widgetElements[0]);
-        });
-      });
-
-      it('should move focus to the last enabled widget on End', () => {
-        end();
-        expect(document.activeElement).toBe(widgetElements[2]);
-      });
-
-      it('should move focus to the first enabled widget on Home', () => {
-        end();
-        expect(document.activeElement).toBe(widgetElements[2]);
-
-        home();
-        expect(document.activeElement).toBe(widgetElements[0]);
-      });
-
-      it('should skip disabled widgets with arrow keys if softDisabled=false', () => {
-        updateToolbar({softDisabled: false});
-        right();
-        expect(document.activeElement).toBe(widgetElements[2]);
-      });
-
-      it('should not skip disabled widgets with arrow keys if softDisabled=true', () => {
-        updateToolbar({softDisabled: true});
-        right();
-        expect(document.activeElement).toBe(widgetElements[1]);
-      });
-
-      it('should wrap focus from last to first when wrap is true', () => {
-        updateToolbar({wrap: true});
-        end();
-        expect(document.activeElement).toBe(widgetElements[2]);
-
-        right();
-        expect(document.activeElement).toBe(widgetElements[0]);
-      });
-
-      it('should not wrap focus from last to first when wrap is false', () => {
-        updateToolbar({wrap: false});
-        end();
-        expect(document.activeElement).toBe(widgetElements[2]);
-
-        right();
-        expect(document.activeElement).toBe(widgetElements[2]);
-      });
-    });
-
-    describe('RTL', () => {
-      beforeEach(() => {
-        setupTestToolbar('rtl');
-        updateToolbar({widgetGroupDisabled: true, orientation: 'horizontal'});
-      });
-
-      describe('horizontal orientation', () => {
-        it('should move focus to the next widget on ArrowLeft', () => {
-          left();
-          expect(document.activeElement).toBe(widgetElements[1]);
-        });
-
-        it('should move focus to the previous widget on ArrowRight', () => {
-          left();
-          expect(document.activeElement).toBe(widgetElements[1]);
-
-          right();
-          expect(document.activeElement).toBe(widgetElements[0]);
-        });
-      });
-    });
-  });
-
-  describe('pointer navigation', () => {
-    beforeEach(() => setupTestToolbar());
-
-    it('should move focus to the clicked widget', () => {
-      click(widgetElements[2]);
-      expect(document.activeElement).toBe(widgetElements[2]);
-    });
-
-    it('should move focus to the clicked disabled widget if softDisabled=true', () => {
-      updateToolbar({softDisabled: true});
-      click(widgetElements[1]);
-      expect(document.activeElement).toBe(widgetElements[1]);
-    });
-
-    it('should not move focus to the clicked disabled widget if softDisabled=false', () => {
-      updateToolbar({softDisabled: false});
-      const initiallyFocused = document.activeElement;
-
-      click(widgetElements[1]);
-
-      expect(document.activeElement).toBe(initiallyFocused);
-    });
-  });
-
-  describe('widget group', () => {
-    describe('LTR', () => {
-      beforeEach(() => {
-        setupTestToolbar('ltr');
-        const widgetGroupElement = testWidgetGroupInstance.toolbarWidgetGroup.element();
-        click(widgetGroupElement);
-        testWidgetGroupInstance.lastAction.set(undefined);
-      });
-
-      describe('vertical orientation', () => {
-        beforeEach(() => {
-          updateToolbar({orientation: 'vertical'});
-        });
-
-        it('should call "next" on ArrowDown', () => {
+        it('should navigate next in a widget group on ArrowDown', () => {
+          const item2 = getWidgetEl('item 2')!;
+          click(item2);
           down();
-          expect(testWidgetGroupInstance.lastAction()).toBe('next');
+          expect(document.activeElement).toBe(getWidgetEl('item 3'));
         });
 
-        it('should call "prev" on ArrowUp', () => {
+        it('should navigate prev in a widget group on ArrowUp', () => {
+          const item3 = getWidgetEl('item 3')!;
+          click(item3);
           up();
-          expect(testWidgetGroupInstance.lastAction()).toBe('prev');
+          expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should call "next" with wrap on ArrowRight', () => {
-          right();
-          expect(testWidgetGroupInstance.lastAction()).toBe('nextWithWrap');
-        });
-
-        it('should call "prev" with wrap on ArrowLeft', () => {
-          left();
-          expect(testWidgetGroupInstance.lastAction()).toBe('prevWithWrap');
-        });
-      });
-
-      describe('horizontal orientation', () => {
-        beforeEach(() => {
-          updateToolbar({orientation: 'horizontal'});
-        });
-
-        it('should call "next" on ArrowRight', () => {
-          right();
-          expect(testWidgetGroupInstance.lastAction()).toBe('next');
-        });
-
-        it('should call "prev" on ArrowLeft', () => {
-          left();
-          expect(testWidgetGroupInstance.lastAction()).toBe('prev');
-        });
-
-        it('should call "next" with wrap on ArrowDown', () => {
+        it('should navigate last to first in a widget group on ArrowDown', () => {
+          const item4 = getWidgetEl('item 4')!;
+          click(item4);
           down();
-          expect(testWidgetGroupInstance.lastAction()).toBe('nextWithWrap');
+          expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should call "prev" with wrap on ArrowUp', () => {
+        it('should navigate first to last in a widget group on ArrowUp', () => {
+          const item2 = getWidgetEl('item 2')!;
+          click(item2);
           up();
-          expect(testWidgetGroupInstance.lastAction()).toBe('prevWithWrap');
+          expect(document.activeElement).toBe(getWidgetEl('item 4'));
+        });
+
+        describe('with wrap false', () => {
+          beforeEach(() => {
+            fixture.componentInstance.wrap.set(false);
+            fixture.detectChanges();
+          });
+
+          it('should not wrap from last to first', () => {
+            const item5 = getWidgetEl('item 5')!;
+            click(item5);
+            right();
+            expect(document.activeElement).toBe(item5);
+          });
+
+          it('should not wrap from first to last', () => {
+            const item0 = getWidgetEl('item 0')!;
+            click(item0);
+            left();
+            expect(document.activeElement).toBe(item0);
+          });
+        });
+
+        describe('with softDisabled true', () => {
+          beforeEach(() => {
+            fixture.componentInstance.softDisabled.set(true);
+            fixture.detectChanges();
+          });
+
+          it('should not skip disabled items when navigating next', () => {
+            fixture.componentInstance.widgets[1].disabled.set(true);
+            fixture.detectChanges();
+            click(getWidgetEl('item 0')!);
+            right();
+            expect(document.activeElement).toBe(getWidgetEl('item 1'));
+          });
+
+          it('should not skip disabled items when navigating prev', () => {
+            fixture.componentInstance.widgets[1].disabled.set(true);
+            fixture.detectChanges();
+            const item2 = getWidgetEl('item 2')!;
+            click(item2);
+            left();
+            expect(document.activeElement).toBe(getWidgetEl('item 1'));
+          });
+
+          it('should not skip disabled groups when navigating next', () => {
+            fixture.componentInstance.groups[0].disabled.set(true);
+            fixture.detectChanges();
+            const item1 = getWidgetEl('item 1')!;
+            click(item1);
+            right();
+            expect(document.activeElement).toBe(getWidgetEl('item 2'));
+          });
+
+          it('should not skip disabled groups when navigating prev', () => {
+            fixture.componentInstance.groups[0].disabled.set(true);
+            fixture.detectChanges();
+            const item5 = getWidgetEl('item 5')!;
+            click(item5);
+            left();
+            expect(document.activeElement).toBe(getWidgetEl('item 4'));
+          });
+
+          it('should navigate to the last item on End', () => {
+            const item0 = getWidgetEl('item 0')!;
+            click(item0);
+            end();
+            expect(document.activeElement).toBe(getWidgetEl('item 5'));
+          });
+
+          it('should navigate to the first item on Home', () => {
+            const item5 = getWidgetEl('item 5')!;
+            click(item5);
+            home();
+            expect(document.activeElement).toBe(getWidgetEl('item 0'));
+          });
+
+          describe('with wrap true', () => {
+            beforeEach(() => {
+              fixture.componentInstance.wrap.set(true);
+              fixture.detectChanges();
+            });
+
+            it('should wrap from last to first', () => {
+              const item5 = getWidgetEl('item 5')!;
+              click(item5);
+              right();
+              expect(document.activeElement).toBe(getWidgetEl('item 0'));
+            });
+
+            it('should wrap from first to last', () => {
+              const item0 = getWidgetEl('item 0')!;
+              click(item0);
+              left();
+              expect(document.activeElement).toBe(getWidgetEl('item 5'));
+            });
+          });
+        });
+
+        describe('with softDisabled false', () => {
+          beforeEach(() => {
+            fixture.componentInstance.softDisabled.set(false);
+            fixture.detectChanges();
+          });
+
+          it('should not navigate to disabled items on click', () => {
+            fixture.componentInstance.widgets[1].disabled.set(true);
+            fixture.detectChanges();
+            const item1 = getWidgetEl('item 1')!;
+            click(item1);
+            expect(document.activeElement).not.toBe(item1);
+          });
+
+          it('should skip disabled items when navigating next', () => {
+            fixture.componentInstance.widgets[1].disabled.set(true);
+            fixture.detectChanges();
+            const item0 = getWidgetEl('item 0')!;
+            click(item0);
+            right();
+            expect(document.activeElement).toBe(getWidgetEl('item 2'));
+          });
+
+          it('should skip disabled items when navigating prev', () => {
+            fixture.componentInstance.widgets[1].disabled.set(true);
+            fixture.detectChanges();
+            const item2 = getWidgetEl('item 2')!;
+            click(item2);
+            left();
+            expect(document.activeElement).toBe(getWidgetEl('item 0'));
+          });
+
+          it('should not navigate to items in disabled groups on click', () => {
+            fixture.componentInstance.groups[0].disabled.set(true);
+            fixture.detectChanges();
+            const item3 = getWidgetEl('item 3')!;
+            click(item3);
+            expect(document.activeElement).not.toBe(item3);
+          });
+
+          it('should skip disabled groups when navigating next', () => {
+            fixture.componentInstance.groups[0].disabled.set(true);
+            fixture.detectChanges();
+            const item1 = getWidgetEl('item 1')!;
+            click(item1);
+            right();
+            expect(document.activeElement).toBe(getWidgetEl('item 5'));
+          });
+
+          it('should skip disabled groups when navigating prev', () => {
+            fixture.componentInstance.groups[0].disabled.set(true);
+            fixture.detectChanges();
+            const item5 = getWidgetEl('item 5')!;
+            click(item5);
+            left();
+            expect(document.activeElement).toBe(getWidgetEl('item 1'));
+          });
+
+          it('should navigate to the last focusable item on End', () => {
+            fixture.componentInstance.widgets[5].disabled.set(true);
+            fixture.detectChanges();
+            const item0 = getWidgetEl('item 0')!;
+            click(item0);
+            end();
+            expect(document.activeElement).toBe(getWidgetEl('item 4'));
+          });
+
+          it('should navigate to the first focusable item on Home', () => {
+            fixture.componentInstance.widgets[0].disabled.set(true);
+            fixture.detectChanges();
+            const item5 = getWidgetEl('item 5')!;
+            click(item5);
+            home();
+            expect(document.activeElement).toBe(getWidgetEl('item 1'));
+          });
+
+          describe('with wrap true', () => {
+            beforeEach(() => {
+              fixture.componentInstance.wrap.set(true);
+              fixture.detectChanges();
+            });
+
+            it('should wrap from last to first focusable item', () => {
+              fixture.componentInstance.widgets[0].disabled.set(true);
+              fixture.detectChanges();
+              const item5 = getWidgetEl('item 5')!;
+              click(item5);
+              right();
+              expect(document.activeElement).toBe(getWidgetEl('item 1'));
+            });
+
+            it('should wrap from first to last focusable item', () => {
+              fixture.componentInstance.widgets[5].disabled.set(true);
+              fixture.detectChanges();
+              const item0 = getWidgetEl('item 0')!;
+              click(item0);
+              left();
+              expect(document.activeElement).toBe(getWidgetEl('item 4'));
+            });
+          });
+
+          describe('with wrap false', () => {
+            beforeEach(() => {
+              fixture.componentInstance.wrap.set(false);
+              fixture.detectChanges();
+            });
+
+            it('should not wrap from last to first focusable item', () => {
+              fixture.componentInstance.widgets[0].disabled.set(true);
+              fixture.detectChanges();
+              const item5 = getWidgetEl('item 5')!;
+              click(item5);
+              right();
+              expect(document.activeElement).toBe(item5);
+            });
+
+            it('should not wrap from first to last focusable item', () => {
+              fixture.componentInstance.widgets[5].disabled.set(true);
+              fixture.detectChanges();
+              const item0 = getWidgetEl('item 0')!;
+              click(item0);
+              left();
+              expect(document.activeElement).toBe(item0);
+            });
+          });
         });
       });
 
-      it('should call "unfocus" on Home key', () => {
-        home();
-        expect(testWidgetGroupInstance.lastAction()).toBe('unfocus');
-        expect(document.activeElement).toBe(widgetElements[0]);
+      describe('with rtl text direction', () => {
+        beforeEach(() => setupToolbar({textDirection: 'rtl'}));
+
+        it('should navigate on click', () => {
+          const item3 = getWidgetEl('item 3')!;
+          click(item3);
+          expect(document.activeElement).toBe(item3);
+        });
+
+        it('should navigate next on ArrowLeft', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
+          left();
+          expect(document.activeElement).toBe(getWidgetEl('item 1'));
+        });
+
+        it('should navigate prev on ArrowRight', () => {
+          click(getWidgetEl('item 1')!);
+          right();
+          expect(document.activeElement).toBe(getWidgetEl('item 0'));
+        });
+
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
+          down();
+          expect(document.activeElement).toBe(item0);
+        });
+
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+          const item0 = getWidgetEl('item 0')!;
+          click(item0);
+          up();
+          expect(document.activeElement).toBe(item0);
+        });
+
+        it('should navigate next in a widget group on ArrowDown', () => {
+          const item2 = getWidgetEl('item 2')!;
+          click(item2);
+          down();
+          expect(document.activeElement).toBe(getWidgetEl('item 3'));
+        });
+
+        it('should navigate prev in a widget group on ArrowUp', () => {
+          const item3 = getWidgetEl('item 3')!;
+          click(item3);
+          up();
+          expect(document.activeElement).toBe(getWidgetEl('item 2'));
+        });
+
+        it('should navigate first to last in a widget group on ArrowUp', () => {
+          const item2 = getWidgetEl('item 2')!;
+          click(item2);
+          up();
+          expect(document.activeElement).toBe(getWidgetEl('item 4'));
+        });
+
+        it('should navigate last to first in a widget group on ArrowDown', () => {
+          const item4 = getWidgetEl('item 4')!;
+          click(item4);
+          down();
+          expect(document.activeElement).toBe(getWidgetEl('item 2'));
+        });
+      });
+    });
+
+    describe('with vertical orientation', () => {
+      beforeEach(() => setupToolbar({orientation: 'vertical'}));
+
+      it('should navigate next on ArrowDown', () => {
+        const item0 = getWidgetEl('item 0')!;
+        click(item0);
+        down();
+        expect(document.activeElement).toBe(getWidgetEl('item 1'));
       });
 
-      it('should call "unfocus" on End key', () => {
-        end();
-        expect(testWidgetGroupInstance.lastAction()).toBe('unfocus');
-        expect(document.activeElement).toBe(widgetElements[2]);
+      it('should navigate prev on ArrowUp', () => {
+        const item1 = getWidgetEl('item 1')!;
+        click(item1);
+        up();
+        expect(document.activeElement).toBe(getWidgetEl('item 0'));
       });
 
-      it('should call "trigger" on Enter key', () => {
-        enter();
-        expect(testWidgetGroupInstance.lastAction()).toBe('trigger');
-      });
-
-      it('should call "trigger" on Space key', () => {
-        space();
-        expect(testWidgetGroupInstance.lastAction()).toBe('trigger');
-      });
-
-      it('should call "first" when navigating into a group from the previous widget', () => {
-        click(widgetElements[1]);
+      it('should not navigate next on ArrowRight when not in a widget group', () => {
+        const item0 = getWidgetEl('item 0')!;
+        click(item0);
         right();
-        expect(testWidgetGroupInstance.lastAction()).toBe('first');
+        expect(document.activeElement).toBe(item0);
       });
 
-      it('should call "last" when navigating into a group from the next widget', () => {
-        click(widgetElements[2]);
+      it('should not navigate prev on ArrowLeft when not in a widget group', () => {
+        const item0 = getWidgetEl('item 0')!;
+        click(item0);
         left();
-        expect(testWidgetGroupInstance.lastAction()).toBe('last');
+        expect(document.activeElement).toBe(item0);
       });
 
-      it('should call "goto" on click', () => {
-        click(testWidgetGroupInstance.toolbarWidgetGroup.element());
-        expect(testWidgetGroupInstance.lastAction()).toBe('goto');
+      it('should navigate next in a widget group on ArrowRight', () => {
+        const item2 = getWidgetEl('item 2')!;
+        click(item2);
+        right();
+        expect(document.activeElement).toBe(getWidgetEl('item 3'));
+      });
+
+      it('should navigate prev in a widget group on ArrowLeft', () => {
+        const item3 = getWidgetEl('item 3')!;
+        click(item3);
+        left();
+        expect(document.activeElement).toBe(getWidgetEl('item 2'));
+      });
+
+      it('should navigate last to first in a widget group on ArrowRight', () => {
+        const item4 = getWidgetEl('item 4')!;
+        click(item4);
+        right();
+        expect(document.activeElement).toBe(getWidgetEl('item 2'));
+      });
+
+      it('should navigate first to last in a widget group on ArrowLeft', () => {
+        const item2 = getWidgetEl('item 2')!;
+        click(item2);
+        left();
+        expect(document.activeElement).toBe(getWidgetEl('item 4'));
       });
     });
 
-    describe('RTL', () => {
-      beforeEach(() => {
-        setupTestToolbar('rtl');
-        const widgetGroupElement = testWidgetGroupInstance.toolbarWidgetGroup.element();
-        click(widgetGroupElement);
-        testWidgetGroupInstance.lastAction.set(undefined);
-        updateToolbar({orientation: 'horizontal'});
-      });
+    describe('with disabled toolbar', () => {
+      it('should not navigate on any key press', () => {
+        setupToolbar({disabled: true});
+        const item0 = getWidgetEl('item 0')!;
+        const initialActiveElement = document.activeElement;
+        click(item0);
+        expect(document.activeElement).toBe(initialActiveElement);
 
-      describe('horizontal orientation', () => {
-        it('should call "next" on ArrowLeft', () => {
-          left();
-          expect(testWidgetGroupInstance.lastAction()).toBe('next');
-        });
+        right();
+        expect(document.activeElement).toBe(initialActiveElement);
 
-        it('should call "prev" on ArrowRight', () => {
-          right();
-          expect(testWidgetGroupInstance.lastAction()).toBe('prev');
-        });
+        left();
+        expect(document.activeElement).toBe(initialActiveElement);
+
+        down();
+        expect(document.activeElement).toBe(initialActiveElement);
+
+        up();
+        expect(document.activeElement).toBe(initialActiveElement);
+
+        home();
+        expect(document.activeElement).toBe(initialActiveElement);
+
+        end();
+        expect(document.activeElement).toBe(initialActiveElement);
       });
+    });
+  });
+
+  describe('Selection', () => {
+    beforeEach(() => setupToolbar());
+
+    it('should toggle the active item on Enter', () => {
+      const item0 = getWidgetEl('item 0')!;
+      click(item0);
+      keydown('Enter');
+      expect(item0.getAttribute('aria-pressed')).toBe('false');
+      keydown('Enter');
+      expect(item0.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should toggle the active item on Space', () => {
+      const item0 = getWidgetEl('item 0')!;
+      click(item0);
+      keydown(' ');
+      expect(item0.getAttribute('aria-pressed')).toBe('false');
+      keydown(' ');
+      expect(item0.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should toggle the active item on click', () => {
+      const item0 = getWidgetEl('item 0')!;
+      click(item0);
+      expect(item0.getAttribute('aria-pressed')).toBe('true');
+      click(item0);
+      expect(item0.getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('should be able to select multiple items in the toolbar', () => {
+      const item0 = getWidgetEl('item 0')!;
+      const item1 = getWidgetEl('item 1')!;
+      click(item0);
+      click(item1);
+      expect(item0.getAttribute('aria-pressed')).toBe('true');
+      expect(item1.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should not be able to select multiple items in a group', () => {
+      const item2 = getWidgetEl('item 2')!;
+      const item3 = getWidgetEl('item 3')!;
+      click(item2);
+      click(item3);
+      expect(item2.getAttribute('aria-pressed')).toBe('false');
+      expect(item3.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should not select disabled items', () => {
+      fixture.componentInstance.widgets[1].disabled.set(true);
+      fixture.detectChanges();
+      const item1 = getWidgetEl('item 1')!;
+      click(item1);
+      expect(item1.getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('should not select items in a disabled group', () => {
+      fixture.componentInstance.groups[0].disabled.set(true);
+      fixture.detectChanges();
+      const item2 = getWidgetEl('item 2')!;
+      click(item2);
+      expect(item2.getAttribute('aria-pressed')).toBe('false');
     });
   });
 });
-
-@Component({
-  template: 'a black box',
-  selector: 'testWidgetGroup',
-  hostDirectives: [
-    {
-      directive: ToolbarWidgetGroup,
-      inputs: ['disabled'],
-    },
-  ],
-})
-class TestToolbarWidgetGroup {
-  readonly toolbarWidgetGroup = inject(ToolbarWidgetGroup);
-  readonly lastAction = signal<string | undefined>(undefined);
-
-  constructor() {
-    this.toolbarWidgetGroup.controls.set({
-      isOnFirstItem: () => false,
-      isOnLastItem: () => false,
-      next: wrap => {
-        this.lastAction.set(wrap ? 'nextWithWrap' : 'next');
-      },
-      prev: wrap => {
-        this.lastAction.set(wrap ? 'prevWithWrap' : 'prev');
-      },
-      first: () => {
-        this.lastAction.set('first');
-      },
-      last: () => {
-        this.lastAction.set('last');
-      },
-      unfocus: () => {
-        this.lastAction.set('unfocus');
-      },
-      trigger: () => {
-        this.lastAction.set('trigger');
-      },
-      goto: () => {
-        this.lastAction.set('goto');
-      },
-      setDefaultState: () => {
-        this.lastAction.set('setDefaultState');
-      },
-    });
-  }
-}
 
 @Component({
   template: `
     <div
       ngToolbar
       [orientation]="orientation()"
+      [softDisabled]="softDisabled()"
       [disabled]="disabled()"
       [wrap]="wrap()"
-      [softDisabled]="softDisabled()"
     >
-      <button ngToolbarWidget data-value="widget">Widget Button 1</button>
-      <button ngToolbarWidget data-value="widget" [disabled]="true">Widget Button 2</button>
-      <testWidgetGroup [disabled]="widgetGroupDisabled()"></testWidgetGroup>
-      <button ngToolbarWidget data-value="widget">Widget Button 3</button>
+      <button ngToolbarWidget #item0="ngToolbarWidget" [aria-pressed]="item0.selected()" [disabled]="widgets[0].disabled()" value="item 0">item 0</button>
+      <button ngToolbarWidget #item1="ngToolbarWidget" [aria-pressed]="item1.selected()" [disabled]="widgets[1].disabled()" value="item 1">item 1</button>
+      <div ngToolbarWidgetGroup [disabled]="groups[0].disabled()">
+        <button ngToolbarWidget #item2="ngToolbarWidget" [aria-pressed]="item2.selected()" [disabled]="widgets[2].disabled()" value="item 2">item 2</button>
+        <button ngToolbarWidget #item3="ngToolbarWidget" [aria-pressed]="item3.selected()" [disabled]="widgets[3].disabled()" value="item 3">item 3</button>
+        <button ngToolbarWidget #item4="ngToolbarWidget" [aria-pressed]="item4.selected()" [disabled]="widgets[4].disabled()" value="item 4">item 4</button>
+      </div>
+      <button ngToolbarWidget #item5="ngToolbarWidget" [aria-pressed]="item5.selected()" [disabled]="widgets[5].disabled()" value="item 5">item 5</button>
     </div>
   `,
-  imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup, TestToolbarWidgetGroup],
+  imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
 })
-class TestToolbarComponent {
+class ToolbarExample {
   orientation = signal<'vertical' | 'horizontal'>('horizontal');
-  disabled = signal(false);
-  widgetGroupDisabled = signal(false);
-  wrap = signal(true);
   softDisabled = signal(true);
+  disabled = signal(false);
+  wrap = signal(true);
+
+  widgets = [
+    {disabled: signal(false)},
+    {disabled: signal(false)},
+    {disabled: signal(false)},
+    {disabled: signal(false)},
+    {disabled: signal(false)},
+    {disabled: signal(false)},
+  ];
+
+  groups = [{disabled: signal(false)}];
 }
