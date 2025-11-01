@@ -213,8 +213,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.11
       firebase-tools:
-        specifier: 14.22.0
-        version: 14.22.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.23.0
+        version: 14.23.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -231,8 +231,8 @@ importers:
         specifier: ^5.6.0
         version: 5.12.0
       jasmine-core:
-        specifier: 5.12.0
-        version: 5.12.0
+        specifier: 5.12.1
+        version: 5.12.1
       jasmine-reporters:
         specifier: ^2.5.2
         version: 2.5.2
@@ -445,11 +445,11 @@ importers:
         specifier: 0.8.17
         version: 0.8.17
       firebase-tools:
-        specifier: 14.22.0
-        version: 14.22.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 14.23.0
+        version: 14.23.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
-        specifier: 5.12.0
-        version: 5.12.0
+        specifier: 5.12.1
+        version: 5.12.1
       jasmine-spec-reporter:
         specifier: 7.0.0
         version: 7.0.0
@@ -470,7 +470,7 @@ importers:
         version: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
       karma-jasmine-html-reporter:
         specifier: ^2.0.0
-        version: 2.1.0(jasmine-core@5.12.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
+        version: 2.1.0(jasmine-core@5.12.1)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9))
       light-server:
         specifier: ^2.9.1
         version: 2.9.1(bufferutil@4.0.9)
@@ -490,8 +490,8 @@ importers:
         specifier: ^24.6.1
         version: 24.26.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.93.2
-        version: 1.93.2
+        specifier: 1.93.3
+        version: 1.93.3
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -5310,8 +5310,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@14.22.0:
-    resolution: {integrity: sha512-ZudDdmP0pFR6jztKHoAFcIE19Qo2izfoMvbLxf7pvd5HY/MknVnhL+87mopWZGGv3Cmfc/gsUOcNW60n/my8cw==}
+  firebase-tools@14.23.0:
+    resolution: {integrity: sha512-JiW1JUlFCIdhj2pIu1vEXJCg0beuHwUSFYTntDSZCE3Z2bzsVFh3zpX3uWG5pL+BpoOjxmhvDjYVbf5c7Sia8A==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6344,6 +6344,9 @@ packages:
 
   jasmine-core@5.12.0:
     resolution: {integrity: sha512-QqO4pX33GEML5JoGQU6BM5NHKPgEsg+TXp3jCIDek9MbfEp2JUYEFBo9EF1+hegWy/bCHS1m5nP0BOp18G6rVA==}
+
+  jasmine-core@5.12.1:
+    resolution: {integrity: sha512-P/UbRZ0LKwXe7wEpwDheuhunPwITn4oPALhrJEQJo6756EwNGnsK/TSQrWojBB4cQDQ+VaxWYws9tFNDuiMh2Q==}
 
   jasmine-reporters@2.5.2:
     resolution: {integrity: sha512-qdewRUuFOSiWhiyWZX8Yx3YNQ9JG51ntBEO4ekLQRpktxFTwUHy24a86zD/Oi2BRTKksEdfWQZcQFqzjqIkPig==}
@@ -8197,6 +8200,11 @@ packages:
 
   sass@1.93.2:
     resolution: {integrity: sha512-t+YPtOQHpGW1QWsh1CHQ5cPIr9lbbGZLZnbihP/D/qZj/yuV68m8qarcV17nvkOX81BCrvzAlq2klCQFZghyTg==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  sass@1.93.3:
+    resolution: {integrity: sha512-elOcIZRTM76dvxNAjqYrucTSI0teAF/L2Lv0s6f6b7FOwcwIuA357bIE871580AjHJuSvLIRUosgV+lIWx6Rgg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -15097,7 +15105,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@14.22.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@14.23.0(@types/node@22.18.13)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.6(@types/node@22.18.13)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -15495,7 +15503,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -15933,7 +15941,7 @@ snapshots:
 
   ignore-walk@8.0.0:
     dependencies:
-      minimatch: 10.0.3
+      minimatch: 10.1.1
 
   ignore@5.3.2: {}
 
@@ -16354,6 +16362,8 @@ snapshots:
 
   jasmine-core@5.12.0: {}
 
+  jasmine-core@5.12.1: {}
+
   jasmine-reporters@2.5.2:
     dependencies:
       '@xmldom/xmldom': 0.8.11
@@ -16372,7 +16382,7 @@ snapshots:
   jasmine@5.12.0:
     dependencies:
       glob: 10.4.5
-      jasmine-core: 5.12.0
+      jasmine-core: 5.12.1
 
   jasminewd2@2.2.0: {}
 
@@ -16533,9 +16543,9 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.12.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.12.1)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.0.9)))(karma@6.4.4(bufferutil@4.0.9)):
     dependencies:
-      jasmine-core: 5.12.0
+      jasmine-core: 5.12.1
       karma: 6.4.4(bufferutil@4.0.9)
       karma-jasmine: 5.1.0(karma@6.4.4(bufferutil@4.0.9))
 
@@ -18486,6 +18496,14 @@ snapshots:
       webpack: 5.102.1(esbuild@0.25.11)
 
   sass@1.93.2:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.4
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.1
+
+  sass@1.93.3:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
