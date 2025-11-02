@@ -1,5 +1,6 @@
 import {join, relative} from 'path';
 import {readFileSync} from 'fs';
+import semver from 'semver';
 import chalk from 'chalk';
 import ts from 'typescript';
 
@@ -8,7 +9,7 @@ const projectRoot = process.cwd();
 const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
 
 // Current version from the package.json. Splits it on the dash to ignore pre-release labels.
-const packageVersion = packageJson.version.split('-')[0];
+const packageVersion = semver.parse(packageJson.version.split('-')[0])!;
 
 // Regex used to extract versions from a string.
 const versionRegex = /\d+\.\d+\.\d+/;
@@ -63,15 +64,17 @@ parsedConfig.fileNames.forEach((fileName: string) => {
 });
 
 // Go through the summary and log out all of the breaking changes.
-Object.keys(summary).forEach(version => {
-  const isExpired = hasExpired(packageVersion, version);
-  const status = isExpired ? chalk.red('(expired)') : chalk.green('(not expired)');
-  const header = chalk.bold(`Breaking changes for ${version} ${status}:`);
-  const messages = summary[version].join('\n');
+Object.keys(summary)
+  .sort(semver.compare)
+  .forEach(version => {
+    const isExpired = packageVersion.compare(version) > -1;
+    const status = isExpired ? chalk.red('(expired)') : chalk.green('(not expired)');
+    const header = chalk.bold(`Breaking changes for ${version} ${status}:`);
+    const messages = summary[version].join('\n');
 
-  console.log(isExpired ? chalk.red(header) : header);
-  console.log(isExpired ? chalk.red(messages) : messages, '\n');
-});
+    console.log(isExpired ? chalk.red(header) : header);
+    console.log(isExpired ? chalk.red(messages) : messages, '\n');
+  });
 
 /**
  * Formats a message to be logged out in the breaking changes summary.
@@ -91,32 +94,4 @@ function formatMessage(comment: string, position: number, lineStarts: readonly n
     .trim();
 
   return `Line ${lineNumber}, ${cleanMessage || 'No message'}`;
-}
-
-/** Converts a version string into an object. */
-function parseVersion(version: string) {
-  const [major = 0, minor = 0, patch = 0] = version.split('.').map(segment => parseInt(segment));
-  return {major, minor, patch};
-}
-
-/**
- * Checks whether a version has expired, based on the current version.
- * @param currentVersion Current version of the package.
- * @param breakingChange Version that is being checked.
- */
-function hasExpired(currentVersion: string, breakingChange: string) {
-  if (currentVersion === breakingChange) {
-    return true;
-  }
-
-  const current = parseVersion(currentVersion);
-  const target = parseVersion(breakingChange);
-
-  return (
-    target.major < current.major ||
-    (target.major === current.major && target.minor < current.minor) ||
-    (target.major === current.major &&
-      target.minor === current.minor &&
-      target.patch < current.patch)
-  );
 }
