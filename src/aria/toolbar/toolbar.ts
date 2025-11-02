@@ -28,7 +28,6 @@ import {
 } from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {toSignal} from '@angular/core/rxjs-interop';
 
 interface HasElement {
   element: Signal<HTMLElement>;

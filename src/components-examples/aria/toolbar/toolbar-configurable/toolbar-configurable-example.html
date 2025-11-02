@@ -1,9 +1,9 @@
 <div class="example-container">
   <h4 class="example-heading">Toolbar Controls</h4>
   <div class="example-toolbar-controls">
-    <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
-    <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
-    <mat-checkbox [formControl]="toolbarDisabled">Disabled</mat-checkbox>
+    <mat-checkbox [(ngModel)]="softDisabled">Soft Disabled</mat-checkbox>
+    <mat-checkbox [(ngModel)]="wrap">Wrap</mat-checkbox>
+    <mat-checkbox [(ngModel)]="toolbarDisabled">Disabled</mat-checkbox>
     <mat-form-field subscriptSizing="dynamic" appearance="outline">
       <mat-label>Orientation</mat-label>
       <mat-select [(value)]="orientation">
@@ -12,26 +12,23 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <h4 class="example-heading">Radio Group Controls</h4>
-  <div class="example-toolbar-controls">
-    <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
-    <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
-    <mat-form-field subscriptSizing="dynamic" appearance="outline">
-      <mat-label>Disabled Radio Options</mat-label>
-      <mat-select [(value)]="disabledOptions" multiple>
-        @for (fruit of fruits; track fruit) {
-          <mat-option [value]="fruit">{{fruit}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </div>
+
   <h4 class="example-heading">Button</h4>
   <div class="example-toolbar-controls">
     <mat-form-field subscriptSizing="dynamic" appearance="outline">
       <mat-label>Disabled Buttons</mat-label>
-      <mat-select [(value)]="disabledButtonOptions" multiple>
-        @for (fruit of buttonFruits; track fruit) {
-          <mat-option [value]="fruit">{{fruit}}</mat-option>
+      <mat-select multiple [(value)]="disabledWidgets">
+        @for (widget of widgets; track widget) {
+          <mat-option [value]="widget">{{widget}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic" appearance="outline">
+      <mat-label>Disabled Groups</mat-label>
+      <mat-select multiple [(value)]="disabledGroups">
+        @for (group of groups; track group) {
+          <mat-option [value]="group">{{group}}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -41,43 +38,73 @@
 <!-- #docregion toolbar -->
 <div
   ngToolbar
+  [wrap]="wrap"
   [orientation]="orientation"
-  [softDisabled]="softDisabled.value"
-  [wrap]="wrap.value"
-  [disabled]="toolbarDisabled.value"
+  [disabled]="toolbarDisabled"
+  [softDisabled]="softDisabled"
   class="example-toolbar"
+  aria-label="Horizontal Toolbar Text Formatting Tools"
 >
-  <button
-    ngToolbarWidget
-    class="example-radio-button"
-    (click)="test('Pear')"
-    [disabled]="disabledButtonOptions.includes('Pear')"
+  <div class="example-group" aria-label="Undo and Redo options">
+    <button toolbar-button value="undo" [disabled]="isDisabled('Undo')">undo</button>
+    <button toolbar-button value="redo" [disabled]="isDisabled('Redo')">redo</button>
+  </div>
+
+  <div class="example-separator" role="separator"></div>
+
+  <div class="example-group" aria-label="Text formatting options">
+    <button toolbar-toggle-button value="bold" [disabled]="isDisabled('Bold')">format_bold</button>
+    <button toolbar-toggle-button value="italic" [disabled]="isDisabled('Italic')">
+      format_italic
+    </button>
+    <button toolbar-toggle-button value="underline" [disabled]="isDisabled('Underline')">
+      format_underlined
+    </button>
+  </div>
+
+  @if (orientation === 'horizontal') {
+    <div class="example-separator" role="separator"></div>
+    <combobox />
+  }
+
+  <div class="example-separator" role="separator"></div>
+
+  <div
+    ngToolbarWidgetGroup
+    role="radiogroup"
+    class="example-group"
+    aria-label="Alignment options"
+    [disabled]="isDisabled('Alignment options')"
   >
-    Pear
-  </button>
-  <button
-    ngToolbarWidget
-    class="example-radio-button"
-    (click)="test('Blueberry')"
-    [disabled]="disabledButtonOptions.includes('Blueberry')"
+    <button toolbar-radio-button value="align left" [disabled]="isDisabled('Align left')">
+      format_align_left
+    </button>
+    <button toolbar-radio-button value="align center" [disabled]="isDisabled('Align center')">
+      format_align_center
+    </button>
+    <button toolbar-radio-button value="align right" [disabled]="isDisabled('Align right')">
+      format_align_right
+    </button>
+  </div>
+
+  <div class="example-separator" role="separator"></div>
+
+  <div
+    ngToolbarWidgetGroup
+    role="radiogroup"
+    class="example-group"
+    aria-label="List options"
+    [disabled]="isDisabled('List options')"
   >
-    Blueberry
-  </button>
-  <button
-    ngToolbarWidget
-    class="example-radio-button"
-    (click)="test('Cherry')"
-    [disabled]="disabledButtonOptions.includes('Cherry')"
-  >
-    Cherry
-  </button>
-  <button
-    ngToolbarWidget
-    class="example-radio-button"
-    (click)="test('Date')"
-    [disabled]="disabledButtonOptions.includes('Date')"
-  >
-    Date
-  </button>
+    <button toolbar-radio-button value="checklist" [disabled]="isDisabled('Checklist')">
+      checklist
+    </button>
+    <button toolbar-radio-button value="bullet list" [disabled]="isDisabled('Bullet list')">
+      format_list_bulleted
+    </button>
+    <button toolbar-radio-button value="numbered list" [disabled]="isDisabled('Numbered list')">
+      format_list_numbered
+    </button>
+  </div>
 </div>
 <!-- #enddocregion toolbar -->

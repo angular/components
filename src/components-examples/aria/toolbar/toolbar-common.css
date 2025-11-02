@@ -1,7 +1,3 @@
-.example-container {
-  padding-bottom: 32px;
-}
-
 .example-heading {
   margin: 16px 0 4px;
 }
@@ -15,120 +11,177 @@
 }
 
 .example-toolbar {
-  display: flex;
-  flex-direction: column;
-  padding: 8px;
-  width: 50%;
-  border: 1px solid var(--mat-sys-outline);
-  border-radius: var(--mat-sys-corner-extra-small);
   gap: 16px;
-}
-.example-toolbar[aria-orientation='horizontal'] {
+  padding: 8px;
+  display: flex;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   flex-direction: row;
-  width: 100%;
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 50%, transparent);
 }
 
-.example-radio-group {
+.example-toolbar[aria-orientation='vertical'],
+.example-toolbar[aria-orientation='vertical'] .example-group {
+  flex-direction: column;
+}
+
+.example-group {
   gap: 4px;
-  margin: 0;
-  padding: 8px;
-  max-height: 300px;
-  border: 1px solid var(--mat-sys-outline);
-  border-radius: var(--mat-sys-corner-extra-small);
   display: flex;
-  list-style: none;
-  flex-direction: column;
-  overflow: scroll;
 }
 
-.example-radio-group[aria-orientation='horizontal'] {
-  flex-direction: row;
-  width: 100%;
-}
-
-.example-radio-group[aria-disabled='true'] {
-  background-color: var(--mat-sys-surface-dim);
-  pointer-events: none;
-}
-
-.example-radio-group label {
-  padding: 16px;
-  flex-shrink: 0;
-}
-
-.example-radio-button {
-  gap: 16px;
-  padding: 16px;
-  display: flex;
+.example-button {
   cursor: pointer;
+  opacity: 0.875;
+  font-size: 1.25rem;
+  padding: 6px 8px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-button:focus,
+.example-button:hover {
+  background: color-mix(in srgb, var(--mat-sys-outline) 10%, transparent);
+}
+
+.example-button:active {
+  background: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.example-button[aria-pressed='true'],
+.example-button[aria-checked='true'] {
+  color: color-mix(in srgb, var(--mat-sys-primary) 90%, black);
+  background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+}
+
+.example-button:focus {
+  border-color: var(--mat-sys-primary);
+  outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
+}
+
+.example-button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.example-separator {
+  width: 1px;
+  background: color-mix(in srgb, var(--mat-sys-outline) 50%, transparent);
+}
+
+.example-toolbar[aria-orientation='vertical'] .example-separator {
+  height: 1px;
+  width: auto;
+}
+
+.example-combobox-container {
+  border-radius: var(--mat-sys-corner-extra-small);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 50%, transparent);
+}
+
+.example-combobox-container:focus-within {
+  border-color: var(--mat-sys-primary);
+  outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
+}
+
+.example-combobox {
+  height: 100%;
+  width: 10rem;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}
+
+.example-combobox-input-container {
+  display: flex;
   position: relative;
   align-items: center;
   border-radius: var(--mat-sys-corner-extra-small);
-}
-
-/* Basic visual indicator for the radio button */
-.example-radio-indicator {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid var(--mat-sys-outline);
-  display: inline-block;
-  position: relative;
-}
-
-.example-radio-button[aria-checked='true'] .example-radio-indicator {
-  border-color: var(--mat-sys-primary);
-}
-
-.example-radio-button[aria-checked='true'] .example-radio-indicator::after {
-  content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--mat-sys-primary);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.example-radio-button[aria-disabled='true'][aria-checked='true'] .example-radio-indicator::after {
-  background-color: var(--mat-sys-outline);
-}
-
-.example-radio-button[data-active='true'],
-.example-radio-button[aria-disabled='false']:hover {
-  outline: 2px solid var(--mat-sys-outline);
-  background: var(--mat-sys-surface-container);
-}
-
-.example-radio-button[aria-disabled='false']:focus-within {
-  outline: 2px solid var(--mat-sys-primary);
-  background: var(--mat-sys-surface-container);
-}
-
-.example-radio-button[data-active='true'][aria-disabled='true'],
-.example-radio-button[aria-disabled='true']:focus-within {
-  outline: 2px solid var(--mat-sys-outline);
-}
-
-.example-radio-button[aria-disabled='true'] {
-  cursor: default;
-}
-
-.example-radio-button[aria-disabled='true'] span:not(.example-radio-indicator) {
-  opacity: 0.3;
-}
-
-.example-radio-button[aria-disabled='true']::before {
-  content: '';
-  position: absolute;
-  width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
+}
+
+.example-combobox-input {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 0.8rem;
+  padding: 0 0.5rem;
   border-radius: var(--mat-sys-corner-extra-small);
-  background-color: var(--mat-sys-on-surface);
-  opacity: var(--mat-sys-focus-state-layer-opacity);
+  background-color: transparent;
+}
+
+.example-combobox-input::-moz-selection {
+  background: transparent;
+}
+
+.example-combobox-input::-webkit-selection {
+  background: transparent;
+}
+
+.example-arrow-icon {
+  padding: 0 0.2rem;
+  position: absolute;
+  right: 0;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.example-combobox[dir='rtl'] .example-arrow-icon {
+  right: auto;
+  left: 0;
+}
+
+.example-combobox-input[aria-expanded='true'] + .example-arrow-icon {
+  transform: rotate(180deg);
+}
+
+.example-popover {
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 50%, transparent);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-surface);
+}
+
+.example-option {
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  display: flex;
+  overflow: hidden;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.example-option:hover {
+  background: color-mix(in srgb, var(--mat-sys-outline) 10%, transparent);
+}
+
+.example-option[data-active='true'] {
+  border-radius: var(--mat-sys-corner-extra-small);
+  outline: 1px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+}
+
+.example-option[aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+.example-option-icon {
+  font-size: 1rem;
+}
+
+.example-option[aria-selected='false'] .example-option-icon {
+  visibility: hidden;
 }
