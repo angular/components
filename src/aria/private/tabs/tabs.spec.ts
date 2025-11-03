@@ -63,7 +63,7 @@ describe('Tabs Pattern', () => {
       focusMode: signal('roving'),
       disabled: signal(false),
       activeItem: signal(undefined),
-      softDisabled: signal(false),
+      softDisabled: signal(true),
       items: signal([]),
       value: signal(['tab-1']),
       element: signal(document.createElement('div')),
@@ -193,6 +193,7 @@ describe('Tabs Pattern', () => {
     });
 
     it('should not set activeIndex if no tabs are focusable', () => {
+      tabListInputs.softDisabled.set(false);
       tabInputs.forEach(input => input.disabled.set(true));
       tabListInputs.activeItem.set(tabPatterns[10]);
       tabListPattern.setDefaultState();
@@ -200,6 +201,7 @@ describe('Tabs Pattern', () => {
     });
 
     it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
+      tabListInputs.softDisabled.set(false);
       tabListInputs.activeItem.set(tabPatterns[2]);
       tabListInputs.value.set([]);
       tabInputs[0].disabled.set(true);
@@ -215,6 +217,7 @@ describe('Tabs Pattern', () => {
     });
 
     it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
+      tabListInputs.softDisabled.set(false);
       tabListInputs.value.set([tabPatterns[1].value()]);
       tabInputs[1].disabled.set(true);
       tabListPattern.setDefaultState();
@@ -231,6 +234,7 @@ describe('Tabs Pattern', () => {
     });
 
     it('skips the disabled tab when `softDisabled` is set to false.', () => {
+      tabListInputs.softDisabled.set(false);
       tabInputs[1].disabled.set(true);
       tabListPattern.onKeydown(right());
       expect(tabPatterns[0].active()).toBeFalse();
@@ -239,7 +243,6 @@ describe('Tabs Pattern', () => {
     });
 
     it('does not skip the disabled tab when `softDisabled` is set to true.', () => {
-      tabListInputs.softDisabled.set(true);
       tabInputs[1].disabled.set(true);
       tabListPattern.onKeydown(right());
       expect(tabPatterns[0].active()).toBeFalse();

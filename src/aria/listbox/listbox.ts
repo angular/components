@@ -98,7 +98,7 @@ export class Listbox<V> {
   wrap = input(true, {transform: booleanAttribute});
 
   /** Whether to allow disabled items in the list to receive focus. */
-  softDisabled = input(false, {transform: booleanAttribute});
+  softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the list. */
   focusMode = input<'roving' | 'activedescendant'>('roving');

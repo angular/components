@@ -273,18 +273,20 @@ describe('Tabs', () => {
           it('should move focus with ArrowRight', () => {
             expect(isTabFocused(0)).toBe(true);
             right();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
           });
 
           it('should move focus with ArrowLeft', () => {
             right();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
             left();
             expect(isTabFocused(0)).toBe(true);
           });
 
           it('should wrap focus with ArrowRight if wrap is true', () => {
             updateTabs({wrap: true});
+            right();
+            expect(isTabFocused(1)).toBe(true);
             right();
             expect(isTabFocused(2)).toBe(true);
             right();
@@ -293,6 +295,8 @@ describe('Tabs', () => {
 
           it('should not wrap focus with ArrowRight if wrap is false', () => {
             updateTabs({wrap: false});
+            right();
+            expect(isTabFocused(1)).toBe(true);
             right();
             expect(isTabFocused(2)).toBe(true);
             right();
@@ -359,12 +363,12 @@ describe('Tabs', () => {
           it('should move focus with ArrowLeft (effectively next)', () => {
             expect(isTabFocused(0)).toBe(true);
             left();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
           });
 
           it('should move focus with ArrowRight (effectively previous)', () => {
             left();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
             right();
             expect(isTabFocused(0)).toBe(true);
           });
@@ -372,6 +376,9 @@ describe('Tabs', () => {
           it('should wrap focus with ArrowLeft if wrap is true', () => {
             updateTabs({wrap: true});
             left();
+            expect(isTabFocused(1)).toBe(true);
+            left();
+            expect(isTabFocused(2)).toBe(true);
             left();
             expect(isTabFocused(0)).toBe(true);
           });
@@ -402,18 +409,20 @@ describe('Tabs', () => {
           it('should move focus with ArrowDown', () => {
             expect(isTabFocused(0)).toBe(true);
             down();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
           });
 
           it('should move focus with ArrowUp', () => {
             down();
-            expect(isTabFocused(2)).toBe(true);
+            expect(isTabFocused(1)).toBe(true);
             up();
             expect(isTabFocused(0)).toBe(true);
           });
 
           it('should wrap focus with ArrowDown if wrap is true', () => {
             updateTabs({wrap: true});
+            down();
+            expect(isTabFocused(1)).toBe(true);
             down();
             expect(isTabFocused(2)).toBe(true);
             down();
@@ -422,6 +431,8 @@ describe('Tabs', () => {
 
           it('should not wrap focus with ArrowDown if wrap is false', () => {
             updateTabs({wrap: false});
+            down();
+            expect(isTabFocused(1)).toBe(true);
             down();
             expect(isTabFocused(2)).toBe(true);
             down();
@@ -443,7 +454,7 @@ describe('Tabs', () => {
           });
 
           it('should move focus to first tab with Home', () => {
-            down();
+            end();
             expect(isTabFocused(2)).toBe(true);
             home();
             expect(isTabFocused(0)).toBe(true);
@@ -723,7 +734,7 @@ class TestTabsComponent {
   orientation = signal<'horizontal' | 'vertical'>('horizontal');
   disabled = signal(false);
   wrap = signal(true);
-  softDisabled = signal(false);
+  softDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'follow' | 'explicit'>('follow');
 }

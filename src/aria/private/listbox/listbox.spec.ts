@@ -40,7 +40,7 @@ describe('Listbox Pattern', () => {
       wrap: inputs.wrap ?? signal(true),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
-      softDisabled: inputs.softDisabled ?? signal(false),
+      softDisabled: inputs.softDisabled ?? signal(true),
       multi: inputs.multi ?? signal(false),
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),

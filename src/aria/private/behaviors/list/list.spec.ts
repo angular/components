@@ -32,7 +32,7 @@ describe('List Behavior', () => {
       orientation: inputs.orientation ?? signal('vertical'),
       element: signal({focus: () => {}} as HTMLElement),
       focusMode: inputs.focusMode ?? signal('roving'),
-      softDisabled: inputs.softDisabled ?? signal(false),
+      softDisabled: inputs.softDisabled ?? signal(true),
       selectionMode: signal('explicit'),
       ...inputs,
     });
@@ -176,8 +176,8 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
     });
 
-    it('should skip disabled items when navigating', () => {
-      const {list, items} = getDefaultPatterns();
+    it('should skip disabled items when softDisabled is false', () => {
+      const {list, items} = getDefaultPatterns({softDisabled: signal(false)});
       items[1].disabled.set(true); // Disable second item
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
@@ -186,8 +186,8 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]); // Should skip back to 'Apple'
     });
 
-    it('should not skip disabled items when softDisabled is true', () => {
-      const {list, items} = getDefaultPatterns({softDisabled: signal(true)});
+    it('should not skip disabled items when navigating', () => {
+      const {list, items} = getDefaultPatterns();
       items[1].disabled.set(true); // Disable second item
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();

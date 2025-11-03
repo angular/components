@@ -118,7 +118,7 @@ export class Tree<V> {
   readonly wrap = input(true, {transform: booleanAttribute});
 
   /** Whether to allow disabled items to receive focus. */
-  readonly softDisabled = input(false, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** Typeahead delay. */
   readonly typeaheadDelay = input(0.5);

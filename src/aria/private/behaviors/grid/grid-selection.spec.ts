@@ -47,7 +47,7 @@ function setupGridSelection(
   const gridFocusInputs: GridFocusInputs = {
     focusMode: signal('roving'),
     disabled: signal(false),
-    softDisabled: signal(false),
+    softDisabled: signal(true),
   };
   const gridFocus = new GridFocus({
     grid: gridData,

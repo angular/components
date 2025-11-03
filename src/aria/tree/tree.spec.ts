@@ -1315,7 +1315,8 @@ describe('Tree', () => {
             });
           });
 
-          it('should move focus to the last enabled visible item on End', () => {
+          it('should move focus to the last enabled visible item on End (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
             right(); // Expands fruits
             updateTreeItemByValue('dairy', {disabled: true});
             updateTreeItemByValue('grains', {disabled: true});
@@ -1324,7 +1325,8 @@ describe('Tree', () => {
             expect(isFocused('berries')).toBe(true);
           });
 
-          it('should move focus to the first enabled visible item on Home', () => {
+          it('should move focus to the first enabled visible item on Home (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
             end();
             updateTreeItemByValue('fruits', {disabled: true});
             home();
@@ -1530,7 +1532,7 @@ class TestTreeComponent {
   orientation = signal<'vertical' | 'horizontal'>('vertical');
   multi = signal(false);
   wrap = signal(true);
-  softDisabled = signal(false);
+  softDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);

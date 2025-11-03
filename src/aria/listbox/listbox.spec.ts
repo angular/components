@@ -218,8 +218,23 @@ describe('Listbox', () => {
         expect(optionElements[4].getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set initial focus (tabindex="0") on the first non-disabled option if selected option is disabled', () => {
-        setupListbox({focusMode: 'roving', value: [1], disabledOptions: [1]});
+      it('should set initial focus (tabindex="0") on the first non-disabled option if selected option is disabled when softDisabled is false', () => {
+        setupListbox({
+          focusMode: 'roving',
+          value: [1],
+          disabledOptions: [0],
+          softDisabled: false,
+        });
+        expect(optionElements[0].getAttribute('tabindex')).toBe('-1');
+        expect(optionElements[1].getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should set initial focus (tabindex="0") on the first option if selected option is disabled', () => {
+        setupListbox({
+          focusMode: 'roving',
+          value: [1],
+          disabledOptions: [0],
+        });
         expect(optionElements[0].getAttribute('tabindex')).toBe('0');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
       });
@@ -249,6 +264,16 @@ describe('Listbox', () => {
       it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled', () => {
         setupListbox({focusMode: 'activedescendant', value: [1], disabledOptions: [1]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
+      });
+
+      it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled when softDisabled is false', () => {
+        setupListbox({
+          focusMode: 'activedescendant',
+          value: [1],
+          disabledOptions: [0],
+          softDisabled: false,
+        });
+        expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[1].id);
       });
 
       it('should set tabindex="-1" for all options', () => {
@@ -553,17 +578,17 @@ describe('Listbox', () => {
     isFocused: (index: number) => boolean,
   ) {
     describe(`keyboard navigation (focusMode="${focusMode}")`, () => {
-      it('should move focus to the last enabled option on End', () => {
+      it('should move focus to the last focusable option on End', () => {
         setupListbox({focusMode, disabledOptions: [4]});
         end();
-        expect(isFocused(3)).toBe(true);
+        expect(isFocused(4)).toBe(true);
       });
 
-      it('should move focus to the first enabled option on Home', () => {
+      it('should move focus to the first focusable option on Home', () => {
         setupListbox({focusMode, disabledOptions: [0]});
         end();
         home();
-        expect(isFocused(1)).toBe(true);
+        expect(isFocused(0)).toBe(true);
       });
 
       it('should allow keyboard navigation if the group is readonly', () => {
@@ -774,7 +799,7 @@ class ListboxExample {
   value: number[] = [];
   disabled = false;
   readonly = false;
-  softDisabled = false;
+  softDisabled = true;
   focusMode: 'roving' | 'activedescendant' = 'roving';
   orientation: 'vertical' | 'horizontal' = 'vertical';
   multi = false;

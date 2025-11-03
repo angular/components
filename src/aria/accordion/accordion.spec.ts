@@ -419,7 +419,7 @@ class AccordionGroupExample {
   value = model<string[]>([]);
   multiExpandable = signal(false);
   disabledGroup = signal(false);
-  softDisabled = signal(false);
+  softDisabled = signal(true);
   wrap = signal(false);
 
   disableItem(itemValue: string, disabled: boolean) {
