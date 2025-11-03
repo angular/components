@@ -14,6 +14,8 @@ import {
   signal,
   ViewContainerRef,
   model,
+  EmbeddedViewRef,
+  OnDestroy,
 } from '@angular/core';
 
 /**
@@ -41,10 +43,11 @@ export class DeferredContentAware {
  * ```
  */
 @Directive()
-export class DeferredContent {
+export class DeferredContent implements OnDestroy {
   private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
   private readonly _templateRef = inject(TemplateRef);
   private readonly _viewContainerRef = inject(ViewContainerRef);
+  private _currentViewRef: EmbeddedViewRef<unknown> | null = null;
   private _isRendered = false;
 
   readonly deferredContentAware = signal(this._deferredContentAware);
@@ -52,14 +55,28 @@ export class DeferredContent {
   constructor() {
     afterRenderEffect(() => {
       if (this.deferredContentAware()?.contentVisible()) {
-        if (this._isRendered) return;
-        this._viewContainerRef.clear();
-        this._viewContainerRef.createEmbeddedView(this._templateRef);
-        this._isRendered = true;
+        if (!this._isRendered) {
+          this._destroyContent();
+          this._currentViewRef = this._viewContainerRef.createEmbeddedView(this._templateRef);
+          this._isRendered = true;
+        }
       } else if (!this.deferredContentAware()?.preserveContent()) {
-        this._viewContainerRef.clear();
+        this._destroyContent();
         this._isRendered = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this._destroyContent();
+  }
+
+  private _destroyContent() {
+    const ref = this._currentViewRef;
+
+    if (ref && !ref.destroyed) {
+      ref.destroy();
+      this._currentViewRef = null;
+    }
   }
 }
