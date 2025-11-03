@@ -232,7 +232,7 @@ describe('Listbox', () => {
       it('should set initial focus (tabindex="0") on the first option if selected option is disabled', () => {
         setupListbox({
           focusMode: 'roving',
-          value: [1],
+          value: [0],
           disabledOptions: [0],
         });
         expect(optionElements[0].getAttribute('tabindex')).toBe('0');
@@ -262,7 +262,7 @@ describe('Listbox', () => {
       });
 
       it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled', () => {
-        setupListbox({focusMode: 'activedescendant', value: [1], disabledOptions: [1]});
+        setupListbox({focusMode: 'activedescendant', value: [0], disabledOptions: [0]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
       });
 
