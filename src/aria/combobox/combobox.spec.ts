@@ -211,12 +211,6 @@ describe('Combobox', () => {
     describe('Expansion', () => {
       beforeEach(() => setupCombobox());
 
-      it('should open on click', () => {
-        focus();
-        click(inputElement);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
       it('should open on ArrowDown', () => {
         focus();
         keydown('ArrowDown');
@@ -955,12 +949,6 @@ describe('Combobox', () => {
 
     describe('Expansion', () => {
       beforeEach(() => setupCombobox());
-
-      it('should open on click', () => {
-        focus();
-        click(inputElement);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
 
       it('should open on ArrowDown', () => {
         focus();

@@ -210,8 +210,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       if (e.target === this.inputs.inputEl()) {
         if (this.readonly()) {
           this.expanded() ? this.close() : this.open({selected: true});
-        } else {
-          this.open();
         }
       }
     }),

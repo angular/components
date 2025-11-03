@@ -295,13 +295,6 @@ describe('Combobox with Listbox Pattern', () => {
   });
 
   describe('Expansion', () => {
-    it('should open on click', () => {
-      const {combobox, inputEl} = getPatterns();
-      expect(combobox.expanded()).toBe(false);
-      combobox.onPointerup(clickInput(inputEl));
-      expect(combobox.expanded()).toBe(true);
-    });
-
     it('should open on ArrowDown', () => {
       const {combobox} = getPatterns();
       expect(combobox.expanded()).toBe(false);
