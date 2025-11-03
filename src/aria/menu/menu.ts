@@ -26,6 +26,8 @@ import {
   MenuItemPattern,
   MenuPattern,
   MenuTriggerPattern,
+  DeferredContent,
+  DeferredContentAware,
 } from '@angular/aria/private';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
