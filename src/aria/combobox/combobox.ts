@@ -117,6 +117,16 @@ export class Combobox<V> {
       }
     });
   }
+
+  /** Opens the combobox to the selected item. */
+  open() {
+    this._pattern.open({selected: true});
+  }
+
+  /** Closes the combobox. */
+  close() {
+    this._pattern.close();
+  }
 }
 
 @Directive({
