@@ -45,7 +45,7 @@ jobs:
       - name: Execute Tests
         run: pnpm bazel test --test_tag_filters=-e2e,-audit //docs/...
       - name: Store Test Logs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: test-logs
@@ -66,7 +66,7 @@ jobs:
       - name: Execute Lighthouse Audit
         run: pnpm -s bazel test --test_tag_filters=audit //docs/...
       - name: Store Audit Logs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: lighthouse-logs
