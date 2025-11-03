@@ -21,8 +21,9 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 import {
+  DeferredContent,
+  DeferredContentAware,
   AccordionGroupPattern,
   AccordionPanelPattern,
   AccordionTriggerPattern,

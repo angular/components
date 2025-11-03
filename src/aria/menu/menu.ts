@@ -27,11 +27,12 @@ import {
   MenuItemPattern,
   MenuPattern,
   MenuTriggerPattern,
+  DeferredContent,
+  DeferredContentAware,
 } from '@angular/aria/private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
-import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 
 /**
  * A trigger for a menu.

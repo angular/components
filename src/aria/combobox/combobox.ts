@@ -19,8 +19,9 @@ import {
   untracked,
   WritableSignal,
 } from '@angular/core';
-import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 import {
+  DeferredContent,
+  DeferredContentAware,
   ComboboxPattern,
   ComboboxListboxControls,
   ComboboxTreeControls,
