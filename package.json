@@ -87,7 +87,7 @@
     "@firebase/app-types": "^0.9.0",
     "@material/material-color-utilities": "^0.3.0",
     "@octokit/rest": "22.0.1",
-    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@schematics/angular": "catalog:",
     "@types/babel__core": "^7.1.18",
