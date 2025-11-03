@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DeferredContent, DeferredContentAware} from '@angular/aria/deferred-content';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
@@ -24,7 +23,13 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabListPattern, TabPanelPattern, TabPattern} from '@angular/aria/private';
+import {
+  TabListPattern,
+  TabPanelPattern,
+  TabPattern,
+  DeferredContent,
+  DeferredContentAware,
+} from '@angular/aria/private';
 
 interface HasElement {
   element: Signal<HTMLElement>;

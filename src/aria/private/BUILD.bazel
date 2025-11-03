@@ -13,6 +13,7 @@ ts_project(
         "//src/aria/private/accordion",
         "//src/aria/private/behaviors/signal-like",
         "//src/aria/private/combobox",
+        "//src/aria/private/deferred-content",
         "//src/aria/private/grid",
         "//src/aria/private/listbox",
         "//src/aria/private/menu",
