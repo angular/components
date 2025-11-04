@@ -82,16 +82,16 @@ export class ListFocus<T extends ListFocusItem> {
     return this.inputs.activeItem()?.id() ?? undefined;
   }
 
-  /** The tabindex for the list. */
-  getListTabindex(): -1 | 0 {
+  /** The tab index for the list. */
+  getListTabIndex(): -1 | 0 {
     if (this.isListDisabledFocusable()) {
       return 0;
     }
     return this.inputs.focusMode() === 'activedescendant' ? 0 : -1;
   }
 
-  /** Returns the tabindex for the given item. */
-  getItemTabindex(item: T): -1 | 0 {
+  /** Returns the tab index for the given item. */
+  getItemTabIndex(item: T): -1 | 0 {
     if (this.isListDisabledFocusable()) {
       return -1;
     }

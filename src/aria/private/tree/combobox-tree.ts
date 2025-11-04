@@ -27,13 +27,13 @@ export class ComboboxTreePattern<V>
   role = () => 'tree' as const;
 
   /* The id of the active (focused) item in the tree. */
-  activeId = computed(() => this.listBehavior.activedescendant());
+  activeId = computed(() => this.listBehavior.activeDescendant());
 
   /** The list of items in the tree. */
   items = computed(() => this.inputs.allItems());
 
-  /** The tabindex for the tree. Always -1 because the combobox handles focus. */
-  override tabindex: SignalLike<-1 | 0> = () => -1;
+  /** The tab index for the tree. Always -1 because the combobox handles focus. */
+  override tabIndex: SignalLike<-1 | 0> = () => -1;
 
   constructor(override readonly inputs: ComboboxTreeInputs<V>) {
     if (inputs.combobox()) {

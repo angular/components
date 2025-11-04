@@ -31,8 +31,8 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
   /** A reference to the parent toolbar. */
   readonly toolbar: SignalLike<ToolbarPattern<V>>;
 
-  /** The tabindex of the widgdet. */
-  readonly tabindex = computed(() => this.toolbar().listBehavior.getItemTabindex(this));
+  /** The tab index of the widgdet. */
+  readonly tabIndex = computed(() => this.toolbar().listBehavior.getItemTabindex(this));
 
   /** The text used by the typeahead search. */
   readonly searchTerm = () => ''; // Unused because toolbar does not support typeahead.

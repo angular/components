@@ -36,11 +36,11 @@ export class ToolbarPattern<V> {
   /** Whether the toolbar is disabled. */
   readonly disabled = computed(() => this.listBehavior.disabled());
 
-  /** The tabindex of the toolbar (if using activedescendant). */
-  readonly tabindex = computed(() => this.listBehavior.tabindex());
+  /** The tab index of the toolbar (if using activedescendant). */
+  readonly tabIndex = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active widget (if using activedescendant). */
-  readonly activedescendant = computed(() => this.listBehavior.activedescendant());
+  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** The key used to navigate to the previous widget. */
   private readonly _prevKey = computed(() => {

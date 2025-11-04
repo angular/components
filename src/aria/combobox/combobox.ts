@@ -123,7 +123,7 @@ export class Combobox<V> {
     'role': 'combobox',
     '[value]': 'value()',
     '[attr.aria-expanded]': 'combobox._pattern.expanded()',
-    '[attr.aria-activedescendant]': 'combobox._pattern.activedescendant()',
+    '[attr.aria-activedescendant]': 'combobox._pattern.activeDescendant()',
     '[attr.aria-controls]': 'combobox._pattern.popupId()',
     '[attr.aria-haspopup]': 'combobox._pattern.hasPopup()',
     '[attr.aria-autocomplete]': 'combobox._pattern.autocomplete()',

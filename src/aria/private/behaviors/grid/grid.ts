@@ -48,7 +48,7 @@ export class Grid<T extends GridCell> {
   /** The anchor point for range selection, linked to the active coordinates. */
   readonly selectionAnchor = linkedSignal<RowCol>(() => this.focusBehavior.activeCoords());
 
-  /** The `tabindex` for the grid container. */
+  /** The `tab index` for the grid container. */
   readonly gridTabIndex = computed(() => this.focusBehavior.gridTabIndex());
 
   /** Whether the grid is in a disabled state. */
@@ -84,9 +84,9 @@ export class Grid<T extends GridCell> {
     return index !== undefined ? index + 1 : undefined;
   }
 
-  /** Gets the `tabindex` for a given cell. */
+  /** Gets the `tab index` for a given cell. */
   cellTabIndex(cell: T): -1 | 0 {
-    return this.focusBehavior.getCellTabindex(cell);
+    return this.focusBehavior.getCellTabIndex(cell);
   }
 
   /** Navigates to the cell above the currently active cell. */

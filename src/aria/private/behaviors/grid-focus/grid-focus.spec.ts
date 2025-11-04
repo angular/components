@@ -231,17 +231,17 @@ describe('GridFocus', () => {
   describe('getGridTabindex', () => {
     it('should return 0 if grid is disabled', () => {
       const {gridFocus} = setupGridFocus({disabled: signal(true)});
-      expect(gridFocus.getGridTabindex()).toBe(0);
+      expect(gridFocus.getGridTabIndex()).toBe(0);
     });
 
     it('should return -1 if focusMode is "roving" and grid is not disabled', () => {
       const {gridFocus} = setupGridFocus({focusMode: signal('roving')});
-      expect(gridFocus.getGridTabindex()).toBe(-1);
+      expect(gridFocus.getGridTabIndex()).toBe(-1);
     });
 
     it('should return 0 if focusMode is "activedescendant" and grid is not disabled', () => {
       const {gridFocus} = setupGridFocus({focusMode: signal('activedescendant')});
-      expect(gridFocus.getGridTabindex()).toBe(0);
+      expect(gridFocus.getGridTabIndex()).toBe(0);
     });
   });
 
@@ -252,9 +252,9 @@ describe('GridFocus', () => {
         numCols: 3,
         disabled: signal(true),
       });
-      expect(gridFocus.getCellTabindex(cells[0][0])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[0][1])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[0][2])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][0])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][1])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][2])).toBe(-1);
     });
 
     it('should return -1 if focusMode is "activedescendant"', () => {
@@ -263,9 +263,9 @@ describe('GridFocus', () => {
         numCols: 3,
         focusMode: signal('activedescendant'),
       });
-      expect(gridFocus.getCellTabindex(cells[0][0])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[0][1])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[0][2])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][0])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][1])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][2])).toBe(-1);
     });
 
     it('should return 0 if focusMode is "roving" and cell is the activeCell', () => {
@@ -275,9 +275,9 @@ describe('GridFocus', () => {
         focusMode: signal('roving'),
       });
 
-      expect(gridFocus.getCellTabindex(cells[0][0])).toBe(0);
-      expect(gridFocus.getCellTabindex(cells[0][1])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[0][2])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][0])).toBe(0);
+      expect(gridFocus.getCellTabIndex(cells[0][1])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][2])).toBe(-1);
     });
   });
 

@@ -220,7 +220,7 @@ describe('GridFocus', () => {
 
       gridFocus.focusCell(cells[1][1]);
 
-      expect(gridFocus.getCellTabindex(cells[1][1])).toBe(0);
+      expect(gridFocus.getCellTabIndex(cells[1][1])).toBe(0);
     });
 
     it('should return -1 for inactive cells in roving mode', () => {
@@ -231,8 +231,8 @@ describe('GridFocus', () => {
 
       gridFocus.focusCell(cells[1][1]);
 
-      expect(gridFocus.getCellTabindex(cells[0][0])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[2][2])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][0])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[2][2])).toBe(-1);
     });
 
     it('should return -1 for all cells in activedescendant mode', () => {
@@ -243,14 +243,14 @@ describe('GridFocus', () => {
 
       gridFocus.focusCell(cells[1][1]);
 
-      expect(gridFocus.getCellTabindex(cells[0][0])).toBe(-1);
-      expect(gridFocus.getCellTabindex(cells[1][1])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[0][0])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[1][1])).toBe(-1);
     });
 
     it('should return -1 for all cells when the grid is disabled', () => {
       const cells = createTestGrid(createGridA);
       const gridFocus = setupGridFocus(signal(cells), {disabled: signal(true)});
-      expect(gridFocus.getCellTabindex(cells[1][1])).toBe(-1);
+      expect(gridFocus.getCellTabIndex(cells[1][1])).toBe(-1);
     });
   });
 

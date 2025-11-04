@@ -30,7 +30,7 @@ export class GridCellWidgetPattern {
   /** The html element that should receive focus. */
   readonly element: SignalLike<HTMLElement>;
 
-  /** The `tabindex` for the widget. */
+  /** The `tab index` for the widget. */
   readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
 
   /** Whether the widget is in an active state (i.e. its containing cell is active). */

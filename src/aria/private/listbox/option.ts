@@ -53,8 +53,8 @@ export class OptionPattern<V> {
   /** A reference to the parent listbox. */
   listbox: SignalLike<ListboxPattern<V> | undefined>;
 
-  /** The tabindex of the option. */
-  tabindex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
+  /** The tab index of the option. */
+  tabIndex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
 
   /** The html element that should receive focus. */
   element: SignalLike<HTMLElement>;

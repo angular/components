@@ -65,7 +65,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
   host: {
     'role': 'toolbar',
     'class': 'ng-toolbar',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
     '(keydown)': '_pattern.onKeydown($event)',
@@ -170,7 +170,7 @@ export class Toolbar<V> {
   host: {
     'class': 'ng-toolbar-widget',
     '[attr.data-active]': '_pattern.active()',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
     '[attr.aria-disabled]': '_pattern.disabled()',

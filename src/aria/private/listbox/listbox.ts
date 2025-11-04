@@ -34,11 +34,11 @@ export class ListboxPattern<V> {
   /** Whether the listbox is readonly. */
   readonly: SignalLike<boolean>;
 
-  /** The tabindex of the listbox. */
-  tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
+  /** The tab index of the listbox. */
+  tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active item. */
-  activedescendant = computed(() => this.listBehavior.activedescendant());
+  activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
   multi: SignalLike<boolean>;

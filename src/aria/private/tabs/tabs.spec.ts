@@ -158,15 +158,15 @@ describe('Tabs Pattern', () => {
     expect(tabPanelPatterns[1].hidden()).toBeTrue();
   });
 
-  it('should set a tabpanel tabindex to 0 if the tab is selected.', () => {
+  it('should set a tabpanel tab index to 0 if the tab is selected.', () => {
     tabListInputs.value.set(['tab-1']);
-    expect(tabPatterns[0].tabindex()).toBe(0);
+    expect(tabPatterns[0].tabIndex()).toBe(0);
   });
 
-  it('should set a tabpanel tabindex to -1 if the tab is not selected.', () => {
+  it('should set a tabpanel tab index to -1 if the tab is not selected.', () => {
     tabListInputs.value.set(['tab-1']);
-    expect(tabPatterns[1].tabindex()).toBe(-1);
-    expect(tabPatterns[2].tabindex()).toBe(-1);
+    expect(tabPatterns[1].tabIndex()).toBe(-1);
+    expect(tabPatterns[2].tabIndex()).toBe(-1);
   });
 
   it('should set a tabpanel aria-labelledby pointing to its tab id.', () => {

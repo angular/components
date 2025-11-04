@@ -45,7 +45,7 @@ import {Directionality} from '@angular/cdk/bidi';
   exportAs: 'ngMenuTrigger',
   host: {
     'class': 'ng-menu-trigger',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
     '[attr.aria-expanded]': '_pattern.expanded()',
     '[attr.aria-controls]': '_pattern.menu()?.id()',
@@ -340,7 +340,7 @@ export class MenuBar<V> {
     'role': 'menuitem',
     'class': 'ng-menu-item',
     '(focusin)': 'onFocusIn()',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': '_pattern.isActive()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
     '[attr.aria-expanded]': '_pattern.expanded()',
