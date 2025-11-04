@@ -38,7 +38,7 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
   readonly value: SignalLike<V>;
 
   /** A reference to the item element. */
-  readonly element: SignalLike<HTMLElement>;
+  readonly element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the item is disabled. */
   readonly disabled: SignalLike<boolean>;

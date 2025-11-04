@@ -18,12 +18,13 @@ import {
   Signal,
   OnInit,
   OnDestroy,
+  contentChildren,
 } from '@angular/core';
 import {
   ToolbarPattern,
   ToolbarWidgetPattern,
   ToolbarWidgetGroupPattern,
-  ToolbarWidgetGroupControls,
+  SignalLike,
 } from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
@@ -69,6 +70,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
     '(keydown)': '_pattern.onKeydown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
@@ -78,9 +80,9 @@ export class Toolbar<V> {
   private readonly _elementRef = inject(ElementRef);
 
   /** The TabList nested inside of the container. */
-  private readonly _widgets = signal(new Set<ToolbarWidget<V> | ToolbarWidgetGroup<V>>());
+  private readonly _widgets = signal(new Set<ToolbarWidget<V>>());
 
-  /** A signal wrapper for directionality. */
+  /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
@@ -110,7 +112,7 @@ export class Toolbar<V> {
   });
 
   /** Whether the toolbar has received focus yet. */
-  private _hasFocused = signal(false);
+  private _hasBeenFocused = signal(false);
 
   constructor() {
     afterRenderEffect(() => {
@@ -123,17 +125,17 @@ export class Toolbar<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
+      if (!this._hasBeenFocused()) {
         this._pattern.setDefaultState();
       }
     });
   }
 
   onFocus() {
-    this._hasFocused.set(true);
+    this._hasBeenFocused.set(true);
   }
 
-  register(widget: ToolbarWidget<V> | ToolbarWidgetGroup<V>) {
+  register(widget: ToolbarWidget<V>) {
     const widgets = this._widgets();
     if (!widgets.has(widget)) {
       widgets.add(widget);
@@ -141,7 +143,7 @@ export class Toolbar<V> {
     }
   }
 
-  unregister(widget: ToolbarWidget<V> | ToolbarWidgetGroup<V>) {
+  unregister(widget: ToolbarWidget<V>) {
     const widgets = this._widgets();
     if (widgets.delete(widget)) {
       this._widgets.set(new Set(widgets));
@@ -151,10 +153,7 @@ export class Toolbar<V> {
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
     const widgetTarget = element.closest('.ng-toolbar-widget');
-    const groupTarget = element.closest('.ng-toolbar-widget-group');
-    return this.items().find(
-      widget => widget.element() === widgetTarget || widget.element() === groupTarget,
-    );
+    return this.items().find(widget => widget.element() === widgetTarget);
   }
 }
 
@@ -188,7 +187,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-', true);
 
   /** A unique identifier for the widget. */
-  readonly id = computed(() => this._generatedId);
+  readonly id = input<string>(this._generatedId);
 
   /** The parent Toolbar UIPattern. */
   readonly toolbar = computed(() => this._toolbar._pattern);
@@ -202,12 +201,27 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   /** Whether the widget is 'hard' disabled, which is different from `aria-disabled`. A hard disabled widget cannot receive focus. */
   readonly hardDisabled = computed(() => this._pattern.disabled() && !this._toolbar.softDisabled());
 
+  /** The optional ToolbarWidgetGroup this widget belongs to. */
+  readonly _group = inject(ToolbarWidgetGroup, {optional: true});
+
+  /** The value associated with the widget. */
+  readonly value = input.required<V>();
+
+  /** Whether the widget is currently active (focused). */
+  readonly active = computed(() => this._pattern.active());
+
+  /** Whether the widget is selected (only relevant in a selection group). */
+  readonly selected = () => this._pattern.selected();
+
+  readonly group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined> =
+    () => this._group?._pattern;
+
   /** The ToolbarWidget UIPattern. */
   readonly _pattern = new ToolbarWidgetPattern<V>({
     ...this,
     id: this.id,
+    value: this.value,
     element: this.element,
-    disabled: computed(() => this._toolbar.disabled() || this.disabled()),
   });
 
   ngOnInit() {
@@ -224,47 +238,31 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
  * have their own internal navigation.
  */
 @Directive({
+  selector: '[ngToolbarWidgetGroup]',
+  exportAs: 'ngToolbarWidgetGroup',
   host: {
     '[class.ng-toolbar-widget-group]': '!!toolbar()',
   },
 })
-export class ToolbarWidgetGroup<V> implements OnInit, OnDestroy {
-  /** A reference to the widget element. */
-  private readonly _elementRef = inject(ElementRef);
-
+export class ToolbarWidgetGroup<V> {
   /** The parent Toolbar. */
   private readonly _toolbar = inject(Toolbar, {optional: true});
 
-  /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-group-', true);
-
-  /** A unique identifier for the widget. */
-  readonly id = computed(() => this._generatedId);
+  /** The list of child widgets within the group. */
+  private readonly _widgets = contentChildren(ToolbarWidget<V>, {descendants: true});
 
   /** The parent Toolbar UIPattern. */
   readonly toolbar = computed(() => this._toolbar?._pattern);
 
-  /** A reference to the widget element to be focused on navigation. */
-  readonly element = computed(() => this._elementRef.nativeElement);
-
   /** Whether the widget group is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** The controls that can be performed on the widget group. */
-  readonly controls = signal<ToolbarWidgetGroupControls | undefined>(undefined);
+  /** The list of toolbar items within the group. */
+  readonly items = () => this._widgets().map(w => w._pattern);
+
+  /** Whether the group allows multiple widgets to be selected. */
+  readonly multi = input(false, {transform: booleanAttribute});
 
   /** The ToolbarWidgetGroup UIPattern. */
-  readonly _pattern = new ToolbarWidgetGroupPattern<V>({
-    ...this,
-    id: this.id,
-    element: this.element,
-  });
-
-  ngOnInit() {
-    this._toolbar?.register(this);
-  }
-
-  ngOnDestroy() {
-    this._toolbar?.unregister(this);
-  }
+  readonly _pattern = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>(this);
 }

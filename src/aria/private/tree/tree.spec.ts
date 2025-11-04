@@ -949,7 +949,7 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
@@ -959,7 +959,7 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.value()).toEqual([]);
       });
     });
@@ -991,7 +991,7 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
@@ -1000,11 +1000,11 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
@@ -1014,7 +1014,7 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.value()).toEqual([]);
       });
     });
@@ -1047,13 +1047,13 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(allItems(), 'Item 0');
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item0.element()));
+        tree.onPointerdown(createClickEvent(item0.element()!));
         expect(tree.inputs.value()).toEqual(['Item 0']);
 
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
 
-        tree.onPointerdown(createClickEvent(item0.element()));
+        tree.onPointerdown(createClickEvent(item0.element()!));
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
 
@@ -1064,7 +1064,7 @@ describe('Tree Pattern', () => {
         item0.expansion.open();
 
         tree.onKeydown(shift());
-        tree.onPointerdown(createClickEvent(item1.element(), {shift: true}));
+        tree.onPointerdown(createClickEvent(item1.element()!, {shift: true}));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
       });
     });
@@ -1097,9 +1097,9 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(allItems(), 'Item 0');
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item0.element()));
+        tree.onPointerdown(createClickEvent(item0.element()!));
         expect(tree.inputs.value()).toEqual(['Item 0']);
-        tree.onPointerdown(createClickEvent(item1.element()));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
 
@@ -1108,10 +1108,10 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(allItems(), 'Item 0');
         const item1 = getItemByValue(allItems(), 'Item 1');
 
-        tree.onPointerdown(createClickEvent(item0.element())); // Select and expand Item 0
-        tree.onPointerdown(createClickEvent(item1.element(), {control: true}));
+        tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
+        tree.onPointerdown(createClickEvent(item1.element()!, {control: true}));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
-        tree.onPointerdown(createClickEvent(item0.element(), {control: true}));
+        tree.onPointerdown(createClickEvent(item0.element()!, {control: true}));
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
 
@@ -1120,9 +1120,9 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(allItems(), 'Item 0');
         const item2 = getItemByValue(allItems(), 'Item 2');
 
-        tree.onPointerdown(createClickEvent(item0.element())); // Select and expand Item 0
+        tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
         tree.onKeydown(shift());
-        tree.onPointerdown(createClickEvent(item2.element(), {shift: true}));
+        tree.onPointerdown(createClickEvent(item2.element()!, {shift: true}));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
       });
 
@@ -1134,10 +1134,10 @@ describe('Tree Pattern', () => {
         item0.expansion.open();
 
         tree.onKeydown(shift());
-        tree.onPointerdown(createClickEvent(item1.element(), {shift: true}));
+        tree.onPointerdown(createClickEvent(item1.element()!, {shift: true}));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
 
-        tree.onPointerdown(createClickEvent(item0_0.element(), {shift: true}));
+        tree.onPointerdown(createClickEvent(item0_0.element()!, {shift: true}));
         expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0']);
       });
 
@@ -1148,7 +1148,7 @@ describe('Tree Pattern', () => {
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(allItems(), 'A');
 
-        tree.onPointerdown(createClickEvent(itemA.element()));
+        tree.onPointerdown(createClickEvent(itemA.element()!));
         expect(tree.inputs.value()).toEqual([]);
         expect(tree.activeItem()).toBe(itemA);
       });
@@ -1159,7 +1159,7 @@ describe('Tree Pattern', () => {
         ];
         const {tree, allItems} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(allItems(), 'A');
-        tree.onPointerdown(createClickEvent(itemA.element()));
+        tree.onPointerdown(createClickEvent(itemA.element()!));
         expect(tree.inputs.value()).toEqual([]);
       });
     });
@@ -1324,9 +1324,9 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(allItems(), 'Item 0');
 
       expect(item0.expanded()).toBe(false);
-      tree.onPointerdown(createClickEvent(item0.element()));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(true);
-      tree.onPointerdown(createClickEvent(item0.element()));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1335,7 +1335,7 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
 
       expect(item1.expanded()).toBe(false);
-      tree.onPointerdown(createClickEvent(item1.element()));
+      tree.onPointerdown(createClickEvent(item1.element()!));
       expect(item1.expanded()).toBe(false);
     });
 
@@ -1344,7 +1344,7 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(allItems(), 'Item 0');
       itemPatternInputsMap.get(item0.id())!.disabled.set(true);
 
-      tree.onPointerdown(createClickEvent(item0.element()));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1353,7 +1353,7 @@ describe('Tree Pattern', () => {
       const {tree, allItems} = createTree(treeExample, treeInputs);
       const item0 = getItemByValue(allItems(), 'Item 0');
 
-      tree.onPointerdown(createClickEvent(item0.element()));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 

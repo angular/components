@@ -161,8 +161,8 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Deselects the currently active item in the list. */
-  deselect() {
-    this.selectionBehavior.deselect();
+  deselect(item?: T) {
+    this.selectionBehavior.deselect(item);
   }
 
   /** Deselects all items in the list. */
