@@ -18,6 +18,9 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
 
   /** Callback function triggered when a menu item is selected. */
   onSelect?: (value: V) => void;
+
+  /** The text direction of the menu bar. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** The inputs for the MenuPattern class. */
@@ -34,6 +37,9 @@ export interface MenuInputs<V>
 
   /** Callback function triggered when a menu item is selected. */
   onSelect?: (value: V) => void;
+
+  /** The text direction of the menu bar. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** The inputs for the MenuTriggerPattern class. */
@@ -43,6 +49,9 @@ export interface MenuTriggerInputs<V> {
 
   /** A reference to the menu associated with the trigger. */
   menu: SignalLike<MenuPattern<V> | undefined>;
+
+  /** The text direction of the menu bar. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** The inputs for the MenuItemPattern class. */

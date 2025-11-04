@@ -36,24 +36,25 @@ function clickMenuItem(items: MenuItemPattern<any>[], index: number, mods?: Modi
   } as unknown as PointerEvent;
 }
 
-function getMenuTriggerPattern() {
+function getMenuTriggerPattern(opts?: {textDirection: 'ltr' | 'rtl'}) {
   const element = signal(document.createElement('button'));
   const submenu = signal<MenuPattern<string> | undefined>(undefined);
   const trigger = new MenuTriggerPattern<string>({
+    textDirection: signal(opts?.textDirection || 'ltr'),
     element,
     menu: submenu,
   });
   return trigger;
 }
 
-function getMenuBarPattern(values: string[]) {
+function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl'}) {
   const items = signal<TestMenuItem[]>([]);
 
   const menubar = new MenuBarPattern<string>({
     items: items,
     activeItem: signal(undefined),
     orientation: signal('horizontal'),
-    textDirection: signal('ltr'),
+    textDirection: signal(opts?.textDirection || 'ltr'),
     multi: signal(false),
     selectionMode: signal('explicit'),
     value: signal([]),
@@ -86,6 +87,7 @@ function getMenuBarPattern(values: string[]) {
 function getMenuPattern(
   parent: undefined | MenuItemPattern<string> | MenuTriggerPattern<string>,
   values: string[],
+  opts?: {textDirection: 'ltr' | 'rtl'},
 ) {
   const items = signal<TestMenuItem[]>([]);
 
@@ -99,7 +101,7 @@ function getMenuPattern(
     softDisabled: signal(true),
     multi: signal(false),
     focusMode: signal('activedescendant'),
-    textDirection: signal('ltr'),
+    textDirection: signal(opts?.textDirection || 'ltr'),
     orientation: signal('vertical'),
     selectionMode: signal('explicit'),
     element: signal(document.createElement('div')),
@@ -407,6 +409,27 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.isVisible()).toBe(true);
       submenu.onMouseOut({relatedTarget: parentMenuItem.element()} as unknown as MouseEvent);
       expect(submenu.isVisible()).toBe(true);
+    });
+  });
+
+  describe('RTL', () => {
+    beforeEach(() => {
+      const opts = {textDirection: 'rtl' as const};
+      menu = getMenuPattern(undefined, ['a', 'b', 'c'], opts);
+      submenu = getMenuPattern(menu.inputs.items()[0], ['d', 'e'], opts);
+    });
+
+    it('should open submenu on arrow left', () => {
+      menu.onKeydown(left());
+      expect(submenu.isVisible()).toBe(true);
+    });
+
+    it('should close submenu on arrow right', () => {
+      menu.onKeydown(left());
+      expect(submenu.isVisible()).toBe(true);
+
+      submenu.onKeydown(right());
+      expect(submenu.isVisible()).toBe(false);
     });
   });
 });
@@ -829,6 +852,60 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.isVisible()).toBe(true);
       expect(menubarItems[0].expanded()).toBe(true);
       expect(menubar.inputs.activeItem()).toBe(menubarItems[0]);
+    });
+
+    describe('RTL', () => {
+      beforeEach(() => {
+        const opts = {textDirection: 'rtl' as const};
+        menubar = getMenuBarPattern(['a', 'b', 'c'], opts);
+        menuA = getMenuPattern(menubar.inputs.items()[0], ['apple', 'avocado'], opts);
+        menuB = getMenuPattern(menubar.inputs.items()[1], ['banana', 'blueberry'], opts);
+        menuC = getMenuPattern(menubar.inputs.items()[2], ['cherry', 'cranberry'], opts);
+      });
+
+      it('should close on arrow left on a leaf menu item', () => {
+        const menubarItems = menubar.inputs.items();
+        menubar.onClick(clickMenuItem(menubarItems, 0));
+        expect(menuA.isVisible()).toBe(true);
+
+        menuA.onKeydown(left());
+
+        expect(menuA.isVisible()).toBe(false);
+        expect(menubarItems[0].expanded()).toBe(false);
+      });
+
+      it('should close on arrow right on a root menu item', () => {
+        const menubarItems = menubar.inputs.items();
+        menubar.onClick(clickMenuItem(menubarItems, 1));
+        expect(menuB.isVisible()).toBe(true);
+
+        menuB.onKeydown(right());
+
+        expect(menuB.isVisible()).toBe(false);
+        expect(menubarItems[1].expanded()).toBe(false);
+      });
+
+      it('should expand the next menu bar item on arrow left on a leaf menu item', () => {
+        const menubarItems = menubar.inputs.items();
+        menubar.onClick(clickMenuItem(menubarItems, 0));
+
+        menuA.onKeydown(left());
+
+        expect(menuB.isVisible()).toBe(true);
+        expect(menubarItems[1].expanded()).toBe(true);
+        expect(menubar.inputs.activeItem()).toBe(menubarItems[1]);
+      });
+
+      it('should expand the previous menu bar item on arrow right on a root menu item', () => {
+        const menubarItems = menubar.inputs.items();
+        menubar.onClick(clickMenuItem(menubarItems, 1));
+
+        menuB.onKeydown(right());
+
+        expect(menuA.isVisible()).toBe(true);
+        expect(menubarItems[0].expanded()).toBe(true);
+        expect(menubar.inputs.activeItem()).toBe(menubarItems[0]);
+      });
     });
   });
 });
