@@ -22,6 +22,7 @@
 }
 
 .example-menu[popover] {
+  left: auto;
   position: absolute;
 }
 

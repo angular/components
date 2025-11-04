@@ -9,6 +9,7 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {
   MenuBarExample,
+  MenuBarRTLExample,
   MenuContextExample,
   MenuTriggerExample,
   MenuStandaloneExample,
@@ -19,6 +20,12 @@ import {
   styleUrl: 'menu-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MenuBarExample, MenuContextExample, MenuTriggerExample, MenuStandaloneExample],
+  imports: [
+    MenuBarExample,
+    MenuBarRTLExample,
+    MenuContextExample,
+    MenuTriggerExample,
+    MenuStandaloneExample,
+  ],
 })
 export class MenuDemo {}

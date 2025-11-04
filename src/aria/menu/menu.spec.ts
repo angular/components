@@ -2,6 +2,7 @@ import {Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Menu, MenuBar, MenuItem, MenuTrigger} from './menu';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 
 describe('Standalone Menu Pattern', () => {
   let fixture: ComponentFixture<StandaloneMenuExample>;
@@ -37,8 +38,10 @@ describe('Standalone Menu Pattern', () => {
     fixture.detectChanges();
   };
 
-  function setupMenu() {
-    TestBed.configureTestingModule({});
+  function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
+    TestBed.configureTestingModule({
+      providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
+    });
     fixture = TestBed.createComponent(StandaloneMenuExample);
     fixture.detectChanges();
     getItem('Apple')?.focus();
@@ -407,6 +410,44 @@ describe('Standalone Menu Pattern', () => {
       expect(isSubmenuExpanded()).toBe(true);
     });
   });
+
+  describe('RTL', () => {
+    function isSubmenuExpanded(): boolean {
+      const berries = getItem('Berries');
+      return berries?.getAttribute('aria-expanded') === 'true';
+    }
+
+    beforeEach(() => setupMenu({textDirection: 'rtl'}));
+
+    it('should open submenu on arrow left', () => {
+      const apple = getItem('Apple');
+      const banana = getItem('Banana');
+      const berries = getItem('Berries');
+      const blueberry = getItem('Blueberry');
+
+      keydown(apple!, 'ArrowDown');
+      keydown(banana!, 'ArrowDown');
+      keydown(berries!, 'ArrowLeft');
+
+      expect(isSubmenuExpanded()).toBe(true);
+      expect(document.activeElement).toBe(blueberry);
+    });
+
+    it('should close submenu on arrow right', () => {
+      const apple = getItem('Apple');
+      const banana = getItem('Banana');
+      const berries = getItem('Berries');
+      const blueberry = getItem('Blueberry');
+
+      keydown(apple!, 'ArrowDown');
+      keydown(banana!, 'ArrowDown');
+      keydown(berries!, 'ArrowLeft');
+      keydown(blueberry!, 'ArrowRight');
+
+      expect(isSubmenuExpanded()).toBe(false);
+      expect(document.activeElement).toBe(berries);
+    });
+  });
 });
 
 describe('Menu Trigger Pattern', () => {
@@ -601,8 +642,10 @@ describe('Menu Bar Pattern', () => {
     fixture.detectChanges();
   };
 
-  function setupMenu() {
-    TestBed.configureTestingModule({});
+  function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
+    TestBed.configureTestingModule({
+      providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
+    });
     fixture = TestBed.createComponent(MenuBarExample);
     fixture.detectChanges();
     getMenuBarItem('File')?.focus();
@@ -634,10 +677,7 @@ describe('Menu Bar Pattern', () => {
   }
 
   describe('Navigation', () => {
-    beforeEach(() => {
-      setupMenu();
-      getMenuBarItem('File')?.focus();
-    });
+    beforeEach(() => setupMenu());
 
     it('should navigate to the first item on arrow down', () => {
       const file = getMenuBarItem('File');
@@ -864,6 +904,40 @@ describe('Menu Bar Pattern', () => {
       keydown(zoomIn!, 'ArrowLeft');
       expect(isExpanded('View')).toBe(false);
       expect(isExpanded('Edit')).toBe(true);
+    });
+  });
+
+  describe('RTL', () => {
+    beforeEach(() => setupMenu({textDirection: 'rtl'}));
+
+    it('should focus the first item of the next menubar item on arrow left', () => {
+      const edit = getMenuBarItem('Edit');
+      const file = getMenuBarItem('File');
+      const view = getMenuBarItem('View');
+      const documentation = getMenuBarItem('Documentation');
+      const zoomIn = getMenuItem('Zoom In');
+
+      keydown(file!, 'ArrowLeft');
+      keydown(edit!, 'ArrowLeft');
+      keydown(view!, 'ArrowDown');
+
+      keydown(zoomIn!, 'ArrowLeft');
+      expect(document.activeElement).toBe(documentation);
+    });
+
+    it('should focus the first item of the previous menubar item on arrow right', () => {
+      const edit = getMenuBarItem('Edit');
+      const file = getMenuBarItem('File');
+      const view = getMenuBarItem('View');
+      const undo = getMenuItem('Undo');
+      const zoomIn = getMenuItem('Zoom In');
+
+      keydown(file!, 'ArrowLeft');
+      keydown(edit!, 'ArrowLeft');
+      keydown(view!, 'ArrowDown');
+
+      keydown(zoomIn!, 'ArrowRight');
+      expect(document.activeElement).toBe(undo);
     });
   });
 });
