@@ -89,9 +89,8 @@ export class Tree<V> {
   /** A unique identifier for the tree. */
   private readonly _generatedId = inject(_IdGenerator).getId('ng-tree-', true);
 
-  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the tree. */
-  protected id = computed(() => this._generatedId);
+  protected id = () => this._generatedId;
 
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {

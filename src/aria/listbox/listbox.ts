@@ -62,9 +62,8 @@ export class Listbox<V> {
   /** A unique identifier for the listbox. */
   private readonly _generatedId = inject(_IdGenerator).getId('ng-listbox-', true);
 
-  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the listbox. */
-  protected id = computed(() => this._generatedId);
+  protected id = () => this._generatedId;
 
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
@@ -218,9 +217,8 @@ export class Option<V> {
   /** A unique identifier for the option. */
   private readonly _generatedId = inject(_IdGenerator).getId('ng-option-', true);
 
-  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the option. */
-  protected id = computed(() => this._generatedId);
+  protected id = () => this._generatedId;
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
