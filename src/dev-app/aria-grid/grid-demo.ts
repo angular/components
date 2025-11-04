@@ -7,11 +7,15 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {GridConfigurableExample, GridPillListExample} from '@angular/components-examples/aria/grid';
+import {
+  GridConfigurableExample,
+  GridPillListExample,
+  GridCalendarExample,
+} from '@angular/components-examples/aria/grid';
 
 @Component({
   templateUrl: 'grid-demo.html',
-  imports: [GridConfigurableExample, GridPillListExample],
+  imports: [GridConfigurableExample, GridPillListExample, GridCalendarExample],
   styleUrl: 'grid-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

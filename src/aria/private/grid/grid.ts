@@ -9,7 +9,7 @@
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
-import {Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
+import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
 
@@ -23,6 +23,18 @@ export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'c
 
   /** The direction that text is read based on the users locale. */
   textDirection: SignalLike<'rtl' | 'ltr'>;
+
+  /** Whether selection is enabled for the grid. */
+  enableSelection: SignalLike<boolean>;
+
+  /** Whether multiple cell in the grid can be selected. */
+  multi: SignalLike<boolean>;
+
+  /** The selection strategy used by the grid. */
+  selectionMode: SignalLike<'follow' | 'explicit'>;
+
+  /** Whether enable range selection. */
+  enableRangeSelection: SignalLike<boolean>;
 
   /** A function that returns the grid cell associated with a given element. */
   getCell: (e: Element) => GridCellPattern | undefined;
@@ -48,6 +60,13 @@ export class GridPattern {
   /** The currently active cell. */
   readonly activeCell = computed(() => this.gridBehavior.focusBehavior.activeCell());
 
+  /** The current selection anchor cell. */
+  readonly anchorCell: SignalLike<GridCellPattern | undefined> = computed(() =>
+    this.inputs.enableSelection() && this.inputs.multi()
+      ? this.gridBehavior.selectionAnchorCell()
+      : undefined,
+  );
+
   /** Whether to pause grid navigation. */
   readonly pauseNavigation = computed(() =>
     this.gridBehavior.data
@@ -58,6 +77,9 @@ export class GridPattern {
 
   /** Whether the focus is in the grid. */
   readonly isFocused = signal(false);
+
+  /** Whether the grid has been focused once. */
+  readonly hasBeenFocused = signal(false);
 
   /** Whether the user is currently dragging to select a range of cells. */
   readonly dragging = signal(false);
@@ -80,23 +102,49 @@ export class GridPattern {
       return manager;
     }
 
+    // Navigation handlers.
+    const opts: NavOptions = {
+      selectOne: this.inputs.enableSelection() && this.inputs.selectionMode() === 'follow',
+    };
     manager
-      .on('ArrowUp', () => this.gridBehavior.up())
-      .on('ArrowDown', () => this.gridBehavior.down())
-      .on(this.prevColKey(), () => this.gridBehavior.left())
-      .on(this.nextColKey(), () => this.gridBehavior.right())
-      .on('Home', () => this.gridBehavior.firstInRow())
-      .on('End', () => this.gridBehavior.lastInRow())
-      .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first())
-      .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last());
+      .on('ArrowUp', () => this.gridBehavior.up(opts))
+      .on('ArrowDown', () => this.gridBehavior.down(opts))
+      .on(this.prevColKey(), () => this.gridBehavior.left(opts))
+      .on(this.nextColKey(), () => this.gridBehavior.right(opts))
+      .on('Home', () => this.gridBehavior.firstInRow(opts))
+      .on('End', () => this.gridBehavior.lastInRow(opts))
+      .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first(opts))
+      .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last(opts));
 
-    if (this.inputs.enableSelection()) {
+    // Basic explicit selection handlers.
+    if (this.inputs.enableSelection() && this.inputs.selectionMode() === 'explicit') {
       manager
-        .on(Modifier.Shift, 'ArrowUp', () => this.gridBehavior.rangeSelectUp())
-        .on(Modifier.Shift, 'ArrowDown', () => this.gridBehavior.rangeSelectDown())
-        .on(Modifier.Shift, 'ArrowLeft', () => this.gridBehavior.rangeSelectLeft())
-        .on(Modifier.Shift, 'ArrowRight', () => this.gridBehavior.rangeSelectRight())
-        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => this.gridBehavior.selectAll())
+        .on('Enter', () =>
+          this.inputs.multi() ? this.gridBehavior.toggle() : this.gridBehavior.toggleOne(),
+        )
+        .on(' ', () =>
+          this.inputs.multi() ? this.gridBehavior.toggle() : this.gridBehavior.toggleOne(),
+        );
+    }
+
+    // Range selection handlers.
+    if (this.inputs.enableSelection() && this.inputs.enableRangeSelection()) {
+      manager
+        .on(Modifier.Shift, 'ArrowUp', () => this.gridBehavior.up({anchor: true}))
+        .on(Modifier.Shift, 'ArrowDown', () => this.gridBehavior.down({anchor: true}))
+        .on(Modifier.Shift, this.prevColKey(), () => this.gridBehavior.left({anchor: true}))
+        .on(Modifier.Shift, this.nextColKey(), () => this.gridBehavior.right({anchor: true}))
+        .on(Modifier.Shift, 'Home', () => this.gridBehavior.firstInRow({anchor: true}))
+        .on(Modifier.Shift, 'End', () => this.gridBehavior.lastInRow({anchor: true}))
+        .on([Modifier.Ctrl | Modifier.Shift], 'Home', () => this.gridBehavior.first({anchor: true}))
+        .on([Modifier.Ctrl | Modifier.Shift], 'End', () => this.gridBehavior.last({anchor: true}))
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => {
+          if (this.gridBehavior.allSelected()) {
+            this.gridBehavior.deselectAll();
+          } else {
+            this.gridBehavior.selectAll();
+          }
+        })
         .on([Modifier.Shift], ' ', () => this.gridBehavior.selectRow())
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.gridBehavior.selectCol());
     }
@@ -108,32 +156,56 @@ export class GridPattern {
   readonly pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    manager.on(e => {
-      const cell = this.inputs.getCell(e.target as Element);
-      if (!cell) return;
+    // Navigation without selection.
+    if (!this.inputs.enableSelection()) {
+      manager.on(e => {
+        const cell = this.inputs.getCell(e.target as Element);
+        if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
-      this.gridBehavior.gotoCell(cell);
+        this.gridBehavior.gotoCell(cell);
+      });
+    }
 
-      if (this.inputs.enableSelection()) {
-        this.dragging.set(true);
-      }
-    });
-
+    // Navigation with selection.
     if (this.inputs.enableSelection()) {
-      manager
-        .on([Modifier.Ctrl, Modifier.Meta], e => {
-          const cell = this.inputs.getCell(e.target as Element);
-          if (!cell) return;
+      manager.on(e => {
+        const cell = this.inputs.getCell(e.target as Element);
+        if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
-          this.gridBehavior.toggleSelect(cell);
-        })
-        .on(Modifier.Shift, e => {
-          const cell = this.inputs.getCell(e.target as Element);
-          if (!cell) return;
-
-          this.gridBehavior.rangeSelect(cell);
-          this.dragging.set(true);
+        this.gridBehavior.gotoCell(cell, {
+          selectOne: this.inputs.selectionMode() === 'follow',
+          toggleOne: this.inputs.selectionMode() === 'explicit' && !this.inputs.multi(),
+          toggle: this.inputs.selectionMode() === 'explicit' && this.inputs.multi(),
         });
+
+        if (this.inputs.multi() && this.inputs.enableRangeSelection()) {
+          this.dragging.set(true);
+        }
+      });
+
+      // Selection with modifier keys.
+      if (this.inputs.multi()) {
+        manager.on([Modifier.Ctrl, Modifier.Meta], e => {
+          const cell = this.inputs.getCell(e.target as Element);
+          if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
+
+          this.gridBehavior.gotoCell(cell, {toggle: true});
+
+          if (this.inputs.enableRangeSelection()) {
+            this.dragging.set(true);
+          }
+        });
+
+        if (this.inputs.enableRangeSelection()) {
+          manager.on(Modifier.Shift, e => {
+            const cell = this.inputs.getCell(e.target as Element);
+            if (!cell) return;
+
+            this.gridBehavior.gotoCell(cell, {anchor: true});
+            this.dragging.set(true);
+          });
+        }
+      }
     }
 
     return manager;
@@ -143,14 +215,20 @@ export class GridPattern {
   readonly pointerup = computed(() => {
     const manager = new PointerEventManager();
 
-    if (this.inputs.enableSelection()) {
-      manager.on([Modifier.Shift, Modifier.None], () => {
+    if (this.inputs.enableSelection() && this.inputs.enableRangeSelection()) {
+      manager.on([Modifier.Shift, Modifier.Ctrl, Modifier.Meta, Modifier.None], () => {
         this.dragging.set(false);
       });
     }
 
     return manager;
   });
+
+  /** Indicates maybe the losing focus is caused by row/cell deletion. */
+  private readonly _maybeDeletion = signal(false);
+
+  /** Indicates the losing focus is certainly caused by row/cell deletion. */
+  private readonly _deletion = signal(false);
 
   constructor(readonly inputs: GridInputs) {
     this.gridBehavior = new Grid({
@@ -177,12 +255,13 @@ export class GridPattern {
   onPointermove(event: PointerEvent) {
     if (this.disabled()) return;
     if (!this.inputs.enableSelection()) return;
+    if (!this.inputs.enableRangeSelection()) return;
     if (!this.dragging()) return;
 
     const cell = this.inputs.getCell(event.target as Element);
     if (!cell) return;
 
-    this.gridBehavior.rangeSelect(cell);
+    this.gridBehavior.gotoCell(cell, {anchor: true});
   }
 
   /** Handles pointerup events on the grid. */
@@ -195,10 +274,8 @@ export class GridPattern {
   /** Handles focusin events on the grid. */
   onFocusIn() {
     this.isFocused.set(true);
+    this.hasBeenFocused.set(true);
   }
-
-  /** Indicates maybe the losing focus is caused by row/cell deletion. */
-  private readonly _maybeDeletion = signal(false);
 
   /** Handles focusout events on the grid. */
   onFocusOut(event: FocusEvent) {
@@ -216,8 +293,12 @@ export class GridPattern {
     this.isFocused.set(false);
   }
 
-  /** Indicates the losing focus is certainly caused by row/cell deletion. */
-  private readonly _deletion = signal(false);
+  /** Sets the default active state of the grid before receiving focus the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenFocused()) return;
+
+    this.gridBehavior.setDefaultState();
+  }
 
   /** Resets the active state of the grid if it is empty or stale. */
   resetStateEffect(): void {
@@ -228,10 +309,8 @@ export class GridPattern {
     if (hasReset && this._maybeDeletion()) {
       this._deletion.set(true);
     }
-
-    if (this._maybeDeletion()) {
-      this._maybeDeletion.set(false);
-    }
+    // Reset maybe deletion state.
+    this._maybeDeletion.set(false);
   }
 
   /** Focuses on the active cell element. */
