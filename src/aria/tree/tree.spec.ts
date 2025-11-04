@@ -352,10 +352,16 @@ describe('Tree', () => {
         expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
+      it('should set tabindex="0" for the tree when disabled when softDisabled is false', () => {
+        updateTree({disabled: true, focusMode: 'roving', softDisabled: false});
+
+        expect(treeElement.getAttribute('tabindex')).toBe('0');
+      });
+
       it('should set tabindex="0" for the tree when disabled', () => {
         updateTree({disabled: true, focusMode: 'roving'});
 
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
+        expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should set initial focus (tabindex="0") on the first non-disabled item if no value is set', () => {
@@ -1315,7 +1321,8 @@ describe('Tree', () => {
             });
           });
 
-          it('should move focus to the last enabled visible item on End', () => {
+          it('should move focus to the last enabled visible item on End (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
             right(); // Expands fruits
             updateTreeItemByValue('dairy', {disabled: true});
             updateTreeItemByValue('grains', {disabled: true});
@@ -1324,7 +1331,8 @@ describe('Tree', () => {
             expect(isFocused('berries')).toBe(true);
           });
 
-          it('should move focus to the first enabled visible item on Home', () => {
+          it('should move focus to the first enabled visible item on Home (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
             end();
             updateTreeItemByValue('fruits', {disabled: true});
             home();
@@ -1530,7 +1538,7 @@ class TestTreeComponent {
   orientation = signal<'vertical' | 'horizontal'>('vertical');
   multi = signal(false);
   wrap = signal(true);
-  softDisabled = signal(false);
+  softDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);

@@ -143,7 +143,7 @@ export class GridFocus<T extends GridFocusCell> {
 
   /** Moves focus to the cell at the given coordinates if it's part of a focusable cell. */
   focusCoordinates(coords: RowCol): boolean {
-    if (this.gridDisabled()) {
+    if (this.gridDisabled() && !this.inputs.softDisabled()) {
       return false;
     }
 

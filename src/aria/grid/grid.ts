@@ -66,7 +66,7 @@ export class Grid {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether to allow disabled items to receive focus. */
-  readonly softDisabled = input(false, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the grid. */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');

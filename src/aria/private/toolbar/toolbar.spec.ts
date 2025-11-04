@@ -103,7 +103,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        softDisabled: signal(false),
+        softDisabled: signal(true),
         wrap: signal(false),
       };
       widgetInputs = [
@@ -173,13 +173,13 @@ describe('Toolbar Pattern', () => {
     });
 
     it('should skip a disabled toolbar widget when softDisabled is false', () => {
+      toolbarInputs.softDisabled.set(false);
       widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
       expect(toolbarInputs.activeItem()).toBe(items[2]);
     });
 
     it('should not skip disabled items when softDisabled is true', () => {
-      toolbarInputs.softDisabled.set(true);
       widgetInputs[1].disabled.set(true);
       toolbar.onKeydown(right());
       expect(toolbarInputs.activeItem()).toBe(items[1]);
@@ -216,7 +216,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        softDisabled: signal(false),
+        softDisabled: signal(true),
         wrap: signal(false),
       };
       const widgetInputs = [
@@ -261,7 +261,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        softDisabled: signal(false),
+        softDisabled: signal(true),
         wrap: signal(false),
       };
       widgetInputs = [
@@ -286,12 +286,14 @@ describe('Toolbar Pattern', () => {
     });
 
     it('should skip disabled widgets and set the next focusable widget as active', () => {
+      toolbarInputs.softDisabled.set(false);
       widgetInputs[0].disabled.set(true);
       toolbar.setDefaultState();
       expect(toolbarInputs.activeItem()).toBe(items[1]);
     });
 
     it('should call "setDefaultState" on a widget group if it is the first focusable item', () => {
+      toolbarInputs.softDisabled.set(false);
       const fakeControls = jasmine.createSpyObj<ToolbarWidgetGroupControls>('fakeControls', [
         'setDefaultState',
       ]);
@@ -329,7 +331,7 @@ describe('Toolbar Pattern', () => {
         orientation: signal('horizontal'),
         textDirection: signal('ltr'),
         disabled: signal(false),
-        softDisabled: signal(false),
+        softDisabled: signal(true),
         wrap: signal(false),
       };
       const widgetInputs = [

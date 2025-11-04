@@ -40,7 +40,7 @@ export class TreeConfigurableExample {
   multi = new FormControl(false, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
   wrap = new FormControl(true, {nonNullable: true});
-  softDisabled = new FormControl(false, {nonNullable: true});
+  softDisabled = new FormControl(true, {nonNullable: true});
   nav = new FormControl(false, {nonNullable: true});
 
   selectedValues = model<string[]>(['package.json']);

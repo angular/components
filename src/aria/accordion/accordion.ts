@@ -172,7 +172,7 @@ export class AccordionGroup {
   value = model<string[]>([]);
 
   /** Whether to allow disabled items to receive focus. */
-  softDisabled = input(false, {transform: booleanAttribute});
+  softDisabled = input(true, {transform: booleanAttribute});
 
   /** Whether keyboard navigation should wrap around from the last item to the first, and vice-versa. */
   wrap = input(false, {transform: booleanAttribute});

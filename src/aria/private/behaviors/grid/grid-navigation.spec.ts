@@ -51,7 +51,7 @@ function setupGridNavigation(
   const gridFocusInputs: GridFocusInputs = {
     focusMode: signal('roving'),
     disabled: signal(false),
-    softDisabled: signal(false),
+    softDisabled: signal(true),
   };
   const gridFocus = new GridFocus({
     grid: gridData,
@@ -114,9 +114,11 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 2});
     });
 
-    it('should return false if the coordinates cannot be focused', () => {
+    it('should return false if the coordinates cannot be focused when softDisabled is false', () => {
       const cells = createTestGrid(createGridD);
-      const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+        softDisabled: signal(false),
+      });
 
       cells[1][0].disabled.set(true); // This cell spans {row: 1, col: 2}
       const result = gridNav.gotoCoords({row: 1, col: 2});
@@ -156,11 +158,22 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Up, from, 'continuous')).toEqual({row: 3, col: 2});
       });
 
-      it('should return undefined if no focusable cell is found', () => {
+      it('should return the next coordinates even if all cells are disabled', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Up, gridFocus.activeCoords());
+
+        expect(nextCoords).toEqual({row: 0, col: 0});
+      });
+
+      it('should return undefined if all cells are disabled when softDisabled is false', () => {
+        const {gridNav} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        cells.flat().forEach(cell => cell.disabled.set(true));
+
+        const nextCoords = gridNav.peek(direction.Up, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
       });
@@ -184,11 +197,22 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Down, from, 'continuous')).toEqual({row: 0, col: 2});
       });
 
-      it('should return undefined if no focusable cell is found', () => {
+      it('should return the next coordinates even if all cells are disabled', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords());
+
+        expect(nextCoords).toEqual({row: 2, col: 0});
+      });
+
+      it('should return undefined if all cells are disabled when softDisabled is false', () => {
+        const {gridNav} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        cells.flat().forEach(cell => cell.disabled.set(true));
+
+        const nextCoords = gridNav.peek(direction.Down, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
       });
@@ -212,13 +236,24 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Left, from, 'continuous')).toEqual({row: 3, col: 2});
       });
 
-      it('should return undefined if no focusable cell is found', () => {
+      it('should return the next coordinates even if all cells are disabled', () => {
         cells.flat().forEach(function (cell) {
           cell.disabled.set(true);
         });
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Left, gridFocus.activeCoords());
+
+        expect(nextCoords).toEqual({row: 1, col: 2});
+      });
+
+      it('should return undefined if all cells are disabled when softDisabled is false', () => {
+        const {gridNav} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        cells.flat().forEach(cell => cell.disabled.set(true));
+
+        const nextCoords = gridNav.peek(direction.Left, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
       });
@@ -242,13 +277,24 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Right, from, 'continuous')).toEqual({row: 1, col: 0});
       });
 
-      it('should return undefined if no focusable cell is found', () => {
+      it('should return the next coordinates even if all cells are disabled', () => {
         cells.flat().forEach(function (cell) {
           cell.disabled.set(true);
         });
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Right, gridFocus.activeCoords());
+
+        expect(nextCoords).toEqual({row: 1, col: 1});
+      });
+
+      it('should return undefined if all cells are disabled when softDisabled is false', () => {
+        const {gridNav} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        cells.flat().forEach(cell => cell.disabled.set(true));
+
+        const nextCoords = gridNav.peek(direction.Right, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
       });
@@ -1844,9 +1890,11 @@ describe('GridNavigation', () => {
   });
 
   describe('first/peekFirst', () => {
-    it('should navigate to the first focusable cell in the grid', () => {
+    it('should navigate to the first focusable cell in the grid when softDisabled is false', () => {
       const cells = createTestGrid(createGridB);
-      const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+        softDisabled: signal(false),
+      });
 
       // Disable the first few cells to make it more interesting.
       cells[0][0].disabled.set(true);
@@ -1864,9 +1912,31 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 0, col: 2});
     });
 
-    it('should navigate to the first focusable cell in a specific row', () => {
-      const cells = createTestGrid(createGridC);
+    it('should navigate to the first focusable cell in the grid', () => {
+      const cells = createTestGrid(createGridB);
       const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+
+      // Disable the first few cells to make it more interesting.
+      cells[0][0].disabled.set(true);
+      cells[0][1].disabled.set(true);
+
+      const firstCoords = gridNav.peekFirst();
+      expect(firstCoords).toEqual({row: 0, col: 0});
+
+      // The active cell should not have changed yet.
+      expect(gridFocus.activeCell()).toBeUndefined();
+
+      const result = gridNav.first();
+      expect(result).toBe(true);
+      expect(gridFocus.activeCell()).toBe(cells[0][0]);
+      expect(gridFocus.activeCoords()).toEqual({row: 0, col: 0});
+    });
+
+    it('should navigate to the first focusable cell in a specific row when softDisabled is false', () => {
+      const cells = createTestGrid(createGridC);
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+        softDisabled: signal(false),
+      });
 
       // Disable the first cell in row 1.
       cells[1][0].disabled.set(true);
@@ -1882,12 +1952,33 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCell()).toBe(cells[1][1]);
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 1});
     });
+
+    it('should navigate to the first focusable cell in a specific row', () => {
+      const cells = createTestGrid(createGridC);
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+
+      // Disable the first cell in row 1.
+      cells[1][0].disabled.set(true);
+
+      const firstInRowCoords = gridNav.peekFirst(1);
+      expect(firstInRowCoords).toEqual({row: 1, col: 0});
+
+      // The active cell should not have changed yet.
+      expect(gridFocus.activeCell()).toBeUndefined();
+
+      const result = gridNav.first(1);
+      expect(result).toBe(true);
+      expect(gridFocus.activeCell()).toBe(cells[1][0]);
+      expect(gridFocus.activeCoords()).toEqual({row: 1, col: 0});
+    });
   });
 
   describe('last/peekLast', () => {
-    it('should navigate to the last focusable cell in the grid', () => {
+    it('should navigate to the last focusable cell in the grid when softDisabled is false', () => {
       const cells = createTestGrid(createGridB);
-      const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+        softDisabled: signal(false),
+      });
 
       // Disable the last few cells to make it more interesting.
       cells[3][1].disabled.set(true); // cell-3-2
@@ -1905,9 +1996,31 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 3, col: 0});
     });
 
-    it('should navigate to the last focusable cell in a specific row', () => {
-      const cells = createTestGrid(createGridC);
+    it('should navigate to the last focusable cell in the grid', () => {
+      const cells = createTestGrid(createGridB);
       const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+
+      // Disable the last few cells to make it more interesting.
+      cells[3][1].disabled.set(true); // cell-3-2
+      cells[3][0].disabled.set(true); // cell-3-1
+
+      const lastCoords = gridNav.peekLast();
+      expect(lastCoords).toEqual({row: 3, col: 2});
+
+      // The active cell should not have changed yet.
+      expect(gridFocus.activeCell()).toBeUndefined();
+
+      const result = gridNav.last();
+      expect(result).toBe(true);
+      expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+      expect(gridFocus.activeCoords()).toEqual({row: 3, col: 2});
+    });
+
+    it('should navigate to the last focusable cell in a specific row when softDisabled is false', () => {
+      const cells = createTestGrid(createGridC);
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+        softDisabled: signal(false),
+      });
 
       // Disable the last cell in row 1.
       cells[1][2].disabled.set(true);
@@ -1919,6 +2032,22 @@ describe('GridNavigation', () => {
       expect(result).toBe(true);
       expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 2});
+    });
+
+    it('should navigate to the last focusable cell in a specific row', () => {
+      const cells = createTestGrid(createGridC);
+      const {gridNav, gridFocus} = setupGridNavigation(signal(cells));
+
+      // Disable the last cell in row 1.
+      cells[1][2].disabled.set(true);
+
+      const lastInRowCoords = gridNav.peekLast(1);
+      expect(lastInRowCoords).toEqual({row: 1, col: 3});
+
+      const result = gridNav.last(1);
+      expect(result).toBe(true);
+      expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+      expect(gridFocus.activeCoords()).toEqual({row: 1, col: 3});
     });
   });
 });
