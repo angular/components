@@ -177,6 +177,19 @@ describe('GridNavigation', () => {
 
         expect(nextCoords).toBeUndefined();
       });
+
+      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+        const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        gridNav.gotoCoords({row: 1, col: 0});
+        cells[0][0].disabled.set(true);
+
+        const nextCoords = gridNav.peek(direction.Up, gridFocus.activeCoords(), 'nowrap', true);
+
+        expect(nextCoords).toEqual({row: 0, col: 0});
+        expect(gridNav.peek(direction.Up, gridFocus.activeCoords(), 'nowrap')).toBeUndefined();
+      });
     });
 
     describe('down', () => {
@@ -216,6 +229,19 @@ describe('GridNavigation', () => {
 
         expect(nextCoords).toBeUndefined();
       });
+
+      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+        const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        gridNav.gotoCoords({row: 1, col: 0});
+        cells[2][0].disabled.set(true);
+
+        const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords(), 'nowrap', true);
+
+        expect(nextCoords).toEqual({row: 2, col: 0});
+        expect(gridNav.peek(direction.Down, gridFocus.activeCoords(), 'nowrap')).toBeUndefined();
+      });
     });
 
     describe('left', () => {
@@ -237,9 +263,7 @@ describe('GridNavigation', () => {
       });
 
       it('should return the next coordinates even if all cells are disabled', () => {
-        cells.flat().forEach(function (cell) {
-          cell.disabled.set(true);
-        });
+        cells.flat().forEach(c => c.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Left, gridFocus.activeCoords());
@@ -256,6 +280,19 @@ describe('GridNavigation', () => {
         const nextCoords = gridNav.peek(direction.Left, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
+      });
+
+      it('should get disabled cells when allowDisabled is true when softDisabled is false', () => {
+        const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        gridNav.gotoCoords({row: 0, col: 1});
+        cells[0][0].disabled.set(true);
+
+        const nextCoords = gridNav.peek(direction.Left, gridFocus.activeCoords(), 'nowrap', true);
+
+        expect(nextCoords).toEqual({row: 0, col: 0});
+        expect(gridNav.peek(direction.Left, gridFocus.activeCoords(), 'nowrap')).toBeUndefined();
       });
     });
 
@@ -278,9 +315,7 @@ describe('GridNavigation', () => {
       });
 
       it('should return the next coordinates even if all cells are disabled', () => {
-        cells.flat().forEach(function (cell) {
-          cell.disabled.set(true);
-        });
+        cells.flat().forEach(c => c.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Right, gridFocus.activeCoords());
@@ -297,6 +332,19 @@ describe('GridNavigation', () => {
         const nextCoords = gridNav.peek(direction.Right, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
+      });
+
+      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+        const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+          softDisabled: signal(false),
+        });
+        gridNav.gotoCoords({row: 0, col: 1});
+        cells[0][2].disabled.set(true);
+
+        const nextCoords = gridNav.peek(direction.Right, gridFocus.activeCoords(), 'nowrap', true);
+
+        expect(nextCoords).toEqual({row: 0, col: 2});
+        expect(gridNav.peek(direction.Right, gridFocus.activeCoords(), 'nowrap')).toBeUndefined();
       });
     });
   });
@@ -1971,6 +2019,17 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCell()).toBe(cells[1][0]);
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 0});
     });
+
+    it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridNav} = setupGridNavigation(signal(cells), {softDisabled: signal(false)});
+      cells[0][0].disabled.set(true);
+
+      const firstCoords = gridNav.peekFirst(undefined, true);
+
+      expect(firstCoords).toEqual({row: 0, col: 0});
+      expect(gridNav.peekFirst()).toEqual({row: 0, col: 1});
+    });
   });
 
   describe('last/peekLast', () => {
@@ -2048,6 +2107,17 @@ describe('GridNavigation', () => {
       expect(result).toBe(true);
       expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 3});
+    });
+
+    it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+      const cells = createTestGrid(createGridA);
+      const {gridNav} = setupGridNavigation(signal(cells), {softDisabled: signal(false)});
+      cells[2][2].disabled.set(true);
+
+      const lastCoords = gridNav.peekLast(undefined, true);
+
+      expect(lastCoords).toEqual({row: 2, col: 2});
+      expect(gridNav.peekLast()).toEqual({row: 2, col: 1});
     });
   });
 });

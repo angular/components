@@ -1,17 +1,7 @@
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
-  gap: 20px;
-}
-
 .demo-grid-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-}
-
-.demo-configurable-grid-container {
-  padding-top: 40px;
+  gap: 40px;
 }
 
 h2 {

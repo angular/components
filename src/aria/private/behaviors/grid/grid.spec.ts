@@ -46,7 +46,6 @@ function setupGrid(
     softDisabled: signal(true),
     rowWrap: signal<WrapStrategy>('loop'),
     colWrap: signal<WrapStrategy>('loop'),
-    enableSelection: signal(true),
     ...inputs,
   };
 
@@ -120,107 +119,224 @@ describe('Grid', () => {
       grid.firstInRow();
       expect(grid.focusBehavior.activeCell()).toBe(cells[1][0]);
     });
+
+    describe('with selection', () => {
+      it('should select one on navigate when `selectOne` is true', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.select(); // cell 0,0 is selected
+
+        grid.down({selectOne: true});
+
+        expect(cells[0][0].selected()).toBe(false);
+        expect(cells[1][0].selected()).toBe(true);
+        expect(grid.focusBehavior.activeCell()).toBe(cells[1][0]);
+      });
+
+      it('should select on navigate when `select` is true', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.select(); // cell 0,0 is selected
+
+        grid.down({select: true});
+
+        expect(cells[0][0].selected()).toBe(true);
+        expect(cells[1][0].selected()).toBe(true);
+        expect(grid.focusBehavior.activeCell()).toBe(cells[1][0]);
+      });
+
+      it('should toggle on navigate when `toggle` is true', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+
+        grid.down({toggle: true}); // Move to 1,0 and select it
+        expect(cells[1][0].selected()).toBe(true);
+
+        grid.up({toggle: true}); // Move to 0,0 and select it
+        expect(cells[0][0].selected()).toBe(true);
+        expect(cells[1][0].selected()).toBe(true); // 1,0 remains selected
+
+        grid.down({toggle: true}); // Move to 1,0 and deselect it
+        expect(cells[1][0].selected()).toBe(false);
+      });
+
+      it('should toggle one on navigate when `toggleOne` is true', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.select(); // cell 0,0 is selected
+
+        grid.down({toggleOne: true}); // Move to 1,0
+
+        expect(cells[0][0].selected()).toBe(false);
+        expect(cells[1][0].selected()).toBe(true);
+
+        grid.down({toggleOne: true}); // Move to 2,0
+        expect(cells[1][0].selected()).toBe(false);
+        expect(cells[2][0].selected()).toBe(true);
+      });
+
+      it('should range select on navigate when `anchor` is true', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[1][1]);
+        grid.down({anchor: true});
+        expect(cells.flat().filter(c => c.selected()).length).toBe(2);
+        expect(cells[1][1].selected()).toBe(true);
+        expect(cells[2][1].selected()).toBe(true);
+      });
+    });
   });
 
   describe('selection', () => {
-    let cells: TestGridCell[][];
-    let grid: Grid<TestGridCell>;
+    describe('selectRow', () => {
+      it('should select all cells in the current row', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.select();
+        expect(cells[0][0].selected()).toBe(true);
 
-    beforeEach(() => {
-      cells = createTestGrid(createGridD);
-      grid = setupGrid(signal(cells));
-      grid.gotoCell(cells[0][0]); // active cell at {0,0}
+        grid.gotoCell(cells[1][1]);
+        grid.selectRow();
+
+        expect(cells[0][0].selected()).toBe(false);
+        expect(cells[1][0].selected()).toBe(true);
+        expect(cells[1][1].selected()).toBe(true);
+        expect(cells[1][2].selected()).toBe(true);
+        expect(cells[2][0].selected()).toBe(false);
+      });
     });
 
-    it('should toggle selection of a cell', () => {
-      grid.toggleSelect(cells[1][0]); // cell at {1,1}
-      expect(cells[1][0].selected()).toBe(true);
-      grid.toggleSelect(cells[1][0]);
-      expect(cells[1][0].selected()).toBe(false);
+    describe('selectCol', () => {
+      it('should select all cells in the current column', () => {
+        const cells = createTestGrid(createGridD);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.selectCol();
+
+        expect(cells[0][0].selected()).toBe(true); // spans row 0 and 1 in col 0
+        expect(cells[2][0].selected()).toBe(true);
+        expect(cells[3][0].selected()).toBe(true);
+        expect(cells[0][1].selected()).toBe(false);
+      });
     });
 
-    it('should select a row', () => {
-      grid.gotoCell(cells[1][0]); // active cell at {1,1}
-      grid.selectRow();
-      // row 1 contains cells at {0,0}, {1,0}, {1,1}
-      expect(cells[0][0].selected()).toBe(true); // spans row 0 and 1
-      expect(cells[1][0].selected()).toBe(true); // spans row 1 and 2
-      expect(cells[1][1].selected()).toBe(true); // spans row 1 and 2
-      expect(cells[0][1].selected()).toBe(false); // only in row 0
+    describe('select', () => {
+      it('should select the active cell', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[1][1]);
+        grid.select();
+
+        expect(cells[1][1].selected()).toBe(true);
+        expect(cells[0][0].selected()).toBe(false);
+      });
     });
 
-    it('should select a column', () => {
-      grid.gotoCell(cells[1][0]); // active cell at {1,1}
-      grid.selectCol();
-      // col 1 contains cells at {0,1}, {1,0}
-      expect(cells[0][1].selected()).toBe(true);
-      expect(cells[1][0].selected()).toBe(true);
-      expect(cells[0][0].selected()).toBe(false);
+    describe('deselect', () => {
+      it('should deselect the active cell', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[1][1]);
+        grid.select();
+        expect(cells[1][1].selected()).toBe(true);
+
+        grid.deselect();
+        expect(cells[1][1].selected()).toBe(false);
+      });
     });
 
-    it('should select all cells', () => {
-      grid.selectAll();
-      cells.flat().forEach(cell => expect(cell.selected()).toBe(true));
+    describe('toggle', () => {
+      it('should toggle the selection of the active cell', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[1][1]);
+
+        grid.toggle();
+        expect(cells[1][1].selected()).toBe(true);
+
+        grid.toggle();
+        expect(cells[1][1].selected()).toBe(false);
+      });
+    });
+
+    describe('toggleOne', () => {
+      it('should toggle the selection of the active cell and deselect others', () => {
+        const cells = createTestGrid(createGridA);
+        const grid = setupGrid(signal(cells));
+        grid.gotoCell(cells[0][0]);
+        grid.select();
+
+        grid.gotoCell(cells[1][1]);
+        grid.toggleOne();
+
+        expect(cells[0][0].selected()).toBe(false);
+        expect(cells[1][1].selected()).toBe(true);
+
+        grid.toggleOne();
+        expect(cells[1][1].selected()).toBe(false);
+      });
+    });
+
+    describe('selectAll', () => {
+      it('should select all selectable cells', () => {
+        const cells = createTestGrid(createGridA);
+        cells[1][1].selectable.set(false);
+        const grid = setupGrid(signal(cells));
+        grid.selectAll();
+
+        expect(cells.flat().filter(c => c.selected()).length).toBe(8);
+        expect(cells[1][1].selected()).toBe(false);
+      });
     });
   });
 
-  describe('range selection', () => {
-    let cells: TestGridCell[][];
-    let grid: Grid<TestGridCell>;
+  describe('setDefaultState', () => {
+    it('should focus the first focusable selected cell if one exists', () => {
+      const cells = createTestGrid(createGridA);
+      const grid = setupGrid(signal(cells), {softDisabled: signal(false)});
 
-    beforeEach(() => {
-      cells = createTestGrid(createGridA);
-      grid = setupGrid(signal(cells));
-      grid.gotoCell(cells[1][1]); // active cell and anchor at {1,1}
+      // This one is selected but not focusable.
+      cells[1][1].selected.set(true);
+      cells[1][1].disabled.set(true);
+
+      // This is the first focusable selected cell.
+      cells[2][0].selected.set(true);
+
+      // This one is also focusable and selected, but comes after.
+      cells[2][2].selected.set(true);
+
+      const result = grid.setDefaultState();
+
+      expect(result).toBe(true);
+      expect(grid.focusBehavior.activeCell()).toBe(cells[2][0]);
     });
 
-    it('should range select with arrow keys', () => {
-      grid.rangeSelectRight();
-      expect(cells[1][1].selected()).toBe(true);
-      expect(cells[1][2].selected()).toBe(true);
-      expect(grid.selectionAnchor()).toEqual({row: 1, col: 2});
+    it('should focus the first focusable cell if no selected cell exists', () => {
+      const cells = createTestGrid(createGridA);
+      const grid = setupGrid(signal(cells), {softDisabled: signal(false)});
 
-      grid.rangeSelectDown();
-      expect(cells[1][1].selected()).toBe(true);
-      expect(cells[1][2].selected()).toBe(true);
-      expect(cells[2][1].selected()).toBe(true);
-      expect(cells[2][2].selected()).toBe(true);
-      expect(grid.selectionAnchor()).toEqual({row: 2, col: 2});
+      cells[0][0].disabled.set(true);
 
-      grid.rangeSelectUp();
-      expect(cells[1][1].selected()).toBe(true);
-      expect(cells[1][2].selected()).toBe(true);
-      expect(cells[2][1].selected()).toBe(false);
-      expect(cells[2][2].selected()).toBe(false);
-      expect(grid.selectionAnchor()).toEqual({row: 1, col: 2});
+      const result = grid.setDefaultState();
 
-      grid.rangeSelectLeft();
-      expect(cells[1][1].selected()).toBe(true);
-      expect(cells[1][2].selected()).toBe(false);
-      expect(grid.selectionAnchor()).toEqual({row: 1, col: 1});
+      expect(result).toBe(true);
+      expect(grid.focusBehavior.activeCell()).toBe(cells[0][1]);
     });
 
-    it('should range select to a specific cell', () => {
-      grid.rangeSelect(cells[2][2]);
+    it('should return false if no focusable cell is found', () => {
+      const cells = createTestGrid(createGridA);
+      cells.flat().forEach(c => c.disabled.set(true));
+      const grid = setupGrid(signal(cells), {softDisabled: signal(false)});
 
-      expect(cells[1][1].selected()).toBe(true);
-      expect(cells[1][2].selected()).toBe(true);
-      expect(cells[2][1].selected()).toBe(true);
-      expect(cells[2][2].selected()).toBe(true);
-      expect(grid.selectionAnchor()).toEqual({row: 2, col: 2});
-    });
+      const result = grid.setDefaultState();
 
-    it('should handle range selection with spanning cells', () => {
-      const spanningCells = createTestGrid(createGridD);
-      grid = setupGrid(signal(spanningCells));
-      grid.gotoCell(spanningCells[0][0]); // active cell at {0,0}
-
-      grid.rangeSelect(spanningCells[3][2]); // cell at {3,2}
-
-      // The range is from {0,0} to {3,3} because cell at {3,2} has colspan 2.
-      // All cells should be selected.
-      spanningCells.flat().forEach(cell => expect(cell.selected()).toBe(true));
-      expect(grid.selectionAnchor()).toEqual({row: 3, col: 2});
+      expect(result).toBe(false);
+      expect(grid.focusBehavior.activeCell()).toBeUndefined();
     });
   });
 

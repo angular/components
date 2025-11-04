@@ -1,5 +1,8 @@
 .example-grid-controls {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 16px;
   margin-bottom: 16px;
 }
 
@@ -10,6 +13,11 @@
 .example-grid-cell[data-active='true'] {
   outline: 3px dashed var(--mat-sys-outline);
   outline-offset: 4px;
+}
+
+.example-grid:focus-within .example-grid-cell[data-anchor='true'][data-active='false'] {
+  outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 3px;
 }
 
 .example-grid-cell[data-active='true']:focus-within,

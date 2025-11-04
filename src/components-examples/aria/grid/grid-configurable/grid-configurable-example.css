@@ -1,5 +1,6 @@
 .example-grid-container {
   display: flex;
+  align-items: flex-start;
 }
 
 .example-grid {
@@ -18,4 +19,8 @@
   height: 50px;
   width: 50px;
   border: 1px solid;
+}
+
+.example-grid-shortcuts {
+  margin-left: 12px;
 }

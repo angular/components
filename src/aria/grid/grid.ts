@@ -46,7 +46,7 @@ export class Grid {
   private readonly _elementRef = inject(ElementRef);
 
   /** The rows that make up the grid. */
-  private readonly _rows = contentChildren(GridRow);
+  private readonly _rows = contentChildren(GridRow, {descendants: true});
 
   /** The UI patterns for the rows in the grid. */
   private readonly _rowPatterns: Signal<GridRowPattern[]> = computed(() =>
@@ -77,6 +77,15 @@ export class Grid {
   /** The wrapping behavior for keyboard navigation along the column axis. */
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
+  /** Whether multiple cells in the grid can be selected. */
+  readonly multi = input(false, {transform: booleanAttribute});
+
+  /** The selection strategy used by the grid. */
+  readonly selectionMode = input<'follow' | 'explicit'>('follow');
+
+  /** Whether enable range selections (with modifier keys or dragging). */
+  readonly enableRangeSelection = input(false, {transform: booleanAttribute});
+
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -85,6 +94,7 @@ export class Grid {
   });
 
   constructor() {
+    afterRenderEffect(() => this._pattern.setDefaultStateEffect());
     afterRenderEffect(() => this._pattern.resetStateEffect());
     afterRenderEffect(() => this._pattern.focusEffect());
   }
@@ -123,7 +133,7 @@ export class GridRow {
   private readonly _elementRef = inject(ElementRef);
 
   /** The cells that make up this row. */
-  private readonly _cells = contentChildren(GridCell);
+  private readonly _cells = contentChildren(GridCell, {descendants: true});
 
   /** The UI patterns for the cells in this row. */
   private readonly _cellPatterns: Signal<GridCellPattern[]> = computed(() =>
@@ -163,6 +173,7 @@ export class GridRow {
     '[attr.rowspan]': '_pattern.rowSpan()',
     '[attr.colspan]': '_pattern.colSpan()',
     '[attr.data-active]': '_pattern.active()',
+    '[attr.data-anchor]': '_pattern.anchor()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-rowspan]': '_pattern.rowSpan()',
     '[attr.aria-colspan]': '_pattern.colSpan()',
