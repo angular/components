@@ -30,5 +30,5 @@ export class TabsConfigurableExample {
 
   wrap = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
-  softDisabled = new FormControl(false, {nonNullable: true});
+  softDisabled = new FormControl(true, {nonNullable: true});
 }

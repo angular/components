@@ -43,7 +43,7 @@ function setupGrid(
     cells,
     focusMode: signal('roving'),
     disabled: signal(false),
-    softDisabled: signal(false),
+    softDisabled: signal(true),
     rowWrap: signal<WrapStrategy>('loop'),
     colWrap: signal<WrapStrategy>('loop'),
     enableSelection: signal(true),
@@ -238,11 +238,21 @@ describe('Grid', () => {
     it('should return false if no focusable cell is found when state is empty', () => {
       const cells = createTestGrid(createGridA);
       cells.flat().forEach(c => c.disabled.set(true));
-      const grid = setupGrid(signal(cells));
+      const grid = setupGrid(signal(cells), {softDisabled: signal(false)});
 
       const result = grid.resetState();
       expect(result).toBe(false);
       expect(grid.focusBehavior.activeCell()).toBeUndefined();
+    });
+
+    it('should return true and focus a cell if all cells are disabled but softDisabled is true', () => {
+      const cells = createTestGrid(createGridA);
+      cells.flat().forEach(c => c.disabled.set(true));
+      const grid = setupGrid(signal(cells));
+
+      const result = grid.resetState();
+      expect(result).toBe(true);
+      expect(grid.focusBehavior.activeCell()).toBe(cells[0][0]);
     });
 
     it('should re-focus the active cell if it is stale but still exists', () => {

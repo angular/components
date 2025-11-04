@@ -158,12 +158,12 @@ describe('Toolbar', () => {
 
         it('should move focus to the next widget on ArrowDown', () => {
           down();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
         });
 
         it('should move focus to the previous widget on ArrowUp', () => {
           down();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
 
           up();
           expect(document.activeElement).toBe(widgetElements[0]);
@@ -177,12 +177,12 @@ describe('Toolbar', () => {
 
         it('should move focus to the next widget on ArrowRight', () => {
           right();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
         });
 
         it('should move focus to the previous widget on ArrowLeft', () => {
           right();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
 
           left();
           expect(document.activeElement).toBe(widgetElements[0]);
@@ -242,12 +242,12 @@ describe('Toolbar', () => {
       describe('horizontal orientation', () => {
         it('should move focus to the next widget on ArrowLeft', () => {
           left();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
         });
 
         it('should move focus to the previous widget on ArrowRight', () => {
           left();
-          expect(document.activeElement).toBe(widgetElements[2]);
+          expect(document.activeElement).toBe(widgetElements[1]);
 
           right();
           expect(document.activeElement).toBe(widgetElements[0]);
@@ -364,7 +364,7 @@ describe('Toolbar', () => {
       });
 
       it('should call "first" when navigating into a group from the previous widget', () => {
-        click(widgetElements[0]);
+        click(widgetElements[1]);
         right();
         expect(testWidgetGroupInstance.lastAction()).toBe('first');
       });
@@ -473,5 +473,5 @@ class TestToolbarComponent {
   disabled = signal(false);
   widgetGroupDisabled = signal(false);
   wrap = signal(true);
-  softDisabled = signal(false);
+  softDisabled = signal(true);
 }

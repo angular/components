@@ -164,7 +164,7 @@ export class TabList implements OnInit, OnDestroy {
   readonly wrap = input(true, {transform: booleanAttribute});
 
   /** Whether to allow disabled items to receive focus. */
-  readonly softDisabled = input(false, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the tablist. */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');

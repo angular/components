@@ -66,9 +66,14 @@ export class ListFocus<T extends ListFocusItem> {
     return this.inputs.disabled() || this.inputs.items().every(i => i.disabled());
   }
 
+  /** Whether the list is in a disabled state, but should still be focusable */
+  isListDisabledFocusable(): boolean {
+    return this.isListDisabled() && !this.inputs.softDisabled();
+  }
+
   /** The id of the current active item. */
   getActiveDescendant(): string | undefined {
-    if (this.isListDisabled()) {
+    if (this.isListDisabledFocusable()) {
       return undefined;
     }
     if (this.inputs.focusMode() === 'roving') {
@@ -79,7 +84,7 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** The tabindex for the list. */
   getListTabindex(): -1 | 0 {
-    if (this.isListDisabled()) {
+    if (this.isListDisabledFocusable()) {
       return 0;
     }
     return this.inputs.focusMode() === 'activedescendant' ? 0 : -1;
@@ -87,7 +92,7 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns the tabindex for the given item. */
   getItemTabindex(item: T): -1 | 0 {
-    if (this.isListDisabled()) {
+    if (this.isListDisabledFocusable()) {
       return -1;
     }
     if (this.inputs.focusMode() === 'activedescendant') {
@@ -98,7 +103,7 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Moves focus to the given item if it is focusable. */
   focus(item: T, opts?: {focusElement?: boolean}): boolean {
-    if (this.isListDisabled() || !this.isFocusable(item)) {
+    if (this.isListDisabledFocusable() || !this.isFocusable(item)) {
       return false;
     }
 

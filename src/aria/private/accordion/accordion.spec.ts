@@ -66,7 +66,7 @@ describe('Accordion Pattern', () => {
       multiExpandable: signal(true),
       items: signal([]),
       expandedIds: signal<string[]>([]),
-      softDisabled: signal(false),
+      softDisabled: signal(true),
       wrap: signal(true),
       element: signal(document.createElement('div')),
     };
