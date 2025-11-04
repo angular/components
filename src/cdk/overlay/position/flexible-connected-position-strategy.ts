@@ -63,6 +63,9 @@ export function createFlexibleConnectedPositionStrategy(
   );
 }
 
+/** Supported locations in the DOM for connected overlays. */
+export type FlexibleOverlayPopoverLocation = 'global' | 'inline';
+
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
  * implicit position relative some origin element. The relative position is defined in terms of
@@ -157,6 +160,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
   private _previousPushAmount: {x: number; y: number} | null;
+
+  /** Configures where in the DOM to insert the overlay when popovers are enabled. */
+  private _popoverLocation: FlexibleOverlayPopoverLocation = 'global';
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
@@ -511,8 +517,24 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this;
   }
 
+  /**
+   * Determines where in the DOM the overlay will be rendered when popover mode is enabled.
+   * @param location Configures the location in the DOM. Supports the following values:
+   *  - `global` - The default which inserts the overlay inside the overlay container.
+   *  - `inline` - Inserts the overlay next to the trigger.
+   */
+  withPopoverLocation(location: FlexibleOverlayPopoverLocation): this {
+    this._popoverLocation = location;
+    return this;
+  }
+
   /** @docs-private */
-  getPopoverInsertionPoint(): Element {
+  getPopoverInsertionPoint(): Element | null {
+    // Return null so it falls back to inserting into the overlay container.
+    if (this._popoverLocation === 'global') {
+      return null;
+    }
+
     const origin = this._origin;
 
     if (origin instanceof ElementRef) {

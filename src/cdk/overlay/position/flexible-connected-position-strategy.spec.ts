@@ -2964,17 +2964,16 @@ describe('FlexibleConnectedPositionStrategy', () => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
 
-      positionStrategy = createFlexibleConnectedPositionStrategy(
-        injector,
-        originElement,
-      ).withPositions([
-        {
-          overlayX: 'start',
-          overlayY: 'top',
-          originX: 'start',
-          originY: 'bottom',
-        },
-      ]);
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
+        .withPopoverLocation('inline')
+        .withPositions([
+          {
+            overlayX: 'start',
+            overlayY: 'top',
+            originX: 'start',
+            originY: 'bottom',
+          },
+        ]);
     });
 
     afterEach(() => {
