@@ -55,19 +55,29 @@ export class ListNavigation<T extends ListNavigationItem> {
 
   /** Navigates to the first item in the list. */
   first(opts?: {focusElement?: boolean}): boolean {
-    const item = this.inputs.items().find(i => this.inputs.focusManager.isFocusable(i));
+    const item = this.peekFirst();
     return item ? this.goto(item, opts) : false;
   }
 
   /** Navigates to the last item in the list. */
   last(opts?: {focusElement?: boolean}): boolean {
-    const items = this.inputs.items();
+    const item = this.peekLast();
+    return item ? this.goto(item, opts) : false;
+  }
+
+  /** Gets the first focusable item from the given list of items. */
+  peekFirst(items: T[] = this.inputs.items()): T | undefined {
+    return items.find(i => this.inputs.focusManager.isFocusable(i));
+  }
+
+  /** Gets the last focusable item from the given list of items. */
+  peekLast(items: T[] = this.inputs.items()): T | undefined {
     for (let i = items.length - 1; i >= 0; i--) {
       if (this.inputs.focusManager.isFocusable(items[i])) {
-        return this.goto(items[i], opts);
+        return items[i];
       }
     }
-    return false;
+    return;
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */

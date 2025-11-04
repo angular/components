@@ -1,23 +1,25 @@
 import {Component} from '@angular/core';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';
 import {
+  SimpleCombobox,
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
   SimpleToolbarToggleButton,
 } from '../simple-toolbar';
 
-/** @title Basic Vertical Toolbar Example */
+/** @title Hard Disabled Toolbar Example */
 @Component({
-  selector: 'toolbar-basic-vertical-example',
-  templateUrl: 'toolbar-basic-vertical-example.html',
+  selector: 'toolbar-hard-disabled-example',
+  templateUrl: 'toolbar-hard-disabled-example.html',
   styleUrl: '../toolbar-common.css',
   imports: [
     Toolbar,
     ToolbarWidget,
     ToolbarWidgetGroup,
+    SimpleCombobox,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
     SimpleToolbarToggleButton,
   ],
 })
-export class ToolbarBasicVerticalExample {}
+export class ToolbarHardDisabledExample {}

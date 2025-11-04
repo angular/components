@@ -6,463 +6,1364 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {computed, signal, WritableSignal} from '@angular/core';
 import {ToolbarInputs, ToolbarPattern} from './toolbar';
-import {ToolbarWidgetInputs, ToolbarWidgetPattern} from './toolbar-widget';
-import {
-  ToolbarWidgetGroupControls,
-  ToolbarWidgetGroupInputs,
-  ToolbarWidgetGroupPattern,
-} from './toolbar-widget-group';
+import {ToolbarWidgetPattern} from './toolbar-widget';
+import {ToolbarWidgetGroupPattern} from './toolbar-widget-group';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {ModifierKeys} from '@angular/cdk/testing';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {ModifierKeys} from '@angular/cdk/testing';
 
-// Converts the SignalLike type to WritableSignal type for controlling test inputs.
-type WritableSignalOverrides<O> = {
-  [K in keyof O as O[K] extends SignalLike<any> ? K : never]: O[K] extends SignalLike<infer T>
-    ? WritableSignal<T>
-    : never;
+// Test types
+type TestWidget = ToolbarWidgetPattern<string> & {
+  inputs: {disabled: WritableSignal<boolean>};
 };
 
-type TestToolbarInputs<V> = Omit<
-  ToolbarInputs<V> & WritableSignalOverrides<ToolbarInputs<V>>,
-  'items' | 'element' | 'getItem'
->;
-type TestToolbarWidgetInputs<V> = Omit<
-  ToolbarWidgetInputs<V> & WritableSignalOverrides<ToolbarWidgetInputs<V>>,
-  'element' | 'id' | 'toolbar'
->;
-type TestToolbarWidgetGroupInputs<V> = Omit<
-  ToolbarWidgetGroupInputs<V> & WritableSignalOverrides<ToolbarWidgetGroupInputs<V>>,
-  'element' | 'id' | 'toolbar'
->;
+type TestWidgetGroup = ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string> & {
+  disabled: WritableSignal<boolean>;
+  items: WritableSignal<TestWidget[]>;
+};
 
-const up = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 38, 'ArrowUp', mods);
-const down = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 40, 'ArrowDown', mods);
-const left = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 37, 'ArrowLeft', mods);
-const right = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 39, 'ArrowRight', mods);
-const home = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 36, 'Home', mods);
-const end = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 35, 'End', mods);
-const space = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 32, ' ', mods);
-const enter = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 13, 'Enter', mods);
-const click = (target: Element) =>
-  ({target, stopPropagation: () => {}, preventDefault: () => {}}) as unknown as PointerEvent;
+type TestItem = TestWidget;
+
+type TestInputs = {
+  readonly [K in keyof ToolbarInputs<string>]: WritableSignal<
+    ToolbarInputs<string>[K] extends SignalLike<infer T> ? T : never
+  >;
+};
+
+// Keyboard event helpers
+const up = () => createKeyboardEvent('keydown', 38, 'ArrowUp');
+const down = () => createKeyboardEvent('keydown', 40, 'ArrowDown');
+const home = () => createKeyboardEvent('keydown', 36, 'Home');
+const end = () => createKeyboardEvent('keydown', 35, 'End');
+const enter = () => createKeyboardEvent('keydown', 13, 'Enter');
+const right = () => createKeyboardEvent('keydown', 39, 'ArrowRight');
+const left = () => createKeyboardEvent('keydown', 37, 'ArrowLeft');
+const space = () => createKeyboardEvent('keydown', 32, ' ');
+
+function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
+  return {
+    target: item.element(),
+    shiftKey: mods?.shift,
+    ctrlKey: mods?.control,
+  } as unknown as PointerEvent;
+}
+
+function getToolbarPattern(
+  inputs: Partial<{
+    [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+  }>,
+  items: WritableSignal<TestItem[]>,
+) {
+  const element = signal(document.createElement('div'));
+  const activeItem = signal<TestItem | undefined>(undefined);
+
+  const allItems = computed(() => {
+    const flatItems: ToolbarWidgetPattern<string>[] = [];
+    for (const item of items()) {
+      if (item instanceof ToolbarWidgetGroupPattern) {
+        flatItems.push(...item.inputs.items());
+      } else {
+        flatItems.push(item);
+      }
+    }
+    return flatItems;
+  });
+
+  const toolbar = new ToolbarPattern<string>({
+    element,
+    items,
+    activeItem,
+    wrap: signal(inputs.wrap ?? true),
+    disabled: signal(inputs.disabled ?? false),
+    softDisabled: signal(inputs.softDisabled ?? true),
+    textDirection: signal(inputs.textDirection ?? 'ltr'),
+    orientation: signal(inputs.orientation ?? 'horizontal'),
+    getItem: (e: Element) => allItems().find(i => i.element() === e),
+  });
+
+  return {toolbar, element, activeItem};
+}
+
+function getWidgetPattern(
+  value: string,
+  toolbar: ToolbarPattern<string>,
+  group?: ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string>,
+): TestWidget {
+  const element = signal(document.createElement('button'));
+  const widget = new ToolbarWidgetPattern<string>({
+    id: signal(`widget-${value}`),
+    element,
+    disabled: signal(false),
+    value: signal(value),
+    group: signal(group),
+    toolbar: signal(toolbar),
+  });
+  return widget as TestWidget;
+}
+
+function getWidgetGroupPattern(id: string, toolbar: ToolbarPattern<string>): TestWidgetGroup {
+  const disabled = signal(false);
+  const items = signal<TestWidget[]>([]);
+
+  const group = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string>({
+    disabled,
+    toolbar: signal(toolbar),
+    items,
+    multi: signal(false),
+  });
+
+  (group as TestWidgetGroup).disabled = disabled;
+  (group as TestWidgetGroup).items = items;
+  return group as TestWidgetGroup;
+}
+
+function getPatterns(
+  inputs: Partial<{
+    [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+  }> = {},
+) {
+  const items = signal<TestItem[]>([]);
+  const {toolbar} = getToolbarPattern(inputs, items);
+
+  const group0 = getWidgetGroupPattern('group 0', toolbar);
+  const group1 = getWidgetGroupPattern('group 1', toolbar);
+
+  items.set([
+    getWidgetPattern('item 0', toolbar),
+    getWidgetPattern('item 1', toolbar),
+    getWidgetPattern('item 2', toolbar, group0),
+    getWidgetPattern('item 3', toolbar, group0),
+    getWidgetPattern('item 4', toolbar, group0),
+    getWidgetPattern('item 5', toolbar),
+    getWidgetPattern('item 6', toolbar, group1),
+    getWidgetPattern('item 7', toolbar, group1),
+    getWidgetPattern('item 8', toolbar, group1),
+  ]);
+
+  // [                [        group 0       ]          [       group 1        ]]
+  // [item 0, item 1, [item 2, item 3, item 4], item 5, [item 6, item 7, item 8]]
+
+  (group0.inputs.items as WritableSignal<any>).set(items().slice(2, 5) as TestWidget[]);
+  (group1.inputs.items as WritableSignal<any>).set(items().slice(6, 9) as TestWidget[]);
+
+  toolbar.setDefaultState();
+  return {toolbar, items: items(), group0, group1};
+}
 
 describe('Toolbar Pattern', () => {
-  function createToolbar<V>(
-    widgets: (TestToolbarWidgetInputs<V> | TestToolbarWidgetGroupInputs<V>)[],
-    toolbarInputs: TestToolbarInputs<V>,
-  ) {
-    const items = signal<(ToolbarWidgetPattern<V> | ToolbarWidgetGroupPattern<V>)[]>([]);
-    const toolbar = new ToolbarPattern<V>({
-      ...toolbarInputs,
-      items,
-      element: signal(document.createElement('div')),
-      getItem: target => items().find(widget => widget.element() === target),
-    });
-
-    const widgetPatterns = widgets.map((widgetInputs, index) => {
-      const id = `widget-${index}`;
-      const element = document.createElement('div');
-      element.id = id;
-
-      if ('controls' in widgetInputs) {
-        // It's a group
-        element.classList.add('toolbar-widget-group');
-        return new ToolbarWidgetGroupPattern<V>({
-          ...widgetInputs,
-          id: signal(id),
-          element: signal(element),
-          toolbar: signal(toolbar),
-        });
-      } else {
-        // It's a widget
-        element.classList.add('toolbar-widget');
-        return new ToolbarWidgetPattern<V>({
-          ...widgetInputs,
-          id: signal(id),
-          element: signal(element),
-          toolbar: signal(toolbar),
-        });
-      }
-    });
-    items.set(widgetPatterns);
-    return {toolbar, items: widgetPatterns};
+  function getItem(toolbar: ToolbarPattern<string>, value: string) {
+    return toolbar.inputs.items().find(item => item.value() === value)!;
   }
 
-  describe('Keyboard Navigation', () => {
-    let toolbar: ToolbarPattern<string>;
-    let toolbarInputs: TestToolbarInputs<string>;
-    let widgetInputs: (TestToolbarWidgetInputs<string> | TestToolbarWidgetGroupInputs<string>)[];
-    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
+  describe('Navigation', () => {
+    describe('with horizontal orientation', () => {
+      it('should navigate on click', () => {
+        const {toolbar} = getPatterns();
+        const item5 = getItem(toolbar, 'item 5');
+        toolbar.onClick(clickItem(item5));
+        expect(toolbar.activeItem()?.value()).toBe('item 5');
+      });
 
-    beforeEach(() => {
-      toolbarInputs = {
-        activeItem: signal(undefined),
-        orientation: signal('horizontal'),
-        textDirection: signal('ltr'),
-        disabled: signal(false),
-        softDisabled: signal(true),
-        wrap: signal(false),
-      };
-      widgetInputs = [
-        {disabled: signal(false)},
-        {disabled: signal(false)},
-        {
-          disabled: signal(false),
-          controls: signal(undefined),
-        },
-        {disabled: signal(false)},
-      ];
-      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
-        widgetInputs,
-        toolbarInputs,
-      );
-      toolbar = newToolbar;
-      items = newItems;
-      toolbarInputs.activeItem.set(items[0]);
+      describe('with ltr text direction', () => {
+        it('should navigate next on ArrowRight', () => {
+          const {toolbar} = getPatterns();
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate prev on ArrowLeft', () => {
+          const {toolbar} = getPatterns();
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
+          const {toolbar} = getPatterns();
+          toolbar.onKeydown(down()); // Item 0 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+          const {toolbar} = getPatterns();
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(up()); // Item 1 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate next in a widget group on ArrowDown', () => {
+          const {toolbar} = getPatterns();
+
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 3');
+        });
+
+        it('should navigate prev in a widget group on ArrowUp', () => {
+          const {toolbar} = getPatterns();
+
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(up()); // Item 3 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate last to first in a widget group on ArrowDown', () => {
+          const {toolbar} = getPatterns();
+
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(down()); // Item 3 -> Item 4 (Group 0)
+          toolbar.onKeydown(down()); // Item 4 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate first to last in a widget group on ArrowUp', () => {
+          const {toolbar} = getPatterns();
+
+          toolbar.onKeydown(right()); // Item 0 -> Item 1
+          toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(up()); // Item 2 -> Item 4 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 4');
+        });
+
+        describe('with wrap false', () => {
+          it('should not wrap from last to first', () => {
+            const {toolbar} = getPatterns({wrap: false});
+            toolbar.onKeydown(end());
+            toolbar.onKeydown(right());
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should not wrap from first to last', () => {
+            const {toolbar} = getPatterns({wrap: false});
+            toolbar.onKeydown(left());
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+        });
+
+        describe('with softDisabled true', () => {
+          it('should not skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 1 (disabled)
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should not skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 1 (disabled)
+            toolbar.onKeydown(right()); // Item 1 -> Item 2
+            toolbar.onKeydown(left()); // Item 2 -> Item 1 (disabled)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should not skip disabled groups when navigating next', () => {
+            const {toolbar, group0} = getPatterns({softDisabled: true});
+            group0.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 1
+            toolbar.onKeydown(right()); // Item 1 -> Item 2
+            expect(toolbar.activeItem()?.value()).toBe('item 2');
+          });
+
+          it('should not skip disabled groups when navigating prev', () => {
+            const {toolbar, group0} = getPatterns({softDisabled: true});
+            group0.disabled.set(true);
+            toolbar.onKeydown(left()); // Item 0 -> Item 8
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should navigate to the last item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should navigate to the first item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end()); // Item 0 -> Item 8
+            toolbar.onKeydown(home()); // Item 8 -> Item 0
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first', () => {
+              const {toolbar, items} = getPatterns({softDisabled: true, wrap: true});
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+
+            it('should wrap from first to last', () => {
+              const {toolbar, items} = getPatterns({softDisabled: true, wrap: true});
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(left());
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+          });
+        });
+
+        describe('with softDisabled false', () => {
+          it('should not navigate to disabled items on click', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onClick(clickItem(items[1]));
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 2 (skips Item 1)
+            expect(toolbar.activeItem()?.value()).toBe('item 2');
+          });
+
+          it('should skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 2
+            toolbar.onKeydown(left()); // Item 2 -> Item 0 (skips Item 1)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should not navigate to items in disabled groups on click', () => {
+            const {toolbar, group0} = getPatterns({softDisabled: false});
+            group0.disabled.set(true);
+            const item2 = getItem(toolbar, 'item 2');
+            toolbar.onClick(clickItem(item2));
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should skip disabled groups when navigating next', () => {
+            const {toolbar, group0} = getPatterns({softDisabled: false});
+            group0.disabled.set(true);
+
+            toolbar.onKeydown(right()); // Item 0 -> Item 1
+            toolbar.onKeydown(right()); // Item 1 -> Item 5 (skips Group 0)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 5');
+          });
+
+          it('should skip disabled groups when navigating prev', () => {
+            const {toolbar, group0, group1} = getPatterns({softDisabled: false});
+            group0.disabled.set(true);
+            group1.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 5 (skips Group 1)
+            toolbar.onKeydown(left()); // Item 5 -> Item 1 (skips Group 0)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should navigate to the last focusable item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 7');
+          });
+
+          it('should navigate to the first focusable item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            toolbar.onKeydown(home());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first focusable item', () => {
+              const {toolbar, items} = getPatterns({softDisabled: false, wrap: true});
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 1');
+            });
+
+            it('should wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({softDisabled: false, wrap: true});
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(left());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 7');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first focusable item', () => {
+              const {toolbar, items} = getPatterns({softDisabled: false, wrap: false});
+              items[items.length - 1].inputs.disabled.set(true);
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 7');
+            });
+
+            it('should not wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({softDisabled: false, wrap: false});
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(left());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 1');
+            });
+          });
+        });
+      });
+
+      describe('with rtl text direction', () => {
+        it('should navigate on click', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+          const item5 = getItem(toolbar, 'item 5');
+          toolbar.onClick(clickItem(item5));
+          expect(toolbar.activeItem()?.value()).toBe('item 5');
+        });
+
+        it('should navigate next on ArrowLeft', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate prev on ArrowRight', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(right()); // Item 1 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+          toolbar.onKeydown(up()); // Item 0 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate next in a widget group on ArrowDown', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 3');
+        });
+
+        it('should navigate prev in a widget group on ArrowUp', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(up()); // Item 3 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate first to last in a widget group on ArrowUp', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(up()); // Item 2 -> Item 4 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 4');
+        });
+
+        it('should navigate last to first in a widget group on ArrowDown', () => {
+          const {toolbar} = getPatterns({textDirection: 'rtl'});
+
+          toolbar.onKeydown(left()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(down()); // Item 3 -> Item 4 (Group 0)
+          toolbar.onKeydown(down()); // Item 4 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        describe('with softDisabled true', () => {
+          it('should not skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 1 (disabled)
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should not skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 1 (disabled)
+            toolbar.onKeydown(left()); // Item 1 -> Item 2
+            toolbar.onKeydown(right()); // Item 2 -> Item 1 (disabled)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should navigate to the last item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should navigate to the first item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 1
+            toolbar.onKeydown(home()); // Item 1 -> Item 0
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first', () => {
+              const {toolbar, items} = getPatterns({
+                wrap: true,
+                softDisabled: true,
+                textDirection: 'rtl',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(left());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+
+            it('should wrap from first to last', () => {
+              const {toolbar, items} = getPatterns({
+                wrap: true,
+                softDisabled: true,
+                textDirection: 'rtl',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(right());
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first', () => {
+              const {toolbar} = getPatterns({
+                wrap: false,
+                softDisabled: true,
+                textDirection: 'rtl',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(left());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last', () => {
+              const {toolbar} = getPatterns({
+                wrap: false,
+                softDisabled: true,
+                textDirection: 'rtl',
+              });
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+
+        describe('with softDisabled false', () => {
+          it('should skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 2 (skips Item 1)
+            expect(toolbar.activeItem()?.value()).toBe('item 2');
+          });
+
+          it('should skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(left()); // Item 0 -> Item 2
+            toolbar.onKeydown(right()); // Item 2 -> Item 0 (skips Item 1)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should navigate to the last focusable item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 7');
+          });
+
+          it('should navigate to the first focusable item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            toolbar.onKeydown(home());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: true,
+                textDirection: 'rtl',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(left());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 1');
+            });
+
+            it('should wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: true,
+                textDirection: 'rtl',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 7');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first focusable item', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: false,
+                wrap: false,
+                textDirection: 'rtl',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(left());
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: false,
+                textDirection: 'rtl',
+              });
+              items[1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(right());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+      });
     });
 
-    it('should navigate next on ArrowRight (horizontal)', () => {
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
+    describe('with vertical orientation', () => {
+      describe('with ltr text direction', () => {
+        it('should navigate next on ArrowDown', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate prev on ArrowUp', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(up()); // Item 1 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate next on ArrowRight when not in a widget group', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+          toolbar.onKeydown(right()); // Item 0 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should not navigate prev on ArrowLeft when not in a widget group', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(left()); // Item 1 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate next in a widget group on ArrowRight', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+
+          toolbar.onKeydown(down());
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(right()); // Item 2 -> Item 3 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 3');
+        });
+
+        it('should navigate prev in a widget group on ArrowLeft', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(right()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(left()); // Item 3 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate last to first in a widget group on ArrowRight', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(right()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(right()); // Item 3 -> Item 4 (Group 0)
+          toolbar.onKeydown(right()); // Item 4 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate first to last in a widget group on ArrowLeft', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical'});
+
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(left()); // Item 2 -> Item 4 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 4');
+        });
+
+        describe('with softDisabled true', () => {
+          it('should not skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should not skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
+            toolbar.onKeydown(down()); // Item 1 -> Item 2
+            toolbar.onKeydown(up()); // Item 2 -> Item 1 (disabled)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should navigate to the last item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should navigate to the first item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1
+            toolbar.onKeydown(home()); // Item 1 -> Item 0
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: true,
+                wrap: true,
+                orientation: 'vertical',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+
+            it('should wrap from first to last', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: true,
+                wrap: true,
+                orientation: 'vertical',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: true,
+                wrap: false,
+                orientation: 'vertical',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: true,
+                wrap: false,
+                orientation: 'vertical',
+              });
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+
+        describe('with softDisabled false', () => {
+          it('should skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 2 (skips Item 1)
+
+            expect(toolbar.activeItem()).toBe(items[2]);
+          });
+
+          it('should skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 2
+            toolbar.onKeydown(up()); // Item 2 -> Item 0 (skips Item 1)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should navigate to the last focusable item on End', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()?.value()).toBe('item 7');
+          });
+
+          it('should navigate to the first focusable item on Home', () => {
+            const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            toolbar.onKeydown(home());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: true,
+                orientation: 'vertical',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 1');
+            });
+
+            it('should wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: true,
+                orientation: 'vertical',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 7');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first focusable item', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: false,
+                wrap: false,
+                orientation: 'vertical',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: false,
+                wrap: false,
+                orientation: 'vertical',
+              });
+              items[1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+      });
+
+      describe('with rtl text direction', () => {
+        it('should navigate next on ArrowDown', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          expect(toolbar.activeItem()?.value()).toBe('item 1');
+        });
+
+        it('should navigate prev on ArrowUp', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(up()); // Item 1 -> Item 0
+          expect(toolbar.activeItem()?.value()).toBe('item 0');
+        });
+
+        it('should navigate last to first in a widget group on ArrowLeft', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
+
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(left()); // Item 2 -> Item 3 (Group 0)
+          toolbar.onKeydown(left()); // Item 3 -> Item 4 (Group 0)
+          toolbar.onKeydown(left()); // Item 4 -> Item 2 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 2');
+        });
+
+        it('should navigate first to last in a widget group on ArrowRight', () => {
+          const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
+
+          toolbar.onKeydown(down()); // Item 0 -> Item 1
+          toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
+          toolbar.onKeydown(right()); // Item 2 -> Item 4 (Group 0)
+
+          expect(toolbar.activeItem()?.value()).toBe('item 4');
+        });
+
+        describe('with softDisabled true', () => {
+          it('should not skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: true,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should not skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: true,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
+            toolbar.onKeydown(down()); // Item 1 -> Item 2
+            toolbar.onKeydown(up()); // Item 2 -> Item 1 (disabled)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          it('should navigate to the last item on End', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: true,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 8');
+          });
+
+          it('should navigate to the first item on Home', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: true,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 1
+            toolbar.onKeydown(home());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: true,
+                wrap: true,
+                orientation: 'vertical',
+                textDirection: 'rtl',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+
+            it('should wrap from first to last', () => {
+              const {toolbar, items} = getPatterns({
+                softDisabled: true,
+                wrap: true,
+                orientation: 'vertical',
+                textDirection: 'rtl',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: true,
+                wrap: false,
+                orientation: 'vertical',
+                textDirection: 'rtl',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last', () => {
+              const {toolbar} = getPatterns({
+                softDisabled: true,
+                wrap: false,
+                orientation: 'vertical',
+                textDirection: 'rtl',
+              });
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+
+        describe('with softDisabled false', () => {
+          it('should skip disabled items when navigating next', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: false,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 2 (skips Item 1)
+
+            expect(toolbar.activeItem()).toBe(items[2]);
+          });
+
+          it('should skip disabled items when navigating prev', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: false,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(down()); // Item 0 -> Item 2
+            toolbar.onKeydown(up()); // Item 2 -> Item 0 (skips Item 1)
+
+            expect(toolbar.activeItem()?.value()).toBe('item 0');
+          });
+
+          it('should navigate to the last focusable item on End', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: false,
+              orientation: 'vertical',
+              textDirection: 'rtl',
+            });
+            items[items.length - 1].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            expect(toolbar.activeItem()).toBe(items[items.length - 2]);
+          });
+
+          it('should navigate to the first focusable item on Home', () => {
+            const {toolbar, items} = getPatterns({
+              softDisabled: false,
+              textDirection: 'rtl',
+              orientation: 'vertical',
+            });
+            items[0].inputs.disabled.set(true);
+
+            toolbar.onKeydown(end());
+            toolbar.onKeydown(home());
+
+            expect(toolbar.activeItem()?.value()).toBe('item 1');
+          });
+
+          describe('with wrap true', () => {
+            it('should wrap from last to first focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                wrap: true,
+                softDisabled: false,
+                textDirection: 'rtl',
+                orientation: 'vertical',
+              });
+              items[0].inputs.disabled.set(true);
+
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 1');
+            });
+
+            it('should wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                wrap: true,
+                softDisabled: false,
+                textDirection: 'rtl',
+                orientation: 'vertical',
+              });
+              items[items.length - 1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()).toBe(items[items.length - 2]);
+            });
+          });
+
+          describe('with wrap false', () => {
+            it('should not wrap from last to first focusable item', () => {
+              const {toolbar} = getPatterns({
+                wrap: false,
+                softDisabled: false,
+                textDirection: 'rtl',
+                orientation: 'vertical',
+              });
+              toolbar.onKeydown(end());
+              toolbar.onKeydown(down());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 8');
+            });
+
+            it('should not wrap from first to last focusable item', () => {
+              const {toolbar, items} = getPatterns({
+                wrap: false,
+                softDisabled: false,
+                textDirection: 'rtl',
+                orientation: 'vertical',
+              });
+              items[1].inputs.disabled.set(true);
+
+              toolbar.onKeydown(home());
+              toolbar.onKeydown(up());
+
+              expect(toolbar.activeItem()?.value()).toBe('item 0');
+            });
+          });
+        });
+      });
     });
 
-    it('should navigate prev on ArrowLeft (horizontal)', () => {
-      toolbarInputs.activeItem.set(items[1]);
-      toolbar.onKeydown(left());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
+    describe('with disabled toolbar', () => {
+      it('should not navigate on any key press', () => {
+        const {toolbar} = getPatterns({disabled: true});
+        const initialActiveItem = toolbar.activeItem();
 
-    it('should navigate next on ArrowDown (vertical)', () => {
-      toolbarInputs.orientation.set('vertical');
-      toolbar.onKeydown(down());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-    });
+        toolbar.onKeydown(right());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
 
-    it('should navigate prev on ArrowUp (vertical)', () => {
-      toolbarInputs.orientation.set('vertical');
-      toolbarInputs.activeItem.set(items[1]);
-      toolbar.onKeydown(up());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
+        toolbar.onKeydown(left());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
 
-    it('should navigate next on ArrowLeft (rtl)', () => {
-      toolbarInputs.textDirection.set('rtl');
-      toolbar.onKeydown(left());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-    });
+        toolbar.onKeydown(up());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
 
-    it('should navigate prev on ArrowRight (rtl)', () => {
-      toolbarInputs.textDirection.set('rtl');
-      toolbarInputs.activeItem.set(items[1]);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
+        toolbar.onKeydown(down());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
 
-    it('should navigate to the first item on Home', () => {
-      toolbarInputs.activeItem.set(items[3]);
-      toolbar.onKeydown(home());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
+        toolbar.onKeydown(home());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
 
-    it('should navigate to the last item on End', () => {
-      toolbar.onKeydown(end());
-      expect(toolbarInputs.activeItem()).toBe(items[3]);
-    });
-
-    it('should skip a disabled toolbar widget when softDisabled is false', () => {
-      toolbarInputs.softDisabled.set(false);
-      widgetInputs[1].disabled.set(true);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[2]);
-    });
-
-    it('should not skip disabled items when softDisabled is true', () => {
-      widgetInputs[1].disabled.set(true);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-    });
-
-    it('should wrap back to the first item when wrap is true', () => {
-      toolbarInputs.wrap.set(true);
-      toolbarInputs.activeItem.set(items[3]);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
-
-    it('should not wrap when wrap is false', () => {
-      toolbarInputs.activeItem.set(items[3]);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[3]);
-    });
-
-    it('should not navigate when the toolbar is disabled', () => {
-      toolbarInputs.disabled.set(true);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
+        toolbar.onKeydown(end());
+        expect(toolbar.activeItem()).toBe(initialActiveItem);
+      });
     });
   });
 
-  describe('Pointer Events', () => {
-    let toolbar: ToolbarPattern<string>;
-    let toolbarInputs: TestToolbarInputs<string>;
-    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
-
-    beforeEach(() => {
-      toolbarInputs = {
-        activeItem: signal(undefined),
-        orientation: signal('horizontal'),
-        textDirection: signal('ltr'),
-        disabled: signal(false),
-        softDisabled: signal(true),
-        wrap: signal(false),
-      };
-      const widgetInputs = [
-        {disabled: signal(false)},
-        {disabled: signal(false)},
-        {
-          disabled: signal(false),
-          controls: signal(undefined),
-        },
-        {disabled: signal(false)},
-      ];
-      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
-        widgetInputs,
-        toolbarInputs,
-      );
-      toolbar = newToolbar;
-      items = newItems;
-      toolbarInputs.activeItem.set(items[0]);
-    });
-
-    it('should set the active item on pointerdown', () => {
-      toolbar.onPointerdown(click(items[1].element()));
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-    });
-
-    it('should not set the active item on pointerdown if the toolbar is disabled', () => {
-      toolbarInputs.disabled.set(true);
-      toolbar.onPointerdown(click(items[1].element()));
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
-  });
-
-  describe('#setDefaultState', () => {
-    let toolbar: ToolbarPattern<string>;
-    let toolbarInputs: TestToolbarInputs<string>;
-    let widgetInputs: (TestToolbarWidgetInputs<string> | TestToolbarWidgetGroupInputs<string>)[];
-    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
-
-    beforeEach(() => {
-      toolbarInputs = {
-        activeItem: signal(undefined),
-        orientation: signal('horizontal'),
-        textDirection: signal('ltr'),
-        disabled: signal(false),
-        softDisabled: signal(true),
-        wrap: signal(false),
-      };
-      widgetInputs = [
-        {disabled: signal(false)},
-        {disabled: signal(false)},
-        {
-          disabled: signal(false),
-          controls: signal(undefined),
-        },
-      ];
-      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
-        widgetInputs,
-        toolbarInputs,
-      );
-      toolbar = newToolbar;
-      items = newItems;
-    });
-
-    it('should set the active item to the first focusable widget', () => {
-      toolbar.setDefaultState();
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-    });
-
-    it('should skip disabled widgets and set the next focusable widget as active', () => {
-      toolbarInputs.softDisabled.set(false);
-      widgetInputs[0].disabled.set(true);
-      toolbar.setDefaultState();
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-    });
-
-    it('should call "setDefaultState" on a widget group if it is the first focusable item', () => {
-      toolbarInputs.softDisabled.set(false);
-      const fakeControls = jasmine.createSpyObj<ToolbarWidgetGroupControls>('fakeControls', [
-        'setDefaultState',
-      ]);
-      (widgetInputs[2] as TestToolbarWidgetGroupInputs<string>).controls.set(fakeControls);
-
-      widgetInputs[0].disabled.set(true);
-      widgetInputs[1].disabled.set(true);
-      toolbar.setDefaultState();
-      expect(toolbarInputs.activeItem()).toBe(items[2]);
-      expect(fakeControls.setDefaultState).toHaveBeenCalled();
-    });
-  });
-
-  describe('Widget Group', () => {
-    let toolbar: ToolbarPattern<string>;
-    let toolbarInputs: TestToolbarInputs<string>;
-    let items: (ToolbarWidgetPattern<string> | ToolbarWidgetGroupPattern<string>)[];
-    let fakeControls: jasmine.SpyObj<ToolbarWidgetGroupControls>;
-
-    beforeEach(() => {
-      fakeControls = jasmine.createSpyObj<ToolbarWidgetGroupControls>('fakeControls', [
-        'next',
-        'prev',
-        'first',
-        'last',
-        'unfocus',
-        'trigger',
-        'goto',
-        'setDefaultState',
-        'isOnFirstItem',
-        'isOnLastItem',
-      ]);
-      toolbarInputs = {
-        activeItem: signal(undefined),
-        orientation: signal('horizontal'),
-        textDirection: signal('ltr'),
-        disabled: signal(false),
-        softDisabled: signal(true),
-        wrap: signal(false),
-      };
-      const widgetInputs = [
-        {disabled: signal(false)},
-        {
-          disabled: signal(false),
-          controls: signal(fakeControls),
-        },
-        {disabled: signal(false)},
-      ];
-      const {toolbar: newToolbar, items: newItems} = createToolbar<string>(
-        widgetInputs,
-        toolbarInputs,
-      );
-      toolbar = newToolbar;
-      items = newItems;
-
-      // Set the widget group as the active item for tests.
-      toolbarInputs.activeItem.set(items[1]);
-    });
-
-    it('should call "next" on the group handler when navigating next (horizontal)', () => {
-      fakeControls.isOnLastItem.and.returnValue(false);
-      toolbar.onKeydown(right());
-      expect(fakeControls.next).toHaveBeenCalledWith(false);
-    });
-
-    it('should call "next" on the group handler when navigating next (vertical)', () => {
-      fakeControls.isOnLastItem.and.returnValue(false);
-      toolbarInputs.orientation.set('vertical');
-      toolbar.onKeydown(down());
-      expect(fakeControls.next).toHaveBeenCalledWith(false);
-    });
-
-    it('should navigate to the next widget if the group allows it', () => {
-      fakeControls.isOnLastItem.and.returnValue(true);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[2]);
-      expect(fakeControls.unfocus).toHaveBeenCalled();
-    });
-
-    it('should not navigate to the next widget if the group prevents it', () => {
-      fakeControls.isOnLastItem.and.returnValue(false);
-      toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-      expect(fakeControls.next).toHaveBeenCalledWith(false);
-    });
-
-    it('should call "prev" on the group handler when navigating previous (horizontal)', () => {
-      fakeControls.isOnFirstItem.and.returnValue(false);
-      toolbar.onKeydown(left());
-      expect(fakeControls.prev).toHaveBeenCalledWith(false);
-    });
-
-    it('should call "prev" on the group handler when navigating previous (vertical)', () => {
-      fakeControls.isOnFirstItem.and.returnValue(false);
-      toolbarInputs.orientation.set('vertical');
-      toolbar.onKeydown(up());
-      expect(fakeControls.prev).toHaveBeenCalledWith(false);
-    });
-
-    it('should navigate to the previous widget if the group allows it', () => {
-      fakeControls.isOnFirstItem.and.returnValue(true);
-      toolbar.onKeydown(left());
-      expect(toolbarInputs.activeItem()).toBe(items[0]);
-      expect(fakeControls.unfocus).toHaveBeenCalled();
-    });
-
-    it('should not navigate to the previous widget if the group prevents it', () => {
-      fakeControls.isOnFirstItem.and.returnValue(false);
-      toolbar.onKeydown(left());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-      expect(fakeControls.prev).toHaveBeenCalledWith(false);
-    });
-
-    it('should call "unfocus" on the group handler on Home', () => {
-      toolbar.onKeydown(home());
-      expect(fakeControls.unfocus).toHaveBeenCalled();
-      expect(toolbarInputs.activeItem()).toBe(items[0]); // Also moves focus
-    });
-
-    it('should call "unfocus" on the group handler on End', () => {
-      toolbar.onKeydown(end());
-      expect(fakeControls.unfocus).toHaveBeenCalled();
-      expect(toolbarInputs.activeItem()).toBe(items[2]); // Also moves focus
-    });
-
-    it('should call "trigger" on the group handler on Enter', () => {
+  describe('Selection', () => {
+    it('should toggle the active item on Enter', () => {
+      const {toolbar} = getPatterns();
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       toolbar.onKeydown(enter());
-      expect(fakeControls.trigger).toHaveBeenCalled();
+      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      toolbar.onKeydown(enter());
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should call "trigger" on the group handler on Space', () => {
+    it('should toggle the active item on Space', () => {
+      const {toolbar} = getPatterns();
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       toolbar.onKeydown(space());
-      expect(fakeControls.trigger).toHaveBeenCalled();
+      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      toolbar.onKeydown(space());
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should call "next" with wrap on the group handler (horizontal)', () => {
-      toolbar.onKeydown(down());
-      expect(fakeControls.next).toHaveBeenCalledWith(true);
+    it('should toggle the active item on click', () => {
+      const {toolbar, items} = getPatterns();
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      toolbar.onClick(clickItem(items[0]));
+      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      toolbar.onClick(clickItem(items[0]));
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should call "next" with wrap on the group handler (vertical)', () => {
-      toolbarInputs.orientation.set('vertical');
+    it('should be able to select multiple items in the toolbar', () => {
+      const {toolbar} = getPatterns();
+      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
+
+      // Select first item
+      toolbar.onKeydown(enter());
+      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
+
+      // Navigate to and select second item
       toolbar.onKeydown(right());
-      expect(fakeControls.next).toHaveBeenCalledWith(true);
+      toolbar.onKeydown(space());
+      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      expect(getItem(toolbar, 'item 1').selected()).toBeTrue();
     });
 
-    it('should call "prev" with wrap on the group handler (horizontal)', () => {
-      toolbar.onKeydown(up());
-      expect(fakeControls.prev).toHaveBeenCalledWith(true);
-    });
+    it('should not be able to select multiple items in a group', () => {
+      const {toolbar} = getPatterns();
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
+      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
 
-    it('should call "prev" with wrap on the group handler (vertical)', () => {
-      toolbarInputs.orientation.set('vertical');
-      toolbar.onKeydown(left());
-      expect(fakeControls.prev).toHaveBeenCalledWith(true);
-    });
-
-    it('should call "first" when navigating into a group from the previous item', () => {
-      toolbarInputs.activeItem.set(items[0]);
+      // Navigate to and select first item in group
       toolbar.onKeydown(right());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-      expect(fakeControls.first).toHaveBeenCalled();
+      toolbar.onKeydown(right());
+      toolbar.onKeydown(enter());
+      expect(getItem(toolbar, 'item 2').selected()).toBeTrue();
+      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
+
+      // Navigate to and select second item in group
+      toolbar.onKeydown(right());
+      toolbar.onKeydown(enter());
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
+      expect(getItem(toolbar, 'item 3').selected()).toBeTrue();
     });
 
-    it('should call "last" when navigating into a group from the next item', () => {
-      toolbarInputs.activeItem.set(items[2]);
-      toolbar.onKeydown(left());
-      expect(toolbarInputs.activeItem()).toBe(items[1]);
-      expect(fakeControls.last).toHaveBeenCalled();
+    it('should not select disabled items', () => {
+      const {toolbar, items} = getPatterns();
+      items[1].inputs.disabled.set(true);
+
+      // Navigate to disabled item
+      toolbar.onKeydown(right());
+      expect(toolbar.activeItem()?.value()).toBe('item 1');
+
+      // Try to select disabled item
+      toolbar.onKeydown(enter());
+      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
+    });
+
+    it('should not select items in a disabled group', () => {
+      const {toolbar, items, group0} = getPatterns();
+      group0.disabled.set(true);
+
+      toolbar.onClick(clickItem(items[2]));
+      expect(toolbar.activeItem()?.value()).toBe('item 2');
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
+
+      toolbar.onKeydown(right());
+      toolbar.onKeydown(enter());
+      expect(toolbar.activeItem()?.value()).toBe('item 3');
+      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
     });
   });
 });

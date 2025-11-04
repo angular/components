@@ -208,7 +208,7 @@ export class Tree<V> {
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
-    this._pattern.inputs.activeItem()?.element().scrollIntoView(options);
+    this._pattern.inputs.activeItem()?.element()?.scrollIntoView(options);
   }
 }
 

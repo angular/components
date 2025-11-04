@@ -47,7 +47,7 @@ export class TabPattern {
   readonly disabled: SignalLike<boolean>;
 
   /** The html element that should receive focus. */
-  readonly element: SignalLike<HTMLElement>;
+  readonly element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the tab is selectable. */
   readonly selectable = () => true;

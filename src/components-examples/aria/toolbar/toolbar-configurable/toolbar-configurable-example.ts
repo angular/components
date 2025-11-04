@@ -2,10 +2,16 @@ import {Component} from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';
+import {
+  SimpleCombobox,
+  SimpleToolbarButton,
+  SimpleToolbarRadioButton,
+  SimpleToolbarToggleButton,
+} from '../simple-toolbar';
 
-/** @title Configurable CDK Radio Group */
+/** @title Configurable Aria Toolbar Example */
 @Component({
   selector: 'toolbar-configurable-example',
   templateUrl: 'toolbar-configurable-example.html',
@@ -13,6 +19,11 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
   imports: [
     Toolbar,
     ToolbarWidget,
+    ToolbarWidgetGroup,
+    SimpleCombobox,
+    SimpleToolbarButton,
+    SimpleToolbarRadioButton,
+    SimpleToolbarToggleButton,
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -21,23 +32,32 @@ import {Toolbar, ToolbarWidget} from '@angular/aria/toolbar';
   ],
 })
 export class ToolbarConfigurableExample {
-  softDisabled = new FormControl(true, {nonNullable: true});
-  wrap = new FormControl(true, {nonNullable: true});
-  toolbarDisabled = new FormControl(false, {nonNullable: true});
+  wrap = true;
+  softDisabled = true;
+  toolbarDisabled = false;
   orientation: 'vertical' | 'horizontal' = 'horizontal';
 
-  fruits = ['Apple', 'Apricot', 'Banana'];
-  buttonFruits = ['Pear', 'Blueberry', 'Cherry', 'Date'];
+  widgets = [
+    'Undo',
+    'Redo',
+    'Bold',
+    'Italic',
+    'Underline',
+    'Text style',
+    'Align left',
+    'Align center',
+    'Align right',
+    'Checklist',
+    'Bullet list',
+    'Numbered list',
+  ];
 
-  // Radio group controls
-  disabled = new FormControl(false, {nonNullable: true});
-  readonly = new FormControl(false, {nonNullable: true});
+  groups = ['Alignment options', 'List options'];
 
-  // Control for which radio options are individually disabled
-  disabledOptions: string[] = ['Banana'];
-  disabledButtonOptions: string[] = ['Pear'];
+  disabledGroups: string[] = [];
+  disabledWidgets: string[] = [];
 
-  test(x: String) {
-    console.log(x);
+  isDisabled(value: string) {
+    return this.disabledWidgets.includes(value) || this.disabledGroups.includes(value);
   }
 }
