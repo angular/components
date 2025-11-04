@@ -508,7 +508,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
       .withFlexibleDimensions(false)
       .withViewportMargin(this._viewportMargin)
-      .withScrollableContainers(scrollableAncestors);
+      .withScrollableContainers(scrollableAncestors)
+      .withPopoverLocation('global');
 
     strategy.positionChanges.pipe(takeUntil(this._destroyed)).subscribe(change => {
       this._updateCurrentPositionClass(change.connectionPair);
@@ -528,6 +529,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
+      usePopover: true,
     });
 
     this._updatePosition(this._overlayRef);
