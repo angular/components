@@ -26,5 +26,5 @@ export interface PositionStrategy {
    * Gets the element in the DOM after which to insert
    * the overlay when it is rendered out as a popover.
    */
-  getPopoverInsertionPoint?(): Element;
+  getPopoverInsertionPoint?(): Element | null;
 }

@@ -67,8 +67,12 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     host.classList.add('cdk-overlay-popover');
   }
 
-  if (overlayConfig.usePopover && overlayConfig.positionStrategy?.getPopoverInsertionPoint) {
-    overlayConfig.positionStrategy.getPopoverInsertionPoint().after(host);
+  const customInsertionPoint = overlayConfig.usePopover
+    ? overlayConfig.positionStrategy?.getPopoverInsertionPoint?.()
+    : null;
+
+  if (customInsertionPoint) {
+    customInsertionPoint.after(host);
   } else {
     overlayContainer.getContainerElement().appendChild(host);
   }
