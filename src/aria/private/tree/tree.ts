@@ -93,8 +93,8 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
   /** Whether the item is active. */
   readonly active = computed(() => this.tree().activeItem() === this);
 
-  /** The tabindex of the item. */
-  readonly tabindex = computed(() => this.tree().listBehavior.getItemTabindex(this));
+  /** The tab index of the item. */
+  readonly tabIndex = computed(() => this.tree().listBehavior.getItemTabindex(this));
 
   /** Whether the item is selected. */
   readonly selected: SignalLike<boolean | undefined> = computed(() => {
@@ -188,11 +188,11 @@ export class TreePattern<V> {
   /** The roow is always visible. */
   readonly visible = () => true;
 
-  /** The tabindex of the tree. */
-  readonly tabindex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabindex());
+  /** The tab index of the tree. */
+  readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active item. */
-  readonly activedescendant = computed(() => this.listBehavior.activedescendant());
+  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** The direct children of the root (top-level tree items). */
   readonly children = computed(() =>

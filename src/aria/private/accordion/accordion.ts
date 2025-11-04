@@ -103,8 +103,8 @@ export class AccordionTriggerPattern {
   /** Id of the accordion panel controlled by the trigger. */
   controls = computed(() => this.inputs.accordionPanel()?.id());
 
-  /** The tabindex of the trigger. */
-  tabindex = computed(() => (this.inputs.accordionGroup().focusManager.isFocusable(this) ? 0 : -1));
+  /** The tab index of the trigger. */
+  tabIndex = computed(() => (this.inputs.accordionGroup().focusManager.isFocusable(this) ? 0 : -1));
 
   /** Whether the trigger is disabled. Disabling an accordion group disables all the triggers. */
   disabled = computed(() => this.inputs.disabled() || this.inputs.accordionGroup().disabled());

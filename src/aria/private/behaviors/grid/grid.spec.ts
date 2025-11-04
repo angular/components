@@ -74,7 +74,7 @@ describe('Grid', () => {
   });
 
   describe('cellTabIndex', () => {
-    it('should return the tabindex for a cell', () => {
+    it('should return the tab index for a cell', () => {
       const cells = createTestGrid(createGridA);
       const grid = setupGrid(signal(cells));
 

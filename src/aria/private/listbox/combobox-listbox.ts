@@ -28,13 +28,13 @@ export class ComboboxListboxPattern<V>
   role = computed(() => 'listbox' as const);
 
   /** The id of the active (focused) item in the listbox. */
-  activeId = computed(() => this.listBehavior.activedescendant());
+  activeId = computed(() => this.listBehavior.activeDescendant());
 
   /** The list of options in the listbox. */
   items: SignalLike<OptionPattern<V>[]> = computed(() => this.inputs.items());
 
-  /** The tabindex for the listbox. Always -1 because the combobox handles focus. */
-  override tabindex: SignalLike<-1 | 0> = () => -1;
+  /** The tab index for the listbox. Always -1 because the combobox handles focus. */
+  override tabIndex: SignalLike<-1 | 0> = () => -1;
 
   constructor(override readonly inputs: ComboboxListboxInputs<V>) {
     if (inputs.combobox()) {

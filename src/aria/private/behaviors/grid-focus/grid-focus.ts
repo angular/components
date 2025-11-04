@@ -96,16 +96,16 @@ export class GridFocus<T extends GridFocusCell> {
     return gridCells.length === 0 || gridCells.every(row => row.every(cell => cell.disabled()));
   }
 
-  /** The tabindex for the grid container. */
-  getGridTabindex(): -1 | 0 {
+  /** The tab index for the grid container. */
+  getGridTabIndex(): -1 | 0 {
     if (this.isGridDisabled()) {
       return 0;
     }
     return this.inputs.focusMode() === 'activedescendant' ? 0 : -1;
   }
 
-  /** Returns the tabindex for the given grid cell cell. */
-  getCellTabindex(cell: T): -1 | 0 {
+  /** Returns the tab index for the given grid cell cell. */
+  getCellTabIndex(cell: T): -1 | 0 {
     if (this.isGridDisabled()) {
       return -1;
     }

@@ -282,10 +282,10 @@ describe('Tree Pattern', () => {
       expect(item1.active()).toBe(true);
     });
 
-    it('should correctly compute tabindex state', () => {
+    it('should correctly compute tab index state', () => {
       const {tree, allItems} = createTree(treeExample, treeInputs);
       const item0 = getItemByValue(allItems(), 'Item 0');
-      expect(item0.tabindex()).toBe(tree.listBehavior.getItemTabindex(item0));
+      expect(item0.tabIndex()).toBe(tree.listBehavior.getItemTabindex(item0));
     });
 
     it('should navigate next on ArrowDown (vertical)', () => {

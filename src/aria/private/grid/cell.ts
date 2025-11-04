@@ -82,7 +82,7 @@ export class GridCellPattern implements GridCell {
     this.inputs.grid().gridBehavior.cellTabIndex(this),
   );
 
-  /** The `tabindex` for the cell. If the cell contains a widget, the cell's tabindex is -1. */
+  /** The tab index for the cell. If the cell contains a widget, the cell's tab index is -1. */
   readonly tabIndex: SignalLike<-1 | 0> = computed(() =>
     this.inputs.widget() !== undefined ? -1 : this._tabIndex(),
   );
@@ -101,7 +101,7 @@ export class GridCellPattern implements GridCell {
     this.selectable = inputs.selectable;
   }
 
-  /** Gets the `tabindex` for the widget within the cell. */
+  /** Gets the tab index for the widget within the cell. */
   widgetTabIndex(): -1 | 0 {
     return this._tabIndex();
   }
