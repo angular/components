@@ -352,10 +352,16 @@ describe('Tree', () => {
         expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
+      it('should set tabindex="0" for the tree when disabled when softDisabled is false', () => {
+        updateTree({disabled: true, focusMode: 'roving', softDisabled: false});
+
+        expect(treeElement.getAttribute('tabindex')).toBe('0');
+      });
+
       it('should set tabindex="0" for the tree when disabled', () => {
         updateTree({disabled: true, focusMode: 'roving'});
 
-        expect(treeElement.getAttribute('tabindex')).toBe('0');
+        expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should set initial focus (tabindex="0") on the first non-disabled item if no value is set', () => {

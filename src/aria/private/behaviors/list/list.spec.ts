@@ -115,11 +115,11 @@ describe('List Behavior', () => {
     });
   });
 
-  describe('with disabled: true', () => {
+  describe('with disabled: true and softDisabled is false', () => {
     let list: TestList<string>;
 
     beforeEach(() => {
-      const patterns = getDefaultPatterns({disabled: signal(true)});
+      const patterns = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       list = patterns.list;
     });
 
@@ -142,6 +142,36 @@ describe('List Behavior', () => {
 
     it('should have a tabindex of 0', () => {
       expect(list.tabindex()).toBe(0);
+    });
+  });
+
+  describe('with disabled: true', () => {
+    let list: TestList<string>;
+
+    beforeEach(() => {
+      const patterns = getDefaultPatterns({disabled: signal(true)});
+      list = patterns.list;
+    });
+
+    it('should report disabled state', () => {
+      expect(list.disabled()).toBe(true);
+    });
+
+    it('should not change active index on navigation', () => {
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
+      list.next();
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]);
+      list.last();
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
+    });
+
+    it('should not select items', () => {
+      list.next({selectOne: true});
+      expect(list.inputs.value()).toEqual([]);
+    });
+
+    it('should have a tabindex of 0', () => {
+      expect(list.tabindex()).toBe(-1);
     });
   });
 
