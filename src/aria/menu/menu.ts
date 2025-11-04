@@ -31,7 +31,6 @@ import {
   DeferredContentAware,
 } from '@angular/aria/private';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {Directionality} from '@angular/cdk/bidi';
 
 /**
@@ -59,10 +58,11 @@ export class MenuTrigger<V> {
   /** A reference to the menu trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
+  readonly textDirection = inject(Directionality).valueSignal;
+
   /** A reference to the menu element. */
   readonly element: HTMLButtonElement = this._elementRef.nativeElement;
-
-  // TODO(wagnermaciel): See we can remove the need to pass in a submenu.
 
   /** The menu associated with the trigger. */
   menu = input<Menu<V> | undefined>(undefined);
@@ -72,6 +72,7 @@ export class MenuTrigger<V> {
 
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
+    textDirection: this.textDirection,
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),
   });
@@ -143,12 +144,7 @@ export class Menu<V> {
   readonly element: HTMLElement = this._elementRef.nativeElement;
 
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
-  /** A signal wrapper for directionality. */
-  readonly textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** The unique ID of the menu. */
   readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-', true));
@@ -278,12 +274,7 @@ export class MenuBar<V> {
   readonly element: HTMLElement = this._elementRef.nativeElement;
 
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
-  /** A signal wrapper for directionality. */
-  readonly textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** The value of the menu. */
   readonly value = model<V[]>([]);
