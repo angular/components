@@ -32,6 +32,7 @@ export {
   createGlobalPositionStrategy,
 } from './position/global-position-strategy';
 export {
+  FlexibleOverlayPopoverLocation,
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,

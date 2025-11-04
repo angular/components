@@ -77,8 +77,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     // (undocumented)
     static ngAcceptInputType_push: unknown;
     // (undocumented)
-    static ngAcceptInputType_usePopover: unknown;
-    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -98,7 +96,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     push: boolean;
     scrollStrategy: ScrollStrategy;
     transformOriginSelector: string;
-    usePopover: boolean;
+    usePopover: FlexibleOverlayPopoverLocation | null;
     viewportMargin: ViewportMargin;
     width: number | string;
     // (undocumented)
@@ -150,7 +148,7 @@ export interface CdkConnectedOverlayConfig {
     // (undocumented)
     transformOriginSelector?: string;
     // (undocumented)
-    usePopover?: boolean;
+    usePopover?: FlexibleOverlayPopoverLocation | null;
     // (undocumented)
     viewportMargin?: ViewportMargin;
     // (undocumented)
@@ -286,7 +284,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // (undocumented)
     detach(): void;
     dispose(): void;
-    getPopoverInsertionPoint(): Element;
+    getPopoverInsertionPoint(): Element | null;
     _origin: FlexibleConnectedPositionStrategyOrigin;
     positionChanges: Observable<ConnectedOverlayPositionChange>;
     get positions(): ConnectionPositionPair[];
@@ -298,6 +296,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withFlexibleDimensions(flexibleDimensions?: boolean): this;
     withGrowAfterOpen(growAfterOpen?: boolean): this;
     withLockedPosition(isLocked?: boolean): this;
+    withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
     withScrollableContainers(scrollables: CdkScrollable[]): this;
@@ -310,6 +309,9 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | (Po
     width?: number;
     height?: number;
 });
+
+// @public
+export type FlexibleOverlayPopoverLocation = 'global' | 'inline';
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {

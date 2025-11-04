@@ -38,6 +38,7 @@ import {
   createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
+  FlexibleOverlayPopoverLocation,
 } from './position/flexible-connected-position-strategy';
 import {createRepositionScrollStrategy, ScrollStrategy} from './scroll/index';
 
@@ -127,7 +128,7 @@ export interface CdkConnectedOverlayConfig {
   growAfterOpen?: boolean;
   push?: boolean;
   disposeOnNavigation?: boolean;
-  usePopover?: boolean;
+  usePopover?: FlexibleOverlayPopoverLocation | null;
   matchWidth?: boolean;
 }
 
@@ -251,8 +252,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   disposeOnNavigation: boolean = false;
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
-  @Input({alias: 'cdkConnectedOverlayUsePopover', transform: booleanAttribute})
-  usePopover: boolean = false;
+  @Input({alias: 'cdkConnectedOverlayUsePopover'})
+  usePopover: FlexibleOverlayPopoverLocation | null = null;
 
   /** Whether the overlay should match the trigger's width. */
   @Input({alias: 'cdkConnectedOverlayMatchWidth', transform: booleanAttribute})
@@ -377,7 +378,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,
       disposeOnNavigation: this.disposeOnNavigation,
-      usePopover: this.usePopover,
+      usePopover: !!this.usePopover,
     });
 
     if (this.height || this.height === 0) {
@@ -423,7 +424,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)
       .withLockedPosition(this.lockPosition)
-      .withTransformOriginOn(this.transformOriginSelector);
+      .withTransformOriginOn(this.transformOriginSelector)
+      .withPopoverLocation(this.usePopover === 'global' ? 'global' : 'inline');
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
