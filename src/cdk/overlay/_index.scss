@@ -190,11 +190,13 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     background: none;
     border: none;
     padding: 0;
-    color: inherit;
     outline: 0;
     overflow: visible;
     position: fixed;
     pointer-events: none;
+    white-space: normal;
+    line-height: normal;
+    text-decoration: none;
 
     // These are important so the overlay can be measured before it's fully inserted.
     width: 100%;
