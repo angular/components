@@ -267,7 +267,7 @@ export function createCloseScrollStrategy(injector: Injector, config?: CloseScro
 export function createFlexibleConnectedPositionStrategy(injector: Injector, origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
 
 // @public
-export function createGlobalPositionStrategy(injector: Injector): GlobalPositionStrategy;
+export function createGlobalPositionStrategy(_injector: Injector): GlobalPositionStrategy;
 
 // @public
 export function createNoopScrollStrategy(): NoopScrollStrategy;
@@ -327,7 +327,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
 
 // @public
 export class GlobalPositionStrategy implements PositionStrategy {
-    constructor(injector?: Injector);
     apply(): void;
     // (undocumented)
     attach(overlayRef: OverlayRef): void;
@@ -336,7 +335,6 @@ export class GlobalPositionStrategy implements PositionStrategy {
     centerVertically(offset?: string): this;
     dispose(): void;
     end(value?: string): this;
-    getPopoverInsertionPoint(): Element;
     // @deprecated
     height(value?: string): this;
     left(value?: string): this;
@@ -525,7 +523,7 @@ export interface PositionStrategy {
     attach(overlayRef: OverlayRef): void;
     detach?(): void;
     dispose(): void;
-    getPopoverInsertionPoint?(): Element;
+    getPopoverInsertionPoint?(): Element | null;
 }
 
 // @public
