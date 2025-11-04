@@ -515,8 +515,8 @@ export class MenuTriggerPattern<V> {
   /** The menu associated with the trigger. */
   menu: SignalLike<MenuPattern<V> | undefined>;
 
-  /** The tabindex of the menu trigger. */
-  tabindex = computed(() => (this.expanded() && this.menu()?.inputs.activeItem() ? -1 : 0));
+  /** The tab index of the menu trigger. */
+  tabIndex = computed(() => (this.expanded() && this.menu()?.inputs.activeItem() ? -1 : 0));
 
   /** Handles keyboard events for the menu trigger. */
   keydownManager = computed(() => {
@@ -607,8 +607,8 @@ export class MenuItemPattern<V> implements ListItem<V> {
   /** Whether the menu item is active. */
   isActive = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
 
-  /** The tabindex of the menu item. */
-  tabindex = computed(() => {
+  /** The tab index of the menu item. */
+  tabIndex = computed(() => {
     if (this.submenu() && this.submenu()?.inputs.activeItem()) {
       return -1;
     }

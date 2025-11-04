@@ -70,8 +70,8 @@ export class TabPattern {
   /** Whether the tab is selected. */
   readonly selected = computed(() => !!this.inputs.tablist().inputs.value().includes(this.value()));
 
-  /** The tabindex of the tab. */
-  readonly tabindex = computed(() => this.inputs.tablist().listBehavior.getItemTabindex(this));
+  /** The tab index of the tab. */
+  readonly tabIndex = computed(() => this.inputs.tablist().listBehavior.getItemTabindex(this));
 
   /** The id of the tabpanel associated with the tab. */
   readonly controls = computed(() => this.inputs.tabpanel()?.id());
@@ -111,8 +111,8 @@ export class TabPanelPattern {
   /** Whether the tabpanel is hidden. */
   readonly hidden = computed(() => this.inputs.tab()?.expanded() === false);
 
-  /** The tabindex of this tabpanel. */
-  readonly tabindex = computed(() => (this.hidden() ? -1 : 0));
+  /** The tab index of this tabpanel. */
+  readonly tabIndex = computed(() => (this.hidden() ? -1 : 0));
 
   /** The aria-labelledby value for this tabpanel. */
   readonly labelledBy = computed(() =>
@@ -149,11 +149,11 @@ export class TabListPattern {
   /** Whether the tablist is disabled. */
   readonly disabled: SignalLike<boolean>;
 
-  /** The tabindex of the tablist. */
-  readonly tabindex = computed(() => this.listBehavior.tabindex());
+  /** The tab index of the tablist. */
+  readonly tabIndex = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active tab. */
-  readonly activedescendant = computed(() => this.listBehavior.activedescendant());
+  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** Whether selection should follow focus. */
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');

@@ -51,22 +51,22 @@ describe('List Focus', () => {
       focusManager = getListFocus({focusMode: signal('roving')});
     });
 
-    it('should set the list tabindex to -1', () => {
-      expect(focusManager.getListTabindex()).toBe(-1);
+    it('should set the list   to -1', () => {
+      expect(focusManager.getListTabIndex()).toBe(-1);
     });
 
-    it('should set the activedescendant to undefined', () => {
+    it('should set the active descendant to undefined', () => {
       expect(focusManager.getActiveDescendant()).toBeUndefined();
     });
 
-    it('should set the tabindex based on the active index', () => {
+    it('should set the tab index based on the active index', () => {
       const items = focusManager.inputs.items() as TestItem[];
       focusManager.inputs.activeItem.set(focusManager.inputs.items()[2]);
-      expect(focusManager.getItemTabindex(items[0])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[1])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[2])).toBe(0);
-      expect(focusManager.getItemTabindex(items[3])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[4])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[0])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[1])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[2])).toBe(0);
+      expect(focusManager.getItemTabIndex(items[3])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[4])).toBe(-1);
     });
   });
 
@@ -77,22 +77,22 @@ describe('List Focus', () => {
       focusManager = getListFocus({focusMode: signal('activedescendant')});
     });
 
-    it('should set the list tabindex to 0', () => {
-      expect(focusManager.getListTabindex()).toBe(0);
+    it('should set the list tab index to 0', () => {
+      expect(focusManager.getListTabIndex()).toBe(0);
     });
 
     it('should set the activedescendant to the active items id', () => {
       expect(focusManager.getActiveDescendant()).toBe(focusManager.inputs.items()[0].id());
     });
 
-    it('should set the tabindex of all items to -1', () => {
+    it('should set the tab index of all items to -1', () => {
       const items = focusManager.inputs.items() as TestItem[];
       focusManager.inputs.activeItem.set(focusManager.inputs.items()[0]);
-      expect(focusManager.getItemTabindex(items[0])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[1])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[2])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[3])).toBe(-1);
-      expect(focusManager.getItemTabindex(items[4])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[0])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[1])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[2])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[3])).toBe(-1);
+      expect(focusManager.getItemTabIndex(items[4])).toBe(-1);
     });
 
     it('should update the activedescendant of the list when navigating', () => {

@@ -116,7 +116,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   expanded = signal(false);
 
   /** The ID of the active item in the combobox. */
-  activedescendant = computed(() => this.inputs.popupControls()?.activeId() ?? null);
+  activeDescendant = computed(() => this.inputs.popupControls()?.activeId() ?? null);
 
   /** The currently highlighted item in the combobox. */
   highlightedItem = signal<T | undefined>(undefined);

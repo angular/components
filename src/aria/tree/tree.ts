@@ -77,8 +77,8 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '[attr.aria-orientation]': '_pattern.orientation()',
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-activedescendant]': '_pattern.activedescendant()',
-    '[tabindex]': '_pattern.tabindex()',
+    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
@@ -230,7 +230,7 @@ export class Tree<V> {
     '[attr.aria-level]': '_pattern.level()',
     '[attr.aria-setsize]': '_pattern.setsize()',
     '[attr.aria-posinset]': '_pattern.posinset()',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
   },
 })
 export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {

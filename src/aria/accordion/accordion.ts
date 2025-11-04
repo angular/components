@@ -95,7 +95,7 @@ export class AccordionPanel {
     '[attr.aria-controls]': '_pattern.controls()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.tabindex]': '_pattern.tabindex()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': '_pattern.onFocus($event)',
@@ -122,7 +122,7 @@ export class AccordionTrigger {
    *
    * TODO(ok7sai): Consider move this to UI patterns.
    */
-  readonly hardDisabled = computed(() => this._pattern.disabled() && this._pattern.tabindex() < 0);
+  readonly hardDisabled = computed(() => this._pattern.disabled() && this._pattern.tabIndex() < 0);
 
   /** The accordion panel pattern controlled by this trigger. This is set by AccordionGroup. */
   readonly accordionPanel: WritableSignal<AccordionPanelPattern | undefined> = signal(undefined);

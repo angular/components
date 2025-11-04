@@ -64,10 +64,10 @@ export class List<T extends ListItem<V>, V> {
   disabled = computed(() => this.focusBehavior.isListDisabled());
 
   /** The id of the current active item. */
-  activedescendant = computed(() => this.focusBehavior.getActiveDescendant());
+  activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
-  /** The tabindex of the list. */
-  tabindex = computed(() => this.focusBehavior.getListTabindex());
+  /** The tab index of the list. */
+  tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The index of the currently active item in the list. */
   activeIndex = computed(() => this.focusBehavior.activeIndex());
@@ -100,9 +100,9 @@ export class List<T extends ListItem<V>, V> {
     });
   }
 
-  /** Returns the tabindex for the given item. */
+  /** Returns the tab index for the given item. */
   getItemTabindex(item: T) {
-    return this.focusBehavior.getItemTabindex(item);
+    return this.focusBehavior.getItemTabIndex(item);
   }
 
   /** Navigates to the first option in the list. */

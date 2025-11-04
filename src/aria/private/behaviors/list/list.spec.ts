@@ -76,36 +76,36 @@ describe('List Behavior', () => {
   }
 
   describe('with focusMode: "activedescendant"', () => {
-    it('should set the list tabindex to 0', () => {
+    it('should set the list tab index to 0', () => {
       const {list} = getDefaultPatterns({focusMode: signal('activedescendant')});
-      expect(list.tabindex()).toBe(0);
+      expect(list.tabIndex()).toBe(0);
     });
 
     it('should set the active descendant to the active item id', () => {
       const {list} = getDefaultPatterns({focusMode: signal('activedescendant')});
-      expect(list.activedescendant()).toBe('item-0');
+      expect(list.activeDescendant()).toBe('item-0');
       list.next();
-      expect(list.activedescendant()).toBe('item-1');
+      expect(list.activeDescendant()).toBe('item-1');
     });
 
-    it('should set item tabindex to -1', () => {
+    it('should set item tab index to -1', () => {
       const {list, items} = getDefaultPatterns({focusMode: signal('activedescendant')});
       expect(list.getItemTabindex(items[0])).toBe(-1);
     });
   });
 
   describe('with focusMode: "roving"', () => {
-    it('should set the list tabindex to -1', () => {
+    it('should set the list tab index to -1', () => {
       const {list} = getDefaultPatterns({focusMode: signal('roving')});
-      expect(list.tabindex()).toBe(-1);
+      expect(list.tabIndex()).toBe(-1);
     });
 
     it('should not set the active descendant', () => {
       const {list} = getDefaultPatterns({focusMode: signal('roving')});
-      expect(list.activedescendant()).toBeUndefined();
+      expect(list.activeDescendant()).toBeUndefined();
     });
 
-    it('should set the active item tabindex to 0 and others to -1', () => {
+    it('should set the active item tab index to 0 and others to -1', () => {
       const {list, items} = getDefaultPatterns({focusMode: signal('roving')});
       expect(list.getItemTabindex(items[0])).toBe(0);
       expect(list.getItemTabindex(items[1])).toBe(-1);
@@ -140,8 +140,8 @@ describe('List Behavior', () => {
       expect(list.inputs.value()).toEqual([]);
     });
 
-    it('should have a tabindex of 0', () => {
-      expect(list.tabindex()).toBe(0);
+    it('should have a tab index of 0', () => {
+      expect(list.tabIndex()).toBe(0);
     });
   });
 
@@ -171,7 +171,7 @@ describe('List Behavior', () => {
     });
 
     it('should have a tabindex of 0', () => {
-      expect(list.tabindex()).toBe(-1);
+      expect(list.tabIndex()).toBe(-1);
     });
   });
 

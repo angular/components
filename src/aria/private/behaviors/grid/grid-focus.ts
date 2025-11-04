@@ -95,7 +95,7 @@ export class GridFocus<T extends GridFocusCell> {
     return gridCells.length === 0 || gridCells.every(row => row.every(cell => cell.disabled()));
   });
 
-  /** The tabindex for the grid container. */
+  /** The tab index for the grid container. */
   readonly gridTabIndex = computed<-1 | 0>(() => {
     if (this.gridDisabled()) {
       return 0;
@@ -105,8 +105,8 @@ export class GridFocus<T extends GridFocusCell> {
 
   constructor(readonly inputs: GridFocusInputs & GridFocusDeps<T>) {}
 
-  /** Returns the tabindex for the given grid cell cell. */
-  getCellTabindex(cell: T): -1 | 0 {
+  /** Returns the tab index for the given grid cell cell. */
+  getCellTabIndex(cell: T): -1 | 0 {
     if (this.gridDisabled()) {
       return -1;
     }
