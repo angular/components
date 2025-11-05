@@ -1,10 +1,14 @@
 .example-combobox-container {
   position: relative;
-  width: 300px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-combobox-container:has([readonly='true']) {
+  width: 200px;
 }
 
 .example-combobox-input-container {
@@ -78,6 +82,7 @@
   overflow: auto;
   max-height: 10rem;
   padding: 0.5rem;
+  gap: 4px;
 }
 
 .example-option {
@@ -89,6 +94,26 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+}
+
+.example-option-text {
+  flex: 1;
+}
+
+.example-checkbox-blank-icon,
+.example-option[aria-selected='true'] .example-checkbox-filled-icon {
+  display: flex;
+  align-items: center;
+}
+
+.example-checkbox-filled-icon,
+.example-option[aria-selected='true'] .example-checkbox-blank-icon {
+  display: none;
+}
+
+.example-checkbox-blank-icon {
+  opacity: 0.6;
 }
 
 .example-selected-icon {
@@ -99,26 +124,17 @@
   visibility: visible;
 }
 
-.example-option[inert],
-.example-tree-item[inert] {
-  display: none;
+.example-option[aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+.example-option:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
 }
 
 .example-combobox-container:focus-within [data-active='true'] {
-  background: color-mix(
-    in srgb,
-    var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
-    transparent
-  );
-}
-
-.example-combobox-container:focus-within [data-active='true'][aria-selected='true'] {
-  background: color-mix(
-    in srgb,
-    var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
-    transparent
-  );
-  color: var(--mat-sys-primary);
+  outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 80%, transparent);
 }
 
 .example-tree {
