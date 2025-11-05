@@ -1,0 +1,28 @@
+<div ngCombobox #combobox="ngCombobox" class="example-combobox-container" [readonly]="true">
+  <div class="example-combobox-input-container">
+    <input
+      ngComboboxInput
+      class="example-combobox-input"
+      placeholder="Search..."
+      [(value)]="searchString"
+    />
+    <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
+  </div>
+
+  <div popover="manual" #popover class="example-popover">
+    <ng-template ngComboboxPopupContainer>
+      <div ngListbox [multi]="true" class="example-listbox">
+        @for (option of options(); track option) {
+          <div class="example-option" ngOption [value]="option" [label]="option">
+            <span>{{option}}</span>
+            <span
+              aria-hidden="true"
+              class="material-symbols-outlined example-icon example-selected-icon"
+              >check</span
+            >
+          </div>
+        }
+      </div>
+    </ng-template>
+  </div>
+</div>

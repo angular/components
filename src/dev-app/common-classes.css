@@ -68,7 +68,6 @@
 [aria-disabled='true'] .example-selectable:focus-within,
 [aria-activedescendant] .example-selectable:focus-within {
   outline-color: transparent;
-  border-radius: 0;
 }
 
 [aria-disabled='true'] .example-selectable[aria-selected='true'],

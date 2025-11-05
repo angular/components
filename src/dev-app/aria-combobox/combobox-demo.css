@@ -1,24 +1,21 @@
-.example-combobox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-    gap: 20px;
-    justify-items: center;
+.example-combobox-row {
+  display: flex;
+  gap: 20px;
 }
 
 .example-combobox-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    /* stylelint-disable material/no-prefixes */
-    width: fit-content;
-}
-
-.example-configurable-combobox-container {
-    padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 350px;
+  padding: 20px 0;
 }
 
 h2 {
-    font-size: 1.1rem;
+  font-size: 1.5rem;
+  padding-top: 20px;
 }
 
+h3 {
+    font-size: 1rem;
+}
