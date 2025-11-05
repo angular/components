@@ -2,8 +2,8 @@
 @use 'sass:map';
 
 @mixin color($theme) {
-  $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
-  $resizable-active-divider: mat.get-theme-color($theme, primary, 600);
+  $resizable-hover-divider: mat.get-theme-color($theme, primary, 60);
+  $resizable-active-divider: mat.get-theme-color($theme, primary, 60);
 
   // TODO: these styles don't really belong in the `color` part of the theme.
   // We should figure out a better place for them.

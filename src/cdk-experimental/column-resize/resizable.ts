@@ -182,12 +182,15 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
 
   private _listenForRowHoverEvents(): void {
     const element = this.elementRef.nativeElement!;
-    const takeUntilDestroyed = takeUntil<boolean>(this.destroyed);
 
     this.eventDispatcher
       .resizeOverlayVisibleForHeaderRow(_closest(element, HEADER_ROW_SELECTOR)!)
-      .pipe(takeUntilDestroyed)
+      .pipe(takeUntil(this.destroyed))
       .subscribe(hoveringRow => {
+        if (this._isDestroyed) {
+          return;
+        }
+
         if (hoveringRow) {
           const tooBigToResize =
             this.maxWidthPxInternal < Number.MAX_SAFE_INTEGER &&
@@ -195,15 +198,12 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
           element.classList.toggle(RESIZE_DISABLED_CLASS, tooBigToResize);
 
           if (!tooBigToResize) {
-            if (!this.overlayRef) {
-              this.overlayRef = this._createOverlayForHandle();
-            }
-
+            this.overlayRef ??= this._createOverlayForHandle();
             this._showHandleOverlay();
           }
-        } else if (this.overlayRef) {
+        } else {
           // todo - can't detach during an active resize - need to work that out
-          this.overlayRef.detach();
+          this.overlayRef?.detach();
         }
       });
   }
@@ -258,7 +258,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   private _cleanUpAfterResize(columnSize: ColumnSizeAction): void {
     this.elementRef.nativeElement!.classList.remove(OVERLAY_ACTIVE_CLASS);
 
-    if (this.overlayRef && this.overlayRef.hasAttached()) {
+    if (this.overlayRef?.hasAttached()) {
       this._updateOverlayHandleHeight();
       this.overlayRef.updatePosition();
 
@@ -293,18 +293,20 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   }
 
   private _showHandleOverlay(): void {
-    this._updateOverlayHandleHeight();
-    this.overlayRef!.attach(this._createHandlePortal());
+    if (!this._isDestroyed) {
+      this._updateOverlayHandleHeight();
+      this.overlayRef?.attach(this._createHandlePortal());
 
-    // Needed to ensure that all of the lifecycle hooks inside the overlay run immediately.
-    this.changeDetectorRef.markForCheck();
+      // Needed to ensure that all of the lifecycle hooks inside the overlay run immediately.
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   private _updateOverlayHandleHeight() {
     runInInjectionContext(this.injector, () => {
       afterNextRender({
         write: () => {
-          this.overlayRef!.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
+          this.overlayRef?.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
         },
       });
     });
