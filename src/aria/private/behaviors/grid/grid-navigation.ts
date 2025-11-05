@@ -146,6 +146,8 @@ export class GridNavigation<T extends GridNavigationCell> {
     wrap: 'continuous' | 'loop' | 'nowrap',
     allowDisabled: boolean = false,
   ): RowCol | undefined {
+    if (this.inputs.gridFocus.gridDisabled()) return undefined;
+
     const fromCell = this.inputs.grid.getCell(fromCoords);
     const maxRowCount = this.inputs.grid.maxRowCount();
     const maxColCount = this.inputs.grid.maxColCount();

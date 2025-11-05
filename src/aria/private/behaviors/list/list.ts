@@ -226,7 +226,7 @@ export class List<T extends ListItem<V>, V> {
 
     const moved = operation();
 
-    if (moved && !this.disabled()) {
+    if (moved) {
       this.updateSelection(opts);
     }
 

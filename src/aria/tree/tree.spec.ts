@@ -358,10 +358,10 @@ describe('Tree', () => {
         expect(treeElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set tabindex="0" for the tree when disabled', () => {
+      it('should set tabindex="0" for the tree when disabled when softDisabled is true', () => {
         updateTree({disabled: true, focusMode: 'roving'});
 
-        expect(treeElement.getAttribute('tabindex')).toBe('-1');
+        expect(treeElement.getAttribute('tabindex')).toBe('0');
       });
 
       it('should set initial focus (tabindex="0") on the first non-disabled item if no value is set', () => {

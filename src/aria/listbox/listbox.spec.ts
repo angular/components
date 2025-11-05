@@ -195,14 +195,9 @@ describe('Listbox', () => {
         expect(listboxElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set tabindex="0" for the listbox when disabled and focusMode is "roving when softDisabled is false"', () => {
-        setupListbox({disabled: true, focusMode: 'roving', softDisabled: false});
-        expect(listboxElement.getAttribute('tabindex')).toBe('0');
-      });
-
-      it('should set tabindex="-1" for the listbox when disabled and focusMode is "roving"', () => {
+      it('should set tabindex="0" for the listbox when disabled and focusMode is "roving"', () => {
         setupListbox({disabled: true, focusMode: 'roving'});
-        expect(listboxElement.getAttribute('tabindex')).toBe('-1');
+        expect(listboxElement.getAttribute('tabindex')).toBe('0');
       });
 
       it('should set initial focus (tabindex="0") on the first non-disabled option if no value is set', () => {
@@ -645,7 +640,7 @@ describe('Listbox', () => {
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should not skip disabled options with ArrowDown when completely disabled', () => {
+        it('should not be focusable ArrowDown when completely disabled', () => {
           setupListbox({
             focusMode,
             orientation: 'vertical',
@@ -654,7 +649,7 @@ describe('Listbox', () => {
           });
 
           down();
-          expect(isFocused(0)).toBe(true);
+          expect(isFocused(0)).toBe(false);
         });
       });
 
