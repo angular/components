@@ -49,6 +49,11 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** The ARIA role for the popup. */
   role: SignalLike<'listbox' | 'tree' | 'grid'>;
 
+  // TODO(wagnermaciel): Add validation that ensures only readonly comboboxes can have multi-select popups.
+
+  /** Whether multiple items in the popup can be selected at once. */
+  multi: SignalLike<boolean>;
+
   /** The ID of the active item in the popup. */
   activeId: SignalLike<string | undefined>;
 
@@ -56,7 +61,7 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   items: SignalLike<T[]>;
 
   /** Navigates to the given item in the popup. */
-  focus: (item: T) => void;
+  focus: (item: T, opts?: {focusElement?: boolean}) => void;
 
   /** Navigates to the next item in the popup. */
   next: () => void;
@@ -73,6 +78,9 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** Selects the current item in the popup. */
   select: (item?: T) => void;
 
+  /** Toggles the selection state of the given item in the popup. */
+  toggle: (item?: T) => void;
+
   /** Clears the selection state of the popup. */
   clearSelection: () => void;
 
@@ -82,8 +90,8 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** Returns the item corresponding to the given event. */
   getItem: (e: PointerEvent) => T | undefined;
 
-  /** Returns the currently selected item in the popup. */
-  getSelectedItem: () => T | undefined;
+  /** Returns the currently selected items in the popup. */
+  getSelectedItems: () => T[];
 
   /** Sets the value of the combobox based on the selected item. */
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
@@ -159,7 +167,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       const manager = new KeyboardEventManager()
         .on('ArrowDown', () => this.open({first: true}))
         .on('ArrowUp', () => this.open({last: true}))
-        .on('Escape', () => this.close({reset: true}));
+        .on('Escape', () => this.close({reset: !this.readonly()}));
 
       if (this.readonly()) {
         manager
@@ -181,14 +189,14 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last())
-      .on('Escape', () => this.close({reset: true}));
+      .on('Escape', () => this.close({reset: !this.readonly()}));
 
     if (this.readonly()) {
-      manager.on(' ', () => this.select({commit: true, close: true}));
+      manager.on(' ', () => this.select({commit: true, close: !popupControls.multi()}));
     }
 
     if (popupControls.role() === 'listbox') {
-      manager.on('Enter', () => this.select({commit: true, close: true}));
+      manager.on('Enter', () => this.select({commit: true, close: !popupControls.multi()}));
     }
 
     if (popupControls.role() === 'tree') {
@@ -228,7 +236,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
           }
         }
 
-        this.select({item, commit: true, close: true});
+        this.select({item, commit: true, close: !this.inputs.popupControls()?.multi()});
         this.inputs.inputEl()?.focus(); // Return focus to the input after selecting.
       }
 
@@ -273,7 +281,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
 
     if (this.inputs.filterMode() === 'manual') {
-      const searchTerm = this.inputs.popupControls()?.getSelectedItem()?.searchTerm();
+      const selectedItems = this.inputs.popupControls()?.getSelectedItems();
+      const searchTerm = selectedItems?.[0]?.searchTerm();
 
       if (searchTerm && this.inputs.inputValue!() !== searchTerm) {
         this.inputs.popupControls()?.clearSelection();
@@ -301,6 +310,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       !this.inputs.containerEl()?.contains(event.relatedTarget)
     ) {
       this.isFocused.set(false);
+
+      if (this.readonly()) {
+        this.close();
+        return;
+      }
+
       if (this.inputs.filterMode() !== 'manual') {
         this.commit();
       } else {
@@ -335,6 +350,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles filtering logic for the combobox. */
   onFilter() {
+    if (this.readonly()) {
+      return;
+    }
+
     // TODO(wagnermaciel)
     // When the user first interacts with the combobox, the popup will lazily render for the first
     // time. This is a simple way to detect this and avoid auto-focus & selection logic, but this
@@ -377,7 +396,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Highlights the currently selected item in the combobox. */
   highlight() {
     const inputEl = this.inputs.inputEl();
-    const item = this.inputs.popupControls()?.getSelectedItem();
+    const selectedItems = this.inputs.popupControls()?.getSelectedItems();
+    const item = selectedItems?.[0];
 
     if (!inputEl || !item) {
       return;
@@ -418,7 +438,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     } else if (this.expanded()) {
       this.close();
 
-      const selectedItem = popupControls?.getSelectedItem();
+      const selectedItem = popupControls?.getSelectedItems()?.[0];
 
       if (selectedItem?.searchTerm() !== this.inputs.inputValue!()) {
         popupControls?.clearSelection();
@@ -435,7 +455,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Opens the combobox. */
   open(nav?: {first?: boolean; last?: boolean; selected?: boolean}) {
     this.expanded.set(true);
-
     const inputEl = this.inputs.inputEl();
 
     if (inputEl && this.inputs.filterMode() === 'highlight') {
@@ -453,7 +472,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       this.last();
     }
     if (nav?.selected) {
-      const selectedItem = this.inputs.popupControls()?.getSelectedItem();
+      const selectedItem = this.inputs
+        .popupControls()
+        ?.items()
+        .find(i => this.inputs.popupControls()?.getSelectedItems().includes(i));
       selectedItem ? this.inputs.popupControls()?.focus(selectedItem) : this.first();
     }
   }
@@ -492,7 +514,13 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
-    this.inputs.popupControls()?.select(opts.item);
+    const controls = this.inputs.popupControls();
+
+    if (opts.item) {
+      controls?.focus(opts.item, {focusElement: false});
+    }
+
+    controls?.multi() ? controls.toggle(opts.item) : controls?.select(opts.item);
 
     if (opts.commit) {
       this.commit();
@@ -505,16 +533,18 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Updates the value of the input based on the currently selected item. */
   commit() {
     const inputEl = this.inputs.inputEl();
-    const item = this.inputs.popupControls()?.getSelectedItem();
+    const selectedItems = this.inputs.popupControls()?.getSelectedItems();
 
-    if (inputEl && item) {
-      inputEl.value = item.searchTerm();
-      this.inputs.inputValue?.set(item.searchTerm());
+    if (!inputEl) {
+      return;
+    }
 
-      if (this.inputs.filterMode() === 'highlight') {
-        const length = inputEl.value.length;
-        inputEl.setSelectionRange(length, length);
-      }
+    inputEl.value = selectedItems?.map(i => i.searchTerm()).join(', ') || '';
+    this.inputs.inputValue?.set(inputEl.value);
+
+    if (this.inputs.filterMode() === 'highlight' && !this.readonly()) {
+      const length = inputEl.value.length;
+      inputEl.setSelectionRange(length, length);
     }
   }
 
@@ -529,7 +559,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (this.inputs.filterMode() === 'highlight') {
       // This is to handle when the user navigates back to the originally highlighted item.
       // E.g. User types "Al", highlights "Alice", then navigates down and back up to "Alice".
-      const selectedItem = this.inputs.popupControls()?.getSelectedItem();
+      const selectedItem = this.inputs.popupControls()?.getSelectedItems()[0];
 
       if (!selectedItem) {
         return;

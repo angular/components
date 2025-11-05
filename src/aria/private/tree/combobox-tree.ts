@@ -76,14 +76,17 @@ export class ComboboxTreePattern<V>
   /** Selects the specified item in the tree or the current active item if not provided. */
   select = (item?: TreeItemPattern<V>) => this.listBehavior.select(item);
 
+  /** Toggles the selection state of the given item in the tree or the current active item if not provided. */
+  toggle = (item?: TreeItemPattern<V>) => this.listBehavior.toggle(item);
+
   /** Clears the selection in the tree. */
   clearSelection = () => this.listBehavior.deselectAll();
 
   /** Retrieves the TreeItemPattern associated with a pointer event. */
   getItem = (e: PointerEvent) => this._getItem(e);
 
-  /** Retrieves the currently selected item in the tree */
-  getSelectedItem = () => this.inputs.allItems().find(i => i.selected());
+  /** Retrieves the currently selected items in the tree */
+  getSelectedItems = () => this.inputs.allItems().filter(item => item.selected());
 
   /** Sets the value of the combobox tree. */
   setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
