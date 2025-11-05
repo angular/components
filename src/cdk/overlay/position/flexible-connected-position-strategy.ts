@@ -923,18 +923,19 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
-      styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
+      styles.bottom = styles.right = 'auto';
+      styles.maxHeight = styles.maxWidth = '';
       styles.width = styles.height = '100%';
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
 
-      styles.height = coerceCssPixelValue(boundingBoxRect.height);
-      styles.top = coerceCssPixelValue(boundingBoxRect.top);
-      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom);
       styles.width = coerceCssPixelValue(boundingBoxRect.width);
-      styles.left = coerceCssPixelValue(boundingBoxRect.left);
-      styles.right = coerceCssPixelValue(boundingBoxRect.right);
+      styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      styles.top = coerceCssPixelValue(boundingBoxRect.top) || 'auto';
+      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom) || 'auto';
+      styles.left = coerceCssPixelValue(boundingBoxRect.left) || 'auto';
+      styles.right = coerceCssPixelValue(boundingBoxRect.right) || 'auto';
 
       // Push the pane content towards the proper direction.
       if (position.overlayX === 'center') {

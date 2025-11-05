@@ -52,9 +52,13 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     injector.get(RendererFactory2).createRenderer(null, null);
 
   const overlayConfig = new OverlayConfig(config);
-
   overlayConfig.direction = overlayConfig.direction || directionality.value;
-  overlayConfig.usePopover = !!overlayConfig?.usePopover && 'showPopover' in doc.body;
+
+  if (!('showPopover' in doc.body)) {
+    overlayConfig.usePopover = false;
+  } else {
+    overlayConfig.usePopover = config?.usePopover ?? true;
+  }
 
   const pane = doc.createElement('div');
   const host = doc.createElement('div');

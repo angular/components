@@ -141,9 +141,9 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   });
 
-  it('should ensure that the most-recently-attached overlay is on top', () => {
-    let pizzaOverlayRef = createOverlayRef(injector);
-    let cakeOverlayRef = createOverlayRef(injector);
+  it('should ensure that the most-recently-attached overlay is on top when popovers are disabled', () => {
+    let pizzaOverlayRef = createOverlayRef(injector, {usePopover: false});
+    let cakeOverlayRef = createOverlayRef(injector, {usePopover: false});
 
     pizzaOverlayRef.attach(componentPortal);
     cakeOverlayRef.attach(templatePortal);
@@ -850,7 +850,7 @@ describe('Overlay', () => {
     });
 
     it('should insert the backdrop before the overlay host in the DOM order', () => {
-      const overlayRef = createOverlayRef(injector, config);
+      const overlayRef = createOverlayRef(injector, {...config, usePopover: false});
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
