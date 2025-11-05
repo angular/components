@@ -363,17 +363,10 @@ describe('AccordionGroup', () => {
     });
 
     it('should not allow keyboard navigation if group is disabled', () => {
-      configureAccordionComponent({disabledGroup: true, softDisabled: false});
-
-      downArrowKey(triggerElements[0]);
-      expect(isTriggerActive(triggerElements[1])).toBeFalse();
-    });
-
-    it('should allow keyboard navigation if group is disabled', () => {
       configureAccordionComponent({disabledGroup: true});
 
       downArrowKey(triggerElements[0]);
-      expect(isTriggerActive(triggerElements[1])).toBeTrue();
+      expect(isTriggerActive(triggerElements[1])).toBeFalse();
     });
 
     it('should not allow expansion if group is disabled', () => {

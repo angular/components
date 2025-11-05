@@ -158,13 +158,13 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Up, from, 'continuous')).toEqual({row: 3, col: 2});
       });
 
-      it('should return the next coordinates even if all cells are disabled', () => {
+      it('should return undefined if all cells are disabled', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Up, gridFocus.activeCoords());
 
-        expect(nextCoords).toEqual({row: 0, col: 0});
+        expect(nextCoords).toBeUndefined();
       });
 
       it('should return undefined if all cells are disabled when softDisabled is false', () => {
@@ -210,22 +210,11 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Down, from, 'continuous')).toEqual({row: 0, col: 2});
       });
 
-      it('should return the next coordinates even if all cells are disabled', () => {
+      it('should return undefined if completely disabled', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords());
-
-        expect(nextCoords).toEqual({row: 2, col: 0});
-      });
-
-      it('should return undefined if all cells are disabled when softDisabled is false', () => {
-        const {gridNav} = setupGridNavigation(signal(cells), {
-          softDisabled: signal(false),
-        });
-        cells.flat().forEach(cell => cell.disabled.set(true));
-
-        const nextCoords = gridNav.peek(direction.Down, {row: 1, col: 0});
 
         expect(nextCoords).toBeUndefined();
       });
@@ -262,22 +251,11 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Left, from, 'continuous')).toEqual({row: 3, col: 2});
       });
 
-      it('should return the next coordinates even if all cells are disabled', () => {
-        cells.flat().forEach(c => c.disabled.set(true));
+      it('should return undefined if completely disabled', () => {
+        cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
-        const nextCoords = gridNav.peek(direction.Left, gridFocus.activeCoords());
-
-        expect(nextCoords).toEqual({row: 1, col: 2});
-      });
-
-      it('should return undefined if all cells are disabled when softDisabled is false', () => {
-        const {gridNav} = setupGridNavigation(signal(cells), {
-          softDisabled: signal(false),
-        });
-        cells.flat().forEach(cell => cell.disabled.set(true));
-
-        const nextCoords = gridNav.peek(direction.Left, {row: 1, col: 0});
+        const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords());
 
         expect(nextCoords).toBeUndefined();
       });
@@ -314,22 +292,11 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Right, from, 'continuous')).toEqual({row: 1, col: 0});
       });
 
-      it('should return the next coordinates even if all cells are disabled', () => {
-        cells.flat().forEach(c => c.disabled.set(true));
+      it('should return undefined if completely disabled', () => {
+        cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
-        const nextCoords = gridNav.peek(direction.Right, gridFocus.activeCoords());
-
-        expect(nextCoords).toEqual({row: 1, col: 1});
-      });
-
-      it('should return undefined if all cells are disabled when softDisabled is false', () => {
-        const {gridNav} = setupGridNavigation(signal(cells), {
-          softDisabled: signal(false),
-        });
-        cells.flat().forEach(cell => cell.disabled.set(true));
-
-        const nextCoords = gridNav.peek(direction.Right, {row: 1, col: 0});
+        const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords());
 
         expect(nextCoords).toBeUndefined();
       });
