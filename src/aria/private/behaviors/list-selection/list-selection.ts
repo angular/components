@@ -71,7 +71,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   }
 
   /** Deselects the item at the current active index. */
-  deselect(item?: T | null) {
+  deselect(item?: ListSelectionItem<V>) {
     item = item ?? this.inputs.focusManager.inputs.activeItem();
 
     if (item && !item.disabled() && item.selectable()) {
@@ -80,10 +80,10 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   }
 
   /** Toggles the item at the current active index. */
-  toggle() {
-    const item = this.inputs.focusManager.inputs.activeItem();
+  toggle(item?: ListSelectionItem<V>) {
+    item = item ?? this.inputs.focusManager.inputs.activeItem();
     if (item) {
-      this.inputs.value().includes(item.value()) ? this.deselect() : this.select();
+      this.inputs.value().includes(item.value()) ? this.deselect(item) : this.select(item);
     }
   }
 

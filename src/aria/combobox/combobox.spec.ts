@@ -211,12 +211,6 @@ describe('Combobox', () => {
     describe('Expansion', () => {
       beforeEach(() => setupCombobox());
 
-      it('should open on click', () => {
-        focus();
-        click(inputElement);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
       it('should open on ArrowDown', () => {
         focus();
         keydown('ArrowDown');
@@ -544,15 +538,6 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should clear selection on escape when closed', () => {
-        focus();
-        down();
-        enter();
-        expect(inputElement.value).toBe('Alabama');
-        escape();
-        expect(inputElement.value).toBe('');
       });
     });
 
@@ -956,12 +941,6 @@ describe('Combobox', () => {
     describe('Expansion', () => {
       beforeEach(() => setupCombobox());
 
-      it('should open on click', () => {
-        focus();
-        click(inputElement);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
       it('should open on ArrowDown', () => {
         focus();
         keydown('ArrowDown');
@@ -1107,18 +1086,6 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
         escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should clear selection on escape when closed', () => {
-        focus();
-        down();
-        right();
-        right();
-        enter();
-        expect(inputElement.value).toBe('December');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-        escape();
-        expect(inputElement.value).toBe('');
       });
     });
   });

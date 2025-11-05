@@ -71,7 +71,7 @@ export class Combobox<V> {
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
 
-  /** Whether the listbox has received focus yet. */
+  /** Whether the combobox has received focus yet. */
   private _hasBeenFocused = signal(false);
 
   /** Whether the combobox is disabled. */

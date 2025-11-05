@@ -171,8 +171,8 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Toggles the currently active item in the list. */
-  toggle() {
-    this.selectionBehavior.toggle();
+  toggle(item?: T) {
+    this.selectionBehavior.toggle(item);
   }
 
   /** Toggles the currently active item in the list, deselecting all other items. */

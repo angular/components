@@ -10,10 +10,11 @@ import {
   ComboboxAutoSelectExample,
   ComboboxHighlightExample,
   ComboboxManualExample,
+  ComboboxReadonlyExample,
+  ComboboxReadonlyMultiselectExample,
   ComboboxTreeAutoSelectExample,
   ComboboxTreeHighlightExample,
   ComboboxTreeManualExample,
-  ComboboxReadonlyExample,
 } from '@angular/components-examples/aria/combobox';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
@@ -24,10 +25,11 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     ComboboxManualExample,
     ComboboxAutoSelectExample,
     ComboboxHighlightExample,
+    ComboboxReadonlyExample,
+    ComboboxReadonlyMultiselectExample,
     ComboboxTreeManualExample,
     ComboboxTreeAutoSelectExample,
     ComboboxTreeHighlightExample,
-    ComboboxReadonlyExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

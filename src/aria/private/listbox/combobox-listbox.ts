@@ -36,9 +36,13 @@ export class ComboboxListboxPattern<V>
   /** The tab index for the listbox. Always -1 because the combobox handles focus. */
   override tabIndex: SignalLike<-1 | 0> = () => -1;
 
+  /** Whether multiple items in the list can be selected at once. */
+  override multi = computed(() => {
+    return this.inputs.combobox()?.readonly() ? this.inputs.multi() : false;
+  });
+
   constructor(override readonly inputs: ComboboxListboxInputs<V>) {
     if (inputs.combobox()) {
-      inputs.multi = () => false;
       inputs.focusMode = () => 'activedescendant';
       inputs.element = inputs.combobox()!.inputs.inputEl;
     }
@@ -56,7 +60,9 @@ export class ComboboxListboxPattern<V>
   override setDefaultState(): void {}
 
   /** Navigates to the specified item in the listbox. */
-  focus = (item: OptionPattern<V>) => this.listBehavior.goto(item);
+  focus = (item: OptionPattern<V>, opts?: {focusElement?: boolean}) => {
+    this.listBehavior.goto(item, opts);
+  };
 
   /** Navigates to the next focusable item in the listbox. */
   next = () => this.listBehavior.next();
@@ -76,14 +82,27 @@ export class ComboboxListboxPattern<V>
   /** Selects the specified item in the listbox. */
   select = (item?: OptionPattern<V>) => this.listBehavior.select(item);
 
+  /** Toggles the selection state of the given item in the listbox. */
+  toggle = (item?: OptionPattern<V>) => this.listBehavior.toggle(item);
+
   /** Clears the selection in the listbox. */
   clearSelection = () => this.listBehavior.deselectAll();
 
   /** Retrieves the OptionPattern associated with a pointer event. */
   getItem = (e: PointerEvent) => this._getItem(e);
 
-  /** Retrieves the currently selected item in the listbox. */
-  getSelectedItem = () => this.inputs.items().find(i => i.selected());
+  /** Retrieves the currently selected items in the listbox. */
+  getSelectedItems = () => {
+    // NOTE: We need to do this funky for loop to preserve the order of the selected values.
+    const items = [];
+    for (const value of this.inputs.value()) {
+      const item = this.items().find(i => i.value() === value);
+      if (item) {
+        items.push(item);
+      }
+    }
+    return items;
+  };
 
   /** Sets the value of the combobox listbox. */
   setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
