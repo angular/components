@@ -101,13 +101,19 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V>
   collapseItem: () => void;
 
   /** Checks if the currently active item in the popup is expandable. */
-  isItemExpandable: () => boolean;
+  isItemExpandable: (item?: T) => boolean;
 
   /** Expands all nodes in the tree. */
   expandAll: () => void;
 
   /** Collapses all nodes in the tree. */
   collapseAll: () => void;
+
+  /** Toggles the expansion state of the currently active item in the popup. */
+  toggleExpansion: (item?: T) => void;
+
+  /** Whether the current active item is selectable. */
+  isItemSelectable: (item?: T) => boolean;
 }
 
 /** Controls the state of a combobox. */
@@ -175,15 +181,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last())
-      .on('Escape', () => this.close({reset: true}))
-      .on('Enter', () => this.select({commit: true, close: true}));
+      .on('Escape', () => this.close({reset: true}));
 
     if (this.readonly()) {
       manager.on(' ', () => this.select({commit: true, close: true}));
     }
 
+    if (popupControls.role() === 'listbox') {
+      manager.on('Enter', () => this.select({commit: true, close: true}));
+    }
+
     if (popupControls.role() === 'tree') {
       const treeControls = popupControls as ComboboxTreeControls<T, V>;
+
+      if (treeControls.isItemSelectable()) {
+        manager.on('Enter', () => this.select({commit: true, close: true}));
+      } else if (treeControls.isItemExpandable()) {
+        manager.on('Enter', () => this.expandItem());
+      }
 
       if (treeControls.isItemExpandable() || treeControls.isItemCollapsible()) {
         manager.on(this.collapseKey(), () => this.collapseItem());
@@ -203,6 +218,16 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       const item = this.inputs.popupControls()?.getItem(e);
 
       if (item) {
+        if (this.inputs.popupControls()?.role() === 'tree') {
+          const treeControls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
+
+          if (treeControls.isItemExpandable(item) && !treeControls.isItemSelectable(item)) {
+            treeControls.toggleExpansion(item);
+            this.inputs.inputEl()?.focus();
+            return;
+          }
+        }
+
         this.select({item, commit: true, close: true});
         this.inputs.inputEl()?.focus(); // Return focus to the input after selecting.
       }
