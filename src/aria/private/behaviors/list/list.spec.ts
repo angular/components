@@ -160,9 +160,9 @@ describe('List Behavior', () => {
     it('should not change active index on navigation', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.last();
-      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
     it('should not select items', () => {
@@ -170,8 +170,8 @@ describe('List Behavior', () => {
       expect(list.inputs.value()).toEqual([]);
     });
 
-    it('should have a tabindex of 0', () => {
-      expect(list.tabIndex()).toBe(-1);
+    it('should have a tab index of 0', () => {
+      expect(list.tabIndex()).toBe(0);
     });
   });
 
