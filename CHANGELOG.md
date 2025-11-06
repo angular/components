@@ -1,3 +1,8 @@
+<a name="20.2.12"></a>
+# 20.2.12 "patch-main" (2025-11-06)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.11"></a>
 # 20.2.11 "material lion" (2025-10-31)
 ### material
