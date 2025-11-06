@@ -16,7 +16,9 @@
     colWrap="continuous"
     rowWrap="nowrap"
     [enableSelection]="true"
+    [softDisabled]="false"
     selectionMode="explicit"
+    (onNavigate)="onNavigate($event)"
   >
     <thead>
       <tr>

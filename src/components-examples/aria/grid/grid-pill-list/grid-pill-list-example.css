@@ -1,6 +1,5 @@
 .example-pill-list-container {
   padding: 10px;
-  border: 1px solid;
   max-width: 800px;
 }
 
@@ -21,7 +20,7 @@
 .example-pill-label {
   border: 1px solid;
   border-right-width: 0;
-  border-radius: 1rem 0 0 1rem;
+  border-radius: 2rem 0 0 2rem;
   padding: 4px 4px 4px 12px;
   display: flex;
   align-items: center;
@@ -32,7 +31,7 @@
 
 .example-pill-action {
   border: 1px solid;
-  border-radius: 0 1rem 1rem 0;
+  border-radius: 0 2rem 2rem 0;
   padding: 4px 12px 4px 8px;
   display: flex;
   align-items: center;

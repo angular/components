@@ -1,0 +1,100 @@
+<table ngGrid class="example-table">
+  <thead>
+    <tr ngGridRow class="example-header-row">
+      <th ngGridCell class="example-cell example-cell-checkbox">
+        <mat-checkbox
+          ngGridCellWidget
+          [focusTarget]="cb._inputElement"
+          [checked]="allSelected()"
+          [indeterminate]="partiallySelected()"
+          (change)="updateSelection($event.checked)"
+          aria-label="all rows"
+          #cb="matCheckbox"
+        ></mat-checkbox>
+      </th>
+      <th ngGridCell class="example-cell">Summary</th>
+      <th ngGridCell class="example-cell">Assignee</th>
+      <th ngGridCell class="example-cell">Tags</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (task of tasks(); track task) {
+      <tr ngGridRow class="example-row">
+        <td ngGridCell class="example-cell example-cell-checkbox">
+          <mat-checkbox
+            ngGridCellWidget
+            [focusTarget]="cb._inputElement"
+            [(ngModel)]="task.selected"
+            aria-label="row {{$index}}"
+            #cb="matCheckbox"
+          ></mat-checkbox>
+        </td>
+        <td ngGridCell class="example-cell example-cell-summary">
+          <div
+            role="button"
+            ngGridCellWidget
+            widgetType="editable"
+            (onActivate)="startEdit($event, task, summaryInput)"
+            (onDeactivate)="completeEdit($event, task)"
+            (click)="onClickEdit(widget, task, summaryInput)"
+            #widget="ngGridCellWidget"
+          >
+            <span [class.example-hidden]="widget.isActivated()">{{task.summary()}}</span>
+            <span
+              aria-hidden="true"
+              class="material-symbols-outlined example-edit-icon"
+              [class.example-hidden]="widget.isActivated()"
+              >edit</span
+            >
+            <mat-form-field
+              [class.example-hidden]="!widget.isActivated()"
+              subscriptSizing="dynamic"
+            >
+              <input matInput [(ngModel)]="tempInput" #summaryInput />
+            </mat-form-field>
+          </div>
+        </td>
+        <td ngGridCell class="example-cell example-cell-assignee">
+          <div
+            role="button"
+            ngGridCellWidget
+            widgetType="complex"
+            (onActivate)="select.focus()"
+            #widget="ngGridCellWidget"
+          >
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-select aria-label="assignee" [(value)]="task.assignee" tabindex="-1" #select>
+                @for (e of employees; track e) {
+                  <mat-option [value]="e">{{e}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+        <td ngGridCell class="example-cell">
+          <div class="example-cell-tags">
+            <div
+              role="button"
+              ngGridCellWidget
+              widgetType="complex"
+              (onActivate)="chips.focus()"
+              #widget="ngGridCellWidget"
+            >
+              <grid-chips [(values)]="task.tags" [tabindex]="-1" #chips />
+            </div>
+            <input
+              name="tag-input"
+              autocomplete="off"
+              class="example-cell-tag-input"
+              ngGridCellWidget
+              widgetType="editable"
+              placeholder="add new tag"
+              (onDeactivate)="addTag($event, task, tagInput)"
+              #tagInput
+            />
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

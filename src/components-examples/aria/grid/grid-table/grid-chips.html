@@ -1,0 +1,25 @@
+<div ngGrid class="example-grid-chips" colWrap="continuous">
+  @for (value of values(); track $index) {
+    <div ngGridRow class="example-grid-chip">
+      <div ngGridCell class="example-chip-label" [tabindex]="tabindex()">
+        {{value}}
+      </div>
+      <div ngGridCell class="example-chip-action">
+        <button
+          ngGridCellWidget
+          class="example-chip-remove-button"
+          aria-label="remove chip"
+          [tabindex]="tabindex()"
+          (click)="removeItem($index)"
+        >
+          <span aria-hidden="true" class="material-symbols-outlined example-chip-icon">close</span>
+        </button>
+      </div>
+    </div>
+  }
+  @if (values().length === 0) {
+    <div ngGridRow class="example-grid-chip">
+      <div ngGridCell class="example-chip-empty" [tabindex]="tabindex()">No Tag</div>
+    </div>
+  }
+</div>

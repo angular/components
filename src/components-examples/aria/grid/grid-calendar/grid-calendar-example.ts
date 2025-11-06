@@ -14,9 +14,10 @@ import {
   computed,
   untracked,
   afterRenderEffect,
+  viewChildren,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
+import {Grid, GridRow, GridCell, GridCellWidget, NavigateEvent} from '@angular/aria/grid';
 
 const DAYS_PER_WEEK = 7;
 
@@ -35,6 +36,7 @@ interface CalendarCell<D = any> {
   imports: [Grid, GridRow, GridCell, GridCellWidget],
 })
 export class GridCalendarExample<D> {
+  private readonly _buttons = viewChildren(GridCellWidget);
   private readonly _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private readonly _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
   private readonly _firstWeekOffset: Signal<number> = computed(() => {
@@ -88,6 +90,9 @@ export class GridCalendarExample<D> {
     this._createWeekCells(this.viewMonth()),
   );
 
+  readonly scrolledUp = signal(false);
+  readonly scrolledDown = signal(false);
+
   constructor() {
     afterRenderEffect(() => {
       for (const day of this.weeks().flat()) {
@@ -95,6 +100,26 @@ export class GridCalendarExample<D> {
           this._activeDate.set(day.date);
           return;
         }
+      }
+    });
+
+    afterRenderEffect(() => {
+      const buttons = this._buttons();
+      const scrollUp = untracked(() => this.scrolledUp());
+
+      if (scrollUp) {
+        buttons[buttons.length - 1].element().focus();
+        this.scrolledUp.set(false);
+      }
+    });
+
+    afterRenderEffect(() => {
+      const buttons = this._buttons();
+      const scrollDown = untracked(() => this.scrolledDown());
+
+      if (scrollDown) {
+        buttons[0].element().focus();
+        this.scrolledDown.set(false);
       }
     });
   }
@@ -105,6 +130,26 @@ export class GridCalendarExample<D> {
 
   prevMonth(): void {
     this.viewMonth.set(this._dateAdapter.addCalendarMonths(this.viewMonth(), -1));
+  }
+
+  onNavigate(event: NavigateEvent) {
+    const prev = event.prev;
+    const next = event.next;
+    if (prev === undefined || next == undefined) return;
+    if (!(event.rawEvent instanceof KeyboardEvent)) return;
+
+    const key = event.rawEvent.key;
+    // Hitting edge
+    if (prev === next) {
+      if (key === 'ArrowUp' || key === 'ArrowLeft') {
+        this.prevMonth();
+        this.scrolledUp.set(true);
+      }
+      if (key === 'ArrowDown' || key === 'ArrowRight') {
+        this.nextMonth();
+        this.scrolledDown.set(true);
+      }
+    }
   }
 
   private _createWeekCells(viewMonth: D): CalendarCell[][] {

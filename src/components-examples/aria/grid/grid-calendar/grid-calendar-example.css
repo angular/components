@@ -44,8 +44,8 @@
 }
 
 .example-calendar-day-button {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   border-radius: 50%;
   border: 0;
   background-color: transparent;
@@ -61,10 +61,12 @@
 
 [data-active='true'] .example-calendar-day-button {
   outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 3px;
 }
 
 [data-active='true']:focus-within .example-calendar-day-button {
   outline: 3px dashed var(--mat-sys-tertiary);
+  outline-offset: 3px;
 }
 
 [aria-selected='true'] .example-calendar-day-button {

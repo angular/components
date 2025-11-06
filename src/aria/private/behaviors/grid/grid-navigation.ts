@@ -162,12 +162,18 @@ export class GridNavigation<T extends GridNavigationCell> {
         nextCoords.row + rowDelta < 0 ||
         nextCoords.row + rowDelta >= maxRowCount;
 
-      if (wrap === 'nowrap' && isWrapping) return;
+      if (wrap === 'nowrap' && isWrapping) return undefined;
 
       if (wrap === 'continuous') {
         const generalDelta = delta.row ?? delta.col;
         const rowStep = isWrapping ? generalDelta : rowDelta;
         const colStep = isWrapping ? generalDelta : colDelta;
+
+        // Reaching start or end.
+        const bothWrapping =
+          (nextCoords.row + rowStep >= maxRowCount && nextCoords.col + colStep >= maxColCount) ||
+          (nextCoords.row + rowStep < 0 && nextCoords.col + colStep < 0);
+        if (bothWrapping) return undefined;
 
         nextCoords = {
           row: (nextCoords.row + rowStep + maxRowCount) % maxRowCount,
