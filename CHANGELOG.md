@@ -1,3 +1,8 @@
+<a name="20.2.12"></a>
+# 20.2.12 "patch-main" (2025-11-06)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-rc.0"></a>
 # 21.0.0-rc.0 "leather shoes" (2025-10-31)
 ### cdk
