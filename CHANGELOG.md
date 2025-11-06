@@ -1,3 +1,26 @@
+<a name="21.0.0-rc.1"></a>
+# 21.0.0-rc.1 "pre-release-21" (2025-11-06)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c3279ca4b](https://github.com/angular/components/commit/c3279ca4b47f91cd61e0ba0be24bdd10869fa059) | fix | **combobox:** highlighting edge cases ([#32136](https://github.com/angular/components/pull/32136)) |
+| [1232805db](https://github.com/angular/components/commit/1232805db6f0a0a07154b3601eaa8b9cc0d94f31) | fix | **combobox:** readonly behavior ([#32169](https://github.com/angular/components/pull/32169)) |
+| [6c46f950d](https://github.com/angular/components/commit/6c46f950d451862692c2c74f41a704a3ef0fd472) | fix | **combobox:** several small fixes ([#32202](https://github.com/angular/components/pull/32202)) |
+| [92d933421](https://github.com/angular/components/commit/92d933421953a2f5123d0f823dc7880bb4e69098) | fix | **grid:** fix navigation bugs and add grid behavior unit tests ([#32140](https://github.com/angular/components/pull/32140)) |
+| [e3babf3fc](https://github.com/angular/components/commit/e3babf3fc3229879e38751eff2c5941ed2152ae7) | fix | **grid:** rtl navigation ([#32170](https://github.com/angular/components/pull/32170)) |
+| [56631cb85](https://github.com/angular/components/commit/56631cb858fda514cfd81e23064e7859aa338843) | fix | **menu:** deferred content import |
+| [ce20dbe1a](https://github.com/angular/components/commit/ce20dbe1a3e4be0e1002533f7f1910b1f9efd0c3) | fix | **menu:** lazy render trigger ([#32203](https://github.com/angular/components/pull/32203)) |
+| [19095030a](https://github.com/angular/components/commit/19095030a0a6f102aa1ba7276afbc12fd79a27c7) | fix | **menu:** public api cleanup ([#32189](https://github.com/angular/components/pull/32189)) |
+| [4b5db1328](https://github.com/angular/components/commit/4b5db13286b263cb28918938dce515376b4a5f5b) | fix | **menu:** rtl text direction ([#32254](https://github.com/angular/components/pull/32254)) |
+| [05f936ae1](https://github.com/angular/components/commit/05f936ae14d8943ced0ad981cde8f3c2ac95afd1) | fix | **tree:** tree item visibility issue ([#32156](https://github.com/angular/components/pull/32156)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b50ecb9b6](https://github.com/angular/components/commit/b50ecb9b6ebb9f9769bd8694a4a5671071eeccef) | fix | enable overwriting `preventDefault` to allow triggering hyperlinks using enter key ([#32123](https://github.com/angular/components/pull/32123)) |
+| [caa2b3b65](https://github.com/angular/components/commit/caa2b3b6595d8a69c5deaac827be69d2aac1111a) | fix | prevent focus on disabled components ([#32263](https://github.com/angular/components/pull/32263)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.12"></a>
 # 20.2.12 "patch-main" (2025-11-06)
 
