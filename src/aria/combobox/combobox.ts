@@ -25,6 +25,7 @@ import {
   ComboboxPattern,
   ComboboxListboxControls,
   ComboboxTreeControls,
+  ComboboxDialogPattern,
 } from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -84,7 +85,12 @@ export class Combobox<V> {
   readonly firstMatch = input<V | undefined>(undefined);
 
   /** Whether the combobox is expanded. */
-  readonly expanded = computed(() => this._pattern.expanded());
+  readonly expanded = computed(() => this.alwaysExpanded() || this._pattern.expanded());
+
+  // TODO: Maybe make expanded a signal that can be passed in?
+  // Or an "always expanded" option?
+
+  readonly alwaysExpanded = input(false);
 
   /** Input element connected to the combobox, if any. */
   readonly inputElement = computed(() => this._pattern.inputs.inputEl());
@@ -103,7 +109,16 @@ export class Combobox<V> {
 
   constructor() {
     afterRenderEffect(() => {
-      if (!this._deferredContentAware?.contentVisible() && this._pattern.isFocused()) {
+      if (this.alwaysExpanded()) {
+        this._pattern.expanded.set(true);
+      }
+    });
+
+    afterRenderEffect(() => {
+      if (
+        !this._deferredContentAware?.contentVisible() &&
+        (this._pattern.isFocused() || this.alwaysExpanded())
+      ) {
         this._deferredContentAware?.contentVisible.set(true);
       }
     });
@@ -146,10 +161,15 @@ export class ComboboxInput {
     );
     this.combobox._pattern.inputs.inputValue = this.value;
 
+    const controls = this.combobox.popup()?.controls();
+    if (controls instanceof ComboboxDialogPattern) {
+      return;
+    }
+
     /** Focuses & selects the first item in the combobox if the user changes the input value. */
     afterRenderEffect(() => {
       this.value();
-      this.combobox.popup()?.controls()?.items();
+      controls?.items();
       untracked(() => this.combobox._pattern.onFilter());
     });
   }
@@ -168,10 +188,62 @@ export class ComboboxPopupContainer {}
 })
 export class ComboboxPopup<V> {
   /** The combobox that the popup belongs to. */
-  readonly combobox = inject<Combobox<V>>(Combobox, {optional: true});
+  readonly combobox = inject<Combobox<V>>(Combobox);
 
   /** The controls the popup exposes to the combobox. */
   readonly controls = signal<
-    ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | undefined
+    | ComboboxListboxControls<any, V>
+    | ComboboxTreeControls<any, V>
+    | ComboboxDialogPattern
+    | undefined
   >(undefined);
+}
+
+@Directive({
+  selector: 'dialog[ngComboboxDialog]',
+  exportAs: 'ngComboboxDialog',
+  host: {
+    '[attr.data-open]': 'combobox._pattern.expanded()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(click)': '_pattern.onClick($event)',
+  },
+  hostDirectives: [{directive: ComboboxPopup}],
+})
+export class ComboboxDialog {
+  /** The dialog element. */
+  readonly element = inject(ElementRef<HTMLDialogElement>);
+
+  /** The combobox that the dialog belongs to. */
+  readonly combobox = inject(Combobox);
+
+  /** A reference to the parent combobox popup, if one exists. */
+  private readonly _popup = inject<ComboboxPopup<any>>(ComboboxPopup, {
+    optional: true,
+  });
+
+  _pattern: ComboboxDialogPattern;
+
+  constructor() {
+    this._pattern = new ComboboxDialogPattern({
+      id: () => '',
+      element: () => this.element.nativeElement,
+      combobox: this.combobox._pattern,
+    });
+
+    if (this._popup) {
+      this._popup.controls.set(this._pattern);
+    }
+
+    afterRenderEffect(() => {
+      if (this.element) {
+        this.combobox._pattern.expanded()
+          ? this.element.nativeElement.showModal()
+          : this.element.nativeElement.close();
+      }
+    });
+  }
+
+  close() {
+    this._popup?.combobox._pattern.close();
+  }
 }
