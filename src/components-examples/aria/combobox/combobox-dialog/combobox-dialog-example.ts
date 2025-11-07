@@ -57,6 +57,7 @@ export class ComboboxDialogExample {
   constructor() {
     afterRenderEffect(() => {
       if (this.dialog() && this.combobox()?.expanded()) {
+        this.listbox()?.gotoFirst();
         this.positionDialog();
       }
     });
@@ -64,6 +65,8 @@ export class ComboboxDialogExample {
     afterRenderEffect(() => {
       if (this.selectedStates().length > 0) {
         untracked(() => this.dialog()?.close());
+        this.value.set(this.selectedStates()[0]);
+        this.searchString.set('');
       }
     });
 

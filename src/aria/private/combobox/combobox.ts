@@ -95,6 +95,9 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** Returns the item corresponding to the given event. */
   getItem: (e: PointerEvent) => T | undefined;
 
+  /** Returns the currently active (focused) item in the popup. */
+  getActiveItem: () => T | undefined;
+
   /** Returns the currently selected items in the popup. */
   getSelectedItems: () => T[];
 
@@ -176,30 +179,55 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is read-only. */
   readonly = computed(() => this.inputs.readonly() || null);
 
+  /** Returns the listbox controls for the combobox. */
+  listControls = () => {
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
+      return null;
+    }
+
+    return popupControls;
+  };
+
+  /** Returns the tree controls for the combobox. */
+  treeControls = () => {
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls?.role() === 'tree') {
+      return popupControls as ComboboxTreeControls<T, V>;
+    }
+
+    return null;
+  };
+
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
     const popupControls = this.inputs.popupControls();
 
+    if (!popupControls) {
+      return manager;
+    }
+
     if (popupControls instanceof ComboboxDialogPattern) {
       manager.on('ArrowUp', () => this.open()).on('ArrowDown', () => this.open());
 
-      if (!this.inputs.alwaysExpanded()) {
-        return manager.on('Escape', () => this.close());
+      if (!this.expanded() && this.readonly()) {
+        manager.on('Enter', () => this.open()).on(' ', () => this.open());
       }
 
       return manager;
+    }
+
+    if (!this.inputs.alwaysExpanded()) {
+      manager.on('Escape', () => this.close({reset: !this.readonly()}));
     }
 
     if (!this.expanded()) {
       manager
         .on('ArrowDown', () => this.open({first: true}))
         .on('ArrowUp', () => this.open({last: true}));
-
-      // TODO(wagnermaciel): A simpler alternative might be to allow propagation for Escape keys.
-      if (!this.inputs.alwaysExpanded()) {
-        return manager.on('Escape', () => this.close({reset: !this.readonly()}));
-      }
 
       if (this.readonly()) {
         manager
@@ -210,44 +238,40 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return manager;
     }
 
-    if (!popupControls) {
-      return new KeyboardEventManager();
-    }
-
     manager
       .on('ArrowDown', () => this.next())
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
       .on('End', () => this.last());
 
-    if (!this.inputs.alwaysExpanded()) {
-      return manager.on('Escape', () => this.close({reset: !this.readonly()}));
-    }
-
     if (this.readonly()) {
       manager.on(' ', () => this.select({commit: true, close: !popupControls.multi()}));
     }
 
     if (popupControls.role() === 'listbox') {
-      manager.on('Enter', () => this.select({commit: true, close: !popupControls.multi()}));
+      manager.on('Enter', () => {
+        this.select({commit: true, close: !popupControls.multi()});
+      });
     }
 
-    if (popupControls.role() === 'tree') {
-      const treeControls = popupControls as ComboboxTreeControls<T, V>;
+    const treeControls = this.treeControls();
 
-      if (treeControls.isItemSelectable()) {
-        manager.on('Enter', () => this.select({commit: true, close: true}));
-      } else if (treeControls.isItemExpandable()) {
+    if (treeControls?.isItemSelectable()) {
+      manager.on('Enter', () => this.select({commit: true, close: true}));
+    }
+
+    if (treeControls?.isItemExpandable()) {
+      manager
+        .on(this.expandKey(), () => this.expandItem())
+        .on(this.collapseKey(), () => this.collapseItem());
+
+      if (!treeControls.isItemSelectable()) {
         manager.on('Enter', () => this.expandItem());
       }
+    }
 
-      if (treeControls.isItemExpandable() || treeControls.isItemCollapsible()) {
-        manager.on(this.collapseKey(), () => this.collapseItem());
-      }
-
-      if (treeControls.isItemExpandable()) {
-        manager.on(this.expandKey(), () => this.expandItem());
-      }
+    if (treeControls?.isItemCollapsible()) {
+      manager.on(this.collapseKey(), () => this.collapseItem());
     }
 
     return manager;
@@ -328,10 +352,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (this.inputs.filterMode() === 'manual') {
       const selectedItems = popupControls?.getSelectedItems();
       const searchTerm = selectedItems?.[0]?.searchTerm();
-
-      if (searchTerm && this.inputs.inputValue!() !== searchTerm) {
-        popupControls?.clearSelection();
-      }
     }
 
     if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
@@ -491,6 +511,16 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
 
     if (!opts?.reset) {
+      if (this.inputs.filterMode() === 'manual') {
+        if (
+          !this.listControls()
+            ?.items()
+            .some(i => i.searchTerm() === this.inputs.inputEl()?.value)
+        ) {
+          this.listControls()?.clearSelection();
+        }
+      }
+
       this.expanded.set(false);
       popupControls?.unfocus();
       return;
@@ -554,16 +584,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       selectedItem ? popupControls?.focus(selectedItem) : this.first();
     }
   }
-
-  listControls = () => {
-    const popupControls = this.inputs.popupControls();
-
-    if (popupControls instanceof ComboboxDialogPattern) {
-      return null;
-    }
-
-    return popupControls;
-  };
 
   /** Navigates to the next focusable item in the combobox popup. */
   next() {

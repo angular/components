@@ -187,6 +187,11 @@ export class Listbox<V> {
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element()?.scrollIntoView(options);
   }
+
+  /** Navigates to the first item in the listbox. */
+  gotoFirst() {
+    this._pattern.listBehavior.first();
+  }
 }
 
 /** A selectable option in a Listbox. */
