@@ -56,7 +56,7 @@ import {ComboboxPopup} from '../combobox';
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
-  hostDirectives: [{directive: ComboboxPopup}],
+  hostDirectives: [ComboboxPopup],
 })
 export class Listbox<V> {
   /** A unique identifier for the listbox. */

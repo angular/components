@@ -83,7 +83,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
-  hostDirectives: [{directive: ComboboxPopup}],
+  hostDirectives: [ComboboxPopup],
 })
 export class Tree<V> {
   /** A unique identifier for the tree. */

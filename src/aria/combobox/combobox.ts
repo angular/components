@@ -207,7 +207,7 @@ export class ComboboxPopup<V> {
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
   },
-  hostDirectives: [{directive: ComboboxPopup}],
+  hostDirectives: [ComboboxPopup],
 })
 export class ComboboxDialog {
   /** The dialog element. */
@@ -217,7 +217,7 @@ export class ComboboxDialog {
   readonly combobox = inject(Combobox);
 
   /** A reference to the parent combobox popup, if one exists. */
-  private readonly _popup = inject<ComboboxPopup<any>>(ComboboxPopup, {
+  private readonly _popup = inject<ComboboxPopup<unknown>>(ComboboxPopup, {
     optional: true,
   });
 

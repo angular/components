@@ -697,6 +697,7 @@ export class ComboboxDialogPattern {
   }
 
   onClick(event: MouseEvent) {
+    // The "click" event fires on the dialog when the user clicks outside of the dialog content.
     if (event.target === this.inputs.element()) {
       this.inputs.combobox.close();
     }
