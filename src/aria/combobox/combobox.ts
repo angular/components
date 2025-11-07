@@ -188,7 +188,7 @@ export class ComboboxPopupContainer {}
 })
 export class ComboboxPopup<V> {
   /** The combobox that the popup belongs to. */
-  readonly combobox = inject<Combobox<V>>(Combobox);
+  readonly combobox = inject<Combobox<V>>(Combobox, {optional: true});
 
   /** The controls the popup exposes to the combobox. */
   readonly controls = signal<
@@ -244,6 +244,6 @@ export class ComboboxDialog {
   }
 
   close() {
-    this._popup?.combobox._pattern.close();
+    this._popup?.combobox?._pattern.close();
   }
 }
