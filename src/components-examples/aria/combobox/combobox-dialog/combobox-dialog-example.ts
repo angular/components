@@ -73,6 +73,8 @@ export class ComboboxDialogExample {
     afterRenderEffect(() => this.listbox()?.scrollActiveItemIntoView());
   }
 
+  // TODO(wagnermaciel): Switch to using the CDK for positioning.
+
   positionDialog() {
     const dialog = this.dialog()!;
     const combobox = this.combobox()!;
