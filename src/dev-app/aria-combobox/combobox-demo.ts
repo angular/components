@@ -7,6 +7,7 @@
  */
 
 import {
+  ComboboxDialogExample,
   ComboboxAutoSelectExample,
   ComboboxHighlightExample,
   ComboboxManualExample,
@@ -22,6 +23,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: 'combobox-demo.html',
   styleUrl: 'combobox-demo.css',
   imports: [
+    ComboboxDialogExample,
     ComboboxManualExample,
     ComboboxAutoSelectExample,
     ComboboxHighlightExample,

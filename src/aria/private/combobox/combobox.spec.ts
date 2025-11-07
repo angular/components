@@ -106,6 +106,7 @@ function getComboboxPattern(
     filterMode: signal(inputs.filterMode ?? 'manual'),
     firstMatch,
     inputValue,
+    alwaysExpanded: signal(false),
   });
 
   return {combobox, inputEl, containerEl, firstMatch, inputValue};
@@ -395,14 +396,14 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
-      it('should deselect on backspace', () => {
+      it('should deselect on close if the input text does not match any options', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
 
+        expect(listbox.inputs.value()).toEqual(['Apple']);
         type('Appl', {backspace: true});
-        combobox.onInput(new InputEvent('input', {inputType: 'deleteContentBackward'}));
-
-        expect(listbox.getSelectedItems().length).toBe(0);
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        combobox.onKeydown(escape());
         expect(listbox.inputs.value()).toEqual([]);
       });
 
@@ -759,13 +760,14 @@ describe('Combobox with Tree Pattern', () => {
         expect(tree.inputs.value()).toEqual(['Apple']);
       });
 
-      it('should deselect on backspace', () => {
+      it('should deselect on close if the input text does not match any options', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
 
-        type('Appl', {backspace: true});
-
-        expect(tree.getSelectedItems().length).toBe(0);
+        expect(tree.inputs.value()).toEqual(['Fruit']);
+        type('Frui', {backspace: true});
+        expect(tree.inputs.value()).toEqual(['Fruit']);
+        combobox.onKeydown(escape());
         expect(tree.inputs.value()).toEqual([]);
       });
 

@@ -1,3 +1,4 @@
+export {ComboboxDialogExample} from './combobox-dialog/combobox-dialog-example';
 export {ComboboxManualExample} from './combobox-manual/combobox-manual-example';
 export {ComboboxAutoSelectExample} from './combobox-auto-select/combobox-auto-select-example';
 export {ComboboxHighlightExample} from './combobox-highlight/combobox-highlight-example';

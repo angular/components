@@ -56,7 +56,7 @@ import {ComboboxPopup} from '../combobox';
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': 'onFocus()',
   },
-  hostDirectives: [{directive: ComboboxPopup}],
+  hostDirectives: [ComboboxPopup],
 })
 export class Listbox<V> {
   /** A unique identifier for the listbox. */
@@ -186,6 +186,11 @@ export class Listbox<V> {
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element()?.scrollIntoView(options);
+  }
+
+  /** Navigates to the first item in the listbox. */
+  gotoFirst() {
+    this._pattern.listBehavior.first();
   }
 }
 
