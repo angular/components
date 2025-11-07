@@ -14,7 +14,9 @@ import {ListItem} from '../behaviors/list/list';
 /** Represents the required inputs for a combobox. */
 export interface ComboboxInputs<T extends ListItem<V>, V> {
   /** The controls for the popup associated with the combobox. */
-  popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | undefined>;
+  popupControls: SignalLike<
+    ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | ComboboxDialogPattern | undefined
+  >;
 
   /** The HTML input element that serves as the combobox input. */
   inputEl: SignalLike<HTMLInputElement | undefined>;
@@ -39,6 +41,9 @@ export interface ComboboxInputs<T extends ListItem<V>, V> {
 
   /** Whether the combobox is in a right-to-left context. */
   textDirection: SignalLike<'rtl' | 'ltr'>;
+
+  /** Whether the combobox is always expanded. */
+  alwaysExpanded: SignalLike<boolean>;
 }
 
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
@@ -90,6 +95,9 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** Returns the item corresponding to the given event. */
   getItem: (e: PointerEvent) => T | undefined;
 
+  /** Returns the currently active (focused) item in the popup. */
+  getActiveItem: () => T | undefined;
+
   /** Returns the currently selected items in the popup. */
   getSelectedItems: () => T[];
 
@@ -130,7 +138,14 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   expanded = signal(false);
 
   /** The ID of the active item in the combobox. */
-  activeDescendant = computed(() => this.inputs.popupControls()?.activeId() ?? null);
+  activeDescendant = computed(() => {
+    const popupControls = this.inputs.popupControls();
+    if (popupControls instanceof ComboboxDialogPattern) {
+      return null;
+    }
+
+    return popupControls?.activeId() ?? null;
+  });
 
   /** The currently highlighted item in the combobox. */
   highlightedItem = signal<T | undefined>(undefined);
@@ -140,6 +155,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Whether the combobox is focused. */
   isFocused = signal(false);
+
+  /** Whether the combobox has ever been focused. */
+  hasBeenFocused = signal(false);
 
   /** The key used to navigate to the previous item in the list. */
   expandKey = computed(() => (this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight'));
@@ -161,13 +179,57 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is read-only. */
   readonly = computed(() => this.inputs.readonly() || null);
 
+  /** Returns the listbox controls for the combobox. */
+  listControls = () => {
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
+      return null;
+    }
+
+    return popupControls;
+  };
+
+  /** Returns the tree controls for the combobox. */
+  treeControls = () => {
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls?.role() === 'tree') {
+      return popupControls as ComboboxTreeControls<T, V>;
+    }
+
+    return null;
+  };
+
   /** The keydown event manager for the combobox. */
   keydown = computed(() => {
+    const manager = new KeyboardEventManager();
+    const popupControls = this.inputs.popupControls();
+
+    if (!popupControls) {
+      return manager;
+    }
+
+    if (popupControls instanceof ComboboxDialogPattern) {
+      if (!this.expanded()) {
+        manager.on('ArrowUp', () => this.open()).on('ArrowDown', () => this.open());
+
+        if (this.readonly()) {
+          manager.on('Enter', () => this.open()).on(' ', () => this.open());
+        }
+      }
+
+      return manager;
+    }
+
+    if (!this.inputs.alwaysExpanded()) {
+      manager.on('Escape', () => this.close({reset: !this.readonly()}));
+    }
+
     if (!this.expanded()) {
-      const manager = new KeyboardEventManager()
+      manager
         .on('ArrowDown', () => this.open({first: true}))
-        .on('ArrowUp', () => this.open({last: true}))
-        .on('Escape', () => this.close({reset: !this.readonly()}));
+        .on('ArrowUp', () => this.open({last: true}));
 
       if (this.readonly()) {
         manager
@@ -178,43 +240,40 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return manager;
     }
 
-    const popupControls = this.inputs.popupControls();
-
-    if (!popupControls) {
-      return new KeyboardEventManager();
-    }
-
-    const manager = new KeyboardEventManager()
+    manager
       .on('ArrowDown', () => this.next())
       .on('ArrowUp', () => this.prev())
       .on('Home', () => this.first())
-      .on('End', () => this.last())
-      .on('Escape', () => this.close({reset: !this.readonly()}));
+      .on('End', () => this.last());
 
     if (this.readonly()) {
       manager.on(' ', () => this.select({commit: true, close: !popupControls.multi()}));
     }
 
     if (popupControls.role() === 'listbox') {
-      manager.on('Enter', () => this.select({commit: true, close: !popupControls.multi()}));
+      manager.on('Enter', () => {
+        this.select({commit: true, close: !popupControls.multi()});
+      });
     }
 
-    if (popupControls.role() === 'tree') {
-      const treeControls = popupControls as ComboboxTreeControls<T, V>;
+    const treeControls = this.treeControls();
 
-      if (treeControls.isItemSelectable()) {
-        manager.on('Enter', () => this.select({commit: true, close: true}));
-      } else if (treeControls.isItemExpandable()) {
+    if (treeControls?.isItemSelectable()) {
+      manager.on('Enter', () => this.select({commit: true, close: true}));
+    }
+
+    if (treeControls?.isItemExpandable()) {
+      manager
+        .on(this.expandKey(), () => this.expandItem())
+        .on(this.collapseKey(), () => this.collapseItem());
+
+      if (!treeControls.isItemSelectable()) {
         manager.on('Enter', () => this.expandItem());
       }
+    }
 
-      if (treeControls.isItemExpandable() || treeControls.isItemCollapsible()) {
-        manager.on(this.collapseKey(), () => this.collapseItem());
-      }
-
-      if (treeControls.isItemExpandable()) {
-        manager.on(this.expandKey(), () => this.expandItem());
-      }
+    if (treeControls?.isItemCollapsible()) {
+      manager.on(this.collapseKey(), () => this.collapseItem());
     }
 
     return manager;
@@ -223,11 +282,23 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** The pointerup event manager for the combobox. */
   pointerup = computed(() =>
     new PointerEventManager().on(e => {
-      const item = this.inputs.popupControls()?.getItem(e);
+      if (e.target === this.inputs.inputEl()) {
+        if (this.readonly()) {
+          this.expanded() ? this.close() : this.open({selected: true});
+        }
+      }
+
+      const controls = this.inputs.popupControls();
+
+      if (controls instanceof ComboboxDialogPattern) {
+        return;
+      }
+
+      const item = controls?.getItem(e);
 
       if (item) {
-        if (this.inputs.popupControls()?.role() === 'tree') {
-          const treeControls = this.inputs.popupControls() as ComboboxTreeControls<T, V>;
+        if (controls?.role() === 'tree') {
+          const treeControls = controls as ComboboxTreeControls<T, V>;
 
           if (treeControls.isItemExpandable(item) && !treeControls.isItemSelectable(item)) {
             treeControls.toggleExpansion(item);
@@ -236,14 +307,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
           }
         }
 
-        this.select({item, commit: true, close: !this.inputs.popupControls()?.multi()});
+        this.select({item, commit: true, close: !controls?.multi()});
         this.inputs.inputEl()?.focus(); // Return focus to the input after selecting.
-      }
-
-      if (e.target === this.inputs.inputEl()) {
-        if (this.readonly()) {
-          this.expanded() ? this.close() : this.open({selected: true});
-        }
       }
     }),
   );
@@ -276,18 +341,15 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return;
     }
 
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
+      return;
+    }
+
     this.open();
     this.inputs.inputValue?.set(inputEl.value);
     this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
-
-    if (this.inputs.filterMode() === 'manual') {
-      const selectedItems = this.inputs.popupControls()?.getSelectedItems();
-      const searchTerm = selectedItems?.[0]?.searchTerm();
-
-      if (searchTerm && this.inputs.inputValue!() !== searchTerm) {
-        this.inputs.popupControls()?.clearSelection();
-      }
-    }
 
     if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
       this.highlight();
@@ -296,12 +358,24 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles focus in events for the combobox. */
   onFocusIn() {
+    if (this.inputs.alwaysExpanded() && !this.hasBeenFocused()) {
+      const firstSelectedItem = this.listControls()?.getSelectedItems()[0];
+      firstSelectedItem ? this.listControls()?.focus(firstSelectedItem) : this.first();
+    }
+
     this.isFocused.set(true);
+    this.hasBeenFocused.set(true);
   }
 
   /** Handles focus out events for the combobox. */
   onFocusOut(event: FocusEvent) {
     if (this.inputs.disabled()) {
+      return;
+    }
+
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
       return;
     }
 
@@ -319,8 +393,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       if (this.inputs.filterMode() !== 'manual') {
         this.commit();
       } else {
-        const item = this.inputs
-          .popupControls()
+        const item = popupControls
           ?.items()
           .find(i => i.searchTerm() === this.inputs.inputEl()?.value);
 
@@ -338,12 +411,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     // TODO(wagnermaciel): Consider whether we should not provide this default behavior for the
     // listbox. Instead, we may want to allow users to have no match so that typing does not focus
     // any option.
-    if (this.inputs.popupControls()?.role() === 'listbox') {
-      return this.inputs.popupControls()?.items()[0];
+    if (this.listControls()?.role() === 'listbox') {
+      return this.listControls()?.items()[0];
     }
 
-    return this.inputs
-      .popupControls()
+    return this.listControls()
       ?.items()
       .find(i => i.value() === this.inputs.firstMatch());
   });
@@ -351,6 +423,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Handles filtering logic for the combobox. */
   onFilter() {
     if (this.readonly()) {
+      return;
+    }
+
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
       return;
     }
 
@@ -377,12 +455,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     const item = this.firstMatch();
 
     if (!item) {
-      this.inputs.popupControls()?.clearSelection();
-      this.inputs.popupControls()?.unfocus();
+      popupControls?.clearSelection();
+      popupControls?.unfocus();
       return;
     }
 
-    this.inputs.popupControls()?.focus(item);
+    popupControls?.focus(item);
 
     if (this.inputs.filterMode() !== 'manual') {
       this.select({item});
@@ -396,7 +474,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Highlights the currently selected item in the combobox. */
   highlight() {
     const inputEl = this.inputs.inputEl();
-    const selectedItems = this.inputs.popupControls()?.getSelectedItems();
+    const selectedItems = this.listControls()?.getSelectedItems();
     const item = selectedItems?.[0];
 
     if (!inputEl || !item) {
@@ -418,13 +496,32 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Closes the combobox. */
   close(opts?: {reset: boolean}) {
-    if (!opts?.reset) {
-      this.expanded.set(false);
-      this.inputs.popupControls()?.unfocus();
+    const popupControls = this.inputs.popupControls();
+
+    if (this.inputs.alwaysExpanded()) {
       return;
     }
 
-    const popupControls = this.inputs.popupControls();
+    if (popupControls instanceof ComboboxDialogPattern) {
+      this.expanded.set(false);
+      return;
+    }
+
+    if (!opts?.reset) {
+      if (this.inputs.filterMode() === 'manual') {
+        if (
+          !this.listControls()
+            ?.items()
+            .some(i => i.searchTerm() === this.inputs.inputEl()?.value)
+        ) {
+          this.listControls()?.clearSelection();
+        }
+      }
+
+      this.expanded.set(false);
+      popupControls?.unfocus();
+      return;
+    }
 
     if (!this.expanded()) {
       this.inputs.inputValue?.set('');
@@ -448,13 +545,19 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this.close();
 
     if (!this.readonly()) {
-      this.inputs.popupControls()?.clearSelection();
+      popupControls?.clearSelection();
     }
   }
 
   /** Opens the combobox. */
   open(nav?: {first?: boolean; last?: boolean; selected?: boolean}) {
     this.expanded.set(true);
+    const popupControls = this.inputs.popupControls();
+
+    if (popupControls instanceof ComboboxDialogPattern) {
+      return;
+    }
+
     const inputEl = this.inputs.inputEl();
 
     if (inputEl && this.inputs.filterMode() === 'highlight') {
@@ -472,32 +575,31 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       this.last();
     }
     if (nav?.selected) {
-      const selectedItem = this.inputs
-        .popupControls()
+      const selectedItem = popupControls
         ?.items()
-        .find(i => this.inputs.popupControls()?.getSelectedItems().includes(i));
-      selectedItem ? this.inputs.popupControls()?.focus(selectedItem) : this.first();
+        .find(i => popupControls?.getSelectedItems().includes(i));
+      selectedItem ? popupControls?.focus(selectedItem) : this.first();
     }
   }
 
   /** Navigates to the next focusable item in the combobox popup. */
   next() {
-    this._navigate(() => this.inputs.popupControls()?.next());
+    this._navigate(() => this.listControls()?.next());
   }
 
   /** Navigates to the previous focusable item in the combobox popup. */
   prev() {
-    this._navigate(() => this.inputs.popupControls()?.prev());
+    this._navigate(() => this.listControls()?.prev());
   }
 
   /** Navigates to the first focusable item in the combobox popup. */
   first() {
-    this._navigate(() => this.inputs.popupControls()?.first());
+    this._navigate(() => this.listControls()?.first());
   }
 
   /** Navigates to the last focusable item in the combobox popup. */
   last() {
-    this._navigate(() => this.inputs.popupControls()?.last());
+    this._navigate(() => this.listControls()?.last());
   }
 
   /** Collapses the currently focused item in the combobox. */
@@ -514,7 +616,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
-    const controls = this.inputs.popupControls();
+    const controls = this.listControls();
 
     if (opts.item) {
       controls?.focus(opts.item, {focusElement: false});
@@ -533,7 +635,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Updates the value of the input based on the currently selected item. */
   commit() {
     const inputEl = this.inputs.inputEl();
-    const selectedItems = this.inputs.popupControls()?.getSelectedItems();
+    const selectedItems = this.listControls()?.getSelectedItems();
 
     if (!inputEl) {
       return;
@@ -559,7 +661,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (this.inputs.filterMode() === 'highlight') {
       // This is to handle when the user navigates back to the originally highlighted item.
       // E.g. User types "Al", highlights "Alice", then navigates down and back up to "Alice".
-      const selectedItem = this.inputs.popupControls()?.getSelectedItems()[0];
+      const selectedItem = this.listControls()?.getSelectedItems()[0];
 
       if (!selectedItem) {
         return;
@@ -571,6 +673,35 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         const inputEl = this.inputs.inputEl()!;
         inputEl.value = selectedItem?.searchTerm()!;
       }
+    }
+  }
+}
+
+export class ComboboxDialogPattern {
+  id = () => this.inputs.id();
+
+  role = () => 'dialog' as const;
+
+  keydown = computed(() => {
+    return new KeyboardEventManager().on('Escape', () => this.inputs.combobox.close());
+  });
+
+  constructor(
+    readonly inputs: {
+      combobox: ComboboxPattern<any, any>;
+      element: SignalLike<HTMLDialogElement>;
+      id: SignalLike<string>;
+    },
+  ) {}
+
+  onKeydown(event: KeyboardEvent) {
+    this.keydown().handle(event);
+  }
+
+  onClick(event: MouseEvent) {
+    // The "click" event fires on the dialog when the user clicks outside of the dialog content.
+    if (event.target === this.inputs.element()) {
+      this.inputs.combobox.close();
     }
   }
 }

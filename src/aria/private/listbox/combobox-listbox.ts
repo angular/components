@@ -64,6 +64,9 @@ export class ComboboxListboxPattern<V>
     this.listBehavior.goto(item, opts);
   };
 
+  /** Navigates to the previous focusable item in the listbox. */
+  getActiveItem = () => this.inputs.activeItem();
+
   /** Navigates to the next focusable item in the listbox. */
   next = () => this.listBehavior.next();
 

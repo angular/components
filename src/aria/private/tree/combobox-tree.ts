@@ -29,6 +29,9 @@ export class ComboboxTreePattern<V>
   /* The id of the active (focused) item in the tree. */
   activeId = computed(() => this.listBehavior.activeDescendant());
 
+  /** Returns the currently active (focused) item in the tree. */
+  getActiveItem = () => this.inputs.activeItem();
+
   /** The list of items in the tree. */
   items = computed(() => this.inputs.allItems());
 
