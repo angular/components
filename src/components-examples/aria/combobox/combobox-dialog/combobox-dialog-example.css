@@ -216,3 +216,7 @@ ul[role='group'] {
 .example-dialog .example-combobox-input-container {
   border-bottom: 1px solid var(--mat-sys-outline);
 }
+
+.example-dialog::backdrop {
+  opacity: 0;
+}

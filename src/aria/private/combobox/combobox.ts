@@ -211,10 +211,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
 
     if (popupControls instanceof ComboboxDialogPattern) {
-      manager.on('ArrowUp', () => this.open()).on('ArrowDown', () => this.open());
+      if (!this.expanded()) {
+        manager.on('ArrowUp', () => this.open()).on('ArrowDown', () => this.open());
 
-      if (!this.expanded() && this.readonly()) {
-        manager.on('Enter', () => this.open()).on(' ', () => this.open());
+        if (this.readonly()) {
+          manager.on('Enter', () => this.open()).on(' ', () => this.open());
+        }
       }
 
       return manager;

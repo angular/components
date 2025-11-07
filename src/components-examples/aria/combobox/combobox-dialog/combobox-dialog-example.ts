@@ -57,7 +57,7 @@ export class ComboboxDialogExample {
   constructor() {
     afterRenderEffect(() => {
       if (this.dialog() && this.combobox()?.expanded()) {
-        this.listbox()?.gotoFirst();
+        untracked(() => this.listbox()?.gotoFirst());
         this.positionDialog();
       }
     });
