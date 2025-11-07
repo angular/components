@@ -747,3 +747,9 @@ $fallbacks: m3-chip.get-tokens();
 .mdc-evolution-chip__icon, .mat-mdc-chip-edit .mat-icon, .mat-mdc-chip-remove .mat-icon {
   min-height: fit-content;
 }
+
+// The `min-height: fit-content` above can stretch out image in Safari (see #32251).
+// It also isn't necessary for image since their content doesn't affect the image container.
+img.mdc-evolution-chip__icon {
+  min-height: 0;
+}
