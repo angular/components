@@ -65,7 +65,7 @@ export class OverlayConfig {
    * Whether the overlay should be rendered as a native popover element,
    * rather than placing it inside of the overlay container.
    */
-  usePopover?: boolean = false;
+  usePopover?: boolean;
 
   constructor(config?: OverlayConfig) {
     if (config) {

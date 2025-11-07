@@ -253,7 +253,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
   @Input({alias: 'cdkConnectedOverlayUsePopover'})
-  usePopover: FlexibleOverlayPopoverLocation | null = null;
+  usePopover: FlexibleOverlayPopoverLocation | null = 'global';
 
   /** Whether the overlay should match the trigger's width. */
   @Input({alias: 'cdkConnectedOverlayMatchWidth', transform: booleanAttribute})

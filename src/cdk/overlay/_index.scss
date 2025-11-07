@@ -195,7 +195,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     position: fixed;
     pointer-events: none;
     white-space: normal;
-    line-height: normal;
+    color: inherit;
     text-decoration: none;
 
     // These are important so the overlay can be measured before it's fully inserted.
@@ -206,6 +206,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // with `align-self` can break the positioning (see #29809).
     inset: auto;
 
+    // Some older versions of Chrome won't render the popover properly without these.
+    top: 0;
+    left: 0;
+
     // For the time being we're using our `.cdk-overlay-backdrop` element instead of the native one.
     &::backdrop {
       display: none;
@@ -213,6 +217,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
 
     .cdk-overlay-backdrop {
       position: fixed;
+      z-index: auto;
     }
   }
 }

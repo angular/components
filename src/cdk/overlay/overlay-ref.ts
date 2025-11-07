@@ -417,7 +417,12 @@ export class OverlayRef implements PortalOutlet {
     }
 
     if (this._config.usePopover) {
-      this._host.showPopover();
+      // We need the try/catch because the browser will throw if the
+      // host or any of the parents are outside the DOM. Also note
+      // the string access which is there for compatibility with Closure.
+      try {
+        this._host['showPopover']();
+      } catch {}
     }
   }
 

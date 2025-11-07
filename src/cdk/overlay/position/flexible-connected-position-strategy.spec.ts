@@ -140,6 +140,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     overlayContainer.getContainerElement().style.top = '-100px';
 
     attachOverlay({
+      usePopover: false,
       positionStrategy: createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush(false)
@@ -2642,7 +2643,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         attachOverlay({positionStrategy});
 
         expect(overlayRef.hostElement.style.left).toBeTruthy();
-        expect(overlayRef.hostElement.style.right).toBeFalsy();
+        expect(overlayRef.hostElement.style.right).toBe('auto');
       });
 
       it('should use `right` when positioning an element at the end', () => {
@@ -2658,7 +2659,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         attachOverlay({positionStrategy});
 
         expect(overlayRef.hostElement.style.right).toBeTruthy();
-        expect(overlayRef.hostElement.style.left).toBeFalsy();
+        expect(overlayRef.hostElement.style.left).toBe('auto');
       });
     });
 
@@ -2679,7 +2680,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         });
 
         expect(overlayRef.hostElement.style.right).toBeTruthy();
-        expect(overlayRef.hostElement.style.left).toBeFalsy();
+        expect(overlayRef.hostElement.style.left).toBe('auto');
       });
 
       it('should use `left` when positioning an element at the end', () => {
@@ -2695,7 +2696,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         attachOverlay({positionStrategy, direction: 'rtl'});
 
         expect(overlayRef.hostElement.style.left).toBeTruthy();
-        expect(overlayRef.hostElement.style.right).toBeFalsy();
+        expect(overlayRef.hostElement.style.right).toBe('auto');
       });
     });
 
@@ -2713,7 +2714,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         attachOverlay({positionStrategy});
 
         expect(overlayRef.hostElement.style.top).toBeTruthy();
-        expect(overlayRef.hostElement.style.bottom).toBeFalsy();
+        expect(overlayRef.hostElement.style.bottom).toBe('auto');
       });
 
       it('should use `bottom` when positioning at element along the bottom', () => {
@@ -2729,7 +2730,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         attachOverlay({positionStrategy});
 
         expect(overlayRef.hostElement.style.bottom).toBeTruthy();
-        expect(overlayRef.hostElement.style.top).toBeFalsy();
+        expect(overlayRef.hostElement.style.top).toBe('auto');
       });
     });
   });
