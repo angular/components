@@ -349,11 +349,6 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     this.inputs.inputValue?.set(inputEl.value);
     this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
 
-    if (this.inputs.filterMode() === 'manual') {
-      const selectedItems = popupControls?.getSelectedItems();
-      const searchTerm = selectedItems?.[0]?.searchTerm();
-    }
-
     if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
       this.highlight();
     }
