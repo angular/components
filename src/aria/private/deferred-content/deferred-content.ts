@@ -29,7 +29,7 @@ export class DeferredContentAware {
 
 /**
  * DeferredContent loads/unloads the content based on the visibility.
- * The visibilty signal is sent from a parent directive implements
+ * The visibility signal is sent from a parent directive implements
  * DeferredContentAware.
  *
  * Use this directive as a host directive. For example:

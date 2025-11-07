@@ -80,7 +80,7 @@ export class GridSelection<T extends GridSelectionCell> {
     );
   }
 
-  /** Whether a cell is selctable. */
+  /** Whether a cell is selectable. */
   isSelectable(cell: T) {
     return cell.selectable() && !cell.disabled();
   }
