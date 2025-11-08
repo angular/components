@@ -5,10 +5,8 @@ import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from
 /** @title Menu trigger example. */
 @Component({
   selector: 'menu-trigger-example',
-  exportAs: 'MenuTriggerExample',
   templateUrl: 'menu-trigger-example.html',
   styleUrl: '../menu-example.css',
-  standalone: true,
   imports: [
     MenuContent,
     MenuTrigger,

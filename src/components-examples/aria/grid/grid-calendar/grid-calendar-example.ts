@@ -30,7 +30,6 @@ interface CalendarCell<D = any> {
 /** @title Grid Calendar. */
 @Component({
   selector: 'grid-calendar-example',
-  exportAs: 'GridCalendarExample',
   templateUrl: 'grid-calendar-example.html',
   styleUrls: ['../grid-common.css', 'grid-calendar-example.css'],
   imports: [Grid, GridRow, GridCell, GridCellWidget],
