@@ -16,10 +16,8 @@ import {toSignal} from '@angular/core/rxjs-interop';
 /** @title Grid Pill List. */
 @Component({
   selector: 'grid-pill-list-example',
-  exportAs: 'GridPillListExample',
   templateUrl: 'grid-pill-list-example.html',
   styleUrls: ['../grid-common.css', 'grid-pill-list-example.css'],
-  standalone: true,
   imports: [
     Grid,
     GridRow,

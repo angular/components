@@ -7,10 +7,8 @@ import {SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText} from
  */
 @Component({
   selector: 'menu-standalone-example',
-  exportAs: 'MenuStandaloneExample',
   templateUrl: 'menu-standalone-example.html',
   styleUrl: '../menu-example.css',
-  standalone: true,
   imports: [Menu, MenuContent, SimpleMenu, SimpleMenuItem, SimpleMenuItemIcon, SimpleMenuItemText],
 })
 export class MenuStandaloneExample {}
