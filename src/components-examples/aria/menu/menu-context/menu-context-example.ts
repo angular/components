@@ -11,10 +11,8 @@ import {
 /** @title Context menu example. */
 @Component({
   selector: 'menu-context-example',
-  exportAs: 'MenuContextExample',
   templateUrl: 'menu-context-example.html',
   styleUrl: '../menu-example.css',
-  standalone: true,
   imports: [
     SimpleMenu,
     SimpleMenuItem,

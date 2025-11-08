@@ -13,10 +13,8 @@ import {MenuContent} from '@angular/aria/menu';
 /** @title Menu bar example. */
 @Component({
   selector: 'menu-bar-example',
-  exportAs: 'MenuBarExample',
   templateUrl: 'menu-bar-example.html',
   styleUrl: '../menu-example.css',
-  standalone: true,
   imports: [
     SimpleMenu,
     SimpleMenuBar,

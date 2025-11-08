@@ -14,10 +14,8 @@ import {MenuContent} from '@angular/aria/menu';
 /** @title Menu bar RTL example. */
 @Component({
   selector: 'menu-bar-rtl-example',
-  exportAs: 'MenuBarRTLExample',
   templateUrl: 'menu-bar-rtl-example.html',
   styleUrl: '../menu-example.css',
-  standalone: true,
   imports: [
     Dir,
     SimpleMenu,

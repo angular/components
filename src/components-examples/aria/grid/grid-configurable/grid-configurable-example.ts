@@ -75,10 +75,8 @@ function generateValidGrid(
 /** @title Configurable Grid. */
 @Component({
   selector: 'grid-configurable-example',
-  exportAs: 'GridConfigurableExample',
   templateUrl: 'grid-configurable-example.html',
   styleUrls: ['../grid-common.css', 'grid-configurable-example.css'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,
