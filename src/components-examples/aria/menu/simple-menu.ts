@@ -15,7 +15,7 @@ export class SimpleMenu {
 
   constructor() {
     afterRenderEffect(() => {
-      this.menu.isVisible() ? this.menu.element.showPopover() : this.menu.element.hidePopover();
+      this.menu.visible() ? this.menu.element.showPopover() : this.menu.element.hidePopover();
     });
   }
 

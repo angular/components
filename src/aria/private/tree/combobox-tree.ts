@@ -21,16 +21,13 @@ export class ComboboxTreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
   /** Whether the currently focused item is collapsible. */
-  isItemCollapsible = () => this.inputs.activeItem()?.parent() instanceof TreeItemPattern;
+  collapsible = () => this.inputs.activeItem()?.parent() instanceof TreeItemPattern;
 
   /** The ARIA role for the tree. */
   role = () => 'tree' as const;
 
   /* The id of the active (focused) item in the tree. */
   activeId = computed(() => this.listBehavior.activeDescendant());
-
-  /** Returns the currently active (focused) item in the tree. */
-  getActiveItem = () => this.inputs.activeItem();
 
   /** The list of items in the tree. */
   items = computed(() => this.inputs.allItems());
@@ -86,10 +83,10 @@ export class ComboboxTreePattern<V>
   clearSelection = () => this.listBehavior.deselectAll();
 
   /** Retrieves the TreeItemPattern associated with a pointer event. */
-  getItem = (e: PointerEvent) => this._getItem(e);
+  item = (e: PointerEvent) => this._getItem(e);
 
   /** Retrieves the currently selected items in the tree */
-  getSelectedItems = () => this.inputs.allItems().filter(item => item.selected());
+  selectedItems = () => this.inputs.allItems().filter(item => item.selected());
 
   /** Sets the value of the combobox tree. */
   setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
@@ -101,7 +98,7 @@ export class ComboboxTreePattern<V>
   collapseItem = () => this.collapse();
 
   /** Whether the specified item or the currently active item is expandable. */
-  isItemExpandable(item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) {
+  expandable(item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) {
     return item ? item.expandable() : false;
   }
 
@@ -112,7 +109,7 @@ export class ComboboxTreePattern<V>
   collapseAll = () => this.items().forEach(item => item.expansion.close());
 
   /** Whether the currently active item is selectable. */
-  isItemSelectable = (item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) => {
+  selectable = (item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) => {
     return item ? item.selectable() : false;
   };
 }

@@ -65,7 +65,7 @@ export class ComboboxListboxPattern<V>
   };
 
   /** Navigates to the previous focusable item in the listbox. */
-  getActiveItem = () => this.inputs.activeItem();
+  activeItem = () => this.inputs.activeItem();
 
   /** Navigates to the next focusable item in the listbox. */
   next = () => this.listBehavior.next();
@@ -92,10 +92,10 @@ export class ComboboxListboxPattern<V>
   clearSelection = () => this.listBehavior.deselectAll();
 
   /** Retrieves the OptionPattern associated with a pointer event. */
-  getItem = (e: PointerEvent) => this._getItem(e);
+  item = (e: PointerEvent) => this._getItem(e);
 
   /** Retrieves the currently selected items in the listbox. */
-  getSelectedItems = () => {
+  selectedItems = () => {
     // NOTE: We need to do this funky for loop to preserve the order of the selected values.
     const items = [];
     for (const value of this.inputs.value()) {

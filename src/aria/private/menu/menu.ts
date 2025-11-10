@@ -75,7 +75,7 @@ export class MenuPattern<V> {
   role = () => 'menu';
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => (this.inputs.parent() ? !!this.inputs.parent()?.expanded() : true));
+  visible = computed(() => (this.inputs.parent() ? !!this.inputs.parent()?.expanded() : true));
 
   /** Controls list behavior for the menu items. */
   listBehavior: List<MenuItemPattern<V>, V>;
@@ -184,7 +184,7 @@ export class MenuPattern<V> {
 
   /** Handles mouseover events for the menu. */
   onMouseOver(event: MouseEvent) {
-    if (!this.isVisible()) {
+    if (!this.visible()) {
       return;
     }
 
@@ -306,7 +306,7 @@ export class MenuPattern<V> {
     }
 
     if (
-      this.isVisible() &&
+      this.visible() &&
       !parentEl?.contains(relatedTarget) &&
       !this.inputs.element()?.contains(relatedTarget)
     ) {
@@ -677,7 +677,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the menu item is active. */
-  isActive = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
+  active = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
 
   /** The tab index of the menu item. */
   tabIndex = computed(() => {

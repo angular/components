@@ -117,14 +117,14 @@ export class Combobox<V> {
     afterRenderEffect(() => {
       if (
         !this._deferredContentAware?.contentVisible() &&
-        (this._pattern.isFocused() || this.alwaysExpanded())
+        (this._pattern.focused() || this.alwaysExpanded())
       ) {
         this._deferredContentAware?.contentVisible.set(true);
       }
     });
 
     afterRenderEffect(() => {
-      if (!this._hasBeenFocused() && this._pattern.isFocused()) {
+      if (!this._hasBeenFocused() && this._pattern.focused()) {
         this._hasBeenFocused.set(true);
       }
     });

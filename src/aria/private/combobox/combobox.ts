@@ -93,13 +93,13 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   unfocus: () => void;
 
   /** Returns the item corresponding to the given event. */
-  getItem: (e: PointerEvent) => T | undefined;
+  item: (e: PointerEvent) => T | undefined;
 
   /** Returns the currently active (focused) item in the popup. */
-  getActiveItem: () => T | undefined;
+  activeItem: () => T | undefined;
 
   /** Returns the currently selected items in the popup. */
-  getSelectedItems: () => T[];
+  selectedItems: () => T[];
 
   /** Sets the value of the combobox based on the selected item. */
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
@@ -108,7 +108,7 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
 export interface ComboboxTreeControls<T extends ListItem<V>, V>
   extends ComboboxListboxControls<T, V> {
   /** Whether the currently active item in the popup is collapsible. */
-  isItemCollapsible: () => boolean;
+  collapsible: () => boolean;
 
   /** Expands the currently active item in the popup. */
   expandItem: () => void;
@@ -116,8 +116,8 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V>
   /** Collapses the currently active item in the popup. */
   collapseItem: () => void;
 
-  /** Checks if the currently active item in the popup is expandable. */
-  isItemExpandable: (item?: T) => boolean;
+  /** Whether the specified item or the currently active item is expandable. */
+  expandable: (item?: T) => boolean;
 
   /** Expands all nodes in the tree. */
   expandAll: () => void;
@@ -129,7 +129,7 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V>
   toggleExpansion: (item?: T) => void;
 
   /** Whether the current active item is selectable. */
-  isItemSelectable: (item?: T) => boolean;
+  selectable: (item?: T) => boolean;
 }
 
 /** Controls the state of a combobox. */
@@ -151,10 +151,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   highlightedItem = signal<T | undefined>(undefined);
 
   /** Whether the most recent input event was a deletion. */
-  isDeleting = false;
+  deleting = false;
 
   /** Whether the combobox is focused. */
-  isFocused = signal(false);
+  focused = signal(false);
 
   /** Whether the combobox has ever been focused. */
   hasBeenFocused = signal(false);
@@ -258,21 +258,21 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     const treeControls = this.treeControls();
 
-    if (treeControls?.isItemSelectable()) {
+    if (treeControls?.selectable()) {
       manager.on('Enter', () => this.select({commit: true, close: true}));
     }
 
-    if (treeControls?.isItemExpandable()) {
+    if (treeControls?.expandable()) {
       manager
         .on(this.expandKey(), () => this.expandItem())
         .on(this.collapseKey(), () => this.collapseItem());
 
-      if (!treeControls.isItemSelectable()) {
+      if (!treeControls.selectable()) {
         manager.on('Enter', () => this.expandItem());
       }
     }
 
-    if (treeControls?.isItemCollapsible()) {
+    if (treeControls?.collapsible()) {
       manager.on(this.collapseKey(), () => this.collapseItem());
     }
 
@@ -294,13 +294,13 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         return;
       }
 
-      const item = controls?.getItem(e);
+      const item = controls?.item(e);
 
       if (item) {
         if (controls?.role() === 'tree') {
           const treeControls = controls as ComboboxTreeControls<T, V>;
 
-          if (treeControls.isItemExpandable(item) && !treeControls.isItemSelectable(item)) {
+          if (treeControls.expandable(item) && !treeControls.selectable(item)) {
             treeControls.toggleExpansion(item);
             this.inputs.inputEl()?.focus();
             return;
@@ -349,9 +349,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     this.open();
     this.inputs.inputValue?.set(inputEl.value);
-    this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
+    this.deleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
 
-    if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
+    if (this.inputs.filterMode() === 'highlight' && !this.deleting) {
       this.highlight();
     }
   }
@@ -359,11 +359,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Handles focus in events for the combobox. */
   onFocusIn() {
     if (this.inputs.alwaysExpanded() && !this.hasBeenFocused()) {
-      const firstSelectedItem = this.listControls()?.getSelectedItems()[0];
+      const firstSelectedItem = this.listControls()?.selectedItems()[0];
       firstSelectedItem ? this.listControls()?.focus(firstSelectedItem) : this.first();
     }
 
-    this.isFocused.set(true);
+    this.focused.set(true);
     this.hasBeenFocused.set(true);
   }
 
@@ -383,7 +383,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       !(event.relatedTarget instanceof HTMLElement) ||
       !this.inputs.containerEl()?.contains(event.relatedTarget)
     ) {
-      this.isFocused.set(false);
+      this.focused.set(false);
 
       if (this.readonly()) {
         this.close();
@@ -436,14 +436,14 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     // When the user first interacts with the combobox, the popup will lazily render for the first
     // time. This is a simple way to detect this and avoid auto-focus & selection logic, but this
     // should probably be moved to the component layer instead.
-    const isInitialRender = !this.inputs.inputValue?.().length && !this.isDeleting;
+    const isInitialRender = !this.inputs.inputValue?.().length && !this.deleting;
 
     if (isInitialRender) {
       return;
     }
 
     // Avoid refocusing the input if a filter event occurs after focus has left the combobox.
-    if (!this.isFocused()) {
+    if (!this.focused()) {
       return;
     }
 
@@ -466,7 +466,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       this.select({item});
     }
 
-    if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
+    if (this.inputs.filterMode() === 'highlight' && !this.deleting) {
       this.highlight();
     }
   }
@@ -474,7 +474,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Highlights the currently selected item in the combobox. */
   highlight() {
     const inputEl = this.inputs.inputEl();
-    const selectedItems = this.listControls()?.getSelectedItems();
+    const selectedItems = this.listControls()?.selectedItems();
     const item = selectedItems?.[0];
 
     if (!inputEl || !item) {
@@ -535,7 +535,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     } else if (this.expanded()) {
       this.close();
 
-      const selectedItem = popupControls?.getSelectedItems()?.[0];
+      const selectedItem = popupControls?.selectedItems()?.[0];
 
       if (selectedItem?.searchTerm() !== this.inputs.inputValue!()) {
         popupControls?.clearSelection();
@@ -577,7 +577,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (nav?.selected) {
       const selectedItem = popupControls
         ?.items()
-        .find(i => popupControls?.getSelectedItems().includes(i));
+        .find(i => popupControls?.selectedItems().includes(i));
       selectedItem ? popupControls?.focus(selectedItem) : this.first();
     }
   }
@@ -635,7 +635,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Updates the value of the input based on the currently selected item. */
   commit() {
     const inputEl = this.inputs.inputEl();
-    const selectedItems = this.listControls()?.getSelectedItems();
+    const selectedItems = this.listControls()?.selectedItems();
 
     if (!inputEl) {
       return;
@@ -661,7 +661,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     if (this.inputs.filterMode() === 'highlight') {
       // This is to handle when the user navigates back to the originally highlighted item.
       // E.g. User types "Al", highlights "Alice", then navigates down and back up to "Alice".
-      const selectedItem = this.listControls()?.getSelectedItems()[0];
+      const selectedItem = this.listControls()?.selectedItems()[0];
 
       if (!selectedItem) {
         return;

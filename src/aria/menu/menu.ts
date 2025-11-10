@@ -110,7 +110,7 @@ export class MenuTrigger<V> {
     'role': 'menu',
     'class': 'ng-menu',
     '[attr.id]': '_pattern.id()',
-    '[attr.data-visible]': '_pattern.isVisible()',
+    '[attr.data-visible]': '_pattern.visible()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(mouseout)': '_pattern.onMouseOut($event)',
@@ -171,7 +171,7 @@ export class Menu<V> {
   readonly items = () => this._items().map(i => i._pattern);
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => this._pattern.isVisible());
+  visible = computed(() => this._pattern.visible());
 
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
@@ -199,7 +199,7 @@ export class Menu<V> {
         this._deferredContentAware?.contentVisible.set(true);
       } else {
         this._deferredContentAware?.contentVisible.set(
-          this._pattern.isVisible() || !!this.parent()?.hasBeenFocused(),
+          this._pattern.visible() || !!this.parent()?.hasBeenFocused(),
         );
       }
     });
@@ -209,7 +209,7 @@ export class Menu<V> {
     // update the display property. The result is focus() being called on an element that is not
     // focusable. This simply retries focusing the element after render.
     afterRenderEffect(() => {
-      if (this._pattern.isVisible()) {
+      if (this._pattern.visible()) {
         const activeItem = untracked(() => this._pattern.inputs.activeItem());
         this._pattern.listBehavior.goto(activeItem!);
       }
@@ -335,7 +335,7 @@ export class MenuBar<V> {
     'class': 'ng-menu-item',
     '(focusin)': 'onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.data-active]': '_pattern.isActive()',
+    '[attr.data-active]': '_pattern.active()',
     '[attr.aria-haspopup]': '_pattern.hasPopup()',
     '[attr.aria-expanded]': '_pattern.expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',

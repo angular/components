@@ -292,130 +292,130 @@ describe('Standalone Menu Pattern', () => {
 
   describe('Expansion and Collapse', () => {
     it('should be expanded by default', () => {
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should expand submenu on click', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should open submenu on arrow right', () => {
       menu.onKeydown(right());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should close submenu on arrow left', () => {
       menu.onKeydown(right());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(left());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close submenu on click outside', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onFocusOut(new FocusEvent('focusout', {relatedTarget: null}));
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should expand submenu on enter', () => {
       menu.onKeydown(enter());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should expand submenu on space', () => {
       menu.onKeydown(space());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should close submenu on escape', () => {
       menu.onKeydown(right());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(escape());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close submenu on arrow left', () => {
       menu.onKeydown(right());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(left());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should open submenu on mouseover', async () => {
       const menuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: menuItem.element()} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should close on selecting an item on click', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onClick(clickMenuItem(submenu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close on selecting an item on enter', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(enter());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close on selecting an item on space', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(space());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close on focus out from the menu', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onFocusOut(new FocusEvent('focusout', {relatedTarget: null}));
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close a submenu on focus out', async () => {
       const parentMenuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: parentMenuItem.element()} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
       expect(submenu.isFocused()).toBe(false);
 
       submenu.onFocusOut(new FocusEvent('focusout', {relatedTarget: document.body}));
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should close an unfocused submenu on mouse out', async () => {
       menu.onMouseOver({target: menu.inputs.items()[0].element()} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onMouseOut({relatedTarget: document.body} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
 
     it('should not close an unfocused submenu on mouse out if the parent menu is hovered', async () => {
       const parentMenuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: parentMenuItem.element()} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
       submenu.onMouseOut({relatedTarget: parentMenuItem.element()} as unknown as MouseEvent);
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
   });
 
@@ -428,15 +428,15 @@ describe('Standalone Menu Pattern', () => {
 
     it('should open submenu on arrow left', () => {
       menu.onKeydown(left());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
     });
 
     it('should close submenu on arrow right', () => {
       menu.onKeydown(left());
-      expect(submenu.isVisible()).toBe(true);
+      expect(submenu.visible()).toBe(true);
 
       submenu.onKeydown(right());
-      expect(submenu.isVisible()).toBe(false);
+      expect(submenu.visible()).toBe(false);
     });
   });
 });
@@ -482,118 +482,118 @@ describe('Menu Trigger Pattern', () => {
   describe('Expansion and Collapse', () => {
     it('should be closed by default', () => {
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should open on click', () => {
       trigger.onClick();
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should close on second click', () => {
       trigger.onClick();
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
+      expect(menu.visible()).toBe(true);
 
       trigger.onClick();
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
     });
 
     it('should open on arrow down', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should open on arrow up', () => {
       trigger.onKeydown(up());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should open on space', () => {
       trigger.onKeydown(space());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should open on enter', () => {
       trigger.onKeydown(enter());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should close on escape', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
+      expect(menu.visible()).toBe(true);
 
       menu.onKeydown(escape());
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
     });
 
     it('should close on selecting an item on click', () => {
       trigger.onClick();
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
 
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(true);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(true);
 
       submenu?.onClick(clickMenuItem(submenu.inputs.items(), 0));
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should close on selecting an item on enter', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
 
       menu.onKeydown(right());
-      expect(submenu?.isVisible()).toBe(true);
+      expect(submenu?.visible()).toBe(true);
 
       submenu?.onKeydown(enter());
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should close on selecting an item on space', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
-      expect(menu.isVisible()).toBe(true);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(submenu?.visible()).toBe(false);
 
       menu.onKeydown(right());
-      expect(submenu?.isVisible()).toBe(true);
+      expect(submenu?.visible()).toBe(true);
 
       submenu?.onKeydown(space());
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
+      expect(submenu?.visible()).toBe(false);
     });
 
     it('should close the trigger on focus out from the menu', () => {
       trigger.onKeydown(down());
       menu.onFocusOut(new FocusEvent('focusout', {relatedTarget: null}));
       expect(trigger.expanded()).toBe(false);
-      expect(menu.isVisible()).toBe(false);
-      expect(submenu?.isVisible()).toBe(false);
+      expect(menu.visible()).toBe(false);
+      expect(submenu?.visible()).toBe(false);
     });
   });
 });
@@ -617,7 +617,7 @@ describe('Menu Bar Pattern', () => {
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(down());
 
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
@@ -626,7 +626,7 @@ describe('Menu Bar Pattern', () => {
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(up());
 
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[1]);
     });
 
@@ -635,7 +635,7 @@ describe('Menu Bar Pattern', () => {
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(enter());
 
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
@@ -644,45 +644,45 @@ describe('Menu Bar Pattern', () => {
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(space());
 
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
     it('should navigate to a menubar item on mouse over', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
-      expect(menuB.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(true);
+      expect(menuB.visible()).toBe(false);
 
       const mouseOverEvent = {target: menubarItems[1].element()} as unknown as MouseEvent;
       menubar.onMouseOver(mouseOverEvent);
 
-      expect(menuA.isVisible()).toBe(false);
-      expect(menuB.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(false);
+      expect(menuB.visible()).toBe(true);
       expect(menubar.inputs.activeItem()).toBe(menubarItems[1]);
     });
 
     it('should focus the first item of the next menubar item on arrow right', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0)); // open menuA
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onKeydown(right());
 
-      expect(menuA.isVisible()).toBe(false);
-      expect(menuB.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(false);
+      expect(menuB.visible()).toBe(true);
       expect(menuB.inputs.activeItem()).toBe(menuB.inputs.items()[0]);
     });
 
     it('should focus the first item of the previous menubar item on arrow left', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 1)); // open menuB
-      expect(menuB.isVisible()).toBe(true);
+      expect(menuB.visible()).toBe(true);
 
       menuB.onKeydown(left());
 
-      expect(menuB.isVisible()).toBe(false);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuB.visible()).toBe(false);
+      expect(menuA.visible()).toBe(true);
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
   });
@@ -694,9 +694,9 @@ describe('Menu Bar Pattern', () => {
       expect(menubarItems[1].expanded()).toBe(false);
       expect(menubarItems[2].expanded()).toBe(false);
 
-      expect(menuA.isVisible()).toBe(false);
-      expect(menuB.isVisible()).toBe(false);
-      expect(menuC.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
+      expect(menuB.visible()).toBe(false);
+      expect(menuC.visible()).toBe(false);
     });
 
     it('should expand on click', () => {
@@ -707,9 +707,9 @@ describe('Menu Bar Pattern', () => {
       expect(menubarItems[1].expanded()).toBe(false);
       expect(menubarItems[2].expanded()).toBe(false);
 
-      expect(menuA.isVisible()).toBe(true);
-      expect(menuB.isVisible()).toBe(false);
-      expect(menuC.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(true);
+      expect(menuB.visible()).toBe(false);
+      expect(menuC.visible()).toBe(false);
     });
 
     it('should collapse on second click', () => {
@@ -717,12 +717,12 @@ describe('Menu Bar Pattern', () => {
       menubar.onClick(clickMenuItem(menubarItems, 0));
 
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menubar.onClick(clickMenuItem(menubarItems, 0));
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should expand on arrow down', () => {
@@ -731,7 +731,7 @@ describe('Menu Bar Pattern', () => {
       menubar.onKeydown(down());
 
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
     });
 
     it('should expand on arrow up', () => {
@@ -740,7 +740,7 @@ describe('Menu Bar Pattern', () => {
       menubar.onKeydown(up());
 
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
     });
 
     it('should expand on space', () => {
@@ -749,7 +749,7 @@ describe('Menu Bar Pattern', () => {
       menubar.onKeydown(space());
 
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
     });
 
     it('should expand on enter', () => {
@@ -758,84 +758,84 @@ describe('Menu Bar Pattern', () => {
       menubar.onKeydown(enter());
 
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
     });
 
     it('should close on escape', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menubarItems[0].expanded()).toBe(true);
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onKeydown(escape());
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should close on selecting an item on click', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onClick(clickMenuItem(menuA.inputs.items(), 0));
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should close on selecting an item on enter', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onKeydown(enter());
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should close on selecting an item on space', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onKeydown(space());
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should close on focus out from the menu', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onFocusOut(new FocusEvent('focusout', {relatedTarget: null}));
 
       expect(menubarItems[0].expanded()).toBe(false);
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
     });
 
     it('should close on arrow right on a leaf menu item', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
 
       menuA.onKeydown(right());
 
-      expect(menuA.isVisible()).toBe(false);
+      expect(menuA.visible()).toBe(false);
       expect(menubarItems[0].expanded()).toBe(false);
     });
 
     it('should close on arrow left on a root menu item', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 1));
-      expect(menuB.isVisible()).toBe(true);
+      expect(menuB.visible()).toBe(true);
 
       menuB.onKeydown(left());
 
-      expect(menuB.isVisible()).toBe(false);
+      expect(menuB.visible()).toBe(false);
       expect(menubarItems[1].expanded()).toBe(false);
     });
 
@@ -845,7 +845,7 @@ describe('Menu Bar Pattern', () => {
 
       menuA.onKeydown(right());
 
-      expect(menuB.isVisible()).toBe(true);
+      expect(menuB.visible()).toBe(true);
       expect(menubarItems[1].expanded()).toBe(true);
       expect(menubar.inputs.activeItem()).toBe(menubarItems[1]);
     });
@@ -856,7 +856,7 @@ describe('Menu Bar Pattern', () => {
 
       menuB.onKeydown(left());
 
-      expect(menuA.isVisible()).toBe(true);
+      expect(menuA.visible()).toBe(true);
       expect(menubarItems[0].expanded()).toBe(true);
       expect(menubar.inputs.activeItem()).toBe(menubarItems[0]);
     });
@@ -873,22 +873,22 @@ describe('Menu Bar Pattern', () => {
       it('should close on arrow left on a leaf menu item', () => {
         const menubarItems = menubar.inputs.items();
         menubar.onClick(clickMenuItem(menubarItems, 0));
-        expect(menuA.isVisible()).toBe(true);
+        expect(menuA.visible()).toBe(true);
 
         menuA.onKeydown(left());
 
-        expect(menuA.isVisible()).toBe(false);
+        expect(menuA.visible()).toBe(false);
         expect(menubarItems[0].expanded()).toBe(false);
       });
 
       it('should close on arrow right on a root menu item', () => {
         const menubarItems = menubar.inputs.items();
         menubar.onClick(clickMenuItem(menubarItems, 1));
-        expect(menuB.isVisible()).toBe(true);
+        expect(menuB.visible()).toBe(true);
 
         menuB.onKeydown(right());
 
-        expect(menuB.isVisible()).toBe(false);
+        expect(menuB.visible()).toBe(false);
         expect(menubarItems[1].expanded()).toBe(false);
       });
 
@@ -898,7 +898,7 @@ describe('Menu Bar Pattern', () => {
 
         menuA.onKeydown(left());
 
-        expect(menuB.isVisible()).toBe(true);
+        expect(menuB.visible()).toBe(true);
         expect(menubarItems[1].expanded()).toBe(true);
         expect(menubar.inputs.activeItem()).toBe(menubarItems[1]);
       });
@@ -909,7 +909,7 @@ describe('Menu Bar Pattern', () => {
 
         menuB.onKeydown(right());
 
-        expect(menuA.isVisible()).toBe(true);
+        expect(menuA.visible()).toBe(true);
         expect(menubarItems[0].expanded()).toBe(true);
         expect(menubar.inputs.activeItem()).toBe(menubarItems[0]);
       });
