@@ -40,6 +40,9 @@ export interface MenuInputs<V>
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
+
+  /** The delay in milliseconds before expanding sub-menus on hover. */
+  expansionDelay: SignalLike<number>;
 }
 
 /** The inputs for the MenuTriggerPattern class. */
@@ -82,6 +85,12 @@ export class MenuPattern<V> {
 
   /** Whether the menu has received focus. */
   hasBeenFocused = signal(false);
+
+  /** Timeout used to open sub-menus on hover. */
+  _openTimeout: any;
+
+  /** Timeout used to close sub-menus on hover out. */
+  _closeTimeout: any;
 
   /** Whether the menu should be focused on mouse over. */
   shouldFocus = computed(() => {
@@ -185,23 +194,55 @@ export class MenuPattern<V> {
       return;
     }
 
+    const parent = this.inputs.parent();
     const activeItem = this?.inputs.activeItem();
 
+    if (parent instanceof MenuItemPattern) {
+      const grandparent = parent.inputs.parent();
+      if (grandparent instanceof MenuPattern) {
+        grandparent._clearTimeouts();
+        grandparent.listBehavior.goto(parent, {focusElement: false});
+      }
+    }
+
     if (activeItem && activeItem !== item) {
-      activeItem.close();
+      this._closeItem(activeItem);
     }
 
-    if (item.expanded() && item.submenu()?.inputs.activeItem()) {
-      item.submenu()?.inputs.activeItem()?.close();
-      item.submenu()?.listBehavior.unfocus();
+    if (item.expanded()) {
+      this._clearCloseTimeout();
     }
 
-    item.open();
+    this._openItem(item);
     this.listBehavior.goto(item, {focusElement: this.shouldFocus()});
+  }
+
+  /** Closes the specified menu item after a delay. */
+  private _closeItem(item: MenuItemPattern<V>) {
+    this._clearOpenTimeout();
+
+    if (!this._closeTimeout) {
+      this._closeTimeout = setTimeout(() => {
+        item.close();
+        this._closeTimeout = undefined;
+      }, this.inputs.expansionDelay());
+    }
+  }
+
+  /** Opens the specified menu item after a delay. */
+  private _openItem(item: MenuItemPattern<V>) {
+    this._clearOpenTimeout();
+
+    this._openTimeout = setTimeout(() => {
+      item.open();
+      this._openTimeout = undefined;
+    }, this.inputs.expansionDelay());
   }
 
   /** Handles mouseout events for the menu. */
   onMouseOut(event: MouseEvent) {
+    this._clearOpenTimeout();
+
     if (this.isFocused()) {
       return;
     }
@@ -368,6 +409,28 @@ export class MenuPattern<V> {
 
     if (root instanceof MenuPattern) {
       root.inputs.activeItem()?.close({refocus: true});
+    }
+  }
+
+  /** Clears any open or close timeouts for sub-menus. */
+  _clearTimeouts() {
+    this._clearOpenTimeout();
+    this._clearCloseTimeout();
+  }
+
+  /** Clears the open timeout. */
+  _clearOpenTimeout() {
+    if (this._openTimeout) {
+      clearTimeout(this._openTimeout);
+      this._openTimeout = undefined;
+    }
+  }
+
+  /** Clears the close timeout. */
+  _clearCloseTimeout() {
+    if (this._closeTimeout) {
+      clearTimeout(this._closeTimeout);
+      this._closeTimeout = undefined;
     }
   }
 }
@@ -685,6 +748,12 @@ export class MenuItemPattern<V> implements ListItem<V> {
       menuitem?._expanded.set(false);
       menuitem?.inputs.parent()?.listBehavior.unfocus();
       menuitems = menuitems.concat(menuitem?.submenu()?.inputs.items() ?? []);
+
+      const parent = menuitem?.inputs.parent();
+
+      if (parent instanceof MenuPattern) {
+        parent._clearTimeouts();
+      }
     }
   }
 }

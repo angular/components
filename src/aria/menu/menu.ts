@@ -176,6 +176,9 @@ export class Menu<V> {
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
 
+  /** The delay in milliseconds before expanding sub-menus on hover. */
+  readonly expansionDelay = input<number>(150); // Arbitrarily chosen.
+
   constructor() {
     this._pattern = new MenuPattern({
       ...this,
@@ -214,7 +217,7 @@ export class Menu<V> {
 
     afterRenderEffect(() => {
       if (!this._pattern.hasBeenFocused()) {
-        this._pattern.setDefaultState();
+        untracked(() => this._pattern.setDefaultState());
       }
     });
   }
