@@ -19,6 +19,7 @@ COMMON_CONFIG = [
 
 # Project dependencies common across libs/tests
 DEPS = [
+    "//docs:node_modules/zone.js",
     "//docs:node_modules/@angular/aria",
     "//docs:node_modules/@angular/cdk",
     "//docs:node_modules/@angular/cdk-experimental",
@@ -36,7 +37,15 @@ APPLICATION_CONFIG = COMMON_CONFIG + [
 TEST_DEPS = [
     "@rules_browsers//browsers/chromium",
     "@rules_browsers//browsers/firefox",
+    "//docs:node_modules/@types/jasmine",
+    "//docs:node_modules/@types/node",
+    "//docs:node_modules/jasmine-core",
+    "//docs:node_modules/karma",
+    "//docs:node_modules/karma-chrome-launcher",
+    "//docs:node_modules/karma-coverage",
     "//docs:node_modules/karma-firefox-launcher",
+    "//docs:node_modules/karma-jasmine",
+    "//docs:node_modules/karma-jasmine-html-reporter",
 ]
 
 # Common dependencies of Angular CLI test suites
