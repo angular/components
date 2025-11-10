@@ -105,6 +105,7 @@ function getMenuPattern(
     orientation: signal('vertical'),
     selectionMode: signal('explicit'),
     element: signal(document.createElement('div')),
+    expansionDelay: signal(0),
   });
 
   items.set(
@@ -347,9 +348,10 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.isVisible()).toBe(false);
     });
 
-    it('should open submenu on mouseover', () => {
+    it('should open submenu on mouseover', async () => {
       const menuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: menuItem.element()} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(true);
     });
 
@@ -385,9 +387,10 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.isVisible()).toBe(false);
     });
 
-    it('should close a submenu on focus out', () => {
+    it('should close a submenu on focus out', async () => {
       const parentMenuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: parentMenuItem.element()} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(true);
       expect(submenu.isFocused()).toBe(false);
 
@@ -395,19 +398,23 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.isVisible()).toBe(false);
     });
 
-    it('should close an unfocused submenu on mouse out', () => {
+    it('should close an unfocused submenu on mouse out', async () => {
       menu.onMouseOver({target: menu.inputs.items()[0].element()} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(true);
 
       submenu.onMouseOut({relatedTarget: document.body} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(false);
     });
 
-    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', () => {
+    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', async () => {
       const parentMenuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: parentMenuItem.element()} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(true);
       submenu.onMouseOut({relatedTarget: parentMenuItem.element()} as unknown as MouseEvent);
+      await new Promise(resolve => setTimeout(resolve, 0));
       expect(submenu.isVisible()).toBe(true);
     });
   });

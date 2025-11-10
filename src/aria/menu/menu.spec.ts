@@ -18,8 +18,9 @@ describe('Standalone Menu Pattern', () => {
     fixture.detectChanges();
   };
 
-  const mouseover = (element: Element) => {
+  const mouseover = async (element: Element) => {
     element.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+    await new Promise(resolve => setTimeout(resolve, 0));
     fixture.detectChanges();
   };
 
@@ -309,9 +310,9 @@ describe('Standalone Menu Pattern', () => {
       expect(document.activeElement).toBe(berries);
     });
 
-    it('should open submenu on mouseover', () => {
+    it('should open submenu on mouseover', async () => {
       const berries = getItem('Berries');
-      mouseover(berries!);
+      await mouseover(berries!);
       expect(isSubmenuExpanded()).toBe(true);
     });
 
@@ -385,11 +386,11 @@ describe('Standalone Menu Pattern', () => {
       externalElement.remove();
     });
 
-    it('should close an unfocused submenu on mouse out', () => {
+    it('should close an unfocused submenu on mouse out', async () => {
       const berries = getItem('Berries');
       const submenu = getSubmenu();
 
-      mouseover(berries!);
+      await mouseover(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
       mouseout(berries!);
@@ -398,11 +399,11 @@ describe('Standalone Menu Pattern', () => {
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', () => {
+    it('should not close an unfocused submenu on mouse out if the parent menu is hovered', async () => {
       const berries = getItem('Berries');
       const submenu = getSubmenu();
 
-      mouseover(berries!);
+      await mouseover(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
       mouseout(berries!);
@@ -944,12 +945,12 @@ describe('Menu Bar Pattern', () => {
 
 @Component({
   template: `
-<div ngMenu (onSelect)="onSelect($event)">
+<div ngMenu [expansionDelay]="0" (onSelect)="onSelect($event)">
   <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
   <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
   <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu #berriesMenu="ngMenu">
+  <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
     <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
     <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
     <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
@@ -968,12 +969,12 @@ class StandaloneMenuExample {
   template: `
 <button ngMenuTrigger [menu]="menu">Open menu</button>
 
-<div ngMenu #menu="ngMenu">
+<div ngMenu [expansionDelay]="0" #menu="ngMenu">
   <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
   <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
   <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu #berriesMenu="ngMenu">
+  <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
     <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
     <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
     <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
@@ -992,14 +993,14 @@ class MenuTriggerExample {}
   <div ngMenuItem value='File' searchTerm='File'>File</div>
   <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu">Edit</div>
 
-  <div ngMenu #editMenu="ngMenu">
+  <div ngMenu [expansionDelay]="0" #editMenu="ngMenu">
     <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
     <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
   </div>
 
   <div ngMenuItem [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
 
-  <div ngMenu #viewMenu="ngMenu">
+  <div ngMenu [expansionDelay]="0" #viewMenu="ngMenu">
     <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
     <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
     <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
@@ -1007,7 +1008,7 @@ class MenuTriggerExample {}
 
   <div ngMenuItem [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
 
-  <div ngMenu #helpMenu="ngMenu">
+  <div ngMenu [expansionDelay]="0" #helpMenu="ngMenu">
     <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
     <div ngMenuItem value='About' searchTerm='About'>About</div>
   </div>
