@@ -360,6 +360,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       .withFlexibleDimensions(false)
       .withPush(false)
       .withTransformOriginOn('.mat-timepicker-panel')
+      .withPopoverLocation('inline')
       .withPositions([
         {
           originX: 'start',
