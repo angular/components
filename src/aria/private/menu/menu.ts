@@ -80,7 +80,7 @@ export class MenuPattern<V> {
   disabled = () => this.inputs.disabled();
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => (this.inputs.parent() ? !!this.inputs.parent()?.expanded() : true));
+  visible = computed(() => (this.inputs.parent() ? !!this.inputs.parent()?.expanded() : true));
 
   /** Controls list behavior for the menu items. */
   listBehavior: List<MenuItemPattern<V>, V>;
@@ -191,7 +191,7 @@ export class MenuPattern<V> {
 
   /** Handles mouseover events for the menu. */
   onMouseOver(event: MouseEvent) {
-    if (!this.isVisible()) {
+    if (!this.visible()) {
       return;
     }
 
@@ -313,7 +313,7 @@ export class MenuPattern<V> {
     }
 
     if (
-      this.isVisible() &&
+      this.visible() &&
       !parentEl?.contains(relatedTarget) &&
       !this.inputs.element()?.contains(relatedTarget)
     ) {
