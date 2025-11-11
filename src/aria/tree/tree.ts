@@ -22,6 +22,7 @@ import {
   untracked,
   afterNextRender,
 } from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
@@ -131,8 +132,13 @@ export class Tree<V> {
   /** Selected item values. */
   readonly value = model<V[]>([]);
 
+  /** The directionality (LTR / RTL) context for the application. */
+  private readonly _directionality = inject(Directionality);
+
   /** Text direction. */
-  readonly textDirection = inject(Directionality).valueSignal;
+  readonly textDirection = toSignal(this._directionality.change, {
+    initialValue: this._directionality.value,
+  });
 
   /** Whether the tree is in navigation mode. */
   readonly nav = input(false);
@@ -158,6 +164,7 @@ export class Tree<V> {
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
       element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?._pattern,
+      textDirection: this.textDirection,
     };
 
     this._pattern = this._popup?.combobox

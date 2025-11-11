@@ -7,6 +7,7 @@
  */
 
 import {Component} from '@angular/core';
+import {Dir} from '@angular/cdk/bidi';
 import {NgTemplateOutlet} from '@angular/common';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {TreeNode, NODES} from '../tree-data';
@@ -18,7 +19,7 @@ import {TreeNode, NODES} from '../tree-data';
   selector: 'tree-rtl-active-descendant-example',
   templateUrl: 'tree-rtl-active-descendant-example.html',
   styleUrl: '../tree-common.css',
-  imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
+  imports: [Dir, Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
 })
 export class TreeRtlActiveDescendantExample {
   nodes: TreeNode[] = NODES;
