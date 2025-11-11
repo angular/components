@@ -1,0 +1,236 @@
+<h1>Accordion</h1>
+
+<div ngAccordionGroup>
+  <h2>
+    <button ngAccordionTrigger value="a11y">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+            fill="black"
+            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+        ></path>
+      </svg>
+      Accessible by default
+    </button>
+  </h2>
+  <div ngAccordionPanel value="a11y">
+    <ng-template ngAccordionContent>
+      <p>
+        Angular Aria ensures your components start with an accessible-first
+        foundation.
+      </p>
+    </ng-template>
+  </div>
+
+  <h2>
+    <button ngAccordionTrigger value="styles">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+            fill="black"
+            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+        ></path>
+      </svg>
+      Easily customizable
+    </button>
+  </h2>
+  <div ngAccordionPanel value="styles">
+    <ng-template ngAccordionContent>
+      <p>Bring your own styles and design, however you want.</p>
+    </ng-template>
+  </div>
+
+  <h2>
+    <button ngAccordionTrigger value="prod">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+            fill="black"
+            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+        ></path>
+      </svg>
+      Production-ready
+    </button>
+  </h2>
+  <div ngAccordionPanel value="prod">
+    <ng-template ngAccordionContent>
+      <p>Automatically stay up-to-date with the latest best practices.</p>
+    </ng-template>
+  </div>
+</div>
+
+<h1>Combobox</h1>
+
+<div ngCombobox #combobox="ngCombobox">
+  <input ngComboboxInput #inputElement/>
+
+  <ng-template
+      [cdkConnectedOverlay]="{origin: inputElement, usePopover: 'inline', matchWidth: true}"
+      [cdkConnectedOverlayOpen]="combobox.expanded()">
+      <div ngListbox>
+        <div ngOption value="apple">
+          Apple
+        </div>
+        <div ngOption value="banana"> Banana </div>
+        <div ngOption value="orange"> Orange </div>
+      </div>
+  </ng-template>
+</div>
+
+<h1>Grid</h1>
+
+<div ngGrid>
+  <div ngGridRow>
+    <div ngGridCell>Yoshka's</div>
+    <div ngGridCell>
+      <button ngGridCellWidget>
+        <svg
+            viewBox="0 0 24 24"
+            focusable="false"
+            aria-hidden="true"
+            stroke="black"
+            stroke-width="2"
+        >
+          <path d="M 18 6 L 6 18 M 6 6 L 18 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div ngGridRow>
+    <div ngGridCell>No-name</div>
+    <div ngGridCell>
+      <button ngGridCellWidget>
+        <svg
+            viewBox="0 0 24 24"
+            focusable="false"
+            aria-hidden="true"
+            stroke="black"
+            stroke-width="2"
+        >
+          <path d="M 18 6 L 6 18 M 6 6 L 18 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div ngGridRow>
+    <div ngGridCell>Charleston</div>
+    <div ngGridCell>
+      <button ngGridCellWidget>
+        <svg
+            viewBox="0 0 24 24"
+            focusable="false"
+            aria-hidden="true"
+            stroke="black"
+            stroke-width="2"
+        >
+          <path d="M 18 6 L 6 18 M 6 6 L 18 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<h1>Listbox</h1>
+
+<ul ngListbox>
+  <li ngOption value="item-1">
+    <span class="demo-selection-indicator"></span>
+    <span>T-rex and flamingos</span>
+  </li>
+  <li ngOption value="item-2">
+    <span class="demo-selection-indicator"></span>
+    <span>G-bikes</span>
+  </li>
+  <li ngOption value="item-3">
+    <span class="demo-selection-indicator"></span>
+    <span>Nap-pods</span>
+  </li>
+</ul>
+
+<h1>Menu</h1>
+
+<div ngMenu>
+  <div ngMenuItem value="circles">Circles</div>
+  <div ngMenuItem value="hangouts">Hangouts</div>
+  <div ngMenuItem value="photos">Photos</div>
+  <div ngMenuItem value="events">Events</div>
+</div>
+
+<h1>Radio</h1>
+
+<ul ngRadioGroup>
+  <li value="apple" ngRadioButton>
+    <span class="demo-selection-indicator"></span>
+    <span>Apple</span>
+  </li>
+  <li value="banana" ngRadioButton>
+    <span class="demo-selection-indicator"></span>
+    <span>Banana</span>
+  </li>
+  <li value="orange" ngRadioButton>
+    <span class="demo-selection-indicator"></span>
+    <span>Orange</span>
+  </li>
+</ul>
+
+<h1>Tabs</h1>
+
+<div ngTabs>
+  <ul ngTabList selectedTab="jelly-bean">
+    <li ngTab value="jelly-bean">Jelly Bean</li>
+    <li ngTab value="lollipop">Lollipop</li>
+    <li ngTab value="pie">Pie</li>
+  </ul>
+
+  <div ngTabPanel value="jelly-bean">
+    <ng-template ngTabContent>Smooth like butter</ng-template>
+  </div>
+
+  <div ngTabPanel value="lollipop">
+    <ng-template ngTabContent>Goodbye Holo - welcome Material</ng-template>
+  </div>
+
+  <div ngTabPanel value="pie">
+    <ng-template ngTabContent>Less pressing. More swiping</ng-template>
+  </div>
+</div>
+
+<h1>Toolbar</h1>
+
+<div ngToolbar>
+  <button ngToolbarWidget value="bold">Bold</button>
+  <button ngToolbarWidget value="italic">Italic</button>
+  <button ngToolbarWidget value="underline">Underline</button>
+  <ul ngRadioGroup>
+    <li ngRadioButton value="left">
+      <span class="demo-selection-indicator"></span>
+      <span>Left</span>
+    </li>
+    <li ngRadioButton value="center">
+      <span class="demo-selection-indicator"></span>
+      <span>Center</span>
+    </li>
+    <li ngRadioButton value="right">
+      <span class="demo-selection-indicator"></span>
+      <span>Right</span>
+    </li>
+  </ul>
+</div>
+
+<h1>Tree</h1>
+
+<div ngTree #tree="ngTree">
+  <div ngTreeItem #animals="ngTreeItem" [parent]="tree" value="Animals">
+    Animals
+  </div>
+
+  <ng-template
+      ngTreeItemGroup
+      [ownedBy]="animals"
+      #animalsGroup="ngTreeItemGroup"
+  >
+    <div ngTreeItem [parent]="animalsGroup" value="dog">Dog</div>
+    <div ngTreeItem [parent]="animalsGroup" value="cat">Cat</div>
+  </ng-template>
+
+  <div ngTreeItem [parent]="tree" value="Broccoli">Broccoli</div>
+</div>

@@ -7,6 +7,7 @@
  */
 
 import {Routes} from '@angular/router';
+import {AutocompleteDocsDemo} from './aria-docs-examples/autocomplete/autocomplete-docs-demo';
 import {DevApp404} from './dev-app/dev-app-404';
 import {DevAppHome} from './dev-app/dev-app-home';
 
@@ -43,6 +44,18 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'aria-combobox',
     loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
+  },
+  {
+    path: 'aria-docs-examples',
+    loadComponent: () =>
+      import('./aria-docs-examples/aria-docs-examples').then(m => m.AriaDocsExamples),
+  },
+  {
+    path: 'aria-docs-autocomplete',
+    loadComponent: () =>
+      import('./aria-docs-examples/autocomplete/autocomplete-docs-demo').then(
+        m => m.AutocompleteDocsDemo,
+      ),
   },
   {
     path: 'aria-grid',
