@@ -379,6 +379,9 @@ export class Overlay {
 }
 
 // @public
+export const OVERLAY_DEFAULT_CONFIG: InjectionToken<OverlayDefaultConfig>;
+
+// @public
 export class OverlayConfig {
     constructor(config?: OverlayConfig);
     backdropClass?: string | string[];
@@ -426,6 +429,12 @@ export class OverlayContainer implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayContainer, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayContainer>;
+}
+
+// @public
+export interface OverlayDefaultConfig {
+    // (undocumented)
+    usePopover?: boolean;
 }
 
 // @public

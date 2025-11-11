@@ -20,6 +20,7 @@ import {
   RendererFactory2,
   DOCUMENT,
   Renderer2,
+  InjectionToken,
 } from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {_CdkPrivateStyleLoader} from '../private';
@@ -30,6 +31,16 @@ import {_CdkOverlayStyleLoader, OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
+
+/** Object used to configure the default options for overlays. */
+export interface OverlayDefaultConfig {
+  usePopover?: boolean;
+}
+
+/** Injection token used to configure the default options for CDK overlays. */
+export const OVERLAY_DEFAULT_CONFIG = new InjectionToken<OverlayDefaultConfig>(
+  'OVERLAY_DEFAULT_CONFIG',
+);
 
 /**
  * Creates an overlay.
@@ -52,12 +63,15 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     injector.get(RendererFactory2).createRenderer(null, null);
 
   const overlayConfig = new OverlayConfig(config);
+  const defaultUsePopover =
+    injector.get(OVERLAY_DEFAULT_CONFIG, null, {optional: true})?.usePopover ?? true;
+
   overlayConfig.direction = overlayConfig.direction || directionality.value;
 
   if (!('showPopover' in doc.body)) {
     overlayConfig.usePopover = false;
   } else {
-    overlayConfig.usePopover = config?.usePopover ?? true;
+    overlayConfig.usePopover = config?.usePopover ?? defaultUsePopover;
   }
 
   const pane = doc.createElement('div');

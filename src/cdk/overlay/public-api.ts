@@ -11,7 +11,7 @@ export * from './position/connected-position';
 export * from './scroll/index';
 export * from './overlay-module';
 export * from './dispatchers/index';
-export {Overlay, createOverlayRef} from './overlay';
+export {Overlay, createOverlayRef, OverlayDefaultConfig, OVERLAY_DEFAULT_CONFIG} from './overlay';
 export {OverlayContainer} from './overlay-container';
 export {
   CdkOverlayOrigin,

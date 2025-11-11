@@ -29,7 +29,7 @@ import {
 import {_getEventTarget} from '../platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
-import {createOverlayRef} from './overlay';
+import {createOverlayRef, OVERLAY_DEFAULT_CONFIG} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {ConnectedOverlayPositionChange, ViewportMargin} from './position/connected-position';
@@ -253,7 +253,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
   @Input({alias: 'cdkConnectedOverlayUsePopover'})
-  usePopover: FlexibleOverlayPopoverLocation | null = 'global';
+  usePopover: FlexibleOverlayPopoverLocation | null;
 
   /** Whether the overlay should match the trigger's width. */
   @Input({alias: 'cdkConnectedOverlayMatchWidth', transform: booleanAttribute})
@@ -293,7 +293,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     const templateRef = inject<TemplateRef<any>>(TemplateRef);
     const viewContainerRef = inject(ViewContainerRef);
     const defaultConfig = inject(CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG, {optional: true});
+    const globalConfig = inject(OVERLAY_DEFAULT_CONFIG, {optional: true});
 
+    this.usePopover = globalConfig?.usePopover === false ? null : 'global';
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
     this.scrollStrategy = this._scrollStrategyFactory();
 
