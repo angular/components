@@ -69,12 +69,6 @@ export class Combobox<V> {
   /** The filter mode for the combobox. */
   filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
 
-  /** Whether the combobox is focused. */
-  readonly isFocused = signal(false);
-
-  /** Whether the combobox has received focus yet. */
-  private _hasBeenFocused = signal(false);
-
   /** Whether the combobox is disabled. */
   readonly disabled = input(false);
 
@@ -120,12 +114,6 @@ export class Combobox<V> {
         (this._pattern.isFocused() || this.alwaysExpanded())
       ) {
         this._deferredContentAware?.contentVisible.set(true);
-      }
-    });
-
-    afterRenderEffect(() => {
-      if (!this._hasBeenFocused() && this._pattern.isFocused()) {
-        this._hasBeenFocused.set(true);
       }
     });
   }
