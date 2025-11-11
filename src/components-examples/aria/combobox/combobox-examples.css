@@ -7,7 +7,7 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.example-combobox-container:has([readonly='true']) {
+.example-combobox-container:has([readonly='true']:not([aria-disabled='true'])) {
   width: 200px;
 }
 
@@ -22,7 +22,7 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.example-combobox-input[readonly='true'] {
+.example-combobox-input[readonly='true']:not([aria-disabled='true']) {
   cursor: pointer;
   padding: 0.7rem 1rem;
 }
@@ -181,4 +181,9 @@ ul[role='group'] {
 .example-tree-item[aria-current] .example-selected-icon,
 .example-tree-item[aria-selected='true'] .example-selected-icon {
   visibility: visible;
+}
+
+.example-combobox-container:has([aria-disabled='true']) {
+  opacity: 0.4;
+  cursor: default;
 }

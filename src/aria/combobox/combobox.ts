@@ -8,6 +8,7 @@
 
 import {
   afterRenderEffect,
+  booleanAttribute,
   computed,
   contentChild,
   Directive,
@@ -76,7 +77,7 @@ export class Combobox<V> {
   private _hasBeenFocused = signal(false);
 
   /** Whether the combobox is disabled. */
-  readonly disabled = input(false);
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the combobox is read-only. */
   readonly readonly = input(false);
@@ -90,6 +91,7 @@ export class Combobox<V> {
   // TODO: Maybe make expanded a signal that can be passed in?
   // Or an "always expanded" option?
 
+  /** Whether the combobox popup is always expanded. */
   readonly alwaysExpanded = input(false);
 
   /** Input element connected to the combobox, if any. */
@@ -129,6 +131,16 @@ export class Combobox<V> {
       }
     });
   }
+
+  /** Expands the combobox popup. */
+  expand() {
+    this._pattern.open();
+  }
+
+  /** Collapses the combobox popup. */
+  collapse() {
+    this._pattern.close();
+  }
 }
 
 @Directive({
@@ -137,6 +149,7 @@ export class Combobox<V> {
   host: {
     'role': 'combobox',
     '[value]': 'value()',
+    '[attr.aria-disabled]': 'combobox._pattern.disabled()',
     '[attr.aria-expanded]': 'combobox._pattern.expanded()',
     '[attr.aria-activedescendant]': 'combobox._pattern.activeDescendant()',
     '[attr.aria-controls]': 'combobox._pattern.popupId()',
