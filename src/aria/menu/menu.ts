@@ -404,7 +404,7 @@ export class MenuBar<V> {
     'role': 'menuitem',
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.data-active]': 'isActive()',
+    '[attr.data-active]': 'active()',
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -445,7 +445,7 @@ export class MenuItem<V> {
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
   /** Whether the menu item is active. */
-  readonly isActive = computed(() => this._pattern.isActive());
+  readonly active = computed(() => this._pattern.active());
 
   /** Whether the menu is expanded. */
   readonly expanded = computed(() => this._pattern.expanded());
