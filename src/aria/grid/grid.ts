@@ -23,7 +23,11 @@ import {
 import {Directionality} from '@angular/cdk/bidi';
 import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
-/** A directive that provides grid-based navigation and selection behavior. */
+/**
+ * A directive that provides grid-based navigation and selection behavior.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngGrid]',
   exportAs: 'ngGrid',
@@ -119,7 +123,11 @@ export class Grid {
   }
 }
 
-/** A directive that represents a row in a grid. */
+/**
+ * A directive that represents a row in a grid.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngGridRow]',
   exportAs: 'ngGridRow',
@@ -162,7 +170,11 @@ export class GridRow {
   });
 }
 
-/** A directive that represents a cell in a grid. */
+/**
+ * A directive that represents a cell in a grid.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngGridCell]',
   exportAs: 'ngGridCell',
@@ -238,7 +250,11 @@ export class GridCell {
   });
 }
 
-/** A directive that represents a widget inside a grid cell. */
+/**
+ * A directive that represents a widget inside a grid cell.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngGridCellWidget]',
   exportAs: 'ngGridCellWidget',

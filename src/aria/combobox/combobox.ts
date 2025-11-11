@@ -30,6 +30,9 @@ import {
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 
+/**
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngCombobox]',
   exportAs: 'ngCombobox',
@@ -131,6 +134,9 @@ export class Combobox<V> {
   }
 }
 
+/**
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: 'input[ngComboboxInput]',
   exportAs: 'ngComboboxInput',
@@ -175,6 +181,9 @@ export class ComboboxInput {
   }
 }
 
+/**
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: 'ng-template[ngComboboxPopupContainer]',
   exportAs: 'ngComboboxPopupContainer',
@@ -182,6 +191,9 @@ export class ComboboxInput {
 })
 export class ComboboxPopupContainer {}
 
+/**
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngComboboxPopup]',
   exportAs: 'ngComboboxPopup',
@@ -199,6 +211,9 @@ export class ComboboxPopup<V> {
   >(undefined);
 }
 
+/**
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: 'dialog[ngComboboxDialog]',
   exportAs: 'ngComboboxDialog',

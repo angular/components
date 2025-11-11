@@ -66,6 +66,8 @@ function sortDirectives(a: HasElement, b: HasElement) {
  *   <li ngTreeItem [value]="'leaf2'" [disabled]="true">Disabled Leaf Item 2</li>
  * </ul>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTree]',
@@ -214,6 +216,8 @@ export class Tree<V> {
 
 /**
  * A selectable and expandable Tree Item in a Tree.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTreeItem]',
@@ -327,6 +331,8 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
 /**
  * Contains children tree itmes.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: 'ng-template[ngTreeItemGroup]',

@@ -38,6 +38,8 @@ import {ComboboxPopup} from '../combobox';
  *   <li [value]="3" ngOption>Item 3</li>
  * </ul>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngListbox]',
@@ -194,7 +196,11 @@ export class Listbox<V> {
   }
 }
 
-/** A selectable option in a Listbox. */
+/**
+ * A selectable option in a Listbox.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngOption]',
   exportAs: 'ngOption',

@@ -68,6 +68,8 @@ function sortDirectives(a: HasElement, b: HasElement) {
  *      <ng-template ngTabContent>Tab content 3</ng-template>
  *   </div>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTabs]',
@@ -118,6 +120,8 @@ export class Tabs {
  * A TabList container.
  *
  * Controls a list of Tab(s).
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTabList]',
@@ -223,7 +227,11 @@ export class TabList implements OnInit, OnDestroy {
   }
 }
 
-/** A selectable tab in a TabList. */
+/**
+ * A selectable tab in a TabList.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngTab]',
   exportAs: 'ngTab',
@@ -293,6 +301,8 @@ export class Tab implements HasElement, OnInit, OnDestroy {
  * will be applied to the tabpanel element to remove it from the accessibility tree and stop
  * all the keyboard and pointer interactions. Note that this does not visually hide the tabpenl
  * and a proper styling is required.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTabPanel]',
@@ -350,6 +360,8 @@ export class TabPanel implements OnInit, OnDestroy {
 
 /**
  * A TabContent container for the lazy-loaded content.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: 'ng-template[ngTabContent]',
