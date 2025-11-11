@@ -710,7 +710,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   element: SignalLike<HTMLElement | undefined>;
 
   /** Whether the menu item is active. */
-  isActive = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
+  active = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
 
   /** Whether the menu item has received focus. */
   hasBeenFocused = signal(false);
