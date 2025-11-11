@@ -148,7 +148,7 @@ export class MenuTrigger<V> {
     '[attr.id]': '_pattern.id()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.tabindex]': 'tabIndex()',
-    '[attr.data-visible]': 'isVisible()',
+    '[attr.data-visible]': 'visible()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(mouseout)': '_pattern.onMouseOut($event)',
@@ -212,7 +212,7 @@ export class Menu<V> {
   readonly items = () => this._items().map(i => i._pattern);
 
   /** Whether the menu is visible. */
-  readonly isVisible = computed(() => this._pattern.isVisible());
+  readonly visible = computed(() => this._pattern.visible());
 
   /** The tab index of the menu. */
   readonly tabIndex = computed(() => this._pattern.tabIndex());
@@ -243,7 +243,7 @@ export class Menu<V> {
         this._deferredContentAware?.contentVisible.set(true);
       } else {
         this._deferredContentAware?.contentVisible.set(
-          this._pattern.isVisible() || !!this.parent()?._pattern.hasBeenFocused(),
+          this._pattern.visible() || !!this.parent()?._pattern.hasBeenFocused(),
         );
       }
     });
@@ -253,7 +253,7 @@ export class Menu<V> {
     // update the display property. The result is focus() being called on an element that is not
     // focusable. This simply retries focusing the element after render.
     afterRenderEffect(() => {
-      if (this._pattern.isVisible()) {
+      if (this._pattern.visible()) {
         const activeItem = untracked(() => this._pattern.inputs.activeItem());
         this._pattern.listBehavior.goto(activeItem!);
       }
