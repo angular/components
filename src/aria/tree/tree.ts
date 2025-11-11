@@ -52,7 +52,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
  * Transforms nested lists into an accessible, ARIA-compliant tree structure.
  *
  * ```html
- * <ul ngTree [(value)]="selectedItems" [multi]="true">
+ * <ul ngTree [(values)]="selectedItems" [multi]="true">
  *   <li ngTreeItem [value]="'leaf1'">Leaf Item 1</li>
  *   <li ngTreeItem [value]="'parent1'">
  *     Parent Item 1
@@ -129,7 +129,7 @@ export class Tree<V> {
   readonly typeaheadDelay = input(0.5);
 
   /** Selected item values. */
-  readonly value = model<V[]>([]);
+  readonly values = model<V[]>([]);
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -185,10 +185,10 @@ export class Tree<V> {
 
     afterRenderEffect(() => {
       const items = inputs.allItems();
-      const value = untracked(() => this.value());
+      const values = untracked(() => this.values());
 
-      if (items && value.some(v => !items.some(i => i.value() === v))) {
-        this.value.set(value.filter(v => items.some(i => i.value() === v)));
+      if (items && values.some(v => !items.some(i => i.value() === v))) {
+        this.values.set(values.filter(v => items.some(i => i.value() === v)));
       }
     });
   }

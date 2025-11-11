@@ -279,8 +279,8 @@ export class MenuBar<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   readonly textDirection = inject(Directionality).valueSignal;
 
-  /** The value of the menu. */
-  readonly value = model<V[]>([]);
+  /** The values of the menu. */
+  readonly values = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input<boolean>(true);

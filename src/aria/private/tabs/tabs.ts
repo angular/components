@@ -68,7 +68,9 @@ export class TabPattern {
   readonly active = computed(() => this.inputs.tablist().inputs.activeItem() === this);
 
   /** Whether the tab is selected. */
-  readonly selected = computed(() => !!this.inputs.tablist().inputs.value().includes(this.value()));
+  readonly selected = computed(
+    () => !!this.inputs.tablist().inputs.values().includes(this.value()),
+  );
 
   /** The tab index of the tab. */
   readonly tabIndex = computed(() => this.inputs.tablist().listBehavior.getItemTabindex(this));
@@ -205,7 +207,7 @@ export class TabListPattern {
     this.expansionManager = new ListExpansion({
       ...inputs,
       multiExpandable: () => false,
-      expandedIds: this.inputs.value,
+      expandedIds: this.inputs.values,
     });
   }
 

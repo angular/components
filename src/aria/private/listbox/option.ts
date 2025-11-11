@@ -39,7 +39,7 @@ export class OptionPattern<V> {
   active = computed(() => this.listbox()?.inputs.activeItem() === this);
 
   /** Whether the option is selected. */
-  selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));
+  selected = computed(() => this.listbox()?.inputs.values().includes(this.value()));
 
   /** Whether the option is selectable. */
   selectable = () => true;
