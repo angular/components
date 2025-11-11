@@ -168,9 +168,6 @@ export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, '
 
   /** The aria-current type. */
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
-
-  /** The text direction of the tree. */
-  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 export interface TreePattern<V> extends TreeInputs<V> {}
