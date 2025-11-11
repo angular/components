@@ -1,0 +1,67 @@
+<button
+  ngMenuTrigger
+  [menu]="formatMenu"
+  aria-label="Open menu"
+  class="example-menu-trigger"
+  [disabled]="true"
+>
+  <span aria-hidden="true" class="material-symbols-outlined">more_vert</span>
+</button>
+
+<div ng-menu #formatMenu="ngMenu">
+  <ng-template ngMenuContent>
+    <div ng-menu-item value="Mark as read">
+      <span ng-menu-item-icon>mark_email_read</span>
+      <span ng-menu-item-text>Mark as read</span>
+    </div>
+
+    <div ng-menu-item value="Snooze">
+      <span ng-menu-item-icon>snooze</span>
+      <span ng-menu-item-text>Snooze</span>
+    </div>
+
+    <div role="separator" aria-orientation="horizontal" class="example-menu-item-separator"></div>
+
+    <div ng-menu-item value="Categorize" [submenu]=" categorizeMenu">
+      <span ng-menu-item-icon>category</span>
+      <span ng-menu-item-text>Categorize</span>
+      <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+    </div>
+
+    <div ng-menu #categorizeMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ng-menu-item value="Mark as important">
+          <span ng-menu-item-icon>label_important</span>
+          <span ng-menu-item-text>Mark as important</span>
+        </div>
+
+        <div ng-menu-item value="Star">
+          <span ng-menu-item-icon>star</span>
+          <span ng-menu-item-text>Star</span>
+        </div>
+
+        <div ng-menu-item value="Label">
+          <span ng-menu-item-icon>label</span>
+          <span ng-menu-item-text>Label</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <div role="separator" aria-orientation="horizontal" class="example-menu-item-separator"></div>
+
+    <div ng-menu-item value="Archive">
+      <span ng-menu-item-icon>archive</span>
+      <span ng-menu-item-text>Archive</span>
+    </div>
+
+    <div ng-menu-item value="Report spam">
+      <span ng-menu-item-icon>report</span>
+      <span ng-menu-item-text>Report spam</span>
+    </div>
+
+    <div ng-menu-item value="Delete">
+      <span ng-menu-item-icon>delete</span>
+      <span ng-menu-item-text>Delete</span>
+    </div>
+  </ng-template>
+</div>
