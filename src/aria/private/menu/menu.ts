@@ -578,6 +578,9 @@ export class MenuTriggerPattern<V> {
   /** Whether the menu is expanded. */
   expanded = signal(false);
 
+  /** Whether the menu trigger has received focus. */
+  hasBeenFocused = signal(false);
+
   /** The role of the menu trigger. */
   role = () => 'button';
 
@@ -612,6 +615,11 @@ export class MenuTriggerPattern<V> {
   /** Handles click events for the menu trigger. */
   onClick() {
     this.expanded() ? this.close() : this.open({first: true});
+  }
+
+  /** Handles focusin events for the menu trigger. */
+  onFocusIn() {
+    this.hasBeenFocused.set(true);
   }
 
   /** Handles focusout events for the menu trigger. */
@@ -678,6 +686,9 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   /** Whether the menu item is active. */
   isActive = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
+
+  /** Whether the menu item has received focus. */
+  hasBeenFocused = signal(false);
 
   /** The tab index of the menu item. */
   tabIndex = computed(() => {
@@ -755,5 +766,10 @@ export class MenuItemPattern<V> implements ListItem<V> {
         parent._clearTimeouts();
       }
     }
+  }
+
+  /** Handles focusin events for the menu item. */
+  onFocusIn() {
+    this.hasBeenFocused.set(true);
   }
 }

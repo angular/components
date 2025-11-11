@@ -51,7 +51,7 @@ import {Directionality} from '@angular/cdk/bidi';
     '(click)': '_pattern.onClick()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
-    '(focusin)': 'onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn()',
   },
 })
 export class MenuTrigger<V> {
@@ -66,9 +66,6 @@ export class MenuTrigger<V> {
 
   /** The menu associated with the trigger. */
   menu = input<Menu<V> | undefined>(undefined);
-
-  /** Whether the menu item has been focused. */
-  readonly hasBeenFocused = signal(false);
 
   /** Whether the menu is expanded. */
   readonly expanded = computed(() => this._pattern.expanded());
@@ -85,11 +82,6 @@ export class MenuTrigger<V> {
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
-  }
-
-  /** Marks the menu trigger as having been focused. */
-  onFocusIn() {
-    this.hasBeenFocused.set(true);
   }
 }
 
@@ -205,7 +197,7 @@ export class Menu<V> {
         this._deferredContentAware?.contentVisible.set(true);
       } else {
         this._deferredContentAware?.contentVisible.set(
-          this._pattern.isVisible() || !!this.parent()?.hasBeenFocused(),
+          this._pattern.isVisible() || !!this.parent()?._pattern.hasBeenFocused(),
         );
       }
     });
@@ -339,7 +331,7 @@ export class MenuBar<V> {
   host: {
     'role': 'menuitem',
     'class': 'ng-menu-item',
-    '(focusin)': 'onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'isActive()',
     '[attr.aria-haspopup]': 'hasPopup()',
@@ -403,11 +395,6 @@ export class MenuItem<V> {
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
-  }
-
-  /** Marks the menu item as having been focused. */
-  onFocusIn() {
-    this.hasBeenFocused.set(true);
   }
 }
 
