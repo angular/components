@@ -388,7 +388,6 @@ export class TreePattern<V> {
     this.softDisabled = inputs.softDisabled;
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
-    textDirection: this.textDirection;
     this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
     this.selectionMode = inputs.selectionMode;
     this.typeaheadDelay = inputs.typeaheadDelay;
