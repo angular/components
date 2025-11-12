@@ -75,7 +75,9 @@ export class MenuPattern<V> {
   role = () => 'menu';
 
   /** Whether the menu is visible. */
-  isVisible = computed(() => (this.inputs.parent() ? !!this.inputs.parent()?.expanded() : true));
+  isVisible = computed(() =>
+    this.inputs.parent() ? !!this.inputs.parent()?.expanded() : this._visible(),
+  );
 
   /** Controls list behavior for the menu items. */
   listBehavior: List<MenuItemPattern<V>, V>;
@@ -85,6 +87,8 @@ export class MenuPattern<V> {
 
   /** Whether the menu has received focus. */
   hasBeenFocused = signal(false);
+
+  _visible = signal(false);
 
   /** Timeout used to open sub-menus on hover. */
   _openTimeout: any;
@@ -395,9 +399,24 @@ export class MenuPattern<V> {
     }
   }
 
+  /** Opens the menu. */
+  open() {
+    if (this.inputs.parent()) {
+      this.inputs.parent()!.close();
+    } else {
+      this._visible.set(true);
+
+      this.first();
+    }
+  }
+
   /** Closes the menu. */
   close() {
-    this.inputs.parent()?.close();
+    if (this.inputs.parent()) {
+      this.inputs.parent()!.close();
+    } else {
+      this._visible.set(false);
+    }
   }
 
   /** Closes the menu and all parent menus. */

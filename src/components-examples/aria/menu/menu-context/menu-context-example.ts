@@ -30,23 +30,20 @@ export class MenuContextExample {
     const relatedTarget = event.relatedTarget as HTMLElement | null;
 
     if (menu && !menu.element.contains(relatedTarget)) {
-      menu.close();
-      menu.element.style.visibility = 'hidden';
+      menu!.close();
     }
   }
 
   open(event: MouseEvent) {
     const menu = this.menu();
-    menu?._pattern.closeAll();
 
     if (menu) {
       event.preventDefault();
 
-      menu.element.style.visibility = 'visible';
       menu.element.style.top = `${event.clientY}px`;
       menu.element.style.left = `${event.clientX}px`;
 
-      setTimeout(() => menu._pattern.first());
+      menu.open();
     }
   }
 }
