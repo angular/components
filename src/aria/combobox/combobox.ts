@@ -255,7 +255,7 @@ export class ComboboxInput {
  * </ng-template>
  * ```
  *
- * When using the CdkOverlay, this directive can be replaced by `cdkConnectedOverlay.
+ * When using CdkOverlay, this directive can be replaced by `cdkConnectedOverlay`.
  *
  * ```html
  * <ng-template
