@@ -98,7 +98,7 @@ export class ComboboxListboxPattern<V>
   getSelectedItems = () => {
     // NOTE: We need to do this funky for loop to preserve the order of the selected values.
     const items = [];
-    for (const value of this.inputs.value()) {
+    for (const value of this.inputs.values()) {
       const item = this.items().find(i => i.value() === value);
       if (item) {
         items.push(item);
@@ -108,5 +108,5 @@ export class ComboboxListboxPattern<V>
   };
 
   /** Sets the value of the combobox listbox. */
-  setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
+  setValue = (value: V | undefined) => this.inputs.values.set(value ? [value] : []);
 }

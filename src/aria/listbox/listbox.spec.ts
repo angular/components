@@ -52,7 +52,7 @@ describe('Listbox', () => {
     orientation?: 'horizontal' | 'vertical';
     disabled?: boolean;
     readonly?: boolean;
-    value?: number[];
+    values?: number[];
     softDisabled?: boolean;
     focusMode?: 'roving' | 'activedescendant';
     multi?: boolean;
@@ -73,7 +73,7 @@ describe('Listbox', () => {
     if (opts?.orientation !== undefined) testComponent.orientation = opts.orientation;
     if (opts?.disabled !== undefined) testComponent.disabled = opts.disabled;
     if (opts?.readonly !== undefined) testComponent.readonly = opts.readonly;
-    if (opts?.value !== undefined) testComponent.value = opts.value;
+    if (opts?.values !== undefined) testComponent.values = opts.values;
     if (opts?.softDisabled !== undefined) testComponent.softDisabled = opts.softDisabled;
     if (opts?.focusMode !== undefined) testComponent.focusMode = opts.focusMode;
     if (opts?.multi !== undefined) testComponent.multi = opts.multi;
@@ -173,7 +173,7 @@ describe('Listbox', () => {
       });
 
       it('should set aria-selected to "true" for selected options', () => {
-        setupListbox({multi: true, value: [1, 3]});
+        setupListbox({multi: true, values: [1, 3]});
         expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
         expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
         expect(optionElements[2].getAttribute('aria-selected')).toBe('false');
@@ -200,7 +200,7 @@ describe('Listbox', () => {
         expect(listboxElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set initial focus (tabindex="0") on the first non-disabled option if no value is set', () => {
+      it('should set initial focus (tabindex="0") on the first non-disabled option if no values are set', () => {
         setupListbox({focusMode: 'roving'});
         expect(optionElements[0].getAttribute('tabindex')).toBe('0');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
@@ -210,7 +210,7 @@ describe('Listbox', () => {
       });
 
       it('should set initial focus (tabindex="0") on the first selected option', () => {
-        setupListbox({focusMode: 'roving', value: [2]});
+        setupListbox({focusMode: 'roving', values: [2]});
         expect(optionElements[0].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[2].getAttribute('tabindex')).toBe('0');
@@ -221,7 +221,7 @@ describe('Listbox', () => {
       it('should set initial focus (tabindex="0") on the first non-disabled option if selected option is disabled when softDisabled is false', () => {
         setupListbox({
           focusMode: 'roving',
-          value: [1],
+          values: [1],
           disabledOptions: [0],
           softDisabled: false,
         });
@@ -232,7 +232,7 @@ describe('Listbox', () => {
       it('should set initial focus (tabindex="0") on the first option if selected option is disabled', () => {
         setupListbox({
           focusMode: 'roving',
-          value: [0],
+          values: [0],
           disabledOptions: [0],
         });
         expect(optionElements[0].getAttribute('tabindex')).toBe('0');
@@ -257,19 +257,19 @@ describe('Listbox', () => {
       });
 
       it('should set aria-activedescendant to the ID of the first selected option', () => {
-        setupListbox({focusMode: 'activedescendant', value: [2]});
+        setupListbox({focusMode: 'activedescendant', values: [2]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[2].id);
       });
 
       it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled', () => {
-        setupListbox({focusMode: 'activedescendant', value: [0], disabledOptions: [0]});
+        setupListbox({focusMode: 'activedescendant', values: [0], disabledOptions: [0]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
       });
 
       it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled when softDisabled is false', () => {
         setupListbox({
           focusMode: 'activedescendant',
-          value: [1],
+          values: [1],
           disabledOptions: [0],
           softDisabled: false,
         });
@@ -289,28 +289,28 @@ describe('Listbox', () => {
 
   describe('value and selection', () => {
     it('should select the options corresponding to the value input', () => {
-      setupListbox({multi: true, value: [1, 3]});
+      setupListbox({multi: true, values: [1, 3]});
       expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
       expect(optionElements[3].getAttribute('aria-selected')).toBe('true');
-      expect(listboxInstance.value()).toEqual([1, 3]);
+      expect(listboxInstance.values()).toEqual([1, 3]);
     });
 
     it('should update the value model when an option is selected via UI (single select)', () => {
       setupListbox({multi: false});
       click(1);
-      expect(listboxInstance.value()).toEqual([1]);
+      expect(listboxInstance.values()).toEqual([1]);
       click(2);
-      expect(listboxInstance.value()).toEqual([2]);
+      expect(listboxInstance.values()).toEqual([2]);
     });
 
     it('should update the value model when options are selected via UI (multi select)', () => {
       setupListbox({multi: true});
       click(1);
-      expect(listboxInstance.value()).toEqual([1]);
+      expect(listboxInstance.values()).toEqual([1]);
       click(3);
-      expect(listboxInstance.value()).toEqual([1, 3]);
+      expect(listboxInstance.values()).toEqual([1, 3]);
       click(1);
-      expect(listboxInstance.value()).toEqual([3]);
+      expect(listboxInstance.values()).toEqual([3]);
     });
 
     describe('pointer interactions', () => {
@@ -318,14 +318,14 @@ describe('Listbox', () => {
         it('should select an option on click', () => {
           setupListbox({multi: false});
           click(1);
-          expect(listboxInstance.value()).toEqual([1]);
+          expect(listboxInstance.values()).toEqual([1]);
           expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
         });
 
         it('should select a new option and deselect the old one on click', () => {
-          setupListbox({multi: false, value: [0]});
+          setupListbox({multi: false, values: [0]});
           click(1);
-          expect(listboxInstance.value()).toEqual([1]);
+          expect(listboxInstance.values()).toEqual([1]);
           expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
           expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
         });
@@ -334,30 +334,30 @@ describe('Listbox', () => {
       describe('multi select', () => {
         describe('selection follows focus', () => {
           it('should select only the clicked option with a simple click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             click(1);
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
           it('should toggle the selected state of an option with ctrl + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             click(1, {ctrlKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
 
             click(0, {ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
           it('should select a range starting from the first option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             click(2, {shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
@@ -367,46 +367,46 @@ describe('Listbox', () => {
             setupListbox({multi: true, selectionMode: 'follow'});
             click(1);
             click(3, {shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
+            expect(listboxInstance.values().sort()).toEqual([1, 2, 3]);
           });
 
           it('should not select disabled options on shift + click', () => {
             setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
             click(2, {shiftKey: true});
-            expect(listboxInstance.value()).toEqual([0, 2]);
+            expect(listboxInstance.values()).toEqual([0, 2]);
           });
         });
 
         describe('explicit selection', () => {
           it('should toggle selection of the clicked option with a simple click', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            setupListbox({multi: true, selectionMode: 'explicit', values: [0]});
             click(1);
-            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
 
             click(0);
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
           });
 
           it('should select a range starting from the first option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            setupListbox({multi: true, selectionMode: 'explicit', values: [0]});
             click(2, {shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2]);
           });
 
           it('should select a range starting from the current active option on shift + click', () => {
             setupListbox({multi: true, selectionMode: 'explicit'});
             click(1);
             click(3, {shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
+            expect(listboxInstance.values().sort()).toEqual([1, 2, 3]);
           });
 
           it('should not select disabled options on shift + click', () => {
             setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
             click(2, {shiftKey: true});
-            expect(listboxInstance.value()).toEqual([0, 2]);
+            expect(listboxInstance.values()).toEqual([0, 2]);
           });
         });
       });
@@ -418,30 +418,30 @@ describe('Listbox', () => {
           it('should select the next option on ArrowDown', () => {
             setupListbox({multi: false, selectionMode: 'follow'});
             down();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
             down();
-            expect(listboxInstance.value()).toEqual([2]);
+            expect(listboxInstance.values()).toEqual([2]);
             expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
           });
 
           it('should select the previous option on ArrowUp', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            setupListbox({multi: false, selectionMode: 'follow', values: [2]});
             up();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
           it('should select the first option on Home', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            setupListbox({multi: false, selectionMode: 'follow', values: [2]});
             home();
-            expect(listboxInstance.value()).toEqual([0]);
+            expect(listboxInstance.values()).toEqual([0]);
           });
 
           it('should select the last option on End', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            setupListbox({multi: false, selectionMode: 'follow', values: [2]});
             end();
-            expect(listboxInstance.value()).toEqual([4]);
+            expect(listboxInstance.values()).toEqual([4]);
           });
         });
 
@@ -452,7 +452,7 @@ describe('Listbox', () => {
             up();
             home();
             end();
-            expect(listboxInstance.value()).toEqual([]);
+            expect(listboxInstance.values()).toEqual([]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('false');
           });
 
@@ -460,12 +460,12 @@ describe('Listbox', () => {
             setupListbox({multi: false, selectionMode: 'explicit'});
             down();
             space();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
             down();
             down();
             space();
-            expect(listboxInstance.value()).toEqual([3]);
+            expect(listboxInstance.values()).toEqual([3]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[3].getAttribute('aria-selected')).toBe('true');
           });
@@ -474,7 +474,7 @@ describe('Listbox', () => {
             setupListbox({multi: false, selectionMode: 'explicit'});
             down();
             enter();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
         });
@@ -483,46 +483,46 @@ describe('Listbox', () => {
       describe('multi select', () => {
         describe('selection follows focus', () => {
           it('should select only the focused option on ArrowDown (no modifier)', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             down();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
           it('should move focus but not change selection on ctrl + ArrowDown, then toggle with ctrl + Space', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             down({ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([0]);
+            expect(listboxInstance.values()).toEqual([0]);
             space({ctrlKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1]);
           });
 
           it('should toggle selection of the focused item on ctrl + Space', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             space({ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([]);
+            expect(listboxInstance.values()).toEqual([]);
             down();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             space({ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([]);
+            expect(listboxInstance.values()).toEqual([]);
           });
 
           it('should extend selection on shift + ArrowDown', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             down({shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1]);
             down({shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2]);
           });
 
           it('should select all on Ctrl+A, then select active on second Ctrl+A', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            setupListbox({multi: true, selectionMode: 'follow', values: [0]});
             keydown('A', {ctrlKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2, 3, 4]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2, 3, 4]);
 
             keydown('A', {ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([0]);
+            expect(listboxInstance.values()).toEqual([0]);
           });
         });
 
@@ -530,43 +530,43 @@ describe('Listbox', () => {
           it('should move focus but not select on ArrowDown', () => {
             setupListbox({multi: true, selectionMode: 'explicit'});
             down();
-            expect(listboxInstance.value()).toEqual([]);
+            expect(listboxInstance.values()).toEqual([]);
           });
 
           it('should toggle selection of the focused item on Space', () => {
             setupListbox({multi: true, selectionMode: 'explicit'});
             down();
             space();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
             down();
             space();
-            expect(listboxInstance.value().sort()).toEqual([1, 2]);
+            expect(listboxInstance.values().sort()).toEqual([1, 2]);
             space();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
           });
 
           it('should toggle selection of the focused item on Enter', () => {
             setupListbox({multi: true, selectionMode: 'explicit'});
             down();
             enter();
-            expect(listboxInstance.value()).toEqual([1]);
+            expect(listboxInstance.values()).toEqual([1]);
           });
 
           it('should extend selection on Shift+ArrowDown', () => {
             setupListbox({multi: true, selectionMode: 'explicit'});
             down({shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1]);
             down({shiftKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2]);
           });
 
           it('should toggle selection of all options on Ctrl+A', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            setupListbox({multi: true, selectionMode: 'explicit', values: [0]});
             keydown('A', {ctrlKey: true});
-            expect(listboxInstance.value().sort()).toEqual([0, 1, 2, 3, 4]);
+            expect(listboxInstance.values().sort()).toEqual([0, 1, 2, 3, 4]);
 
             keydown('A', {ctrlKey: true});
-            expect(listboxInstance.value()).toEqual([]);
+            expect(listboxInstance.values()).toEqual([]);
           });
         });
       });
@@ -711,7 +711,7 @@ describe('Listbox', () => {
         setupListbox({options: getOptions(), focusMode, selectionMode: 'follow'});
         type('O');
         expect(isFocused(4)).toBe(true);
-        expect(listboxInstance.value()).toEqual([4]);
+        expect(listboxInstance.values()).toEqual([4]);
         expect(optionElements[4].getAttribute('aria-selected')).toBe('true');
       });
 
@@ -719,7 +719,7 @@ describe('Listbox', () => {
         setupListbox({options: getOptions(), focusMode, selectionMode: 'explicit'});
         type('O');
         expect(isFocused(4)).toBe(true);
-        expect(listboxInstance.value()).toEqual([]);
+        expect(listboxInstance.values()).toEqual([]);
         expect(optionElements[4].getAttribute('aria-selected')).toBe('false');
       });
 
@@ -766,7 +766,7 @@ describe('Listbox', () => {
       expect(optionElements.length).toBe(0);
       expect(() => down()).not.toThrow();
       expect(() => space()).not.toThrow();
-      expect(listboxInstance.value()).toEqual([]);
+      expect(listboxInstance.values()).toEqual([]);
     });
   });
 });
@@ -782,7 +782,7 @@ interface TestOption {
     <ul
       ngListbox
       aria-label="Test Listbox"
-      [(value)]="value"
+      [(values)]="values"
       [disabled]="disabled"
       [readonly]="readonly"
       [focusMode]="focusMode"
@@ -808,7 +808,7 @@ class ListboxExample {
     {value: 4, label: 'Option 4', disabled: false},
   ]);
 
-  value: number[] = [];
+  values: number[] = [];
   disabled = false;
   readonly = false;
   softDisabled = true;

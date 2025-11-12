@@ -104,7 +104,7 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().value().includes(this.value());
+    return this.tree().values().includes(this.value());
   });
 
   /** The current type of this item. */
@@ -115,7 +115,7 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
+    return this.tree().values().includes(this.value()) ? this.tree().currentType() : undefined;
   });
 
   constructor(readonly inputs: TreeItemInputs<V>) {
@@ -372,8 +372,8 @@ export class TreePattern<V> {
   /** The delay in milliseconds to wait before clearing the typeahead buffer. */
   typeaheadDelay: SignalLike<number>;
 
-  /** The current value of the tree (the selected items). */
-  value: WritableSignalLike<V[]>;
+  /** The current selected items of the tree. */
+  values: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
     this.id = inputs.id;
@@ -390,7 +390,7 @@ export class TreePattern<V> {
     this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
     this.selectionMode = inputs.selectionMode;
     this.typeaheadDelay = inputs.typeaheadDelay;
-    this.value = inputs.value;
+    this.values = inputs.values;
 
     this.listBehavior = new List({
       ...inputs,
