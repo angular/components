@@ -38,6 +38,8 @@ import {Directionality} from '@angular/cdk/bidi';
  *
  * The menu trigger is used to open and close menus, and can be placed on menu items to connect
  * sub-menus.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: 'button[ngMenuTrigger]',
@@ -110,6 +112,8 @@ export class MenuTrigger<V> {
  *   <div ngMenuItem>Delete</div>
  * </div>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenu]',
@@ -242,6 +246,8 @@ export class Menu<V> {
  * Like the menu, a menubar is used to offer a list of menu item choices to users. However, a
  * menubar is used to display a persistent, top-level,
  * always-visible set of menu item choices.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenuBar]',
@@ -324,6 +330,8 @@ export class MenuBar<V> {
  * An item in a Menu.
  *
  * Menu items can be used in menus and menubars to represent a choice or action a user can take.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenuItem]',
@@ -408,7 +416,11 @@ export class MenuItem<V> {
   }
 }
 
-/** Defers the rendering of the menu content. */
+/**
+ * Defers the rendering of the menu content.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: 'ng-template[ngMenuContent]',
   exportAs: 'ngMenuContent',
