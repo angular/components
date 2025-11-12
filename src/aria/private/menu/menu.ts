@@ -25,7 +25,7 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
 
 /** The inputs for the MenuPattern class. */
 export interface MenuInputs<V>
-  extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value' | 'disabled'> {
+  extends Omit<ListInputs<MenuItemPattern<V>, V>, 'values' | 'disabled'> {
   /** The unique ID of the menu. */
   id: SignalLike<string>;
 
@@ -165,7 +165,7 @@ export class MenuPattern<V> {
     this.id = inputs.id;
     this.listBehavior = new List<MenuItemPattern<V>, V>({
       ...inputs,
-      value: signal([]),
+      values: signal([]),
       disabled: () => false,
     });
   }

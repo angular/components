@@ -30,7 +30,7 @@
         </div>
 
         <ng-template ngComboboxPopupContainer>
-          <div ngListbox class="example-listbox" [(value)]="selectedStates">
+          <div ngListbox class="example-listbox" [(values)]="selectedStates">
             @for (option of options(); track option) {
               <div class="example-option" ngOption [value]="option" [label]="option">
                 <span>{{option}}</span>

@@ -55,7 +55,7 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
 
   /** Whether the widget is selected (only relevant in a selection group). */
   readonly selected = computed(() =>
-    this.toolbar().listBehavior.inputs.value().includes(this.value()),
+    this.toolbar().listBehavior.inputs.values().includes(this.value()),
   );
 
   /** Whether the widget is currently the active one (focused). */
