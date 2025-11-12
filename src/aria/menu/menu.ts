@@ -206,7 +206,7 @@ export class Menu<V> {
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
 
-  /** The delay in milliseconds before expanding sub-menus on hover. */
+  /** The delay in seconds before expanding sub-menus on hover. */
   readonly expansionDelay = input<number>(0.1); // Arbitrarily chosen.
 
   constructor() {
