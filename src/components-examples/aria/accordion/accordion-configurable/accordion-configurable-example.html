@@ -3,15 +3,6 @@
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
   <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
-
-  <mat-form-field subscriptSizing="dynamic" appearance="outline">
-    <mat-label>Expanded Items</mat-label>
-    <mat-select [(value)]="expandedIds" multiple>
-      @for (item of items; track item) {
-        <mat-option [value]="item">{{item}}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
 </div>
 
 <div
@@ -21,7 +12,6 @@
   [disabled]="disabled.value"
   [softDisabled]="softDisabled.value"
   [wrap]="wrap.value"
-  [(expandedPanels)]="expandedIds"
 >
   <div class="example-accordion">
     <h3 class="example-accordion-header">
@@ -40,7 +30,7 @@
 
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item2" disabled>
+      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item2" disabled [expanded]="true">
         Item 2 Trigger (disabled)
         <mat-icon aria-hidden="true">{{expansionIcon('item2')()}}</mat-icon>
       </button>

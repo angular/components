@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal, model} from '@angular/core';
+import {Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
@@ -7,10 +7,8 @@ import {AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent} from
 
 describe('AccordionGroup', () => {
   let fixture: ComponentFixture<AccordionGroupExample>;
-  let groupDebugElement: DebugElement;
   let triggerDebugElements: DebugElement[];
   let panelDebugElements: DebugElement[];
-  let groupInstance: AccordionGroup;
   let triggerElements: HTMLElement[];
   let panelElements: HTMLElement[];
 
@@ -32,9 +30,9 @@ describe('AccordionGroup', () => {
   const endKey = (target: HTMLElement) => keydown(target, 'End');
 
   interface SetupOptions {
-    initialExpandedPanels?: string[];
     multiExpandable?: boolean;
     disabledGroup?: boolean;
+    expandedItemValues?: string[];
     disabledItemValues?: string[];
     softDisabled?: boolean;
     wrap?: boolean;
@@ -43,9 +41,6 @@ describe('AccordionGroup', () => {
   function configureAccordionComponent(opts: SetupOptions = {}) {
     const testComponent = fixture.componentInstance as AccordionGroupExample;
 
-    if (opts.initialExpandedPanels !== undefined) {
-      testComponent.expandedPanels.set(opts.initialExpandedPanels);
-    }
     if (opts.multiExpandable !== undefined) {
       testComponent.multiExpandable.set(opts.multiExpandable);
     }
@@ -61,17 +56,18 @@ describe('AccordionGroup', () => {
     if (opts.disabledItemValues !== undefined) {
       opts.disabledItemValues.forEach(value => testComponent.disableItem(value, true));
     }
+    if (opts.expandedItemValues !== undefined) {
+      opts.expandedItemValues.forEach(value => testComponent.expandItem(value, true));
+    }
 
     fixture.detectChanges();
     defineTestVariables(fixture);
   }
 
   function defineTestVariables(currentFixture: ComponentFixture<AccordionGroupExample>) {
-    groupDebugElement = currentFixture.debugElement.query(By.directive(AccordionGroup));
     triggerDebugElements = currentFixture.debugElement.queryAll(By.directive(AccordionTrigger));
     panelDebugElements = currentFixture.debugElement.queryAll(By.directive(AccordionPanel));
 
-    groupInstance = groupDebugElement.injector.get<AccordionGroup>(AccordionGroup);
     triggerElements = triggerDebugElements.map(el => el.nativeElement);
     panelElements = panelDebugElements.map(el => el.nativeElement);
   }
@@ -109,7 +105,7 @@ describe('AccordionGroup', () => {
       });
 
       it('should have aria-expanded="false" when collapsed', () => {
-        configureAccordionComponent({initialExpandedPanels: []});
+        configureAccordionComponent();
         expect(triggerElements[0].getAttribute('aria-expanded')).toBe('false');
         expect(triggerElements[1].getAttribute('aria-expanded')).toBe('false');
         expect(triggerElements[2].getAttribute('aria-expanded')).toBe('false');
@@ -154,7 +150,7 @@ describe('AccordionGroup', () => {
       });
 
       it('should have "inert" attribute when collapsed', () => {
-        configureAccordionComponent({initialExpandedPanels: []});
+        configureAccordionComponent();
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
         expect(panelElements[1].hasAttribute('inert')).toBeTrue();
         expect(panelElements[2].hasAttribute('inert')).toBeTrue();
@@ -172,7 +168,6 @@ describe('AccordionGroup', () => {
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
         expect(panelElements[0].hasAttribute('inert')).toBeFalse();
-        expect(groupInstance.expandedPanels()).toEqual(['item-1']);
       });
 
       it('should collapes panel on trigger click and update expanded panels', () => {
@@ -180,24 +175,21 @@ describe('AccordionGroup', () => {
         click(triggerElements[0]); // Collapse
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
-        expect(groupInstance.expandedPanels()).toEqual([]);
       });
 
       it('should expand one and collapse others', () => {
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
-        expect(groupInstance.expandedPanels()).toEqual(['item-1']);
 
         click(triggerElements[1]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
         expect(panelElements[1].hasAttribute('inert')).toBeFalse();
-        expect(groupInstance.expandedPanels()).toEqual(['item-2']);
       });
 
       it('should allow setting initial value', () => {
-        configureAccordionComponent({initialExpandedPanels: ['item-2'], multiExpandable: false});
+        configureAccordionComponent({expandedItemValues: ['item-2'], multiExpandable: false});
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
         expect(isTriggerExpanded(triggerElements[2])).toBeFalse();
@@ -221,19 +213,17 @@ describe('AccordionGroup', () => {
       it('should collapse an item without affecting others', () => {
         click(triggerElements[0]);
         click(triggerElements[1]);
-        expect(groupInstance.expandedPanels()).toEqual(
-          jasmine.arrayWithExactContents(['item-1', 'item-2']),
-        );
+        expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
+        expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
 
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
-        expect(groupInstance.expandedPanels()).toEqual(['item-2']);
       });
 
       it('should allow setting initial multiple values', () => {
         configureAccordionComponent({
-          initialExpandedPanels: ['item-1', 'item-3'],
+          expandedItemValues: ['item-1', 'item-3'],
           multiExpandable: true,
         });
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
@@ -247,7 +237,6 @@ describe('AccordionGroup', () => {
         configureAccordionComponent({disabledItemValues: ['item-1']});
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
-        expect(groupInstance.expandedPanels()).toEqual([]);
         expect(triggerElements[0].getAttribute('aria-disabled')).toBe('true');
       });
 
@@ -255,7 +244,6 @@ describe('AccordionGroup', () => {
         configureAccordionComponent({disabledGroup: true});
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
-        expect(groupInstance.expandedPanels()).toEqual([]);
         click(triggerElements[1]);
         expect(isTriggerExpanded(triggerElements[1])).toBeFalse();
       });
@@ -387,7 +375,6 @@ describe('AccordionGroup', () => {
   template: `
     <div
       ngAccordionGroup
-      [(expandedPanels)]="expandedPanels"
       [multiExpandable]="multiExpandable()"
       [disabled]="disabledGroup()"
       [softDisabled]="softDisabled()"
@@ -399,6 +386,7 @@ describe('AccordionGroup', () => {
             ngAccordionTrigger
             [panelId]="item.panelId"
             [disabled]="item.disabled"
+            [(expanded)]="item.expanded"
           >{{ item.header }}</button>
           <div
             ngAccordionPanel
@@ -416,12 +404,29 @@ describe('AccordionGroup', () => {
 })
 class AccordionGroupExample {
   items = signal([
-    {panelId: 'item-1', header: 'Item 1 Header', content: 'Item 1 Content', disabled: false},
-    {panelId: 'item-2', header: 'Item 2 Header', content: 'Item 2 Content', disabled: false},
-    {panelId: 'item-3', header: 'Item 3 Header', content: 'Item 3 Content', disabled: false},
+    {
+      panelId: 'item-1',
+      header: 'Item 1 Header',
+      content: 'Item 1 Content',
+      disabled: false,
+      expanded: false,
+    },
+    {
+      panelId: 'item-2',
+      header: 'Item 2 Header',
+      content: 'Item 2 Content',
+      disabled: false,
+      expanded: false,
+    },
+    {
+      panelId: 'item-3',
+      header: 'Item 3 Header',
+      content: 'Item 3 Content',
+      disabled: false,
+      expanded: false,
+    },
   ]);
 
-  expandedPanels = model<string[]>([]);
   multiExpandable = signal(false);
   disabledGroup = signal(false);
   softDisabled = signal(true);
@@ -430,6 +435,12 @@ class AccordionGroupExample {
   disableItem(itemValue: string, disabled: boolean) {
     this.items.update(items =>
       items.map(item => (item.panelId === itemValue ? {...item, disabled} : item)),
+    );
+  }
+
+  expandItem(itemValue: string, expanded: boolean) {
+    this.items.update(items =>
+      items.map(item => (item.panelId === itemValue ? {...item, expanded} : item)),
     );
   }
 }

@@ -1,4 +1,4 @@
-import {Component, computed, model, Signal} from '@angular/core';
+import {Component, computed, Signal, viewChildren} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -36,7 +36,13 @@ export class AccordionConfigurableExample {
   multi = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
   softDisabled = new FormControl(true, {nonNullable: true});
-  expandedIds = model<string[]>(['item1']);
+
+  triggers = viewChildren(AccordionTrigger);
+  expandedIds = computed(() =>
+    this.triggers()
+      .filter(t => t.expanded())
+      .map(t => t.panelId()),
+  );
 
   // Example items
   items = ['item1', 'item2', 'item3', 'item4', 'item5'];

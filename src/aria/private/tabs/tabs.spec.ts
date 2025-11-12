@@ -65,7 +65,6 @@ describe('Tabs Pattern', () => {
       activeItem: signal(undefined),
       softDisabled: signal(true),
       items: signal([]),
-      values: signal(['tab-1']),
       element: signal(document.createElement('div')),
     };
     tabListPattern = new TabListPattern(tabListInputs);
@@ -79,6 +78,7 @@ describe('Tabs Pattern', () => {
         element: signal(createTabElement()),
         disabled: signal(false),
         value: signal('tab-1'),
+        expanded: signal(false),
       },
       {
         tablist: signal(tabListPattern),
@@ -87,6 +87,7 @@ describe('Tabs Pattern', () => {
         element: signal(createTabElement()),
         disabled: signal(false),
         value: signal('tab-2'),
+        expanded: signal(false),
       },
       {
         tablist: signal(tabListPattern),
@@ -95,6 +96,7 @@ describe('Tabs Pattern', () => {
         element: signal(createTabElement()),
         disabled: signal(false),
         value: signal('tab-3'),
+        expanded: signal(false),
       },
     ];
     tabPatterns = [
@@ -138,227 +140,256 @@ describe('Tabs Pattern', () => {
     tabListInputs.activeItem.set(tabPatterns[0]);
   });
 
-  it('sets the selected tab by setting `value`.', () => {
-    expect(tabPatterns[0].selected()).toBeTrue();
-    expect(tabPatterns[1].selected()).toBeFalse();
-    tabListInputs.values.set(['tab-2']);
-    expect(tabPatterns[0].selected()).toBeFalse();
-    expect(tabPatterns[1].selected()).toBeTrue();
-  });
+  describe('TabListPattern', () => {
+    describe('#open', () => {
+      it('should open a tab with value', () => {
+        expect(tabListPattern.selectedTab()).toBeUndefined();
+        tabListPattern.open('tab-1');
+        expect(tabListPattern.selectedTab()!.value()).toBe('tab-1');
+      });
 
-  it('sets a tabpanel to be not hidden if a tab is selected.', () => {
-    tabListInputs.values.set(['tab-1']);
-    expect(tabPatterns[0].selected()).toBeTrue();
-    expect(tabPanelPatterns[0].hidden()).toBeFalse();
-  });
+      it('should open a tab with tab pattern instance', () => {
+        expect(tabListPattern.selectedTab()).toBeUndefined();
+        tabListPattern.open(tabPatterns[0]);
+        expect(tabListPattern.selectedTab()).toBe(tabPatterns[0]);
+      });
 
-  it('sets a tabpanel to be hidden if a tab is not selected.', () => {
-    tabListInputs.values.set(['tab-1']);
-    expect(tabPatterns[1].selected()).toBeFalse();
-    expect(tabPanelPatterns[1].hidden()).toBeTrue();
-  });
-
-  it('should set a tabpanel tab index to 0 if the tab is selected.', () => {
-    tabListInputs.values.set(['tab-1']);
-    expect(tabPatterns[0].tabIndex()).toBe(0);
-  });
-
-  it('should set a tabpanel tab index to -1 if the tab is not selected.', () => {
-    tabListInputs.values.set(['tab-1']);
-    expect(tabPatterns[1].tabIndex()).toBe(-1);
-    expect(tabPatterns[2].tabIndex()).toBe(-1);
-  });
-
-  it('should set a tabpanel aria-labelledby pointing to its tab id.', () => {
-    expect(tabPanelPatterns[0].labelledBy()).toBe('tab-1-id');
-    expect(tabPanelPatterns[1].labelledBy()).toBe('tab-2-id');
-    expect(tabPanelPatterns[2].labelledBy()).toBe('tab-3-id');
-  });
-
-  it('gets a controlled tabpanel id from a tab.', () => {
-    expect(tabPanelPatterns[0].id()).toBe('tabpanel-1-id');
-    expect(tabPatterns[0].controls()).toBe('tabpanel-1-id');
-    expect(tabPanelPatterns[1].id()).toBe('tabpanel-2-id');
-    expect(tabPatterns[1].controls()).toBe('tabpanel-2-id');
-    expect(tabPanelPatterns[2].id()).toBe('tabpanel-3-id');
-    expect(tabPatterns[2].controls()).toBe('tabpanel-3-id');
-  });
-
-  describe('#setDefaultState', () => {
-    it('should not set activeIndex if there are no tabs', () => {
-      tabListInputs.items.set([]);
-      tabListInputs.activeItem.set(tabPatterns[10]);
-      tabListPattern.setDefaultState();
-      expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
+      it('should open the active tab', () => {
+        expect(tabListPattern.selectedTab()).toBeUndefined();
+        expect(tabListPattern.activeTab()).toBe(tabPatterns[0]);
+        tabListPattern.open();
+        expect(tabListPattern.selectedTab()).toBe(tabPatterns[0]);
+      });
     });
 
-    it('should not set activeIndex if no tabs are focusable', () => {
-      tabListInputs.softDisabled.set(false);
-      tabInputs.forEach(input => input.disabled.set(true));
-      tabListInputs.activeItem.set(tabPatterns[10]);
-      tabListPattern.setDefaultState();
-      expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
+    describe('#setDefaultState', () => {
+      it('should not set activeIndex if there are no tabs', () => {
+        tabListInputs.items.set([]);
+        tabListInputs.activeItem.set(tabPatterns[10]);
+        tabListPattern.setDefaultState();
+        expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
+      });
+
+      it('should not set activeIndex if no tabs are focusable', () => {
+        tabListInputs.softDisabled.set(false);
+        tabInputs.forEach(input => input.disabled.set(true));
+        tabListInputs.activeItem.set(tabPatterns[10]);
+        tabListPattern.setDefaultState();
+        expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
+      });
+
+      it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
+        tabListInputs.softDisabled.set(false);
+        tabListInputs.activeItem.set(tabPatterns[2]);
+        tabListPattern.selectedTab.set(undefined);
+        tabInputs[0].disabled.set(true);
+        tabListPattern.setDefaultState();
+        expect(tabListInputs.activeItem()).toBe(tabPatterns[1]);
+      });
+
+      it('should set activeIndex to the first focusable and selected tab', () => {
+        tabListInputs.activeItem.set(tabPatterns[0]);
+        tabListPattern.selectedTab.set(tabPatterns[2]);
+        tabListPattern.setDefaultState();
+        expect(tabListInputs.activeItem()).toBe(tabPatterns[2]);
+      });
+
+      it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
+        tabListInputs.softDisabled.set(false);
+        tabListPattern.selectedTab.set(tabPatterns[1]);
+        tabInputs[1].disabled.set(true);
+        tabListPattern.setDefaultState();
+        expect(tabListInputs.activeItem()).toBe(tabPatterns[0]);
+      });
     });
 
-    it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
-      tabListInputs.softDisabled.set(false);
-      tabListInputs.activeItem.set(tabPatterns[2]);
-      tabListInputs.values.set([]);
-      tabInputs[0].disabled.set(true);
-      tabListPattern.setDefaultState();
-      expect(tabListInputs.activeItem()).toBe(tabPatterns[1]);
-    });
+    describe('Keyboard Navigation', () => {
+      it('does not handle keyboard event if a tablist is disabled.', () => {
+        expect(tabPatterns[1].active()).toBeFalse();
+        tabListInputs.disabled.set(true);
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[1].active()).toBeFalse();
+      });
 
-    it('should set activeIndex to the first focusable and selected tab', () => {
-      tabListInputs.activeItem.set(tabPatterns[0]);
-      tabListInputs.values.set([tabPatterns[2].value()]);
-      tabListPattern.setDefaultState();
-      expect(tabListInputs.activeItem()).toBe(tabPatterns[2]);
-    });
+      it('skips the disabled tab when `softDisabled` is set to false.', () => {
+        tabListInputs.softDisabled.set(false);
+        tabInputs[1].disabled.set(true);
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].active()).toBeFalse();
+        expect(tabPatterns[1].active()).toBeFalse();
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
 
-    it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
-      tabListInputs.softDisabled.set(false);
-      tabListInputs.values.set([tabPatterns[1].value()]);
-      tabInputs[1].disabled.set(true);
-      tabListPattern.setDefaultState();
-      expect(tabListInputs.activeItem()).toBe(tabPatterns[0]);
+      it('does not skip the disabled tab when `softDisabled` is set to true.', () => {
+        tabInputs[1].disabled.set(true);
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].active()).toBeFalse();
+        expect(tabPatterns[1].active()).toBeTrue();
+        expect(tabPatterns[2].active()).toBeFalse();
+      });
+
+      it('selects a tab by focus if `selectionMode` is "follow".', () => {
+        tabListPattern.onKeydown(space());
+        expect(tabPatterns[0].selected()).toBeTrue();
+        expect(tabPatterns[1].selected()).toBeFalse();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].selected()).toBeFalse();
+        expect(tabPatterns[1].selected()).toBeTrue();
+      });
+
+      it('selects a tab by enter key if `selectionMode` is "explicit".', () => {
+        tabListInputs.selectionMode.set('explicit');
+        tabListPattern.onKeydown(space());
+        expect(tabPatterns[0].selected()).toBeTrue();
+        expect(tabPatterns[1].selected()).toBeFalse();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].selected()).toBeTrue();
+        expect(tabPatterns[1].selected()).toBeFalse();
+        tabListPattern.onKeydown(enter());
+        expect(tabPatterns[0].selected()).toBeFalse();
+        expect(tabPatterns[1].selected()).toBeTrue();
+      });
+
+      it('selects a tab by space key if `selectionMode` is "explicit".', () => {
+        tabListInputs.selectionMode.set('explicit');
+        tabListPattern.onKeydown(space());
+        expect(tabPatterns[0].selected()).toBeTrue();
+        expect(tabPatterns[1].selected()).toBeFalse();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].selected()).toBeTrue();
+        expect(tabPatterns[1].selected()).toBeFalse();
+        tabListPattern.onKeydown(space());
+        expect(tabPatterns[0].selected()).toBeFalse();
+        expect(tabPatterns[1].selected()).toBeTrue();
+      });
+
+      it('uses left key to navigate to the previous tab when `orientation` is set to "horizontal".', () => {
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(left());
+        expect(tabPatterns[0].active()).toBeTrue();
+      });
+
+      it('uses right key to navigate to the next tab when `orientation` is set to "horizontal".', () => {
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
+
+      it('uses up key to navigate to the previous tab when `orientation` is set to "vertical".', () => {
+        tabListInputs.orientation.set('vertical');
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(up());
+        expect(tabPatterns[0].active()).toBeTrue();
+      });
+
+      it('uses down key to navigate to the next tab when `orientation` is set to "vertical".', () => {
+        tabListInputs.orientation.set('vertical');
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(down());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
+
+      it('uses home key to navigate to the first tab.', () => {
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(home());
+        expect(tabPatterns[0].active()).toBeTrue();
+      });
+
+      it('uses end key to navigate to the last tab.', () => {
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        expect(tabPatterns[1].active()).toBeTrue();
+        tabListPattern.onKeydown(end());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
+
+      it('moves to the last tab from first tab when navigating to the previous tab if `wrap` is set to true', () => {
+        expect(tabPatterns[0].active()).toBeTrue();
+        tabListPattern.onKeydown(left());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
+
+      it('moves to the first tab from last tab when navigating to the next tab if `wrap` is set to true', () => {
+        tabListPattern.onKeydown(end());
+        expect(tabPatterns[2].active()).toBeTrue();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[0].active()).toBeTrue();
+      });
+
+      it('stays on the first tab when navigating to the previous tab if `wrap` is set to false', () => {
+        tabListInputs.wrap.set(false);
+        expect(tabPatterns[0].active()).toBeTrue();
+        tabListPattern.onKeydown(left());
+        expect(tabPatterns[0].active()).toBeTrue();
+      });
+
+      it('stays on the last tab when navigating to the next tab if `wrap` is set to false', () => {
+        tabListInputs.wrap.set(false);
+        tabListPattern.onKeydown(end());
+        expect(tabPatterns[2].active()).toBeTrue();
+        tabListPattern.onKeydown(right());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
+
+      it('changes the navigation direction with `rtl` mode.', () => {
+        tabListInputs.textDirection.set('rtl');
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        tabListPattern.onKeydown(left());
+        expect(tabPatterns[2].active()).toBeTrue();
+      });
     });
   });
 
-  describe('Keyboard Navigation', () => {
-    it('does not handle keyboard event if a tablist is disabled.', () => {
-      expect(tabPatterns[1].active()).toBeFalse();
-      tabListInputs.disabled.set(true);
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[1].active()).toBeFalse();
+  describe('TabPattern', () => {
+    it('gets a controlled tabpanel id from a tab', () => {
+      expect(tabPanelPatterns[0].id()).toBe('tabpanel-1-id');
+      expect(tabPatterns[0].controls()).toBe('tabpanel-1-id');
+      expect(tabPanelPatterns[1].id()).toBe('tabpanel-2-id');
+      expect(tabPatterns[1].controls()).toBe('tabpanel-2-id');
+      expect(tabPanelPatterns[2].id()).toBe('tabpanel-3-id');
+      expect(tabPatterns[2].controls()).toBe('tabpanel-3-id');
     });
 
-    it('skips the disabled tab when `softDisabled` is set to false.', () => {
-      tabListInputs.softDisabled.set(false);
-      tabInputs[1].disabled.set(true);
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].active()).toBeFalse();
-      expect(tabPatterns[1].active()).toBeFalse();
-      expect(tabPatterns[2].active()).toBeTrue();
+    describe('#open', () => {
+      it('should open the current tab', () => {
+        expect(tabListPattern.selectedTab()).toBeUndefined();
+        tabPatterns[0].open();
+        expect(tabListPattern.selectedTab()).toBe(tabPatterns[0]);
+      });
     });
+  });
 
-    it('does not skip the disabled tab when `softDisabled` is set to true.', () => {
-      tabInputs[1].disabled.set(true);
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].active()).toBeFalse();
-      expect(tabPatterns[1].active()).toBeTrue();
-      expect(tabPatterns[2].active()).toBeFalse();
-    });
-
-    it('selects a tab by focus if `selectionMode` is "follow".', () => {
+  describe('TabPanelPattern', () => {
+    it('should set a tabpanel to be not hidden if a tab is opened', () => {
+      tabPatterns[0].open();
       expect(tabPatterns[0].selected()).toBeTrue();
+      expect(tabPanelPatterns[0].hidden()).toBeFalse();
+    });
+
+    it('sets a tabpanel to be hidden if a tab is not opened', () => {
       expect(tabPatterns[1].selected()).toBeFalse();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].selected()).toBeFalse();
-      expect(tabPatterns[1].selected()).toBeTrue();
+      expect(tabPanelPatterns[1].hidden()).toBeTrue();
     });
 
-    it('selects a tab by enter key if `selectionMode` is "explicit".', () => {
-      tabListInputs.selectionMode.set('explicit');
-      expect(tabPatterns[0].selected()).toBeTrue();
-      expect(tabPatterns[1].selected()).toBeFalse();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].selected()).toBeTrue();
-      expect(tabPatterns[1].selected()).toBeFalse();
-      tabListPattern.onKeydown(enter());
-      expect(tabPatterns[0].selected()).toBeFalse();
-      expect(tabPatterns[1].selected()).toBeTrue();
+    it('should set a tabpanel tab index to 0 if the tab is opened', () => {
+      tabPatterns[0].open();
+      expect(tabPatterns[0].tabIndex()).toBe(0);
     });
 
-    it('selects a tab by space key if `selectionMode` is "explicit".', () => {
-      tabListInputs.selectionMode.set('explicit');
-      expect(tabPatterns[0].selected()).toBeTrue();
-      expect(tabPatterns[1].selected()).toBeFalse();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].selected()).toBeTrue();
-      expect(tabPatterns[1].selected()).toBeFalse();
-      tabListPattern.onKeydown(space());
-      expect(tabPatterns[0].selected()).toBeFalse();
-      expect(tabPatterns[1].selected()).toBeTrue();
+    it('should set a tabpanel tab index to -1 if the tab is not opened', () => {
+      tabPatterns[0].open();
+      expect(tabPatterns[1].tabIndex()).toBe(-1);
+      expect(tabPatterns[2].tabIndex()).toBe(-1);
     });
 
-    it('uses left key to navigate to the previous tab when `orientation` is set to "horizontal".', () => {
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(left());
-      expect(tabPatterns[0].active()).toBeTrue();
-    });
-
-    it('uses right key to navigate to the next tab when `orientation` is set to "horizontal".', () => {
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[2].active()).toBeTrue();
-    });
-
-    it('uses up key to navigate to the previous tab when `orientation` is set to "vertical".', () => {
-      tabListInputs.orientation.set('vertical');
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(up());
-      expect(tabPatterns[0].active()).toBeTrue();
-    });
-
-    it('uses down key to navigate to the next tab when `orientation` is set to "vertical".', () => {
-      tabListInputs.orientation.set('vertical');
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(down());
-      expect(tabPatterns[2].active()).toBeTrue();
-    });
-
-    it('uses home key to navigate to the first tab.', () => {
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(home());
-      expect(tabPatterns[0].active()).toBeTrue();
-    });
-
-    it('uses end key to navigate to the last tab.', () => {
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      expect(tabPatterns[1].active()).toBeTrue();
-      tabListPattern.onKeydown(end());
-      expect(tabPatterns[2].active()).toBeTrue();
-    });
-
-    it('moves to the last tab from first tab when navigating to the previous tab if `wrap` is set to true', () => {
-      expect(tabPatterns[0].active()).toBeTrue();
-      tabListPattern.onKeydown(left());
-      expect(tabPatterns[2].active()).toBeTrue();
-    });
-
-    it('moves to the first tab from last tab when navigating to the next tab if `wrap` is set to true', () => {
-      tabListPattern.onKeydown(end());
-      expect(tabPatterns[2].active()).toBeTrue();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[0].active()).toBeTrue();
-    });
-
-    it('stays on the first tab when navigating to the previous tab if `wrap` is set to false', () => {
-      tabListInputs.wrap.set(false);
-      expect(tabPatterns[0].active()).toBeTrue();
-      tabListPattern.onKeydown(left());
-      expect(tabPatterns[0].active()).toBeTrue();
-    });
-
-    it('stays on the last tab when navigating to the next tab if `wrap` is set to false', () => {
-      tabListInputs.wrap.set(false);
-      tabListPattern.onKeydown(end());
-      expect(tabPatterns[2].active()).toBeTrue();
-      tabListPattern.onKeydown(right());
-      expect(tabPatterns[2].active()).toBeTrue();
-    });
-
-    it('changes the navigation direction with `rtl` mode.', () => {
-      tabListInputs.textDirection.set('rtl');
-      tabListInputs.activeItem.set(tabPatterns[1]);
-      tabListPattern.onKeydown(left());
-      expect(tabPatterns[2].active()).toBeTrue();
+    it('should set a tabpanel aria-labelledby pointing to its tab id', () => {
+      expect(tabPanelPatterns[0].labelledBy()).toBe('tab-1-id');
+      expect(tabPanelPatterns[1].labelledBy()).toBe('tab-2-id');
+      expect(tabPanelPatterns[2].labelledBy()).toBe('tab-3-id');
     });
   });
 });

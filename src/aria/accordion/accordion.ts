@@ -74,7 +74,7 @@ export class AccordionPanel {
   private readonly _id = inject(_IdGenerator).getId('accordion-trigger-', true);
 
   /** A local unique identifier for the panel, used to match with its trigger's `panelId`. */
-  panelId = input.required<string>();
+  readonly panelId = input.required<string>();
 
   /** Whether the accordion panel is visible. True if the associated trigger is expanded. */
   readonly visible = computed(() => !this._pattern.hidden());
@@ -99,17 +99,17 @@ export class AccordionPanel {
 
   /** Expands this item. */
   expand() {
-    this.accordionTrigger()?.expansionControl.open();
+    this.accordionTrigger()?.open();
   }
 
   /** Collapses this item. */
   collapse() {
-    this.accordionTrigger()?.expansionControl.close();
+    this.accordionTrigger()?.close();
   }
 
   /** Toggles the expansion state of this item. */
   toggle() {
-    this.accordionTrigger()?.expansionControl.toggle();
+    this.accordionTrigger()?.toggle();
   }
 }
 
@@ -141,65 +141,58 @@ export class AccordionPanel {
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.controls()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.disabled]': 'hardDisabled() ? true : null',
+    '[attr.disabled]': '_pattern.hardDisabled() ? true : null',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_pattern.onFocus($event)',
   },
 })
 export class AccordionTrigger {
-  /** A global unique identifier for the trigger. */
-  private readonly _id = inject(_IdGenerator).getId('ng-accordion-trigger-', true);
-
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(AccordionGroup);
 
+  /** A unique identifier for the widget. */
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
+
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
+
   /** A local unique identifier for the trigger, used to match with its panel's `panelId`. */
-  panelId = input.required<string>();
+  readonly panelId = input.required<string>();
 
   /** Whether the trigger is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the corresponding panel is expanded. */
+  readonly expanded = model<boolean>(false);
 
   /** Whether the trigger is active. */
   readonly active = computed(() => this._pattern.active());
 
-  /** Whether the trigger is expanded. */
-  readonly expanded = computed(() => this._pattern.expanded());
-
-  // TODO(ok7sai): Consider moving this to UI patterns.
-  /** Whether this trigger is inaccessible via keyboard navigation. */
-  readonly hardDisabled = computed(() => this._pattern.disabled() && this._pattern.tabIndex() < 0);
-
   /** The accordion panel pattern controlled by this trigger. This is set by AccordionGroup. */
-  readonly accordionPanel: WritableSignal<AccordionPanelPattern | undefined> = signal(undefined);
+  readonly _accordionPanel: WritableSignal<AccordionPanelPattern | undefined> = signal(undefined);
 
   /** The UI pattern instance for this trigger. */
   readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
-    id: () => this._id,
-    panelId: this.panelId,
-    disabled: this.disabled,
-    element: () => this._elementRef.nativeElement,
+    ...this,
     accordionGroup: computed(() => this._accordionGroup._pattern),
-    accordionPanel: this.accordionPanel,
+    accordionPanel: this._accordionPanel,
   });
 
   /** Expands this item. */
   expand() {
-    this._pattern.expansionControl.open();
+    this._pattern.open();
   }
 
   /** Collapses this item. */
   collapse() {
-    this._pattern.expansionControl.close();
+    this._pattern.close();
   }
 
   /** Toggles the expansion state of this item. */
   toggle() {
-    this._pattern.expansionControl.toggle();
+    this._pattern.toggle();
   }
 }
 
@@ -243,6 +236,9 @@ export class AccordionTrigger {
   exportAs: 'ngAccordionGroup',
   host: {
     'class': 'ng-accordion-group',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(focusin)': '_pattern.onFocus($event)',
   },
 })
 export class AccordionGroup {
@@ -250,43 +246,43 @@ export class AccordionGroup {
   private readonly _elementRef = inject(ElementRef);
 
   /** The AccordionTriggers nested inside this group. */
-  protected readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
+  private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
+
+  /** The AccordionTrigger patterns nested inside this group. */
+  private readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
 
   /** The AccordionPanels nested inside this group. */
-  protected readonly _panels = contentChildren(AccordionPanel, {descendants: true});
+  private readonly _panels = contentChildren(AccordionPanel, {descendants: true});
+
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Whether the entire accordion group is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether multiple accordion items can be expanded simultaneously. */
-  multiExpandable = input(true, {transform: booleanAttribute});
-
-  /** The ids of the currently expanded accordion panels. */
-  expandedPanels = model<string[]>([]);
+  readonly multiExpandable = input(true, {transform: booleanAttribute});
 
   /**
    * Whether to allow disabled items to receive focus. When `true`, disabled items are
    * focusable but not interactive. When `false`, disabled items are skipped during navigation.
    */
-  softDisabled = input(true, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** Whether keyboard navigation should wrap around from the last item to the first, and vice-versa. */
-  wrap = input(false, {transform: booleanAttribute});
+  readonly wrap = input(false, {transform: booleanAttribute});
 
   /** The UI pattern instance for this accordion group. */
   readonly _pattern: AccordionGroupPattern = new AccordionGroupPattern({
     ...this,
-    // TODO(ok7sai): Consider making `activeItem` an internal state in the pattern and call
-    // `setDefaultState` in the CDK.
     activeItem: signal(undefined),
-    items: computed(() => this._triggers().map(trigger => trigger._pattern)),
-    expandedIds: this.expandedPanels,
+    items: this._triggerPatterns,
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
-    element: () => this._elementRef.nativeElement,
+    getItem: e => this._getItem(e),
   });
 
   constructor() {
@@ -297,7 +293,7 @@ export class AccordionGroup {
 
       for (const trigger of triggers) {
         const panel = panels.find(p => p.panelId() === trigger.panelId());
-        trigger.accordionPanel.set(panel?._pattern);
+        trigger._accordionPanel.set(panel?._pattern);
         if (panel) {
           panel.accordionTrigger.set(trigger._pattern);
         }
@@ -307,12 +303,28 @@ export class AccordionGroup {
 
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {
-    this._pattern.expansionManager.openAll();
+    this._pattern.expansionBehavior.openAll();
   }
 
   /** Collapses all accordion panels. */
   collapseAll() {
-    this._pattern.expansionManager.closeAll();
+    this._pattern.expansionBehavior.closeAll();
+  }
+
+  /** Gets the trigger pattern for a given element. */
+  private _getItem(element: Element | null | undefined): AccordionTriggerPattern | undefined {
+    let target = element;
+
+    while (target) {
+      const pattern = this._triggerPatterns().find(t => t.element() === target);
+      if (pattern) {
+        return pattern;
+      }
+
+      target = target.parentElement?.closest('[ngAccordionTrigger]');
+    }
+
+    return undefined;
   }
 }
 
