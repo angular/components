@@ -43,6 +43,13 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
+.example-menu-item[aria-disabled='true'],
+.example-menu-trigger[aria-disabled='true'],
+.example-menu-bar-item[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.38;
+}
+
 .example-menu-heading {
   display: block;
   font-weight: bold;
@@ -82,11 +89,6 @@
 .example-menu-trigger:focus,
 .example-menu-bar-item:focus {
   outline: 2px solid var(--mat-sys-primary);
-}
-
-.example-menu-item[aria-disabled='true'] {
-  cursor: default;
-  opacity: 0.38;
 }
 
 .example-icon {

@@ -38,6 +38,8 @@ import {ComboboxPopup} from '../combobox';
  *   <li [value]="3" ngOption>Item 3</li>
  * </ul>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngListbox]',
@@ -116,7 +118,7 @@ export class Listbox<V> {
   readonly = input(false, {transform: booleanAttribute});
 
   /** The values of the current selected items. */
-  value = model<V[]>([]);
+  values = model<V[]>([]);
 
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
@@ -169,13 +171,13 @@ export class Listbox<V> {
       }
     });
 
-    // Ensure that the value is always in sync with the available options.
+    // Ensure that the values are always in sync with the available options.
     afterRenderEffect(() => {
       const items = inputs.items();
-      const value = untracked(() => this.value());
+      const values = untracked(() => this.values());
 
-      if (items && value.some(v => !items.some(i => i.value() === v))) {
-        this.value.set(value.filter(v => items.some(i => i.value() === v)));
+      if (items && values.some(v => !items.some(i => i.value() === v))) {
+        this.values.set(values.filter(v => items.some(i => i.value() === v)));
       }
     });
   }
@@ -194,7 +196,11 @@ export class Listbox<V> {
   }
 }
 
-/** A selectable option in a Listbox. */
+/**
+ * A selectable option in a Listbox.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: '[ngOption]',
   exportAs: 'ngOption',

@@ -80,7 +80,7 @@ describe('Accordion Pattern', () => {
         id: signal('trigger-1-id'),
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
-        value: signal('panel-1'), // Value should match the panel it controls
+        panelId: signal('panel-1'), // Value should match the panel it controls
       },
       {
         accordionGroup: signal(groupPattern),
@@ -88,7 +88,7 @@ describe('Accordion Pattern', () => {
         id: signal('trigger-2-id'),
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
-        value: signal('panel-2'),
+        panelId: signal('panel-2'),
       },
       {
         accordionGroup: signal(groupPattern),
@@ -96,7 +96,7 @@ describe('Accordion Pattern', () => {
         id: signal('trigger-3-id'),
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
-        value: signal('panel-3'),
+        panelId: signal('panel-3'),
       },
     ];
     triggerPatterns = [
@@ -111,17 +111,17 @@ describe('Accordion Pattern', () => {
     panelInputs = [
       {
         id: signal('panel-1-id'),
-        value: signal('panel-1'),
+        panelId: signal('panel-1'),
         accordionTrigger: signal(undefined),
       },
       {
         id: signal('panel-2-id'),
-        value: signal('panel-2'),
+        panelId: signal('panel-2'),
         accordionTrigger: signal(undefined),
       },
       {
         id: signal('panel-3-id'),
-        value: signal('panel-3'),
+        panelId: signal('panel-3'),
         accordionTrigger: signal(undefined),
       },
     ];

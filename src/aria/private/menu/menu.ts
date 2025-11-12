@@ -12,7 +12,7 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The inputs for the MenuBarPattern class. */
-export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'disabled'> {
+export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
   /** The menu items contained in the menu. */
   items: SignalLike<MenuItemPattern<V>[]>;
 
@@ -24,8 +24,7 @@ export interface MenuBarInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>
 }
 
 /** The inputs for the MenuPattern class. */
-export interface MenuInputs<V>
-  extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value' | 'disabled'> {
+export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'values'> {
   /** The unique ID of the menu. */
   id: SignalLike<string>;
 
@@ -55,6 +54,9 @@ export interface MenuTriggerInputs<V> {
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
+
+  /** Whether the menu trigger is disabled. */
+  disabled: SignalLike<boolean>;
 }
 
 /** The inputs for the MenuItemPattern class. */
@@ -73,6 +75,9 @@ export class MenuPattern<V> {
 
   /** The role of the menu. */
   role = () => 'menu';
+
+  /** Whether the menu is disabled. */
+  disabled = () => this.inputs.disabled();
 
   /** Whether the menu is visible. */
   isVisible = computed(() =>
@@ -95,6 +100,9 @@ export class MenuPattern<V> {
 
   /** Timeout used to close sub-menus on hover out. */
   _closeTimeout: any;
+
+  /** The tab index of the menu. */
+  tabIndex = () => this.listBehavior.tabIndex();
 
   /** Whether the menu should be focused on mouse over. */
   shouldFocus = computed(() => {
@@ -169,15 +177,14 @@ export class MenuPattern<V> {
     this.id = inputs.id;
     this.listBehavior = new List<MenuItemPattern<V>, V>({
       ...inputs,
-      value: signal([]),
-      disabled: () => false,
+      values: signal([]),
     });
   }
 
   /** Sets the default state for the menu. */
   setDefaultState() {
     if (!this.inputs.parent()) {
-      this.inputs.activeItem.set(this.inputs.items()[0]);
+      this.listBehavior.goto(this.inputs.items()[0], {focusElement: false});
     }
   }
 
@@ -229,7 +236,7 @@ export class MenuPattern<V> {
       this._closeTimeout = setTimeout(() => {
         item.close();
         this._closeTimeout = undefined;
-      }, this.inputs.expansionDelay());
+      }, this.inputs.expansionDelay() * 1000);
     }
   }
 
@@ -240,7 +247,7 @@ export class MenuPattern<V> {
     this._openTimeout = setTimeout(() => {
       item.open();
       this._openTimeout = undefined;
-    }, this.inputs.expansionDelay());
+    }, this.inputs.expansionDelay() * 1000);
   }
 
   /** Handles mouseout events for the menu. */
@@ -464,6 +471,9 @@ export class MenuBarPattern<V> {
   /** Controls list behavior for the menu items. */
   listBehavior: List<MenuItemPattern<V>, V>;
 
+  /** The tab index of the menu. */
+  tabIndex = () => this.listBehavior.tabIndex();
+
   /** The key used to navigate to the next item. */
   private _nextKey = computed(() => {
     return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
@@ -486,6 +496,9 @@ export class MenuBarPattern<V> {
   /** Whether the menubar has been focused. */
   hasBeenFocused = signal(false);
 
+  /** Whether the menubar is disabled. */
+  disabled = () => this.inputs.disabled();
+
   /** Handles keyboard events for the menu. */
   keydownManager = computed(() => {
     return new KeyboardEventManager()
@@ -501,7 +514,7 @@ export class MenuBarPattern<V> {
   });
 
   constructor(readonly inputs: MenuBarInputs<V>) {
-    this.listBehavior = new List<MenuItemPattern<V>, V>({...inputs, disabled: () => false});
+    this.listBehavior = new List<MenuItemPattern<V>, V>(inputs);
   }
 
   /** Sets the default state for the menubar. */
@@ -617,6 +630,9 @@ export class MenuTriggerPattern<V> {
   /** The tab index of the menu trigger. */
   tabIndex = computed(() => (this.expanded() && this.menu()?.inputs.activeItem() ? -1 : 0));
 
+  /** Whether the menu trigger is disabled. */
+  disabled = () => this.inputs.disabled();
+
   /** Handles keyboard events for the menu trigger. */
   keydownManager = computed(() => {
     return new KeyboardEventManager()
@@ -633,12 +649,16 @@ export class MenuTriggerPattern<V> {
 
   /** Handles keyboard events for the menu trigger. */
   onKeydown(event: KeyboardEvent) {
-    this.keydownManager().handle(event);
+    if (!this.inputs.disabled()) {
+      this.keydownManager().handle(event);
+    }
   }
 
   /** Handles click events for the menu trigger. */
   onClick() {
-    this.expanded() ? this.close() : this.open({first: true});
+    if (!this.inputs.disabled()) {
+      this.expanded() ? this.close() : this.open({first: true});
+    }
   }
 
   /** Handles focusin events for the menu trigger. */
@@ -700,7 +720,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   id: SignalLike<string>;
 
   /** Whether the menu item is disabled. */
-  disabled: SignalLike<boolean>;
+  disabled = () => this.inputs.parent()?.disabled() || this.inputs.disabled();
 
   /** The search term for the menu item. */
   searchTerm: SignalLike<string>;
@@ -750,7 +770,6 @@ export class MenuItemPattern<V> implements ListItem<V> {
     this.id = inputs.id;
     this.value = inputs.value;
     this.element = inputs.element;
-    this.disabled = inputs.disabled;
     this.submenu = this.inputs.submenu;
     this.searchTerm = inputs.searchTerm;
     this.selectable = computed(() => !this.submenu());
@@ -758,6 +777,10 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   /** Opens the submenu. */
   open(opts?: {first?: boolean; last?: boolean}) {
+    if (this.disabled()) {
+      return;
+    }
+
     this._expanded.set(true);
 
     if (opts?.first) {

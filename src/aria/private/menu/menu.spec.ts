@@ -13,8 +13,9 @@ import {ModifierKeys} from '@angular/cdk/testing';
 
 // Test types
 type TestMenuItem = MenuItemPattern<string> & {
-  disabled: WritableSignal<boolean>;
-  submenu: WritableSignal<MenuPattern<string> | undefined>;
+  inputs: {
+    disabled: WritableSignal<boolean>;
+  };
 };
 
 // Keyboard event helpers
@@ -43,6 +44,7 @@ function getMenuTriggerPattern(opts?: {textDirection: 'ltr' | 'rtl'}) {
     textDirection: signal(opts?.textDirection || 'ltr'),
     element,
     menu: submenu,
+    disabled: signal(false),
   });
   return trigger;
 }
@@ -57,12 +59,13 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
     textDirection: signal(opts?.textDirection || 'ltr'),
     multi: signal(false),
     selectionMode: signal('explicit'),
-    value: signal([]),
+    values: signal([]),
     wrap: signal(true),
     typeaheadDelay: signal(0.5),
     softDisabled: signal(true),
     focusMode: signal('activedescendant'),
     element: signal(document.createElement('div')),
+    disabled: signal(false),
   });
 
   items.set(
@@ -106,6 +109,7 @@ function getMenuPattern(
     selectionMode: signal('explicit'),
     element: signal(document.createElement('div')),
     expansionDelay: signal(0),
+    disabled: signal(false),
   });
 
   items.set(
@@ -275,7 +279,7 @@ describe('Standalone Menu Pattern', () => {
 
     it('should not select a disabled item', () => {
       const items = menu.inputs.items() as TestMenuItem[];
-      items[1].disabled.set(true);
+      items[1].inputs.disabled.set(true);
       menu.inputs.activeItem.set(items[1]);
       menu.inputs.onSelect = jasmine.createSpy('onSelect');
 

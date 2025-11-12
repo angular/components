@@ -32,6 +32,8 @@ import {
 /**
  * Represents the content panel of an accordion item. It is controlled by an
  * associated `AccordionTrigger`.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngAccordionPanel]',
@@ -57,8 +59,8 @@ export class AccordionPanel {
   /** A global unique identifier for the panel. */
   private readonly _id = inject(_IdGenerator).getId('accordion-trigger-', true);
 
-  /** A local unique identifier for the panel, used to match with its trigger's value. */
-  value = input.required<string>();
+  /** A local unique identifier for the panel, used to match with its trigger's `panelId`. */
+  panelId = input.required<string>();
 
   /** Whether the accordion panel is visible. True if the associated trigger is expanded. */
   readonly visible = computed(() => !this._pattern.hidden());
@@ -70,7 +72,7 @@ export class AccordionPanel {
   /** The UI pattern instance for this panel. */
   readonly _pattern: AccordionPanelPattern = new AccordionPanelPattern({
     id: () => this._id,
-    value: this.value,
+    panelId: this.panelId,
     accordionTrigger: () => this.accordionTrigger(),
   });
 
@@ -100,6 +102,8 @@ export class AccordionPanel {
 /**
  * Represents the trigger button for an accordion item. It controls the expansion
  * state of an associated `AccordionPanel`.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngAccordionTrigger]',
@@ -129,8 +133,8 @@ export class AccordionTrigger {
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(AccordionGroup);
 
-  /** A local unique identifier for the trigger, used to match with its panel's value. */
-  value = input.required<string>();
+  /** A local unique identifier for the trigger, used to match with its panel's `panelId`. */
+  panelId = input.required<string>();
 
   /** Whether the trigger is disabled. */
   disabled = input(false, {transform: booleanAttribute});
@@ -154,7 +158,7 @@ export class AccordionTrigger {
   /** The UI pattern instance for this trigger. */
   readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
     id: () => this._id,
-    value: this.value,
+    panelId: this.panelId,
     disabled: this.disabled,
     element: () => this._elementRef.nativeElement,
     accordionGroup: computed(() => this._accordionGroup._pattern),
@@ -180,6 +184,8 @@ export class AccordionTrigger {
 /**
  * Container for a group of accordion items. It manages the overall state and
  * interactions of the accordion, such as keyboard navigation and expansion mode.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngAccordionGroup]',
@@ -207,8 +213,8 @@ export class AccordionGroup {
   /** Whether multiple accordion items can be expanded simultaneously. */
   multiExpandable = input(true, {transform: booleanAttribute});
 
-  /** The values of the current selected/expanded accordions. */
-  value = model<string[]>([]);
+  /** The ids of the current expanded accordion panels. */
+  expandedPanels = model<string[]>([]);
 
   /** Whether to allow disabled items to receive focus. */
   softDisabled = input(true, {transform: booleanAttribute});
@@ -223,7 +229,7 @@ export class AccordionGroup {
     // `setDefaultState` in the CDK.
     activeItem: signal(undefined),
     items: computed(() => this._triggers().map(trigger => trigger._pattern)),
-    expandedIds: this.value,
+    expandedIds: this.expandedPanels,
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
     element: () => this._elementRef.nativeElement,
@@ -236,7 +242,7 @@ export class AccordionGroup {
       const panels = this._panels();
 
       for (const trigger of triggers) {
-        const panel = panels.find(p => p.value() === trigger.value());
+        const panel = panels.find(p => p.panelId() === trigger.panelId());
         trigger.accordionPanel.set(panel?._pattern);
         if (panel) {
           panel.accordionTrigger.set(trigger._pattern);
@@ -259,6 +265,8 @@ export class AccordionGroup {
 /**
  * A structural directive that marks the `ng-template` to be used as the content
  * for a `AccordionPanel`. This content can be lazily loaded.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: 'ng-template[ngAccordionContent]',

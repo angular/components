@@ -59,6 +59,8 @@ function sortDirectives(a: HasElement, b: HasElement) {
  *  </div>
  * </div>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngToolbar]',
@@ -162,6 +164,8 @@ export class Toolbar<V> {
  *
  * A widget is anything that is within a toolbar. It should be applied to any native HTML element
  * that has the purpose of acting as a widget navigatable within a toolbar.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngToolbarWidget]',
@@ -236,6 +240,8 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 /**
  * A directive that groups toolbar widgets, used for more complex widgets like radio groups that
  * have their own internal navigation.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngToolbarWidgetGroup]',

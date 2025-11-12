@@ -90,7 +90,7 @@ export class SimpleToolbarRadioButton {
 
       <div popover="manual" #popover class="example-popover">
         <ng-template ngComboboxPopupContainer>
-          <div ngListbox [value]="[value()]" class="example-listbox">
+          <div ngListbox [values]="[value()]" class="example-listbox">
             @for (option of options; track option) {
               <div ngOption [value]="option" [label]="option" class="example-option">
                 <span>{{option}}</span>

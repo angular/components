@@ -54,14 +54,14 @@ export class SimpleMenu {
 
 @Directive({
   selector: '[ng-menu-bar]',
-  hostDirectives: [{directive: MenuBar}],
+  hostDirectives: [{directive: MenuBar, inputs: ['disabled']}],
   host: {class: 'example-menu-bar'},
 })
 export class SimpleMenuBar {}
 
 @Directive({
   selector: '[ng-menu-bar-item]',
-  hostDirectives: [{directive: MenuItem, inputs: ['value', 'submenu']}],
+  hostDirectives: [{directive: MenuItem, inputs: ['value', 'submenu', 'disabled']}],
   host: {class: 'example-menu-bar-item'},
 })
 export class SimpleMenuBarItem {

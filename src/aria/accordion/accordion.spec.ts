@@ -32,7 +32,7 @@ describe('AccordionGroup', () => {
   const endKey = (target: HTMLElement) => keydown(target, 'End');
 
   interface SetupOptions {
-    initialValue?: string[];
+    initialExpandedPanels?: string[];
     multiExpandable?: boolean;
     disabledGroup?: boolean;
     disabledItemValues?: string[];
@@ -43,8 +43,8 @@ describe('AccordionGroup', () => {
   function configureAccordionComponent(opts: SetupOptions = {}) {
     const testComponent = fixture.componentInstance as AccordionGroupExample;
 
-    if (opts.initialValue !== undefined) {
-      testComponent.value.set(opts.initialValue);
+    if (opts.initialExpandedPanels !== undefined) {
+      testComponent.expandedPanels.set(opts.initialExpandedPanels);
     }
     if (opts.multiExpandable !== undefined) {
       testComponent.multiExpandable.set(opts.multiExpandable);
@@ -109,7 +109,7 @@ describe('AccordionGroup', () => {
       });
 
       it('should have aria-expanded="false" when collapsed', () => {
-        configureAccordionComponent({initialValue: []});
+        configureAccordionComponent({initialExpandedPanels: []});
         expect(triggerElements[0].getAttribute('aria-expanded')).toBe('false');
         expect(triggerElements[1].getAttribute('aria-expanded')).toBe('false');
         expect(triggerElements[2].getAttribute('aria-expanded')).toBe('false');
@@ -154,7 +154,7 @@ describe('AccordionGroup', () => {
       });
 
       it('should have "inert" attribute when collapsed', () => {
-        configureAccordionComponent({initialValue: []});
+        configureAccordionComponent({initialExpandedPanels: []});
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
         expect(panelElements[1].hasAttribute('inert')).toBeTrue();
         expect(panelElements[2].hasAttribute('inert')).toBeTrue();
@@ -168,36 +168,36 @@ describe('AccordionGroup', () => {
         configureAccordionComponent({multiExpandable: false});
       });
 
-      it('should expand panel on trigger click and update value', () => {
+      it('should expand panel on trigger click and update expanded panels', () => {
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
         expect(panelElements[0].hasAttribute('inert')).toBeFalse();
-        expect(groupInstance.value()).toEqual(['item-1']);
+        expect(groupInstance.expandedPanels()).toEqual(['item-1']);
       });
 
-      it('should collapes panel on trigger click and update value', () => {
+      it('should collapes panel on trigger click and update expanded panels', () => {
         click(triggerElements[0]);
         click(triggerElements[0]); // Collapse
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
-        expect(groupInstance.value()).toEqual([]);
+        expect(groupInstance.expandedPanels()).toEqual([]);
       });
 
       it('should expand one and collapse others', () => {
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
-        expect(groupInstance.value()).toEqual(['item-1']);
+        expect(groupInstance.expandedPanels()).toEqual(['item-1']);
 
         click(triggerElements[1]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(panelElements[0].hasAttribute('inert')).toBeTrue();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
         expect(panelElements[1].hasAttribute('inert')).toBeFalse();
-        expect(groupInstance.value()).toEqual(['item-2']);
+        expect(groupInstance.expandedPanels()).toEqual(['item-2']);
       });
 
       it('should allow setting initial value', () => {
-        configureAccordionComponent({initialValue: ['item-2'], multiExpandable: false});
+        configureAccordionComponent({initialExpandedPanels: ['item-2'], multiExpandable: false});
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
         expect(isTriggerExpanded(triggerElements[2])).toBeFalse();
@@ -221,16 +221,21 @@ describe('AccordionGroup', () => {
       it('should collapse an item without affecting others', () => {
         click(triggerElements[0]);
         click(triggerElements[1]);
-        expect(groupInstance.value()).toEqual(jasmine.arrayWithExactContents(['item-1', 'item-2']));
+        expect(groupInstance.expandedPanels()).toEqual(
+          jasmine.arrayWithExactContents(['item-1', 'item-2']),
+        );
 
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
         expect(isTriggerExpanded(triggerElements[1])).toBeTrue();
-        expect(groupInstance.value()).toEqual(['item-2']);
+        expect(groupInstance.expandedPanels()).toEqual(['item-2']);
       });
 
       it('should allow setting initial multiple values', () => {
-        configureAccordionComponent({initialValue: ['item-1', 'item-3'], multiExpandable: true});
+        configureAccordionComponent({
+          initialExpandedPanels: ['item-1', 'item-3'],
+          multiExpandable: true,
+        });
         expect(isTriggerExpanded(triggerElements[0])).toBeTrue();
         expect(isTriggerExpanded(triggerElements[1])).toBeFalse();
         expect(isTriggerExpanded(triggerElements[2])).toBeTrue();
@@ -242,7 +247,7 @@ describe('AccordionGroup', () => {
         configureAccordionComponent({disabledItemValues: ['item-1']});
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
-        expect(groupInstance.value()).toEqual([]);
+        expect(groupInstance.expandedPanels()).toEqual([]);
         expect(triggerElements[0].getAttribute('aria-disabled')).toBe('true');
       });
 
@@ -250,7 +255,7 @@ describe('AccordionGroup', () => {
         configureAccordionComponent({disabledGroup: true});
         click(triggerElements[0]);
         expect(isTriggerExpanded(triggerElements[0])).toBeFalse();
-        expect(groupInstance.value()).toEqual([]);
+        expect(groupInstance.expandedPanels()).toEqual([]);
         click(triggerElements[1]);
         expect(isTriggerExpanded(triggerElements[1])).toBeFalse();
       });
@@ -382,22 +387,22 @@ describe('AccordionGroup', () => {
   template: `
     <div
       ngAccordionGroup
-      [(value)]="value"
+      [(expandedPanels)]="expandedPanels"
       [multiExpandable]="multiExpandable()"
       [disabled]="disabledGroup()"
       [softDisabled]="softDisabled()"
       [wrap]="wrap()"
     >
-      @for (item of items(); track item.value) {
+      @for (item of items(); track item.panelId) {
         <div class="item-container">
           <button
             ngAccordionTrigger
-            [value]="item.value"
+            [panelId]="item.panelId"
             [disabled]="item.disabled"
           >{{ item.header }}</button>
           <div
             ngAccordionPanel
-            [value]="item.value"
+            [panelId]="item.panelId"
           >
             <ng-template ngAccordionContent>
               {{ item.content }}
@@ -411,12 +416,12 @@ describe('AccordionGroup', () => {
 })
 class AccordionGroupExample {
   items = signal([
-    {value: 'item-1', header: 'Item 1 Header', content: 'Item 1 Content', disabled: false},
-    {value: 'item-2', header: 'Item 2 Header', content: 'Item 2 Content', disabled: false},
-    {value: 'item-3', header: 'Item 3 Header', content: 'Item 3 Content', disabled: false},
+    {panelId: 'item-1', header: 'Item 1 Header', content: 'Item 1 Content', disabled: false},
+    {panelId: 'item-2', header: 'Item 2 Header', content: 'Item 2 Content', disabled: false},
+    {panelId: 'item-3', header: 'Item 3 Header', content: 'Item 3 Content', disabled: false},
   ]);
 
-  value = model<string[]>([]);
+  expandedPanels = model<string[]>([]);
   multiExpandable = signal(false);
   disabledGroup = signal(false);
   softDisabled = signal(true);
@@ -424,7 +429,7 @@ class AccordionGroupExample {
 
   disableItem(itemValue: string, disabled: boolean) {
     this.items.update(items =>
-      items.map(item => (item.value === itemValue ? {...item, disabled} : item)),
+      items.map(item => (item.panelId === itemValue ? {...item, disabled} : item)),
     );
   }
 }
