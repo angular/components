@@ -158,7 +158,7 @@ export class Tree<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Whether the tree is in navigation mode. */
-  readonly nav = input(false);
+  readonly nav = input(false, {transform: booleanAttribute});
 
   /**
    * The `aria-current` type. It can be used in navigation trees to indicate the currently active item.
