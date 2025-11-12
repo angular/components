@@ -10,9 +10,12 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 import {
   MenuBarExample,
   MenuBarRTLExample,
+  MenuBarDisabledExample,
   MenuContextExample,
   MenuTriggerExample,
   MenuStandaloneExample,
+  MenuStandaloneDisabledExample,
+  MenuTriggerDisabledExample,
 } from '@angular/components-examples/aria/menu';
 
 @Component({
@@ -23,9 +26,12 @@ import {
   imports: [
     MenuBarExample,
     MenuBarRTLExample,
+    MenuBarDisabledExample,
     MenuContextExample,
     MenuTriggerExample,
+    MenuTriggerDisabledExample,
     MenuStandaloneExample,
+    MenuStandaloneDisabledExample,
   ],
 })
 export class MenuDemo {}
