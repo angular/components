@@ -36,7 +36,7 @@ describe('Listbox Pattern', () => {
       items: inputs.items,
       values: inputs.values ?? signal([]),
       activeItem: signal(undefined),
-      typeaheadDelay: inputs.typeaheadDelay ?? signal(0.5),
+      typeaheadDelay: inputs.typeaheadDelay ?? signal(500),
       wrap: inputs.wrap ?? signal(true),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),

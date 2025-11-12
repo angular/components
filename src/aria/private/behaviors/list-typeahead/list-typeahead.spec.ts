@@ -26,7 +26,7 @@ function getTypeahead(inputs: TestInputs = {}): ListTypeahead<TestItem> {
     focusManager,
     ...focusManager.inputs,
     items,
-    typeaheadDelay: signal(0.5),
+    typeaheadDelay: signal(500),
     ...inputs,
   });
 }

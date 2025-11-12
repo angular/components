@@ -24,7 +24,7 @@ describe('List Behavior', () => {
     return new List({
       values: inputs.values ?? signal([]),
       activeItem: signal(undefined),
-      typeaheadDelay: inputs.typeaheadDelay ?? signal(0.5),
+      typeaheadDelay: inputs.typeaheadDelay ?? signal(500),
       wrap: inputs.wrap ?? signal(true),
       disabled: inputs.disabled ?? signal(false),
       multi: inputs.multi ?? signal(false),
@@ -390,7 +390,7 @@ describe('List Behavior', () => {
     });
 
     it('should respect typeaheadDelay', async () => {
-      const {list} = getDefaultPatterns({typeaheadDelay: signal(0.1)});
+      const {list} = getDefaultPatterns({typeaheadDelay: signal(100)});
       list.search('b');
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[2]); // Banana
       await delay(50); // Less than delay
