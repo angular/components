@@ -16,6 +16,7 @@ import {
   TreeMultiSelectExample,
   TreeMultiSelectFollowFocusExample,
   TreeNavExample,
+  TreeRtlActiveDescendantExample,
   TreeSingleSelectExample,
   TreeSingleSelectFollowFocusExample,
 } from '@angular/components-examples/aria/tree';
@@ -31,6 +32,7 @@ import {
     TreeMultiSelectExample,
     TreeMultiSelectFollowFocusExample,
     TreeNavExample,
+    TreeRtlActiveDescendantExample,
     TreeSingleSelectExample,
     TreeSingleSelectFollowFocusExample,
   ],

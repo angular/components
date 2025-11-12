@@ -168,6 +168,9 @@ export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, '
 
   /** The aria-current type. */
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+
+  /** The text direction of the tree. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 export interface TreePattern<V> extends TreeInputs<V> {}
@@ -226,7 +229,8 @@ export class TreePattern<V> {
     if (this.inputs.orientation() === 'horizontal') {
       return 'ArrowUp';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    const isRtl = this.inputs.textDirection() === 'rtl';
+    return isRtl ? 'ArrowRight' : 'ArrowLeft';
   });
 
   /** The key for expanding an item or moving to its first child. */
@@ -234,7 +238,8 @@ export class TreePattern<V> {
     if (this.inputs.orientation() === 'horizontal') {
       return 'ArrowDown';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    const isRtl = this.inputs.textDirection() === 'rtl';
+    return isRtl ? 'ArrowLeft' : 'ArrowRight';
   });
 
   /** Represents the space key. Does nothing when the user is actively using typeahead. */
@@ -360,9 +365,6 @@ export class TreePattern<V> {
   /** The orientation of the tree. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
 
-  /** The text direction of the tree. */
-  textDirection: SignalLike<'ltr' | 'rtl'>;
-
   /** Whether multiple items can be selected at the same time. */
   multi: SignalLike<boolean>;
 
@@ -386,7 +388,6 @@ export class TreePattern<V> {
     this.softDisabled = inputs.softDisabled;
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
-    this.textDirection = inputs.textDirection;
     this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
     this.selectionMode = inputs.selectionMode;
     this.typeaheadDelay = inputs.typeaheadDelay;
