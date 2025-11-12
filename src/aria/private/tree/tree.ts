@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
+import {computed} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 import {ExpansionItem, ListExpansion} from '../behaviors/expansion/expansion';
@@ -148,9 +148,8 @@ export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, '
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
 }
 
-export interface TreePattern<V> extends TreeInputs<V> {}
 /** Controls the state and interactions of a tree view. */
-export class TreePattern<V> {
+export class TreePattern<V> implements TreeInputs<V> {
   /** The list behavior for the tree. */
   readonly listBehavior: List<TreeItemPattern<V>, V>;
 
@@ -315,62 +314,57 @@ export class TreePattern<V> {
   });
 
   /** A unique identifier for the tree. */
-  id: SignalLike<string>;
+  readonly id: SignalLike<string> = () => this.inputs.id();
+
+  /** The host native element. */
+  readonly element: SignalLike<HTMLElement> = () => this.inputs.element()!;
 
   /** Whether the tree is in navigation mode. */
-  nav: SignalLike<boolean>;
+  readonly nav: SignalLike<boolean> = () => this.inputs.nav();
 
   /** The aria-current type. */
-  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+  readonly currentType: SignalLike<
+    'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'
+  > = () => this.inputs.currentType();
 
   /** All items in the tree, in document order (DFS-like, a flattened list). */
-  allItems: SignalLike<TreeItemPattern<V>[]>;
+  readonly allItems: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.allItems();
+
+  /** The focus strategy used by the tree. */
+  readonly focusMode: SignalLike<'roving' | 'activedescendant'> = () => this.inputs.focusMode();
 
   /** Whether the tree is disabled. */
-  disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
   /** The currently active item in the tree. */
-  activeItem: WritableSignalLike<TreeItemPattern<V> | undefined> = signal(undefined);
+  readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
 
   /** Whether disabled items should be focusable. */
-  softDisabled: SignalLike<boolean>;
+  readonly softDisabled: SignalLike<boolean> = () => this.inputs.softDisabled();
 
   /** Whether the focus should wrap when navigating past the first or last item. */
-  wrap: SignalLike<boolean>;
+  readonly wrap: SignalLike<boolean> = () => this.inputs.wrap();
 
   /** The orientation of the tree. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
 
   /** The text direction of the tree. */
-  textDirection: SignalLike<'ltr' | 'rtl'>;
+  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.textDirection();
 
   /** Whether multiple items can be selected at the same time. */
-  multi: SignalLike<boolean>;
+  readonly multi: SignalLike<boolean> = computed(() => (this.nav() ? false : this.inputs.multi()));
 
   /** The selection mode of the tree. */
-  selectionMode: SignalLike<'follow' | 'explicit'>;
+  readonly selectionMode: SignalLike<'follow' | 'explicit'> = () => this.inputs.selectionMode();
 
   /** The delay in milliseconds to wait before clearing the typeahead buffer. */
-  typeaheadDelay: SignalLike<number>;
+  readonly typeaheadDelay: SignalLike<number> = () => this.inputs.typeaheadDelay();
 
   /** The current selected items of the tree. */
-  values: WritableSignalLike<V[]>;
+  readonly values: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
-    this.id = inputs.id;
-    this.nav = inputs.nav;
-    this.currentType = inputs.currentType;
-    this.allItems = inputs.allItems;
-    this.focusMode = inputs.focusMode;
-    this.disabled = inputs.disabled;
     this.activeItem = inputs.activeItem;
-    this.softDisabled = inputs.softDisabled;
-    this.wrap = inputs.wrap;
-    this.orientation = inputs.orientation;
-    this.textDirection = inputs.textDirection;
-    this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
-    this.selectionMode = inputs.selectionMode;
-    this.typeaheadDelay = inputs.typeaheadDelay;
     this.values = inputs.values;
 
     this.listBehavior = new List({
