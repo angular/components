@@ -65,7 +65,7 @@ describe('Tabs Pattern', () => {
       activeItem: signal(undefined),
       softDisabled: signal(true),
       items: signal([]),
-      value: signal(['tab-1']),
+      values: signal(['tab-1']),
       element: signal(document.createElement('div')),
     };
     tabListPattern = new TabListPattern(tabListInputs);
@@ -141,30 +141,30 @@ describe('Tabs Pattern', () => {
   it('sets the selected tab by setting `value`.', () => {
     expect(tabPatterns[0].selected()).toBeTrue();
     expect(tabPatterns[1].selected()).toBeFalse();
-    tabListInputs.value.set(['tab-2']);
+    tabListInputs.values.set(['tab-2']);
     expect(tabPatterns[0].selected()).toBeFalse();
     expect(tabPatterns[1].selected()).toBeTrue();
   });
 
   it('sets a tabpanel to be not hidden if a tab is selected.', () => {
-    tabListInputs.value.set(['tab-1']);
+    tabListInputs.values.set(['tab-1']);
     expect(tabPatterns[0].selected()).toBeTrue();
     expect(tabPanelPatterns[0].hidden()).toBeFalse();
   });
 
   it('sets a tabpanel to be hidden if a tab is not selected.', () => {
-    tabListInputs.value.set(['tab-1']);
+    tabListInputs.values.set(['tab-1']);
     expect(tabPatterns[1].selected()).toBeFalse();
     expect(tabPanelPatterns[1].hidden()).toBeTrue();
   });
 
   it('should set a tabpanel tab index to 0 if the tab is selected.', () => {
-    tabListInputs.value.set(['tab-1']);
+    tabListInputs.values.set(['tab-1']);
     expect(tabPatterns[0].tabIndex()).toBe(0);
   });
 
   it('should set a tabpanel tab index to -1 if the tab is not selected.', () => {
-    tabListInputs.value.set(['tab-1']);
+    tabListInputs.values.set(['tab-1']);
     expect(tabPatterns[1].tabIndex()).toBe(-1);
     expect(tabPatterns[2].tabIndex()).toBe(-1);
   });
@@ -203,7 +203,7 @@ describe('Tabs Pattern', () => {
     it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
       tabListInputs.softDisabled.set(false);
       tabListInputs.activeItem.set(tabPatterns[2]);
-      tabListInputs.value.set([]);
+      tabListInputs.values.set([]);
       tabInputs[0].disabled.set(true);
       tabListPattern.setDefaultState();
       expect(tabListInputs.activeItem()).toBe(tabPatterns[1]);
@@ -211,14 +211,14 @@ describe('Tabs Pattern', () => {
 
     it('should set activeIndex to the first focusable and selected tab', () => {
       tabListInputs.activeItem.set(tabPatterns[0]);
-      tabListInputs.value.set([tabPatterns[2].value()]);
+      tabListInputs.values.set([tabPatterns[2].value()]);
       tabListPattern.setDefaultState();
       expect(tabListInputs.activeItem()).toBe(tabPatterns[2]);
     });
 
     it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
       tabListInputs.softDisabled.set(false);
-      tabListInputs.value.set([tabPatterns[1].value()]);
+      tabListInputs.values.set([tabPatterns[1].value()]);
       tabInputs[1].disabled.set(true);
       tabListPattern.setDefaultState();
       expect(tabListInputs.activeItem()).toBe(tabPatterns[0]);

@@ -199,9 +199,9 @@ export class ListboxPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.value().length > 1) {
+    if (!this.inputs.multi() && this.inputs.values().length > 1) {
       violations.push(
-        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
+        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
       );
     }
 

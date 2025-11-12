@@ -137,6 +137,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is expanded. */
   expanded = signal(false);
 
+  /** Whether the combobox is disabled. */
+  disabled = () => this.inputs.disabled();
+
   /** The ID of the active item in the combobox. */
   activeDescendant = computed(() => {
     const popupControls = this.inputs.popupControls();
@@ -177,7 +180,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
 
   /** Whether the combobox is read-only. */
-  readonly = computed(() => this.inputs.readonly() || null);
+  readonly = computed(() => this.inputs.readonly() || this.inputs.disabled() || null);
 
   /** Returns the listbox controls for the combobox. */
   listControls = () => {

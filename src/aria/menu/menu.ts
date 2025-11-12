@@ -8,6 +8,7 @@
 
 import {
   afterRenderEffect,
+  booleanAttribute,
   computed,
   contentChildren,
   Directive,
@@ -38,6 +39,8 @@ import {Directionality} from '@angular/cdk/bidi';
  *
  * The menu trigger is used to open and close menus, and can be placed on menu items to connect
  * sub-menus.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: 'button[ngMenuTrigger]',
@@ -45,6 +48,8 @@ import {Directionality} from '@angular/cdk/bidi';
   host: {
     'class': 'ng-menu-trigger',
     '[attr.tabindex]': '_pattern.tabIndex()',
+    '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
+    '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.menu()?.id()',
@@ -73,11 +78,18 @@ export class MenuTrigger<V> {
   /** Whether the menu trigger has a popup. */
   readonly hasPopup = computed(() => this._pattern.hasPopup());
 
+  /** Whether the menu trigger is disabled. */
+  readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the menu trigger is soft disabled. */
+  readonly softDisabled = input(true, {transform: booleanAttribute});
+
   /** The menu trigger ui pattern instance. */
   _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     textDirection: this.textDirection,
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),
+    disabled: () => this.disabled(),
   });
 
   constructor() {
@@ -110,6 +122,8 @@ export class MenuTrigger<V> {
  *   <div ngMenuItem>Delete</div>
  * </div>
  * ```
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenu]',
@@ -118,6 +132,8 @@ export class MenuTrigger<V> {
     'role': 'menu',
     'class': 'ng-menu',
     '[attr.id]': '_pattern.id()',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.tabindex]': 'tabIndex()',
     '[attr.data-visible]': 'isVisible()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
@@ -158,10 +174,13 @@ export class Menu<V> {
   readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-', true));
 
   /** Whether the menu should wrap its items. */
-  readonly wrap = input<boolean>(true);
+  readonly wrap = input(true, {transform: booleanAttribute});
 
   /** The delay in seconds before the typeahead buffer is cleared. */
   readonly typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
+
+  /** Whether the menu is disabled. */
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** A reference to the parent menu item or menu trigger. */
   readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
@@ -181,11 +200,14 @@ export class Menu<V> {
   /** Whether the menu is visible. */
   readonly isVisible = computed(() => this._pattern.isVisible());
 
+  /** The tab index of the menu. */
+  readonly tabIndex = computed(() => this._pattern.tabIndex());
+
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
 
-  /** The delay in milliseconds before expanding sub-menus on hover. */
-  readonly expansionDelay = input<number>(150); // Arbitrarily chosen.
+  /** The delay in seconds before expanding sub-menus on hover. */
+  readonly expansionDelay = input<number>(0.1); // Arbitrarily chosen.
 
   constructor() {
     this._pattern = new MenuPattern({
@@ -224,7 +246,7 @@ export class Menu<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._pattern.hasBeenFocused()) {
+      if (!this._pattern.hasBeenFocused() && this._items().length) {
         untracked(() => this._pattern.setDefaultState());
       }
     });
@@ -242,6 +264,8 @@ export class Menu<V> {
  * Like the menu, a menubar is used to offer a list of menu item choices to users. However, a
  * menubar is used to display a persistent, top-level,
  * always-visible set of menu item choices.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenuBar]',
@@ -249,6 +273,9 @@ export class Menu<V> {
   host: {
     'role': 'menubar',
     'class': 'ng-menu-bar',
+    '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
+    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(click)': '_pattern.onClick($event)',
@@ -269,14 +296,20 @@ export class MenuBar<V> {
   /** A reference to the menubar element. */
   readonly element: HTMLElement = this._elementRef.nativeElement;
 
+  /** Whether the menubar is disabled. */
+  readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the menubar is soft disabled. */
+  readonly softDisabled = input(true, {transform: booleanAttribute});
+
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   readonly textDirection = inject(Directionality).valueSignal;
 
-  /** The value of the menu. */
-  readonly value = model<V[]>([]);
+  /** The values of the menu. */
+  readonly values = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
-  readonly wrap = input<boolean>(true);
+  readonly wrap = input(true, {transform: booleanAttribute});
 
   /** The delay in seconds before the typeahead buffer is cleared. */
   readonly typeaheadDelay = input<number>(0.5);
@@ -324,6 +357,8 @@ export class MenuBar<V> {
  * An item in a Menu.
  *
  * Menu items can be used in menus and menubars to represent a choice or action a user can take.
+ *
+ * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngMenuItem]',
@@ -408,7 +443,11 @@ export class MenuItem<V> {
   }
 }
 
-/** Defers the rendering of the menu content. */
+/**
+ * Defers the rendering of the menu content.
+ *
+ * @developerPreview 21.0
+ */
 @Directive({
   selector: 'ng-template[ngMenuContent]',
   exportAs: 'ngMenuContent',
