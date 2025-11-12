@@ -205,12 +205,15 @@ export class TreePattern<V> {
   /** Whether the tree selection follows focus. */
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
+  /** Whether the tree direction is RTL. */
+  readonly isRtl = computed(() => this.inputs.textDirection() === 'rtl');
+
   /** The key for navigating to the previous item. */
   readonly prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    return this.isRtl() ? 'ArrowRight' : 'ArrowLeft';
   });
 
   /** The key for navigating to the next item. */
@@ -218,7 +221,7 @@ export class TreePattern<V> {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    return this.isRtl() ? 'ArrowLeft' : 'ArrowRight';
   });
 
   /** The key for collapsing an item or moving to its parent. */
@@ -226,7 +229,7 @@ export class TreePattern<V> {
     if (this.inputs.orientation() === 'horizontal') {
       return 'ArrowUp';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    return this.isRtl() ? 'ArrowRight' : 'ArrowLeft';
   });
 
   /** The key for expanding an item or moving to its first child. */
@@ -234,7 +237,7 @@ export class TreePattern<V> {
     if (this.inputs.orientation() === 'horizontal') {
       return 'ArrowDown';
     }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    return this.isRtl() ? 'ArrowLeft' : 'ArrowRight';
   });
 
   /** Represents the space key. Does nothing when the user is actively using typeahead. */
