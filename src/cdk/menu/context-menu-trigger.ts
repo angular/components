@@ -27,7 +27,14 @@ import {_getEventTarget} from '../platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {CdkMenuTriggerBase, MENU_TRIGGER, MenuTracker} from './menu-trigger-base';
+import {
+  CDK_MENU_DEFAULT_OPTIONS,
+  CdkMenuDefaultOptions,
+  CdkMenuTriggerBase,
+  MENU_TRIGGER,
+  MenuTracker,
+} from './menu-trigger-base';
+import {coerceArray} from '../coercion';
 
 /** The preferred menu positions for the context menu. */
 const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position => {
@@ -77,6 +84,13 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private readonly _menuTracker = inject(MenuTracker);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+
+  private _defaults = inject<CdkMenuDefaultOptions | null>(CDK_MENU_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
+  /** Classes to apply to the panel. */
+  readonly _overlayPanelClass = coerceArray(this._defaults?.overlayPanelClass || []);
 
   /** Whether the context menu is disabled. */
   @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
@@ -137,6 +151,11 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       positionStrategy: this._getOverlayPositionStrategy(coordinates),
       scrollStrategy: this.menuScrollStrategy(),
       direction: this._directionality || undefined,
+      ...(this.menuStack.isEmpty() && {
+        hasBackdrop: this._defaults?.hasBackdrop,
+        panelClass: this._overlayPanelClass,
+        backdropClass: this._defaults?.backdropClass || 'cdk-overlay-transparent-backdrop',
+      }),
     });
   }
 

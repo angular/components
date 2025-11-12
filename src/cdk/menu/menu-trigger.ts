@@ -43,8 +43,15 @@ import {takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
 import {PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
 import {MENU_AIM} from './menu-aim';
-import {CdkMenuTriggerBase, MENU_TRIGGER, MenuTracker} from './menu-trigger-base';
+import {
+  CDK_MENU_DEFAULT_OPTIONS,
+  CdkMenuDefaultOptions,
+  CdkMenuTriggerBase,
+  MENU_TRIGGER,
+  MenuTracker,
+} from './menu-trigger-base';
 import {eventDispatchesNativeClick} from './event-detection';
+import {coerceArray} from '../coercion';
 
 /**
  * A directive that turns its host element into a trigger for a popup menu.
@@ -85,6 +92,13 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
   private readonly _renderer = inject(Renderer2);
   private readonly _injector = inject(Injector);
   private _cleanupMouseenter: () => void;
+
+  private _defaults = inject<CdkMenuDefaultOptions | null>(CDK_MENU_DEFAULT_OPTIONS, {
+    optional: true,
+  });
+
+  /** Classes to apply to the panel. */
+  readonly _overlayPanelClass = coerceArray(this._defaults?.overlayPanelClass || []);
 
   /** The app's menu tracking registry */
   private readonly _menuTracker = inject(MenuTracker);
@@ -276,6 +290,11 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
       positionStrategy: this._getOverlayPositionStrategy(),
       scrollStrategy: this.menuScrollStrategy(),
       direction: this._directionality || undefined,
+      ...(this.menuStack.isEmpty() && {
+        hasBackdrop: this._defaults?.hasBackdrop,
+        panelClass: this._overlayPanelClass,
+        backdropClass: this._defaults?.backdropClass || 'cdk-overlay-transparent-backdrop',
+      }),
     });
   }
 
