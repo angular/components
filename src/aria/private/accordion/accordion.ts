@@ -72,8 +72,8 @@ export class AccordionGroupPattern {
 /** Inputs for the AccordionTriggerPattern. */
 export type AccordionTriggerInputs = Omit<ListNavigationItem & ListFocusItem, 'index'> &
   Omit<ExpansionItem, 'expansionId' | 'expandable'> & {
-    /** A local unique identifier for the trigger. */
-    value: SignalLike<string>;
+    /** A local unique identifier for the trigger's corresponding panel. */
+    panelId: SignalLike<string>;
 
     /** The parent accordion group that controls this trigger. */
     accordionGroup: SignalLike<AccordionGroupPattern>;
@@ -115,10 +115,10 @@ export class AccordionTriggerPattern {
   constructor(readonly inputs: AccordionTriggerInputs) {
     this.id = inputs.id;
     this.element = inputs.element;
-    this.value = inputs.value;
+    this.panelId = inputs.panelId;
     this.expansionControl = new ExpansionControl({
       ...inputs,
-      expansionId: inputs.value,
+      expansionId: inputs.panelId,
       expandable: () => true,
       expansionManager: inputs.accordionGroup().expansionManager,
     });
@@ -203,8 +203,8 @@ export interface AccordionPanelInputs {
   /** A global unique identifier for the panel. */
   id: SignalLike<string>;
 
-  /** A local unique identifier for the panel, matching its trigger's value. */
-  value: SignalLike<string>;
+  /** A local unique identifier for the panel, matching its trigger's panelId. */
+  panelId: SignalLike<string>;
 
   /** The parent accordion trigger that controls this panel. */
   accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
@@ -218,7 +218,7 @@ export class AccordionPanelPattern {
 
   constructor(readonly inputs: AccordionPanelInputs) {
     this.id = inputs.id;
-    this.value = inputs.value;
+    this.panelId = inputs.panelId;
     this.accordionTrigger = inputs.accordionTrigger;
     this.hidden = computed(() => inputs.accordionTrigger()?.expanded() === false);
   }
