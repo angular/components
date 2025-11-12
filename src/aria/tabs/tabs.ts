@@ -16,7 +16,6 @@ import {
   inject,
   input,
   model,
-  linkedSignal,
   signal,
   Signal,
   afterRenderEffect,
@@ -88,10 +87,10 @@ export class Tabs {
   private readonly _unorderedPanels = signal(new Set<TabPanel>());
 
   /** The Tab UIPattern of the child Tabs. */
-  tabs = computed(() => this._tablist()?.tabs());
+  readonly _tabPatterns = computed(() => this._tablist()?._tabPatterns());
 
   /** The TabPanel UIPattern of the child TabPanels. */
-  unorderedTabpanels = computed(() =>
+  readonly _unorderedTabpanelPatterns = computed(() =>
     [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
   );
 
@@ -115,13 +114,6 @@ export class Tabs {
       this._unorderedPanels().delete(child);
       this._unorderedPanels.set(new Set(this._unorderedPanels()));
     }
-  }
-
-  /** Opens the tab panel with the specified value. */
-  open(value: string) {
-    const tab = this.tabs()?.find(t => t.value() === value);
-
-    tab?.expansion.open();
   }
 }
 
@@ -166,16 +158,11 @@ export class TabList implements OnInit, OnDestroy {
   /** The Tabs nested inside of the TabList. */
   private readonly _unorderedTabs = signal(new Set<Tab>());
 
-  /** The internal tab selection state. */
-  private readonly _selection = linkedSignal(() =>
-    this.selectedTab() ? [this.selectedTab()!] : [],
-  );
-
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The Tab UIPatterns of the child Tabs. */
-  readonly tabs = computed(() =>
+  readonly _tabPatterns = computed(() =>
     [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab._pattern),
   );
 
@@ -205,17 +192,16 @@ export class TabList implements OnInit, OnDestroy {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
+  /** The current selected tab. */
+  readonly selectedTab = model<string | undefined>();
+
   /** Whether the tablist is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** The currently selected tab. */
-  readonly selectedTab = model<string | undefined>();
 
   /** The TabList UIPattern. */
   readonly _pattern: TabListPattern = new TabListPattern({
     ...this,
-    items: this.tabs,
-    values: this._selection,
+    items: this._tabPatterns,
     activeItem: signal(undefined),
     element: () => this._elementRef.nativeElement,
   });
@@ -224,11 +210,23 @@ export class TabList implements OnInit, OnDestroy {
   private _hasFocused = signal(false);
 
   constructor() {
-    afterRenderEffect(() => this.selectedTab.set(this._selection()[0]));
-
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this._pattern.setDefaultState();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const tab = this._pattern.selectedTab();
+      if (tab) {
+        this.selectedTab.set(tab.value());
+      }
+    });
+
+    afterRenderEffect(() => {
+      const value = this.selectedTab();
+      if (value) {
+        this._pattern.open(value);
       }
     });
   }
@@ -253,6 +251,11 @@ export class TabList implements OnInit, OnDestroy {
   deregister(child: Tab) {
     this._unorderedTabs().delete(child);
     this._unorderedTabs.set(new Set(this._unorderedTabs()));
+  }
+
+  /** Opens the tab panel with the specified value. */
+  open(value: string): boolean {
+    return this._pattern.open(value);
   }
 }
 
@@ -294,8 +297,8 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** The parent TabList. */
   private readonly _tabList = inject(TabList);
 
-  /** A global unique identifier for the tab. */
-  private readonly _id = inject(_IdGenerator).getId('ng-tab-');
+  /** A unique identifier for the widget. */
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-tab-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -305,20 +308,17 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 
   /** The TabPanel UIPattern associated with the tab */
   readonly tabpanel = computed(() =>
-    this._tabs.unorderedTabpanels().find(tabpanel => tabpanel.value() === this.value()),
+    this._tabs._unorderedTabpanelPatterns().find(tabpanel => tabpanel.value() === this.value()),
   );
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** A local unique identifier for the tab. */
+  /** The remote tabpanel unique identifier. */
   readonly value = input.required<string>();
 
   /** Whether the tab is active. */
   readonly active = computed(() => this._pattern.active());
-
-  /** Whether the tab is expanded. */
-  readonly expanded = computed(() => this._pattern.expanded());
 
   /** Whether the tab is selected. */
   readonly selected = computed(() => this._pattern.selected());
@@ -326,15 +326,14 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
     ...this,
-    id: () => this._id,
     tablist: this.tablist,
     tabpanel: this.tabpanel,
-    value: this.value,
+    expanded: signal(false),
   });
 
   /** Opens this tab panel. */
   open() {
-    this._pattern.expansion.open();
+    this._pattern.open();
   }
 
   ngOnInit() {
@@ -392,7 +391,9 @@ export class TabPanel implements OnInit, OnDestroy {
   private readonly _id = inject(_IdGenerator).getId('ng-tabpanel-', true);
 
   /** The Tab UIPattern associated with the tabpanel */
-  readonly tab = computed(() => this._Tabs.tabs()?.find(tab => tab.value() === this.value()));
+  readonly tab = computed(() =>
+    this._Tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
+  );
 
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();

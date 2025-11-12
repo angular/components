@@ -106,10 +106,10 @@ export class ComboboxTreePattern<V>
   }
 
   /** Expands all of the tree items. */
-  expandAll = () => this.items().forEach(item => item.expansion.open());
+  expandAll = () => this.items().forEach(item => this.expansionBehavior.open(item));
 
   /** Collapses all of the tree items. */
-  collapseAll = () => this.items().forEach(item => item.expansion.close());
+  collapseAll = () => this.items().forEach(item => item.expansionBehavior.close(item));
 
   /** Whether the currently active item is selectable. */
   isItemSelectable = (item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) => {

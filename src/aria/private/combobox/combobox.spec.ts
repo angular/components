@@ -196,6 +196,7 @@ function getTreePattern(
         id: signal('tree-item-' + tree.allItems().length),
         disabled: signal(false),
         selectable: signal(true),
+        expanded: signal(false),
         searchTerm: signal(node.value),
         tree: signal(tree),
         parent: signal(parent),
@@ -210,7 +211,7 @@ function getTreePattern(
 
       if (node.children) {
         const children = createTreeItems(node.children, treeItem);
-        (treeItem.children as WritableSignal<TreeItemPattern<string>[]>).set(children);
+        (treeItem.inputs.children as WritableSignal<TreeItemPattern<string>[]>).set(children);
       }
 
       return treeItem;

@@ -6,106 +6,96 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
+import {computed, signal, WritableSignal} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {
-  ExpansionItem,
-  ExpansionControl,
-  ListExpansionInputs,
-  ListExpansion,
-} from '../behaviors/expansion/expansion';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
+import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
-import {List, ListInputs, ListItem} from '../behaviors/list/list';
+import {ListFocus} from '../behaviors/list-focus/list-focus';
+import {
+  ListNavigationItem,
+  ListNavigation,
+  ListNavigationInputs,
+} from '../behaviors/list-navigation/list-navigation';
 
 /** The required inputs to tabs. */
 export interface TabInputs
-  extends Omit<ListItem<string>, 'searchTerm' | 'index' | 'selectable'>,
-    Omit<ExpansionItem, 'expansionId' | 'expandable'> {
+  extends Omit<ListNavigationItem, 'index'>,
+    Omit<ExpansionItem, 'expandable'> {
   /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
 
   /** The remote tabpanel controlled by the tab. */
   tabpanel: SignalLike<TabPanelPattern | undefined>;
+
+  /** The remote tabpanel unique identifier. */
+  value: SignalLike<string>;
 }
 
 /** A tab in a tablist. */
 export class TabPattern {
-  /** Controls expansion for this tab. */
-  readonly expansion: ExpansionControl;
-
   /** A global unique identifier for the tab. */
-  readonly id: SignalLike<string>;
+  readonly id: SignalLike<string> = () => this.inputs.id();
 
   /** The index of the tab. */
   readonly index = computed(() => this.inputs.tablist().inputs.items().indexOf(this));
 
-  /** A local unique identifier for the tab. */
-  readonly value: SignalLike<string>;
+  /** The remote tabpanel unique identifier. */
+  readonly value: SignalLike<string> = () => this.inputs.value();
 
   /** Whether the tab is disabled. */
-  readonly disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
   /** The html element that should receive focus. */
-  readonly element: SignalLike<HTMLElement | undefined>;
+  readonly element: SignalLike<HTMLElement> = () => this.inputs.element()!;
 
-  /** Whether the tab is selectable. */
-  readonly selectable = () => true;
+  /** Whether this tab has expandable panel. */
+  readonly expandable: SignalLike<boolean> = () => true;
 
-  /** The text used by the typeahead search. */
-  readonly searchTerm = () => ''; // Unused because tabs do not support typeahead.
-
-  /** Whether this tab has expandable content. */
-  readonly expandable = computed(() => this.expansion.expandable());
-
-  /** The unique identifier used by the expansion behavior. */
-  readonly expansionId = computed(() => this.expansion.expansionId());
-
-  /** Whether the tab is expanded. */
-  readonly expanded = computed(() => this.expansion.isExpanded());
+  /** Whether the tab panel is expanded. */
+  readonly expanded: WritableSignalLike<boolean>;
 
   /** Whether the tab is active. */
   readonly active = computed(() => this.inputs.tablist().inputs.activeItem() === this);
 
   /** Whether the tab is selected. */
-  readonly selected = computed(
-    () => !!this.inputs.tablist().inputs.values().includes(this.value()),
-  );
+  readonly selected = computed(() => this.inputs.tablist().selectedTab() === this);
 
   /** The tab index of the tab. */
-  readonly tabIndex = computed(() => this.inputs.tablist().listBehavior.getItemTabindex(this));
+  readonly tabIndex = computed(() => this.inputs.tablist().focusBehavior.getItemTabIndex(this));
 
   /** The id of the tabpanel associated with the tab. */
   readonly controls = computed(() => this.inputs.tabpanel()?.id());
 
   constructor(readonly inputs: TabInputs) {
-    this.id = inputs.id;
-    this.value = inputs.value;
-    this.disabled = inputs.disabled;
-    this.element = inputs.element;
-    this.expansion = new ExpansionControl({
-      ...inputs,
-      expansionId: inputs.value,
-      expandable: () => true,
-      expansionManager: inputs.tablist().expansionManager,
-    });
+    this.expanded = inputs.expanded;
+  }
+
+  /** Opens the tab. */
+  open(): boolean {
+    return this.inputs.tablist().open(this);
   }
 }
 
 /** The required inputs for the tabpanel. */
 export interface TabPanelInputs extends LabelControlOptionalInputs {
+  /** A global unique identifier for the tabpanel. */
   id: SignalLike<string>;
+
+  /** The tab that controls this tabpanel. */
   tab: SignalLike<TabPattern | undefined>;
+
+  /** A local unique identifier for the tabpanel. */
   value: SignalLike<string>;
 }
 
 /** A tabpanel associated with a tab. */
 export class TabPanelPattern {
   /** A global unique identifier for the tabpanel. */
-  readonly id: SignalLike<string>;
+  readonly id: SignalLike<string> = () => this.inputs.id();
 
   /** A local unique identifier for the tabpanel. */
-  readonly value: SignalLike<string>;
+  readonly value: SignalLike<string> = () => this.inputs.value();
 
   /** Controls label for this tabpanel. */
   readonly labelManager: LabelControl;
@@ -124,8 +114,6 @@ export class TabPanelPattern {
   );
 
   constructor(readonly inputs: TabPanelInputs) {
-    this.id = inputs.id;
-    this.value = inputs.value;
     this.labelManager = new LabelControl({
       ...inputs,
       defaultLabelledBy: computed(() => (this.inputs.tab() ? [this.inputs.tab()!.id()] : [])),
@@ -134,28 +122,41 @@ export class TabPanelPattern {
 }
 
 /** The required inputs for the tablist. */
-export type TabListInputs = Omit<ListInputs<TabPattern, string>, 'multi' | 'typeaheadDelay'> &
-  Omit<ListExpansionInputs, 'multiExpandable' | 'expandedIds' | 'items'>;
+export interface TabListInputs
+  extends Omit<ListNavigationInputs<TabPattern>, 'multi'>,
+    Omit<ListExpansionInputs, 'multiExpandable' | 'items'> {
+  /** The selection strategy used by the tablist. */
+  selectionMode: SignalLike<'follow' | 'explicit'>;
+}
 
 /** Controls the state of a tablist. */
 export class TabListPattern {
-  /** The list behavior for the tablist. */
-  readonly listBehavior: List<TabPattern, string>;
+  /** The list focus behavior for the tablist. */
+  readonly focusBehavior: ListFocus<TabPattern>;
+
+  /** The list navigation behavior for the tablist. */
+  readonly navigationBehavior: ListNavigation<TabPattern>;
 
   /** Controls expansion for the tablist. */
-  readonly expansionManager: ListExpansion;
+  readonly expansionBehavior: ListExpansion;
+
+  /** The currently active tab. */
+  readonly activeTab: SignalLike<TabPattern | undefined> = () => this.inputs.activeItem();
+
+  /** The currently selected tab. */
+  readonly selectedTab: WritableSignal<TabPattern | undefined> = signal(undefined);
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
 
   /** Whether the tablist is disabled. */
-  readonly disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
   /** The tab index of the tablist. */
-  readonly tabIndex = computed(() => this.listBehavior.tabIndex());
+  readonly tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The id of the current active tab. */
-  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
+  readonly activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
   /** Whether selection should follow focus. */
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
@@ -179,35 +180,36 @@ export class TabListPattern {
   /** The keydown event manager for the tablist. */
   readonly keydown = computed(() => {
     return new KeyboardEventManager()
-      .on(this.prevKey, () => this.listBehavior.prev({select: this.followFocus()}))
-      .on(this.nextKey, () => this.listBehavior.next({select: this.followFocus()}))
-      .on('Home', () => this.listBehavior.first({select: this.followFocus()}))
-      .on('End', () => this.listBehavior.last({select: this.followFocus()}))
-      .on(' ', () => this.listBehavior.select())
-      .on('Enter', () => this.listBehavior.select());
+      .on(this.prevKey, () =>
+        this._navigate(() => this.navigationBehavior.prev(), this.followFocus()),
+      )
+      .on(this.nextKey, () =>
+        this._navigate(() => this.navigationBehavior.next(), this.followFocus()),
+      )
+      .on('Home', () => this._navigate(() => this.navigationBehavior.first(), this.followFocus()))
+      .on('End', () => this._navigate(() => this.navigationBehavior.last(), this.followFocus()))
+      .on(' ', () => this.open())
+      .on('Enter', () => this.open());
   });
 
   /** The pointerdown event manager for the tablist. */
   readonly pointerdown = computed(() => {
     return new PointerEventManager().on(e =>
-      this.listBehavior.goto(this._getItem(e)!, {select: true}),
+      this._navigate(() => this.navigationBehavior.goto(this._getItem(e)!), true),
     );
   });
 
   constructor(readonly inputs: TabListInputs) {
-    this.disabled = inputs.disabled;
-    this.orientation = inputs.orientation;
+    this.focusBehavior = new ListFocus(inputs);
 
-    this.listBehavior = new List({
+    this.navigationBehavior = new ListNavigation({
       ...inputs,
-      multi: () => false,
-      typeaheadDelay: () => 0, // Tabs do not support typeahead.
+      focusManager: this.focusBehavior,
     });
 
-    this.expansionManager = new ListExpansion({
+    this.expansionBehavior = new ListExpansion({
       ...inputs,
       multiExpandable: () => false,
-      expandedIds: this.inputs.values,
     });
   }
 
@@ -223,7 +225,7 @@ export class TabListPattern {
     let firstItem: TabPattern | undefined;
 
     for (const item of this.inputs.items()) {
-      if (!this.listBehavior.isFocusable(item)) continue;
+      if (!this.focusBehavior.isFocusable(item)) continue;
 
       if (firstItem === undefined) {
         firstItem = item;
@@ -250,6 +252,37 @@ export class TabListPattern {
   onPointerdown(event: PointerEvent) {
     if (!this.disabled()) {
       this.pointerdown().handle(event);
+    }
+  }
+
+  /** Opens the tab by given value. */
+  open(value: string): boolean;
+
+  /** Opens the given tab or the current active tab. */
+  open(tab?: TabPattern): boolean;
+
+  open(tab: TabPattern | string | undefined): boolean {
+    tab ??= this.activeTab();
+
+    if (typeof tab === 'string') {
+      tab = this.inputs.items().find(t => t.value() === tab);
+    }
+
+    if (tab === undefined) return false;
+
+    const success = this.expansionBehavior.open(tab);
+    if (success) {
+      this.selectedTab.set(tab);
+    }
+
+    return success;
+  }
+
+  /** Executes a navigation operation and expand the active tab if needed. */
+  private _navigate(op: () => boolean, shouldExpand: boolean = false): void {
+    const success = op();
+    if (success && shouldExpand) {
+      this.open();
     }
   }
 

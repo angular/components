@@ -12,8 +12,8 @@ import {ListExpansion, ListExpansionInputs, ExpansionItem} from './expansion';
 type TestItem = ExpansionItem & {
   id: WritableSignal<string>;
   disabled: WritableSignal<boolean>;
+  expanded: WritableSignal<boolean>;
   expandable: WritableSignal<boolean>;
-  expansionId: WritableSignal<string>;
 };
 
 type TestInputs = Partial<Omit<ListExpansionInputs, 'items'>> & {
@@ -29,8 +29,8 @@ function createItems(length: number): WritableSignal<TestItem[]> {
       return {
         id: signal(itemId),
         disabled: signal(false),
+        expanded: signal(false),
         expandable: signal(true),
-        expansionId: signal(itemId),
       };
     }),
   );
@@ -43,18 +43,23 @@ function getExpansion(inputs: TestInputs = {}): {
   const numItems = inputs.numItems ?? 3;
   const items = createItems(numItems);
 
+  for (const id of inputs.initialExpandedIds ?? []) {
+    items()
+      .find(i => i.id() === id)
+      ?.expanded.set(true);
+  }
+
   const expansion = new ListExpansion({
     items: items,
     disabled: signal(inputs.expansionDisabled ?? false),
     multiExpandable: signal(inputs.multiExpandable?.() ?? false),
-    expandedIds: signal<string[]>([]),
   });
 
-  if (inputs.initialExpandedIds) {
-    expansion.expandedIds.set(inputs.initialExpandedIds);
-  }
-
   return {expansion, items: items()};
+}
+
+function getExpandedIds(items: TestItem[]): string[] {
+  return items.filter(i => i.expanded()).map(i => i.id());
 }
 
 describe('Expansion', () => {
@@ -65,10 +70,10 @@ describe('Expansion', () => {
       });
 
       expansion.open(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-0']);
+      expect(getExpandedIds(items)).toEqual(['item-0']);
 
       expansion.open(items[1]);
-      expect(expansion.expandedIds()).toEqual(['item-1']);
+      expect(getExpandedIds(items)).toEqual(['item-1']);
     });
 
     it('should open multiple items when multiExpandable is true', () => {
@@ -77,24 +82,24 @@ describe('Expansion', () => {
       });
 
       expansion.open(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-0']);
+      expect(getExpandedIds(items)).toEqual(['item-0']);
 
       expansion.open(items[1]);
-      expect(expansion.expandedIds()).toEqual(['item-0', 'item-1']);
+      expect(getExpandedIds(items)).toEqual(['item-0', 'item-1']);
     });
 
     it('should not open an item if it is not expandable (expandable is false)', () => {
       const {expansion, items} = getExpansion();
       items[1].expandable.set(false);
       expansion.open(items[1]);
-      expect(expansion.expandedIds()).toEqual([]);
+      expect(getExpandedIds(items)).toEqual([]);
     });
 
     it('should not open an item if it is disabled', () => {
       const {expansion, items} = getExpansion();
       items[1].disabled.set(true);
       expansion.open(items[1]);
-      expect(expansion.expandedIds()).toEqual([]);
+      expect(getExpandedIds(items)).toEqual([]);
     });
   });
 
@@ -102,21 +107,21 @@ describe('Expansion', () => {
     it('should close the specified item', () => {
       const {expansion, items} = getExpansion({initialExpandedIds: ['item-0', 'item-1']});
       expansion.close(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-1']);
+      expect(getExpandedIds(items)).toEqual(['item-1']);
     });
 
     it('should not close an item if it is not expandable', () => {
       const {expansion, items} = getExpansion({initialExpandedIds: ['item-0']});
       items[0].expandable.set(false);
       expansion.close(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-0']);
+      expect(getExpandedIds(items)).toEqual(['item-0']);
     });
 
     it('should not close an item if it is disabled', () => {
       const {expansion, items} = getExpansion({initialExpandedIds: ['item-0']});
       items[0].disabled.set(true);
       expansion.close(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-0']);
+      expect(getExpandedIds(items)).toEqual(['item-0']);
     });
   });
 
@@ -124,7 +129,7 @@ describe('Expansion', () => {
     it('should open a closed item', () => {
       const {expansion, items} = getExpansion();
       expansion.toggle(items[0]);
-      expect(expansion.expandedIds()).toEqual(['item-0']);
+      expect(getExpandedIds(items)).toEqual(['item-0']);
     });
 
     it('should close an opened item', () => {
@@ -132,18 +137,18 @@ describe('Expansion', () => {
         initialExpandedIds: ['item-0'],
       });
       expansion.toggle(items[0]);
-      expect(expansion.expandedIds()).toEqual([]);
+      expect(getExpandedIds(items)).toEqual([]);
     });
   });
 
   describe('#openAll', () => {
     it('should open all focusable and expandable items when multiExpandable is true', () => {
-      const {expansion} = getExpansion({
+      const {expansion, items} = getExpansion({
         numItems: 3,
         multiExpandable: signal(true),
       });
       expansion.openAll();
-      expect(expansion.expandedIds()).toEqual(['item-0', 'item-1', 'item-2']);
+      expect(getExpandedIds(items)).toEqual(['item-0', 'item-1', 'item-2']);
     });
 
     it('should not expand items that are not expandable', () => {
@@ -153,7 +158,7 @@ describe('Expansion', () => {
       });
       items[1].expandable.set(false);
       expansion.openAll();
-      expect(expansion.expandedIds()).toEqual(['item-0', 'item-2']);
+      expect(getExpandedIds(items)).toEqual(['item-0', 'item-2']);
     });
 
     it('should not expand items that are disabled', () => {
@@ -163,16 +168,16 @@ describe('Expansion', () => {
       });
       items[1].disabled.set(true);
       expansion.openAll();
-      expect(expansion.expandedIds()).toEqual(['item-0', 'item-2']);
+      expect(getExpandedIds(items)).toEqual(['item-0', 'item-2']);
     });
 
     it('should do nothing when multiExpandable is false', () => {
-      const {expansion} = getExpansion({
+      const {expansion, items} = getExpansion({
         numItems: 3,
         multiExpandable: signal(false),
       });
       expansion.openAll();
-      expect(expansion.expandedIds()).toEqual([]);
+      expect(getExpandedIds(items)).toEqual([]);
     });
   });
 
@@ -184,7 +189,7 @@ describe('Expansion', () => {
       });
       items[1].expandable.set(false);
       expansion.closeAll();
-      expect(expansion.expandedIds()).toEqual([]);
+      expect(getExpandedIds(items)).toEqual([]);
     });
 
     it('should not close items that are not expandable', () => {
@@ -194,7 +199,7 @@ describe('Expansion', () => {
       });
       items[1].expandable.set(false);
       expansion.closeAll();
-      expect(expansion.expandedIds()).toEqual(['item-1']);
+      expect(getExpandedIds(items)).toEqual(['item-1']);
     });
 
     it('should not close items that are disabled', () => {
@@ -204,7 +209,7 @@ describe('Expansion', () => {
       });
       items[1].disabled.set(true);
       expansion.closeAll();
-      expect(expansion.expandedIds()).toEqual(['item-1']);
+      expect(getExpandedIds(items)).toEqual(['item-1']);
     });
   });
 
@@ -236,13 +241,13 @@ describe('Expansion', () => {
 
   describe('#isExpanded', () => {
     it('should return true if item ID is in expandedIds', () => {
-      const {expansion, items} = getExpansion({initialExpandedIds: ['item-0']});
-      expect(expansion.isExpanded(items[0])).toBeTrue();
+      const {items} = getExpansion({initialExpandedIds: ['item-0']});
+      expect(items[0].expanded()).toBeTrue();
     });
 
     it('should return false if item ID is not in expandedIds', () => {
-      const {expansion, items} = getExpansion();
-      expect(expansion.isExpanded(items[0])).toBeFalse();
+      const {items} = getExpansion();
+      expect(items[0].expanded()).toBeFalse();
     });
   });
 });

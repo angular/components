@@ -99,13 +99,6 @@ function sortDirectives(a: HasElement, b: HasElement) {
   hostDirectives: [ComboboxPopup],
 })
 export class Tree<V> {
-  /** A unique identifier for the tree. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-tree-', true);
-
-  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
-  /** A unique identifier for the tree. */
-  protected id = computed(() => this._generatedId);
-
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
     optional: true,
@@ -116,6 +109,12 @@ export class Tree<V> {
 
   /** All TreeItem instances within this tree. */
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
+
+  /** A unique identifier for the tree. */
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-tree-', true));
+
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Orientation of the tree. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -183,7 +182,6 @@ export class Tree<V> {
         [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
       ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
-      element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?._pattern,
     };
 
@@ -262,7 +260,7 @@ export class Tree<V> {
     '[attr.data-active]': 'active()',
     'role': 'treeitem',
     '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': 'expanded()',
+    '[attr.aria-expanded]': '_expanded()',
     '[attr.aria-selected]': 'selected()',
     '[attr.aria-current]': '_pattern.current()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -276,11 +274,11 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   /** A reference to the tree item element. */
   private readonly _elementRef = inject(ElementRef);
 
-  /** A unique identifier for the tree item. */
-  private readonly _id = inject(_IdGenerator).getId('ng-tree-item-', true);
-
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
+
+  /** A unique identifier for the tree item. */
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-tree-item-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -296,6 +294,9 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   /** Whether the tree item is selectable. */
   readonly selectable = input<boolean>(true);
+
+  /** Whether the tree item is expanded. */
+  readonly expanded = model<boolean>(false);
 
   /** Optional label for typeahead. Defaults to the element's textContent. */
   readonly label = input<string>();
@@ -314,11 +315,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   /** Whether the item is active. */
   readonly active = computed(() => this._pattern.active());
 
-  /** Whether this item is currently expanded, returning null if not expandable. */
-  readonly expanded = computed(() =>
-    this._pattern.expandable() ? this._pattern.expanded() : null,
-  );
-
   /** The level of the current item in a tree. */
   readonly level = computed(() => this._pattern.level());
 
@@ -327,6 +323,11 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   /** Whether this item is visible due to all of its parents being expanded. */
   readonly visible = computed(() => this._pattern.visible());
+
+  /** Whether the tree is expanded. Use this value for aria-expanded. */
+  protected readonly _expanded: Signal<boolean | undefined> = computed(() =>
+    this._pattern.expandable() ? this._pattern.expanded() : undefined,
+  );
 
   /** The UI pattern for this item. */
   _pattern: TreeItemPattern<V>;
@@ -359,7 +360,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     });
     this._pattern = new TreeItemPattern<V>({
       ...this,
-      id: () => this._id,
       tree: treePattern,
       parent: parentPattern,
       children: computed(() => this._group()?.children() ?? []),

@@ -1037,6 +1037,36 @@ describe('Tree', () => {
   });
 
   describe('expansion and collapse', () => {
+    it('should expand items by setting expanded input', () => {
+      setupTestTree();
+      updateTree({
+        nodes: [
+          {
+            value: 'fruits',
+            label: 'Fruits',
+            children: [
+              {value: 'apple', label: 'Apple'},
+              {value: 'banana', label: 'Banana'},
+              {
+                value: 'berries',
+                label: 'Berries',
+                children: [
+                  {value: 'strawberry', label: 'Strawberry'},
+                  {value: 'blueberry', label: 'Blueberry'},
+                ],
+                expanded: true,
+              },
+            ],
+            expanded: true,
+          },
+        ],
+      });
+      const fruitsEl = getTreeItemElementByValue('fruits')!;
+      const berriesEl = getTreeItemElementByValue('berries')!;
+      expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
+      expect(berriesEl.getAttribute('aria-expanded')).toBe('true');
+    });
+
     describe('LTR', () => {
       beforeEach(() => {
         setupTestTree();
@@ -1451,6 +1481,7 @@ interface TestTreeNode<V = string> {
   label: string;
   disabled?: boolean;
   selectable?: boolean;
+  expanded?: boolean;
   children?: TestTreeNode<V>[];
 }
 
@@ -1482,6 +1513,7 @@ interface TestTreeNode<V = string> {
         [label]="node.label"
         [disabled]="!!node.disabled"
         [selectable]="node.selectable ?? true"
+        [expanded]="node.expanded ?? false"
         [parent]="parent"
         [attr.data-value]="node.value"
         #treeItem="ngTreeItem"
