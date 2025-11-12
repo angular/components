@@ -109,7 +109,7 @@ export class Combobox<V> {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the combobox is read-only. */
-  readonly readonly = input(false);
+  readonly readonly = input(false, {transform: booleanAttribute});
 
   /** The value of the first matching item in the popup. */
   readonly firstMatch = input<V | undefined>(undefined);
@@ -121,7 +121,7 @@ export class Combobox<V> {
   // Or an "always expanded" option?
 
   /** Whether the combobox popup should always be expanded, regardless of user interaction. */
-  readonly alwaysExpanded = input(false);
+  readonly alwaysExpanded = input(false, {transform: booleanAttribute});
 
   /** Input element connected to the combobox, if any. */
   readonly inputElement = computed(() => this._pattern.inputs.inputEl());
