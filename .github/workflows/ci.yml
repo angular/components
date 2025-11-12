@@ -24,6 +24,8 @@ jobs:
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Install node modules
         run: pnpm install --frozen-lockfile
+      - name: Validate ng-dev config
+        run: pnpm ng-dev config validate
       - name: Checking package externals
         run: |
           bazel build //:package_externals

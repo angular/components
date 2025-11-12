@@ -15,7 +15,6 @@
     "pnpm": "10.20.0"
   },
   "scripts": {
-    "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
     "ng-dev:stamp": "pnpm -s ng-dev release build-env-stamp --additional-stamping-script=tools/bazel-additional-stamp.mjs",
     "build": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-packages-dist-main.mts",
     "build-docs-content": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-docs-content-main.mts",
@@ -76,7 +75,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#39869500e7723f91e1797f575d663afaff1b97e7",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#b2a9942f63a07068a57121d94a1174f81f3c04fb",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
