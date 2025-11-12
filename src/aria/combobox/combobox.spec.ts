@@ -1226,12 +1226,12 @@ class ComboboxTreeExample {
   }
 }
 
-export interface TreeNode {
+interface TreeNode {
   name: string;
   children?: TreeNode[];
 }
 
-export const TREE_NODES = [
+const TREE_NODES = [
   {
     name: 'Winter',
     children: [{name: 'December'}, {name: 'January'}, {name: 'February'}],
