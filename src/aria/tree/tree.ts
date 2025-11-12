@@ -149,7 +149,7 @@ export class Tree<V> {
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The delay in seconds before the typeahead search is reset. */
-  readonly typeaheadDelay = input(0.5);
+  readonly typeaheadDelay = input(500);
 
   /** The values of the currently selected items. */
   readonly values = model<V[]>([]);

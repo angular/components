@@ -123,7 +123,7 @@ export class Listbox<V> {
   selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** The amount of time before the typeahead search is reset. */
-  typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
+  typeaheadDelay = input<number>(500); // Picked arbitrarily.
 
   /** Whether the listbox is disabled. */
   disabled = input(false, {transform: booleanAttribute});
