@@ -26,16 +26,19 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {ComboboxPopup} from '../combobox';
 
 /**
- * A listbox container.
+ * Represents a container used to display a list of items for a user to select from.
  *
- * Listboxes are used to display a list of items for a user to select from. The Listbox is meant
- * to be used in conjunction with Option as follows:
+ * The `ngListbox` is meant to be used in conjunction with `ngOption` directives to create a
+ * selectable list. It supports single and multiple selection modes, as well as various focus and
+ * orientation strategies.
  *
  * ```html
- * <ul ngListbox>
- *   <li [value]="1" ngOption>Item 1</li>
- *   <li [value]="2" ngOption>Item 2</li>
- *   <li [value]="3" ngOption>Item 3</li>
+ * <ul ngListbox [(value)]="selectedItems" [multi]="true" orientation="vertical">
+ *   @for (item of items; track item.id) {
+ *     <li ngOption [value]="item.id" [label]="item.name" [disabled]="item.disabled">
+ *       {{item.name}}
+ *     </li>
+ *   }
  * </ul>
  * ```
  *
@@ -99,13 +102,24 @@ export class Listbox<V> {
   /** Whether focus should wrap when navigating. */
   wrap = input(true, {transform: booleanAttribute});
 
-  /** Whether to allow disabled items in the list to receive focus. */
+  /**
+   * Whether to allow disabled items to receive focus. When `true`, disabled items are
+   * focusable but not interactive. When `false`, disabled items are skipped during navigation.
+   */
   softDisabled = input(true, {transform: booleanAttribute});
 
-  /** The focus strategy used by the list. */
+  /**
+   * The focus strategy used by the list.
+   * - `roving`: Focus is moved to the active item using `tabindex`.
+   * - `activedescendant`: Focus remains on the listbox container, and `aria-activedescendant` is used to indicate the active item.
+   */
   focusMode = input<'roving' | 'activedescendant'>('roving');
 
-  /** The selection strategy used by the list. */
+  /**
+   * The selection strategy used by the list.
+   * - `follow`: The focused item is automatically selected.
+   * - `explicit`: Items are selected explicitly by the user (e.g., via click or spacebar).
+   */
   selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** The amount of time before the typeahead search is reset. */
@@ -117,7 +131,7 @@ export class Listbox<V> {
   /** Whether the listbox is readonly. */
   readonly = input(false, {transform: booleanAttribute});
 
-  /** The values of the current selected items. */
+  /** The values of the currently selected items. */
   values = model<V[]>([]);
 
   /** The Listbox UIPattern. */
@@ -197,7 +211,17 @@ export class Listbox<V> {
 }
 
 /**
- * A selectable option in a Listbox.
+ * A selectable option in an `ngListbox`.
+ *
+ * This directive should be applied to an element (e.g., `<li>`, `<div>`) within an
+ * `ngListbox`. The `value` input is used to identify the option, and the `label` input provides
+ * the accessible name for the option.
+ *
+ * ```html
+ * <li ngOption value="item-id" label="Item Name">
+ *   Item Name
+ * </li>
+ * ```
  *
  * @developerPreview 21.0
  */

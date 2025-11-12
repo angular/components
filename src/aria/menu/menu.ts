@@ -37,8 +37,18 @@ import {Directionality} from '@angular/cdk/bidi';
 /**
  * A trigger for a menu.
  *
- * The menu trigger is used to open and close menus, and can be placed on menu items to connect
- * sub-menus.
+ * The `ngMenuTrigger` directive is used to open and close menus. It can be applied to
+ * any interactive element (e.g., a button) to associate it with a `ngMenu` instance.
+ * It also supports linking to sub-menus when applied to a `ngMenuItem`.
+ *
+ * ```html
+ * <button ngMenuTrigger [menu]="myMenu">Open Menu</button>
+ *
+ * <div ngMenu #myMenu="ngMenu">
+ *   <div ngMenuItem>Item 1</div>
+ *   <div ngMenuItem>Item 2</div>
+ * </div>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -110,16 +120,22 @@ export class MenuTrigger<V> {
 /**
  * A list of menu items.
  *
- * A menu is used to offer a list of menu item choices to users. Menus can be nested within other
- * menus to create sub-menus.
+ * A `ngMenu` is used to offer a list of menu item choices to users. Menus can be nested
+ * within other menus to create sub-menus. It works in conjunction with `ngMenuTrigger`
+ * and `ngMenuItem` directives.
  *
  * ```html
- * <button ngMenuTrigger menu="menu">Options</button>
+ * <button ngMenuTrigger [menu]="myMenu">Options</button>
  *
- * <div ngMenu #menu="ngMenu">
+ * <div ngMenu #myMenu="ngMenu">
  *   <div ngMenuItem>Star</div>
  *   <div ngMenuItem>Edit</div>
- *   <div ngMenuItem>Delete</div>
+ *   <div ngMenuItem [submenu]="subMenu">More</div>
+ * </div>
+ *
+ * <div ngMenu #subMenu="ngMenu">
+ *   <div ngMenuItem>Sub Item 1</div>
+ *   <div ngMenuItem>Sub Item 2</div>
  * </div>
  * ```
  *
@@ -261,9 +277,26 @@ export class Menu<V> {
 /**
  * A menu bar of menu items.
  *
- * Like the menu, a menubar is used to offer a list of menu item choices to users. However, a
- * menubar is used to display a persistent, top-level,
- * always-visible set of menu item choices.
+ * Like the `ngMenu`, a `ngMenuBar` is used to offer a list of menu item choices to users.
+ * However, a menubar is used to display a persistent, top-level, always-visible set of
+ * menu item choices, typically found at the top of an application window.
+ *
+ * ```html
+ * <div ngMenuBar>
+ *   <button ngMenuTrigger [menu]="fileMenu">File</button>
+ *   <button ngMenuTrigger [menu]="editMenu">Edit</button>
+ * </div>
+ *
+ * <div ngMenu #fileMenu="ngMenu">
+ *   <div ngMenuItem>New</div>
+ *   <div ngMenuItem>Open</div>
+ * </div>
+ *
+ * <div ngMenu #editMenu="ngMenu">
+ *   <div ngMenuItem>Cut</div>
+ *   <div ngMenuItem>Copy</div>
+ * </div>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -305,7 +338,7 @@ export class MenuBar<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   readonly textDirection = inject(Directionality).valueSignal;
 
-  /** The values of the menu. */
+  /** The values of the currently selected menu items. */
   readonly values = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
@@ -356,7 +389,14 @@ export class MenuBar<V> {
 /**
  * An item in a Menu.
  *
- * Menu items can be used in menus and menubars to represent a choice or action a user can take.
+ * `ngMenuItem` directives can be used in `ngMenu` and `ngMenuBar` to represent a choice
+ * or action a user can take. They can also act as triggers for sub-menus.
+ *
+ * ```html
+ * <div ngMenuItem (onSelect)="doAction()">Action Item</div>
+ *
+ * <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -445,6 +485,18 @@ export class MenuItem<V> {
 
 /**
  * Defers the rendering of the menu content.
+ *
+ * This structural directive should be applied to an `ng-template` within a `ngMenu`
+ * or `ngMenuBar` to lazily render its content only when the menu is opened.
+ *
+ * ```html
+ * <div ngMenu #myMenu="ngMenu">
+ *   <ng-template ngMenuContent>
+ *     <div ngMenuItem>Lazy Item 1</div>
+ *     <div ngMenuItem>Lazy Item 2</div>
+ *   </ng-template>
+ * </div>
+ * ```
  *
  * @developerPreview 21.0
  */
