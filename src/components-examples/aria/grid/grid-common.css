@@ -26,7 +26,7 @@
   outline-offset: 3px;
 }
 
-.example-cell.example-cell.example-cell:has([data-widget-activated='true']) {
+.example-cell.example-cell.example-cell:has([data-active-control='widget']) {
   outline: 3px dashed var(--mat-sys-on-error-container);
   outline-offset: 3px;
 }

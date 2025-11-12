@@ -378,7 +378,7 @@ export class GridCell {
   host: {
     'class': 'grid-cell-widget',
     '[attr.data-active]': '_pattern.active()',
-    '[attr.data-widget-activated]': 'isActivated()',
+    '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
     '[tabindex]': '_tabIndex()',
   },
 })
