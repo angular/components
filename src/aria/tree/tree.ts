@@ -84,7 +84,6 @@ function sortDirectives(a: HasElement, b: HasElement) {
   selector: '[ngTree]',
   exportAs: 'ngTree',
   host: {
-    'class': 'ng-tree',
     'role': 'tree',
     '[attr.id]': 'id()',
     '[attr.aria-orientation]': '_pattern.orientation()',
@@ -256,7 +255,6 @@ export class Tree<V> {
   selector: '[ngTreeItem]',
   exportAs: 'ngTreeItem',
   host: {
-    'class': 'ng-treeitem',
     '[attr.data-active]': 'active()',
     'role': 'treeitem',
     '[id]': '_pattern.id()',

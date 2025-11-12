@@ -49,7 +49,6 @@ import {ComboboxPopup} from '../combobox';
   exportAs: 'ngListbox',
   host: {
     'role': 'listbox',
-    'class': 'ng-listbox',
     '[attr.id]': 'id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-readonly]': '_pattern.readonly()',
@@ -230,7 +229,6 @@ export class Listbox<V> {
   exportAs: 'ngOption',
   host: {
     'role': 'option',
-    'class': 'ng-option',
     '[attr.data-active]': '_pattern.active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',

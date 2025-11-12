@@ -75,9 +75,6 @@ function sortDirectives(a: HasElement, b: HasElement) {
 @Directive({
   selector: '[ngTabs]',
   exportAs: 'ngTabs',
-  host: {
-    'class': 'ng-tabs',
-  },
 })
 export class Tabs {
   /** The TabList nested inside of the container. */
@@ -138,7 +135,6 @@ export class Tabs {
   exportAs: 'ngTabList',
   host: {
     'role': 'tablist',
-    'class': 'ng-tablist',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
@@ -278,7 +274,6 @@ export class TabList implements OnInit, OnDestroy {
   exportAs: 'ngTab',
   host: {
     'role': 'tab',
-    'class': 'ng-tab',
     '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
@@ -367,7 +362,6 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   exportAs: 'ngTabPanel',
   host: {
     'role': 'tabpanel',
-    'class': 'ng-tabpanel',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': '!visible() ? true : null',
