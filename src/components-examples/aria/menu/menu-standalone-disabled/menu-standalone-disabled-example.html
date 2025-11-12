@@ -1,0 +1,65 @@
+<div ngMenu class="example-menu" [disabled]="true">
+  <ng-template ngMenuContent>
+    <span id="security-label" class="example-menu-heading">SECURITY</span>
+
+    <div role="group" aria-labelledby="security-label">
+      <div ng-menu-item value="Change password">
+        <span ng-menu-item-icon>lock_open</span>
+        <span ng-menu-item-text>Change password</span>
+      </div>
+
+      <div ng-menu-item value="Two-factor authentication">
+        <span ng-menu-item-icon>security_key</span>
+        <span ng-menu-item-text>Two-factor authentication</span>
+      </div>
+
+      <div ng-menu-item value="Reset" [submenu]="updateMenu">
+        <span ng-menu-item-icon>refresh</span>
+        <span ng-menu-item-text>Reset</span>
+        <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+      </div>
+
+      <div ng-menu #updateMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Email address">
+            <span ng-menu-item-icon>email</span>
+            <span ng-menu-item-text>Email address</span>
+          </div>
+
+          <div ng-menu-item value="Phone number">
+            <span ng-menu-item-icon>phone</span>
+            <span ng-menu-item-text>Phone number</span>
+          </div>
+
+          <div ng-menu-item value="Password">
+            <span ng-menu-item-icon>vpn_key</span>
+            <span ng-menu-item-text>Password</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div role="separator" class="example-menu-item-separator"></div>
+
+    <span id="help-label" class="example-menu-heading">HELP</span>
+
+    <div role="group" aria-labelledby="help-label">
+      <div ng-menu-item value="Support">
+        <span ng-menu-item-icon>help</span>
+        <span ng-menu-item-text>Support</span>
+      </div>
+
+      <div ng-menu-item value="Feedback">
+        <span ng-menu-item-icon>feedback</span>
+        <span ng-menu-item-text>Feedback</span>
+      </div>
+    </div>
+
+    <div role="separator" class="example-menu-item-separator"></div>
+
+    <div ng-menu-item value="Logout">
+      <span ng-menu-item-icon>logout</span>
+      <span ng-menu-item-text>Logout</span>
+    </div>
+  </ng-template>
+</div>
