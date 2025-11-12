@@ -4,7 +4,15 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tree, TreeItem, TreeItemGroup} from './tree';
+import {
+  Tree,
+  TreeItem,
+  TreeItemGroup,
+  ListOrientation,
+  ListFocusMode,
+  ListSelectionMode,
+  TreeCurrentType,
+} from './tree';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -77,14 +85,14 @@ describe('Tree', () => {
       nodes?: TestTreeNode[];
       values?: string[];
       disabled?: boolean;
-      orientation?: 'horizontal' | 'vertical';
+      orientation?: ListOrientation;
       multi?: boolean;
       wrap?: boolean;
       softDisabled?: boolean;
-      focusMode?: 'roving' | 'activedescendant';
-      selectionMode?: 'follow' | 'explicit';
+      focusMode?: ListFocusMode;
+      selectionMode?: ListSelectionMode;
       nav?: boolean;
-      currentType?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
+      currentType?: TreeCurrentType;
     } = {},
   ) {
     if (config.nodes !== undefined) testComponent.nodes.set(config.nodes);
@@ -1535,12 +1543,12 @@ class TestTreeComponent {
   ]);
   values = signal<string[]>([]);
   disabled = signal(false);
-  orientation = signal<'vertical' | 'horizontal'>('vertical');
+  orientation = signal<ListOrientation>('vertical');
   multi = signal(false);
   wrap = signal(true);
   softDisabled = signal(true);
-  focusMode = signal<'roving' | 'activedescendant'>('roving');
-  selectionMode = signal<'explicit' | 'follow'>('explicit');
+  focusMode = signal<ListFocusMode>('roving');
+  selectionMode = signal<ListSelectionMode>('explicit');
   nav = signal(false);
-  currentType = signal('page' as 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false');
+  currentType = signal('page' as TreeCurrentType);
 }

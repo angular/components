@@ -30,8 +30,14 @@ import {
   TreePattern,
   DeferredContent,
   DeferredContentAware,
+  ListOrientation,
+  ListFocusMode,
+  ListSelectionMode,
+  TreeCurrentType,
 } from '@angular/aria/private';
 import {ComboboxPopup} from '../combobox';
+
+export {ListOrientation, ListFocusMode, ListSelectionMode, TreeCurrentType};
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -107,7 +113,7 @@ export class Tree<V> {
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
   /** Orientation of the tree. */
-  readonly orientation = input<'vertical' | 'horizontal'>('vertical');
+  readonly orientation = input<ListOrientation>('vertical');
 
   /** Whether multi-selection is allowed. */
   readonly multi = input(false, {transform: booleanAttribute});
@@ -116,10 +122,10 @@ export class Tree<V> {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The selection strategy used by the tree. */
-  readonly selectionMode = input<'explicit' | 'follow'>('explicit');
+  readonly selectionMode = input<ListSelectionMode>('explicit');
 
   /** The focus strategy used by the tree. */
-  readonly focusMode = input<'roving' | 'activedescendant'>('roving');
+  readonly focusMode = input<ListFocusMode>('roving');
 
   /** Whether navigation wraps. */
   readonly wrap = input(true, {transform: booleanAttribute});
@@ -140,9 +146,7 @@ export class Tree<V> {
   readonly nav = input(false);
 
   /** The aria-current type. */
-  readonly currentType = input<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>(
-    'page',
-  );
+  readonly currentType = input<TreeCurrentType>('page');
 
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;

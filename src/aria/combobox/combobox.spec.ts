@@ -1,7 +1,13 @@
 import {Component, computed, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopup,
+  ComboboxFilterMode,
+  ComboboxPopupContainer,
+} from '../combobox';
 import {Listbox, Option} from '../listbox';
 import {runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';
@@ -52,9 +58,7 @@ describe('Combobox', () => {
     const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
     const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
 
-    function setupCombobox(
-      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
-    ) {
+    function setupCombobox(opts: {readonly?: boolean; filterMode?: ComboboxFilterMode} = {}) {
       TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxListboxExample);
       const testComponent = fixture.componentInstance;
@@ -605,9 +609,7 @@ describe('Combobox', () => {
     const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
     const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
 
-    function setupCombobox(
-      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
-    ) {
+    function setupCombobox(opts: {readonly?: boolean; filterMode?: ComboboxFilterMode} = {}) {
       TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxTreeExample);
       const testComponent = fixture.componentInstance;
@@ -1126,7 +1128,7 @@ class ComboboxListboxExample {
   readonly = signal(false);
   searchString = signal('');
   values = signal<string[]>([]);
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
+  filterMode = signal<ComboboxFilterMode>('manual');
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -1197,7 +1199,7 @@ class ComboboxTreeExample {
   searchString = signal('');
   values = signal<string[]>([]);
   nodes = computed(() => this.filterTreeNodes(TREE_NODES));
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
+  filterMode = signal<ComboboxFilterMode>('manual');
 
   firstMatch = computed<string | undefined>(() => {
     const flatNodes = this.flattenTreeNodes(this.nodes());

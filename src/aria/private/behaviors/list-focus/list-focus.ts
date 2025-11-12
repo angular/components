@@ -9,6 +9,8 @@
 import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 
+export type ListFocusMode = 'roving' | 'activedescendant';
+
 /** Represents an item in a collection, such as a listbox option, than may receive focus. */
 export interface ListFocusItem {
   /** A unique identifier for the item. */
@@ -27,7 +29,7 @@ export interface ListFocusItem {
 /** Represents the required inputs for a collection that contains focusable items. */
 export interface ListFocusInputs<T extends ListFocusItem> {
   /** The focus strategy used by the list. */
-  focusMode: SignalLike<'roving' | 'activedescendant'>;
+  focusMode: SignalLike<ListFocusMode>;
 
   /** Whether the list is disabled. */
   disabled: SignalLike<boolean>;

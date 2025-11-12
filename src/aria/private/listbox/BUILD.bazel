@@ -12,6 +12,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/event-manager",
         "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/list-navigation",
         "//src/aria/private/behaviors/signal-like",
         "//src/aria/private/combobox",
     ],

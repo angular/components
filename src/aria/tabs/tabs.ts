@@ -29,7 +29,12 @@ import {
   TabPattern,
   DeferredContent,
   DeferredContentAware,
+  ListOrientation,
+  ListFocusMode,
+  ListSelectionMode,
 } from '@angular/aria/private';
+
+export {ListOrientation, ListFocusMode, ListSelectionMode};
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -169,7 +174,7 @@ export class TabList implements OnInit, OnDestroy {
   );
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
+  readonly orientation = input<ListOrientation>('horizontal');
 
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
@@ -178,10 +183,10 @@ export class TabList implements OnInit, OnDestroy {
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the tablist. */
-  readonly focusMode = input<'roving' | 'activedescendant'>('roving');
+  readonly focusMode = input<ListFocusMode>('roving');
 
   /** The selection strategy used by the tablist. */
-  readonly selectionMode = input<'follow' | 'explicit'>('follow');
+  readonly selectionMode = input<ListSelectionMode>('follow');
 
   /** Whether the tablist is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});

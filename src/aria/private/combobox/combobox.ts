@@ -11,6 +11,8 @@ import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 
+export type ComboboxFilterMode = 'manual' | 'auto-select' | 'highlight';
+
 /** Represents the required inputs for a combobox. */
 export interface ComboboxInputs<T extends ListItem<V>, V> {
   /** The controls for the popup associated with the combobox. */
@@ -25,7 +27,7 @@ export interface ComboboxInputs<T extends ListItem<V>, V> {
   containerEl: SignalLike<HTMLElement | undefined>;
 
   /** The filtering mode for the combobox. */
-  filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
+  filterMode: SignalLike<ComboboxFilterMode>;
 
   /** The current value of the combobox. */
   inputValue?: WritableSignalLike<string>;

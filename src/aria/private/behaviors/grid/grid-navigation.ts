@@ -28,7 +28,7 @@ export const direction: Record<'Up' | 'Down' | 'Left' | 'Right', Delta> = {
 } as const;
 
 /** The wrapping behavior for keyboard navigation. */
-export type WrapStrategy = 'continuous' | 'loop' | 'nowrap';
+export type GridWrapStrategy = 'continuous' | 'loop' | 'nowrap';
 
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
 export interface GridNavigationCell extends GridFocusCell {}
@@ -36,10 +36,10 @@ export interface GridNavigationCell extends GridFocusCell {}
 /** Represents the required inputs for a collection that has navigable items. */
 export interface GridNavigationInputs extends GridFocusInputs {
   /** The wrapping behavior for keyboard navigation along the row axis. */
-  rowWrap: SignalLike<WrapStrategy>;
+  rowWrap: SignalLike<GridWrapStrategy>;
 
   /** The wrapping behavior for keyboard navigation along the column axis. */
-  colWrap: SignalLike<WrapStrategy>;
+  colWrap: SignalLike<GridWrapStrategy>;
 }
 
 /** Dependencies for the `GridNavigation` class. */
@@ -76,7 +76,7 @@ export class GridNavigation<T extends GridNavigationCell> {
   peek(
     direction: Delta,
     fromCoords: RowCol,
-    wrap?: WrapStrategy,
+    wrap?: GridWrapStrategy,
     allowDisabled?: boolean,
   ): RowCol | undefined {
     wrap = wrap ?? (direction.row !== undefined ? this.inputs.rowWrap() : this.inputs.colWrap());
@@ -143,7 +143,7 @@ export class GridNavigation<T extends GridNavigationCell> {
   private _peekDirectional(
     delta: Delta,
     fromCoords: RowCol,
-    wrap: 'continuous' | 'loop' | 'nowrap',
+    wrap: GridWrapStrategy,
     allowDisabled: boolean = false,
   ): RowCol | undefined {
     if (this.inputs.gridFocus.gridDisabled()) return undefined;

@@ -9,6 +9,8 @@
 import {SignalLike} from '../signal-like/signal-like';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 
+export type ListOrientation = 'horizontal' | 'vertical';
+
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
 export interface ListNavigationItem extends ListFocusItem {}
 
@@ -18,9 +20,9 @@ export interface ListNavigationInputs<T extends ListNavigationItem> extends List
   wrap: SignalLike<boolean>;
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  orientation: SignalLike<ListOrientation>;
 
-  /** The direction that text is read based on the users locale. */
+  /** The direction that text is read based on the user's locale. */
   textDirection: SignalLike<'rtl' | 'ltr'>;
 }
 

@@ -10,6 +10,8 @@ import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 
+export type ListSelectionMode = 'follow' | 'explicit';
+
 /** Represents an item in a collection, such as a listbox option, that can be selected. */
 export interface ListSelectionItem<V> extends ListFocusItem {
   /** The value of the item. */
@@ -28,7 +30,7 @@ export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> extends 
   values: WritableSignalLike<V[]>;
 
   /** The selection strategy used by the list. */
-  selectionMode: SignalLike<'follow' | 'explicit'>;
+  selectionMode: SignalLike<ListSelectionMode>;
 }
 
 /** Controls selection for a list of items. */

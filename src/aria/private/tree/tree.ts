@@ -9,6 +9,8 @@
 import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
+import {ListOrientation} from '../behaviors/list-navigation/list-navigation';
+import {ListSelectionMode} from '../behaviors/list-selection/list-selection';
 import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
@@ -155,6 +157,8 @@ interface SelectOptions {
   anchor?: boolean;
 }
 
+export type TreeCurrentType = 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
+
 /** Represents the required inputs for a tree. */
 export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, 'items'> {
   /** A unique identifier for the tree. */
@@ -167,7 +171,7 @@ export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, '
   nav: SignalLike<boolean>;
 
   /** The aria-current type. */
-  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+  currentType: SignalLike<TreeCurrentType>;
 }
 
 export interface TreePattern<V> extends TreeInputs<V> {}
@@ -343,7 +347,7 @@ export class TreePattern<V> {
   nav: SignalLike<boolean>;
 
   /** The aria-current type. */
-  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+  currentType: SignalLike<TreeCurrentType>;
 
   /** All items in the tree, in document order (DFS-like, a flattened list). */
   allItems: SignalLike<TreeItemPattern<V>[]>;
@@ -361,7 +365,7 @@ export class TreePattern<V> {
   wrap: SignalLike<boolean>;
 
   /** The orientation of the tree. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  orientation: SignalLike<ListOrientation>;
 
   /** The text direction of the tree. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -370,7 +374,7 @@ export class TreePattern<V> {
   multi: SignalLike<boolean>;
 
   /** The selection mode of the tree. */
-  selectionMode: SignalLike<'follow' | 'explicit'>;
+  selectionMode: SignalLike<ListSelectionMode>;
 
   /** The delay in milliseconds to wait before clearing the typeahead buffer. */
   typeaheadDelay: SignalLike<number>;

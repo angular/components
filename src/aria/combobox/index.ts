@@ -12,4 +12,5 @@ export {
   ComboboxInput,
   ComboboxPopup,
   ComboboxPopupContainer,
+  ComboboxFilterMode,
 } from './combobox';

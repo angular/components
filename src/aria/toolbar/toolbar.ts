@@ -25,9 +25,12 @@ import {
   ToolbarWidgetPattern,
   ToolbarWidgetGroupPattern,
   SignalLike,
+  ListOrientation,
 } from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
+
+export {ListOrientation};
 
 interface HasElement {
   element: Signal<HTMLElement>;
@@ -93,7 +96,7 @@ export class Toolbar<V> {
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
-  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
+  readonly orientation = input<ListOrientation>('horizontal');
 
   /** Whether to allow disabled items to receive focus. */
   softDisabled = input(true, {transform: booleanAttribute});

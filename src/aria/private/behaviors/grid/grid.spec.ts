@@ -9,7 +9,7 @@
 import {signal, Signal, WritableSignal} from '@angular/core';
 import {Grid, GridInputs} from './grid';
 import {createGridA, createGridD, TestBaseGridCell} from './grid-data.spec';
-import {WrapStrategy} from './grid-navigation';
+import {GridWrapStrategy} from './grid-navigation';
 
 interface TestGridCell extends TestBaseGridCell {
   element: WritableSignal<HTMLElement>;
@@ -44,8 +44,8 @@ function setupGrid(
     focusMode: signal('roving'),
     disabled: signal(false),
     softDisabled: signal(true),
-    rowWrap: signal<WrapStrategy>('loop'),
-    colWrap: signal<WrapStrategy>('loop'),
+    rowWrap: signal<GridWrapStrategy>('loop'),
+    colWrap: signal<GridWrapStrategy>('loop'),
     ...inputs,
   };
 

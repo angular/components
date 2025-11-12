@@ -1,5 +1,5 @@
 import {Component, DebugElement, signal} from '@angular/core';
-import {Listbox, Option} from './listbox';
+import {Listbox, Option, ListOrientation, ListSelectionMode, ListFocusMode} from './listbox';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
@@ -49,15 +49,15 @@ describe('Listbox', () => {
   const type = (char: string) => keydown(char);
 
   function setupListbox(opts?: {
-    orientation?: 'horizontal' | 'vertical';
+    orientation?: ListOrientation;
     disabled?: boolean;
     readonly?: boolean;
     values?: number[];
     softDisabled?: boolean;
-    focusMode?: 'roving' | 'activedescendant';
+    focusMode?: ListFocusMode;
     multi?: boolean;
     wrap?: boolean;
-    selectionMode?: 'follow' | 'explicit';
+    selectionMode?: ListSelectionMode;
     typeaheadDelay?: number;
     disabledOptions?: number[];
     options?: TestOption[];
@@ -573,10 +573,7 @@ describe('Listbox', () => {
     });
   });
 
-  function runNavigationTests(
-    focusMode: 'roving' | 'activedescendant',
-    isFocused: (index: number) => boolean,
-  ) {
+  function runNavigationTests(focusMode: ListFocusMode, isFocused: (index: number) => boolean) {
     describe(`keyboard navigation (focusMode="${focusMode}")`, () => {
       it('should move focus to the last focusable option on End', () => {
         setupListbox({focusMode, disabledOptions: [4]});
@@ -812,11 +809,11 @@ class ListboxExample {
   disabled = false;
   readonly = false;
   softDisabled = true;
-  focusMode: 'roving' | 'activedescendant' = 'roving';
-  orientation: 'vertical' | 'horizontal' = 'vertical';
+  focusMode: ListFocusMode = 'roving';
+  orientation: ListOrientation = 'vertical';
   multi = false;
   wrap = true;
-  selectionMode: 'follow' | 'explicit' = 'explicit';
+  selectionMode: ListSelectionMode = 'explicit';
   typeaheadDelay = 0.5;
 }
 

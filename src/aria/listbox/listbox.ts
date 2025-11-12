@@ -19,11 +19,20 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '@angular/aria/private';
+import {
+  ComboboxListboxPattern,
+  ListOrientation,
+  ListboxPattern,
+  OptionPattern,
+  ListSelectionMode,
+  ListFocusMode,
+} from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {ComboboxPopup} from '../combobox';
+
+export {ListOrientation, ListFocusMode, ListSelectionMode};
 
 /**
  * A listbox container.
@@ -91,7 +100,7 @@ export class Listbox<V> {
   protected items = computed(() => this._options().map(option => option._pattern));
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('vertical');
+  orientation = input<ListOrientation>('vertical');
 
   /** Whether multiple items in the list can be selected at once. */
   multi = input(false, {transform: booleanAttribute});
@@ -103,10 +112,10 @@ export class Listbox<V> {
   softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the list. */
-  focusMode = input<'roving' | 'activedescendant'>('roving');
+  focusMode = input<ListFocusMode>('roving');
 
   /** The selection strategy used by the list. */
-  selectionMode = input<'follow' | 'explicit'>('follow');
+  selectionMode = input<ListSelectionMode>('follow');
 
   /** The amount of time before the typeahead search is reset. */
   typeaheadDelay = input<number>(0.5); // Picked arbitrarily.

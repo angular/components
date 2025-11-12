@@ -17,6 +17,7 @@ import {
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
+import {ListOrientation} from '../behaviors/list-navigation/list-navigation';
 
 /** The required inputs to tabs. */
 export interface TabInputs
@@ -146,7 +147,7 @@ export class TabListPattern {
   readonly expansionManager: ListExpansion;
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<ListOrientation>;
 
   /** Whether the tablist is disabled. */
   readonly disabled: SignalLike<boolean>;

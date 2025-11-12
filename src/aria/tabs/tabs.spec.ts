@@ -3,7 +3,16 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tabs, TabList, Tab, TabPanel, TabContent} from './tabs';
+import {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  TabContent,
+  ListOrientation,
+  ListFocusMode,
+  ListSelectionMode,
+} from './tabs';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -76,12 +85,12 @@ describe('Tabs', () => {
     options: {
       initialTabs?: TestTabDefinition[];
       selectedTab?: string | undefined;
-      orientation?: 'horizontal' | 'vertical';
+      orientation?: ListOrientation;
       disabled?: boolean;
       wrap?: boolean;
       softDisabled?: boolean;
-      focusMode?: 'roving' | 'activedescendant';
-      selectionMode?: 'follow' | 'explicit';
+      focusMode?: ListFocusMode;
+      selectionMode?: ListSelectionMode;
     } = {},
   ) {
     if (options.initialTabs !== undefined) testComponent.tabsData.set(options.initialTabs);
@@ -731,10 +740,10 @@ class TestTabsComponent {
   ]);
 
   selectedTab = signal<string | undefined>(undefined);
-  orientation = signal<'horizontal' | 'vertical'>('horizontal');
+  orientation = signal<ListOrientation>('horizontal');
   disabled = signal(false);
   wrap = signal(true);
   softDisabled = signal(true);
-  focusMode = signal<'roving' | 'activedescendant'>('roving');
-  selectionMode = signal<'follow' | 'explicit'>('follow');
+  focusMode = signal<ListFocusMode>('roving');
+  selectionMode = signal<ListSelectionMode>('follow');
 }

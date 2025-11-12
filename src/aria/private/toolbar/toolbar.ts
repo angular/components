@@ -11,6 +11,7 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {List, ListInputs} from '../behaviors/list/list';
 import {ToolbarWidgetPattern} from './toolbar-widget';
+import {ListOrientation} from '../behaviors/list-navigation/list-navigation';
 
 /** Represents the required inputs for a toolbar. */
 export type ToolbarInputs<V> = Omit<
@@ -26,8 +27,8 @@ export class ToolbarPattern<V> {
   /** The list behavior for the toolbar. */
   readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
 
-  /** Whether the tablist is vertically or horizontally oriented. */
-  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+  /** Whether the toolbar is vertically or horizontally oriented. */
+  readonly orientation: SignalLike<ListOrientation>;
 
   /** Whether disabled items in the group should be focusable. */
   readonly softDisabled: SignalLike<boolean>;

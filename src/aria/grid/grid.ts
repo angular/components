@@ -21,7 +21,17 @@ import {
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
+import {
+  GridPattern,
+  GridRowPattern,
+  GridCellPattern,
+  GridCellWidgetPattern,
+  GridFocusMode,
+  GridWrapStrategy,
+  GridSelectionMode,
+} from '../private';
+
+export {GridFocusMode, GridWrapStrategy, GridSelectionMode};
 
 /**
  * A directive that provides grid-based navigation and selection behavior.
@@ -73,19 +83,19 @@ export class Grid {
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the grid. */
-  readonly focusMode = input<'roving' | 'activedescendant'>('roving');
+  readonly focusMode = input<GridFocusMode>('roving');
 
   /** The wrapping behavior for keyboard navigation along the row axis. */
-  readonly rowWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
+  readonly rowWrap = input<GridWrapStrategy>('loop');
 
   /** The wrapping behavior for keyboard navigation along the column axis. */
-  readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
+  readonly colWrap = input<GridWrapStrategy>('loop');
 
   /** Whether multiple cells in the grid can be selected. */
   readonly multi = input(false, {transform: booleanAttribute});
 
   /** The selection strategy used by the grid. */
-  readonly selectionMode = input<'follow' | 'explicit'>('follow');
+  readonly selectionMode = input<GridSelectionMode>('follow');
 
   /** Whether enable range selections (with modifier keys or dragging). */
   readonly enableRangeSelection = input(false, {transform: booleanAttribute});
@@ -123,6 +133,8 @@ export class Grid {
   }
 }
 
+export type GridRowRole = 'row' | 'rowheader';
+
 /**
  * A directive that represents a row in a grid.
  *
@@ -158,7 +170,7 @@ export class GridRow {
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The ARIA role for the row. */
-  readonly role = input<'row' | 'rowheader'>('row');
+  readonly role = input<GridRowRole>('row');
 
   /** The index of this row within the grid. */
   readonly rowIndex = input<number>();
@@ -169,6 +181,8 @@ export class GridRow {
     cells: this._cellPatterns,
   });
 }
+
+export type GridCellRole = 'gridcell' | 'columnheader';
 
 /**
  * A directive that represents a cell in a grid.
@@ -217,7 +231,7 @@ export class GridCell {
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The ARIA role for the cell. */
-  readonly role = input<'gridcell' | 'columnheader'>('gridcell');
+  readonly role = input<GridCellRole>('gridcell');
 
   /** The number of rows the cell should span. */
   readonly rowSpan = input<number>(1);
