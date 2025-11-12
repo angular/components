@@ -21,15 +21,7 @@ import {
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  GridPattern,
-  GridRowPattern,
-  GridCellPattern,
-  GridCellWidgetPattern,
-  NavigateEvent,
-} from '../private';
-
-export {NavigateEvent} from '../private';
+import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
 /**
  * The container for a grid. It provides keyboard navigation and focus management for the grid's
@@ -135,9 +127,6 @@ export class Grid {
   /** Whether enable range selections (with modifier keys or dragging). */
   readonly enableRangeSelection = input(false, {transform: booleanAttribute});
 
-  /** Emits when navigation occurs within the grid. */
-  readonly onNavigate = output<NavigateEvent>();
-
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -151,12 +140,6 @@ export class Grid {
     afterRenderEffect(() => this._pattern.resetFocusEffect());
     afterRenderEffect(() => this._pattern.restoreFocusEffect());
     afterRenderEffect(() => this._pattern.focusEffect());
-    afterRenderEffect(() => {
-      const navigateEvent = this._pattern.lastNavigateEvent();
-      if (navigateEvent) {
-        this.onNavigate.emit(navigateEvent);
-      }
-    });
   }
 
   /** Gets the cell pattern for a given element. */

@@ -6,19 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, untracked, WritableSignal} from '@angular/core';
+import {computed, signal, untracked} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
-
-/** An event that represents navigation within the grid. */
-export interface NavigateEvent {
-  prev?: HTMLElement;
-  next?: HTMLElement;
-  rawEvent?: KeyboardEvent | PointerEvent;
-}
 
 /** Represents the required inputs for the grid pattern. */
 export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'cells'> {
@@ -74,9 +67,6 @@ export class GridPattern {
       : undefined,
   );
 
-  /** The last navigation event that occurred in the grid. */
-  readonly lastNavigateEvent: WritableSignal<NavigateEvent | undefined> = signal(undefined);
-
   /** Whether to pause grid navigation and give the keyboard control to cell or widget. */
   readonly pauseNavigation: SignalLike<boolean> = computed(() =>
     this.gridBehavior.data
@@ -117,14 +107,14 @@ export class GridPattern {
       selectOne: this.inputs.enableSelection() && this.inputs.selectionMode() === 'follow',
     };
     manager
-      .on('ArrowUp', e => this._advance(() => this.gridBehavior.up(opts), e))
-      .on('ArrowDown', e => this._advance(() => this.gridBehavior.down(opts), e))
-      .on(this.prevColKey(), e => this._advance(() => this.gridBehavior.left(opts), e))
-      .on(this.nextColKey(), e => this._advance(() => this.gridBehavior.right(opts), e))
-      .on('Home', e => this._advance(() => this.gridBehavior.firstInRow(opts), e))
-      .on('End', e => this._advance(() => this.gridBehavior.lastInRow(opts), e))
-      .on([Modifier.Ctrl], 'Home', e => this._advance(() => this.gridBehavior.first(opts), e))
-      .on([Modifier.Ctrl], 'End', e => this._advance(() => this.gridBehavior.last(opts), e));
+      .on('ArrowUp', () => this.gridBehavior.up(opts))
+      .on('ArrowDown', () => this.gridBehavior.down(opts))
+      .on(this.prevColKey(), () => this.gridBehavior.left(opts))
+      .on(this.nextColKey(), () => this.gridBehavior.right(opts))
+      .on('Home', () => this.gridBehavior.firstInRow(opts))
+      .on('End', () => this.gridBehavior.lastInRow(opts))
+      .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first(opts))
+      .on([Modifier.Ctrl], 'End', () => this.gridBehavior.last(opts));
 
     // Basic explicit selection handlers.
     if (this.inputs.enableSelection() && this.inputs.selectionMode() === 'explicit') {
@@ -164,14 +154,12 @@ export class GridPattern {
 
     // Navigation without selection.
     if (!this.inputs.enableSelection()) {
-      manager.on(e =>
-        this._advance(() => {
-          const cell = this.inputs.getCell(e.target as Element);
-          if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
+      manager.on(e => {
+        const cell = this.inputs.getCell(e.target as Element);
+        if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
-          this.gridBehavior.gotoCell(cell);
-        }, e),
-      );
+        this.gridBehavior.gotoCell(cell);
+      });
     }
 
     // Navigation with selection.
@@ -405,17 +393,5 @@ export class GridPattern {
     if (isRoving && !cellFocused) {
       activeCell.focus();
     }
-  }
-
-  /** Performs a navigation operation and emits a navigate event. */
-  private _advance(op: () => void, event?: KeyboardEvent | PointerEvent): void {
-    const prev = this.activeCell()?.element();
-    op();
-    const next = this.activeCell()?.element();
-    this.lastNavigateEvent.set({
-      prev,
-      next,
-      rawEvent: event,
-    });
   }
 }
