@@ -10,6 +10,8 @@ import {computed, signal} from '@angular/core';
 import {SignalLike} from '../signal-like/signal-like';
 import type {GridData, BaseGridCell, RowCol} from './grid-data';
 
+export type GridFocusMode = 'roving' | 'activedescendant';
+
 /** Represents an cell in a grid, such as a grid cell, that may receive focus. */
 export interface GridFocusCell extends BaseGridCell {
   /** A unique identifier for the cell. */
@@ -25,7 +27,7 @@ export interface GridFocusCell extends BaseGridCell {
 /** Represents the required inputs for a grid that contains focusable cells. */
 export interface GridFocusInputs {
   /** The focus strategy used by the grid. */
-  focusMode: SignalLike<'roving' | 'activedescendant'>;
+  focusMode: SignalLike<GridFocusMode>;
 
   /** Whether the grid is disabled. */
   disabled: SignalLike<boolean>;

@@ -1,7 +1,7 @@
 import {Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
+import {Toolbar, ToolbarWidget, ToolbarWidgetGroup, ListOrientation} from './toolbar';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 
 describe('Toolbar', () => {
@@ -37,7 +37,7 @@ describe('Toolbar', () => {
 
   function setupToolbar(
     opts: {
-      orientation?: 'vertical' | 'horizontal';
+      orientation?: ListOrientation;
       softDisabled?: boolean;
       disabled?: boolean;
       wrap?: boolean;
@@ -622,7 +622,7 @@ describe('Toolbar', () => {
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
 })
 class ToolbarExample {
-  orientation = signal<'vertical' | 'horizontal'>('horizontal');
+  orientation = signal<ListOrientation>('horizontal');
   softDisabled = signal(true);
   disabled = signal(false);
   wrap = signal(true);

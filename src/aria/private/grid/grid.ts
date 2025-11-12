@@ -13,6 +13,8 @@ import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/g
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
 
+export type GridSelectionMode = 'follow' | 'explicit';
+
 /** Represents the required inputs for the grid pattern. */
 export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'cells'> {
   /** The html element of the grid. */
@@ -31,7 +33,7 @@ export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'c
   multi: SignalLike<boolean>;
 
   /** The selection strategy used by the grid. */
-  selectionMode: SignalLike<'follow' | 'explicit'>;
+  selectionMode: SignalLike<GridSelectionMode>;
 
   /** Whether enable range selection. */
   enableRangeSelection: SignalLike<boolean>;

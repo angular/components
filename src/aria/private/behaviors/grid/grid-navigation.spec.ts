@@ -18,7 +18,7 @@ import {
   TestBaseGridCell,
 } from './grid-data.spec';
 import {GridFocus, GridFocusInputs} from './grid-focus';
-import {direction, GridNavigation, GridNavigationInputs, WrapStrategy} from './grid-navigation';
+import {direction, GridNavigation, GridNavigationInputs, GridWrapStrategy} from './grid-navigation';
 
 export interface TestGridNavigationCell extends TestBaseGridCell {
   element: WritableSignal<HTMLElement>;
@@ -62,8 +62,8 @@ function setupGridNavigation(
   const gridNav = new GridNavigation({
     grid: gridData,
     gridFocus: gridFocus,
-    rowWrap: signal<WrapStrategy>('loop'),
-    colWrap: signal<WrapStrategy>('loop'),
+    rowWrap: signal<GridWrapStrategy>('loop'),
+    colWrap: signal<GridWrapStrategy>('loop'),
     ...gridFocusInputs,
     ...inputs,
   });

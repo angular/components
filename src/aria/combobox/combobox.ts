@@ -27,9 +27,12 @@ import {
   ComboboxListboxControls,
   ComboboxTreeControls,
   ComboboxDialogPattern,
+  ComboboxFilterMode,
 } from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
+
+export {ComboboxFilterMode};
 
 /**
  * @developerPreview 21.0
@@ -71,7 +74,7 @@ export class Combobox<V> {
   readonly popup = contentChild<ComboboxPopup<V>>(ComboboxPopup);
 
   /** The filter mode for the combobox. */
-  filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
+  filterMode = input<ComboboxFilterMode>('manual');
 
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});

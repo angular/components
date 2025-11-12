@@ -13,6 +13,7 @@ ts_project(
         "//src/aria/private/behaviors/expansion",
         "//src/aria/private/behaviors/label",
         "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/list-navigation",
         "//src/aria/private/behaviors/signal-like",
     ],
 )

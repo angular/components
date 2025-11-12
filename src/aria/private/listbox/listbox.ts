@@ -11,6 +11,7 @@ import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
+import {ListOrientation} from '../behaviors/list-navigation/list-navigation';
 
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
@@ -26,7 +27,7 @@ export class ListboxPattern<V> {
   listBehavior: List<OptionPattern<V>, V>;
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  orientation: SignalLike<ListOrientation>;
 
   /** Whether the listbox is disabled. */
   disabled = computed(() => this.listBehavior.disabled());

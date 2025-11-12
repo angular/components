@@ -10,6 +10,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/aria/private/behaviors/grid-focus",
         "//src/aria/private/behaviors/signal-like",
     ],
 )
