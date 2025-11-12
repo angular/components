@@ -65,10 +65,10 @@ describe('Accordion Pattern', () => {
       disabled: signal(false),
       multiExpandable: signal(true),
       items: signal([]),
-      expandedIds: signal<string[]>([]),
       softDisabled: signal(true),
       wrap: signal(true),
       element: signal(document.createElement('div')),
+      getItem: e => triggerPatterns.find(i => i.element() === e),
     };
     groupPattern = new AccordionGroupPattern(groupInputs);
 
@@ -81,6 +81,7 @@ describe('Accordion Pattern', () => {
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
         panelId: signal('panel-1'), // Value should match the panel it controls
+        expanded: signal(false),
       },
       {
         accordionGroup: signal(groupPattern),
@@ -89,6 +90,7 @@ describe('Accordion Pattern', () => {
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
         panelId: signal('panel-2'),
+        expanded: signal(false),
       },
       {
         accordionGroup: signal(groupPattern),
@@ -97,6 +99,7 @@ describe('Accordion Pattern', () => {
         element: signal(createAccordionTriggerElement()),
         disabled: signal(false),
         panelId: signal('panel-3'),
+        expanded: signal(false),
       },
     ];
     triggerPatterns = [
@@ -141,12 +144,6 @@ describe('Accordion Pattern', () => {
     groupInputs.items.set(triggerPatterns);
   });
 
-  it('expands a panel by setting `value`.', () => {
-    expect(triggerPatterns[0].expanded()).toBeFalse();
-    groupInputs.expandedIds.set(['panel-1']);
-    expect(triggerPatterns[0].expanded()).toBeTrue();
-  });
-
   it('gets a controlled panel id from a trigger.', () => {
     expect(panelPatterns[0].id()).toBe('panel-1-id');
     expect(triggerPatterns[0].controls()).toBe('panel-1-id');
@@ -159,47 +156,49 @@ describe('Accordion Pattern', () => {
   describe('Keyboard Navigation', () => {
     it('does not handle keyboard event if an accordion group is disabled.', () => {
       groupInputs.disabled.set(true);
-      triggerPatterns[0].onKeydown(space());
+      groupInputs.activeItem.set(triggerPatterns[0]);
+      groupPattern.onKeydown(space());
       expect(panelPatterns[0].hidden()).toBeTrue();
     });
 
     it('does not handle keyboard event if an accordion trigger is disabled.', () => {
       triggerInputs[0].disabled.set(true);
-      triggerPatterns[0].onKeydown(space());
+      groupInputs.activeItem.set(triggerPatterns[0]);
+      groupPattern.onKeydown(space());
       expect(panelPatterns[0].hidden()).toBeTrue();
     });
 
     it('navigates to first accordion trigger with home key.', () => {
-      groupInputs.activeItem.set(groupInputs.items()[2]);
+      groupInputs.activeItem.set(triggerPatterns[2]);
       expect(triggerPatterns[2].active()).toBeTrue();
-      triggerPatterns[2].onKeydown(home());
+      groupPattern.onKeydown(home());
       expect(triggerPatterns[2].active()).toBeFalse();
       expect(triggerPatterns[0].active()).toBeTrue();
     });
 
     it('navigates to last accordion trigger with end key.', () => {
-      groupInputs.activeItem.set(groupInputs.items()[0]);
+      groupInputs.activeItem.set(triggerPatterns[0]);
       expect(triggerPatterns[0].active()).toBeTrue();
-      triggerPatterns[0].onKeydown(end());
+      groupPattern.onKeydown(end());
       expect(triggerPatterns[0].active()).toBeFalse();
       expect(triggerPatterns[2].active()).toBeTrue();
     });
 
     describe('Vertical Orientation (orientation=vertical)', () => {
       it('navigates to the next trigger with down key.', () => {
-        groupInputs.activeItem.set(groupInputs.items()[0]);
+        groupInputs.activeItem.set(triggerPatterns[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
-        triggerPatterns[0].onKeydown(down());
+        groupPattern.onKeydown(down());
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
       });
 
       it('navigates to the previous trigger with up key.', () => {
-        groupInputs.activeItem.set(groupInputs.items()[1]);
+        groupInputs.activeItem.set(triggerPatterns[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
-        triggerPatterns[1].onKeydown(up());
+        groupPattern.onKeydown(up());
         expect(triggerPatterns[1].active()).toBeFalse();
         expect(triggerPatterns[0].active()).toBeTrue();
       });
@@ -210,19 +209,19 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the last trigger with up key from first trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[0]);
+          groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
-          triggerPatterns[0].onKeydown(up());
+          groupPattern.onKeydown(up());
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
         });
 
         it('navigates to the first trigger with down key from last trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[2]);
+          groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
-          triggerPatterns[2].onKeydown(down());
+          groupPattern.onKeydown(down());
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
         });
@@ -234,16 +233,16 @@ describe('Accordion Pattern', () => {
         });
 
         it('stays on the first trigger with up key from first trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[0]);
+          groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
-          triggerPatterns[0].onKeydown(up());
+          groupPattern.onKeydown(up());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with down key from last trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[2]);
+          groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
-          triggerPatterns[2].onKeydown(down());
+          groupPattern.onKeydown(down());
           expect(triggerPatterns[2].active()).toBeTrue();
         });
       });
@@ -255,19 +254,19 @@ describe('Accordion Pattern', () => {
       });
 
       it('navigates to the next trigger with right key.', () => {
-        groupInputs.activeItem.set(groupInputs.items()[0]);
+        groupInputs.activeItem.set(triggerPatterns[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
-        triggerPatterns[0].onKeydown(right());
+        groupPattern.onKeydown(right());
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
       });
 
       it('navigates to the previous trigger with left key.', () => {
-        groupInputs.activeItem.set(groupInputs.items()[1]);
+        groupInputs.activeItem.set(triggerPatterns[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
-        triggerPatterns[1].onKeydown(left());
+        groupPattern.onKeydown(left());
         expect(triggerPatterns[1].active()).toBeFalse();
         expect(triggerPatterns[0].active()).toBeTrue();
       });
@@ -278,19 +277,19 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the last trigger with left key from first trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[0]);
+          groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
-          triggerPatterns[0].onKeydown(left());
+          groupPattern.onKeydown(left());
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
         });
 
         it('navigates to the first trigger with right key from last trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[2]);
+          groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
           expect(triggerPatterns[0].active()).toBeFalse();
-          triggerPatterns[2].onKeydown(right());
+          groupPattern.onKeydown(right());
           expect(triggerPatterns[2].active()).toBeFalse();
           expect(triggerPatterns[0].active()).toBeTrue();
         });
@@ -302,16 +301,16 @@ describe('Accordion Pattern', () => {
         });
 
         it('stays on the first trigger with left key from first trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[0]);
+          groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
-          triggerPatterns[0].onKeydown(left());
+          groupPattern.onKeydown(left());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with right key from last trigger.', () => {
-          groupInputs.activeItem.set(groupInputs.items()[2]);
+          groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
-          triggerPatterns[2].onKeydown(right());
+          groupPattern.onKeydown(right());
           expect(triggerPatterns[2].active()).toBeTrue();
         });
       });
@@ -323,21 +322,21 @@ describe('Accordion Pattern', () => {
       });
 
       it('expands a panel and collapses others with space key.', () => {
-        groupInputs.expandedIds.set(['panel-2']);
+        triggerPatterns[1].expanded.set(true);
         expect(panelPatterns[0].hidden()).toBeTrue();
         expect(panelPatterns[1].hidden()).toBeFalse();
 
-        triggerPatterns[0].onKeydown(space());
+        groupPattern.onKeydown(space());
         expect(panelPatterns[0].hidden()).toBeFalse();
         expect(panelPatterns[1].hidden()).toBeTrue();
       });
 
       it('expands a panel and collapses others with enter key.', () => {
-        groupInputs.expandedIds.set(['panel-2']);
+        triggerPatterns[1].expanded.set(true);
         expect(panelPatterns[0].hidden()).toBeTrue();
         expect(panelPatterns[1].hidden()).toBeFalse();
 
-        triggerPatterns[0].onKeydown(space());
+        groupPattern.onKeydown(space());
         expect(panelPatterns[0].hidden()).toBeFalse();
         expect(panelPatterns[1].hidden()).toBeTrue();
       });
@@ -349,21 +348,22 @@ describe('Accordion Pattern', () => {
       });
 
       it('expands a panel without affecting other panels.', () => {
-        groupInputs.expandedIds.set(['panel-2']);
+        triggerPatterns[1].expanded.set(true);
         expect(panelPatterns[0].hidden()).toBeTrue();
         expect(panelPatterns[1].hidden()).toBeFalse();
 
-        triggerPatterns[0].onKeydown(space());
+        groupPattern.onKeydown(space());
         expect(panelPatterns[0].hidden()).toBeFalse();
         expect(panelPatterns[1].hidden()).toBeFalse();
       });
 
       it('collapses a panel without affecting other panels.', () => {
-        groupInputs.expandedIds.set(['panel-1', 'panel-2']);
+        triggerPatterns[0].expanded.set(true);
+        triggerPatterns[1].expanded.set(true);
         expect(panelPatterns[0].hidden()).toBeFalse();
         expect(panelPatterns[1].hidden()).toBeFalse();
 
-        triggerPatterns[0].onKeydown(enter());
+        groupPattern.onKeydown(enter());
         expect(panelPatterns[0].hidden()).toBeTrue();
         expect(panelPatterns[1].hidden()).toBeFalse();
       });

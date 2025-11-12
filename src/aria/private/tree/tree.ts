@@ -6,14 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
+import {computed} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
-import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expansion/expansion';
+import {ExpansionItem, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
-export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'> {
+export interface TreeItemInputs<V>
+  extends Omit<ListItem<V>, 'index'>,
+    Omit<ExpansionItem, 'expandable'> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 
@@ -32,52 +34,46 @@ export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'> {
  */
 export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
   /** A unique identifier for this item. */
-  readonly id: SignalLike<string>;
+  readonly id: SignalLike<string> = () => this.inputs.id();
 
   /** The value of this item. */
-  readonly value: SignalLike<V>;
+  readonly value: SignalLike<V> = () => this.inputs.value();
 
   /** A reference to the item element. */
-  readonly element: SignalLike<HTMLElement | undefined>;
+  readonly element: SignalLike<HTMLElement> = () => this.inputs.element()!;
 
   /** Whether the item is disabled. */
-  readonly disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
   /** The text used by the typeahead search. */
-  readonly searchTerm: SignalLike<string>;
+  readonly searchTerm: SignalLike<string> = () => this.inputs.searchTerm();
 
   /** The tree pattern this item belongs to. */
-  readonly tree: SignalLike<TreePattern<V>>;
+  readonly tree: SignalLike<TreePattern<V>> = () => this.inputs.tree();
 
   /** The parent item. */
-  readonly parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
+  readonly parent: SignalLike<TreeItemPattern<V> | TreePattern<V>> = () => this.inputs.parent();
 
   /** The children items. */
-  readonly children: SignalLike<TreeItemPattern<V>[]>;
+  readonly children: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.children();
 
   /** The position of this item among its siblings. */
   readonly index = computed(() => this.tree().visibleItems().indexOf(this));
 
-  /** The unique identifier used by the expansion behavior. */
-  readonly expansionId: SignalLike<string>;
-
   /** Controls expansion for child items. */
-  readonly expansionManager: ListExpansion;
-
-  /** Controls expansion for this item. */
-  readonly expansion: ExpansionControl;
+  readonly expansionBehavior: ListExpansion;
 
   /** Whether the item is expandable. It's expandable if children item exist. */
-  readonly expandable: SignalLike<boolean>;
+  readonly expandable: SignalLike<boolean> = () => this.inputs.hasChildren();
 
   /** Whether the item is selectable. */
-  readonly selectable: SignalLike<boolean>;
+  readonly selectable: SignalLike<boolean> = () => this.inputs.selectable();
+
+  /** Whether the item is expanded. */
+  readonly expanded: WritableSignalLike<boolean>;
 
   /** The level of the current item in a tree. */
   readonly level: SignalLike<number> = computed(() => this.parent().level() + 1);
-
-  /** Whether this item is currently expanded. */
-  readonly expanded = computed(() => this.expansion.isExpanded());
 
   /** Whether this item is visible. */
   readonly visible: SignalLike<boolean> = computed(
@@ -119,28 +115,10 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
   });
 
   constructor(readonly inputs: TreeItemInputs<V>) {
-    this.id = inputs.id;
-    this.value = inputs.value;
-    this.element = inputs.element;
-    this.disabled = inputs.disabled;
-    this.searchTerm = inputs.searchTerm;
-    this.expansionId = inputs.id;
-    this.tree = inputs.tree;
-    this.parent = inputs.parent;
-    this.children = inputs.children;
-    this.expandable = inputs.hasChildren;
-    this.selectable = inputs.selectable;
-    this.expansion = new ExpansionControl({
-      ...inputs,
-      expandable: this.expandable,
-      expansionId: this.expansionId,
-      expansionManager: this.parent().expansionManager,
-    });
-    this.expansionManager = new ListExpansion({
+    this.expanded = inputs.expanded;
+    this.expansionBehavior = new ListExpansion({
       ...inputs,
       multiExpandable: () => true,
-      // TODO(ok7sai): allow pre-expanded tree items.
-      expandedIds: signal([]),
       items: this.children,
       disabled: computed(() => this.tree()?.disabled() ?? false),
     });
@@ -170,14 +148,13 @@ export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, '
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
 }
 
-export interface TreePattern<V> extends TreeInputs<V> {}
 /** Controls the state and interactions of a tree view. */
-export class TreePattern<V> {
+export class TreePattern<V> implements TreeInputs<V> {
   /** The list behavior for the tree. */
   readonly listBehavior: List<TreeItemPattern<V>, V>;
 
   /** Controls expansion for direct children of the tree root (top-level items). */
-  readonly expansionManager: ListExpansion;
+  readonly expansionBehavior: ListExpansion;
 
   /** The root level is 0. */
   readonly level = () => 0;
@@ -337,62 +314,57 @@ export class TreePattern<V> {
   });
 
   /** A unique identifier for the tree. */
-  id: SignalLike<string>;
+  readonly id: SignalLike<string> = () => this.inputs.id();
+
+  /** The host native element. */
+  readonly element: SignalLike<HTMLElement> = () => this.inputs.element()!;
 
   /** Whether the tree is in navigation mode. */
-  nav: SignalLike<boolean>;
+  readonly nav: SignalLike<boolean> = () => this.inputs.nav();
 
   /** The aria-current type. */
-  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+  readonly currentType: SignalLike<
+    'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'
+  > = () => this.inputs.currentType();
 
   /** All items in the tree, in document order (DFS-like, a flattened list). */
-  allItems: SignalLike<TreeItemPattern<V>[]>;
+  readonly allItems: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.allItems();
+
+  /** The focus strategy used by the tree. */
+  readonly focusMode: SignalLike<'roving' | 'activedescendant'> = () => this.inputs.focusMode();
 
   /** Whether the tree is disabled. */
-  disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
   /** The currently active item in the tree. */
-  activeItem: WritableSignalLike<TreeItemPattern<V> | undefined> = signal(undefined);
+  readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
 
   /** Whether disabled items should be focusable. */
-  softDisabled: SignalLike<boolean>;
+  readonly softDisabled: SignalLike<boolean> = () => this.inputs.softDisabled();
 
   /** Whether the focus should wrap when navigating past the first or last item. */
-  wrap: SignalLike<boolean>;
+  readonly wrap: SignalLike<boolean> = () => this.inputs.wrap();
 
   /** The orientation of the tree. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
 
   /** The text direction of the tree. */
-  textDirection: SignalLike<'ltr' | 'rtl'>;
+  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.textDirection();
 
   /** Whether multiple items can be selected at the same time. */
-  multi: SignalLike<boolean>;
+  readonly multi: SignalLike<boolean> = computed(() => (this.nav() ? false : this.inputs.multi()));
 
   /** The selection mode of the tree. */
-  selectionMode: SignalLike<'follow' | 'explicit'>;
+  readonly selectionMode: SignalLike<'follow' | 'explicit'> = () => this.inputs.selectionMode();
 
   /** The delay in milliseconds to wait before clearing the typeahead buffer. */
-  typeaheadDelay: SignalLike<number>;
+  readonly typeaheadDelay: SignalLike<number> = () => this.inputs.typeaheadDelay();
 
   /** The current selected items of the tree. */
-  values: WritableSignalLike<V[]>;
+  readonly values: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
-    this.id = inputs.id;
-    this.nav = inputs.nav;
-    this.currentType = inputs.currentType;
-    this.allItems = inputs.allItems;
-    this.focusMode = inputs.focusMode;
-    this.disabled = inputs.disabled;
     this.activeItem = inputs.activeItem;
-    this.softDisabled = inputs.softDisabled;
-    this.wrap = inputs.wrap;
-    this.orientation = inputs.orientation;
-    this.textDirection = inputs.textDirection;
-    this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
-    this.selectionMode = inputs.selectionMode;
-    this.typeaheadDelay = inputs.typeaheadDelay;
     this.values = inputs.values;
 
     this.listBehavior = new List({
@@ -401,10 +373,8 @@ export class TreePattern<V> {
       multi: this.multi,
     });
 
-    this.expansionManager = new ListExpansion({
+    this.expansionBehavior = new ListExpansion({
       multiExpandable: () => true,
-      // TODO(ok7sai): allow pre-expanded tree items.
-      expandedIds: signal([]),
       items: this.children,
       disabled: this.disabled,
     });
@@ -470,7 +440,7 @@ export class TreePattern<V> {
     if (item.expanded()) {
       this.collapse();
     } else {
-      item.expansion.open();
+      this.expansionBehavior.open(item);
     }
   }
 
@@ -480,7 +450,7 @@ export class TreePattern<V> {
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && !item.expanded()) {
-      item.expansion.open();
+      this.expansionBehavior.open(item);
     } else if (
       item.expanded() &&
       item.children().some(item => this.listBehavior.isFocusable(item))
@@ -493,7 +463,7 @@ export class TreePattern<V> {
   expandSiblings(item?: TreeItemPattern<V>) {
     item ??= this.activeItem();
     const siblings = item?.parent()?.children();
-    siblings?.forEach(item => item.expansion.open());
+    siblings?.forEach(item => this.expansionBehavior.open(item));
   }
 
   /** Collapses a tree item. */
@@ -502,7 +472,7 @@ export class TreePattern<V> {
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && item.expanded()) {
-      item.expansion.close();
+      this.expansionBehavior.close(item);
     } else if (item.parent() && item.parent() !== this) {
       const parentItem = item.parent();
       if (parentItem instanceof TreeItemPattern && this.listBehavior.isFocusable(parentItem)) {
