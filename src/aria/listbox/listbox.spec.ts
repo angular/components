@@ -724,7 +724,7 @@ describe('Listbox', () => {
       });
 
       it('should reset search term after typeaheadDelay', async () => {
-        setupListbox({options: getOptions(), focusMode, typeaheadDelay: 0.1});
+        setupListbox({options: getOptions(), focusMode, typeaheadDelay: 100});
 
         type('A');
         expect(isFocused(1)).toBe(true);
@@ -817,7 +817,7 @@ class ListboxExample {
   multi = false;
   wrap = true;
   selectionMode: 'follow' | 'explicit' = 'explicit';
-  typeaheadDelay = 0.5;
+  typeaheadDelay = 500;
 }
 
 @Component({

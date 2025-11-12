@@ -192,8 +192,8 @@ export class Menu<V> {
   /** Whether the menu should wrap its items. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
-  /** The delay in seconds before the typeahead buffer is cleared. */
-  readonly typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
+  /** The delay in milliseconds before the typeahead buffer is cleared. */
+  readonly typeaheadDelay = input<number>(500); // Picked arbitrarily.
 
   /** Whether the menu is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -222,8 +222,8 @@ export class Menu<V> {
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
 
-  /** The delay in seconds before expanding sub-menus on hover. */
-  readonly expansionDelay = input<number>(0.1); // Arbitrarily chosen.
+  /** The delay in milliseconds before expanding sub-menus on hover. */
+  readonly expansionDelay = input<number>(100); // Arbitrarily chosen.
 
   constructor() {
     this._pattern = new MenuPattern({
@@ -344,8 +344,8 @@ export class MenuBar<V> {
   /** Whether the menu should wrap its items. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
-  /** The delay in seconds before the typeahead buffer is cleared. */
-  readonly typeaheadDelay = input<number>(0.5);
+  /** The delay in milliseconds before the typeahead buffer is cleared. */
+  readonly typeaheadDelay = input<number>(500);
 
   /** The menu ui pattern instance. */
   readonly _pattern: MenuBarPattern<V>;

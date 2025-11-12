@@ -232,7 +232,7 @@ export class MenuPattern<V> {
       this._closeTimeout = setTimeout(() => {
         item.close();
         this._closeTimeout = undefined;
-      }, this.inputs.expansionDelay() * 1000);
+      }, this.inputs.expansionDelay());
     }
   }
 
@@ -243,7 +243,7 @@ export class MenuPattern<V> {
     this._openTimeout = setTimeout(() => {
       item.open();
       this._openTimeout = undefined;
-    }, this.inputs.expansionDelay() * 1000);
+    }, this.inputs.expansionDelay());
   }
 
   /** Handles mouseout events for the menu. */
