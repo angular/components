@@ -24,7 +24,23 @@ import {Directionality} from '@angular/cdk/bidi';
 import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
 
 /**
- * A directive that provides grid-based navigation and selection behavior.
+ * The container for a grid. It provides keyboard navigation and focus management for the grid's
+ * rows and cells. It manages the overall behavior of the grid, including focus
+ * wrapping, selection, and disabled states.
+ *
+ * ```html
+ * <table ngGrid [multi]="true" [enableSelection]="true">
+ *   @for (row of gridData; track row) {
+ *     <tr ngGridRow>
+ *       @for (cell of row; track cell) {
+ *         <td ngGridCell [disabled]="cell.disabled">
+ *           {{cell.value}}
+ *         </td>
+ *       }
+ *     </tr>
+ *   }
+ * </table>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -69,22 +85,43 @@ export class Grid {
   /** Whether the grid is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** Whether to allow disabled items to receive focus. */
+  /**
+   * Whether to allow disabled items to receive focus. When `true`, disabled items are
+   * focusable but not interactive. When `false`, disabled items are skipped during navigation.
+   */
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
-  /** The focus strategy used by the grid. */
+  /**
+   * The focus strategy used by the grid.
+   * - `roving`: Focus is moved to the active cell using `tabindex`.
+   * - `activedescendant`: Focus remains on the grid container, and `aria-activedescendant` is used to indicate the active cell.
+   */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');
 
-  /** The wrapping behavior for keyboard navigation along the row axis. */
+  /**
+   * The wrapping behavior for keyboard navigation along the row axis.
+   * - `continuous`: Navigation wraps from the last row to the first, and vice-versa.
+   * - `loop`: Navigation wraps within the current row.
+   * - `nowrap`: Navigation stops at the first/last item in the row.
+   */
   readonly rowWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
-  /** The wrapping behavior for keyboard navigation along the column axis. */
+  /**
+   * The wrapping behavior for keyboard navigation along the column axis.
+   * - `continuous`: Navigation wraps from the last column to the first, and vice-versa.
+   * - `loop`: Navigation wraps within the current column.
+   * - `nowrap`: Navigation stops at the first/last item in the column.
+   */
   readonly colWrap = input<'continuous' | 'loop' | 'nowrap'>('loop');
 
   /** Whether multiple cells in the grid can be selected. */
   readonly multi = input(false, {transform: booleanAttribute});
 
-  /** The selection strategy used by the grid. */
+  /**
+   * The selection strategy used by the grid.
+   * - `follow`: The focused cell is automatically selected.
+   * - `explicit`: Cells are selected explicitly by the user (e.g., via click or spacebar).
+   */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** Whether enable range selections (with modifier keys or dragging). */
@@ -124,7 +161,13 @@ export class Grid {
 }
 
 /**
- * A directive that represents a row in a grid.
+ * Represents a row within a grid. It is a container for `ngGridCell` directives.
+ *
+ * ```html
+ * <tr ngGridRow>
+ *   <!-- ... cells ... -->
+ * </tr>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -171,7 +214,15 @@ export class GridRow {
 }
 
 /**
- * A directive that represents a cell in a grid.
+ * Represents a cell within a grid row. It is the primary focusable element
+ * within the grid. It can be disabled and can have its selection state managed
+ * through the `selected` input.
+ *
+ * ```html
+ * <td ngGridCell [disabled]="isDisabled" [(selected)]="isSelected">
+ *   Cell Content
+ * </td>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -251,7 +302,18 @@ export class GridCell {
 }
 
 /**
- * A directive that represents a widget inside a grid cell.
+ * Represents an interactive element inside a `GridCell`. It allows for pausing grid navigation to
+ * interact with the widget.
+ *
+ * When the user interacts with the widget (e.g., by typing in an input or opening a menu), grid
+ * navigation is temporarily suspended to allow the widget to handle keyboard
+ * events.
+ *
+ * ```html
+ * <td ngGridCell>
+ *   <button ngGridCellWidget>Click Me</button>
+ * </td>
+ * ```
  *
  * @developerPreview 21.0
  */
