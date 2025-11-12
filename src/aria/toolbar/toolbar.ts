@@ -43,20 +43,20 @@ function sortDirectives(a: HasElement, b: HasElement) {
 }
 
 /**
- * A toolbar widget container.
- *
- * Widgets such as radio groups or buttons are nested within a toolbar to allow for a single
- * place of reference for focus and navigation. The Toolbar is meant to be used in conjunction
- * with ToolbarWidget and RadioGroup as follows:
+ * A toolbar widget container for a group of interactive widgets, such as
+ * buttons or radio groups. It provides a single point of reference for keyboard navigation
+ * and focus management. It supports various orientations and disabled states.
  *
  * ```html
- * <div ngToolbar>
- *  <button ngToolbarWidget>Button</button>
- *  <div ngRadioGroup>
- *    <label ngRadioButton value="1">Option 1</label>
- *    <label ngRadioButton value="2">Option 2</label>
- *    <label ngRadioButton value="3">Option 3</label>
- *  </div>
+ * <div ngToolbar orientation="horizontal" [wrap]="true">
+ *   <button ngToolbarWidget value="save">Save</button>
+ *   <button ngToolbarWidget value="print">Print</button>
+ *
+ *   <div ngToolbarWidgetGroup [(value)]="selectedAlignment">
+ *     <button ngToolbarWidget value="left">Left</button>
+ *     <button ngToolbarWidget value="center">Center</button>
+ *     <button ngToolbarWidget value="right">Right</button>
+ *   </div>
  * </div>
  * ```
  *
@@ -95,7 +95,10 @@ export class Toolbar<V> {
   /** Whether the toolbar is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
 
-  /** Whether to allow disabled items to receive focus. */
+  /**
+   * Whether to allow disabled items to receive focus. When `true`, disabled items are
+   * focusable but not interactive. When `false`, disabled items are skipped during navigation.
+   */
   softDisabled = input(true, {transform: booleanAttribute});
 
   /** Whether the toolbar is disabled. */
@@ -162,8 +165,15 @@ export class Toolbar<V> {
 /**
  * A widget within a toolbar.
  *
- * A widget is anything that is within a toolbar. It should be applied to any native HTML element
- * that has the purpose of acting as a widget navigatable within a toolbar.
+ * The `ngToolbarWidget` directive should be applied to any native HTML element that acts
+ * as an interactive widget within an `ngToolbar` or `ngToolbarWidgetGroup`. It enables
+ * keyboard navigation and selection within the toolbar.
+ *
+ * ```html
+ * <button ngToolbarWidget value="action-id" [disabled]="isDisabled">
+ *   Perform Action
+ * </button>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -238,8 +248,8 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 }
 
 /**
- * A directive that groups toolbar widgets, used for more complex widgets like radio groups that
- * have their own internal navigation.
+ * A directive that groups toolbar widgets, used for more complex widgets like radio groups
+ * that have their own internal navigation.
  *
  * @developerPreview 21.0
  */

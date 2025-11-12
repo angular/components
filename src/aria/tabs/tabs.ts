@@ -47,26 +47,28 @@ function sortDirectives(a: HasElement, b: HasElement) {
 /**
  * A Tabs container.
  *
- * Represents a set of layered sections of content. The Tabs is a container meant to be used with
- * TabList, Tab, and TabPanel as follows:
+ * The `ngTabs` directive represents a set of layered sections of content. It acts as the
+ * overarching container for a tabbed interface, coordinating the behavior of `ngTabList`,
+ * `ngTab`, and `ngTabPanel` directives.
  *
  * ```html
  * <div ngTabs>
- *   <ul ngTabList>
+ *   <ul ngTabList [(selectedTab)]="selectedTabValue">
  *     <li ngTab value="tab1">Tab 1</li>
  *     <li ngTab value="tab2">Tab 2</li>
  *     <li ngTab value="tab3">Tab 3</li>
  *   </ul>
  *
  *   <div ngTabPanel value="tab1">
- *      <ng-template ngTabContent>Tab content 1</ng-template>
+ *      <ng-template ngTabContent>Content for Tab 1</ng-template>
  *   </div>
  *   <div ngTabPanel value="tab2">
- *      <ng-template ngTabContent>Tab content 2</ng-template>
+ *      <ng-template ngTabContent>Content for Tab 2</ng-template>
  *   </div>
  *   <div ngTabPanel value="tab3">
- *      <ng-template ngTabContent>Tab content 3</ng-template>
+ *      <ng-template ngTabContent>Content for Tab 3</ng-template>
  *   </div>
+ * </div>
  * ```
  *
  * @developerPreview 21.0
@@ -126,7 +128,16 @@ export class Tabs {
 /**
  * A TabList container.
  *
- * Controls a list of Tab(s).
+ * The `ngTabList` directive controls a list of `ngTab` elements. It manages keyboard
+ * navigation, selection, and the overall orientation of the tabs. It should be placed
+ * within an `ngTabs` container.
+ *
+ * ```html
+ * <ul ngTabList [(selectedTab)]="mySelectedTab" orientation="horizontal" selectionMode="explicit">
+ *   <li ngTab value="first">First Tab</li>
+ *   <li ngTab value="second">Second Tab</li>
+ * </ul>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -174,19 +185,30 @@ export class TabList implements OnInit, OnDestroy {
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
-  /** Whether to allow disabled items to receive focus. */
+  /**
+   * Whether to allow disabled items to receive focus. When `true`, disabled items are
+   * focusable but not interactive. When `false`, disabled items are skipped during navigation.
+   */
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
-  /** The focus strategy used by the tablist. */
+  /**
+   * The focus strategy used by the tablist.
+   * - `roving`: Focus is moved to the active tab using `tabindex`.
+   * - `activedescendant`: Focus remains on the tablist container, and `aria-activedescendant` is used to indicate the active tab.
+   */
   readonly focusMode = input<'roving' | 'activedescendant'>('roving');
 
-  /** The selection strategy used by the tablist. */
+  /**
+   * The selection strategy used by the tablist.
+   * - `follow`: The focused tab is automatically selected.
+   * - `explicit`: Tabs are selected explicitly by the user (e.g., via click or spacebar).
+   */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** Whether the tablist is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** The current selected tab. */
+  /** The currently selected tab. */
   readonly selectedTab = model<string | undefined>();
 
   /** The TabList UIPattern. */
@@ -236,6 +258,15 @@ export class TabList implements OnInit, OnDestroy {
 
 /**
  * A selectable tab in a TabList.
+ *
+ * The `ngTab` directive represents an individual tab control within an `ngTabList`. It
+ * requires a `value` that uniquely identifies it and links it to a corresponding `ngTabPanel`.
+ *
+ * ```html
+ * <li ngTab value="myTabId" [disabled]="isTabDisabled">
+ *   My Tab Label
+ * </li>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -318,10 +349,17 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
  *
- * If a tabpanel is hidden due to its corresponding tab is not activated, the `inert` attribute
- * will be applied to the tabpanel element to remove it from the accessibility tree and stop
- * all the keyboard and pointer interactions. Note that this does not visually hide the tabpenl
- * and a proper styling is required.
+ * The `ngTabPanel` directive holds the content for a specific tab. It is linked to an
+ * `ngTab` by a matching `value`. If a tab panel is hidden, the `inert` attribute will be
+ * applied to remove it from the accessibility tree. Proper styling is required for visual hiding.
+ *
+ * ```html
+ * <div ngTabPanel value="myTabId">
+ *   <ng-template ngTabContent>
+ *     <!-- Content for the tab panel -->
+ *   </ng-template>
+ * </div>
+ * ```
  *
  * @developerPreview 21.0
  */
@@ -384,6 +422,18 @@ export class TabPanel implements OnInit, OnDestroy {
 
 /**
  * A TabContent container for the lazy-loaded content.
+ *
+ * This structural directive should be applied to an `ng-template` within an `ngTabPanel`.
+ * It enables lazy loading of the tab's content, meaning the content is only rendered
+ * when the tab is activated for the first time.
+ *
+ * ```html
+ * <div ngTabPanel value="myTabId">
+ *   <ng-template ngTabContent>
+ *     <p>This content will be loaded when 'myTabId' is selected.</p>
+ *   </ng-template>
+ * </div>
+ * ```
  *
  * @developerPreview 21.0
  */
