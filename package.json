@@ -15,7 +15,6 @@
     "pnpm": "10.23.0"
   },
   "scripts": {
-    "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
     "ng-dev:stamp": "pnpm -s ng-dev release build-env-stamp --additional-stamping-script=tools/bazel-additional-stamp.mjs",
     "build": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-packages-dist-main.mts",
     "build-docs-content": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-docs-content-main.mts",
