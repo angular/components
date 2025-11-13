@@ -266,6 +266,11 @@ export class Menu<V> {
     });
   }
 
+  /** Opens the menu. */
+  open() {
+    this._pattern.open();
+  }
+
   /** Closes the menu. */
   close() {
     this._pattern.close();
