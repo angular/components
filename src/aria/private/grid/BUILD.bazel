@@ -14,7 +14,8 @@ ts_project(
         "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/event-manager",
         "//src/aria/private/behaviors/grid",
-        "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/list-focus",
+        "//src/aria/private/behaviors/list-navigation",
         "//src/aria/private/behaviors/signal-like",
     ],
 )

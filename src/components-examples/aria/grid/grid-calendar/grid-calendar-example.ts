@@ -88,6 +88,9 @@ export class GridCalendarExample<D> {
     this._createWeekCells(this.viewMonth()),
   );
 
+  readonly scrolledUp = signal(false);
+  readonly scrolledDown = signal(false);
+
   constructor() {
     afterRenderEffect(() => {
       for (const day of this.weeks().flat()) {

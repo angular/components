@@ -329,7 +329,7 @@ export class Grid<T extends GridCell> {
         return true;
       }
 
-      // If the cooridnates no longer valid, go back to the first available cell.
+      // If the coordinates no longer valid, go back to the first available cell.
       if (this.focusBehavior.focusCoordinates(this.navigationBehavior.peekFirst()!)) {
         return true;
       }

@@ -6,10 +6,10 @@
   <div ngGrid class="example-pill-list" colWrap="continuous" #grid="ngGrid">
     @for (item of sortedItems(); track item; let i = $index) {
       <div ngGridRow class="example-pill">
-        <div ngGridCell class="example-pill-label example-stateful example-grid-cell">
+        <div ngGridCell class="example-pill-label example-cell">
           {{item.label}}
         </div>
-        <div ngGridCell class="example-pill-action example-stateful example-grid-cell">
+        <div ngGridCell class="example-pill-action example-cell">
           <button ngGridCellWidget class="example-pill-button" (click)="removeItem(i)">
             <mat-icon>close</mat-icon>
           </button>
