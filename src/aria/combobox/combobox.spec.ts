@@ -33,7 +33,7 @@ describe('Combobox', () => {
 
     const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
       focus();
-      element.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, ...eventInit}));
+      element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
       fixture.detectChanges();
     };
 
@@ -584,7 +584,7 @@ describe('Combobox', () => {
 
     const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
       focus();
-      element.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, ...eventInit}));
+      element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
       fixture.detectChanges();
     };
 
