@@ -20,7 +20,9 @@
 [ngComboboxInput] {
   opacity: 0;
   cursor: pointer;
-  padding: 0.75rem 3rem 0.75rem 1rem;
+  padding: 0 3rem;
+  height: 3rem;
+  border: none;
 }
 
 [ngCombobox]:focus-within .example-select {
@@ -29,7 +31,7 @@
 }
 
 .example-combobox-text {
-  left: 1rem;
+  left: 2rem;
   position: absolute;
 }
 
@@ -80,10 +82,10 @@
   display: flex;
   cursor: pointer;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   color: var(--mat-sys-on-surface);
   font-size: var(--mat-sys-label-large);
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: var(--mat-sys-corner-extra-large);
 }
 
 [ngOption]:hover {
