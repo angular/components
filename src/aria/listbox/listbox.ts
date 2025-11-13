@@ -228,7 +228,7 @@ export class Listbox<V> {
   exportAs: 'ngOption',
   host: {
     'role': 'option',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-selected]': '_pattern.selected()',
@@ -241,6 +241,9 @@ export class Option<V> {
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
+
+  /** Whether the option is currently active (focused). */
+  active = computed(() => this._pattern.active());
 
   /** The parent Listbox. */
   private readonly _listbox = inject(Listbox);
