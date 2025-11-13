@@ -236,7 +236,7 @@ export class GridRow {
     '[attr.id]': '_pattern.id()',
     '[attr.rowspan]': '_pattern.rowSpan()',
     '[attr.colspan]': '_pattern.colSpan()',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.data-anchor]': '_pattern.anchor()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-rowspan]': '_pattern.rowSpan()',
@@ -253,6 +253,9 @@ export class GridCell {
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
+
+  /** Whether the cell is currently active (focused). */
+  readonly active = computed(() => this._pattern.active());
 
   /** The widgets contained within this cell, if any. */
   private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
@@ -362,7 +365,7 @@ export class GridCell {
   exportAs: 'ngGridCellWidget',
   host: {
     'class': 'grid-cell-widget',
-    '[attr.data-active]': '_pattern.active()',
+    '[attr.data-active]': 'active()',
     '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
     '[tabindex]': '_tabIndex()',
   },
@@ -373,6 +376,9 @@ export class GridCellWidget {
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
+
+  /** Whether the widget is currently active (focused). */
+  readonly active = computed(() => this._pattern.active());
 
   /** The parent cell. */
   private readonly _cell = inject(GridCell);
