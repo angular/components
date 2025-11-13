@@ -71,8 +71,11 @@ export class Listbox<V> {
     optional: true,
   });
 
-  /** A reference to the listbox element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
@@ -233,8 +236,11 @@ export class Listbox<V> {
   },
 })
 export class Option<V> {
-  /** A reference to the option element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Listbox. */
   private readonly _listbox = inject(Listbox);
@@ -245,13 +251,10 @@ export class Option<V> {
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
   /** The text used by the typeahead search. */
-  protected searchTerm = computed(() => this.label() ?? this.element().textContent);
+  protected searchTerm = computed(() => this.label() ?? this.element.textContent);
 
   /** The parent Listbox UIPattern. */
   protected listbox = computed(() => this._listbox._pattern);
-
-  /** A reference to the option element to be focused on navigation. */
-  protected element = computed(() => this._elementRef.nativeElement);
 
   /** The value of the option. */
   value = input.required<V>();
@@ -271,7 +274,7 @@ export class Option<V> {
     id: this.id,
     value: this.value,
     listbox: this.listbox,
-    element: this.element,
+    element: () => this.element,
     searchTerm: this.searchTerm,
   });
 }

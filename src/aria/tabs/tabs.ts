@@ -31,14 +31,14 @@ import {
 } from '@angular/aria/private';
 
 interface HasElement {
-  element: Signal<HTMLElement>;
+  element: HTMLElement;
 }
 
 /**
  * Sort directives by their document order.
  */
 function sortDirectives(a: HasElement, b: HasElement) {
-  return (a.element().compareDocumentPosition(b.element()) & Node.DOCUMENT_POSITION_PRECEDING) > 0
+  return (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_PRECEDING) > 0
     ? 1
     : -1;
 }
@@ -77,6 +77,12 @@ function sortDirectives(a: HasElement, b: HasElement) {
   exportAs: 'ngTabs',
 })
 export class Tabs {
+  /** A reference to the host element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The TabList nested inside of the container. */
   private readonly _tablist = signal<TabList | undefined>(undefined);
 
@@ -145,8 +151,11 @@ export class Tabs {
   },
 })
 export class TabList implements OnInit, OnDestroy {
-  /** A reference to the tab list element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Tabs. */
   private readonly _tabs = inject(Tabs);
@@ -283,8 +292,11 @@ export class TabList implements OnInit, OnDestroy {
   },
 })
 export class Tab implements HasElement, OnInit, OnDestroy {
-  /** A reference to the tab element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Tabs. */
   private readonly _tabs = inject(Tabs);
@@ -294,9 +306,6 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The parent TabList UIPattern. */
   readonly tablist = computed(() => this._tabList._pattern);
@@ -324,6 +333,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     tablist: this.tablist,
     tabpanel: this.tabpanel,
     expanded: signal(false),
+    element: () => this.element,
   });
 
   /** Opens this tab panel. */
@@ -375,6 +385,12 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   ],
 })
 export class TabPanel implements OnInit, OnDestroy {
+  /** A reference to the host element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 

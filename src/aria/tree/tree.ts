@@ -34,14 +34,14 @@ import {
 import {ComboboxPopup} from '../combobox';
 
 interface HasElement {
-  element: Signal<HTMLElement>;
+  element: HTMLElement;
 }
 
 /**
  * Sort directives by their document order.
  */
 function sortDirectives(a: HasElement, b: HasElement) {
-  return (a.element().compareDocumentPosition(b.element()) & Node.DOCUMENT_POSITION_PRECEDING) > 0
+  return (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_PRECEDING) > 0
     ? 1
     : -1;
 }
@@ -98,22 +98,22 @@ function sortDirectives(a: HasElement, b: HasElement) {
   hostDirectives: [ComboboxPopup],
 })
 export class Tree<V> {
+  /** A reference to the host element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
     optional: true,
   });
-
-  /** A reference to the tree element. */
-  private readonly _elementRef = inject(ElementRef);
 
   /** All TreeItem instances within this tree. */
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
   /** A unique identifier for the tree. */
   readonly id = input(inject(_IdGenerator).getId('ng-tree-', true));
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Orientation of the tree. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -182,6 +182,7 @@ export class Tree<V> {
       ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
       combobox: () => this._popup?.combobox?._pattern,
+      element: () => this.element,
     };
 
     this._pattern = this._popup?.combobox
@@ -269,17 +270,17 @@ export class Tree<V> {
   },
 })
 export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
-  /** A reference to the tree item element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
 
   /** A unique identifier for the tree item. */
   readonly id = input(inject(_IdGenerator).getId('ng-tree-item-', true));
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The value of the tree item. */
   readonly value = input.required<V>();
@@ -300,7 +301,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   readonly label = input<string>();
 
   /** Search term for typeahead. */
-  readonly searchTerm = computed(() => this.label() ?? this.element().textContent);
+  readonly searchTerm = computed(() => this.label() ?? this.element.textContent);
 
   /** The tree root. */
   readonly tree: Signal<Tree<V>> = computed(() => {
@@ -362,6 +363,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       parent: parentPattern,
       children: computed(() => this._group()?.children() ?? []),
       hasChildren: computed(() => !!this._group()),
+      element: () => this.element,
     });
   }
 
@@ -405,6 +407,12 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   hostDirectives: [DeferredContent],
 })
 export class TreeItemGroup<V> implements OnInit, OnDestroy {
+  /** A reference to the host element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The DeferredContent host directive. */
   private readonly _deferredContent = inject(DeferredContent);
 

@@ -91,6 +91,9 @@ export class Combobox<V> {
   /** The element that the combobox is attached to. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the combobox element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
 
@@ -213,6 +216,9 @@ export class ComboboxInput {
   /** The element that the combobox is attached to. */
   private readonly _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
+  /** A reference to the input element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The combobox that the input belongs to. */
   readonly combobox = inject(Combobox);
 
@@ -330,7 +336,10 @@ export class ComboboxPopup<V> {
 })
 export class ComboboxDialog {
   /** The dialog element. */
-  readonly element = inject(ElementRef<HTMLDialogElement>);
+  private readonly _elementRef = inject(ElementRef<HTMLDialogElement>);
+
+  /** A reference to the dialog element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The combobox that the dialog belongs to. */
   readonly combobox = inject(Combobox);
@@ -345,7 +354,7 @@ export class ComboboxDialog {
   constructor() {
     this._pattern = new ComboboxDialogPattern({
       id: () => '',
-      element: () => this.element.nativeElement,
+      element: () => this._elementRef.nativeElement,
       combobox: this.combobox._pattern,
     });
 
@@ -354,10 +363,10 @@ export class ComboboxDialog {
     }
 
     afterRenderEffect(() => {
-      if (this.element) {
+      if (this._elementRef) {
         this.combobox._pattern.expanded()
-          ? this.element.nativeElement.showModal()
-          : this.element.nativeElement.close();
+          ? this._elementRef.nativeElement.showModal()
+          : this._elementRef.nativeElement.close();
       }
     });
   }
