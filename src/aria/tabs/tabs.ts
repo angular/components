@@ -17,7 +17,6 @@ import {
   input,
   model,
   signal,
-  Signal,
   afterRenderEffect,
   OnInit,
   OnDestroy,
