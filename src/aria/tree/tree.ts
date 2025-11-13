@@ -111,7 +111,7 @@ export class Tree<V> {
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
   /** A unique identifier for the tree. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-tree-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-tree-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -278,7 +278,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
 
   /** A unique identifier for the tree item. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-tree-item-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-tree-item-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
