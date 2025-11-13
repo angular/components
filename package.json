@@ -121,7 +121,7 @@
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
     "magic-string": "0.30.21",
-    "marked": "^16.0.0",
+    "marked": "^17.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",
     "postcss": "^8.4.17",
