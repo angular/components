@@ -1,33 +1,26 @@
-<div ngCombobox #combobox="ngCombobox" class="example-combobox-container" [readonly]="true" [disabled]="true">
-  <div class="example-combobox-input-container">
-    <input
-      ngComboboxInput
-      class="example-combobox-input"
-      placeholder="Search..."
-      [(value)]="searchString"
-    />
-    <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
+<div ngCombobox readonly disabled>
+  <div #origin class="example-select">
+    <span class="combobox-text">{{ displayValue() }}</span>
+    <input aria-label="Label dropdown" placeholder="Select a label" ngComboboxInput />
+    <span class="example-arrow material-symbols-outlined">arrow_drop_down</span>
   </div>
 
-  <div popover="manual" #popover class="example-popover">
+  <ng-template
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="true"
+  >
     <ng-template ngComboboxPopupContainer>
-      <div ngListbox class="example-listbox">
-        @for (option of options(); track option) {
-          <div
-            class="example-option example-selectable example-stateful"
-            ngOption
-            [value]="option"
-            [label]="option"
-          >
-            <span>{{option}}</span>
-            <span
-              aria-hidden="true"
-              class="material-symbols-outlined example-icon example-selected-icon"
-              >check</span
-            >
-          </div>
-        }
+      <div class="example-popup-container">
+        <div ngListbox>
+          @for (label of labels; track label.value) {
+            <div ngOption [value]="label.value" [label]="label.value">
+              <span class="example-option-icon material-symbols-outlined">{{label.icon}}</span>
+              <span class="example-option-text">{{label.value}}</span>
+              <span class="example-option-check material-symbols-outlined">check</span>
+            </div>
+          }
+        </div>
       </div>
     </ng-template>
-  </div>
+  </ng-template>
 </div>

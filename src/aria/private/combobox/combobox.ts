@@ -587,7 +587,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       const selectedItem = popupControls
         ?.items()
         .find(i => popupControls?.getSelectedItems().includes(i));
-      selectedItem ? popupControls?.focus(selectedItem) : this.first();
+
+      if (selectedItem) {
+        popupControls?.focus(selectedItem);
+      }
     }
   }
 

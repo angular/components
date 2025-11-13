@@ -278,6 +278,6 @@ export class Option<V> {
     value: this.value,
     listbox: this.listbox,
     element: () => this.element,
-    searchTerm: this.searchTerm,
+    searchTerm: () => this.searchTerm() ?? '',
   });
 }
