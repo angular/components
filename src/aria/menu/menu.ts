@@ -69,14 +69,14 @@ import {Directionality} from '@angular/cdk/bidi';
   },
 })
 export class MenuTrigger<V> {
-  /** A reference to the menu trigger element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   readonly textDirection = inject(Directionality).valueSignal;
-
-  /** A reference to the menu element. */
-  readonly element: HTMLButtonElement = this._elementRef.nativeElement;
 
   /** The menu associated with the trigger. */
   menu = input<Menu<V> | undefined>(undefined);
@@ -175,11 +175,11 @@ export class Menu<V> {
     this._allItems().filter(i => i.parent === this),
   );
 
-  /** A reference to the menu element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
-  /** A reference to the menu element. */
-  readonly element: HTMLElement = this._elementRef.nativeElement;
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -320,11 +320,11 @@ export class MenuBar<V> {
   readonly _items: SignalLike<MenuItem<V>[]> = () =>
     this._allItems().filter(i => i.parent === this);
 
-  /** A reference to the menu element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
-  /** A reference to the menubar element. */
-  readonly element: HTMLElement = this._elementRef.nativeElement;
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** Whether the menubar is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -412,11 +412,11 @@ export class MenuBar<V> {
   },
 })
 export class MenuItem<V> {
-  /** A reference to the menu item element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
-  /** A reference to the menu element. */
-  readonly element: HTMLElement = this._elementRef.nativeElement;
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The unique ID of the menu item. */
   readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));

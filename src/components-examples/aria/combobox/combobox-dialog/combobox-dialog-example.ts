@@ -80,14 +80,13 @@ export class ComboboxDialogExample {
     const combobox = this.combobox()!;
 
     const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const dialogEl = dialog.element.nativeElement;
 
     const scrollY = window.scrollY;
 
     if (comboboxRect) {
-      dialogEl.style.width = `${comboboxRect.width}px`;
-      dialogEl.style.top = `${comboboxRect.bottom + scrollY + 4}px`;
-      dialogEl.style.left = `${comboboxRect.left - 1}px`;
+      dialog.element.style.width = `${comboboxRect.width}px`;
+      dialog.element.style.top = `${comboboxRect.bottom + scrollY + 4}px`;
+      dialog.element.style.left = `${comboboxRect.left - 1}px`;
     }
   }
 }

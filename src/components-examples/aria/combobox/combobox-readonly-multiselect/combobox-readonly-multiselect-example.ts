@@ -53,8 +53,7 @@ export class ComboboxReadonlyMultiselectExample {
       const combobox = this.combobox()!;
       combobox._pattern.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
 
-      // TODO(wagnermaciel): Make this easier for developers to do.
-      this.listbox()?._pattern.inputs.activeItem()?.element()?.scrollIntoView({block: 'nearest'});
+      this.listbox()?.scrollActiveItemIntoView();
     });
   }
 

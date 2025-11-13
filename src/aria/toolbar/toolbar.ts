@@ -15,7 +15,6 @@ import {
   input,
   booleanAttribute,
   signal,
-  Signal,
   OnInit,
   OnDestroy,
   contentChildren,
@@ -30,14 +29,14 @@ import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
 
 interface HasElement {
-  element: Signal<HTMLElement>;
+  element: HTMLElement;
 }
 
 /**
  * Sort directives by their document order.
  */
 function sortDirectives(a: HasElement, b: HasElement) {
-  return (a.element().compareDocumentPosition(b.element()) & Node.DOCUMENT_POSITION_PRECEDING) > 0
+  return (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_PRECEDING) > 0
     ? 1
     : -1;
 }
@@ -77,8 +76,11 @@ function sortDirectives(a: HasElement, b: HasElement) {
   },
 })
 export class Toolbar<V> {
-  /** A reference to the toolbar element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The TabList nested inside of the container. */
   private readonly _widgets = signal(new Set<ToolbarWidget<V>>());
@@ -189,8 +191,11 @@ export class Toolbar<V> {
   },
 })
 export class ToolbarWidget<V> implements OnInit, OnDestroy {
-  /** A reference to the widget element. */
+  /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Toolbar. */
   private readonly _toolbar = inject(Toolbar);
@@ -200,9 +205,6 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 
   /** The parent Toolbar UIPattern. */
   readonly toolbar = computed(() => this._toolbar._pattern);
-
-  /** A reference to the widget element to be focused on navigation. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Whether the widget is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -230,7 +232,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
     ...this,
     id: this.id,
     value: this.value,
-    element: this.element,
+    element: () => this.element,
   });
 
   ngOnInit() {
@@ -253,6 +255,12 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   exportAs: 'ngToolbarWidgetGroup',
 })
 export class ToolbarWidgetGroup<V> {
+  /** A reference to the host element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The parent Toolbar. */
   private readonly _toolbar = inject(Toolbar, {optional: true});
 
