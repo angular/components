@@ -57,7 +57,7 @@ $prefix: (mat, stepper);
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($scale) {
-  $scale: theming.clamp-density(scale, -4);
+  $scale: theming.clamp-density($scale, -4);
   $index: ($scale * -1) + 1;
 
   @return (
