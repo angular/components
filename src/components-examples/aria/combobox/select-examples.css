@@ -83,7 +83,7 @@
   padding: 0.5rem 1rem;
   color: var(--mat-sys-on-surface);
   font-size: var(--mat-sys-label-large);
-  border-radius: var(--mat-sys-corner-small);
+  border-radius: var(--mat-sys-corner-large);
 }
 
 [ngOption]:hover {
