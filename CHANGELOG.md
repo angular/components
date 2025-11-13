@@ -1,3 +1,37 @@
+<a name="21.0.0-rc.2"></a>
+# 21.0.0-rc.2 "wooden-dolphin" (2025-11-13)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ec6045b27](https://github.com/angular/components/commit/ec6045b270211131b6987e316fb3252745c89e11) | fix | **accordion:** rename value to panelId for trigger and panel ([#32295](https://github.com/angular/components/pull/32295)) |
+| [25223a2f8](https://github.com/angular/components/commit/25223a2f8be7b13699b94b99a1335e4ac7185772) | fix | **combobox:** dialog popup support ([#32279](https://github.com/angular/components/pull/32279)) |
+| [a47ebeb96](https://github.com/angular/components/commit/a47ebeb964e794e3868659d68e46b3b782d1550b) | fix | **combobox:** disabled state ([#32308](https://github.com/angular/components/pull/32308)) |
+| [8beb22f8c](https://github.com/angular/components/commit/8beb22f8c8d0d9f415225826188c38964c65ceee) | fix | **combobox:** use click instead of pointerup ([#32324](https://github.com/angular/components/pull/32324)) |
+| [fe79e982c](https://github.com/angular/components/commit/fe79e982cb7b3f0b42c2be056face255ccfe5783) | fix | **menu:** add expansion delay ([#32293](https://github.com/angular/components/pull/32293)) |
+| [95e648ad8](https://github.com/angular/components/commit/95e648ad8a4fb3591fd20229db3a0649ac95ebb8) | fix | **menu:** disabled state ([#32301](https://github.com/angular/components/pull/32301)) |
+| [d8acd69f5](https://github.com/angular/components/commit/d8acd69f5d26c85ffc08224e67be5f594c85e38a) | fix | **tree:** adds rtl keyboard functionality for tree ([#32305](https://github.com/angular/components/pull/32305)) |
+| [09e31e716](https://github.com/angular/components/commit/09e31e71673a73d80033e7aaf8ad8f6ae9db8f89) | fix | **tree:** only reset selected values if used in combobox ([#32329](https://github.com/angular/components/pull/32329)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b112568d1](https://github.com/angular/components/commit/b112568d194963566b971c13c9c88b78990c221f) | fix | **overlay:** add DI token to opt out of popovers ([#32306](https://github.com/angular/components/pull/32306)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [772e1bfb3](https://github.com/angular/components/commit/772e1bfb35e838a8a141b13f939f86238f6f3ae3) | fix | **chips:** avatar image stretched in Safari ([#32278](https://github.com/angular/components/pull/32278)) |
+| [cd14409a3](https://github.com/angular/components/commit/cd14409a390baf18b49280da69b5f710e9ec72ce) | fix | **timepicker:** render overlay next to trigger ([#32288](https://github.com/angular/components/pull/32288)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8a76ccfa0](https://github.com/angular/components/commit/8a76ccfa0f4db446aa679c00858f44d6b594dc04) | fix | allow ids to be inputs ([#32320](https://github.com/angular/components/pull/32320)) |
+| [e7f9ef3e8](https://github.com/angular/components/commit/e7f9ef3e826a543b422505671c74e73b2a2f495e) | fix | change delays to use ms ([#32321](https://github.com/angular/components/pull/32321)) |
+| [a8bbd2816](https://github.com/angular/components/commit/a8bbd281629aaa8978aa8c23a394d63a24058c45) | fix | change value inputs to 'values' for array-based types ([#32300](https://github.com/angular/components/pull/32300)) |
+| [f38020952](https://github.com/angular/components/commit/f38020952b78fe3d87c8a3f6bda63684c018dd32) | fix | expose active from public api ([#32330](https://github.com/angular/components/pull/32330)) |
+| [9ac3ab5f9](https://github.com/angular/components/commit/9ac3ab5f9cad2952c1a8fa139794de9518e6190a) | fix | expose element ([#32328](https://github.com/angular/components/pull/32328)) |
+| [551ce3df3](https://github.com/angular/components/commit/551ce3df36785a7552f465b81ecede5796716f73) | fix | transform boolean attr ([#32319](https://github.com/angular/components/pull/32319)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-rc.1"></a>
 # 21.0.0-rc.1 "pre-release-21" (2025-11-06)
 ### aria
