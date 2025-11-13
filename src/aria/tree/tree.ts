@@ -208,6 +208,8 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
+      if (!(this._pattern instanceof ComboboxTreePattern)) return;
+
       const items = inputs.allItems();
       const values = untracked(() => this.values());
 

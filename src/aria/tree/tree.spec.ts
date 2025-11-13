@@ -1067,6 +1067,48 @@ describe('Tree', () => {
       expect(berriesEl.getAttribute('aria-expanded')).toBe('true');
     });
 
+    it('should not affect selected item when collapse', () => {
+      setupTestTree();
+      updateTree({
+        nodes: [
+          {
+            value: 'fruits',
+            label: 'Fruits',
+            children: [
+              {value: 'apple', label: 'Apple'},
+              {value: 'banana', label: 'Banana'},
+              {
+                value: 'berries',
+                label: 'Berries',
+                children: [
+                  {value: 'strawberry', label: 'Strawberry'},
+                  {value: 'blueberry', label: 'Blueberry'},
+                ],
+                expanded: true,
+              },
+            ],
+            expanded: true,
+          },
+        ],
+      });
+      const blueberryEl = getTreeItemElementByValue('blueberry')!;
+      const berriesEl = getTreeItemElementByValue('berries')!;
+      const fruits = getTreeItemElementByValue('fruits')!;
+
+      click(blueberryEl);
+      expect(treeInstance.values()).toEqual(['blueberry']);
+
+      left();
+      left(); // collapse berries
+      expect(berriesEl.getAttribute('aria-expanded')).toBe('false');
+      expect(treeInstance.values()).toEqual(['blueberry']);
+
+      left();
+      left(); // collapse fruits
+      expect(fruits.getAttribute('aria-expanded')).toBe('false');
+      expect(treeInstance.values()).toEqual(['blueberry']);
+    });
+
     describe('LTR', () => {
       beforeEach(() => {
         setupTestTree();
