@@ -904,7 +904,8 @@ export class MatAutocompleteTrigger
       this._getConnectedElement(),
     )
       .withFlexibleDimensions(false)
-      .withPush(false);
+      .withPush(false)
+      .withPopoverLocation('inline');
 
     this._setStrategyPositions(strategy);
     this._positionStrategy = strategy;
