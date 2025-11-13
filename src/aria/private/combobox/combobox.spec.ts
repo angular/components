@@ -352,7 +352,7 @@ describe('Combobox with Listbox Pattern', () => {
     it('should not expand when disabled', () => {
       const {combobox, inputEl} = getPatterns({disabled: true});
       expect(combobox.expanded()).toBe(false);
-      combobox.onPointerup(clickInput(inputEl));
+      combobox.onClick(clickInput(inputEl));
       expect(combobox.expanded()).toBe(false);
     });
   });
@@ -376,7 +376,7 @@ describe('Combobox with Listbox Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 0));
+        combobox.onClick(clickOption(listbox.inputs.items(), 0));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.values()).toEqual(['Apple']);
         expect(inputEl.value).toBe('Apple');
@@ -437,7 +437,7 @@ describe('Combobox with Listbox Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 3));
+        combobox.onClick(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
         expect(listbox.inputs.values()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
@@ -498,7 +498,7 @@ describe('Combobox with Listbox Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 3));
+        combobox.onClick(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
         expect(listbox.inputs.values()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
@@ -585,7 +585,7 @@ describe('Combobox with Listbox Pattern', () => {
     describe('with single-select', () => {
       it('should select and close on selection', () => {
         const {combobox, listbox, inputEl} = getPatterns({readonly: true});
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 2));
+        combobox.onClick(clickOption(listbox.inputs.items(), 2));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[2]);
         expect(listbox.inputs.values()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
@@ -606,8 +606,8 @@ describe('Combobox with Listbox Pattern', () => {
         const {combobox, listbox, inputEl} = getPatterns({readonly: true});
         (listbox.inputs.multi as WritableSignal<boolean>).set(true);
 
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 1));
-        combobox.onPointerup(clickOption(listbox.inputs.items(), 2));
+        combobox.onClick(clickOption(listbox.inputs.items(), 1));
+        combobox.onClick(clickOption(listbox.inputs.items(), 2));
 
         expect(listbox.inputs.values()).toEqual(['Apricot', 'Banana']);
         expect(inputEl.value).toBe('Apricot, Banana');
@@ -741,7 +741,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
+        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 0));
         expect(tree.inputs.values()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
@@ -755,7 +755,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select on focusout if the input text exactly matches an item', () => {
-        combobox.onPointerup(clickInput(inputEl));
+        combobox.onClick(clickInput(inputEl));
         type('Apple');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(tree.inputs.values()).toEqual(['Apple']);
@@ -801,7 +801,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 2));
+        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 2));
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
@@ -858,7 +858,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 2));
+        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 2));
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
@@ -928,9 +928,9 @@ describe('Combobox with Tree Pattern', () => {
   describe('Readonly mode', () => {
     it('should select and close on selection', () => {
       const {combobox, tree, inputEl} = getPatterns({readonly: true});
-      combobox.onPointerup(clickInput(inputEl));
+      combobox.onClick(clickInput(inputEl));
       expect(combobox.expanded()).toBe(true);
-      combobox.onPointerup(clickTreeItem(tree.inputs.allItems(), 0));
+      combobox.onClick(clickTreeItem(tree.inputs.allItems(), 0));
       expect(tree.inputs.values()).toEqual(['Fruit']);
       expect(inputEl.value).toBe('Fruit');
       expect(combobox.expanded()).toBe(false);
