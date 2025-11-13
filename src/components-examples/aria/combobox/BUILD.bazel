@@ -16,6 +16,7 @@ ng_project(
         "//src/aria/combobox",
         "//src/aria/listbox",
         "//src/aria/tree",
+        "//src/cdk/overlay",
     ],
 )
 
