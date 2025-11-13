@@ -59,7 +59,6 @@ import {
     },
   ],
   host: {
-    'class': 'ng-accordion-panel',
     'role': 'region',
     '[attr.id]': '_pattern.id()',
     '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
@@ -134,7 +133,6 @@ export class AccordionPanel {
   selector: '[ngAccordionTrigger]',
   exportAs: 'ngAccordionTrigger',
   host: {
-    'class': 'ng-accordion-trigger',
     '[attr.data-active]': 'active()',
     'role': 'button',
     '[id]': '_pattern.id()',
@@ -235,7 +233,6 @@ export class AccordionTrigger {
   selector: '[ngAccordionGroup]',
   exportAs: 'ngAccordionGroup',
   host: {
-    'class': 'ng-accordion-group',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': '_pattern.onFocus($event)',
