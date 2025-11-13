@@ -17,17 +17,17 @@ import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   signal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 /** @title Disabled readonly combobox. */
 @Component({
   selector: 'combobox-readonly-disabled-example',
   templateUrl: 'combobox-readonly-disabled-example.html',
-  styleUrl: '../combobox-examples.css',
+  styleUrl: '../select-examples.css',
   imports: [
     Combobox,
     ComboboxInput,
@@ -35,43 +35,60 @@ import {FormsModule} from '@angular/forms';
     ComboboxPopupContainer,
     Listbox,
     Option,
-    FormsModule,
+    OverlayModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxReadonlyDisabledExample {
-  popover = viewChild<ElementRef>('popover');
-  listbox = viewChild<Listbox<any>>(Listbox);
-  combobox = viewChild<Combobox<any>>(Combobox);
+  /** The string that is displayed in the combobox. */
+  displayValue = signal('');
 
-  options = () => states;
-  searchString = signal('');
+  /** The combobox listbox popup. */
+  listbox = viewChild<Listbox<string>>(Listbox);
+
+  /** The options available in the listbox. */
+  options = viewChildren<Option<string>>(Option);
+
+  /** A reference to the ng aria combobox. */
+  combobox = viewChild<Combobox<string>>(Combobox);
+
+  /** The labels that are available for selection. */
+  labels = [
+    {value: 'Important', icon: 'label'},
+    {value: 'Starred', icon: 'star'},
+    {value: 'Work', icon: 'work'},
+    {value: 'Personal', icon: 'person'},
+    {value: 'To Do', icon: 'checklist'},
+    {value: 'Later', icon: 'schedule'},
+    {value: 'Read', icon: 'menu_book'},
+    {value: 'Travel', icon: 'flight'},
+  ];
 
   constructor() {
+    // Updates the display value when the listbox values change.
     afterRenderEffect(() => {
-      const popover = this.popover()!;
-      const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      const values = this.listbox()?.values() || [];
+      if (values.length === 0) {
+        this.displayValue.set('Select a label');
+      } else if (values.length === 1) {
+        this.displayValue.set(values[0]);
+      } else {
+        this.displayValue.set(`${values[0]} + ${values.length - 1} more`);
+      }
+    });
 
-      this.listbox()?.scrollActiveItemIntoView();
+    // Scrolls to the active item when the active option changes.
+    // The slight delay here is to ensure animations are done before scrolling.
+    afterRenderEffect(() => {
+      const option = this.options().find(opt => opt.active());
+      setTimeout(() => option?.element.scrollIntoView({block: 'nearest'}), 50);
+    });
+
+    // Resets the listbox scroll position when the combobox is closed.
+    afterRenderEffect(() => {
+      if (!this.combobox()?.expanded()) {
+        setTimeout(() => this.listbox()?.element.scrollTo(0, 0), 150);
+      }
     });
   }
-
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
-    }
-
-    popover.nativeElement.showPopover();
-  }
 }
-
-const states = ['Option 1', 'Option 2', 'Option 3'];
