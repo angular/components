@@ -1,0 +1,73 @@
+.example-table {
+  border-spacing: 12px;
+}
+
+.example-table td,
+.example-table th {
+  height: 40px;
+}
+
+.example-header-row th:not(:first-of-type) {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 80%, transparent);
+  color: var(--mat-sys-on-secondary);
+}
+
+.example-edit-icon {
+  color: color-mix(in srgb, var(--mat-sys-on-background) 60%, transparent);
+}
+
+.example-row .example-edit-icon {
+  opacity: 0;
+  padding: 0 8px;
+}
+
+.example-row:hover .example-edit-icon,
+.example-row:focus-within .example-edit-icon {
+  opacity: 1;
+}
+
+.example-cell-summary [role='button'] {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  outline: none;
+}
+
+.example-cell-summary mat-form-field {
+  width: 100%;
+  height: 100%;
+}
+
+.example-cell-checkbox {
+  width: 40px;
+}
+
+.example-cell-assignee [role='button'] {
+  outline: none;
+}
+
+.example-cell-tags {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  height: 100%;
+  max-width: 500px;
+}
+
+.example-cell-tag-input {
+  border: none;
+  border-bottom: 1px dotted;
+  font-size: 0.825rem;
+  background-color: transparent;
+  max-width: 100px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+}
+
+.example-hidden {
+  display: none;
+}

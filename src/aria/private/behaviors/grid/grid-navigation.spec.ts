@@ -155,7 +155,7 @@ describe('GridNavigation', () => {
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Up, from, 'loop')).toEqual({row: 3, col: 0});
         expect(gridNav.peek(direction.Up, from, 'nowrap')).toBeUndefined();
-        expect(gridNav.peek(direction.Up, from, 'continuous')).toEqual({row: 3, col: 2});
+        expect(gridNav.peek(direction.Up, from, 'continuous')).toBeUndefined();
       });
 
       it('should return undefined if all cells are disabled', () => {
@@ -248,7 +248,7 @@ describe('GridNavigation', () => {
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Left, from, 'loop')).toEqual({row: 0, col: 2});
         expect(gridNav.peek(direction.Left, from, 'nowrap')).toBeUndefined();
-        expect(gridNav.peek(direction.Left, from, 'continuous')).toEqual({row: 3, col: 2});
+        expect(gridNav.peek(direction.Left, from, 'continuous')).toBeUndefined();
       });
 
       it('should return undefined if completely disabled', () => {
@@ -319,758 +319,1103 @@ describe('GridNavigation', () => {
   describe('advance', () => {
     describe('wrap=continuous', () => {
       describe('up', () => {
-        it('case 1', () => {
-          const cells = createTestGrid(createGridA);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 1', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 2', () => {
-          const cells = createTestGrid(createGridB);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 2', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 3', () => {
-          const cells = createTestGrid(createGridC);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 3', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 3});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 4', () => {
-          const cells = createTestGrid(createGridD);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 4', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 3});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 5', () => {
-          const cells = createTestGrid(createGridE);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 5', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 0, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 6', () => {
-          const cells = createTestGrid(createGridF);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 6', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Up);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Up);
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Up);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
       });
 
       describe('down', () => {
-        it('case 1', () => {
-          const cells = createTestGrid(createGridA);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 1', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
 
-        it('case 2', () => {
-          const cells = createTestGrid(createGridB);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 2', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridB);
+            const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            gridNav.gotoCoords({row: 3, col: 2});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
         });
 
-        it('case 3', () => {
-          const cells = createTestGrid(createGridC);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 3', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridC);
+            const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            gridNav.gotoCoords({row: 2, col: 3});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
 
-        it('case 4', () => {
-          const cells = createTestGrid(createGridD);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 4', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridD);
+            const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            gridNav.gotoCoords({row: 3, col: 3});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
         });
 
-        it('case 5', () => {
-          const cells = createTestGrid(createGridE);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 5', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridE);
+            const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            gridNav.gotoCoords({row: 0, col: 2});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+          });
         });
 
-        it('case 6', () => {
-          const cells = createTestGrid(createGridF);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 6', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Down);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridF);
+            const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            gridNav.gotoCoords({row: 2, col: 2});
+            gridNav.advance(direction.Down);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
       });
 
       describe('left', () => {
-        it('case 1', () => {
-          const cells = createTestGrid(createGridA);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 1', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            // Advancing left from the first cell should not change the active cell.
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 2', () => {
-          const cells = createTestGrid(createGridB);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 2', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 3', () => {
-          const cells = createTestGrid(createGridC);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 3', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 4', () => {
-          const cells = createTestGrid(createGridD);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 4', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 5', () => {
-          const cells = createTestGrid(createGridE);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 5', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 1});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
 
-        it('case 6', () => {
-          const cells = createTestGrid(createGridF);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 6', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Left);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Left);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+          });
         });
       });
 
       describe('right', () => {
-        it('case 1', () => {
-          const cells = createTestGrid(createGridA);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 1', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridA);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
 
-        it('case 2', () => {
-          const cells = createTestGrid(createGridB);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 2', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridB);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 2});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
         });
 
-        it('case 3', () => {
-          const cells = createTestGrid(createGridC);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 3', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridC);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
 
-        it('case 4', () => {
-          const cells = createTestGrid(createGridD);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 4', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-3');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridD);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 3, col: 2});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
+          });
         });
 
-        it('case 5', () => {
-          const cells = createTestGrid(createGridE);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 5', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-1-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridE);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 1});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+          });
         });
 
-        it('case 6', () => {
-          const cells = createTestGrid(createGridF);
-          const setup = setupGridNavigation(signal(cells), {
-            rowWrap: signal('continuous'),
-            colWrap: signal('continuous'),
-          });
-          const gridNav = setup.gridNav;
-          const gridFocus = setup.gridFocus;
+        describe('case 6', () => {
+          it('from start', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
 
-          gridNav.gotoCoords({row: 0, col: 0});
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
-          gridNav.advance(direction.Right);
-          expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.gotoCoords({row: 0, col: 0});
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
+
+          it('from end', () => {
+            const cells = createTestGrid(createGridF);
+            const setup = setupGridNavigation(signal(cells), {
+              rowWrap: signal('continuous'),
+              colWrap: signal('continuous'),
+            });
+            const gridNav = setup.gridNav;
+            const gridFocus = setup.gridFocus;
+
+            gridNav.gotoCoords({row: 2, col: 2});
+            gridNav.advance(direction.Right);
+            expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
+          });
         });
       });
     });

@@ -11,12 +11,12 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChild,
   contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
+  output,
   model,
   Signal,
 } from '@angular/core';
@@ -57,7 +57,7 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(pointermove)': '_pattern.onPointermove($event)',
     '(pointerup)': '_pattern.onPointerup($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
 })
@@ -137,26 +137,28 @@ export class Grid {
   constructor() {
     afterRenderEffect(() => this._pattern.setDefaultStateEffect());
     afterRenderEffect(() => this._pattern.resetStateEffect());
+    afterRenderEffect(() => this._pattern.resetFocusEffect());
+    afterRenderEffect(() => this._pattern.restoreFocusEffect());
     afterRenderEffect(() => this._pattern.focusEffect());
   }
 
   /** Gets the cell pattern for a given element. */
-  private _getCell(element: Element): GridCellPattern | undefined {
-    const cellElement = element.closest('[ngGridCell]');
-    if (cellElement === undefined) return;
+  private _getCell(element: Element | null | undefined): GridCellPattern | undefined {
+    let target = element;
 
-    const widgetElement = element.closest('[ngGridCellWidget]');
-    for (const row of this._rowPatterns()) {
-      for (const cell of row.inputs.cells()) {
-        if (
-          cell.element() === cellElement ||
-          (widgetElement !== undefined && cell.element() === widgetElement)
-        ) {
-          return cell;
+    while (target) {
+      for (const row of this._rowPatterns()) {
+        for (const cell of row.inputs.cells()) {
+          if (cell.element() === target) {
+            return cell;
+          }
         }
       }
+
+      target = target.parentElement?.closest('[ngGridCell]');
     }
-    return;
+
+    return undefined;
   }
 }
 
@@ -176,7 +178,8 @@ export class Grid {
   exportAs: 'ngGridRow',
   host: {
     'class': 'grid-row',
-    '[attr.role]': 'role()',
+    'role': 'row',
+    '[attr.aria-rowindex]': '_pattern.rowIndex()',
   },
 })
 export class GridRow {
@@ -199,9 +202,6 @@ export class GridRow {
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
-
-  /** The ARIA role for the row. */
-  readonly role = input<'row' | 'rowheader'>('row');
 
   /** The index of this row within the grid. */
   readonly rowIndex = input<number>();
@@ -243,32 +243,35 @@ export class GridRow {
     '[attr.aria-rowindex]': '_pattern.ariaRowIndex()',
     '[attr.aria-colindex]': '_pattern.ariaColIndex()',
     '[attr.aria-selected]': '_pattern.ariaSelected()',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': '_tabIndex()',
   },
 })
 export class GridCell {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
-  /** The widget contained within this cell, if any. */
-  private readonly _widgets = contentChild(GridCellWidget);
+  /** The widgets contained within this cell, if any. */
+  private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
 
   /** The UI pattern for the widget in this cell. */
-  private readonly _widgetPattern: Signal<GridCellWidgetPattern | undefined> = computed(
-    () => this._widgets()?._pattern,
+  private readonly _widgetPatterns: Signal<GridCellWidgetPattern[]> = computed(() =>
+    this._widgets().map(w => w._pattern),
   );
 
   /** The parent row. */
   private readonly _row = inject(GridRow);
 
+  /** Text direction. */
+  readonly textDirection = inject(Directionality).valueSignal;
+
   /** A unique identifier for the cell. */
-  private readonly _id = inject(_IdGenerator).getId('ng-grid-cell-', true);
+  readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The ARIA role for the cell. */
-  readonly role = input<'gridcell' | 'columnheader'>('gridcell');
+  readonly role = input<'gridcell' | 'columnheader' | 'rowheader'>('gridcell');
 
   /** The number of rows the cell should span. */
   readonly rowSpan = input<number>(1);
@@ -291,14 +294,49 @@ export class GridCell {
   /** Whether the cell is selectable. */
   readonly selectable = input<boolean>(true);
 
+  /** Orientation of the widgets in the cell. */
+  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
+
+  /** Whether widgets navigation wraps. */
+  readonly wrap = input(true, {transform: booleanAttribute});
+
+  /** The tabindex override. */
+  readonly tabindex = input<number | undefined>();
+
+  /**
+   * The tabindex value set to the element.
+   * If a focus target exists then return -1. Unless an override.
+   */
+  protected readonly _tabIndex: Signal<number> = computed(
+    () => this.tabindex() ?? this._pattern.tabIndex(),
+  );
+
   /** The UI pattern for the grid cell. */
   readonly _pattern = new GridCellPattern({
     ...this,
-    id: () => this._id,
     grid: this._row.grid,
     row: () => this._row._pattern,
-    widget: this._widgetPattern,
+    widgets: this._widgetPatterns,
+    getWidget: e => this._getWidget(e),
   });
+
+  constructor() {}
+
+  /** Gets the cell widget pattern for a given element. */
+  private _getWidget(element: Element | null | undefined): GridCellWidgetPattern | undefined {
+    let target = element;
+
+    while (target) {
+      const pattern = this._widgetPatterns().find(w => w.element() === target);
+      if (pattern) {
+        return pattern;
+      }
+
+      target = target.parentElement?.closest('[ngGridCellWidget]');
+    }
+
+    return undefined;
+  }
 }
 
 /**
@@ -323,7 +361,8 @@ export class GridCell {
   host: {
     'class': 'grid-cell-widget',
     '[attr.data-active]': '_pattern.active()',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
+    '[tabindex]': '_tabIndex()',
   },
 })
 export class GridCellWidget {
@@ -336,17 +375,75 @@ export class GridCellWidget {
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
 
-  /** Whether the widget is activated and the grid navigation should be paused. */
-  readonly activate = model<boolean>(false);
+  /** A unique identifier for the widget. */
+  readonly id = input<string>(inject(_IdGenerator).getId('ng-grid-cell-', true));
+
+  /** The type of widget, which determines how it is activated. */
+  readonly widgetType = input<'simple' | 'complex' | 'editable'>('simple');
+
+  /** Whether the widget is disabled. */
+  readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** The target that will receive focus instead of the widget. */
+  readonly focusTarget = input<ElementRef | HTMLElement | undefined>();
+
+  /** Emits when the widget is activated. */
+  readonly onActivate = output<KeyboardEvent | FocusEvent | undefined>();
+
+  /** Emits when the widget is deactivated. */
+  readonly onDeactivate = output<KeyboardEvent | FocusEvent | undefined>();
+
+  /** The tabindex override. */
+  readonly tabindex = input<number | undefined>();
+
+  /**
+   * The tabindex value set to the element.
+   * If a focus target exists then return -1. Unless an override.
+   */
+  protected readonly _tabIndex: Signal<number> = computed(
+    () => this.tabindex() ?? (this.focusTarget() ? -1 : this._pattern.tabIndex()),
+  );
 
   /** The UI pattern for the grid cell widget. */
   readonly _pattern = new GridCellWidgetPattern({
     ...this,
     cell: () => this._cell._pattern,
+    focusTarget: computed(() => {
+      if (this.focusTarget() instanceof ElementRef) {
+        return (this.focusTarget() as ElementRef).nativeElement;
+      }
+      return this.focusTarget();
+    }),
   });
 
-  /** Focuses the widget. */
-  focus(): void {
-    this.element().focus();
+  /** Whether the widget is activated. */
+  get isActivated(): Signal<boolean> {
+    return this._pattern.isActivated.asReadonly();
+  }
+
+  constructor() {
+    afterRenderEffect(() => {
+      const activateEvent = this._pattern.lastActivateEvent();
+      if (activateEvent) {
+        this.onActivate.emit(activateEvent);
+      }
+    });
+
+    afterRenderEffect(() => {
+      const deactivateEvent = this._pattern.lastDeactivateEvent();
+      if (deactivateEvent) {
+        this.onDeactivate.emit(deactivateEvent);
+      }
+    });
+  }
+
+  /** Activates the widget. */
+  activate(): void {
+    this._pattern.activate();
+  }
+
+  /** Deactivates the widget. */
+  deactivate(): void {
+    this._pattern.deactivate();
   }
 }

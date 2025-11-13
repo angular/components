@@ -128,6 +128,11 @@ export class GridData<T extends BaseGridCell> {
     this.cells = this.inputs.cells;
   }
 
+  /** Whether the cell exists. */
+  hasCell(cell: T): boolean {
+    return this._coordsMap().has(cell);
+  }
+
   /** Gets the cell at the given coordinates. */
   getCell(rowCol: RowCol): T | undefined {
     return this._cellMap().get(`${rowCol.row}:${rowCol.col}`);

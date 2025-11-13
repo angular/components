@@ -1,4 +1,4 @@
-<div class="example-grid-controls">
+<div class="example-controls">
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
   <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
   <mat-checkbox [formControl]="enableSelection">Enable Selection</mat-checkbox>
@@ -6,7 +6,7 @@
   <mat-checkbox [formControl]="enableRangeSelection">Range Selection</mat-checkbox>
 
   <mat-form-field
-    class="example-grid-controls-select"
+    class="example-controls-select"
     subscriptSizing="dynamic"
     appearance="outline"
   >
@@ -18,7 +18,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field
-    class="example-grid-controls-select"
+    class="example-controls-select"
     subscriptSizing="dynamic"
     appearance="outline"
   >
@@ -30,7 +30,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field
-    class="example-grid-controls-select"
+    class="example-controls-select"
     subscriptSizing="dynamic"
     appearance="outline"
   >
@@ -41,7 +41,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field
-    class="example-grid-controls-select"
+    class="example-controls-select"
     subscriptSizing="dynamic"
     appearance="outline"
   >
@@ -72,7 +72,7 @@
       <tr ngGridRow>
         @for (cell of row; track cell) {
           <td
-            class="example-grid-cell example-stateful example-selectable"
+            class="example-cell"
             ngGridCell
             [rowSpan]="cell.rowSpan ?? 1"
             [colSpan]="cell.colSpan ?? 1"
@@ -86,7 +86,7 @@
   <div class="example-grid-shortcuts">
     <div>
       <mat-form-field
-        class="example-grid-controls-select"
+        class="example-controls-select"
         subscriptSizing="dynamic"
         appearance="outline"
       >

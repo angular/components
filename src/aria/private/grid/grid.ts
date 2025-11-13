@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
+import {computed, signal, untracked} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
@@ -37,7 +37,7 @@ export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'c
   enableRangeSelection: SignalLike<boolean>;
 
   /** A function that returns the grid cell associated with a given element. */
-  getCell: (e: Element) => GridCellPattern | undefined;
+  getCell: (e: Element | null) => GridCellPattern | undefined;
 }
 
 /** The UI pattern for a grid, handling keyboard navigation, focus, and selection. */
@@ -67,12 +67,12 @@ export class GridPattern {
       : undefined,
   );
 
-  /** Whether to pause grid navigation. */
-  readonly pauseNavigation = computed(() =>
+  /** Whether to pause grid navigation and give the keyboard control to cell or widget. */
+  readonly pauseNavigation: SignalLike<boolean> = computed(() =>
     this.gridBehavior.data
       .cells()
       .flat()
-      .reduce((res, c) => res || c.widgetActivated(), false),
+      .reduce((res, c) => res || c.isActivated(), false),
   );
 
   /** Whether the focus is in the grid. */
@@ -118,13 +118,9 @@ export class GridPattern {
 
     // Basic explicit selection handlers.
     if (this.inputs.enableSelection() && this.inputs.selectionMode() === 'explicit') {
-      manager
-        .on('Enter', () =>
-          this.inputs.multi() ? this.gridBehavior.toggle() : this.gridBehavior.toggleOne(),
-        )
-        .on(' ', () =>
-          this.inputs.multi() ? this.gridBehavior.toggle() : this.gridBehavior.toggleOne(),
-        );
+      manager.on(/Enter| /, () =>
+        this.inputs.multi() ? this.gridBehavior.toggle() : this.gridBehavior.toggleOne(),
+      );
     }
 
     // Range selection handlers.
@@ -230,6 +226,9 @@ export class GridPattern {
   /** Indicates the losing focus is certainly caused by row/cell deletion. */
   private readonly _deletion = signal(false);
 
+  /** Whether the grid state is stale and needs to be reconciled. */
+  private readonly _stateStale = signal(false);
+
   constructor(readonly inputs: GridInputs) {
     this.gridBehavior = new Grid({
       ...inputs,
@@ -239,57 +238,86 @@ export class GridPattern {
 
   /** Handles keydown events on the grid. */
   onKeydown(event: KeyboardEvent) {
-    if (!this.disabled()) {
-      this.keydown().handle(event);
-    }
+    if (this.disabled()) return;
+
+    this.activeCell()?.onKeydown(event);
+    this.keydown().handle(event);
   }
 
   /** Handles pointerdown events on the grid. */
   onPointerdown(event: PointerEvent) {
-    if (!this.disabled()) {
-      this.pointerdown().handle(event);
-    }
+    if (this.disabled()) return;
+
+    this.pointerdown().handle(event);
   }
 
   /** Handles pointermove events on the grid. */
   onPointermove(event: PointerEvent) {
-    if (this.disabled()) return;
-    if (!this.inputs.enableSelection()) return;
-    if (!this.inputs.enableRangeSelection()) return;
-    if (!this.dragging()) return;
+    if (
+      this.disabled() ||
+      !this.inputs.enableSelection() ||
+      !this.inputs.enableRangeSelection() ||
+      !this.dragging()
+    ) {
+      return;
+    }
 
     const cell = this.inputs.getCell(event.target as Element);
-    if (!cell) return;
 
-    this.gridBehavior.gotoCell(cell, {anchor: true});
+    // Dragging anchor.
+    if (cell !== undefined) {
+      this.gridBehavior.gotoCell(cell, {anchor: true});
+    }
   }
 
   /** Handles pointerup events on the grid. */
   onPointerup(event: PointerEvent) {
-    if (!this.disabled()) {
-      this.pointerup().handle(event);
-    }
+    if (this.disabled()) return;
+
+    this.pointerup().handle(event);
   }
 
   /** Handles focusin events on the grid. */
-  onFocusIn() {
+  onFocusIn(event: FocusEvent) {
     this.isFocused.set(true);
     this.hasBeenFocused.set(true);
+
+    // Skip if in the middle of range selection.
+    if (this.dragging()) return;
+
+    // Cell that receives focus.
+    const cell = this.inputs.getCell(event.target as Element | null);
+    if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
+
+    // Pass down the focusin event to the cell.
+    cell.onFocusIn(event);
+
+    // Update active cell state if the cell is receiving focus by
+    // tabbing, pointer, or any programmatic control into a widget inside the cell.
+    if (cell !== this.activeCell()) {
+      this.gridBehavior.gotoCell(cell);
+    }
   }
 
   /** Handles focusout events on the grid. */
   onFocusOut(event: FocusEvent) {
-    const parentEl = this.inputs.element();
-    const targetEl = event.relatedTarget as Node | null;
+    // Pass down focusout event to the cell that loses focus.
+    const blurTarget = event.target as Element | null;
+    const cell = this.inputs.getCell(blurTarget);
 
-    // If a `relatedTarget` is null, then it can be caused by either
+    // Pass down the focusout event to the cell.
+    cell?.onFocusOut(event);
+
+    const focusTarget = event.relatedTarget as Element | null;
+    if (this.inputs.element().contains(focusTarget)) return;
+
+    // If a `relatedTarget`(focusing target) is null, then it can be caused by either
     // - Clicking on a non-focusable element, or
     // - The focused element is removed from the page.
-    if (targetEl === null) {
+    if (focusTarget === null) {
       this._maybeDeletion.set(true);
     }
 
-    if (parentEl.contains(targetEl)) return;
     this.isFocused.set(false);
   }
 
@@ -304,27 +332,66 @@ export class GridPattern {
   resetStateEffect(): void {
     const hasReset = this.gridBehavior.resetState();
 
-    // If the active state has been reset right after a focusout event, then
-    // we know it's caused by a row/cell deletion.
-    if (hasReset && this._maybeDeletion()) {
-      this._deletion.set(true);
+    if (hasReset) {
+      // If the active state has been reset right after a focusout event, then
+      // we know it's caused by a row/cell deletion.
+      if (this._maybeDeletion()) {
+        this._deletion.set(true);
+      } else {
+        this._stateStale.set(true);
+      }
     }
     // Reset maybe deletion state.
     this._maybeDeletion.set(false);
   }
 
-  /** Focuses on the active cell element. */
+  /** Resets the focus to the active cell element or grid element. */
+  resetFocusEffect(): void {
+    const stateStale = this._stateStale();
+    if (!stateStale) return;
+
+    const isFocused = untracked(() => this.isFocused());
+    const isRoving = untracked(() => this.inputs.focusMode() === 'roving');
+    const activeCell = untracked(() => this.activeCell());
+
+    if (isRoving && activeCell !== undefined && isFocused) {
+      if (!activeCell.isFocused()) {
+        activeCell.focus();
+      }
+    }
+
+    this._stateStale.set(false);
+  }
+
+  /** Restore focus when a deletion happened. */
+  restoreFocusEffect(): void {
+    const deletion = this._deletion();
+    if (!deletion) return;
+
+    const isRoving = untracked(() => this.inputs.focusMode() === 'roving');
+    const activeCell = untracked(() => this.activeCell());
+
+    if (isRoving && activeCell !== undefined) {
+      if (!activeCell.isFocused()) {
+        activeCell.focus();
+      }
+    }
+
+    this._deletion.set(false);
+  }
+
+  /** Sets focus when active cell changed. */
   focusEffect(): void {
     const activeCell = this.activeCell();
-    const hasFocus = this.isFocused();
-    const deletion = this._deletion();
-    const isRoving = this.inputs.focusMode() === 'roving';
-    if (activeCell !== undefined && isRoving && (hasFocus || deletion)) {
-      activeCell.element().focus();
+    const gridFocused = untracked(() => this.isFocused());
 
-      if (deletion) {
-        this._deletion.set(false);
-      }
+    if (activeCell === undefined || !gridFocused) return;
+
+    const isRoving = untracked(() => this.inputs.focusMode() === 'roving');
+    const cellFocused = untracked(() => activeCell.isFocused());
+
+    if (isRoving && !cellFocused) {
+      activeCell.focus();
     }
   }
 }
