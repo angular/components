@@ -28,7 +28,7 @@
   outline: 2px solid var(--mat-sys-primary);
 }
 
-.combobox-text {
+.example-combobox-text {
   left: 1rem;
   position: absolute;
 }
