@@ -67,7 +67,6 @@ function sortDirectives(a: HasElement, b: HasElement) {
   exportAs: 'ngToolbar',
   host: {
     'role': 'toolbar',
-    'class': 'ng-toolbar',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
@@ -157,7 +156,7 @@ export class Toolbar<V> {
 
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
-    const widgetTarget = element.closest('.ng-toolbar-widget');
+    const widgetTarget = element.closest('[ngToolbarWidget]');
     return this.items().find(widget => widget.element() === widgetTarget);
   }
 }
@@ -181,7 +180,6 @@ export class Toolbar<V> {
   selector: '[ngToolbarWidget]',
   exportAs: 'ngToolbarWidget',
   host: {
-    'class': 'ng-toolbar-widget',
     '[attr.data-active]': 'active()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
@@ -253,9 +251,6 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 @Directive({
   selector: '[ngToolbarWidgetGroup]',
   exportAs: 'ngToolbarWidgetGroup',
-  host: {
-    '[class.ng-toolbar-widget-group]': '!!toolbar()',
-  },
 })
 export class ToolbarWidgetGroup<V> {
   /** The parent Toolbar. */

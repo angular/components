@@ -56,7 +56,6 @@ import {Directionality} from '@angular/cdk/bidi';
   selector: 'button[ngMenuTrigger]',
   exportAs: 'ngMenuTrigger',
   host: {
-    'class': 'ng-menu-trigger',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -146,7 +145,6 @@ export class MenuTrigger<V> {
   exportAs: 'ngMenu',
   host: {
     'role': 'menu',
-    'class': 'ng-menu',
     '[attr.id]': '_pattern.id()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.tabindex]': 'tabIndex()',
@@ -305,7 +303,6 @@ export class Menu<V> {
   exportAs: 'ngMenuBar',
   host: {
     'role': 'menubar',
-    'class': 'ng-menu-bar',
     '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.tabindex]': '_pattern.tabIndex()',
@@ -405,7 +402,6 @@ export class MenuBar<V> {
   exportAs: 'ngMenuItem',
   host: {
     'role': 'menuitem',
-    'class': 'ng-menu-item',
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'isActive()',
