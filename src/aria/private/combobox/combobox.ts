@@ -510,6 +510,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       return;
     }
 
+    if (this.readonly()) {
+      this.expanded.set(false);
+      popupControls?.unfocus();
+      return;
+    }
+
     if (!opts?.reset) {
       if (this.inputs.filterMode() === 'manual') {
         if (
