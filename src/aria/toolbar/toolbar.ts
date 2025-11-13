@@ -198,10 +198,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   private readonly _toolbar = inject(Toolbar);
 
   /** A unique identifier for the widget. */
-  private readonly _generatedId = inject(_IdGenerator).getId('ng-toolbar-widget-', true);
-
-  /** A unique identifier for the widget. */
-  readonly id = input<string>(this._generatedId);
+  readonly id = input(inject(_IdGenerator).getId('ng-toolbar-widget-', true));
 
   /** The parent Toolbar UIPattern. */
   readonly toolbar = computed(() => this._toolbar._pattern);

@@ -376,7 +376,7 @@ export class GridCellWidget {
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** A unique identifier for the widget. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-grid-cell-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-widget-', true));
 
   /** The type of widget, which determines how it is activated. */
   readonly widgetType = input<'simple' | 'complex' | 'editable'>('simple');

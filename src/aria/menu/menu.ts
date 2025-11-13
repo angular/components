@@ -187,7 +187,7 @@ export class Menu<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The unique ID of the menu. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-menu-', true));
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input(true, {transform: booleanAttribute});
@@ -423,7 +423,7 @@ export class MenuItem<V> {
   readonly element: HTMLElement = this._elementRef.nativeElement;
 
   /** The unique ID of the menu item. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-menu-item-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));
 
   /** The value of the menu item. */
   readonly value = input.required<V>();

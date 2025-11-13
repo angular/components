@@ -71,7 +71,7 @@ export class AccordionPanel {
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
   /** A global unique identifier for the panel. */
-  private readonly _id = inject(_IdGenerator).getId('accordion-trigger-', true);
+  readonly id = input(inject(_IdGenerator).getId('ng-accordion-panel-', true));
 
   /** A local unique identifier for the panel, used to match with its trigger's `panelId`. */
   readonly panelId = input.required<string>();
@@ -85,7 +85,7 @@ export class AccordionPanel {
 
   /** The UI pattern instance for this panel. */
   readonly _pattern: AccordionPanelPattern = new AccordionPanelPattern({
-    id: () => this._id,
+    id: this.id,
     panelId: this.panelId,
     accordionTrigger: () => this.accordionTrigger(),
   });
@@ -153,7 +153,7 @@ export class AccordionTrigger {
   private readonly _accordionGroup = inject(AccordionGroup);
 
   /** A unique identifier for the widget. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
