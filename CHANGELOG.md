@@ -1,3 +1,12 @@
+<a name="20.2.13"></a>
+# 20.2.13 "wooden-penguin" (2025-11-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7b63d9560](https://github.com/angular/components/commit/7b63d956091bffa06f70a3b56fb212f805454894) | fix | **chips:** avatar image stretched in Safari ([#32278](https://github.com/angular/components/pull/32278)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-rc.1"></a>
 # 21.0.0-rc.1 "pre-release-21" (2025-11-06)
 ### aria
