@@ -65,6 +65,9 @@ export class Grid {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The rows that make up the grid. */
   private readonly _rows = contentChildren(GridRow, {descendants: true});
 
@@ -75,9 +78,6 @@ export class Grid {
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** Whether selection is enabled for the grid. */
   readonly enableSelection = input(false, {transform: booleanAttribute});
@@ -132,6 +132,7 @@ export class Grid {
     ...this,
     rows: this._rowPatterns,
     getCell: e => this._getCell(e),
+    element: () => this.element,
   });
 
   constructor() {
@@ -186,6 +187,9 @@ export class GridRow {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The cells that make up this row. */
   private readonly _cells = contentChildren(GridCell, {descendants: true});
 
@@ -199,9 +203,6 @@ export class GridRow {
 
   /** The parent grid UI pattern. */
   readonly grid = computed(() => this._grid._pattern);
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The index of this row within the grid. */
   readonly rowIndex = input<number>();
@@ -250,6 +251,9 @@ export class GridCell {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The widgets contained within this cell, if any. */
   private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
 
@@ -266,9 +270,6 @@ export class GridCell {
 
   /** A unique identifier for the cell. */
   readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-', true));
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The ARIA role for the cell. */
   readonly role = input<'gridcell' | 'columnheader' | 'rowheader'>('gridcell');
@@ -318,6 +319,7 @@ export class GridCell {
     row: () => this._row._pattern,
     widgets: this._widgetPatterns,
     getWidget: e => this._getWidget(e),
+    element: () => this.element,
   });
 
   constructor() {}
@@ -369,11 +371,11 @@ export class GridCellWidget {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the host element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The parent cell. */
   private readonly _cell = inject(GridCell);
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-widget-', true));
@@ -407,6 +409,7 @@ export class GridCellWidget {
   /** The UI pattern for the grid cell widget. */
   readonly _pattern = new GridCellWidgetPattern({
     ...this,
+    element: () => this.element,
     cell: () => this._cell._pattern,
     focusTarget: computed(() => {
       if (this.focusTarget() instanceof ElementRef) {

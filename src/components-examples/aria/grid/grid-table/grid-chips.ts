@@ -27,6 +27,6 @@ export class GridChips {
   }
 
   focus(): void {
-    this.firstCell()?.element().focus();
+    this.firstCell()?.element.focus();
   }
 }

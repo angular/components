@@ -147,14 +147,14 @@ export class AccordionTrigger {
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the trigger element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(AccordionGroup);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** A local unique identifier for the trigger, used to match with its panel's `panelId`. */
   readonly panelId = input.required<string>();
@@ -176,6 +176,7 @@ export class AccordionTrigger {
     ...this,
     accordionGroup: computed(() => this._accordionGroup._pattern),
     accordionPanel: this._accordionPanel,
+    element: () => this.element,
   });
 
   /** Expands this item. */
@@ -242,6 +243,9 @@ export class AccordionGroup {
   /** A reference to the group element. */
   private readonly _elementRef = inject(ElementRef);
 
+  /** A reference to the group element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The AccordionTriggers nested inside this group. */
   private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
 
@@ -250,9 +254,6 @@ export class AccordionGroup {
 
   /** The AccordionPanels nested inside this group. */
   private readonly _panels = contentChildren(AccordionPanel, {descendants: true});
-
-  /** The host native element. */
-  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -280,6 +281,7 @@ export class AccordionGroup {
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
     getItem: e => this._getItem(e),
+    element: () => this.element,
   });
 
   constructor() {
