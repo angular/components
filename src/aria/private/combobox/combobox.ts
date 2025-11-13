@@ -326,9 +326,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   /** Handles click events for the combobox. */
-  onClick(event: PointerEvent) {
+  onClick(event: MouseEvent) {
     if (!this.inputs.disabled()) {
-      this.click().handle(event);
+      this.click().handle(event as PointerEvent);
     }
   }
 
