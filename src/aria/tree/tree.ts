@@ -366,6 +366,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       children: computed(() => this._group()?.children() ?? []),
       hasChildren: computed(() => !!this._group()),
       element: () => this.element,
+      searchTerm: () => this.searchTerm() ?? '',
     });
   }
 
