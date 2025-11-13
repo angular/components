@@ -298,7 +298,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   private readonly _tabList = inject(TabList);
 
   /** A unique identifier for the widget. */
-  readonly id = input<string>(inject(_IdGenerator).getId('ng-tab-', true));
+  readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
@@ -388,7 +388,7 @@ export class TabPanel implements OnInit, OnDestroy {
   private readonly _Tabs = inject(Tabs);
 
   /** A global unique identifier for the tab. */
-  private readonly _id = inject(_IdGenerator).getId('ng-tabpanel-', true);
+  readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
   readonly tab = computed(() =>
@@ -404,8 +404,6 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The TabPanel UIPattern. */
   readonly _pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
-    id: () => this._id,
-    tab: this.tab,
   });
 
   constructor() {
