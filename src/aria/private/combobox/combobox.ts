@@ -282,8 +282,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     return manager;
   });
 
-  /** The pointerup event manager for the combobox. */
-  pointerup = computed(() =>
+  /** The click event manager for the combobox. */
+  click = computed(() =>
     new PointerEventManager().on(e => {
       if (e.target === this.inputs.inputEl()) {
         if (this.readonly()) {
@@ -325,10 +325,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
   }
 
-  /** Handles pointerup events for the combobox. */
-  onPointerup(event: PointerEvent) {
+  /** Handles click events for the combobox. */
+  onClick(event: MouseEvent) {
     if (!this.inputs.disabled()) {
-      this.pointerup().handle(event);
+      this.click().handle(event as PointerEvent);
     }
   }
 
@@ -507,6 +507,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     if (popupControls instanceof ComboboxDialogPattern) {
       this.expanded.set(false);
+      return;
+    }
+
+    if (this.readonly()) {
+      this.expanded.set(false);
+      popupControls?.unfocus();
       return;
     }
 
