@@ -363,7 +363,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       ...this,
       tree: treePattern,
       parent: parentPattern,
-      children: computed(() => this._group()?.children() ?? []),
+      children: computed(() => this._group()?._childPatterns() ?? []),
       hasChildren: computed(() => !!this._group()),
       element: () => this.element,
       searchTerm: () => this.searchTerm() ?? '',
@@ -423,7 +423,7 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
   /** Child items within this group. */
-  readonly children = computed<TreeItemPattern<V>[]>(() =>
+  readonly _childPatterns = computed<TreeItemPattern<V>[]>(() =>
     [...this._unorderedItems()].sort(sortDirectives).map(c => c._pattern),
   );
 
