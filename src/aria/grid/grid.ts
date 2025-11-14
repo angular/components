@@ -202,7 +202,7 @@ export class GridRow {
   private readonly _grid = inject(Grid);
 
   /** The parent grid UI pattern. */
-  readonly grid = computed(() => this._grid._pattern);
+  readonly _gridPattern = computed(() => this._grid._pattern);
 
   /** The index of this row within the grid. */
   readonly rowIndex = input<number>();
@@ -211,6 +211,7 @@ export class GridRow {
   readonly _pattern = new GridRowPattern({
     ...this,
     cells: this._cellPatterns,
+    grid: this._gridPattern,
   });
 }
 
@@ -318,7 +319,7 @@ export class GridCell {
   /** The UI pattern for the grid cell. */
   readonly _pattern = new GridCellPattern({
     ...this,
-    grid: this._row.grid,
+    grid: this._row._gridPattern,
     row: () => this._row._pattern,
     widgets: this._widgetPatterns,
     getWidget: e => this._getWidget(e),
