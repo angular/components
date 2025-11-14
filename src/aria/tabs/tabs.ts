@@ -96,7 +96,7 @@ export class Tabs {
     [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
   );
 
-  register(child: TabList | TabPanel) {
+  _register(child: TabList | TabPanel) {
     if (child instanceof TabList) {
       this._tablist.set(child);
     }
@@ -107,7 +107,7 @@ export class Tabs {
     }
   }
 
-  deregister(child: TabList | TabPanel) {
+  _unregister(child: TabList | TabPanel) {
     if (child instanceof TabList) {
       this._tablist.set(undefined);
     }
@@ -240,19 +240,19 @@ export class TabList implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabs.register(this);
+    this._tabs._register(this);
   }
 
   ngOnDestroy() {
-    this._tabs.deregister(this);
+    this._tabs._unregister(this);
   }
 
-  register(child: Tab) {
+  _register(child: Tab) {
     this._unorderedTabs().add(child);
     this._unorderedTabs.set(new Set(this._unorderedTabs()));
   }
 
-  deregister(child: Tab) {
+  _unregister(child: Tab) {
     this._unorderedTabs().delete(child);
     this._unorderedTabs.set(new Set(this._unorderedTabs()));
   }
@@ -341,11 +341,11 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabList.register(this);
+    this._tabList._register(this);
   }
 
   ngOnDestroy() {
-    this._tabList.deregister(this);
+    this._tabList._unregister(this);
   }
 }
 
@@ -420,11 +420,11 @@ export class TabPanel implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._Tabs.register(this);
+    this._Tabs._register(this);
   }
 
   ngOnDestroy() {
-    this._Tabs.deregister(this);
+    this._Tabs._unregister(this);
   }
 }
 
