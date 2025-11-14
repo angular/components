@@ -79,14 +79,14 @@ export class AccordionPanel {
   readonly visible = computed(() => !this._pattern.hidden());
 
   /** The parent accordion trigger pattern that controls this panel. This is set by AccordionGroup. */
-  readonly accordionTrigger: WritableSignal<AccordionTriggerPattern | undefined> =
+  readonly _accordionTriggerPattern: WritableSignal<AccordionTriggerPattern | undefined> =
     signal(undefined);
 
   /** The UI pattern instance for this panel. */
   readonly _pattern: AccordionPanelPattern = new AccordionPanelPattern({
     id: this.id,
     panelId: this.panelId,
-    accordionTrigger: () => this.accordionTrigger(),
+    accordionTrigger: () => this._accordionTriggerPattern(),
   });
 
   constructor() {
@@ -98,17 +98,17 @@ export class AccordionPanel {
 
   /** Expands this item. */
   expand() {
-    this.accordionTrigger()?.open();
+    this._accordionTriggerPattern()?.open();
   }
 
   /** Collapses this item. */
   collapse() {
-    this.accordionTrigger()?.close();
+    this._accordionTriggerPattern()?.close();
   }
 
   /** Toggles the expansion state of this item. */
   toggle() {
-    this.accordionTrigger()?.toggle();
+    this._accordionTriggerPattern()?.toggle();
   }
 }
 
@@ -169,13 +169,14 @@ export class AccordionTrigger {
   readonly active = computed(() => this._pattern.active());
 
   /** The accordion panel pattern controlled by this trigger. This is set by AccordionGroup. */
-  readonly _accordionPanel: WritableSignal<AccordionPanelPattern | undefined> = signal(undefined);
+  readonly _accordionPanelPattern: WritableSignal<AccordionPanelPattern | undefined> =
+    signal(undefined);
 
   /** The UI pattern instance for this trigger. */
   readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
     ...this,
     accordionGroup: computed(() => this._accordionGroup._pattern),
-    accordionPanel: this._accordionPanel,
+    accordionPanel: this._accordionPanelPattern,
     element: () => this.element,
   });
 
@@ -292,9 +293,9 @@ export class AccordionGroup {
 
       for (const trigger of triggers) {
         const panel = panels.find(p => p.panelId() === trigger.panelId());
-        trigger._accordionPanel.set(panel?._pattern);
+        trigger._accordionPanelPattern.set(panel?._pattern);
         if (panel) {
-          panel.accordionTrigger.set(trigger._pattern);
+          panel._accordionTriggerPattern.set(trigger._pattern);
         }
       }
     });
