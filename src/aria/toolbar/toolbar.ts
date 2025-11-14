@@ -89,7 +89,7 @@ export class Toolbar<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
-  readonly items = computed(() =>
+  readonly _itemPatterns = computed(() =>
     [...this._widgets()].sort(sortDirectives).map(widget => widget._pattern),
   );
 
@@ -111,6 +111,7 @@ export class Toolbar<V> {
   /** The toolbar UIPattern. */
   readonly _pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
+    items: this._itemPatterns,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
@@ -159,7 +160,7 @@ export class Toolbar<V> {
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
     const widgetTarget = element.closest('[ngToolbarWidget]');
-    return this.items().find(widget => widget.element() === widgetTarget);
+    return this._itemPatterns().find(widget => widget.element() === widgetTarget);
   }
 }
 
@@ -204,7 +205,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-toolbar-widget-', true));
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._toolbar._pattern);
+  readonly _toolbarPattern = computed(() => this._toolbar._pattern);
 
   /** Whether the widget is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -224,12 +225,15 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   /** Whether the widget is selected (only relevant in a selection group). */
   readonly selected = () => this._pattern.selected();
 
-  readonly group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined> =
-    () => this._group?._pattern;
+  private readonly _groupPattern: SignalLike<
+    ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined
+  > = () => this._group?._pattern;
 
   /** The ToolbarWidget UIPattern. */
   readonly _pattern = new ToolbarWidgetPattern<V>({
     ...this,
+    group: this._groupPattern,
+    toolbar: this._toolbarPattern,
     id: this.id,
     value: this.value,
     element: () => this.element,
@@ -268,17 +272,21 @@ export class ToolbarWidgetGroup<V> {
   private readonly _widgets = contentChildren(ToolbarWidget<V>, {descendants: true});
 
   /** The parent Toolbar UIPattern. */
-  readonly toolbar = computed(() => this._toolbar?._pattern);
+  private readonly _toolbarPattern = computed(() => this._toolbar?._pattern);
 
   /** Whether the widget group is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The list of toolbar items within the group. */
-  readonly items = () => this._widgets().map(w => w._pattern);
+  private readonly _itemPatterns = () => this._widgets().map(w => w._pattern);
 
   /** Whether the group allows multiple widgets to be selected. */
   readonly multi = input(false, {transform: booleanAttribute});
 
   /** The ToolbarWidgetGroup UIPattern. */
-  readonly _pattern = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>(this);
+  readonly _pattern = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>({
+    ...this,
+    items: this._itemPatterns,
+    toolbar: this._toolbarPattern,
+  });
 }
