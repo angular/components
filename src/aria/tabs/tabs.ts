@@ -146,7 +146,7 @@ export class Tabs {
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': 'onFocus()',
+    '(focusin)': '_onFocus()',
   },
 })
 export class TabList implements OnInit, OnDestroy {
@@ -235,7 +235,7 @@ export class TabList implements OnInit, OnDestroy {
     });
   }
 
-  onFocus() {
+  _onFocus() {
     this._hasFocused.set(true);
   }
 
