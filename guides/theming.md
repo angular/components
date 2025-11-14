@@ -58,6 +58,20 @@ body {
 }
 ```
 
+You can also define a convenient set of CSS utility classes that let you apply 
+theme styles from your component templates.
+
+```scss
+html {
+  ...
+  @include mat.system-classes();
+}
+```
+
+```html
+<body class="mat-bg-surface mat-text-on-surface">
+```
+
 The `mat.theme` mixin will only declare CSS variables for the categories
 included in the input. For example, if `typography` is not defined, then
 typography CSS variables will not be included in the output.
@@ -357,7 +371,7 @@ typography variables to create an application-wide banner presenting important
 information to the user:
 
 ```scss
-:host {
+.my-component {
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
   border: 1px solid var(--mat-sys-outline-variant);
@@ -365,8 +379,14 @@ information to the user:
 }
 ```
 
-See the [Theme Variables](https://material.angular.dev/guide/system-variables) guide for a
-comprehensive list of these variables, examples of where they are used, and how
+Alternatively, you can use utility classes to achieve the same styles:
+
+```html
+<div class="mat-bg-primary-container mat-text-on-primary-container mat-border-variant mat-font-body-lg"></div>
+```
+
+See the [Theming your components](https://material.angular.dev/guide/theming-your-components) guide for a
+comprehensive list of these variables and classes, including examples of where they are used, and how
 components can depend on them.
 
 ## Customizing Tokens

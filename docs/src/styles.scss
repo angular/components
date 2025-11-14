@@ -9,16 +9,19 @@ html {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
 
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 
+  @include mat.system-classes();
   @include cdk.a11y-visually-hidden();
 }
 

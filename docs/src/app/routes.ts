@@ -57,10 +57,10 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
     path: 'cdk/drag-drop/:tab',
     redirectTo: externalRedirect('https://angular.dev/guide/drag-drop'),
   },
+  {path: 'guide/system-variables', redirectTo: '/guide/theming-your-components'},
   // In v19, the theming system became based on system variables and the mat.theme mixin.
   // The following guides were consolidated into the main theming guide, which redirects
   // users to v18 docs if they are looking for this content.
-  {path: 'guide/theming-your-components', redirectTo: '/guide/theming'},
   {path: 'guide/typography', redirectTo: '/guide/theming'},
   {path: 'guide/customizing-component-styles', redirectTo: '/guide/theming'},
   {path: 'guide/elevation', redirectTo: '/guide/theming'},
