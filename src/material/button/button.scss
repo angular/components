@@ -10,7 +10,8 @@ $fallbacks: m3-button.get-tokens();
 .mat-mdc-button-base {
   text-decoration: none;
   // Makes button icon not cut off/shrink making the icon visible to fix b/411228600
-  & .mat-icon {
+  // Exclude icon button and FABs which have fixed dimensions to fix 32338
+  &:not(.mat-mdc-icon-button):not(.mat-mdc-fab-base) .mat-icon {
     // stylelint-disable material/no-prefixes
     min-height: fit-content;
     flex-shrink: 0;
