@@ -257,7 +257,7 @@ export class Option<V> {
   protected searchTerm = computed(() => this.label() ?? this.element.textContent);
 
   /** The parent Listbox UIPattern. */
-  protected listbox = computed(() => this._listbox._pattern);
+  private readonly _listboxPattern = computed(() => this._listbox._pattern);
 
   /** The value of the option. */
   value = input.required<V>();
@@ -276,7 +276,7 @@ export class Option<V> {
     ...this,
     id: this.id,
     value: this.value,
-    listbox: this.listbox,
+    listbox: this._listboxPattern,
     element: () => this.element,
     searchTerm: () => this.searchTerm() ?? '',
   });
