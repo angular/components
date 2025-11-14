@@ -138,7 +138,7 @@ export class Combobox<V> {
     inputValue: signal(''),
     inputEl: signal(undefined),
     containerEl: () => this._elementRef.nativeElement,
-    popupControls: () => this.popup()?.controls(),
+    popupControls: () => this.popup()?._controls(),
   });
 
   constructor() {
@@ -231,7 +231,7 @@ export class ComboboxInput {
     );
     this.combobox._pattern.inputs.inputValue = this.value;
 
-    const controls = this.combobox.popup()?.controls();
+    const controls = this.combobox.popup()?._controls();
     if (controls instanceof ComboboxDialogPattern) {
       return;
     }
@@ -301,7 +301,7 @@ export class ComboboxPopup<V> {
   readonly combobox = inject<Combobox<V>>(Combobox, {optional: true});
 
   /** The popup controls exposed to the combobox. */
-  readonly controls = signal<
+  readonly _controls = signal<
     | ComboboxListboxControls<any, V>
     | ComboboxTreeControls<any, V>
     | ComboboxDialogPattern
@@ -359,7 +359,7 @@ export class ComboboxDialog {
     });
 
     if (this._popup) {
-      this._popup.controls.set(this._pattern);
+      this._popup._controls.set(this._pattern);
     }
 
     afterRenderEffect(() => {

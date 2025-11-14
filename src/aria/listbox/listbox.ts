@@ -154,7 +154,7 @@ export class Listbox<V> {
       : new ListboxPattern<V>(inputs);
 
     if (this._popup) {
-      this._popup.controls.set(this._pattern as ComboboxListboxPattern<V>);
+      this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);
     }
 
     afterRenderEffect(() => {
