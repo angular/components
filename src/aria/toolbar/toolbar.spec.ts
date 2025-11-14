@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, Directive, inject, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
@@ -533,6 +533,23 @@ describe('Toolbar', () => {
         expect(document.activeElement).toBe(initialActiveElement);
       });
     });
+
+    describe('with wrapped toolbar widgets', () => {
+      beforeEach(() => {
+        TestBed.configureTestingModule({imports: [WrappedToolbarExample]});
+        fixture = TestBed.createComponent(WrappedToolbarExample) as any;
+        fixture.detectChanges();
+      });
+
+      it('should navigate on click', () => {
+        const widgets = fixture.debugElement
+          .queryAll(By.css('[toolbar-button]'))
+          .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+        console.log('clicking:', widgets[0]);
+        click(widgets[0]);
+        expect(document.activeElement).toBe(widgets[0]);
+      });
+    });
   });
 
   describe('Selection', () => {
@@ -638,3 +655,27 @@ class ToolbarExample {
 
   groups = [{disabled: signal(false)}];
 }
+
+@Directive({
+  selector: 'button[toolbar-button]',
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
+  host: {
+    type: 'button',
+    class: 'example-button material-symbols-outlined',
+    '[aria-label]': 'widget.value()',
+  },
+})
+export class SimpleToolbarButton {
+  widget = inject(ToolbarWidget);
+}
+
+@Component({
+  template: `
+    <div ngToolbar>
+      <button toolbar-button value="undo">undo</button>
+      <button toolbar-button value="redo">redo</button>
+    </div>
+  `,
+  imports: [Toolbar, SimpleToolbarButton],
+})
+class WrappedToolbarExample {}
