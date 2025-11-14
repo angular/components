@@ -209,7 +209,7 @@ export class Menu<V> {
    * sometimes the items array is empty. The bug can be reproduced by switching this to use a
    * computed and then quickly opening and closing menus in the dev app.
    */
-  readonly items = () => this._items().map(i => i._pattern);
+  private readonly _itemPatterns = () => this._items().map(i => i._pattern);
 
   /** Whether the menu is visible. */
   readonly visible = computed(() => this._pattern.visible());
@@ -227,6 +227,7 @@ export class Menu<V> {
     this._pattern = new MenuPattern({
       ...this,
       parent: computed(() => this.parent()?._pattern),
+      items: this._itemPatterns,
       multi: () => false,
       softDisabled: () => true,
       focusMode: () => 'roving',
@@ -348,7 +349,7 @@ export class MenuBar<V> {
   readonly _pattern: MenuBarPattern<V>;
 
   /** The menu items as a writable signal. */
-  readonly items = signal<MenuItemPattern<V>[]>([]);
+  private readonly _itemPatterns = signal<MenuItemPattern<V>[]>([]);
 
   /** A callback function triggered when a menu item is selected. */
   onSelect = output<V>();
@@ -356,6 +357,7 @@ export class MenuBar<V> {
   constructor() {
     this._pattern = new MenuBarPattern({
       ...this,
+      items: this._itemPatterns,
       multi: () => false,
       softDisabled: () => true,
       focusMode: () => 'roving',
@@ -367,7 +369,7 @@ export class MenuBar<V> {
     });
 
     afterRenderEffect(() => {
-      this.items.set(this._items().map(i => i._pattern));
+      this._itemPatterns.set(this._items().map(i => i._pattern));
     });
 
     afterRenderEffect(() => {
