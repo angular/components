@@ -307,10 +307,10 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
   /** The parent TabList UIPattern. */
-  readonly tablist = computed(() => this._tabList._pattern);
+  private readonly _tablistPattern = computed(() => this._tabList._pattern);
 
   /** The TabPanel UIPattern associated with the tab */
-  readonly tabpanel = computed(() =>
+  private readonly _tabpanelPattern = computed(() =>
     this._tabs._unorderedTabpanelPatterns().find(tabpanel => tabpanel.value() === this.value()),
   );
 
@@ -329,8 +329,8 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
     ...this,
-    tablist: this.tablist,
-    tabpanel: this.tabpanel,
+    tablist: this._tablistPattern,
+    tabpanel: this._tabpanelPattern,
     expanded: signal(false),
     element: () => this.element,
   });
@@ -400,7 +400,7 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  readonly tab = computed(() =>
+  private readonly _tabPattern = computed(() =>
     this._Tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
   );
 
@@ -413,6 +413,7 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The TabPanel UIPattern. */
   readonly _pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
+    tab: this._tabPattern,
   });
 
   constructor() {
