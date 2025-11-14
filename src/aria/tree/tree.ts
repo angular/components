@@ -93,7 +93,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': 'onFocus()',
+    '(focusin)': '_onFocus()',
   },
   hostDirectives: [ComboboxPopup],
 })
@@ -220,7 +220,7 @@ export class Tree<V> {
     });
   }
 
-  onFocus() {
+  _onFocus() {
     this._hasFocused.set(true);
   }
 

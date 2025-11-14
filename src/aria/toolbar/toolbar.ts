@@ -72,7 +72,7 @@ function sortDirectives(a: HasElement, b: HasElement) {
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': 'onFocus()',
+    '(focusin)': '_onFocus()',
   },
 })
 export class Toolbar<V> {
@@ -137,7 +137,7 @@ export class Toolbar<V> {
     });
   }
 
-  onFocus() {
+  _onFocus() {
     this._hasBeenFocused.set(true);
   }
 

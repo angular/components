@@ -58,7 +58,7 @@ import {ComboboxPopup} from '../combobox';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': 'onFocus()',
+    '(focusin)': '_onFocus()',
   },
   hostDirectives: [ComboboxPopup],
 })
@@ -194,7 +194,7 @@ export class Listbox<V> {
     });
   }
 
-  onFocus() {
+  _onFocus() {
     this._hasFocused.set(true);
   }
 
