@@ -141,7 +141,7 @@ export class Toolbar<V> {
     this._hasBeenFocused.set(true);
   }
 
-  register(widget: ToolbarWidget<V>) {
+  _register(widget: ToolbarWidget<V>) {
     const widgets = this._widgets();
     if (!widgets.has(widget)) {
       widgets.add(widget);
@@ -149,7 +149,7 @@ export class Toolbar<V> {
     }
   }
 
-  unregister(widget: ToolbarWidget<V>) {
+  _unregister(widget: ToolbarWidget<V>) {
     const widgets = this._widgets();
     if (widgets.delete(widget)) {
       this._widgets.set(new Set(widgets));
@@ -236,11 +236,11 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this._toolbar.register(this);
+    this._toolbar._register(this);
   }
 
   ngOnDestroy() {
-    this._toolbar.unregister(this);
+    this._toolbar._unregister(this);
   }
 }
 

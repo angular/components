@@ -224,12 +224,12 @@ export class Tree<V> {
     this._hasFocused.set(true);
   }
 
-  register(child: TreeItem<V>) {
+  _register(child: TreeItem<V>) {
     this._unorderedItems().add(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 
-  unregister(child: TreeItem<V>) {
+  _unregister(child: TreeItem<V>) {
     this._unorderedItems().delete(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
@@ -349,8 +349,8 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    this.parent().register(this);
-    this.tree().register(this);
+    this.parent()._register(this);
+    this.tree()._register(this);
 
     const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
@@ -371,15 +371,15 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnDestroy() {
-    this.parent().unregister(this);
-    this.tree().unregister(this);
+    this.parent()._unregister(this);
+    this.tree()._unregister(this);
   }
 
-  register(group: TreeItemGroup<V>) {
+  _register(group: TreeItemGroup<V>) {
     this._group.set(group);
   }
 
-  unregister() {
+  _unregister() {
     this._group.set(undefined);
   }
 }
@@ -432,19 +432,19 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._deferredContent.deferredContentAware.set(this.ownedBy());
-    this.ownedBy().register(this);
+    this.ownedBy()._register(this);
   }
 
   ngOnDestroy() {
-    this.ownedBy().unregister();
+    this.ownedBy()._unregister();
   }
 
-  register(child: TreeItem<V>) {
+  _register(child: TreeItem<V>) {
     this._unorderedItems().add(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 
-  unregister(child: TreeItem<V>) {
+  _unregister(child: TreeItem<V>) {
     this._unorderedItems().delete(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
