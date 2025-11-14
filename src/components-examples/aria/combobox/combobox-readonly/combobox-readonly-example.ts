@@ -27,7 +27,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 @Component({
   selector: 'combobox-readonly-example',
   templateUrl: 'combobox-readonly-example.html',
-  styleUrl: '../select-examples.css',
+  styleUrl: '../retro-select-examples.css',
   imports: [
     Combobox,
     ComboboxInput,

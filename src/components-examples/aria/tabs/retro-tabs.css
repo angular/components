@@ -1,0 +1,54 @@
+:host {
+  font-family: 'Press Start 2P';
+  --retro-button-color: var(--mat-sys-primary);
+  --retro-shadow-light: color-mix(in srgb, var(--retro-button-color) 90%, #fff);
+  --retro-shadow-dark: color-mix(in srgb, var(--retro-button-color) 90%, #000);
+  --retro-box-shadow:
+    inset 4px 4px 0px 0px var(--retro-shadow-light),
+    inset -4px -4px 0px 0px var(--retro-shadow-dark), 4px 0px 0px 0px var(--mat-sys-shadow),
+    0px 4px 0px 0px var(--mat-sys-shadow), -4px 0px 0px 0px var(--mat-sys-shadow),
+    0px -4px 0px 0px var(--mat-sys-shadow), 8px 8px 0px 0px var(--mat-sys-shadow);
+  --retro-box-shadow-pressed:
+    inset 4px 4px 0px 0px var(--retro-shadow-dark),
+    inset -4px -4px 0px 0px var(--retro-shadow-light), 4px 0px 0px 0px var(--mat-sys-shadow),
+    0px 4px 0px 0px var(--mat-sys-shadow), -4px 0px 0px 0px var(--mat-sys-shadow),
+    0px -4px 0px 0px var(--mat-sys-shadow), 0px 0px 0px 0px var(--mat-sys-shadow);
+}
+
+[ngTabs] {
+  --retro-shadow-light: color-mix(in srgb, var(--mat-sys-surface) 90%, #fff);
+  --retro-shadow-dark: color-mix(in srgb, var(--mat-sys-surface) 90%, #000);
+  --retro-box-shadow:
+    inset 4px 4px 0px 0px var(--retro-shadow-light),
+    inset -4px -4px 0px 0px var(--retro-shadow-dark), 4px 0px 0px 0px var(--mat-sys-shadow),
+    0px 4px 0px 0px var(--mat-sys-shadow), -4px 0px 0px 0px var(--mat-sys-shadow),
+    0px -4px 0px 0px var(--mat-sys-shadow), 8px 8px 0px 0px var(--mat-sys-shadow);
+
+  align-items: center;
+  text-transform: uppercase;
+  background-color: var(--mat-sys-surface);
+  box-shadow: var(--retro-box-shadow);
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+}
+
+[ngTabList] {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 4px solid var(--mat-sys-shadow);
+}
+
+.example-select:has([ngComboboxInput][aria-disabled='true']) {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.example-select:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 90%, transparent);
+}
+
+.example-select:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--retro-box-shadow-pressed);
+}

@@ -1,0 +1,86 @@
+:host {
+  font-family: 'Press Start 2P';
+  --retro-shadow-light: color-mix(in srgb, transparent 90%, #fff);
+  --retro-shadow-dark: color-mix(in srgb, transparent 90%, #000);
+  --retro-box-shadow:
+    inset 4px 4px 0px 0px var(--retro-shadow-light),
+    inset -4px -4px 0px 0px var(--retro-shadow-dark), 4px 0px 0px 0px var(--mat-sys-shadow),
+    0px 4px 0px 0px var(--mat-sys-shadow), -4px 0px 0px 0px var(--mat-sys-shadow),
+    0px -4px 0px 0px var(--mat-sys-shadow), 8px 8px 0px 0px var(--mat-sys-shadow);
+  --retro-box-shadow-pressed:
+    inset 4px 4px 0px 0px var(--retro-shadow-dark),
+    inset -4px -4px 0px 0px var(--retro-shadow-light), 4px 0px 0px 0px var(--mat-sys-shadow),
+    0px 4px 0px 0px var(--mat-sys-shadow), -4px 0px 0px 0px var(--mat-sys-shadow),
+    0px -4px 0px 0px var(--mat-sys-shadow), 0px 0px 0px 0px var(--mat-sys-shadow);
+}
+
+.example-toolbar {
+  gap: 16px;
+  padding: 8px;
+  display: flex;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  flex-direction: row;
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface);
+}
+
+.example-group {
+  gap: 16px;
+  display: flex;
+}
+
+.example-button {
+  cursor: pointer;
+  opacity: 0.875;
+  font-size: 1.25rem;
+  padding: 6px 8px;
+  color: var(--mat-sys-on-primary);
+  background-color: var(--mat-sys-primary);
+  border: 1px solid transparent;
+  box-shadow: var(--retro-box-shadow);
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+}
+
+.example-button:focus {
+  outline-offset: 4px;
+  outline: 4px dashed var(--mat-sys-primary);
+}
+
+.example-button[aria-label="settings"] {
+  --mat-sys-primary: #6a7d99;
+}
+.example-button[aria-label="inventory"] {
+  --mat-sys-primary: #db9e25;
+}
+.example-button[aria-label="heal"] {
+  --mat-sys-primary: #cc2e2e;
+}
+.example-button[aria-label="combat"] {
+  --mat-sys-primary: #d16b1f;
+}
+.example-button[aria-label="spells"] {
+  --mat-sys-primary: #b34cb3;
+}
+.example-button[aria-label="roll for initiative"] {
+  --mat-sys-primary: #29ad75;
+}
+
+.example-button:focus,
+.example-button:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 90%, transparent);
+}
+
+.example-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--retro-box-shadow-pressed);
+}
+
+.example-separator {
+  height: 4px;
+  width: 12px;
+  align-self: center;
+  background: var(--mat-sys-on-surface);
+}
