@@ -159,8 +159,7 @@ export class Toolbar<V> {
 
   /** Finds the toolbar item associated with a given element. */
   private _getItem(element: Element) {
-    const widgetTarget = element.closest('[ngToolbarWidget]');
-    return this._itemPatterns().find(widget => widget.element() === widgetTarget);
+    return this._itemPatterns().find(item => item.element()?.contains(element));
   }
 }
 
