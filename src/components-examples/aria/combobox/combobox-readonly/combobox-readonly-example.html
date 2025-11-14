@@ -14,7 +14,6 @@
         <div ngListbox>
           @for (label of labels; track label.value) {
             <div ngOption [value]="label.value" [label]="label.value">
-              <span class="example-option-icon material-symbols-outlined">{{label.icon}}</span>
               <span class="example-option-text">{{label.value}}</span>
               <span class="example-option-check material-symbols-outlined">check</span>
             </div>
