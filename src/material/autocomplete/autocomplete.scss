@@ -43,11 +43,12 @@ div.mat-mdc-autocomplete-panel {
   &.mat-mdc-autocomplete-visible {
     visibility: visible;
   }
+}
 
-  &.mat-mdc-autocomplete-hidden {
-    visibility: hidden;
-    pointer-events: none;
-  }
+div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-hidden,
+.cdk-overlay-pane:has(> .mat-mdc-autocomplete-hidden) {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 @keyframes _mat-autocomplete-enter {
