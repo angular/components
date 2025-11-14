@@ -34,7 +34,8 @@
     }
 
     // stylelint-disable-next-line selector-class-pattern
-    h3 .material-icons, h4 .material-icons {
+    h3 .material-icons,
+    h4 .material-icons {
       color: var(--mat-sys-on-surface);
     }
 
@@ -44,7 +45,9 @@
       font-weight: 400;
     }
 
-    p, ul, ol {
+    p,
+    ul,
+    ol {
       font-size: 16px;
       line-height: 28px;
     }
@@ -118,4 +121,30 @@
     }
   }
 
+  summary {
+    cursor: pointer;
+    padding: 8px;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+        transparent
+      );
+    }
+    &:focus {
+      background-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
+        transparent
+      );
+    }
+    &:active {
+      background-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
+        transparent
+      );
+    }
+  }
 }
