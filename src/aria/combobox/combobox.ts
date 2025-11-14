@@ -167,16 +167,6 @@ export class Combobox<V> {
   close() {
     this._pattern.close();
   }
-
-  /** Expands the combobox popup. */
-  expand() {
-    this._pattern.open();
-  }
-
-  /** Collapses the combobox popup. */
-  collapse() {
-    this._pattern.close();
-  }
 }
 
 /**
