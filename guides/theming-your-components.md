@@ -38,6 +38,75 @@ Using the system tokens makes it easy to match the same color scheme of your app
 also makes it easy to ensure your application can correctly handle both light and dark mode
 automatically.
 
+<details>
+  <summary>Expand to view all available color system tokens</summary>
+
+```css
+/* Primary */
+--mat-sys-primary
+--mat-sys-on-primary
+--mat-sys-primary-container
+--mat-sys-on-primary-container
+--mat-sys-primary-fixed
+--mat-sys-on-primary-fixed
+--mat-sys-on-primary-fixed-variant
+--mat-sys-primary-fixed-dim
+--mat-sys-inverse-primary
+
+/* Secondary */
+--mat-sys-secondary
+--mat-sys-on-secondary
+--mat-sys-secondary-container
+--mat-sys-on-secondary-container
+--mat-sys-secondary-fixed
+--mat-sys-on-secondary-fixed
+--mat-sys-on-secondary-fixed-variant
+--mat-sys-secondary-fixed-dim
+
+/* Tertiary */
+--mat-sys-tertiary
+--mat-sys-on-tertiary
+--mat-sys-tertiary-container
+--mat-sys-on-tertiary-container
+--mat-sys-tertiary-fixed
+--mat-sys-on-tertiary-fixed
+--mat-sys-on-tertiary-fixed-variant
+--mat-sys-tertiary-fixed-dim
+
+/* Error */
+--mat-sys-error
+--mat-sys-on-error
+--mat-sys-error-container
+--mat-sys-on-error-container
+
+/* Surface */
+--mat-sys-surface
+--mat-sys-on-surface
+--mat-sys-on-surface-variant
+--mat-sys-surface-bright
+--mat-sys-surface-container
+--mat-sys-surface-container-high
+--mat-sys-surface-container-highest
+--mat-sys-surface-container-low
+--mat-sys-surface-container-lowest
+--mat-sys-surface-dim
+--mat-sys-surface-tint
+--mat-sys-surface-variant
+--mat-sys-inverse-surface
+--mat-sys-inverse-on-surface
+
+/* Miscellaneous */
+--mat-sys-background
+--mat-sys-on-background
+--mat-sys-neutral-variant20
+--mat-sys-neutral10
+--mat-sys-outline
+--mat-sys-outline-variant
+--mat-sys-scrim
+--mat-sys-shadow
+```
+</details>
+
 ### Background
 
 <h4>Primary</h4>
@@ -383,6 +452,119 @@ Each category has three sizes: small, medium, and large. Learn more about how th
 their sizes should be used in your application by visiting Material
 Design's [Applying Type](https://m3.material.io/styles/typography/applying-type) documentation.
 
+<details>
+  <summary>Expand to view all available typography system tokens</summary>
+
+```css
+--mat-sys-body-large
+--mat-sys-body-large-font
+--mat-sys-body-large-line-height
+--mat-sys-body-large-size
+--mat-sys-body-large-tracking
+--mat-sys-body-large-weight
+
+--mat-sys-body-medium
+--mat-sys-body-medium-font
+--mat-sys-body-medium-line-height
+--mat-sys-body-medium-size
+--mat-sys-body-medium-tracking
+--mat-sys-body-medium-weight
+
+--mat-sys-body-small
+--mat-sys-body-small-font
+--mat-sys-body-small-line-height
+--mat-sys-body-small-size
+--mat-sys-body-small-tracking
+--mat-sys-body-small-weight
+
+--mat-sys-display-large
+--mat-sys-display-large-font
+--mat-sys-display-large-line-height
+--mat-sys-display-large-size
+--mat-sys-display-large-tracking
+--mat-sys-display-large-weight
+
+--mat-sys-display-medium
+--mat-sys-display-medium-font
+--mat-sys-display-medium-line-height
+--mat-sys-display-medium-size
+--mat-sys-display-medium-tracking
+--mat-sys-display-medium-weight
+
+--mat-sys-display-small
+--mat-sys-display-small-font
+--mat-sys-display-small-line-height
+--mat-sys-display-small-size
+--mat-sys-display-small-tracking
+--mat-sys-display-small-weight
+
+--mat-sys-headline-large
+--mat-sys-headline-large-font
+--mat-sys-headline-large-line-height
+--mat-sys-headline-large-size
+--mat-sys-headline-large-tracking
+--mat-sys-headline-large-weight
+
+--mat-sys-headline-medium
+--mat-sys-headline-medium-font
+--mat-sys-headline-medium-line-height
+--mat-sys-headline-medium-size
+--mat-sys-headline-medium-tracking
+--mat-sys-headline-medium-weight
+
+--mat-sys-headline-small
+--mat-sys-headline-small-font
+--mat-sys-headline-small-line-height
+--mat-sys-headline-small-size
+--mat-sys-headline-small-tracking
+--mat-sys-headline-small-weight
+
+--mat-sys-label-large
+--mat-sys-label-large-font
+--mat-sys-label-large-line-height
+--mat-sys-label-large-size
+--mat-sys-label-large-tracking
+--mat-sys-label-large-weight
+--mat-sys-label-large-weight-prominent
+
+--mat-sys-label-medium
+--mat-sys-label-medium-font
+--mat-sys-label-medium-line-height
+--mat-sys-label-medium-size
+--mat-sys-label-medium-tracking
+--mat-sys-label-medium-weight
+--mat-sys-label-medium-weight-prominent
+
+--mat-sys-label-small
+--mat-sys-label-small-font
+--mat-sys-label-small-line-height
+--mat-sys-label-small-size
+--mat-sys-label-small-tracking
+--mat-sys-label-small-weight
+
+--mat-sys-title-large
+--mat-sys-title-large-font
+--mat-sys-title-large-line-height
+--mat-sys-title-large-size
+--mat-sys-title-large-tracking
+--mat-sys-title-large-weight
+
+--mat-sys-title-medium
+--mat-sys-title-medium-font
+--mat-sys-title-medium-line-height
+--mat-sys-title-medium-size
+--mat-sys-title-medium-tracking
+--mat-sys-title-medium-weight
+
+--mat-sys-title-small
+--mat-sys-title-small-font
+--mat-sys-title-small-line-height
+--mat-sys-title-small-size
+--mat-sys-title-small-tracking
+--mat-sys-title-small-weight
+```
+</details>
+
 <h3> Body </h3>
 
 
@@ -581,8 +763,27 @@ Design's [Corner Radius Scale](https://m3.material.io/styles/shape/corner-radius
 documentation to learn more.
 
 In Angular Material, shape is scoped to varying levels of border-radius. The following code blocks
-demonstate the levels of roundness. Their border sizes are increased to 2px to clearly show the
+demonstrate the levels of roundness. Their border sizes are increased to `2px` to clearly show the
 border radii.
+
+<details>
+  <summary>Expand to view all available corner shape system tokens</summary>
+
+```css
+--mat-sys-corner-extra-large: 28px;
+--mat-sys-corner-extra-large-top: 28px 28px 0 0;
+--mat-sys-corner-extra-small: 4px;
+--mat-sys-corner-extra-small-top: 4px 4px 0 0;
+--mat-sys-corner-full: 9999px;
+--mat-sys-corner-large: 16px;
+--mat-sys-corner-large-end: 0 16px 16px 0;
+--mat-sys-corner-large-start: 16px 0 0 16px;
+--mat-sys-corner-large-top: 16px 16px 0 0;
+--mat-sys-corner-medium: 12px;
+--mat-sys-corner-none: 0;
+--mat-sys-corner-small: 8px;
+```
+</details>
 
 The extra small border radius is useful for components that need a small amount of rounding, such as
 a chip. In Angular Material, this is used for the shape of a snackbar and a tooltip.
@@ -637,10 +838,18 @@ Material, this is used for the shape of a badge and the shape of a button.
 
 Material Design uses borders and shadows to create a sense of depth and hierarchy in the UI. See
 Material Design's [Applying Elevation](https://m3.material.io/styles/elevation/applying-elevation)
-documentation to
-learn more.
+documentation to learn more.
 
 <h3> Border </h3>
+
+<details>
+  <summary>Expand to view the outline system tokens</summary>
+
+```css
+--mat-sys-outline
+--mat-sys-outline-variant
+```
+</details>
 
 The Material Design border is useful for components that need a visible boundary. In Angular
 Material, this is used for the outline of an outlined button.
@@ -661,6 +870,19 @@ Material, this is used for the outline of an outlined card and the color of the 
 </pre>
 
 <h3> Shadow </h3>
+
+<details>
+  <summary>Expand to view all available elevation system tokens</summary>
+
+```css
+--mat-sys-level0: 0px 0px 0px 0px rgba(0, 0, 0, .2), 0px 0px 0px 0px rgba(0, 0, 0, .14), 0px 0px 0px 0px rgba(0, 0, 0, .12);
+--mat-sys-level1: 0px 2px 1px -1px rgba(0, 0, 0, .2), 0px 1px 1px 0px rgba(0, 0, 0, .14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
+--mat-sys-level2: 0px 3px 3px -2px rgba(0, 0, 0, .2), 0px 3px 4px 0px rgba(0, 0, 0, .14), 0px 1px 8px 0px rgba(0, 0, 0, .12);
+--mat-sys-level3: 0px 3px 5px -1px rgba(0, 0, 0, .2), 0px 6px 10px 0px rgba(0, 0, 0, .14), 0px 1px 18px 0px rgba(0, 0, 0, .12);
+--mat-sys-level4: 0px 5px 5px -3px rgba(0, 0, 0, .2), 0px 8px 10px 1px rgba(0, 0, 0, .14), 0px 3px 14px 2px rgba(0, 0, 0, .12);
+--mat-sys-level5: 0px 7px 8px -4px rgba(0, 0, 0, .2), 0px 12px 17px 2px rgba(0, 0, 0, .14), 0px 5px 22px 4px rgba(0, 0, 0, .12);
+```
+</details>
 
 Level 1 elevation can be used to slightly raise the appearance of a surface. In Angular Material,
 this is used for the elevation of an elevated card and the handle of a slider.
