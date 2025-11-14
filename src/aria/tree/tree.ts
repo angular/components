@@ -190,7 +190,7 @@ export class Tree<V> {
       : new TreePattern<V>(inputs);
 
     if (this._popup?.combobox) {
-      this._popup?.controls?.set(this._pattern as ComboboxTreePattern<V>);
+      this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
     }
 
     afterRenderEffect(() => {
