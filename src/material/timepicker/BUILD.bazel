@@ -68,6 +68,7 @@ ng_project(
         "timepicker.ts",
         "timepicker-input.ts",
         "timepicker-module.ts",
+        "timepicker-option.ts",
         "timepicker-toggle.ts",
         "util.ts",
     ],
@@ -77,6 +78,7 @@ ng_project(
         ":timepicker_css",
     ],
     deps = [
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
