@@ -8,7 +8,7 @@
 
 import {MatDateFormats} from './date-formats';
 
-export const MAT_NATIVE_DATE_FORMATS: MatDateFormats = {
+export const MAT_NATIVE_DATE_FORMATS: MatDateFormats<Intl.DateTimeFormatOptions, null> = {
   parse: {
     dateInput: null,
     timeInput: null,

@@ -8,19 +8,19 @@
 
 import {InjectionToken} from '@angular/core';
 
-export type MatDateFormats = {
+export type MatDateFormats<DisplayFormatType = string, ParseFormatType = DisplayFormatType> = {
   parse: {
-    dateInput: any;
-    timeInput?: any;
+    dateInput: ParseFormatType;
+    timeInput: ParseFormatType;
   };
   display: {
-    dateInput: any;
-    monthLabel?: any;
-    monthYearLabel: any;
-    dateA11yLabel: any;
-    monthYearA11yLabel: any;
-    timeInput?: any;
-    timeOptionLabel?: any;
+    dateInput: DisplayFormatType;
+    monthLabel?: DisplayFormatType;
+    monthYearLabel: DisplayFormatType;
+    dateA11yLabel: DisplayFormatType;
+    monthYearA11yLabel: DisplayFormatType;
+    timeInput?: DisplayFormatType;
+    timeOptionLabel?: DisplayFormatType;
   };
 };
 

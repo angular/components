@@ -47,7 +47,7 @@ export class MatDatepickerInputEvent<D, S = unknown> {
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInputBase<S, D>,
+    public target: MatDatepickerInputBase<S, D, unknown, unknown, unknown>,
     /** Reference to the native input element associated with the datepicker input. */
     public targetElement: HTMLElement,
   ) {
@@ -78,12 +78,23 @@ export interface _MatFormFieldPartial {
 
 /** Base class for datepicker inputs. */
 @Directive()
-export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection<S>>
+export abstract class MatDatepickerInputBase<
+    S,
+    D = ExtractDateTypeFromSelection<S>,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy, Validator
 {
   protected _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
+  _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(DateAdapter, {
+    optional: true,
+  })!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  )!;
 
   /** Whether the component has been initialized. */
   private _isInitialized: boolean;
@@ -126,14 +137,10 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D, S>> = new EventEmitter<
-    MatDatepickerInputEvent<D, S>
-  >();
+  @Output() readonly dateChange = new EventEmitter<MatDatepickerInputEvent<D, S>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D, S>> = new EventEmitter<
-    MatDatepickerInputEvent<D, S>
-  >();
+  @Output() readonly dateInput = new EventEmitter<MatDatepickerInputEvent<D, S>>();
 
   /** Emits when the internal state has changed */
   readonly stateChanges = new Subject<void>();
@@ -419,7 +426,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
  */
 export function dateInputsHaveChanged(
   changes: SimpleChanges,
-  adapter: DateAdapter<unknown>,
+  adapter: DateAdapter<unknown, unknown, unknown, unknown>,
 ): boolean {
   const keys = Object.keys(changes);
 
