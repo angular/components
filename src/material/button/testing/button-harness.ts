@@ -60,8 +60,9 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       .addOption('buttonType', options.buttonType, (harness, buttonType) =>
         HarnessPredicate.stringMatches(harness.getType(), buttonType),
       )
-      .addOption('iconName', options.iconName, (harness, iconName) => {
-        return harness.hasHarness(MatIconHarness.with({name: iconName}));
+      .addOption('iconName', options.iconName, async (harness, iconName) => {
+        const result = await harness.locatorForOptional(MatIconHarness.with({name: iconName}))();
+        return result !== null;
       });
   }
 
