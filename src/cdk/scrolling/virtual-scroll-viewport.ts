@@ -179,7 +179,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   private _injector = inject(Injector);
 
-  private _isDestroyed = false;
+  private _destroyRef = inject(DestroyRef);
 
   constructor(...args: unknown[]);
 
@@ -211,7 +211,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       // effect that runs before change detection of any application views (since we're depending on markForCheck marking parents dirty)
       {injector: inject(ApplicationRef).injector},
     );
-    inject(DestroyRef).onDestroy(() => void ref.destroy());
+    this._destroyRef.onDestroy(() => void ref.destroy());
   }
 
   override ngOnInit() {
@@ -261,8 +261,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
     this._viewportChanges.unsubscribe();
-
-    this._isDestroyed = true;
 
     super.ngOnDestroy();
   }
@@ -512,7 +510,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Run change detection. */
   private _doChangeDetection() {
-    if (this._isDestroyed) {
+    if (this._destroyRef.destroyed) {
       return;
     }
 
