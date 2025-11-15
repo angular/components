@@ -15,7 +15,7 @@ import {ToolbarWidgetPattern} from './toolbar-widget';
 /** Represents the required inputs for a toolbar. */
 export type ToolbarInputs<V> = Omit<
   ListInputs<ToolbarWidgetPattern<V>, V>,
-  'multi' | 'typeaheadDelay' | 'values' | 'selectionMode' | 'focusMode'
+  'multi' | 'typeaheadDelay' | 'selectionMode' | 'focusMode'
 > & {
   /** A function that returns the toolbar item associated with a given element. */
   getItem: (e: Element) => ToolbarWidgetPattern<V> | undefined;
@@ -160,7 +160,6 @@ export class ToolbarPattern<V> {
       multi: () => true,
       focusMode: () => 'roving',
       selectionMode: () => 'explicit',
-      values: signal([] as V[]),
       typeaheadDelay: () => 0, // Toolbar widgets do not support typeahead.
     });
   }
