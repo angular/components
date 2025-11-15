@@ -18,6 +18,7 @@ import {
   OnInit,
   OnDestroy,
   contentChildren,
+  model,
 } from '@angular/core';
 import {
   ToolbarPattern,
@@ -108,6 +109,9 @@ export class Toolbar<V> {
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
+  /** The values of the selected widgets within the toolbar. */
+  readonly values = model<V[]>([]);
+
   /** The toolbar UIPattern. */
   readonly _pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
@@ -116,6 +120,7 @@ export class Toolbar<V> {
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
     getItem: e => this._getItem(e),
+    values: this.values,
   });
 
   /** Whether the toolbar has received focus yet. */
