@@ -542,7 +542,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     } else if (origin instanceof Element) {
       return origin;
     }
-    return document.body.lastChild as Element;
+    return null;
   }
 
   /**
