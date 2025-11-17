@@ -297,8 +297,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withGrowAfterOpen(growAfterOpen?: boolean): this;
     withLockedPosition(isLocked?: boolean): this;
     withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
-    withCustomPopoverHostElement(element: FlexibleConnectedPositionStrategyOrigin): this;
-    withAttachPopoverAsChild(withAttachPopoverAsChild?: boolean): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
     withScrollableContainers(scrollables: CdkScrollable[]): this;
@@ -313,7 +311,7 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | (Po
 });
 
 // @public
-export type FlexibleOverlayPopoverLocation = 'global' | 'inline';
+export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {type: 'parent', element: Element };
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {

@@ -129,8 +129,6 @@ export interface CdkConnectedOverlayConfig {
   push?: boolean;
   disposeOnNavigation?: boolean;
   usePopover?: FlexibleOverlayPopoverLocation | null;
-  customPopoverHostElement?: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin | null;
-  attachPopoverAsChild?: boolean;
   matchWidth?: boolean;
 }
 
