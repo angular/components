@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -13,6 +13,7 @@ const year = today.getFullYear();
   selector: 'date-range-picker-comparison-example',
   templateUrl: 'date-range-picker-comparison-example.html',
   styleUrl: 'date-range-picker-comparison-example.css',
+  encapsulation: ViewEncapsulation.None,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
