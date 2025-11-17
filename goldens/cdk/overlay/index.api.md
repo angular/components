@@ -284,7 +284,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // (undocumented)
     detach(): void;
     dispose(): void;
-    getPopoverInsertionPoint(): Element | null | {type: 'parent', element: Element};
+    getPopoverInsertionPoint(): Element | null | {
+        type: 'parent';
+        element: Element;
+    };
     _origin: FlexibleConnectedPositionStrategyOrigin;
     positionChanges: Observable<ConnectedOverlayPositionChange>;
     get positions(): ConnectionPositionPair[];
@@ -311,7 +314,10 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | (Po
 });
 
 // @public
-export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {type: 'parent', element: Element };
+export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {
+    type: 'parent';
+    element: Element;
+};
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
@@ -534,7 +540,10 @@ export interface PositionStrategy {
     attach(overlayRef: OverlayRef): void;
     detach?(): void;
     dispose(): void;
-    getPopoverInsertionPoint?(): Element | null | {type: 'parent', element: Element};
+    getPopoverInsertionPoint?(): Element | null | {
+        type: 'parent';
+        element: Element;
+    };
 }
 
 // @public
