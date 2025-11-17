@@ -1,3 +1,25 @@
+<a name="21.0.0-rc.3"></a>
+# 21.0.0-rc.3 "bubblewrap-bazooka" (2025-11-17)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [127d3dba57](https://github.com/angular/components/commit/127d3dba5754a4ceaa60f56ced7b4795c29372cc) | fix | **combobox:** escape key behavior ([#32364](https://github.com/angular/components/pull/32364)) |
+| [bac171d8bc](https://github.com/angular/components/commit/bac171d8bc82fd7bfd716cc5214c49f1bfbc76bb) | fix | **toolbar:** allow developers to wrap widgets ([#32341](https://github.com/angular/components/pull/32341)) |
+| [86558d2aa6](https://github.com/angular/components/commit/86558d2aa6437556bac805a6acdf8c31f5b2cfb8) | fix | **tree:** internal conformance check ([#32337](https://github.com/angular/components/pull/32337)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6234d82e2c](https://github.com/angular/components/commit/6234d82e2ca8101fdd1aac97257e92cb02466ef7) | fix | **overlay:** update golden file ([#32367](https://github.com/angular/components/pull/32367)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9aa4cc8818](https://github.com/angular/components/commit/9aa4cc88188d4dd5e933ca9767a0de06234f1474) | fix | **autocomplete:** empty autocomplete obscuring content ([#32348](https://github.com/angular/components/pull/32348)) |
+| [cf04a38988](https://github.com/angular/components/commit/cf04a3898839affe430cdcfd3dbc5f58cf8c82f1) | fix | **autocomplete:** render overlay next to trigger ([#32282](https://github.com/angular/components/pull/32282)) |
+| [c7bb91ed49](https://github.com/angular/components/commit/c7bb91ed4999f35cfaa733adc0911d4a96fcb3dc) | fix | **button-toggle:** fix typo in clamp-density call |
+| [b3e5365407](https://github.com/angular/components/commit/b3e5365407ec063bf17f5b5581e4197dc5b97765) | fix | **stepper:** fix typo in clamp-density call |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0-rc.2"></a>
 # 21.0.0-rc.2 "wooden-dolphin" (2025-11-13)
 ### aria
