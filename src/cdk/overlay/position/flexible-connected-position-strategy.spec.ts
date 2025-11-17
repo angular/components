@@ -3024,7 +3024,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         return;
       }
 
-      positionStrategy.withPopoverLocation({parent: customHostElement});
+      positionStrategy.withPopoverLocation({type: 'parent', element: customHostElement});
       attachOverlay({positionStrategy, usePopover: true});
 
       expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
@@ -3037,7 +3037,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         return;
       }
 
-      positionStrategy.withPopoverLocation({parent: originElement});
+      positionStrategy.withPopoverLocation({type: 'parent', element: originElement});
       attachOverlay({positionStrategy, usePopover: true});
 
       expect(containerElement.contains(overlayRef.hostElement)).toBe(false);

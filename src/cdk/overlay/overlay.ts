@@ -98,7 +98,9 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     if (customInsertionPoint instanceof Element) {
       customInsertionPoint.after(host);
     } else {
-      customInsertionPoint.parent.appendChild(host);
+      if (customInsertionPoint.type === 'parent') {
+        customInsertionPoint.element?.appendChild(host);
+      }
     }
   }
 

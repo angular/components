@@ -46,7 +46,7 @@ export type FlexibleConnectedPositionStrategyOrigin =
 type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
 /** Possible point to attach a popover to. */
-export type PopoverInsertionPoint = Element | {parent: Element} | null;
+export type PopoverInsertionPoint = Element | {type: 'parent'; element: Element} | null;
 
 /**
  * Creates a flexible position strategy.
@@ -70,7 +70,7 @@ export function createFlexibleConnectedPositionStrategy(
 export type FlexibleOverlayPopoverLocation =
   | 'global'
   | 'inline'
-  | {parent: FlexibleConnectedPositionStrategyOrigin};
+  | {type: 'parent'; element: FlexibleConnectedPositionStrategyOrigin};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -528,6 +528,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @param location Configures the location in the DOM. Supports the following values:
    *  - `global` - The default which inserts the overlay inside the overlay container.
    *  - `inline` - Inserts the overlay next to the trigger.
+   *  - {type: 'parent', element: element} - Inserts the overlay to a child of a custom parent
+   *  element.
    */
   withPopoverLocation(location: FlexibleOverlayPopoverLocation): this {
     this._popoverLocation = location;
@@ -543,7 +545,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const origin =
       this._popoverLocation === 'inline'
         ? this._origin
-        : (this._popoverLocation as {parent: FlexibleConnectedPositionStrategyOrigin}).parent;
+        : (
+            this._popoverLocation as {
+              type: 'parent';
+              element: FlexibleConnectedPositionStrategyOrigin;
+            }
+          ).element;
     let element: Element | null = null;
 
     if (origin instanceof ElementRef) {
@@ -559,7 +566,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     // Otherwise we're inserting as a child.
     if (element) {
-      return {parent: element};
+      return {type: 'parent', element: element};
     }
 
     return null;

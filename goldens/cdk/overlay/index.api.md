@@ -284,7 +284,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // (undocumented)
     detach(): void;
     dispose(): void;
-    getPopoverInsertionPoint(): Element | null | {parent: Element};
+    getPopoverInsertionPoint(): Element | null | {type: 'parent', element: Element};
     _origin: FlexibleConnectedPositionStrategyOrigin;
     positionChanges: Observable<ConnectedOverlayPositionChange>;
     get positions(): ConnectionPositionPair[];
@@ -536,7 +536,7 @@ export interface PositionStrategy {
     attach(overlayRef: OverlayRef): void;
     detach?(): void;
     dispose(): void;
-    getPopoverInsertionPoint?(): Element | null | {parent: Element};
+    getPopoverInsertionPoint?(): Element | null | {type: 'parent', element: Element};
 }
 
 // @public
