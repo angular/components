@@ -410,7 +410,13 @@ export class OverlayRef implements PortalOutlet {
         : null;
 
       if (customInsertionPoint) {
-        customInsertionPoint.after(this._host);
+        if (customInsertionPoint instanceof Element) {
+          customInsertionPoint.after(this._host);
+        } else {
+          if (customInsertionPoint.type === 'parent') {
+            customInsertionPoint.element?.appendChild(this._host);
+          }
+        }
       } else {
         this._previousHostParent?.appendChild(this._host);
       }

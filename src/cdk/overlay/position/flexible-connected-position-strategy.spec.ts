@@ -2959,11 +2959,14 @@ describe('FlexibleConnectedPositionStrategy', () => {
     let positionStrategy: FlexibleConnectedPositionStrategy;
     let containerElement: HTMLElement;
     let originElement: HTMLElement;
+    let customHostElement: HTMLElement;
 
     beforeEach(() => {
       containerElement = overlayContainer.getContainerElement();
       originElement = createPositionedBlockElement();
+      customHostElement = createBlockElement('span');
       document.body.appendChild(originElement);
+      document.body.appendChild(customHostElement);
 
       positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
         .withPopoverLocation('inline')
@@ -2979,6 +2982,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
     afterEach(() => {
       originElement.remove();
+      customHostElement.remove();
     });
 
     it('should place the overlay inside the overlay container by default', () => {
@@ -3013,6 +3017,32 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
       overlayRef.attach(portal);
       expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
+    });
+
+    it('should insert the overlay as a child of a custom element', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      positionStrategy.withPopoverLocation({type: 'parent', element: customHostElement});
+      attachOverlay({positionStrategy, usePopover: true});
+
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
+      expect(customHostElement.contains(overlayRef.hostElement)).toBe(true);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBe('manual');
+    });
+
+    it('should insert the overlay as a child of the origin', () => {
+      if (!('showPopover' in document.body)) {
+        return;
+      }
+
+      positionStrategy.withPopoverLocation({type: 'parent', element: originElement});
+      attachOverlay({positionStrategy, usePopover: true});
+
+      expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
+      expect(originElement.contains(overlayRef.hostElement)).toBe(true);
+      expect(overlayRef.hostElement.getAttribute('popover')).toBe('manual');
     });
   });
 });
