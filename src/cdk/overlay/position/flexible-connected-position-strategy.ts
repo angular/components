@@ -45,6 +45,9 @@ export type FlexibleConnectedPositionStrategyOrigin =
 /** Equivalent of `DOMRect` without some of the properties we don't care about. */
 type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
+/** Possible point to attach a popover to. */
+export type PopoverInsertionPoint = Element | {parent: Element} | null;
+
 /**
  * Creates a flexible position strategy.
  * @param injector Injector used to resolve dependnecies for the position strategy.
@@ -64,7 +67,10 @@ export function createFlexibleConnectedPositionStrategy(
 }
 
 /** Supported locations in the DOM for connected overlays. */
-export type FlexibleOverlayPopoverLocation = 'global' | 'inline';
+export type FlexibleOverlayPopoverLocation =
+  | 'global'
+  | 'inline'
+  | {parent: FlexibleConnectedPositionStrategyOrigin};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -163,18 +169,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Configures where in the DOM to insert the overlay when popovers are enabled. */
   private _popoverLocation: FlexibleOverlayPopoverLocation = 'global';
-
-  /**
-   * Defines a specific host element for the popover content. If provided, the popover will attach
-   * to this element.
-   * */
-  private _customPopoverHostElement: FlexibleConnectedPositionStrategyOrigin | null;
-
-  /**
-   * Whether the popover is attached directly as a child of the popover host element instead of
-   * a sibling element.
-   * */
-  private _attachPopoverAsChild = false;
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
@@ -540,44 +534,35 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this;
   }
 
-  /**
-   * Sets a custom element to use as the host for the popover.
-   * The popover will be inserted after this element in the DOM.
-   * If null, the overlay will be inserted after the origin.
-   * @param element The element to use as the host for the popover.
-   */
-  withCustomPopoverHostElement(element: FlexibleConnectedPositionStrategyOrigin | null): this {
-    this._customPopoverHostElement = element;
-    return this;
-  }
-
   /** @docs-private */
-  getPopoverInsertionPoint(): Element | null {
-    // Return null so it falls back to inserting into the overlay container.
+  getPopoverInsertionPoint(): PopoverInsertionPoint {
     if (this._popoverLocation === 'global') {
       return null;
     }
 
     const origin =
-      this._customPopoverHostElement != null ? this._customPopoverHostElement : this._origin;
+      this._popoverLocation === 'inline'
+        ? this._origin
+        : (this._popoverLocation as {parent: FlexibleConnectedPositionStrategyOrigin}).parent;
+    let element: Element | null = null;
 
     if (origin instanceof ElementRef) {
-      return origin.nativeElement;
+      element = origin.nativeElement;
     } else if (origin instanceof Element) {
-      return origin;
+      element = origin;
     }
-    return null;
-  }
 
-  /**
-   * Whether to attach the popover as a child of the popover host.
-   * If true, the popover will be attached as a child of the host.
-   * If false, the popover will be attached after the host.
-   * @param attachPopoverAsChild Whether to attach the popover as a child of the popover host.
-   */
-  withAttachPopoverAsChild(attachPopoverAsChild = false): this {
-    this._attachPopoverAsChild = attachPopoverAsChild;
-    return this;
+    // If the location is 'inline', we're inserting as a sibling.
+    if (this._popoverLocation === 'inline') {
+      return element;
+    }
+
+    // Otherwise we're inserting as a child.
+    if (element) {
+      return {parent: element};
+    }
+
+    return null;
   }
 
   /**

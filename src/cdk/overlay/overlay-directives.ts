@@ -261,22 +261,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input({alias: 'cdkConnectedOverlayMatchWidth', transform: booleanAttribute})
   matchWidth: boolean = false;
 
-  /**
-   * A custom element to use as the host for the popover.
-   * The popover will be inserted after this element in the DOM.
-   * If null, the overlay will be inserted after the origin.
-   */
-  @Input({alias: 'cdkCustomPopoverInsertionElement'})
-  customPopoverHostElement: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin | null;
-
-  /**
-   * Whether to attach the popover as a child of the popover host.
-   * If true, the popover will be attached as a child of the host.
-   * If false, the popover will be attached after the host.
-   */
-  @Input({alias: 'cdkAttachPopoverAsChild', transform: booleanAttribute})
-  attachPopoverAsChild: boolean = false;
-
   /** Shorthand for setting multiple overlay options at once. */
   @Input('cdkConnectedOverlay')
   set _config(value: string | CdkConnectedOverlayConfig) {
@@ -356,8 +340,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     if (changes['open']) {
-      console.log('changes[open]');
-      console.log(this.open);
       this.open ? this.attachOverlay() : this.detachOverlay();
     }
   }
@@ -401,7 +383,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       hasBackdrop: this.hasBackdrop,
       disposeOnNavigation: this.disposeOnNavigation,
       usePopover: !!this.usePopover,
-      attachPopoverAsChild: this.attachPopoverAsChild,
     });
 
     if (this.height || this.height === 0) {
@@ -448,9 +429,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withViewportMargin(this.viewportMargin)
       .withLockedPosition(this.lockPosition)
       .withTransformOriginOn(this.transformOriginSelector)
-      .withPopoverLocation(this.usePopover === 'global' ? 'global' : 'inline')
-      .withCustomPopoverHostElement(this._getCustomPopoverHostElement())
-      .withAttachPopoverAsChild(this.attachPopoverAsChild);
+      .withPopoverLocation(this.usePopover === null ? 'global' : this.usePopover);
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
@@ -465,18 +444,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       return this.origin.elementRef;
     } else {
       return this.origin;
-    }
-  }
-
-  /**
-   * Gets the custom popover host element from the origin input.
-   * @docs-private
-   */
-  private _getCustomPopoverHostElement(): FlexibleConnectedPositionStrategyOrigin | null {
-    if (this.customPopoverHostElement instanceof CdkOverlayOrigin) {
-      return this.customPopoverHostElement.elementRef;
-    } else {
-      return this.customPopoverHostElement;
     }
   }
 
@@ -579,9 +546,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this.push = config.push ?? this.push;
     this.disposeOnNavigation = config.disposeOnNavigation ?? this.disposeOnNavigation;
     this.usePopover = config.usePopover ?? this.usePopover;
-    this.customPopoverHostElement =
-      config.customPopoverHostElement ?? this.customPopoverHostElement;
-    this.attachPopoverAsChild = config.attachPopoverAsChild ?? this.attachPopoverAsChild;
     this.matchWidth = config.matchWidth ?? this.matchWidth;
   }
 }
