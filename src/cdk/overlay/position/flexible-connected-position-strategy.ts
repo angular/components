@@ -45,9 +45,6 @@ export type FlexibleConnectedPositionStrategyOrigin =
 /** Equivalent of `DOMRect` without some of the properties we don't care about. */
 type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
-/** Possible point to attach a popover to. */
-export type PopoverInsertionPoint = Element | {type: 'parent'; element: Element} | null;
-
 /**
  * Creates a flexible position strategy.
  * @param injector Injector used to resolve dependnecies for the position strategy.
@@ -70,7 +67,7 @@ export function createFlexibleConnectedPositionStrategy(
 export type FlexibleOverlayPopoverLocation =
   | 'global'
   | 'inline'
-  | {type: 'parent'; element: FlexibleConnectedPositionStrategyOrigin};
+  | {type: 'parent'; element: Element};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -537,36 +534,32 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** @docs-private */
-  getPopoverInsertionPoint(): PopoverInsertionPoint {
+  getPopoverInsertionPoint(): Element | null | {type: 'parent'; element: Element} {
     if (this._popoverLocation === 'global') {
       return null;
     }
 
-    const origin =
-      this._popoverLocation === 'inline'
-        ? this._origin
-        : (
-            this._popoverLocation as {
-              type: 'parent';
-              element: FlexibleConnectedPositionStrategyOrigin;
-            }
-          ).element;
-    let element: Element | null = null;
+    let hostElement: Element | null = null;
 
-    if (origin instanceof ElementRef) {
-      element = origin.nativeElement;
-    } else if (origin instanceof Element) {
-      element = origin;
+    if (this._popoverLocation === 'inline') {
+      if (this._origin instanceof ElementRef) {
+        hostElement = this._origin.nativeElement;
+      } else if (this._origin instanceof Element) {
+        hostElement = this._origin;
+      }
+    } else {
+      // this._popoverLocation is {type: 'parent', element: Element}
+      hostElement = this._popoverLocation.element;
     }
 
     // If the location is 'inline', we're inserting as a sibling.
     if (this._popoverLocation === 'inline') {
-      return element;
+      return hostElement;
     }
 
     // Otherwise we're inserting as a child.
-    if (element) {
-      return {type: 'parent', element: element};
+    if (hostElement) {
+      return {type: 'parent', element: hostElement};
     }
 
     return null;
