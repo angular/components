@@ -427,7 +427,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withViewportMargin(this.viewportMargin)
       .withLockedPosition(this.lockPosition)
       .withTransformOriginOn(this.transformOriginSelector)
-      .withPopoverLocation(this.usePopover === 'global' ? 'global' : 'inline');
+      .withPopoverLocation(this.usePopover === null ? 'global' : this.usePopover);
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
