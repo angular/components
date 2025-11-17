@@ -164,6 +164,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Configures where in the DOM to insert the overlay when popovers are enabled. */
   private _popoverLocation: FlexibleOverlayPopoverLocation = 'global';
 
+  /**
+   * Defines a specific host element for the popover content. If provided, the popover will attach
+   * to this element.
+   * */
+  private _customPopoverHostElement: FlexibleConnectedPositionStrategyOrigin | null;
+
+  /**
+   * Whether the popover is attached directly as a child of the popover host element instead of
+   * a sibling element.
+   * */
+  private _attachPopoverAsChild = false;
+
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
 
@@ -528,6 +540,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this;
   }
 
+  /**
+   * Sets a custom element to use as the host for the popover.
+   * The popover will be inserted after this element in the DOM.
+   * If null, the overlay will be inserted after the origin.
+   * @param element The element to use as the host for the popover.
+   */
+  withCustomPopoverHostElement(element: FlexibleConnectedPositionStrategyOrigin | null): this {
+    this._customPopoverHostElement = element;
+    return this;
+  }
+
   /** @docs-private */
   getPopoverInsertionPoint(): Element | null {
     // Return null so it falls back to inserting into the overlay container.
@@ -535,7 +558,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return null;
     }
 
-    const origin = this._origin;
+    const origin =
+      this._customPopoverHostElement != null ? this._customPopoverHostElement : this._origin;
 
     if (origin instanceof ElementRef) {
       return origin.nativeElement;
@@ -543,6 +567,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return origin;
     }
     return null;
+  }
+
+  /**
+   * Whether to attach the popover as a child of the popover host.
+   * If true, the popover will be attached as a child of the host.
+   * If false, the popover will be attached after the host.
+   * @param attachPopoverAsChild Whether to attach the popover as a child of the popover host.
+   */
+  withAttachPopoverAsChild(attachPopoverAsChild = false): this {
+    this._attachPopoverAsChild = attachPopoverAsChild;
+    return this;
   }
 
   /**

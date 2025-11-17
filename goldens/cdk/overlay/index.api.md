@@ -297,6 +297,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withGrowAfterOpen(growAfterOpen?: boolean): this;
     withLockedPosition(isLocked?: boolean): this;
     withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
+    withCustomPopoverHostElement(element: FlexibleConnectedPositionStrategyOrigin): this;
+    withAttachPopoverAsChild(withAttachPopoverAsChild?: boolean): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
     withScrollableContainers(scrollables: CdkScrollable[]): this;

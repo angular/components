@@ -95,7 +95,11 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
   // it's going to end up at the custom insertion point anyways. We need to do it,
   // because some internal clients depend on the host passing through the container first.
   if (customInsertionPoint) {
-    customInsertionPoint.after(host);
+    if (overlayConfig.attachPopoverAsChild) {
+      customInsertionPoint.appendChild(host);
+    } else {
+      customInsertionPoint.after(host);
+    }
   }
 
   return new OverlayRef(

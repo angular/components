@@ -410,7 +410,9 @@ export class OverlayRef implements PortalOutlet {
         : null;
 
       if (customInsertionPoint) {
-        customInsertionPoint.after(this._host);
+        this._config.attachPopoverAsChild
+          ? customInsertionPoint.appendChild(this._host)
+          : customInsertionPoint.after(this._host);
       } else {
         this._previousHostParent?.appendChild(this._host);
       }

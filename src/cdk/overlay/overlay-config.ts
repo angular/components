@@ -67,6 +67,13 @@ export class OverlayConfig {
    */
   usePopover?: boolean;
 
+  /**
+   * Whether to attach the popover as a child of the popover host.
+   * If true, the popover will be attached as a child of the host.
+   * If false, the popover will be attached after the host.
+   */
+  attachPopoverAsChild?: boolean;
+
   constructor(config?: OverlayConfig) {
     if (config) {
       // Use `Iterable` instead of `Array` because TypeScript, as of 3.6.3,
