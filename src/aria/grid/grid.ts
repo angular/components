@@ -48,7 +48,6 @@ import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} fro
   selector: '[ngGrid]',
   exportAs: 'ngGrid',
   host: {
-    'class': 'grid',
     'role': 'grid',
     '[tabindex]': '_pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -178,7 +177,6 @@ export class Grid {
   selector: '[ngGridRow]',
   exportAs: 'ngGridRow',
   host: {
-    'class': 'grid-row',
     'role': 'row',
     '[attr.aria-rowindex]': '_pattern.rowIndex()',
   },
@@ -232,7 +230,6 @@ export class GridRow {
   selector: '[ngGridCell]',
   exportAs: 'ngGridCell',
   host: {
-    'class': 'grid-cell',
     '[attr.role]': 'role()',
     '[attr.id]': '_pattern.id()',
     '[attr.rowspan]': '_pattern.rowSpan()',
@@ -365,7 +362,6 @@ export class GridCell {
   selector: '[ngGridCellWidget]',
   exportAs: 'ngGridCellWidget',
   host: {
-    'class': 'grid-cell-widget',
     '[attr.data-active]': 'active()',
     '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
     '[tabindex]': '_tabIndex()',
