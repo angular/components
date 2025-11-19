@@ -1,3 +1,13 @@
+<a name="20.2.14"></a>
+# 20.2.14 "aerogel-alpaca" (2025-11-19)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [52f00f317](https://github.com/angular/components/commit/52f00f317f9469e364f7821cee7c701c22214466) | fix | **button-toggle:** fix typo in clamp-density call |
+| [0de537fd7](https://github.com/angular/components/commit/0de537fd7320b36c742fb83c38f6a121b56f8ebb) | fix | **stepper:** fix typo in clamp-density call |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.13"></a>
 # 20.2.13 "wooden-penguin" (2025-11-13)
 ### material
