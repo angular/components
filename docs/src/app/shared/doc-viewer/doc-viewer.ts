@@ -38,6 +38,7 @@ import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 import {DeprecatedFieldComponent} from './deprecated-tooltip';
 import {ModuleImportCopyButton} from './module-import-copy-button';
+import {AngularAriaBanner} from './angular-aria-banner/angular-aria-banner';
 
 @Injectable({providedIn: 'root'})
 class DocFetcher {
@@ -154,6 +155,9 @@ export class DocViewer implements OnDestroy {
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);
 
+    // Inject Angular Aria banner for specific CDK components
+    this._injectAngularAriaBanner();
+
     // Create tooltips for the deprecated fields
     this._createTooltipsForDeprecated();
 
@@ -266,5 +270,38 @@ export class DocViewer implements OnDestroy {
 
       this._portalHosts.push(elementPortalOutlet);
     });
+  }
+
+  /**
+   * Injects the Angular Aria migration banner for specific CDK components.
+   */
+  private _injectAngularAriaBanner() {
+    const componentName = this.name();
+    const componentsWithAriaBanner = ['listbox', 'tree', 'accordion', 'menu'];
+
+    if (!componentName || !componentsWithAriaBanner.includes(componentName.toLowerCase())) {
+      return;
+    }
+
+    // Create a container div for the banner at the beginning of the document
+    const bannerContainer = document.createElement('div');
+    bannerContainer.setAttribute('angular-aria-banner', '');
+    bannerContainer.setAttribute('componentName', componentName);
+
+    // Insert the banner at the beginning of the document content
+    const firstChild = this._elementRef.nativeElement.firstChild;
+    if (firstChild) {
+      this._elementRef.nativeElement.insertBefore(bannerContainer, firstChild);
+    } else {
+      this._elementRef.nativeElement.appendChild(bannerContainer);
+    }
+
+    // Create and attach the banner component
+    const portalHost = new DomPortalOutlet(bannerContainer, this._appRef, this._injector);
+    const bannerPortal = new ComponentPortal(AngularAriaBanner, this._viewContainerRef);
+    const bannerComponent = portalHost.attach(bannerPortal);
+    bannerComponent.instance.componentName = componentName;
+
+    this._portalHosts.push(portalHost);
   }
 }
