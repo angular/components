@@ -107,6 +107,7 @@
 @mixin mat-private-button-disabled() {
   // `[disabled]` shouldn't be necessary, but we keep it to maintain
   // compatibility with apps setting it through host bindings.
+  fieldset:disabled &,
   &[disabled],
   &.mat-mdc-button-disabled {
     cursor: default;
