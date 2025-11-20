@@ -28,7 +28,7 @@ import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatch
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {_CdkOverlayStyleLoader, OverlayContainer} from './overlay-container';
-import {OverlayRef} from './overlay-ref';
+import {isElement, OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
 
@@ -89,19 +89,14 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     ? overlayConfig.positionStrategy?.getPopoverInsertionPoint?.()
     : null;
 
-  overlayContainer.getContainerElement().appendChild(host);
-
-  // Note: it's redundant to pass the `host` through the container element above if
-  // it's going to end up at the custom insertion point anyways. We need to do it,
-  // because some internal clients depend on the host passing through the container first.
-  if (customInsertionPoint) {
-    if (customInsertionPoint instanceof Element) {
-      customInsertionPoint.after(host);
-    } else {
-      if (customInsertionPoint.type === 'parent') {
-        customInsertionPoint.element?.appendChild(host);
-      }
-    }
+  if (isElement(customInsertionPoint)) {
+    customInsertionPoint.after(host);
+  } else if (customInsertionPoint?.type === 'parent') {
+    customInsertionPoint.element.appendChild(host);
+  } else {
+    // Note: leave the container for last so that we fall
+    // back to it for unsupported/newly-added values.
+    overlayContainer.getContainerElement().appendChild(host);
   }
 
   return new OverlayRef(

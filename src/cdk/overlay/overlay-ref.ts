@@ -32,6 +32,11 @@ export type ImmutableObject<T> = {
   readonly [P in keyof T]: T[P];
 };
 
+/** Checks if a value is an element. */
+export function isElement(value: any): value is Element {
+  return value && (value as Element).nodeType === 1;
+}
+
 /**
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
@@ -409,14 +414,10 @@ export class OverlayRef implements PortalOutlet {
         ? this._positionStrategy?.getPopoverInsertionPoint?.()
         : null;
 
-      if (customInsertionPoint) {
-        if (customInsertionPoint instanceof Element) {
-          customInsertionPoint.after(this._host);
-        } else {
-          if (customInsertionPoint.type === 'parent') {
-            customInsertionPoint.element?.appendChild(this._host);
-          }
-        }
+      if (isElement(customInsertionPoint)) {
+        customInsertionPoint.after(this._host);
+      } else if (customInsertionPoint?.type === 'parent') {
+        customInsertionPoint.element.appendChild(this._host);
       } else {
         this._previousHostParent?.appendChild(this._host);
       }
