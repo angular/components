@@ -2,9 +2,9 @@ import {MutationObserverFactory} from '../../observers';
 import {ComponentPortal} from '../../portal';
 import {Component, inject, Injector} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
+import {By, DomSanitizer} from '@angular/platform-browser';
 import {A11yModule} from '../index';
-import {LiveAnnouncer} from './live-announcer';
+import {LiveAnnouncer, LiveAnnouncerMessage} from './live-announcer';
 import {
   AriaLivePoliteness,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
@@ -202,6 +202,19 @@ describe('LiveAnnouncer', () => {
       tick(100);
       expect(modal.getAttribute('aria-owns')).toBe(`foo bar ${ariaLiveElement.id}`);
     }));
+
+    it('should be able to announce safe HTML', fakeAsync(() => {
+      const sanitizer = TestBed.inject(DomSanitizer);
+      const message = sanitizer.bypassSecurityTrustHtml(
+        '<span class="message" lang="fr">Bonjour</span>',
+      );
+      fixture.componentInstance.announce(message);
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(100);
+
+      expect(ariaLiveElement.querySelector('.message')?.textContent).toBe('Bonjour');
+    }));
   });
 
   describe('with a custom element', () => {
@@ -378,13 +391,13 @@ function getLiveElement(): Element {
 }
 
 @Component({
-  template: `<button (click)="announceText('Test')">Announce</button>`,
+  template: `<button (click)="announce('Test')">Announce</button>`,
   imports: [A11yModule],
 })
 class TestApp {
   live = inject(LiveAnnouncer);
 
-  announceText(message: string) {
+  announce(message: LiveAnnouncerMessage) {
     this.live.announce(message);
   }
 }
