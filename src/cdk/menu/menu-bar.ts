@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterContentInit, Directive} from '@angular/core';
+import {inject, AfterContentInit, Directive, ElementRef} from '@angular/core';
 import {
   DOWN_ARROW,
   ESCAPE,
@@ -16,6 +16,7 @@ import {
   TAB,
   UP_ARROW,
 } from '../keycodes';
+import {_getEventTarget} from '../platform';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';
@@ -43,6 +44,8 @@ import {CdkMenuBase} from './menu-base';
   ],
 })
 export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
+  private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+
   /** The direction items in the menu flow. */
   override readonly orientation = 'horizontal';
 
@@ -60,6 +63,13 @@ export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
    */
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this.keyManager;
+
+    const element = this._elementRef.nativeElement;
+    const target = _getEventTarget(event) as HTMLElement;
+    if (target !== element && target.parentElement !== element) {
+      return;
+    }
+
     switch (event.keyCode) {
       case UP_ARROW:
       case DOWN_ARROW:
