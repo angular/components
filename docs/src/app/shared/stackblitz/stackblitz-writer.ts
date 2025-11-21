@@ -215,8 +215,8 @@ export class StackBlitzWriter {
       // Replace `bootstrapApplication(MaterialDocsExample,`
       // will be replaced as `bootstrapApplication(ButtonDemo,`
       fileContent = fileContent.replace(
-        /bootstrapApplication\(MaterialDocsExample,/g,
-        `bootstrapApplication(${mainComponentName},`,
+        /bootstrapApplication\(MaterialDocsExample/g,
+        `bootstrapApplication(${mainComponentName}`,
       );
 
       const dotIndex = data.indexFilename.lastIndexOf('.');
