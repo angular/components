@@ -229,10 +229,14 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * @returns Whether the filter matches against the data
    */
   filterPredicate: (data: T, filter: string) => boolean = (data: T, filter: string): boolean => {
+    if ((typeof ngDevMode === 'undefined' || ngDevMode) && typeof data !== 'object') {
+      throw new Error('Default implementation of filterPredicate requires data to be object.');
+    }
+
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     // Loops over the values in the array and returns true if any of them match the filter string
-    return Object.values(data as {[key: string]: any}).some(value =>
+    return Object.values(data as object).some(value =>
       `${value}`.toLowerCase().includes(transformedFilter),
     );
   };
