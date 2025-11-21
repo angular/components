@@ -1,0 +1,56 @@
+[ngComboboxInput] {
+  width: 300px;
+  padding: 8px;
+  border-width: 1px;
+  border-radius: 4px;
+  border-style: solid;
+}
+
+[ngCombobox]:focus-within [ngComboboxInput] {
+  border-color: blue;
+}
+
+[ngOption] {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+[ngOption][aria-selected='true'] {
+  content: '✓';
+  background: #ededff;
+  color: #5e5eff;
+}
+
+[ngOption][aria-selected='true']::after {
+  content: '✓';
+}
+
+[ngOption][data-active='true'],
+[ngOption]:hover {
+  background: #eaeaea;
+}
+
+[ngOption]:active {
+  background: #e5e5e5;
+}
+
+[popover] {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+[ngListbox] {
+  overflow: auto;
+  max-height: 300px;
+  border: 1px solid;
+  width: 100%;
+  padding: 4px;
+  border-radius: 4px;
+  /* Would be nice to inherit background but
+  its set to none by the cdk-overlay-popover */
+  background: white;
+}
