@@ -18,6 +18,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -404,10 +405,10 @@ export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 // @public (undocumented)
 export class LiveAnnouncer implements OnDestroy {
     constructor(...args: unknown[]);
-    announce(message: string): Promise<void>;
-    announce(message: string, politeness?: AriaLivePoliteness): Promise<void>;
-    announce(message: string, duration?: number): Promise<void>;
-    announce(message: string, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
+    announce(message: LiveAnnouncerMessage): Promise<void>;
+    announce(message: LiveAnnouncerMessage, politeness?: AriaLivePoliteness): Promise<void>;
+    announce(message: LiveAnnouncerMessage, duration?: number): Promise<void>;
+    announce(message: LiveAnnouncerMessage, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
     clear(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -422,6 +423,9 @@ export interface LiveAnnouncerDefaultOptions {
     duration?: number;
     politeness?: AriaLivePoliteness;
 }
+
+// @public
+export type LiveAnnouncerMessage = string | SafeHtml;
 
 // @public @deprecated
 export const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container";
