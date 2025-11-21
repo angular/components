@@ -68,7 +68,6 @@ ng_project(
         "icon-registry.ts",
         "index.ts",
         "public-api.ts",
-        "trusted-types.ts",
     ],
     assets = [
         ":css",
@@ -79,6 +78,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
+        "//src/cdk/private",
         "//src/material/core",
     ],
 )
