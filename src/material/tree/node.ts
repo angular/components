@@ -31,7 +31,7 @@ import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@a
 function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
   keyManager: TreeKeyManagerStrategy<T>,
 ): keyManager is NoopTreeKeyManager<T> {
-  return !!(keyManager as any)._isNoopTreeKeyManager;
+  return !!(keyManager as NoopTreeKeyManager<T>)._isNoopTreeKeyManager;
 }
 
 /**
