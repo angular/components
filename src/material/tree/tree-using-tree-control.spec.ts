@@ -24,7 +24,7 @@ type TreeContent = NodeContent[];
 
 describe('MatTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
-  const _ = {};
+  const _ = '';
   let treeElement: HTMLElement;
   let underlyingDataSource: FakeDataSource;
 
