@@ -42,6 +42,11 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfi
   },
 );
 
+export interface SnackBarTemplateContext<D> {
+  $implicit?: D | null;
+  snackBarRef?: MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D>;
+}
+
 /**
  * Service to dispatch Material Design snack bar messages.
  */
@@ -108,10 +113,10 @@ export class MatSnackBar implements OnDestroy {
    * @param template Template to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromTemplate<C extends D, D>(
-    template: TemplateRef<C>,
+  openFromTemplate<D>(
+    template: TemplateRef<SnackBarTemplateContext<D>>,
     config?: MatSnackBarConfig<D>,
-  ): MatSnackBarRef<EmbeddedViewRef<C>, D> {
+  ): MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D> {
     return this._attach(template, config);
   }
 
@@ -192,27 +197,30 @@ export class MatSnackBar implements OnDestroy {
     content: ComponentType<T>,
     userConfig?: MatSnackBarConfig<D>,
   ): MatSnackBarRef<T, D>;
-  private _attach<D, C extends D>(
-    content: TemplateRef<C>,
+  private _attach<D>(
+    content: TemplateRef<SnackBarTemplateContext<D>>,
     userConfig?: MatSnackBarConfig<D>,
-  ): MatSnackBarRef<EmbeddedViewRef<C>, D>;
-  private _attach<T, D, C extends D>(
-    content: ComponentType<T> | TemplateRef<C>,
+  ): MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D>;
+  private _attach<T, D>(
+    content: ComponentType<T> | TemplateRef<SnackBarTemplateContext<D>>,
     userConfig?: MatSnackBarConfig<D>,
-  ): MatSnackBarRef<T | EmbeddedViewRef<C>, D> {
+  ): MatSnackBarRef<T | EmbeddedViewRef<SnackBarTemplateContext<D>>, D> {
     const config: MatSnackBarConfig<D> = {
       ...new MatSnackBarConfig(),
-      ...this._defaultConfig,
+      ...(this._defaultConfig as MatSnackBarConfig<D>),
       ...userConfig,
     };
     const overlayRef = this._createOverlay(config);
     const container = this._attachSnackBarContainer(overlayRef, config);
-    const snackBarRef = new MatSnackBarRef(container, overlayRef);
+    const snackBarRef = new MatSnackBarRef<T | EmbeddedViewRef<SnackBarTemplateContext<D>>, D>(
+      container,
+      overlayRef,
+    );
 
     if (content instanceof TemplateRef) {
-      const portal = new TemplatePortal<C>(content, null!, {
+      const portal = new TemplatePortal<SnackBarTemplateContext<D>>(content, null!, {
         $implicit: config.data,
-        snackBarRef,
+        snackBarRef: snackBarRef as MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D>,
       });
 
       snackBarRef.instance = container.attachTemplatePortal(portal);
