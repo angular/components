@@ -12,7 +12,7 @@ import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
 import {MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel} from './snack-bar-content';
 
-/** Input data for the snack bar. */
+/** Input data for a simple snack bar component that has a message and a single action. */
 export interface TextOnlySnackBarData {
   message: string;
   action: string;
@@ -23,7 +23,7 @@ export interface TextOnlySnackBarData {
  */
 export interface TextOnlySnackBar {
   data: TextOnlySnackBarData;
-  snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  snackBarRef: MatSnackBarRef<TextOnlySnackBar, TextOnlySnackBarData>;
   action: () => void;
   hasAction: boolean;
 }
@@ -41,7 +41,7 @@ export interface TextOnlySnackBar {
   },
 })
 export class SimpleSnackBar implements TextOnlySnackBar {
-  snackBarRef = inject<MatSnackBarRef<SimpleSnackBar>>(MatSnackBarRef);
+  snackBarRef = inject<MatSnackBarRef<SimpleSnackBar, TextOnlySnackBarData>>(MatSnackBarRef);
   data = inject<TextOnlySnackBarData>(MAT_SNACK_BAR_DATA);
 
   constructor(...args: unknown[]);
