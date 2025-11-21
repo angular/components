@@ -1,14 +1,3 @@
-import {Directionality} from '../../bidi';
-import {Platform, _supportsShadowDom} from '../../platform';
-import {CdkScrollable, ViewportRuler} from '../../scrolling';
-import {
-  createMouseEvent,
-  createTouchEvent,
-  dispatchEvent,
-  dispatchFakeEvent,
-  dispatchMouseEvent,
-  dispatchTouchEvent,
-} from '../../testing/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -25,20 +14,33 @@ import {
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {of as observableOf} from 'rxjs';
+import {Platform, _supportsShadowDom} from '../../platform';
+import {CdkScrollable, ViewportRuler} from '../../scrolling';
+import {
+  createMouseEvent,
+  createTouchEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchMouseEvent,
+  dispatchTouchEvent,
+} from '../../testing/private';
 
 import {extendStyles} from '../dom/styling';
 import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
+import {provideFakeDirectionality} from '@angular/cdk/testing/private/fake-directionality';
+import {NgClass, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
 import {CdkDrag} from './drag';
+import {CdkDragPlaceholder} from './drag-placeholder';
+import {CdkDragPreview} from './drag-preview';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
 import {
-  createComponent as _createComponent,
   DragDropTestConfig,
+  createComponent as _createComponent,
   continueDraggingViaTouch,
   dragElementViaMouse,
   makeScrollable,
@@ -47,9 +49,6 @@ import {
   stopDraggingViaTouch,
   tickAnimationFrames,
 } from './test-utils.spec';
-import {NgClass, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {CdkDragPreview} from './drag-preview';
-import {CdkDragPlaceholder} from './drag-placeholder';
 
 export const ITEM_HEIGHT = 25;
 export const ITEM_WIDTH = 75;
@@ -551,12 +550,7 @@ export function defineCommonDropListTests(config: {
 
     it('should dispatch the correct `dropped` event in RTL horizontal drop zone', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
 
       fixture.nativeElement.setAttribute('dir', 'rtl');
@@ -812,7 +806,7 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
 
       const anchor = Array.from(list.childNodes).find(
-        node => node.textContent === 'cdk-drag-anchor',
+        node => node.textContent === 'cdk-drag-marker',
       );
       expect(anchor).toBeTruthy();
 
@@ -1200,12 +1194,7 @@ export function defineCommonDropListTests(config: {
 
     it('should pass the proper direction to the preview in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
 
       fixture.detectChanges();
@@ -2500,12 +2489,7 @@ export function defineCommonDropListTests(config: {
 
     it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
@@ -2529,12 +2513,7 @@ export function defineCommonDropListTests(config: {
 
     it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
@@ -4761,6 +4740,166 @@ export function defineCommonDropListTests(config: {
       );
     }));
   });
+
+  describe('with an anchor', () => {
+    function getAnchor(container: HTMLElement) {
+      return container.querySelector('.cdk-drag-anchor');
+    }
+
+    function getPlaceholder(container: HTMLElement) {
+      return container.querySelector('.cdk-drag-placeholder');
+    }
+
+    it('should create and manage the anchor element when the item is moved into a new container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.componentInstance.hasAnchor.set(true);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const [sourceContainer, targetContainer] = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-drop-list'),
+      );
+      const item = groups[0][1];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+      const x = targetRect.left + 1;
+      const y = targetRect.top + 1;
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      expect(getAnchor(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(sourceContainer)).toBeTruthy();
+
+      dispatchMouseEvent(document, 'mousemove', x, y);
+      fixture.detectChanges();
+      const anchor = getAnchor(sourceContainer)!;
+      expect(anchor).toBeTruthy();
+      expect(anchor.textContent).toContain('One');
+      expect(anchor.classList).toContain('cdk-drag-anchor');
+      expect(anchor.classList).not.toContain('cdk-drag-placeholder');
+      expect(getAnchor(targetContainer)).toBeFalsy();
+      expect(getPlaceholder(targetContainer)).toBeTruthy();
+
+      dispatchMouseEvent(document, 'mouseup', x, y);
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+    }));
+
+    it('should remove the anchor when the item is returned to the initial container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.componentInstance.hasAnchor.set(true);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const [sourceContainer, targetContainer] = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-drop-list'),
+      );
+      const item = groups[0][1];
+      const sourceRect = sourceContainer.getBoundingClientRect();
+      const targetRect = targetContainer.getBoundingClientRect();
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      expect(getAnchor(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(sourceContainer)).toBeTruthy();
+
+      // Move into the second container.
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+      expect(getAnchor(sourceContainer)).toBeTruthy();
+      expect(getAnchor(targetContainer)).toBeFalsy();
+      expect(getPlaceholder(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(targetContainer)).toBeTruthy();
+
+      // Move back into the source container.
+      dispatchMouseEvent(document, 'mousemove', sourceRect.left + 1, sourceRect.top + 1);
+      fixture.detectChanges();
+      expect(getAnchor(sourceContainer)).toBeFalsy();
+      expect(getAnchor(targetContainer)).toBeFalsy();
+      expect(getPlaceholder(sourceContainer)).toBeTruthy();
+      expect(getPlaceholder(targetContainer)).toBeFalsy();
+
+      dispatchMouseEvent(document, 'mouseup', sourceRect.left + 1, sourceRect.top + 1);
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+    }));
+
+    it('should keep the anchor inside the initial container as the item is moved between containers', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      // By default the drop zones are stacked on top of each other.
+      // Lay them out horizontally so the coordinates aren't changing while dragging.
+      fixture.nativeElement.style.display = 'flex';
+      fixture.nativeElement.style.alignItems = 'flex-start';
+
+      // The extra zone isn't connected to the others by default.
+      fixture.componentInstance.todoConnectedTo.set([
+        fixture.componentInstance.dropInstances.get(1)!,
+        fixture.componentInstance.dropInstances.get(2)!,
+      ]);
+      fixture.componentInstance.hasAnchor.set(true);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const [sourceContainer, secondContainer, thirdContainer] = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('.cdk-drop-list'),
+      );
+      const item = groups[0][1];
+      const secondRect = secondContainer.getBoundingClientRect();
+      const thirdRect = thirdContainer.getBoundingClientRect();
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      expect(getAnchor(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(sourceContainer)).toBeTruthy();
+
+      // Move to the second container.
+      dispatchMouseEvent(document, 'mousemove', secondRect.left + 1, secondRect.top + 1);
+      fixture.detectChanges();
+      expect(getAnchor(sourceContainer)).toBeTruthy();
+      expect(getAnchor(secondContainer)).toBeFalsy();
+      expect(getAnchor(thirdContainer)).toBeFalsy();
+
+      expect(getPlaceholder(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(secondContainer)).toBeTruthy();
+      expect(getPlaceholder(thirdContainer)).toBeFalsy();
+
+      // Move to the third container.
+      dispatchMouseEvent(document, 'mousemove', thirdRect.left + 1, thirdRect.top + 1);
+      fixture.detectChanges();
+      expect(getAnchor(sourceContainer)).toBeTruthy();
+      expect(getAnchor(secondContainer)).toBeFalsy();
+      expect(getAnchor(thirdContainer)).toBeFalsy();
+
+      expect(getPlaceholder(sourceContainer)).toBeFalsy();
+      expect(getPlaceholder(secondContainer)).toBeFalsy();
+      expect(getPlaceholder(thirdContainer)).toBeTruthy();
+
+      // Drop the item.
+      dispatchMouseEvent(document, 'mouseup', thirdRect.left + 1, thirdRect.top + 1);
+      fixture.detectChanges();
+
+      flush();
+      fixture.detectChanges();
+
+      expect(getAnchor(fixture.nativeElement)).toBeFalsy();
+      expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
+    }));
+  });
 }
 
 export function assertStartToEndSorting(
@@ -5347,6 +5486,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     #todoZone="cdkDropList"
     [cdkDropListData]="todo"
     [cdkDropListConnectedTo]="todoConnectedTo() || [doneZone]"
+    [cdkDropListHasAnchor]="hasAnchor()"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
     @for (item of todo; track item) {
@@ -5362,6 +5502,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     #doneZone="cdkDropList"
     [cdkDropListData]="done"
     [cdkDropListConnectedTo]="doneConnectedTo() || [todoZone]"
+    [cdkDropListHasAnchor]="hasAnchor()"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
     @for (item of done; track item) {
@@ -5377,6 +5518,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     #extraZone="cdkDropList"
     [cdkDropListData]="extra"
     [cdkDropListConnectedTo]="extraConnectedTo()!"
+    [cdkDropListHasAnchor]="hasAnchor()"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
     @for (item of extra; track item) {
@@ -5402,13 +5544,14 @@ export class ConnectedDropZones implements AfterViewInit {
   groupedDragItems: CdkDrag[][] = [];
   todo = ['Zero', 'One', 'Two', 'Three'];
   done = ['Four', 'Five', 'Six'];
-  extra = [];
+  extra: string[] = [];
   droppedSpy = jasmine.createSpy('dropped spy');
   enteredSpy = jasmine.createSpy('entered spy');
   itemEnteredSpy = jasmine.createSpy('item entered spy');
   todoConnectedTo = signal<(CdkDropList | string)[] | undefined>(undefined);
   doneConnectedTo = signal<(CdkDropList | string)[] | undefined>(undefined);
   extraConnectedTo = signal<(CdkDropList | string)[] | undefined>(undefined);
+  hasAnchor = signal(false);
 
   ngAfterViewInit() {
     this.dropInstances.forEach((dropZone, index) => {

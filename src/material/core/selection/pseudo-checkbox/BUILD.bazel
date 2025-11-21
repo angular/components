@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "sass_binary", "sass_library")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_project", "sass_binary", "sass_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -49,6 +48,7 @@ sass_library(
         "_pseudo-checkbox-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",

@@ -1,13 +1,14 @@
 import {
-  ApplicationRef,
   Component,
+  Injector,
   NgZone,
   TrackByFunction,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   provideZoneChangeDetection,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {animationFrameScheduler} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
 import {ScrollingModule} from './scrolling-module';
@@ -20,16 +21,15 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
     let testComponent: FixedSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [provideZoneChangeDetection()],
-        imports: [ScrollingModule, FixedSizeVirtualScroll],
       });
 
       fixture = TestBed.createComponent(FixedSizeVirtualScroll);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
-    }));
+    });
 
     it('should emit on viewChange inside the Angular zone', fakeAsync(() => {
       const zoneTest = jasmine.createSpy('zone test');
@@ -40,7 +40,6 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
 
     describe('viewChange change detection behavior', () => {
       it('should run change detection if there are any viewChange listeners', fakeAsync(() => {
-        const appRef = TestBed.inject(ApplicationRef);
         testComponent.virtualForOf.viewChange.subscribe();
         finishInit(fixture);
         testComponent.items = Array(10).fill(0);
@@ -48,12 +47,13 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
         fixture.detectChanges();
         flush();
 
-        spyOn(appRef, 'tick');
+        const spy = jasmine.createSpy();
+        afterNextRender(spy, {injector: TestBed.inject(Injector)});
 
         viewport.scrollToIndex(5);
         triggerScroll(viewport);
 
-        expect(appRef.tick).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
       }));
     });
   });
@@ -105,7 +105,7 @@ class FixedSizeVirtualScroll {
   // Casting virtualForOf as any so we can spy on private methods
   @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
 
-  orientation = 'vertical';
+  orientation: 'vertical' | 'horizontal' = 'vertical';
   viewportSize = 200;
   viewportCrossSize = 100;
   itemSize = 50;

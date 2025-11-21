@@ -1,7 +1,7 @@
 import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
 import {ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
 import {CdkSelectionModule} from './selection-module';
@@ -10,12 +10,6 @@ import {SelectionChange} from './selection-set';
 describe('CdkSelection', () => {
   let fixture: ComponentFixture<ListWithMultiSelection>;
   let component: ListWithMultiSelection;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, ListWithMultiSelection],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListWithMultiSelection);
@@ -237,12 +231,6 @@ describe('CdkSelection with multiple = false', () => {
   let fixture: ComponentFixture<ListWithSingleSelection>;
   let component: ListWithSingleSelection;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, ListWithSingleSelection],
-    });
-  }));
-
   beforeEach(() => {
     fixture = TestBed.createComponent(ListWithSingleSelection);
     component = fixture.componentInstance;
@@ -301,12 +289,6 @@ describe('CdkSelection with multiple = false', () => {
 describe('cdkSelectionColumn', () => {
   let fixture: ComponentFixture<MultiSelectTableWithSelectionColumn>;
   let component: MultiSelectTableWithSelectionColumn;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, CdkTableModule, MultiSelectTableWithSelectionColumn],
-    });
-  }));
 
   beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(MultiSelectTableWithSelectionColumn);
@@ -396,12 +378,6 @@ describe('cdkSelectionColumn', () => {
 describe('cdkSelectionColumn with multiple = false', () => {
   let fixture: ComponentFixture<SingleSelectTableWithSelectionColumn>;
   let component: SingleSelectTableWithSelectionColumn;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkSelectionModule, CdkTableModule, SingleSelectTableWithSelectionColumn],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SingleSelectTableWithSelectionColumn);

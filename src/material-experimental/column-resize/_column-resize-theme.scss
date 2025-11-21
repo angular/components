@@ -1,9 +1,9 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @mixin color($theme) {
-  $non-resizable-hover-divider: mat.get-theme-color($theme, foreground, divider);
-  $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
-  $resizable-active-divider: mat.get-theme-color($theme, primary, 600);
+  $resizable-hover-divider: mat.get-theme-color($theme, primary, 60);
+  $resizable-active-divider: mat.get-theme-color($theme, primary, 60);
 
   // TODO: these styles don't really belong in the `color` part of the theme.
   // We should figure out a better place for them.
@@ -65,11 +65,15 @@
 
     .mat-header-cell:not(.mat-resizable)::after,
     .mat-mdc-header-cell:not(.mat-resizable)::after {
-      background: $non-resizable-hover-divider;
+      background: map.get($theme, _mat-system, outline);
     }
 
     .mat-resizable-handle {
       background: $resizable-hover-divider;
+    }
+
+    .cdk-resizable-resize-disabled > .mat-resizable-handle {
+      background: map.get($theme, _mat-system, outline);
     }
   }
 
@@ -137,15 +141,13 @@
 @mixin density($theme) {}
 
 @mixin theme($theme) {
-  @include mat.private-check-duplicate-theme-styles($theme, 'mat-column-resize') {
-    @if mat.theme-has($theme, color) {
-      @include color($theme);
-    }
-    @if mat.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if mat.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+  @if mat.theme-has($theme, density) {
+    @include density($theme);
+  }
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
   }
 }

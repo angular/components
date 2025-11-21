@@ -30,18 +30,21 @@ import {
   inject,
   afterNextRender,
   Injector,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ConnectedPosition,
   ConnectionPositionPair,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   OriginConnectionPosition,
-  Overlay,
   OverlayConnectionPosition,
   OverlayRef,
   ScrollDispatcher,
@@ -90,51 +93,22 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector, {scrollThrottle: SCROLL_THROTTLE_MS});
     },
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_TOOLTIP_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
-};
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
-  return {
-    showDelay: 0,
-    hideDelay: 0,
-    touchendHideDelay: 1500,
-  };
-}
 
 /** Injection token to be used to override the default options for `matTooltip`. */
 export const MAT_TOOLTIP_DEFAULT_OPTIONS = new InjectionToken<MatTooltipDefaultOptions>(
   'mat-tooltip-default-options',
   {
     providedIn: 'root',
-    factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      showDelay: 0,
+      hideDelay: 0,
+      touchendHideDelay: 1500,
+    }),
   },
 );
 
@@ -223,6 +197,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
+  _overlayPanelClass: string[] | undefined; // Used for styling internally.
 
   private _portal: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
@@ -532,16 +507,18 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .get(ScrollDispatcher)
       .getAncestorScrollContainers(this._elementRef);
 
-    const overlay = this._injector.get(Overlay);
+    const panelClass = `${this._cssClassPrefix}-${PANEL_CLASS}`;
 
     // Create connected position strategy that listens for scroll events to reposition.
-    const strategy = overlay
-      .position()
-      .flexibleConnectedTo(this.positionAtOrigin ? origin || this._elementRef : this._elementRef)
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this.positionAtOrigin ? origin || this._elementRef : this._elementRef,
+    )
       .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
       .withFlexibleDimensions(false)
       .withViewportMargin(this._viewportMargin)
-      .withScrollableContainers(scrollableAncestors);
+      .withScrollableContainers(scrollableAncestors)
+      .withPopoverLocation('global');
 
     strategy.positionChanges.pipe(takeUntil(this._destroyed)).subscribe(change => {
       this._updateCurrentPositionClass(change.connectionPair);
@@ -555,12 +532,13 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       }
     });
 
-    this._overlayRef = overlay.create({
+    this._overlayRef = createOverlayRef(this._injector, {
       direction: this._dir,
       positionStrategy: strategy,
-      panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
+      panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
+      usePopover: true,
     });
 
     this._updatePosition(this._overlayRef);

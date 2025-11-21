@@ -40,6 +40,8 @@
       {"name": ["Object", "assign"], "message": "Use the spread operator instead."},
       {"name": ["*", "asObservable"], "message": "Cast to Observable type instead."},
       {"name": ["*", "removeChild"], "message": "Use `remove` instead instead."},
+      {"name": ["CommonModule"], "message": "Import the necessary symbols directly instead."},
+      {"name": ["*", "compileComponents"], "message": "`compileComponents` is not necessary."},
       {
         "name": ["isDevMode"],
         "message": "Use `typeof ngDevMode === 'undefined' || ngDevMode` instead"
@@ -95,19 +97,26 @@
             "argument": 0,
             "properties": {
               "!preserveWhitespaces": ".*",
-              "!styles": ".*",
               "!moduleId": ".*",
+              "!standalone": ".*"
+            }
+          },
+          // Don't require `ViewEncapsulation.None` and allow inline styles in non-production code.
+          {
+            "argument": 0,
+            "properties": {
+              "!styles": ".*",
               "encapsulation": "\\.None$"
             },
-            "excludeFiles": ["**/dev-app/**"]
+            "excludeFiles": ["**/dev-app/**", "**/docs/**", "**/*.spec.ts"]
           },
           // Enforce OnPush & standalone even in the dev-app.
           {
             "argument": 0,
             "properties": {
-              "changeDetection": "\\.OnPush$",
-              "!standalone": ".*"
-            }
+              "changeDetection": "\\.OnPush$"
+            },
+            "excludeFiles": ["**/docs/**", "**/*.spec.ts"]
           }
         ],
         "Directive": [
@@ -141,8 +150,7 @@
       },
       [
         // Internal code that doesn't need to follow the same standards.
-        "**/+(e2e-app|components-examples|universal-app|integration)/**",
-        "**/*.spec.ts"
+        "**/+(e2e-app|components-examples|universal-app|integration)/**"
       ]
     ],
     "require-license-banner": [
@@ -175,7 +183,11 @@
         "**/src/cdk/testing/testbed/testbed-harness-environment.ts",
         "**/src/cdk/testing/tests/testbed.spec.ts",
         // TODO: Tooltip harness still relies on Zone.js.
-        "**/src/material/tooltip/testing/tooltip-harness.spec.ts"
+        "**/src/material/tooltip/testing/tooltip-harness.spec.ts",
+        // TODO: Migrate docs app to zoneless.
+        "**/docs/**/*.ts",
+        // TODO: Migrate e2e app to zoneless.
+        "**/src/e2e-app/**/*.ts"
       ]
     ]
   },

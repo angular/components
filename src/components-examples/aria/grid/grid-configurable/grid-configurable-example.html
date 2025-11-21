@@ -1,0 +1,156 @@
+<div class="example-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="enableSelection">Enable Selection</mat-checkbox>
+  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
+  <mat-checkbox [formControl]="enableRangeSelection">Range Selection</mat-checkbox>
+
+  <mat-form-field
+    class="example-controls-select"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>Row Wrap</mat-label>
+    <mat-select [(value)]="rowWrap">
+      <mat-option value="nowrap">No Wrap</mat-option>
+      <mat-option value="loop">Loop</mat-option>
+      <mat-option value="continuous">Continuous</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    class="example-controls-select"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>Col Wrap</mat-label>
+    <mat-select [(value)]="colWrap">
+      <mat-option value="nowrap">No Wrap</mat-option>
+      <mat-option value="loop">Loop</mat-option>
+      <mat-option value="continuous">Continuous</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    class="example-controls-select"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>Focus Strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    class="example-controls-select"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>Selection Strategy</mat-label>
+    <mat-select [(value)]="selectionMode">
+      <mat-option value="explicit">Explicit</mat-option>
+      <mat-option value="follow">Follow Focus</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-grid-container">
+  <table
+    ngGrid
+    class="example-grid"
+    [rowWrap]="rowWrap"
+    [colWrap]="colWrap"
+    [focusMode]="focusMode"
+    [disabled]="disabled.value"
+    [softDisabled]="softDisabled.value"
+    [enableSelection]="enableSelection.value"
+    [selectionMode]="selectionMode"
+    [multi]="multi.value"
+    [enableRangeSelection]="enableRangeSelection.value"
+    #grid="ngGrid"
+  >
+    @for (row of gridData; track row) {
+      <tr ngGridRow>
+        @for (cell of row; track cell) {
+          <td
+            class="example-cell"
+            ngGridCell
+            [rowSpan]="cell.rowSpan ?? 1"
+            [colSpan]="cell.colSpan ?? 1"
+            [disabled]="cell.disabled"
+          ></td>
+        }
+      </tr>
+    }
+  </table>
+
+  <div class="example-grid-shortcuts">
+    <div>
+      <mat-form-field
+        class="example-controls-select"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <mat-label>Example Options</mat-label>
+        <mat-select [(value)]="exampleOptions" multiple>
+          <mat-option value="rowSpan">Row Span</mat-option>
+          <mat-option value="colSpan">Col Span</mat-option>
+          <mat-option value="disable">Disabled</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <hr />
+    Navigation Keys
+    <ul>
+      <li>Arrow keys navigation</li>
+      <li>Home: first cell in the row</li>
+      <li>End: last cell in the row</li>
+      <li>Crtl + Home: very first cell</li>
+      <li>Ctrl + End: very last cell</li>
+    </ul>
+
+    @if (enableSelection.value) {
+      Selection Keys
+      <ul>
+        @if (this.selectionMode === 'explicit') {
+          <li>Enter/Space: select/deselect cell (explicit)</li>
+        }
+        @if (this.selectionMode === 'follow') {
+          <li>Selection change on navigation (follow focus)</li>
+        }
+        @if (multi.value && enableRangeSelection.value) {
+          <li>Shift + Arrow: expand selection</li>
+          <li>Ctrl + A: select all or deselect all (if all selected)</li>
+          <li>Shift + Space: select a row</li>
+          <li>Ctrl + Space: select a col</li>
+          <li>Shift + Home: range select from first cell in the row</li>
+          <li>Shift + End: range select to last cell in the row</li>
+          <li>Shift + Ctrl + Home: range select from very first cell</li>
+          <li>Shift + Ctrl + End: range select to very last cell</li>
+        }
+      </ul>
+
+      Mouse Selection
+      <ul>
+        @if (this.selectionMode === 'explicit') {
+          <li>Click: select/deselect cell (explicit)</li>
+        }
+        @if (this.selectionMode === 'follow') {
+          <li>Click: select cell (follow focus)</li>
+          @if (multi.value) {
+            <li>Ctrl + Click: add/remove a cell</li>
+          }
+        }
+        @if (multi.value && enableRangeSelection.value) {
+          @if (this.selectionMode === 'explicit') {
+            <li>Drag: add a new range selection (explicit)</li>
+          }
+          @if (this.selectionMode === 'follow') {
+            <li>Drag: start a new range selection (follow focus)</li>
+          }
+          <li>Shift + Drag: update the current range selection</li>
+          <li>Ctrl + Drag: add a new range selection</li>
+        }
+      </ul>
+    }
+  </div>
+</div>

@@ -7,7 +7,7 @@
     @if (iconOverrides && iconOverrides[state]) {
       <ng-container
         [ngTemplateOutlet]="iconOverrides[state]"
-        [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+        [ngTemplateOutletContext]="{index, active, optional}"></ng-container>
     } @else {
       @switch (state) {
         @case ('number') {
@@ -41,11 +41,11 @@
     <div class="mat-step-text-label">{{label}}</div>
   }
 
-  @if (optional && state != 'error') {
+  @if (_hasOptionalLabel()) {
     <div class="mat-step-optional">{{_intl.optionalLabel}}</div>
   }
 
-  @if (state === 'error') {
+  @if (_hasErrorLabel()) {
     <div class="mat-step-sub-label-error">{{errorMessage}}</div>
   }
 </div>

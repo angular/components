@@ -3,11 +3,12 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
+    "ts_project",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -71,11 +72,11 @@ ng_project(
     name = "slider",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "slider.ts",
         "slider-input.ts",
         "slider-interface.ts",
+        "slider-module.ts",
         "slider-thumb.ts",
     ],
     assets = [
@@ -113,7 +114,7 @@ filegroup(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "slider_tests_lib",
     testonly = True,
     srcs = glob(
@@ -151,6 +152,6 @@ ts_project(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources_legacy",
+        ":e2e_test_sources",
     ],
 )

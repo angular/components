@@ -7,7 +7,7 @@
  */
 
 export {MatInput, MatInputConfig, MAT_INPUT_CONFIG} from './input';
-export {MatInputModule} from './module';
+export {MatInputModule} from './input-module';
 export * from './input-value-accessor';
 export * from './input-errors';
 

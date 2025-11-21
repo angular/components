@@ -1,6 +1,14 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnDestroy, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {MatAnchor} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 
 import {SECTIONS} from '../documentation-items/documentation-items';
@@ -17,7 +25,8 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
   imports: [
-    MatAnchor,
+    MatButton,
+    MatIconButton,
     RouterLink,
     RouterLinkActive,
     VersionPicker,
@@ -30,7 +39,7 @@ export class NavBar implements OnDestroy {
   private _navigationFocusService = inject(NavigationFocusService);
 
   private _subscriptions = new Subscription();
-  isNextVersion = location.hostname === 'next.material.angular.io';
+  isNextVersion = location.hostname === 'next.material.angular.dev';
   skipLinkHref: string | null | undefined;
   skipLinkHidden = true;
 

@@ -1,55 +1,61 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
+@use '../core/tokens/m3';
+@use '../core/style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, expansion);
 
 /// Generates custom tokens for the mat-expansion.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-expansion
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, header-text, title-medium),
-    m3-utils.generate-typography-tokens($systems, container-text, body-large),
-    (
-      container-shape: m3-utils.hardcode(12px, $exclude-hardcoded),
-      legacy-header-indicator-display: m3-utils.hardcode(none, $exclude-hardcoded),
-      header-indicator-display: m3-utils.hardcode(inline-block, $exclude-hardcoded),
-      container-background-color: map.get($systems, md-sys-color, surface),
-      container-text-color: map.get($systems, md-sys-color, on-surface),
-      actions-divider-color: map.get($systems, md-sys-color, outline),
-      header-hover-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
-      ),
-      header-focus-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
-      ),
-      header-disabled-state-text-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      header-text-color: map.get($systems, md-sys-color, on-surface),
-      header-description-color: map.get($systems, md-sys-color, on-surface-variant),
-      header-indicator-color: map.get($systems, md-sys-color, on-surface-variant),
-    )
-  );
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      expansion-container-shape: 12px,
+      expansion-header-indicator-display: inline-block,
+      expansion-legacy-header-indicator-display: none,
+      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    color: (
+      expansion-actions-divider-color: map.get($system, outline),
+      expansion-container-background-color: map.get($system, surface),
+      expansion-container-text-color: map.get($system, on-surface),
+      expansion-header-description-color: map.get($system, on-surface-variant),
+      expansion-header-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      expansion-header-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      expansion-header-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      expansion-header-indicator-color: map.get($system, on-surface-variant),
+      expansion-header-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      expansion-container-text-font: map.get($system, body-large-font),
+      expansion-container-text-line-height: map.get($system, body-large-line-height),
+      expansion-container-text-size: map.get($system, body-large-size),
+      expansion-container-text-tracking: map.get($system, body-large-tracking),
+      expansion-container-text-weight: map.get($system, body-large-weight),
+      expansion-header-text-font: map.get($system, title-medium-font),
+      expansion-header-text-line-height: map.get($system, title-medium-line-height),
+      expansion-header-text-size: map.get($system, title-medium-size),
+      expansion-header-text-tracking: map.get($system, title-medium-tracking),
+      expansion-header-text-weight: map.get($system, title-medium-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
   $index: ($scale * -1) + 1;
 
   @return (
-    header-collapsed-state-height: list.nth((48px, 44px, 40px, 36px), $index),
-    header-expanded-state-height: list.nth((64px, 60px, 56px, 48px), $index),
+    expansion-header-collapsed-state-height: list.nth((48px, 44px, 40px, 36px), $index),
+    expansion-header-expanded-state-height: list.nth((64px, 60px, 56px, 48px), $index),
   );
 }

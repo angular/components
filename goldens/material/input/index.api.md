@@ -14,9 +14,9 @@ import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/observers';
-import * as i4 from '@angular/cdk/text-field';
+import * as i1 from '@angular/cdk/observers';
+import * as i2 from '@angular/cdk/bidi';
+import * as i3 from '@angular/cdk/text-field';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -245,7 +245,7 @@ export class MatInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof MatCommonModule, typeof MatFormFieldModule, typeof MatInput], [typeof MatInput, typeof MatFormFieldModule, typeof i4.TextFieldModule, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof MatFormFieldModule, typeof MatInput], [typeof MatInput, typeof MatFormFieldModule, typeof i3.TextFieldModule, typeof i2.BidiModule]>;
 }
 
 // @public

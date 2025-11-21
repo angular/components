@@ -11,7 +11,12 @@ import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW} from '@angular/cdk/keycod
 import {Injectable, inject} from '@angular/core';
 import {PartialObserver} from 'rxjs';
 
-import {EDITABLE_CELL_SELECTOR, ROW_SELECTOR, TABLE_SELECTOR} from './constants';
+import {
+  EDITABLE_CELL_SELECTOR,
+  ROW_SELECTOR,
+  SKIP_ROW_FOCUS_SELECTOR,
+  TABLE_SELECTOR,
+} from './constants';
 import {closest} from './polyfill';
 
 /**
@@ -53,7 +58,11 @@ export class FocusDispatcher {
     const currentIndexWithinRow = Array.from(
       currentRow.querySelectorAll(EDITABLE_CELL_SELECTOR),
     ).indexOf(currentCell);
-    const newRowIndex = currentRowIndex + offset;
+
+    let newRowIndex = currentRowIndex + offset;
+    while (rows[newRowIndex]?.matches(SKIP_ROW_FOCUS_SELECTOR)) {
+      newRowIndex = newRowIndex + (offset > 0 ? 1 : -1);
+    }
 
     if (rows[newRowIndex]) {
       const rowToFocus = Array.from(

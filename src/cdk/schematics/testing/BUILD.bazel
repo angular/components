@@ -1,6 +1,15 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//src/cdk/schematics:tsconfig",
+    ],
+)
 
 ts_project(
     name = "testing",
@@ -9,8 +18,7 @@ ts_project(
     # Needed to ensure these files are picked up as CommonJS, as otherwise
     # the higher-level `package.json` from `src/package.json` is `type: module`.
     data = ["//src/cdk/schematics:package_json"],
-    extends = "//src/cdk/schematics:tsconfig",
-    tsconfig = "tsconfig.json",
+    tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
@@ -18,7 +26,6 @@ ts_project(
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@schematics/angular",
         "//:node_modules/@types/fs-extra",
-        "//:node_modules/@types/glob",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",

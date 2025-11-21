@@ -1,8 +1,8 @@
 load(
     "//tools:defaults.bzl",
+    "ng_project",
     "ng_web_test_suite",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -19,7 +19,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "private_tests_lib",
     testonly = True,
     srcs = glob(

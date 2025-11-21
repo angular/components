@@ -11,7 +11,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
@@ -20,9 +20,6 @@ import { Validator } from '@angular/forms';
 
 // @public
 export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOptions>;
-
-// @public @deprecated
-export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions;
 
 // @public (undocumented)
 export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
@@ -145,7 +142,7 @@ export class MatCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCheckboxModule, never, [typeof MatCheckbox, typeof MatCommonModule], [typeof MatCheckbox, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCheckboxModule, never, [typeof MatCheckbox], [typeof MatCheckbox, typeof i2.BidiModule]>;
 }
 
 // @public

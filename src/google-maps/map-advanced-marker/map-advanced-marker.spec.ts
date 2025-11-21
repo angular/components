@@ -52,11 +52,11 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerConstructorSpy = createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = options.position;
-    fixture.componentInstance.title = options.title;
-    fixture.componentInstance.content = options.content;
-    fixture.componentInstance.gmpDraggable = options.gmpDraggable;
-    fixture.componentInstance.zIndex = options.zIndex;
+    fixture.componentInstance.position = options.position!;
+    fixture.componentInstance.title = options.title!;
+    fixture.componentInstance.content = options.content!;
+    fixture.componentInstance.gmpDraggable = options.gmpDraggable!;
+    fixture.componentInstance.zIndex = options.zIndex!;
 
     fixture.detectChanges();
     flush();
@@ -104,12 +104,12 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerConstructorSpy = createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.position = expectedOptions.position;
-    fixture.componentInstance.title = expectedOptions.title;
-    fixture.componentInstance.content = expectedOptions.content;
-    fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable;
-    fixture.componentInstance.zIndex = expectedOptions.zIndex;
-    fixture.componentInstance.options = options;
+    fixture.componentInstance.position = expectedOptions.position!;
+    fixture.componentInstance.title = expectedOptions.title!;
+    fixture.componentInstance.content = expectedOptions.content!;
+    fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable!;
+    fixture.componentInstance.zIndex = expectedOptions.zIndex!;
+    fixture.componentInstance.options = options!;
 
     fixture.detectChanges();
     flush();
@@ -121,20 +121,21 @@ describe('MapAdvancedMarker', () => {
     const advancedMarkerSpy = createAdvancedMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
-    const addSpy = advancedMarkerSpy.addListener;
+    const customSpy = advancedMarkerSpy.addListener;
+    const nativeSpy = advancedMarkerSpy.addEventListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
     flush();
 
-    expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
-    expect(addSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
+    expect(customSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
+    expect(nativeSpy).toHaveBeenCalledWith('auxclick', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
   }));
 
   it('should be able to add an event listener after init', fakeAsync(() => {
@@ -180,11 +181,11 @@ describe('MapAdvancedMarker', () => {
 })
 class TestApp {
   @ViewChild(MapAdvancedMarker) advancedMarker: MapAdvancedMarker;
-  title?: string | null;
-  position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
-  content?: Node | google.maps.marker.PinElement | null;
-  gmpDraggable?: boolean | null;
-  zIndex?: number | null;
+  title: string;
+  position: google.maps.LatLng | google.maps.LatLngLiteral;
+  content: Node | google.maps.marker.PinElement;
+  gmpDraggable: boolean;
+  zIndex: number;
   options: google.maps.marker.AdvancedMarkerElementOptions;
 
   handleClick() {}

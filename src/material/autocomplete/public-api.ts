@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './module';
+export * from './autocomplete-module';
 export * from './autocomplete';
 export * from './autocomplete-origin';
 export * from './autocomplete-trigger';

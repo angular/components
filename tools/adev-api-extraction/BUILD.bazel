@@ -1,0 +1,47 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("//tools:defaults.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "extract_api_to_json_lib",
+    srcs = glob(
+        ["**/*.mts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
+    ),
+    resolve_json_module = True,
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@angular/compiler",
+        "//:node_modules/@angular/compiler-cli",
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/node",
+        "//:node_modules/typescript",
+    ],
+)
+
+# Action binary for the api_gen bazel rule.
+js_binary(
+    name = "extract_api_to_json",
+    data = [
+        ":extract_api_to_json_lib",
+        "//:node_modules/typescript",
+    ],
+    entry_point = "index.mjs",
+    visibility = ["//visibility:public"],
+)
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["**/*"]),
+)
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = ["//:node_modules/@types/node"],
+)

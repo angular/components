@@ -1,0 +1,394 @@
+@use '../../button-toggle/m3-button-toggle';
+@use '../../button/m3-button';
+@use '../../button/m3-fab';
+@use '../../button/m3-icon-button';
+@use '../../checkbox/m3-checkbox';
+@use '../../chips/m3-chip';
+@use '../../expansion/m3-expansion';
+@use '../../form-field/m3-form-field';
+@use '../../list/m3-list';
+@use '../../paginator/m3-paginator';
+@use '../../radio/m3-radio';
+@use '../../select/m3-select';
+@use '../../stepper/m3-stepper';
+@use '../../table/m3-table';
+@use '../../tabs/m3-tabs';
+@use '../../toolbar/m3-toolbar';
+@use '../../tree/m3-tree';
+@use '../style/elevation';
+@use '../theming/config-validation';
+@use '../theming/definition';
+@use '../theming/inspection';
+@use '../theming/m2-inspection';
+@use '../theming/palettes';
+@use '../style/sass-utils';
+@use './m2';
+@use './m3';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+
+/// Emits necessary CSS variables for Material's system level values for the values defined in the
+/// config map. The config map can have values color, typography, and/or density.
+///
+/// If the config map's color value is an Angular Material color palette, it will be used as the
+/// primary and tertiary colors with a `color-scheme` theme type. Otherwise if the color value is a
+/// map, it must have a `primary` value containing an Angular Material color palette, and
+/// optionally a different `tertiary` palette (defaults to primary palette) and `theme-type` that
+/// is either `light`, `dark`, or 'color-scheme` (defaults to `color-scheme`). Color variable
+/// definitions will not be emitted if there are no color values in the config.
+///
+/// If the config map's typography value is a font family string, it will be used as the
+/// plain and brand font family with default bold, medium, and regular weights of 700, 500, and 400,
+/// respectfully. Otherwise if the typography value is a map, it must have a `plain-family` font
+/// family value, and optionally a different `brand-family` font family (defaults to the plain
+/// value) and weights for `bold-weight` (default: 700), `bold-weight` (default: 500), and
+/// `bold-weight` (default: 400). Typography variable definitions will not be emitted if there are
+/// no typography values in the config.
+///
+/// If the config map's density value is a number, it will be used as the density scale. Otherwise
+/// if the density value is a map, it must have a `scale` value. Density variable definitions will
+/// not be emitted if there are no density values in the config.
+///
+/// The application variables emitted use the namespace prefix "--mat-sys".
+/// e.g. --mat-sys-surface: #E5E5E5
+///
+/// @param {Map} $config The color configuration with optional keys color, typography, or density.
+@mixin theme($config, $overrides: ()) {
+  $color: map.get($config, color);
+  $color-config: null;
+  @if ($color) {
+    // validate-palette returns null if it is a valid M3 palette
+    $is-palette: config-validation.validate-palette($color) == null;
+
+    // Default to "color-scheme" theme type if the config's color does not provide one.
+    @if (not $is-palette and not map.has-key($color, theme-type)) {
+      $color: map.set($color, theme-type, color-scheme);
+    }
+
+    $color-config: $color;
+    @if ($is-palette) {
+      $color: map.set($color, tertiary, $color);
+      $color-config: (
+        definition.$internals: (
+          palettes: (
+            primary: map.remove($color, neutral, neutral-variant, secondary),
+            secondary: map.get($color, secondary),
+            tertiary: map.remove($color, neutral, neutral-variant, secondary, error),
+            neutral: map.get($color, neutral),
+            neutral-variant: map.get($color, neutral-variant),
+            error: map.get($color, error),
+          ),
+          theme-type: color-scheme,
+        )
+      );
+    } @else {
+      $primary: map.get($color, primary) or palettes.$violet-palette;
+      $tertiary: map.get($color, tertiary) or $primary;
+      $color-config: (
+        definition.$internals: (
+          palettes: (
+            primary: map.remove($primary, neutral, neutral-variant, secondary),
+            secondary: map.get($primary, secondary),
+            tertiary: map.remove($tertiary, neutral, neutral-variant, secondary, error),
+            neutral: map.get($primary, neutral),
+            neutral-variant: map.get($primary, neutral-variant),
+            error: map.get($primary, error),
+          ),
+          theme-type: map.get($color, theme-type),
+        )
+      );
+    }
+
+    @include system-level-colors($color-config, $overrides, definition.$system-fallback-prefix);
+    @include system-level-elevation($color-config, $overrides, definition.$system-fallback-prefix);
+  }
+
+  $typography: map.get($config, typography);
+  $typography-config: null;
+  @if ($typography) {
+    $plain: (Roboto, sans-serif);
+    $brand: $plain;
+    $bold: 700;
+    $medium: 500;
+    $regular: 400;
+    @if (meta.type-of($typography) == map) {
+      $plain: map.get($typography, plain-family);
+      $brand: map.get($typography, brand-family) or $plain;
+      $bold: map.get($typography, bold-weight) or $bold;
+      $medium: map.get($typography, medium-weight) or $medium;
+      $regular: map.get($typography, regular-weight) or $regular;
+    } @else {
+      $plain: $typography;
+      $brand: $typography;
+    }
+    $typography-config: (
+      definition.$internals: (
+        font-definition: (
+          plain: $plain,
+          brand: $brand,
+          bold: $bold,
+          medium: $medium,
+          regular: $regular,
+        )
+      )
+    );
+    @include system-level-typography(
+        $typography-config, $overrides, definition.$system-fallback-prefix);
+  }
+
+  $density: map.get($config, density);
+  $density-config: null;
+  @if ($density) {
+    $scale: 0;
+    @if (meta.type-of($density) == map) {
+      $scale: map.get($density, scale);
+    } @else {
+      $scale: $density;
+    }
+    @if ($scale != 0) {
+      // Emit component-level density tokens if the scale is lower than 0. The density tokens
+      // do not fallback to any system-level values and must be defined if the scale is different.
+      $density-tokens: get-density-tokens($scale);
+      @each $tokens in $density-tokens {
+        @each $token-name, $token-value in $tokens {
+          --mat-#{$token-name}: #{$token-value};
+        }
+      }
+    }
+  }
+
+  @include system-level-shape($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
+  @include system-level-state($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
+}
+
+// Gets all density-related tokens from the components.
+@function get-density-tokens($scale) {
+  @return (
+    m3-checkbox.get-density-tokens($scale),
+    m3-chip.get-density-tokens($scale),
+    m3-expansion.get-density-tokens($scale),
+    m3-fab.get-density-tokens($scale),
+    m3-button.get-density-tokens($scale),
+    m3-form-field.get-density-tokens($scale),
+    m3-icon-button.get-density-tokens($scale),
+    m3-list.get-density-tokens($scale),
+    m3-paginator.get-density-tokens($scale),
+    m3-radio.get-density-tokens($scale),
+    m3-tabs.get-density-tokens($scale),
+    m3-select.get-density-tokens($scale),
+    m3-button-toggle.get-density-tokens($scale),
+    m3-stepper.get-density-tokens($scale),
+    m3-table.get-density-tokens($scale),
+    m3-toolbar.get-density-tokens($scale),
+    m3-tree.get-density-tokens($scale),
+  );
+}
+
+/// Emits the system-level CSS variables for each of the provided override values. E.g. to
+/// change the primary color to red, use `mat.theme-overrides((primary: red));`
+@mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
+  $sys-names: map-merge-all(
+      m3.md-sys-color-values-light(palettes.$blue-palette),
+      m3.md-sys-typescale-values((
+        brand: (Roboto),
+        plain: (Roboto),
+        bold: 700,
+        medium: 500,
+        regular: 400
+      )),
+      m3.md-sys-elevation-values(),
+      m3.md-sys-shape-values(),
+      m3.md-sys-state-values());
+
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in $overrides {
+      @if (map.has-key($sys-names, $name)) {
+        --#{$prefix}-#{$name}: #{map.get($overrides, $name)};
+      }
+    }
+  }
+}
+
+@mixin system-level-colors($theme, $overrides: (), $prefix: null) {
+  $palettes: map.get($theme, definition.$internals, palettes);
+  $type: map.get($theme, definition.$internals, theme-type);
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, definition.$internals,
+        color-system-variables-prefix) or definition.$system-level-prefix;
+  }
+
+
+  $sys-colors: _generate-sys-colors($palettes, $type);
+
+  // Manually insert a subset of palette values that are used directly by components
+  // instead of system variables.
+  $sys-colors: map.set($sys-colors, neutral-variant20, map.get($palettes, neutral-variant, 20));
+  $sys-colors: map.set($sys-colors, neutral10, map.get($palettes, neutral, 10));
+
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in $sys-colors {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@function _generate-sys-colors($palettes, $type) {
+  $light-sys-colors: m3.md-sys-color-values-light($palettes);
+  @if ($type == light) {
+    @return $light-sys-colors;
+  }
+
+  $dark-sys-colors: m3.md-sys-color-values-dark($palettes);
+  @if ($type == dark) {
+    @return $dark-sys-colors;
+  }
+
+  @if ($type == color-scheme) {
+    $light-dark-sys-colors: ();
+    @each $name, $light-value in $light-sys-colors {
+      $dark-value: map.get($dark-sys-colors, $name);
+      $light-dark-sys-colors:
+          map.set($light-dark-sys-colors, $name, light-dark($light-value, $dark-value));
+    }
+    @return $light-dark-sys-colors;
+  }
+
+  @error 'Unknown theme-type provided: #{$type}';
+}
+
+@mixin system-level-typography($theme, $overrides: (), $prefix: null) {
+  $font-definition: map.get($theme, definition.$internals, font-definition);
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, definition.$internals,
+        typography-system-variables-prefix) or definition.$system-level-prefix;
+  }
+
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in m3.md-sys-typescale-values($font-definition) {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-elevation($theme, $overrides: (), $prefix: definition.$system-level-prefix) {
+  $shadow-color: map.get(
+      $theme, definition.$internals, palettes, neutral, 0);
+
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in m3.md-sys-elevation-values() {
+      $level: map.get($overrides, $name) or $value;
+      $value: elevation.get-box-shadow($level, $shadow-color);
+      --#{$prefix}-#{$name}: #{$value};
+    }
+  }
+}
+
+@mixin system-level-shape($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in m3.md-sys-shape-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in m3.md-sys-state-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+/// Creates a single merged map from the provided variable-length map arguments
+@function map-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}
+
+// Defines Angular Material system variables using M2 values provided by
+// an M2 theme config created with `mat.m2-define-light-theme` or `mat.m2-define-dark-theme`.
+//
+// This enables applications to style custom components with system-level CSS
+// variables instead of creating a separate component theme mixin that relies on
+// the theme config.
+//
+// For example, use `var(--mat-sys-primary)` to get a theme's primary color instead of
+// pulling it from the theme with `m2-get-color-from-palette($primary-palette, default)`.
+//
+// Unlike M3's `mat.theme()`, this mixin does not replace the need to call
+// individual component theme mixins for Angular Material components.
+@mixin m2-theme($theme-config, $overrides: ()) {
+  @if inspection.get-theme-version($theme-config) == 1 {
+    @error '`m2-theme` mixin should only be called for M2 theme ' +
+        'configs created with define-light-theme or define-dark-theme';
+  }
+
+  // Check whether any override keys do not match keys in the theme
+  // config system map.
+  $invalid-keys: ();
+  $config-system: map.get($theme-config, _mat-system);
+  @each $key, $value in $overrides {
+    @if (not map.has-key($config-system, $key)) {
+      $invalid-keys: list.append($invalid-keys, $key);
+    }
+  }
+  @if (list.length($invalid-keys) > 0) {
+    @error 'The following overrides are not valid system variables: #{$invalid-keys}. ' +
+        'Valid keys are: #{map.keys($config-system)}';
+  }
+
+  $config: m2-inspection.get-m2-config($theme-config);
+
+  $color: map.get($config, color);
+  @if (m2-inspection.theme-has($theme-config, color)) {
+    $system-colors: if(map.get($color, is-dark),
+      m2.md-sys-color-values-dark($color),
+      m2.md-sys-color-values-light($color),
+    );
+    @include _define-m2-system-vars($system-colors, $overrides);
+
+    $shadow: map.get($theme-config, _mat-system, shadow);
+    $system-elevations: ();
+    @each $name, $value in m2.md-sys-elevation-values() {
+      $level: map.get($overrides, $name) or $value;
+      $value: elevation.get-box-shadow($level, $shadow);
+      $system-elevations: map.set($system-elevations, $name, $value);
+    }
+    @include _define-m2-system-vars($system-elevations, $overrides);
+  }
+
+  $typography: map.get($config, typography);
+  @if ($typography) {
+    $system-typography: m2.md-sys-typescale-values($typography);
+    @include _define-m2-system-vars($system-typography, $overrides);
+  }
+
+  @include _define-m2-system-vars(m2.md-sys-shape-values(), $overrides);
+  @include _define-m2-system-vars(m2.md-sys-state-values(), $overrides);
+
+  // The icon button's color token is set to `inherit` for M2 and intended to display
+  // the color inherited from its parent element. This is crucial because it's unknown
+  // whether the icon button sits on a container with background like "surface" or "primary",
+  // where both may have different contrast colors like white or black.
+  // However, variables set to inherit AND define a fallback will always use the fallback,
+  // which is "on-surface-variant". This mixin now defines this value.
+  // To avoid this, and continue using `inherit` for the icon button color, set the color explicitly
+  // to the token without a fallback.
+  .mat-mdc-button-base.mat-mdc-icon-button:not(.mat-mdc-button-disabled) {
+    color: var(--mat-icon-button-icon-color);
+  }
+}
+
+@mixin _define-m2-system-vars($vars, $overrides) {
+  @include sass-utils.current-selector-or-root {
+    @each $name, $value in $vars {
+      --#{definition.$system-fallback-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}

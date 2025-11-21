@@ -7,25 +7,25 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated (undocumented)
-export const fadeInItems: any;
 
 // @public
 export const MAT_MENU_CONTENT: InjectionToken<MatMenuContent>;
@@ -39,12 +39,39 @@ export const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 // @public
 export const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
-export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof MAT_MENU_SCROLL_STRATEGY_FACTORY;
-};
+// @public
+export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestroy {
+    constructor();
+    // (undocumented)
+    protected _destroyMenu(reason: MenuCloseReason): void;
+    disabled: boolean;
+    // (undocumented)
+    protected _getOutsideClickStream(overlayRef: OverlayRef): rxjs.Observable<MouseEvent>;
+    // (undocumented)
+    protected _getOverlayOrigin(): {
+        x: number;
+        y: number;
+        initialX: number;
+        initialY: number;
+        initialScrollX: number;
+        initialScrollY: number;
+    };
+    protected _handleContextMenuEvent(event: MouseEvent): void;
+    get menu(): MatMenuPanel | null;
+    set menu(menu: MatMenuPanel | null);
+    readonly menuClosed: EventEmitter<void>;
+    menuData: any;
+    readonly menuOpened: EventEmitter<void>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngOnDestroy(): void;
+    restoreFocus: boolean;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatContextMenuTrigger, "[matContextMenuTriggerFor]", ["matContextMenuTrigger"], { "menu": { "alias": "matContextMenuTriggerFor"; "required": true; }; "menuData": { "alias": "matContextMenuTriggerData"; "required": false; }; "restoreFocus": { "alias": "matContextMenuTriggerRestoreFocus"; "required": false; }; "disabled": { "alias": "matContextMenuTriggerDisabled"; "required": false; }; }, { "menuOpened": "menuOpened"; "menuClosed": "menuClosed"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatContextMenuTrigger, never>;
+}
 
 // @public (undocumented)
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
@@ -73,7 +100,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     _handleKeydown(event: KeyboardEvent): void;
     hasBackdrop?: boolean;
     _hovered(): Observable<MatMenuItem>;
-    _isAnimating: boolean;
+    _isAnimating: i0.WritableSignal<boolean>;
     // @deprecated
     items: QueryList<MatMenuItem>;
     lazyContent: MatMenuContent;
@@ -115,12 +142,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenu, never>;
 }
-
-// @public @deprecated
-export const matMenuAnimations: {
-    readonly transformMenu: any;
-    readonly fadeInItems: any;
-};
 
 // @public
 export class MatMenuContent implements OnDestroy {
@@ -191,7 +212,7 @@ export class MatMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof MatCommonModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger], [typeof i5.CdkScrollableModule, typeof MatMenu, typeof MatCommonModule, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger], [typeof i2$1.BidiModule, typeof i1.CdkScrollableModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger]>;
 }
 
 // @public
@@ -235,14 +256,16 @@ export interface MatMenuPanel<T = any> {
 }
 
 // @public
-export class MatMenuTrigger implements AfterContentInit, OnDestroy {
+export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentInit, OnDestroy {
     constructor(...args: unknown[]);
     closeMenu(): void;
     // @deprecated (undocumented)
     get _deprecatedMatMenuTriggerFor(): MatMenuPanel | null;
     set _deprecatedMatMenuTriggerFor(v: MatMenuPanel | null);
-    get dir(): Direction;
-    focus(origin?: FocusOrigin, options?: FocusOptions): void;
+    // (undocumented)
+    protected _getOutsideClickStream(overlayRef: OverlayRef): rxjs.Observable<MouseEvent>;
+    // (undocumented)
+    protected _getOverlayOrigin(): i0.ElementRef<HTMLElement>;
     _handleClick(event: MouseEvent): void;
     _handleKeydown(event: KeyboardEvent): void;
     _handleMousedown(event: MouseEvent): void;
@@ -250,7 +273,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     set menu(menu: MatMenuPanel | null);
     readonly menuClosed: EventEmitter<void>;
     menuData: any;
-    get menuOpen(): boolean;
     readonly menuOpened: EventEmitter<void>;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -260,8 +282,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     readonly onMenuClose: EventEmitter<void>;
     // @deprecated
     readonly onMenuOpen: EventEmitter<void>;
-    // (undocumented)
-    _openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     openMenu(): void;
     restoreFocus: boolean;
     toggleMenu(): void;
@@ -284,9 +304,6 @@ export type MenuPositionX = 'before' | 'after';
 
 // @public (undocumented)
 export type MenuPositionY = 'above' | 'below';
-
-// @public @deprecated (undocumented)
-export const transformMenu: any;
 
 // (No @packageDocumentation comment for this package)
 

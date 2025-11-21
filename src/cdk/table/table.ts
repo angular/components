@@ -21,7 +21,7 @@ import {
 } from '../collections';
 import {Platform} from '../platform';
 import {ViewportRuler} from '../scrolling';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -50,6 +50,7 @@ import {
   inject,
   Injector,
   HostAttributeToken,
+  DOCUMENT,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -61,7 +62,6 @@ import {
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
-import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from './coalesced-style-scheduler';
 import {
   BaseRowDef,
   CdkCellOutlet,
@@ -184,45 +184,6 @@ export class NoDataRowOutlet implements RowOutlet {
 }
 
 /**
- * The table template that can be used by the mat-table. Should not be used outside of the
- * material library.
- * @docs-private
- */
-export const CDK_TABLE_TEMPLATE =
-  // Note that according to MDN, the `caption` element has to be projected as the **first**
-  // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
-  `
-  <ng-content select="caption"/>
-  <ng-content select="colgroup, col"/>
-
-  <!--
-    Unprojected content throws a hydration error so we need this to capture it.
-    It gets removed on the client so it doesn't affect the layout.
-  -->
-  @if (_isServer) {
-    <ng-content/>
-  }
-
-  @if (_isNativeHtmlTable) {
-    <thead role="rowgroup">
-      <ng-container headerRowOutlet/>
-    </thead>
-    <tbody role="rowgroup">
-      <ng-container rowOutlet/>
-      <ng-container noDataRowOutlet/>
-    </tbody>
-    <tfoot role="rowgroup">
-      <ng-container footerRowOutlet/>
-    </tfoot>
-  } @else {
-    <ng-container headerRowOutlet/>
-    <ng-container rowOutlet/>
-    <ng-container noDataRowOutlet/>
-    <ng-container footerRowOutlet/>
-  }
-`;
-
-/**
  * Interface used to conveniently type the possible context interfaces for the render row.
  * @docs-private
  */
@@ -264,7 +225,36 @@ export interface RenderRow<T> {
 @Component({
   selector: 'cdk-table, table[cdk-table]',
   exportAs: 'cdkTable',
-  template: CDK_TABLE_TEMPLATE,
+  template: `
+    <ng-content select="caption"/>
+    <ng-content select="colgroup, col"/>
+
+    <!--
+      Unprojected content throws a hydration error so we need this to capture it.
+      It gets removed on the client so it doesn't affect the layout.
+    -->
+    @if (_isServer) {
+      <ng-content/>
+    }
+
+    @if (_isNativeHtmlTable) {
+      <thead role="rowgroup">
+        <ng-container headerRowOutlet/>
+      </thead>
+      <tbody role="rowgroup">
+        <ng-container rowOutlet/>
+        <ng-container noDataRowOutlet/>
+      </tbody>
+      <tfoot role="rowgroup">
+        <ng-container footerRowOutlet/>
+      </tfoot>
+    } @else {
+      <ng-container headerRowOutlet/>
+      <ng-container rowOutlet/>
+      <ng-container noDataRowOutlet/>
+      <ng-container footerRowOutlet/>
+    }
+  `,
   styleUrl: 'table.css',
   host: {
     'class': 'cdk-table',
@@ -279,7 +269,6 @@ export interface RenderRow<T> {
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
-    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
@@ -295,9 +284,6 @@ export class CdkTable<T>
   private _platform = inject(Platform);
   protected readonly _viewRepeater =
     inject<_ViewRepeater<T, RenderRow<T>, RowContext<T>>>(_VIEW_REPEATER_STRATEGY);
-  protected readonly _coalescedStyleScheduler = inject<_CoalescedStyleScheduler>(
-    _COALESCED_STYLE_SCHEDULER,
-  );
   private readonly _viewportRuler = inject(ViewportRuler);
   protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
     STICKY_POSITIONING_LISTENER,
@@ -403,7 +389,7 @@ export class CdkTable<T>
   /**
    * Whether the sticky styler should recalculate cell widths when applying sticky styles. If
    * `false`, cached values will be used instead. This is only applicable to tables with
-   * {@link fixedLayout} enabled. For other tables, cell widths will always be recalculated.
+   * `_fixedLayout` enabled. For other tables, cell widths will always be recalculated.
    */
   private _forceRecalculateCellWidths = true;
 
@@ -1390,10 +1376,9 @@ export class CdkTable<T>
     this._stickyStyler = new StickyStyler(
       this._isNativeHtmlTable,
       this.stickyCssClass,
-      direction,
-      this._coalescedStyleScheduler,
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
+      direction,
       this._stickyPositioningListener,
       this._injector,
     );
@@ -1434,7 +1419,13 @@ export class CdkTable<T>
       // to figure out which one to add it to when there are multiple.
       if (view.rootNodes.length === 1 && rootNode?.nodeType === this._document.ELEMENT_NODE) {
         rootNode.setAttribute('role', 'row');
-        rootNode.classList.add(noDataRow._contentClassName);
+        rootNode.classList.add(...noDataRow._contentClassNames);
+
+        const cells = rootNode.querySelectorAll(noDataRow._cellSelector);
+
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].classList.add(...noDataRow._cellClassNames);
+        }
       }
     } else {
       container.clear();

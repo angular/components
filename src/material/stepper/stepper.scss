@@ -1,32 +1,34 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use './m2-stepper';
+@use './m3-stepper';
 @use '../core/tokens/token-utils';
 @use './stepper-variables';
 
 // Gets the `calc` expression for the vertical padding of the stepper header.
 @function _get-vertical-padding-calc() {
-  $height: token-utils.slot(header-height);
+  $height: token-utils.slot(stepper-header-height, $fallbacks);
   @return calc(calc(#{$height} - #{stepper-variables.$label-header-height}) / 2);
 }
 
-$token-prefix: m2-stepper.$prefix;
-$token-slots: m2-stepper.get-token-slots();
+$fallbacks: m3-stepper.get-tokens();
 
 .mat-stepper-vertical,
 .mat-stepper-horizontal {
   display: block;
+  font-family: token-utils.slot(stepper-container-text-font, $fallbacks);
+  background: token-utils.slot(stepper-container-color, $fallbacks);
+}
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    font-family: token-utils.slot(container-text-font);
-    background: token-utils.slot(container-color);
-  }
+.mat-horizontal-stepper-header-wrapper {
+  align-items: center;
+  display: flex;
 }
 
 .mat-horizontal-stepper-header-container {
   white-space: nowrap;
   display: flex;
   align-items: center;
+  flex-grow: 1;
 
   .mat-stepper-label-position-bottom & {
     align-items: flex-start;
@@ -44,19 +46,16 @@ $token-slots: m2-stepper.get-token-slots();
   height: 0;
   margin: 0 stepper-variables.$line-gap - stepper-variables.$side-gap;
   min-width: stepper-variables.$line-gap + stepper-variables.$side-gap;
+  border-top-color: token-utils.slot(stepper-line-color, $fallbacks);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    border-top-color: token-utils.slot(line-color);
+  .mat-stepper-label-position-bottom & {
+    $vertical-padding: _get-vertical-padding-calc();
+    margin: 0;
+    min-width: 0;
+    position: relative;
 
-    .mat-stepper-label-position-bottom & {
-      $vertical-padding: _get-vertical-padding-calc();
-      margin: 0;
-      min-width: 0;
-      position: relative;
-
-      // Ensures that the horizontal line for the step content is aligned centered vertically.
-      top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
-    }
+    // Ensures that the horizontal line for the step content is aligned centered vertically.
+    top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
   }
 }
 
@@ -73,14 +72,10 @@ $token-slots: m2-stepper.get-token-slots();
 
 .mat-horizontal-stepper-header {
   display: flex;
-  height: stepper-variables.$header-height;
   overflow: hidden;
   align-items: center;
   padding: 0 stepper-variables.$side-gap;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    height: token-utils.slot(header-height);
-  }
+  height: token-utils.slot(stepper-header-height, $fallbacks);
 
   .mat-step-icon {
     margin-right: stepper-variables.$line-gap;
@@ -92,22 +87,24 @@ $token-slots: m2-stepper.get-token-slots();
     }
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    $vertical-padding: _get-vertical-padding-calc();
+  &.mat-step-header-empty-label .mat-step-icon {
+    margin: 0;
+  }
+
+  $vertical-padding: _get-vertical-padding-calc();
+
+  &::before,
+  &::after {
+    border-top-color: token-utils.slot(stepper-line-color, $fallbacks);
+  }
+
+  .mat-stepper-label-position-bottom & {
+    padding: #{$vertical-padding} stepper-variables.$side-gap;
 
     &::before,
     &::after {
-      border-top-color: token-utils.slot(line-color);
-    }
-
-    .mat-stepper-label-position-bottom & {
-      padding: #{$vertical-padding} stepper-variables.$side-gap;
-
-      &::before,
-      &::after {
-        // Ensures that the horizontal lines for the step header are centered vertically.
-        top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
-      }
+      // Ensures that the horizontal lines for the step header are centered vertically.
+      top: calc(#{$vertical-padding} + #{math.div(stepper-variables.$label-header-height, 2)});
     }
   }
 
@@ -156,9 +153,7 @@ $token-slots: m2-stepper.get-token-slots();
   // We can't use `max-height` here, because it breaks the flexbox centering in IE.
   height: stepper-variables.$label-header-height;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    padding: #{_get-vertical-padding-calc()} stepper-variables.$side-gap;
-  }
+  padding: #{_get-vertical-padding-calc()} stepper-variables.$side-gap;
 
   .mat-step-icon {
     margin-right: stepper-variables.$vertical-stepper-content-margin - stepper-variables.$side-gap;
@@ -271,17 +266,15 @@ $token-slots: m2-stepper.get-token-slots();
   border-left-width: stepper-variables.$line-width;
   border-left-style: solid;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    $vertical-padding: _get-vertical-padding-calc();
-    $vertical-offset: calc(#{stepper-variables.$line-gap} - #{$vertical-padding});
+  $vertical-padding: _get-vertical-padding-calc();
+  $vertical-offset: calc(#{stepper-variables.$line-gap} - #{$vertical-padding});
 
-    border-left-color: token-utils.slot(line-color);
+  border-left-color: token-utils.slot(stepper-line-color, $fallbacks);
 
-    // Ensures that the vertical lines for the step content exceed into the step
-    // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.
-    top: $vertical-offset;
-    bottom: $vertical-offset;
-  }
+  // Ensures that the vertical lines for the step content exceed into the step
+  // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.
+  top: $vertical-offset;
+  bottom: $vertical-offset;
 
   [dir='rtl'] & {
     left: auto;

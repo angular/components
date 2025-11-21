@@ -1,12 +1,12 @@
 @use '@angular/cdk';
-@use './m2-progress-bar';
+@use './m3-progress-bar';
 @use '../core/tokens/token-utils';
-@use '../core/style/vendor-prefixes';
 
-$token-prefix: m2-progress-bar.$prefix;
-$token-slots: m2-progress-bar.get-token-slots();
+$fallbacks: m3-progress-bar.get-tokens();
 
 .mat-mdc-progress-bar {
+  --mat-progress-bar-animation-multiplier: 1;
+
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
   display: block;
 
@@ -36,6 +36,12 @@ $token-slots: m2-progress-bar.get-token-slots();
   }
 }
 
+// Slow down the animation by 100% when the user configured their OS to reduce
+// motion since some animations like the indeterminate one can be quite dynamic.
+.mat-progress-bar-reduced-motion {
+  --mat-progress-bar-animation-multiplier: 2;
+}
+
 .mdc-linear-progress {
   position: relative;
   width: 100%;
@@ -44,11 +50,9 @@ $token-slots: m2-progress-bar.get-token-slots();
   overflow-x: hidden;
   transition: opacity 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    $track-variable: token-utils.slot(track-height);
-    $indicator-height-variable: token-utils.slot(active-indicator-height);
-    height: max(#{$track-variable}, #{$indicator-height-variable});
-  }
+  $track-variable: token-utils.slot(progress-bar-track-height, $fallbacks);
+  $indicator-height-variable: token-utils.slot(progress-bar-active-indicator-height, $fallbacks);
+  height: max(#{$track-variable}, #{$indicator-height-variable});
 
   @include cdk.high-contrast {
     outline-color: CanvasText;
@@ -64,10 +68,7 @@ $token-slots: m2-progress-bar.get-token-slots();
   animation: none;
   transform-origin: top left;
   transition: transform 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    height: token-utils.slot(active-indicator-height);
-  }
+  height: token-utils.slot(progress-bar-active-indicator-height, $fallbacks);
 
   .mdc-linear-progress--indeterminate & {
     transition: none;
@@ -85,11 +86,8 @@ $token-slots: m2-progress-bar.get-token-slots();
   width: 100%;
   animation: none;
   border-top-style: solid;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    border-color: token-utils.slot(active-indicator-color);
-    border-top-width: token-utils.slot(active-indicator-height);
-  }
+  border-color: token-utils.slot(progress-bar-active-indicator-color, $fallbacks);
+  border-top-width: token-utils.slot(progress-bar-active-indicator-height, $fallbacks);
 }
 
 .mdc-linear-progress__buffer {
@@ -100,35 +98,31 @@ $token-slots: m2-progress-bar.get-token-slots();
   margin: auto 0;
   width: 100%;
   overflow: hidden;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    height: token-utils.slot(track-height);
-    border-radius: token-utils.slot(track-shape);
-  }
+  height: token-utils.slot(progress-bar-track-height, $fallbacks);
+  border-radius: token-utils.slot(progress-bar-track-shape, $fallbacks);
 }
 
 .mdc-linear-progress__buffer-dots {
-  $mask: "data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' " +
-         "xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' " +
-         "enable-background='new 0 0 5 2' xml:space='preserve' viewBox='0 0 5 2' " +
-         "preserveAspectRatio='xMinYMin slice'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/svg%3E";
-
-  @include vendor-prefixes.mask-image(url($mask));
+  $circle-color: token-utils.slot(progress-bar-track-color, $fallbacks);
+  $circle-size: calc(#{token-utils.slot(progress-bar-track-height, $fallbacks)} / 2);
+  background-image: radial-gradient(circle, #{$circle-color} #{$circle-size}, transparent 0);
   background-repeat: repeat-x;
+  background-size: calc(#{$circle-size} * 5);
+  // The `background-position` prevents the animation from jumping around when the progress
+  // changes. Note that we shouldn't invert it in RTL, because the animation direction is reversed.
+  background-position: left;
   flex: auto;
   transform: rotate(180deg);
-  animation: mdc-linear-progress-buffering 250ms infinite linear;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(track-color);
-  }
+  animation: mdc-linear-progress-buffering
+    calc(250ms * var(--mat-progress-bar-animation-multiplier)) infinite linear;
 
   @include cdk.high-contrast {
     background-color: ButtonBorder;
   }
 
   [dir='rtl'] & {
-    animation: mdc-linear-progress-buffering-reverse 250ms infinite linear;
+    animation: mdc-linear-progress-buffering-reverse
+      calc(250ms * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     transform: rotate(0);
   }
 }
@@ -136,10 +130,7 @@ $token-slots: m2-progress-bar.get-token-slots();
 .mdc-linear-progress__buffer-bar {
   flex: 0 1 100%;
   transition: flex-basis 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(track-color);
-  }
+  background-color: token-utils.slot(progress-bar-track-color, $fallbacks);
 }
 
 .mdc-linear-progress__primary-bar {
@@ -150,12 +141,14 @@ $token-slots: m2-progress-bar.get-token-slots();
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
-    animation: mdc-linear-progress-primary-indeterminate-translate 2s infinite linear;
+    animation: mdc-linear-progress-primary-indeterminate-translate
+      calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
     > .mdc-linear-progress__bar-inner {
-      animation: mdc-linear-progress-primary-indeterminate-scale 2s infinite linear;
+      animation: mdc-linear-progress-primary-indeterminate-scale
+        calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     }
   }
 
@@ -178,12 +171,14 @@ $token-slots: m2-progress-bar.get-token-slots();
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
-    animation: mdc-linear-progress-secondary-indeterminate-translate 2s infinite linear;
+    animation: mdc-linear-progress-secondary-indeterminate-translate
+      calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
     > .mdc-linear-progress__bar-inner {
-      animation: mdc-linear-progress-secondary-indeterminate-scale 2s infinite linear;
+      animation: mdc-linear-progress-secondary-indeterminate-scale
+        calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     }
   }
 
@@ -199,10 +194,8 @@ $token-slots: m2-progress-bar.get-token-slots();
 
 @keyframes mdc-linear-progress-buffering {
   from {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
-      $track-variable: token-utils.slot(track-height);
-      transform: rotate(180deg) translateX(calc(#{$track-variable} * -2.5));
-    }
+    $track-variable: token-utils.slot(progress-bar-track-height, $fallbacks);
+    transform: rotate(180deg) translateX(calc(#{$track-variable} * -2.5));
   }
 }
 

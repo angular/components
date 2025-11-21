@@ -30,6 +30,7 @@ import {
   ViewEncapsulation,
   forwardRef,
   inject,
+  signal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '../core';
@@ -103,10 +104,10 @@ export class MatSelectionList
   /**
    * Theme color of the selection list. This sets the checkbox color for all
    * list options. This API is supported in M2 themes only, it has no effect in
-   * M3 themes. For color customization in M3, see https://material.angular.io/components/list/styling.
+   * M3 themes. For color customization in M3, see https://material.angular.dev/components/list/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette = 'accent';
 
@@ -265,18 +266,18 @@ export class MatSelectionList
    */
   @Input()
   override get disabled(): boolean {
-    return this._selectionListDisabled;
+    return this._selectionListDisabled();
   }
   override set disabled(value: BooleanInput) {
     // Update the disabled state of this list. Write to `this._selectionListDisabled` instead of
     // `super.disabled`. That is to avoid closure compiler compatibility issues with assigning to
     // a super property.
-    this._selectionListDisabled = coerceBooleanProperty(value);
-    if (this._selectionListDisabled) {
+    this._selectionListDisabled.set(coerceBooleanProperty(value));
+    if (this._selectionListDisabled()) {
       this._keyManager?.setActiveItem(-1);
     }
   }
-  private _selectionListDisabled = false;
+  private _selectionListDisabled = signal(false);
 
   /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void): void {

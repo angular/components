@@ -19,29 +19,18 @@ import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i3$1 from '@angular/cdk/stepper';
-import * as i3 from '@angular/cdk/portal';
+import * as i2$1 from '@angular/cdk/stepper';
+import * as i2$2 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { StepState } from '@angular/cdk/stepper';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated
-export const MAT_STEPPER_INTL_PROVIDER: {
-    provide: typeof MatStepperIntl;
-    deps: Optional[][];
-    useFactory: typeof MAT_STEPPER_INTL_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl): MatStepperIntl;
 
 // @public (undocumented)
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
@@ -82,7 +71,12 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     // (undocumented)
     _getDefaultTextForState(state: StepState): string;
     _getHostElement(): HTMLElement;
-    _getIconContext(): MatStepperIconContext;
+    // (undocumented)
+    protected _hasEmptyLabel(): boolean;
+    // (undocumented)
+    protected _hasErrorLabel(): boolean;
+    // (undocumented)
+    protected _hasOptionalLabel(): boolean;
     iconOverrides: {
         [key: string]: TemplateRef<MatStepperIconContext>;
     };
@@ -125,6 +119,7 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     // (undocumented)
     _getAnimationDuration(): string;
     headerPosition: 'top' | 'bottom';
+    readonly headerPrefix: i0.InputSignal<TemplateRef<unknown> | null>;
     _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>>;
     _icons: QueryList<MatStepperIcon>;
     // (undocumented)
@@ -138,21 +133,13 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     // (undocumented)
     ngOnDestroy(): void;
     _stepHeader: QueryList<MatStepHeader>;
-    // (undocumented)
-    _stepIsNavigable(index: number, step: MatStep): boolean;
     readonly steps: QueryList<MatStep>;
     _steps: QueryList<MatStep>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "headerPrefix": { "alias": "headerPrefix"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
-
-// @public @deprecated
-export const matStepperAnimations: {
-    readonly horizontalStepTransition: any;
-    readonly verticalStepTransition: any;
-};
 
 // @public
 export class MatStepperIcon {
@@ -192,7 +179,7 @@ export class MatStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof MatCommonModule, typeof i3.PortalModule, typeof i3$1.CdkStepperModule, typeof MatIconModule, typeof MatRippleModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent], [typeof MatCommonModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i2.PortalModule, typeof i2$1.CdkStepperModule, typeof MatIconModule, typeof MatRippleModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent], [typeof i2$2.BidiModule, typeof MatStep, typeof MatStepLabel, typeof MatStepper, typeof MatStepperNext, typeof MatStepperPrevious, typeof MatStepHeader, typeof MatStepperIcon, typeof MatStepContent]>;
 }
 
 // @public

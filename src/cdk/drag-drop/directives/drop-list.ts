@@ -95,7 +95,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   @Input() id: string = inject(_IdGenerator).getId('cdk-drop-list-');
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  @Input('cdkDropListLockAxis') lockAxis: DragAxis;
+  @Input('cdkDropListLockAxis') lockAxis: DragAxis | null = null;
 
   /** Whether starting a dragging sequence from this container is disabled. */
   @Input({alias: 'cdkDropListDisabled', transform: booleanAttribute})
@@ -149,6 +149,20 @@ export class CdkDropList<T = any> implements OnDestroy {
    * ```
    */
   @Input('cdkDropListElementContainer') elementContainerSelector: string | null;
+
+  /**
+   * By default when an item leaves its initial container, its placeholder will be transferred
+   * to the new container. If that's not desirable for your use case, you can enable this option
+   * which will clone the placeholder and leave it inside the original container. If the item is
+   * returned to the initial container, the anchor element will be removed automatically.
+   *
+   * The cloned placeholder can be styled by targeting the `cdk-drag-anchor` class.
+   *
+   * This option is useful in combination with `cdkDropListSortingDisabled` to implement copying
+   * behavior in a drop list.
+   */
+  @Input({alias: 'cdkDropListHasAnchor', transform: booleanAttribute})
+  hasAnchor: boolean;
 
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')
@@ -221,6 +235,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   /** Registers an items with the drop list. */
   addItem(item: CdkDrag): void {
     this._unsortedItems.add(item);
+    item._dragRef._withDropContainer(this._dropListRef);
 
     // Only sync the items while dragging since this method is
     // called when items are being initialized one-by-one.
@@ -339,6 +354,7 @@ export class CdkDropList<T = any> implements OnDestroy {
       ref.sortingDisabled = this.sortingDisabled;
       ref.autoScrollDisabled = this.autoScrollDisabled;
       ref.autoScrollStep = coerceNumberProperty(this.autoScrollStep, 2);
+      ref.hasAnchor = this.hasAnchor;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);
@@ -409,10 +425,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     this.sortingDisabled = sortingDisabled == null ? false : sortingDisabled;
     this.autoScrollDisabled = listAutoScrollDisabled == null ? false : listAutoScrollDisabled;
     this.orientation = listOrientation || 'vertical';
-
-    if (lockAxis) {
-      this.lockAxis = lockAxis;
-    }
+    this.lockAxis = lockAxis || null;
   }
 
   /** Syncs up the registered drag items with underlying drop list ref. */

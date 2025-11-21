@@ -10,19 +10,22 @@ import {ListRange} from '../collections';
 import {Platform} from '../platform';
 import {
   afterNextRender,
+  ApplicationRef,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
+  effect,
   ElementRef,
   inject,
-  Inject,
   Injector,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
+  signal,
+  untracked,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -69,11 +72,8 @@ const SCROLL_SCHEDULER =
   providers: [
     {
       provide: CdkScrollable,
-      useFactory: (
-        virtualScrollable: CdkVirtualScrollable | null,
-        viewport: CdkVirtualScrollViewport,
-      ) => virtualScrollable || viewport,
-      deps: [[new Optional(), new Inject(VIRTUAL_SCROLLABLE)], CdkVirtualScrollViewport],
+      useFactory: () =>
+        inject(VIRTUAL_SCROLLABLE, {optional: true}) || inject(CdkVirtualScrollViewport),
     },
   ],
 })
@@ -137,10 +137,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   private _totalContentSize = 0;
 
   /** A string representing the `style.width` property value to be used for the spacer element. */
-  _totalContentWidth = '';
+  _totalContentWidth = signal('');
 
   /** A string representing the `style.height` property value to be used for the spacer element. */
-  _totalContentHeight = '';
+  _totalContentHeight = signal('');
 
   /**
    * The CSS transform applied to the rendered subset of items so that they appear within the bounds
@@ -169,8 +169,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    */
   private _renderedContentOffsetNeedsRewrite = false;
 
-  /** Whether there is a pending change detection cycle. */
-  private _isChangeDetectionPending = false;
+  private _changeDetectionNeeded = signal(false);
 
   /** A list of functions to run after the next change detection cycle. */
   private _runAfterChangeDetection: Function[] = [];
@@ -201,6 +200,18 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this.elementRef.nativeElement.classList.add('cdk-virtual-scrollable');
       this.scrollable = this;
     }
+
+    const ref = effect(
+      () => {
+        if (this._changeDetectionNeeded()) {
+          this._doChangeDetection();
+        }
+      },
+      // Using ApplicationRef injector is important here because we want this to be a root
+      // effect that runs before change detection of any application views (since we're depending on markForCheck marking parents dirty)
+      {injector: inject(ApplicationRef).injector},
+    );
+    inject(DestroyRef).onDestroy(() => void ref.destroy());
   }
 
   override ngOnInit() {
@@ -487,16 +498,16 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this._runAfterChangeDetection.push(runAfter);
     }
 
-    // Use a Promise to batch together calls to `_doChangeDetection`. This way if we set a bunch of
-    // properties sequentially we only have to run `_doChangeDetection` once at the end.
-    if (!this._isChangeDetectionPending) {
-      this._isChangeDetectionPending = true;
-      this.ngZone.runOutsideAngular(() =>
-        Promise.resolve().then(() => {
-          this._doChangeDetection();
-        }),
-      );
+    if (untracked(this._changeDetectionNeeded)) {
+      return;
     }
+    this.ngZone.runOutsideAngular(() => {
+      Promise.resolve().then(() => {
+        this.ngZone.run(() => {
+          this._changeDetectionNeeded.set(true);
+        });
+      });
+    });
   }
 
   /** Run change detection. */
@@ -519,7 +530,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
       afterNextRender(
         () => {
-          this._isChangeDetectionPending = false;
+          this._changeDetectionNeeded.set(false);
           const runAfterChangeDetection = this._runAfterChangeDetection;
           this._runAfterChangeDetection = [];
           for (const fn of runAfterChangeDetection) {
@@ -533,9 +544,11 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Calculates the `style.width` and `style.height` for the spacer element. */
   private _calculateSpacerSize() {
-    this._totalContentHeight =
-      this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`;
-    this._totalContentWidth =
-      this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '';
+    this._totalContentHeight.set(
+      this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`,
+    );
+    this._totalContentWidth.set(
+      this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '',
+    );
   }
 }

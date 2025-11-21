@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, Provider, CSP_NONCE, inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {Injectable, OnDestroy, Provider, CSP_NONCE, inject, DOCUMENT} from '@angular/core';
+
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
-import {CdkTable, _CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
+import {CdkTable} from '@angular/cdk/table';
 
 import {ColumnResize} from './column-resize';
+import {_COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 /**
  * Provides an implementation for resizing a column.

@@ -1,5 +1,12 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnInit, inject} from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 import {MatAnchor} from '@angular/material/button';
 import {MatRipple} from '@angular/material/core';
@@ -39,27 +46,16 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
     MatRipple,
   ],
   host: {
-    'class': 'main-content',
-    '[class.animations-disabled]': 'animationsDisabled',
+    'class': 'docs-main-content',
   },
 })
 export class Homepage implements OnInit {
-  _componentPageTitle = inject(ComponentPageTitle);
-  guideItems = inject(GuideItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
+  protected readonly guideItems = inject(GuideItems);
 
-  readonly animationsDisabled: boolean;
-
-  constructor() {
-    const animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
-
-    this.animationsDisabled = animationsModule === 'NoopAnimations';
-  }
+  protected readonly topComponents = TOP_COMPONENTS;
 
   ngOnInit(): void {
     this._componentPageTitle.title = '';
-  }
-
-  getTopComponents(): string[] {
-    return TOP_COMPONENTS;
   }
 }

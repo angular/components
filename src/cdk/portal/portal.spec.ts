@@ -22,19 +22,6 @@ import {ComponentPortal, DomPortal, Portal, TemplatePortal} from './portal';
 import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 
 describe('Portals', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        PortalModule,
-        PortalTestApp,
-        UnboundPortalTestApp,
-        ArbitraryViewContainerRefComponent,
-        PizzaMsg,
-        SaveParentNodeOnInit,
-      ],
-    });
-  });
-
   describe('CdkPortalOutlet', () => {
     let fixture: ComponentFixture<PortalTestApp>;
 

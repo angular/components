@@ -22,9 +22,10 @@ import {
   inject,
   numberAttribute,
   Renderer2,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {_animationsDisabled, ThemePalette} from '../core';
+
+import {_getAnimationsState, ThemePalette} from '../core';
 
 /** Last animation end data. */
 export interface ProgressAnimationEnd {
@@ -35,10 +36,10 @@ export interface ProgressAnimationEnd {
 export interface MatProgressBarDefaultOptions {
   /**
    * Default theme color of the progress bar. This API is supported in M2 themes only,
-   * it has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/progress-bar/styling.
+   * it has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/progress-bar/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   color?: ThemePalette;
 
@@ -58,7 +59,19 @@ export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS = new InjectionToken<MatProgressBa
  */
 export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocation>(
   'mat-progress-bar-location',
-  {providedIn: 'root', factory: MAT_PROGRESS_BAR_LOCATION_FACTORY},
+  {
+    providedIn: 'root',
+    factory: () => {
+      const _document = inject(DOCUMENT);
+      const _location = _document ? _document.location : null;
+
+      return {
+        // Note that this needs to be a function, rather than a property, because Angular
+        // will only resolve it once, but we want the current path on each call.
+        getPathname: () => (_location ? _location.pathname + _location.search : ''),
+      };
+    },
+  },
 );
 
 /**
@@ -67,22 +80,6 @@ export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocati
  */
 export interface MatProgressBarLocation {
   getPathname: () => string;
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
-  const _document = inject(DOCUMENT);
-  const _location = _document ? _document.location : null;
-
-  return {
-    // Note that this needs to be a function, rather than a property, because Angular
-    // will only resolve it once, but we want the current path on each call.
-    getPathname: () => (_location ? _location.pathname + _location.search : ''),
-  };
 }
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
@@ -120,9 +117,17 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
+    const animationsState = _getAnimationsState();
+
     const defaults = inject<MatProgressBarDefaultOptions>(MAT_PROGRESS_BAR_DEFAULT_OPTIONS, {
       optional: true,
     });
+
+    this._isNoopAnimation = animationsState === 'di-disabled';
+
+    if (animationsState === 'reduced-motion') {
+      this._elementRef.nativeElement.classList.add('mat-progress-bar-reduced-motion');
+    }
 
     if (defaults) {
       if (defaults.color) {
@@ -134,15 +139,15 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   }
 
   /** Flag that indicates whether NoopAnimations mode is set to true. */
-  _isNoopAnimation = _animationsDisabled();
+  _isNoopAnimation: boolean;
 
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
   /**
    * Theme color of the progress bar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/progress-bar/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/progress-bar/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get color() {

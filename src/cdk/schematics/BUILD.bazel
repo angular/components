@@ -1,6 +1,6 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults2.bzl", "jasmine_test", "npm_package", "ts_project")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 
 package(default_visibility = [":__subpackages__"])
 
@@ -29,6 +29,14 @@ rules_js_tsconfig(
     src = "tsconfig.json",
 )
 
+rules_js_tsconfig(
+    name = "tsconfig_test",
+    src = "tsconfig-test.json",
+    deps = [
+        ":tsconfig",
+    ],
+)
+
 ts_project(
     name = "schematics",
     srcs = glob(
@@ -39,12 +47,11 @@ ts_project(
             "testing/**/*.ts",
         ],
     ),
-    tsconfig = "tsconfig.json",
+    tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@schematics/angular",
-        "//:node_modules/@types/glob",
         "//:node_modules/@types/node",
         "//:node_modules/glob",
         "//:node_modules/parse5",
@@ -78,8 +85,7 @@ ts_project(
             "**/files/**/*.spec.ts",
         ],
     ),
-    extends = "tsconfig.json",
-    tsconfig = "tsconfig-test.json",
+    tsconfig = "tsconfig_test",
     deps = [
         ":schematics",
         "//:node_modules/@angular-devkit/schematics",

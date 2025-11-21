@@ -1,0 +1,43 @@
+.docs-angular-aria-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  border-left: 4px solid var(--mat-sys-primary);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.docs-angular-aria-banner-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  fill: var(--mat-sys-primary);
+}
+
+.docs-angular-aria-banner-content {
+  flex: 1;
+}
+
+.docs-angular-aria-banner-content strong {
+  color: var(--mat-sys-primary);
+}
+
+.docs-angular-aria-banner-content a {
+  color: var(--mat-sys-primary);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .docs-angular-aria-banner {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .docs-angular-aria-banner-icon {
+    font-size: 18px;
+  }
+}

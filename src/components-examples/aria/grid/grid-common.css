@@ -1,0 +1,53 @@
+.example-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.example-controls-select {
+  padding: 8px;
+}
+
+.example-cell[data-active='true'] {
+  outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 4px;
+}
+
+.example-grid:focus-within .example-cell[data-anchor='true'][data-active='false'] {
+  outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 3px;
+}
+
+.example-cell[data-active='true']:focus-within,
+[aria-activedescendant]:focus-within .example-cell[data-active='true'] {
+  outline: 3px dashed var(--mat-sys-tertiary);
+  outline-offset: 3px;
+}
+
+.example-cell.example-cell.example-cell:has([data-active-control='widget']) {
+  outline: 3px dashed var(--mat-sys-on-error-container);
+  outline-offset: 3px;
+}
+
+.example-cell[aria-disabled='true'] {
+  border: 1px dashed var(--mat-sys-outline-variant);
+}
+
+.example-cell:hover {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-cell[aria-selected='true'] {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
+    transparent
+  );
+  color: var(--mat-sys-primary);
+}

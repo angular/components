@@ -1,0 +1,53 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {ENTER} from '@angular/cdk/keycodes';
+import {NgModule} from '@angular/core';
+import {ErrorStateMatcher, MatRippleModule} from '../core';
+import {MatChip} from './chip';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
+import {MatChipEditInput} from './chip-edit-input';
+import {MatChipGrid} from './chip-grid';
+import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
+import {MatChipInput} from './chip-input';
+import {MatChipListbox} from './chip-listbox';
+import {MatChipRow} from './chip-row';
+import {MatChipOption} from './chip-option';
+import {MatChipSet} from './chip-set';
+import {MatChipAction} from './chip-action';
+import {BidiModule} from '@angular/cdk/bidi';
+
+const CHIP_DECLARATIONS = [
+  MatChip,
+  MatChipAvatar,
+  MatChipEdit,
+  MatChipEditInput,
+  MatChipGrid,
+  MatChipInput,
+  MatChipListbox,
+  MatChipOption,
+  MatChipRemove,
+  MatChipRow,
+  MatChipSet,
+  MatChipTrailingIcon,
+];
+
+@NgModule({
+  imports: [MatRippleModule, MatChipAction, CHIP_DECLARATIONS],
+  exports: [BidiModule, CHIP_DECLARATIONS],
+  providers: [
+    ErrorStateMatcher,
+    {
+      provide: MAT_CHIPS_DEFAULT_OPTIONS,
+      useValue: {
+        separatorKeyCodes: [ENTER],
+      } as MatChipsDefaultOptions,
+    },
+  ],
+})
+export class MatChipsModule {}

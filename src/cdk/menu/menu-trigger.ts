@@ -11,6 +11,7 @@ import {
   Directive,
   ElementRef,
   inject,
+  Injector,
   NgZone,
   OnChanges,
   OnDestroy,
@@ -21,8 +22,9 @@ import {InputModalityDetector} from '../a11y';
 import {Directionality} from '../bidi';
 import {
   ConnectedPosition,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
@@ -41,7 +43,7 @@ import {takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
 import {PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
 import {MENU_AIM} from './menu-aim';
-import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
+import {CdkMenuTriggerBase, MENU_TRIGGER, MenuTracker} from './menu-trigger-base';
 import {eventDispatchesNativeClick} from './event-detection';
 
 /**
@@ -76,13 +78,16 @@ import {eventDispatchesNativeClick} from './event-detection';
 })
 export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnDestroy {
   private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
-  private readonly _overlay = inject(Overlay);
   private readonly _ngZone = inject(NgZone);
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
   private readonly _inputModalityDetector = inject(InputModalityDetector);
   private readonly _directionality = inject(Directionality, {optional: true});
   private readonly _renderer = inject(Renderer2);
+  private readonly _injector = inject(Injector);
   private _cleanupMouseenter: () => void;
+
+  /** The app's menu tracking registry */
+  private readonly _menuTracker = inject(MenuTracker);
 
   /** The parent menu this trigger belongs to. */
   private readonly _parentMenu = inject(CDK_MENU, {optional: true});
@@ -107,10 +112,14 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
 
   /** Open the attached menu. */
   open() {
+    if (!this._parentMenu) {
+      this._menuTracker.update(this);
+    }
     if (!this.isOpen() && this.menuTemplateRef != null) {
       this.opened.next();
 
-      this.overlayRef = this.overlayRef || this._overlay.create(this._getOverlayConfig());
+      this.overlayRef =
+        this.overlayRef || createOverlayRef(this._injector, this._getOverlayConfig());
       this.overlayRef.attach(this.getMenuContentPortal());
       this._changeDetectorRef.markForCheck();
       this._subscribeToOutsideClicks();
@@ -272,9 +281,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
 
   /** Build the position strategy for the overlay which specifies where to place the menu. */
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
-    return this._overlay
-      .position()
-      .flexibleConnectedTo(this._elementRef)
+    return createFlexibleConnectedPositionStrategy(this._injector, this._elementRef)
       .withLockedPosition()
       .withFlexibleDimensions(false)
       .withPositions(this._getOverlayPositions());

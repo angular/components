@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -43,6 +43,7 @@ ng_project(
     ],
     deps = [
         ":version",
+        "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/material/core:ripple",
@@ -85,6 +86,7 @@ sass_library(
         "_core-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core:ripple_sass_theme",
         "//src/material/core/option:theme",
         "//src/material/core/selection/pseudo-checkbox:sass_theme",
@@ -101,7 +103,7 @@ sass_library(
 #  Test targets
 #################
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -110,11 +112,13 @@ ts_project(
     ),
     deps = [
         ":core",
+        ":ripple",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
+        "//src/material/core/animation",
         "//src/material/testing",
     ],
 )
@@ -210,6 +214,7 @@ ng_project(
         "ripple/index.ts",
         "ripple/ripple.ts",
         "ripple/ripple-event-manager.ts",
+        "ripple/ripple-module.ts",
         "ripple/ripple-ref.ts",
         "ripple/ripple-renderer.ts",
     ],
@@ -217,6 +222,7 @@ ng_project(
         ":ripple_structure",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk/a11y",
         "//src/cdk/coercion",
         "//src/cdk/platform",

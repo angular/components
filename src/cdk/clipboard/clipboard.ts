@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Injectable, inject} from '@angular/core';
+import {Injectable, inject, DOCUMENT} from '@angular/core';
 import {PendingCopy} from './pending-copy';
 
 /**

@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -65,9 +65,9 @@ ng_project(
     name = "paginator",
     srcs = [
         "index.ts",
-        "module.ts",
         "paginator.ts",
         "paginator-intl.ts",
+        "paginator-module.ts",
         "public-api.ts",
     ],
     assets = [
@@ -80,12 +80,13 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/material/button",
         "//src/material/core",
+        "//src/material/form-field",
         "//src/material/select",
         "//src/material/tooltip",
     ],
 )
 
-ts_project(
+ng_project(
     name = "paginator_tests_lib",
     testonly = True,
     srcs = glob(

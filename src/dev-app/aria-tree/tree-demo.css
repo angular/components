@@ -1,0 +1,19 @@
+.example-tree-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: 20px;
+}
+
+.example-tree-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.example-configurable-tree-container {
+  padding-top: 40px;
+}
+
+h2 {
+  font-size: 1.1rem;
+}

@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -41,12 +41,14 @@ sass_library(
     ],
     deps = [
         ":m2",
+        "//src/material/checkbox:m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
         "//src/material/core/typography",
+        "//src/material/radio:m2",
     ],
 )
 
@@ -126,7 +128,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "list_tests_lib",
     testonly = True,
     srcs = glob(

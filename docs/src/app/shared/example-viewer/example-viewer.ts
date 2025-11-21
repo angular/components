@@ -1,4 +1,22 @@
-import {Component, ElementRef, inject, Input, OnInit, Type, viewChildren} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Input,
+  model,
+  signal,
+  Type,
+  viewChildren,
+} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
@@ -6,7 +24,7 @@ import {type LiveExample, loadExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
 import {normalizePath} from '../normalize-path';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
-import {StackBlitzButton} from '../stack-blitz/stack-blitz-button';
+import {StackblitzButton} from '../stackblitz/stackblitz-button';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatIconButton} from '@angular/material/button';
@@ -29,7 +47,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
     MatIconButton,
     MatTooltip,
     MatIcon,
-    StackBlitzButton,
+    StackblitzButton,
     MatTabGroup,
     MatTab,
     CodeSnippet,
@@ -39,7 +57,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
     '[attr.id]': 'example',
   },
 })
-export class ExampleViewer implements OnInit {
+export class ExampleViewer {
   private readonly _snackbar = inject(MatSnackBar);
   private readonly _clipboard = inject(Clipboard);
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -47,25 +65,48 @@ export class ExampleViewer implements OnInit {
   readonly snippet = viewChildren(CodeSnippet);
 
   /** The tab to jump to when expanding from snippet view. */
-  selectedTab: number = 0;
+  readonly selectedTab = signal(0);
 
   /** Map of example files that should be displayed in the view-source tab in order. */
-  exampleTabs: {[tabName: string]: string} = {};
+  readonly exampleTabs = signal<Record<string, string>>({});
 
   /** Data for the currently selected example. */
-  exampleData: LiveExample | null = null;
+  readonly exampleData = signal<LiveExample | null>(null);
 
   /** URL to fetch code snippet for snippet view. */
-  fileUrl: string | undefined;
+  readonly fileUrl = computed(() => {
+    const file = this.file();
+    const exampleData = this.exampleData();
+    const region = this.region();
+
+    if (!file) {
+      return undefined;
+    }
+
+    const lastDotIndex = file.lastIndexOf('.');
+    const contentBeforeDot = file.substring(0, lastDotIndex);
+    const contentAfterDot = file.substring(lastDotIndex + 1);
+    let fileName: string;
+
+    if (region) {
+      fileName = `${contentBeforeDot}_${region}-${contentAfterDot}.html`;
+    } else {
+      fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
+    }
+
+    return exampleData
+      ? `/docs-content/examples-highlighted/${exampleData.packagePath}/${fileName}`
+      : '';
+  });
 
   /** Component type for the current example. */
-  _exampleComponentType: Type<any> | null = null;
+  readonly _exampleComponentType = signal<Type<any> | null>(null);
 
   /** View of the example component. */
-  @Input() view: Views | undefined;
+  readonly view = model<Views>();
 
   /** Whether to show toggle for compact view. */
-  @Input() showCompactToggle = false;
+  readonly showCompactToggle = model(false);
 
   /** String key of the currently displayed example. */
   @Input()
@@ -81,30 +122,26 @@ export class ExampleViewer implements OnInit {
   private _example: string | undefined;
 
   /** Range of lines of the source code to display in compact view. */
-  @Input() region?: string;
+  readonly region = signal<string | undefined>(undefined);
 
   /** Name of file to display in compact view. */
-  @Input() file?: string;
-
-  ngOnInit() {
-    if (this.file) {
-      this.fileUrl = this.generateUrl(this.file);
-    }
-  }
+  readonly file = model<string | undefined>();
 
   /** Selects a given tab based on the example file of the compact view. */
   selectCorrectTab() {
-    if (!this.file || !this.exampleTabs) {
+    const file = this.file();
+    const exampleTabNames = this._exampleTabNames();
+
+    if (!file || !exampleTabNames.length) {
       return;
     }
 
-    const extension = this.file.substring(this.file.lastIndexOf('.') + 1);
-    const exampleTabNames = this._getExampleTabNames();
+    const extension = file.substring(file.lastIndexOf('.') + 1);
 
     for (let i = 0; i < exampleTabNames.length; i++) {
       const tabName = exampleTabNames[i];
       if (tabName.toLowerCase() === extension || tabName.endsWith(`.${extension}`)) {
-        this.selectedTab = i;
+        this.selectedTab.set(i);
         return;
       }
     }
@@ -113,16 +150,16 @@ export class ExampleViewer implements OnInit {
   }
 
   toggleCompactView() {
-    if (this.view === 'snippet') {
-      this.view = 'full';
+    if (this.view() === 'snippet') {
+      this.view.set('full');
       this.selectCorrectTab();
     } else {
-      this.view = 'snippet';
+      this.view.set('snippet');
     }
   }
 
   toggleSourceView(): void {
-    this.view = this.view === 'full' ? 'demo' : 'full';
+    this.view.set(this.view() === 'full' ? 'demo' : 'full');
   }
 
   copySource(snippets: readonly CodeSnippet[], selectedIndex: number = 0) {
@@ -134,42 +171,29 @@ export class ExampleViewer implements OnInit {
     }
   }
 
-  generateUrl(file: string): string {
-    const lastDotIndex = file.lastIndexOf('.');
-    const contentBeforeDot = file.substring(0, lastDotIndex);
-    const contentAfterDot = file.substring(lastDotIndex + 1);
-    let fileName: string;
+  protected _exampleTabNames = computed(() => {
+    const exampleTabs = this.exampleTabs();
 
-    if (this.region) {
-      fileName = `${contentBeforeDot}_${this.region}-${contentAfterDot}.html`;
-    } else {
-      fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
+    if (!exampleTabs) {
+      return [];
     }
 
-    return this.exampleData
-      ? `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}`
-      : '';
-  }
+    return Object.keys(exampleTabs).sort((a, b) => {
+      let indexA = preferredExampleFileOrder.indexOf(a);
+      let indexB = preferredExampleFileOrder.indexOf(b);
+      // Files which are not part of the preferred example file order should be
+      // moved after all items with a preferred index.
+      if (indexA === -1) {
+        indexA = preferredExampleFileOrder.length;
+      }
 
-  _getExampleTabNames() {
-    return this.exampleTabs
-      ? Object.keys(this.exampleTabs).sort((a, b) => {
-          let indexA = preferredExampleFileOrder.indexOf(a);
-          let indexB = preferredExampleFileOrder.indexOf(b);
-          // Files which are not part of the preferred example file order should be
-          // moved after all items with a preferred index.
-          if (indexA === -1) {
-            indexA = preferredExampleFileOrder.length;
-          }
+      if (indexB === -1) {
+        indexB = preferredExampleFileOrder.length;
+      }
 
-          if (indexB === -1) {
-            indexB = preferredExampleFileOrder.length;
-          }
-
-          return indexA - indexB || 1;
-        })
-      : [];
-  }
+      return indexA - indexB || 1;
+    });
+  });
 
   _copyLink() {
     // Reconstruct the URL using `origin + pathname` so we drop any pre-existing hash.
@@ -185,19 +209,19 @@ export class ExampleViewer implements OnInit {
 
   private async _exampleChanged(name: string) {
     const examples = (await this._docsItems.getData()).examples;
-    this.exampleData = examples[name];
+    this.exampleData.set(examples[name]);
 
-    if (!this.exampleData) {
+    if (!this.exampleData()) {
       console.error(`Could not find example: ${name}`);
       return;
     }
 
     try {
-      this._generateExampleTabs();
+      this._generateExampleTabs(this.exampleData());
 
       // Lazily loads the example package that contains the requested example.
       const moduleExports = await loadExample(name);
-      this._exampleComponentType = moduleExports[examples[name].componentName];
+      this._exampleComponentType.set(moduleExports[examples[name].componentName]);
 
       // Since the data is loaded asynchronously, we can't count on the native behavior
       // that scrolls the element into view automatically. We do it ourselves while giving
@@ -210,20 +234,20 @@ export class ExampleViewer implements OnInit {
     }
   }
 
-  private _generateExampleTabs() {
-    this.exampleTabs = {};
+  private _generateExampleTabs(data: LiveExample | null) {
+    const tabs: Record<string, string> = {};
 
-    if (this.exampleData) {
+    if (data) {
       // Name of the default example files. If files with such name exist within the example,
       // we provide a shorthand for them within the example tabs (for less verbose tabs).
       const exampleBaseFileName = `${this.example}-example`;
-      const docsContentPath = `/docs-content/examples-highlighted/${this.exampleData.packagePath}`;
+      const docsContentPath = `/docs-content/examples-highlighted/${data.packagePath}`;
 
       const tsPath = normalizePath(`${exampleBaseFileName}.ts`);
       const cssPath = normalizePath(`${exampleBaseFileName}.css`);
       const htmlPath = normalizePath(`${exampleBaseFileName}.html`);
 
-      for (let fileName of this.exampleData.files) {
+      for (let fileName of data.files) {
         // Since the additional files refer to the original file name, we need to transform
         // the file name to match the highlighted HTML file that displays the source.
         const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
@@ -234,15 +258,17 @@ export class ExampleViewer implements OnInit {
         fileName = normalizePath(fileName);
 
         if (fileName === tsPath) {
-          this.exampleTabs['TS'] = importPath;
+          tabs['TS'] = importPath;
         } else if (fileName === cssPath) {
-          this.exampleTabs['CSS'] = importPath;
+          tabs['CSS'] = importPath;
         } else if (fileName === htmlPath) {
-          this.exampleTabs['HTML'] = importPath;
+          tabs['HTML'] = importPath;
         } else {
-          this.exampleTabs[fileName] = importPath;
+          tabs[fileName] = importPath;
         }
       }
     }
+
+    this.exampleTabs.set(tabs);
   }
 }

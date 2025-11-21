@@ -43,15 +43,14 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
   /** Whether the notch should be opened. */
   @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
 
-  @ViewChild('notch') _notch: ElementRef;
-
-  constructor(...args: unknown[]);
-  constructor() {}
+  @ViewChild('notch') _notch: ElementRef<HTMLElement>;
 
   ngAfterViewInit(): void {
-    const label = this._elementRef.nativeElement.querySelector<HTMLElement>('.mdc-floating-label');
+    const element = this._elementRef.nativeElement;
+    const label = element.querySelector<HTMLElement>('.mdc-floating-label');
+
     if (label) {
-      this._elementRef.nativeElement.classList.add('mdc-notched-outline--upgraded');
+      element.classList.add('mdc-notched-outline--upgraded');
 
       if (typeof requestAnimationFrame === 'function') {
         label.style.transitionDuration = '0s';
@@ -60,19 +59,29 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
         });
       }
     } else {
-      this._elementRef.nativeElement.classList.add('mdc-notched-outline--no-label');
+      element.classList.add('mdc-notched-outline--no-label');
     }
   }
 
   _setNotchWidth(labelWidth: number) {
+    const notch = this._notch.nativeElement;
+
     if (!this.open || !labelWidth) {
-      this._notch.nativeElement.style.width = '';
+      notch.style.width = '';
     } else {
       const NOTCH_ELEMENT_PADDING = 8;
       const NOTCH_ELEMENT_BORDER = 1;
-      this._notch.nativeElement.style.width = `calc(${labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${
+      notch.style.width = `calc(${labelWidth}px * var(--mat-mdc-form-field-floating-label-scale, 0.75) + ${
         NOTCH_ELEMENT_PADDING + NOTCH_ELEMENT_BORDER
       }px)`;
     }
+  }
+
+  _setMaxWidth(prefixAndSuffixWidth: number) {
+    // Set this only on the notch to avoid style recalculations in other parts of the form field.
+    this._notch.nativeElement.style.setProperty(
+      '--mat-form-field-notch-max-width',
+      `calc(100% - ${prefixAndSuffixWidth}px)`,
+    );
   }
 }

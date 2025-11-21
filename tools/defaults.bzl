@@ -1,25 +1,30 @@
 # Re-export of Bazel rules with repository-wide defaults
 
+load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
+load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
+load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
+load("@devinfra//bazel/spec-bundling:index.bzl", _spec_bundle = "spec_bundle")
+load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
+load("@rules_angular//src/ng_package:index.bzl", _ng_package = "ng_package")
+load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
+load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
+load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
+load("@rules_browsers//protractor_test:index.bzl", "protractor_test")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
-load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
 load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
-load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
-load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
-load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
-load("//tools:defaults2.bzl", _ng_web_test_suite = "ng_web_test_suite")
-
-npmPackageSubstitutions = select({
-    "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
-    "//conditions:default": NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS,
-})
+load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
+load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
+load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
 extract_tokens = _extract_tokens
 ng_web_test_suite = _ng_web_test_suite
+spec_bundle = _spec_bundle
+http_server = _http_server
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(
@@ -65,21 +70,21 @@ def ng_package(
         externals = externals,
         srcs = srcs + [":license_copied"],
         deps = deps,
-        # We never set a `package_name` for NPM packages, neither do we enable validation.
-        # This is necessary because the source targets of the NPM packages all have
-        # package names set and setting a similar `package_name` on the NPM package would
-        # result in duplicate linker mappings that will conflict. e.g. consider the following
-        # scenario: We have a `ts_library` for `@angular/cdk`. We will configure a package
-        # name for the target so that it can be resolved in NodeJS executions from `node_modules`.
-        # If we'd also set a `package_name` for the associated `pkg_npm` target, there would be
-        # two mappings for `@angular/cdk` and the linker will complain. For a better development
-        # experience, we want the mapping to resolve to the direct outputs of the `ts_library`
-        # instead of requiring tests and other targets to assemble the NPM package first.
-        package_name = None,
-        validate = False,
+        package = package_name,
         readme_md = readme_md,
-        substitutions = npmPackageSubstitutions,
+        substitutions = select({
+            "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
+            "//conditions:default": NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS,
+        }),
         visibility = visibility,
+        rollup_runtime_deps = [
+            "//:node_modules/@babel/core",
+            "//:node_modules/@rollup/plugin-commonjs",
+            "//:node_modules/@rollup/plugin-node-resolve",
+            "//:node_modules/magic-string",
+            "//:node_modules/rollup-plugin-dts",
+            "//:node_modules/rollup-plugin-sourcemaps2",
+        ],
         **kwargs
     )
 
@@ -98,26 +103,147 @@ def ng_package(
         name = "pkg",
         src = ":%s" % name,
         visibility = visibility,
-        interop_deps = [d.replace("_legacy", "") for d in deps] + package_deps,
+        interop_deps = deps + package_deps,
         package_name = package_name,
     )
 
-def pkg_npm(name, visibility = None, **kwargs):
-    _pkg_npm(
+def npm_package(name, srcs = [], **kwargs):
+    _text_replace(
+        name = "%s_substituted" % name,
+        srcs = srcs,
+        substitutions = select({
+            "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
+            "//conditions:default": NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS,
+        }),
+    )
+    _npm_package(
         name = name,
-        # We never set a `package_name` for NPM packages, neither do we enable validation.
-        # This is necessary because the source targets of the NPM packages all have
-        # package names set and setting a similar `package_name` on the NPM package would
-        # result in duplicate linker mappings that will conflict. e.g. consider the following
-        # scenario: We have a `ts_library` for `@angular/cdk`. We will configure a package
-        # name for the target so that it can be resolved in NodeJS executions from `node_modules`.
-        # If we'd also set a `package_name` for the associated `pkg_npm` target, there would be
-        # two mappings for `@angular/cdk` and the linker will complain. For a better development
-        # experience, we want the mapping to resolve to the direct outputs of the `ts_library`
-        # instead of requiring tests and other targets to assemble the NPM package first.
-        package_name = None,
-        validate = False,
-        substitutions = npmPackageSubstitutions,
+        srcs = srcs + [
+            "%s_substituted" % name,
+        ],
+        replace_prefixes = {
+            "%s_substituted" % name: "/",
+        },
+        allow_overwrites = True,
+        **kwargs
+    )
+
+def ts_project(
+        name,
+        srcs = [],
+        deps = [],
+        source_map = True,
+        testonly = False,
+        tsconfig = None,
+        visibility = None,
+        **kwargs):
+    if tsconfig == None and native.package_name().startswith("src"):
+        tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
+
+    _ts_project(
+        name = name,
+        source_map = source_map,
+        testonly = testonly,
+        declaration = True,
+        tsconfig = tsconfig,
         visibility = visibility,
+        srcs = srcs,
+        deps = deps,
+        **kwargs
+    )
+
+    strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        srcs = srcs,
+        deps = deps,
+        tsconfig = tsconfig,
+    )
+
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    # if False and not testonly:
+    #    _make_tsec_test(kwargs["name"])
+
+def ng_project(
+        name,
+        srcs = [],
+        deps = [],
+        source_map = True,
+        testonly = False,
+        tsconfig = None,
+        visibility = None,
+        **kwargs):
+    if tsconfig == None and native.package_name().startswith("src"):
+        tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
+
+    _ng_project(
+        name = name,
+        source_map = source_map,
+        testonly = testonly,
+        declaration = True,
+        tsconfig = tsconfig,
+        visibility = visibility,
+        srcs = srcs,
+        deps = deps,
+        **kwargs
+    )
+
+    strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        srcs = srcs,
+        deps = deps,
+        tsconfig = tsconfig,
+    )
+
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    # if False and not testonly:
+    #    _make_tsec_test(kwargs["name"])
+
+def jasmine_test(name, data = [], args = [], **kwargs):
+    # Create relative path to root, from current package dir. Necessary as
+    # we change the `chdir` below to the package directory.
+    relative_to_root = "/".join([".."] * len(native.package_name().split("/")))
+
+    _jasmine_test(
+        name = name,
+        node_modules = "//:node_modules",
+        chdir = native.package_name(),
+        fixed_args = [
+            "--require=%s/node_modules/source-map-support/register.js" % relative_to_root,
+            # Escape so that the `js_binary` launcher triggers Bash expansion.
+            "'**/*+(.|_)spec.js'",
+            "'**/*+(.|_)spec.mjs'",
+            "'**/*+(.|_)spec.cjs'",
+        ] + args,
+        data = data + [
+            "//:node_modules/source-map-support",
+        ],
+        **kwargs
+    )
+
+def protractor_web_test_suite(name, deps, **kwargs):
+    spec_bundle(
+        name = "%s_bundle" % name,
+        deps = deps,
+        external = ["protractor", "selenium-webdriver"],
+    )
+
+    protractor_test(
+        name = name,
+        deps = [":%s_bundle" % name],
+        extra_config = {
+            "useAllAngular2AppRoots": True,
+            "allScriptsTimeout": 120000,
+            "getPageTimeout": 120000,
+            "jasmineNodeOpts": {
+                "defaultTimeoutInterval": 120000,
+            },
+            # Since we want to use async/await we don't want to mix up with selenium's promise
+            # manager. In order to enforce this, we disable the promise manager.
+            "SELENIUM_PROMISE_MANAGER": False,
+        },
+        data = [
+            "//:node_modules/protractor",
+            "//:node_modules/selenium-webdriver",
+        ],
         **kwargs
     )

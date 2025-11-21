@@ -2,7 +2,7 @@ import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatProgressSpinnerModule} from '../module';
+import {MatProgressSpinnerModule} from '../progress-spinner-module';
 import {MatProgressSpinnerHarness} from './progress-spinner-harness';
 
 describe('MatProgressSpinnerHarness', () => {
@@ -10,10 +10,6 @@ describe('MatProgressSpinnerHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule, ProgressSpinnerHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ProgressSpinnerHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

@@ -29,7 +29,7 @@ export const CDK_DRAG_CONFIG = new InjectionToken<DragDropConfig>('CDK_DRAG_CONF
  * items and drop lists within a module or a component.
  */
 export interface DragDropConfig extends Partial<DragRefConfig> {
-  lockAxis?: DragAxis;
+  lockAxis?: DragAxis | null;
   dragStartDelay?: DragStartDelay;
   constrainPosition?: DragConstrainPosition;
   previewClass?: string | string[];

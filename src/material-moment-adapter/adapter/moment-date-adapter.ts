@@ -40,20 +40,9 @@ export const MAT_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<MatMomentDateA
   'MAT_MOMENT_DATE_ADAPTER_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY,
+    factory: () => ({useUtc: false}),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): MatMomentDateAdapterOptions {
-  return {
-    useUtc: false,
-  };
-}
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
@@ -187,7 +176,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return this._createMoment().locale(this.locale);
   }
 
-  parse(value: any, parseFormat: string | string[]): Moment | null {
+  parse(value: unknown, parseFormat: string | string[]): Moment | null {
     if (value && typeof value == 'string') {
       return this._createMoment(value, parseFormat, this.locale);
     }
@@ -223,7 +212,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
    * (https://www.ietf.org/rfc/rfc3339.txt) and valid Date objects into valid Moments and empty
    * string into null. Returns an invalid date for all other values.
    */
-  override deserialize(value: any): Moment | null {
+  override deserialize(value: unknown): Moment | null {
     let date;
     if (value instanceof Date) {
       date = this._createMoment(value).locale(this.locale);
@@ -243,7 +232,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return super.deserialize(value);
   }
 
-  isDateInstance(obj: any): boolean {
+  isDateInstance(obj: unknown): obj is Moment {
     return moment.isMoment(obj);
   }
 
@@ -285,7 +274,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     return date.seconds();
   }
 
-  override parseTime(value: any, parseFormat: string | string[]): Moment | null {
+  override parseTime(value: unknown, parseFormat: string | string[]): Moment | null {
     return this.parse(value, parseFormat);
   }
 

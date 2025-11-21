@@ -1,89 +1,88 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
-@use '../core/theming/theming';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-toolbar';
 @use './m3-toolbar';
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
-    m2-toolbar.$prefix,
-    m2-toolbar.private-get-color-palette-color-tokens(
-      $background-color: inspection.get-theme-color($theme, $palette-name),
-      $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
-    )
+  $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+    $background-color: inspection.get-theme-color($theme, $palette-name),
+    $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
   );
+  @include token-utils.values($tokens);
 }
 
 @mixin base($theme) {
+  $tokens: map.get(m2-toolbar.get-tokens($theme), base);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-toolbar.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: map.get(m2-toolbar.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-toolbar.$prefix,
-        m2-toolbar.get-color-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-toolbar.get-tokens($theme), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mat-toolbar {
       &.mat-primary {
-        @include _palette-styles($theme, primary);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, primary),
+          $text-color: inspection.get-theme-color($theme, primary, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
 
       &.mat-accent {
-        @include _palette-styles($theme, accent);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, accent),
+          $text-color: inspection.get-theme-color($theme, accent, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include _palette-styles($theme, warn);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, warn),
+          $text-color: inspection.get-theme-color($theme, warn, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
     }
   }
 }
 
-@mixin typography($theme) {
-  @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
-    $theme: inspection.private-get-typography-back-compat-theme($theme);
-
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-toolbar.$prefix,
-        m2-toolbar.get-typography-tokens($theme)
-      );
+  @mixin typography($theme) {
+    $tokens: map.get(m2-toolbar.get-tokens($theme), typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      $tokens: map.get(m3-toolbar.get-tokens($theme), typography);
     }
-  }
-}
 
-@mixin density($theme) {
-  @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-toolbar.$prefix, m3-toolbar.get-density-tokens($theme));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-toolbar.$prefix,
-        m2-toolbar.get-density-tokens($theme)
-      );
-    }
+    @include token-utils.values($tokens);
   }
-}
+
+  @mixin density($theme) {
+    $tokens: map.get(m2-toolbar.get-tokens($theme), density);
+    @if inspection.get-theme-version($theme) == 1 {
+      $tokens: map.get(m3-toolbar.get-tokens($theme), density);
+    }
+
+    @include token-utils.values($tokens);
+  }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-toolbar.$prefix,
-      tokens: m2-toolbar.get-token-slots(),
+      namespace: toolbar,
+      tokens: token-utils.get-overrides(m3-toolbar.get-tokens(), toolbar)
     ),
   );
 }
@@ -91,39 +90,25 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-toolbar') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-toolbar.$prefix,
-      map.get($tokens, m2-toolbar.$prefix)
-    );
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
   }
 }

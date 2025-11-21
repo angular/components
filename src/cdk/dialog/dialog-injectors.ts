@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken, inject} from '@angular/core';
-import {Overlay, ScrollStrategy} from '../overlay';
+import {InjectionToken, Injector, inject} from '@angular/core';
+import {createBlockScrollStrategy, ScrollStrategy} from '../overlay';
 import {DialogConfig} from './dialog-config';
 
 /** Injection token for the Dialog's ScrollStrategy. */
@@ -16,8 +16,8 @@ export const DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.block();
+      const injector = inject(Injector);
+      return () => createBlockScrollStrategy(injector);
     },
   },
 );

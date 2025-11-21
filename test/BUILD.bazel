@@ -1,5 +1,5 @@
-load("//tools:defaults2.bzl", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -21,7 +21,6 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//:node_modules/reflect-metadata",
         "//:node_modules/zone.js",
     ],
 )

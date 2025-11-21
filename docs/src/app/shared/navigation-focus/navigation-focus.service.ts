@@ -1,71 +1,71 @@
-import {Injectable, OnDestroy, inject} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {Injectable, inject} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {filter, skip} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NavigationFocusService implements OnDestroy {
-  private router = inject(Router);
+export class NavigationFocusService {
+  private _router = inject(Router);
+  private _navigationFocusRequests: HTMLElement[] = [];
+  private _skipLinkFocusRequests: HTMLElement[] = [];
+  private _skipLinkHref: string | null | undefined;
 
-  private subscriptions = new Subscription();
-  private navigationFocusRequests: HTMLElement[] = [];
-  private skipLinkFocusRequests: HTMLElement[] = [];
-  private skipLinkHref: string | null | undefined;
-
-  readonly navigationEndEvents = this.router.events.pipe(
+  readonly navigationEndEvents = this._router.events.pipe(
     filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd),
   );
   readonly softNavigations = this.navigationEndEvents.pipe(skip(1));
 
   constructor() {
-    this.subscriptions.add(
-      this.softNavigations.subscribe(() => {
-        // focus if url does not have fragment
-        if (!this.router.url.split('#')[1]) {
-          setTimeout(() => {
-            if (this.navigationFocusRequests.length) {
-              this.navigationFocusRequests[this.navigationFocusRequests.length - 1].focus({
-                preventScroll: true,
-              });
-            }
-          }, 100);
-        }
-      }),
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this.softNavigations.pipe(takeUntilDestroyed()).subscribe(() => {
+      // focus if url does not have fragment
+      if (!this._router.url.split('#')[1]) {
+        setTimeout(() => {
+          if (this._navigationFocusRequests.length) {
+            this._navigationFocusRequests[this._navigationFocusRequests.length - 1].focus({
+              preventScroll: true,
+            });
+          }
+        }, 100);
+      }
+    });
   }
 
   requestFocusOnNavigation(el: HTMLElement) {
-    this.navigationFocusRequests.push(el);
+    this._navigationFocusRequests.push(el);
   }
 
   relinquishFocusOnNavigation(el: HTMLElement) {
-    this.navigationFocusRequests.splice(this.navigationFocusRequests.indexOf(el), 1);
+    this._navigationFocusRequests.splice(this._navigationFocusRequests.indexOf(el), 1);
   }
 
   requestSkipLinkFocus(el: HTMLElement) {
-    this.skipLinkFocusRequests.push(el);
+    this._skipLinkFocusRequests.push(el);
     this.setSkipLinkHref(el);
   }
 
   relinquishSkipLinkFocus(el: HTMLElement) {
-    this.skipLinkFocusRequests.splice(this.skipLinkFocusRequests.indexOf(el), 1);
-    const skipLinkFocusTarget = this.skipLinkFocusRequests[this.skipLinkFocusRequests.length - 1];
+    this._skipLinkFocusRequests.splice(this._skipLinkFocusRequests.indexOf(el), 1);
+    const skipLinkFocusTarget = this._skipLinkFocusRequests[this._skipLinkFocusRequests.length - 1];
     this.setSkipLinkHref(skipLinkFocusTarget);
   }
 
   setSkipLinkHref(el: HTMLElement | null) {
-    const baseUrl = this.router.url.split('#')[0];
-    this.skipLinkHref = el ? `${baseUrl}#${el.id}` : null;
+    const baseUrl = this._router.url.split('#')[0];
+    this._skipLinkHref = el ? `${baseUrl}#${el.id}` : null;
   }
 
   getSkipLinkHref(): string | null | undefined {
-    return this.skipLinkHref;
+    return this._skipLinkHref;
   }
 
   isNavigationWithinComponentView(previousUrl: string, newUrl: string) {

@@ -1,5 +1,5 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, flushMicrotasks} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ThemePalette} from '../core';
@@ -9,19 +9,10 @@ import {
   MatCheckbox,
   MatCheckboxChange,
   MatCheckboxDefaultOptions,
-  MatCheckboxModule,
 } from './index';
 
 describe('MatCheckbox', () => {
   let fixture: ComponentFixture<any>;
-
-  function createComponent<T>(componentType: Type<T>) {
-    TestBed.configureTestingModule({
-      imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, componentType],
-    });
-
-    return TestBed.createComponent<T>(componentType);
-  }
 
   describe('basic behaviors', () => {
     let checkboxDebugElement: DebugElement;
@@ -33,7 +24,7 @@ describe('MatCheckbox', () => {
     let checkboxElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -294,7 +285,7 @@ describe('MatCheckbox', () => {
     }));
 
     it('should generate a unique id for the checkbox input if no id is set', fakeAsync(() => {
-      testComponent.checkboxId = null;
+      testComponent.checkboxId = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -587,11 +578,10 @@ describe('MatCheckbox', () => {
       beforeEach(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
-          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
           providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}],
         });
 
-        fixture = createComponent(SingleCheckbox);
+        fixture = TestBed.createComponent(SingleCheckbox);
         fixture.detectChanges();
 
         checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -619,11 +609,10 @@ describe('MatCheckbox', () => {
       beforeEach(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
-          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, SingleCheckbox],
           providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}],
         });
 
-        fixture = createComponent(SingleCheckbox);
+        fixture = TestBed.createComponent(SingleCheckbox);
         fixture.detectChanges();
 
         checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -687,7 +676,7 @@ describe('MatCheckbox', () => {
     let labelElement: HTMLLabelElement;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithChangeEvent);
+      fixture = TestBed.createComponent(CheckboxWithChangeEvent);
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -735,7 +724,7 @@ describe('MatCheckbox', () => {
 
   describe('aria handling', () => {
     it('should use the provided aria-label', fakeAsync(() => {
-      fixture = createComponent(CheckboxWithAriaLabel);
+      fixture = TestBed.createComponent(CheckboxWithAriaLabel);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
       const inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -745,14 +734,14 @@ describe('MatCheckbox', () => {
     }));
 
     it('should not set the aria-label attribute if no value is provided', fakeAsync(() => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelector('input').hasAttribute('aria-label')).toBe(false);
     }));
 
     it('should use the provided aria-labelledby', fakeAsync(() => {
-      fixture = createComponent(CheckboxWithAriaLabelledby);
+      fixture = TestBed.createComponent(CheckboxWithAriaLabelledby);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
       const inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -762,7 +751,7 @@ describe('MatCheckbox', () => {
     }));
 
     it('should not assign aria-labelledby if none is provided', fakeAsync(() => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
       const inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -772,7 +761,7 @@ describe('MatCheckbox', () => {
     }));
 
     it('should clear the static aria attributes from the host node', () => {
-      fixture = createComponent(CheckboxWithStaticAriaAttributes);
+      fixture = TestBed.createComponent(CheckboxWithStaticAriaAttributes);
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox))!.nativeElement;
       fixture.detectChanges();
 
@@ -787,7 +776,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     it('should use the provided aria-describedby', () => {
-      fixture = createComponent(CheckboxWithAriaDescribedby);
+      fixture = TestBed.createComponent(CheckboxWithAriaDescribedby);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -797,7 +786,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should not assign aria-describedby if none is provided', () => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -813,7 +802,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     it('should use the provided postive aria-expanded', () => {
-      fixture = createComponent(CheckboxWithPositiveAriaExpanded);
+      fixture = TestBed.createComponent(CheckboxWithPositiveAriaExpanded);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -823,7 +812,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should use the provided negative aria-expanded', () => {
-      fixture = createComponent(CheckboxWithNegativeAriaExpanded);
+      fixture = TestBed.createComponent(CheckboxWithNegativeAriaExpanded);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -833,7 +822,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should not assign aria-expanded if none is provided', () => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -849,7 +838,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     it('should use the provided aria-controls', () => {
-      fixture = createComponent(CheckboxWithAriaControls);
+      fixture = TestBed.createComponent(CheckboxWithAriaControls);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -859,7 +848,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should not assign aria-controls if none is provided', () => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -875,7 +864,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     it('should use the provided aria-owns', () => {
-      fixture = createComponent(CheckboxWithAriaOwns);
+      fixture = TestBed.createComponent(CheckboxWithAriaOwns);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -885,7 +874,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should not assign aria-owns if none is provided', () => {
-      fixture = createComponent(SingleCheckbox);
+      fixture = TestBed.createComponent(SingleCheckbox);
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -902,7 +891,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithTabIndex);
+      fixture = TestBed.createComponent(CheckboxWithTabIndex);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -934,7 +923,7 @@ describe('MatCheckbox', () => {
 
   describe('with native tabindex attribute', () => {
     it('should properly detect native tabindex attribute', fakeAsync(() => {
-      fixture = createComponent(CheckboxWithTabindexAttr);
+      fixture = TestBed.createComponent(CheckboxWithTabindexAttr);
       fixture.detectChanges();
 
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox))!
@@ -946,7 +935,7 @@ describe('MatCheckbox', () => {
     }));
 
     it('should clear the tabindex attribute from the host element', fakeAsync(() => {
-      fixture = createComponent(CheckboxWithTabindexAttr);
+      fixture = TestBed.createComponent(CheckboxWithTabindexAttr);
       fixture.detectChanges();
 
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox))!.nativeElement;
@@ -956,7 +945,7 @@ describe('MatCheckbox', () => {
 
   describe('with multiple checkboxes', () => {
     beforeEach(() => {
-      fixture = createComponent(MultipleCheckboxes);
+      fixture = TestBed.createComponent(MultipleCheckboxes);
       fixture.detectChanges();
     });
 
@@ -979,7 +968,7 @@ describe('MatCheckbox', () => {
     let ngModel: NgModel;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithNgModel);
+      fixture = TestBed.createComponent(CheckboxWithNgModel);
 
       fixture.componentInstance.isRequired = false;
       fixture.detectChanges();
@@ -1023,7 +1012,7 @@ describe('MatCheckbox', () => {
     it('should mark the element as touched on blur when inside an OnPush parent', fakeAsync(() => {
       fixture.destroy();
       TestBed.resetTestingModule();
-      fixture = createComponent(CheckboxWithNgModelAndOnPush);
+      fixture = TestBed.createComponent(CheckboxWithNgModelAndOnPush);
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -1107,7 +1096,7 @@ describe('MatCheckbox', () => {
 
   describe('with name attribute', () => {
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithNameAttribute);
+      fixture = TestBed.createComponent(CheckboxWithNameAttribute);
       fixture.detectChanges();
     });
 
@@ -1126,7 +1115,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithFormControl);
+      fixture = TestBed.createComponent(CheckboxWithFormControl);
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -1156,7 +1145,7 @@ describe('MatCheckbox', () => {
     let checkboxInnerContainer: HTMLElement;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithoutLabel);
+      fixture = TestBed.createComponent(CheckboxWithoutLabel);
       const checkboxDebugEl = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxInnerContainer = checkboxDebugEl.query(By.css('.mdc-form-field'))!.nativeElement;
     });
@@ -1177,7 +1166,6 @@ describe('MatCheckboxDefaultOptions', () => {
   describe('when MAT_CHECKBOX_DEFAULT_OPTIONS overridden', () => {
     function configure(defaults: MatCheckboxDefaultOptions) {
       TestBed.configureTestingModule({
-        imports: [MatCheckboxModule, FormsModule, SingleCheckbox, SingleCheckbox],
         providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: defaults}],
       });
     }
@@ -1245,7 +1233,7 @@ class SingleCheckbox {
   parentElementClicked = false;
   parentElementKeyedUp = false;
   disabledInteractive = false;
-  checkboxId: string | null = 'simple-check';
+  checkboxId = 'simple-check';
   checkboxColor: ThemePalette = 'primary';
   checkboxValue: string = 'single_checkbox';
 

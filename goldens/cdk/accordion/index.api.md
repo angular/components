@@ -29,7 +29,9 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     ngOnDestroy(): void;
     openAll(): void;
     readonly _openCloseAllActions: Subject<boolean>;
-    readonly _stateChanges: Subject<SimpleChanges>;
+    readonly _stateChanges: Subject<{
+        [propName: string]: i0.SimpleChange<any>;
+    }>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordion, "cdk-accordion, [cdkAccordion]", ["cdkAccordion"], { "multi": { "alias": "multi"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -44,7 +46,8 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
     close(): void;
     readonly closed: EventEmitter<void>;
     readonly destroyed: EventEmitter<void>;
-    disabled: boolean;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     get expanded(): boolean;
     set expanded(expanded: boolean);
     readonly expandedChange: EventEmitter<boolean>;

@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {BidiModule} from '@angular/cdk/bidi';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
 import {MatIcon} from './icon';
 
 @NgModule({
-  imports: [MatCommonModule, MatIcon],
-  exports: [MatIcon, MatCommonModule],
+  imports: [MatIcon],
+  exports: [MatIcon, BidiModule],
 })
 export class MatIconModule {}

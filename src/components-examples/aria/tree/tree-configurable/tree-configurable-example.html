@@ -1,0 +1,133 @@
+<div class="example-tree-controls">
+  <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="nav">Nav Mode</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection Strategy</mat-label>
+    <mat-select [(value)]="selectionMode">
+      <mat-option value="explicit">Explicit</mat-option>
+      <mat-option value="follow">Follow</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus Strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-tree-output">
+  <strong>Selected Values:</strong> {{ selectedValues().join(', ') || 'None' }}
+</div>
+
+<ul
+  ngTree
+  class="example-tree"
+  [multi]="multi.value"
+  [disabled]="disabled.value"
+  [selectionMode]="selectionMode"
+  [focusMode]="focusMode"
+  [wrap]="wrap.value"
+  [softDisabled]="softDisabled.value"
+  [nav]="nav.value"
+  [(values)]="selectedValues"
+  #tree="ngTree"
+>
+  <ng-template
+    [ngTemplateOutlet]="treeNodes"
+    [ngTemplateOutletContext]="{nodes: nodes, parent: tree}"
+  />
+</ul>
+
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.value) {
+    @if (nav.value) {
+      <li role="none" style="list-style: none">
+        <a
+          ngTreeItem
+          [parent]="parent"
+          [value]="node.value"
+          [label]="node.name"
+          [disabled]="node.disabled"
+          [selectable]="!node.children"
+          #treeItem="ngTreeItem"
+          class="example-tree-item example-selectable example-stateful"
+          [attr.href]="!!node.children ? null : '/aria-tree#' + node.name"
+        >
+          <span
+            aria-hidden="true"
+            class="material-symbols-outlined example-parent-icon example-icon"
+            >{{node.children ? 'chevron_right' : ''}}</span
+          >
+          <span
+            aria-hidden="true"
+            class="material-symbols-outlined example-icon"
+            >{{node.children ? 'folder' : 'docs'}}</span
+          >
+          {{ node.name }}
+          <span
+            aria-hidden="true"
+            class="material-symbols-outlined example-selected-icon example-icon"
+            >check</span
+          >
+        </a>
+      </li>
+
+      @if (node.children) {
+        <ul role="group">
+          <ng-template ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
+            <ng-template
+              [ngTemplateOutlet]="treeNodes"
+              [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
+            />
+          </ng-template>
+        </ul>
+      }
+    } @else {
+      <li
+        ngTreeItem
+        [parent]="parent"
+        [value]="node.value"
+        [label]="node.name"
+        [disabled]="node.disabled"
+        [(expanded)]="node.expanded"
+        #treeItem="ngTreeItem"
+        class="example-tree-item example-selectable example-stateful"
+      >
+        <span
+          aria-hidden="true"
+          class="material-symbols-outlined example-parent-icon example-icon"
+          >{{node.children ? 'chevron_right' : ''}}</span
+        >
+        <span
+          aria-hidden="true"
+          class="material-symbols-outlined example-icon"
+          >{{node.children ? 'folder' : 'docs'}}</span
+        >
+        {{ node.name }}
+        <span
+          aria-hidden="true"
+          class="material-symbols-outlined example-selected-icon example-icon"
+          >check</span
+        >
+      </li>
+
+      @if (node.children) {
+        <ul role="group">
+          <ng-template ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup">
+            <ng-template
+              [ngTemplateOutlet]="treeNodes"
+              [ngTemplateOutletContext]="{nodes: node.children, parent: group}"
+            />
+          </ng-template>
+        </ul>
+      }
+    }
+  }
+</ng-template>

@@ -21,9 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Checking package externals
@@ -44,69 +42,48 @@ jobs:
         run: pnpm tslint
       - name: Check for circular dependencies
         run: pnpm -s ts-circular-deps:check
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Lint check'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   api_golden_checks:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Check API Goldens
         run: pnpm bazel test goldens/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'API Golden Checks'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   e2e:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Run e2e tests
         run: pnpm e2e --flaky_test_attempts=2
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'E2E test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   integration:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
@@ -114,69 +91,48 @@ jobs:
       - name: Run integration tests
         run: pnpm integration-tests
         continue-on-error: true
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Integration test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   test:
     runs-on: ubuntu-latest-16core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Run tests
-        run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+        run: bazel test --build_tests_only --test_tag_filters=-linker-integration-test --test_tag_filters=-e2e -- //... -//goldens/... -//integration/...
 
   build:
     runs-on: ubuntu-latest-16core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Run tests
         run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Build'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   publish_snapshots:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Build and Verify Release Output
@@ -191,27 +147,20 @@ jobs:
         run: ./scripts/circleci/publish-snapshots.sh
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Snapshot publishing'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   deploy_doc_site:
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       # See: https://github.com/puppeteer/puppeteer/pull/13196 and
       # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md.
       - name: Disable AppArmor
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Build and Verify Release Output
@@ -225,11 +174,6 @@ jobs:
           CIRCLE_SHA1: ${{ github.sha }}
           DOCS_SITE_GCP_SERVICE_KEY: ${{ secrets.DOCS_SITE_GCP_SERVICE_KEY }}
           DOCS_DEPLOY_GITHUB_TOKEN: ${{ secrets.DOCS_DEPLOY_GITHUB_TOKEN }}
-      - uses: ./.github/actions/slack
-        if: failure()
-        with:
-          JOB_NAME: 'Docs site deployment'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   browserstack:
     runs-on: ubuntu-latest
@@ -239,14 +183,12 @@ jobs:
       CI_RUNNER_NUMBER: ${{ github.run_id }}
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-        with:
-          cache-node-modules: true
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/bazel/setup@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Setup Browserstack Variables
-        uses: angular/dev-infra/github-actions/browserstack@e4bf37af223483ce00f9316d227fd62cd744dc4b
+        uses: angular/dev-infra/github-actions/browserstack@7fa1ab52a99168e16ea3722e4b7313839daea490
       - name: Run tests on Browserstack
         run: ./scripts/circleci/run-browserstack-tests.sh

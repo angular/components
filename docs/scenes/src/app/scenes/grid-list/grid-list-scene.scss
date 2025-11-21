@@ -7,5 +7,7 @@ app-grid-list-scene {
 mat-grid-tile {
   box-sizing: border-box;
   padding: 3px;
+
+  // stylelint-disable-next-line material/no-prefixes
   background-clip: content-box !important;
 }

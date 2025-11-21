@@ -1,0 +1,29 @@
+mat-card {
+  font: var(--mat-sys-body-medium);
+  display: inline-flex;
+  flex-direction: column;
+  margin: 1rem;
+  overflow: hidden;
+  min-height: 16rem;
+}
+
+.example-background {
+  width: 16rem;
+  flex-grow: 1;
+  padding: 1rem 0.5rem 1rem 0;
+}
+
+.example-foreground {
+  padding-inline-start: 2rem;
+}
+
+.example-role-title {
+  font: var(--mat-sys-title-small);
+  padding-inline-start: 1rem;
+  margin-bottom: 1rem;
+}
+
+section {
+  margin-inline: 3rem;
+  max-width: 75px;
+}

@@ -95,6 +95,9 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     -webkit-tap-highlight-color: transparent;
     opacity: 0;
 
+    // Removes the tap delay on touch devices (see #30965).
+    touch-action: manipulation;
+
     @include _conditional-layer($wrap-customizable-styles) {
       z-index: $overlay-backdrop-z-index;
       transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
@@ -181,6 +184,41 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // potentially result in double scrollbars. It shouldn't be an issue, because we won't
     // block scrolling on a page that doesn't have a scrollbar in the first place.
     overflow-y: scroll;
+  }
+
+  .cdk-overlay-popover {
+    background: none;
+    border: none;
+    padding: 0;
+    outline: 0;
+    overflow: visible;
+    position: fixed;
+    pointer-events: none;
+    white-space: normal;
+    color: inherit;
+    text-decoration: none;
+
+    // These are important so the overlay can be measured before it's fully inserted.
+    width: 100%;
+    height: 100%;
+
+    // Chrome sets a user agent style of `inset: 0` which combined
+    // with `align-self` can break the positioning (see #29809).
+    inset: auto;
+
+    // Some older versions of Chrome won't render the popover properly without these.
+    top: 0;
+    left: 0;
+
+    // For the time being we're using our `.cdk-overlay-backdrop` element instead of the native one.
+    &::backdrop {
+      display: none;
+    }
+
+    .cdk-overlay-backdrop {
+      position: fixed;
+      z-index: auto;
+    }
   }
 }
 

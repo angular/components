@@ -102,7 +102,7 @@ year, emitted by `yearSelected` output, will not cause any change in the value o
 associated `<input>`.
 
 The following example uses `yearSelected` and `monthSelected` outputs to emulate a month and year
-picker (if you're not familiar with the usage of `MomentDateAdapter` and `MAT_DATE_FORMATS`
+picker (if you're not familiar with the usage of `LuxonDateAdapter` and `MAT_DATE_FORMATS`
 you can [read more about them](#choosing-a-date-implementation-and-date-format-settings) below in
 this document to fully understand the example).
 
@@ -112,14 +112,14 @@ this document to fully understand the example).
 
 The type of values that the datepicker expects depends on the type of `DateAdapter` provided in your
 application. The `NativeDateAdapter`, for example, works directly with plain JavaScript `Date`
-objects. When using the `MomentDateAdapter`, however, the values will all be Moment.js instances.
+objects. When using the `LuxonDateAdapter`, however, the values will all be `DateTime` instances.
 This use of the adapter pattern allows the datepicker component to work with any arbitrary date
 representation with a custom `DateAdapter`.
 See [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)
 for more information.
 
 Depending on the `DateAdapter` being used, the datepicker may automatically deserialize certain date
-formats for you as well. For example, both the `NativeDateAdapter` and `MomentDateAdapter` allow
+formats for you as well. For example, both the `NativeDateAdapter` and `LuxonDateAdapter` allow
 [ISO 8601](https://tools.ietf.org/html/rfc3339) strings to be passed to the datepicker and
 automatically converted to the proper object type. This can be convenient when binding data directly
 from your backend to the datepicker. However, the datepicker will not accept date strings formatted
@@ -396,7 +396,7 @@ _Please note: `provideNativeDateAdapter` is based off the functionality availabl
 native [`Date` object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date).
 Thus it is not suitable for many locales. One of the biggest shortcomings of the native `Date`
 object is the inability to set the parse format. We strongly recommend using an adapter based on
-a more robust formatting and parsing library. You can use `provideMomentDateAdapter`
+a more robust formatting and parsing library. You can use one of the adapters mentioned above
 or a custom `DateAdapter` that works with the library of your choice._
 
 These APIs include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
@@ -419,27 +419,14 @@ export class MyComponent {
 }
 ```
 
-<!-- example(datepicker-moment) -->
+<!-- example(datepicker-luxon) -->
 
-By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change
-the default behaviour to parse dates as UTC by passing `useUtc: true` into `provideMomentDateAdapter`
-or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
-
-```ts
-bootstrapApplication(MyApp, {
-  providers: [provideMomentDateAdapter(undefined, {useUtc: true})]
-});
-```
-
-By default the `MomentDateAdapter` will parse dates in a
-[forgiving way](https://momentjs.com/guides/#/parsing/forgiving-mode/). This may result in dates
-being parsed incorrectly. You can change the default behaviour to
-[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by `strict: true` to
-`provideMomentDateAdapter` or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
+By default the `LuxonDateAdapter` creates dates in your time zone specific locale. You can change
+the default behaviour to parse dates as UTC by passing `useUtc: true` into `provideLuxonDateAdapter`:
 
 ```ts
 bootstrapApplication(MyApp, {
-  providers: [provideMomentDateAdapter(undefined, {strict: true})]
+  providers: [provideLuxonDateAdapter(undefined, {useUtc: true})]
 });
 ```
 
@@ -479,30 +466,6 @@ bootstrapApplication(MyApp, {
 ```
 
 <!-- example(datepicker-formats) -->
-
-##### Moment.js formats
-
-To use custom formats with the `provideMomentDateAdapter` you can pick from the parse formats
-documented [here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats
-documented [here](https://momentjs.com/docs/#/displaying/format/).
-
-It is also possible to support multiple parse formats. For example:
-
-```ts
-bootstraApplication(MyApp, {
-  providers: [provideMomentDateAdapter({
-    parse: {
-      dateInput: ['l', 'LL'],
-    },
-    display: {
-      dateInput: 'L',
-      monthYearLabel: 'MMM YYYY',
-      dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'MMMM YYYY',
-    },
-  })]
-});
-```
 
 #### Customizing the calendar header
 
@@ -566,7 +529,7 @@ datepicker pop-up. However, ChromeOS intercepts this key combination at the OS l
 browser only receives a `PageDown` key event. Because of this behavior, you should always include an
 additional means of opening the pop-up, such as `MatDatepickerToggle`.
 
-`MatDatepickerToggle` must be included along with `MatDatepicker` for optimal mobile a11y 
+`MatDatepickerToggle` must be included along with `MatDatepicker` for optimal mobile a11y
 compatibility. Mobile screen reader users currently do not have a way to trigger the datepicker
 dialog without the icon button present.
 
@@ -632,8 +595,7 @@ In multi-year view:
 #### Error: MatDatepicker: No provider found for DateAdapter/MAT_DATE_FORMATS
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
-The easiest way to resolve this is to add `provideNativeDateAdapter` or `provideMomentDateAdapter`
-to your app config. See
+The easiest way to resolve this is to add a date adapter to your app config. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
 

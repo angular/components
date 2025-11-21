@@ -1,10 +1,10 @@
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -32,7 +32,7 @@ sass_binary(
     src = "virtual-scroll-viewport.scss",
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

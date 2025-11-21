@@ -1,7 +1,6 @@
 import {TAB} from '../../keycodes';
 import {Platform} from '../../platform';
-import {DOCUMENT} from '@angular/common';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, DOCUMENT} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -32,7 +31,6 @@ describe('FocusMonitor', () => {
     fakeActiveElement = null;
 
     TestBed.configureTestingModule({
-      imports: [A11yModule, PlainButton],
       providers: [
         {
           provide: DOCUMENT,
@@ -467,7 +465,6 @@ describe('FocusMonitor with "eventual" detection', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule, PlainButton],
       providers: [
         {
           provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
@@ -500,20 +497,6 @@ describe('FocusMonitor with "eventual" detection', () => {
 });
 
 describe('cdkMonitorFocus', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        A11yModule,
-        ButtonWithFocusClasses,
-        ComplexComponentWithMonitorElementFocus,
-        ComplexComponentWithMonitorSubtreeFocus,
-        ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus,
-        FocusMonitorOnCommentNode,
-        ExportedFocusMonitor,
-      ],
-    });
-  });
-
   describe('button with cdkMonitorElementFocus', () => {
     let fixture: ComponentFixture<ButtonWithFocusClasses>;
     let buttonElement: HTMLElement;
@@ -821,7 +804,6 @@ describe('FocusMonitor observable stream', () => {
   beforeEach(() => {
     fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
-      imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}],
     });
     fixture = TestBed.createComponent(PlainButton);
@@ -855,9 +837,6 @@ describe('FocusMonitor input label detection', () => {
   let focusMonitor: FocusMonitor;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule, CheckboxWithLabel],
-    });
     fixture = TestBed.createComponent(CheckboxWithLabel);
     focusMonitor = TestBed.inject(FocusMonitor);
     fixture.detectChanges();

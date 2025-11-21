@@ -282,6 +282,10 @@ export class CdkTree<T, K = T>
   ngOnDestroy() {
     this._nodeOutlet.viewContainer.clear();
 
+    this._nodes.complete();
+    this._keyManagerNodes.complete();
+    this._nodeType.complete();
+    this._flattenedNodes.complete();
     this.viewChange.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
@@ -603,6 +607,7 @@ export class CdkTree<T, K = T>
 
     // Node context that will be provided to created embedded view
     const context = new CdkTreeNodeOutletContext<T>(nodeData);
+    context.index = index;
 
     parentData ??= this._parents.get(key) ?? undefined;
     // If the tree is flat tree, then use the `getLevel` function in flat tree control
@@ -1400,7 +1405,9 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
       .changed.pipe(
         map(() => this.isExpanded),
         distinctUntilChanged(),
+        takeUntil(this._destroyed),
       )
+      .pipe(takeUntil(this._destroyed))
       .subscribe(() => this._changeDetectorRef.markForCheck());
     this._tree._setNodeTypeIfUnset(this._type);
     this._tree._registerNode(this);

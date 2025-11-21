@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "sass_binary", "sass_library")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_project", "sass_binary", "sass_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -36,6 +35,7 @@ sass_library(
         "_option-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
@@ -51,6 +51,7 @@ ng_project(
         "index.ts",
         "optgroup.ts",
         "option.ts",
+        "option-module.ts",
         "option-parent.ts",
     ],
     assets = [
@@ -60,6 +61,7 @@ ng_project(
         ":option_css",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/keycodes",

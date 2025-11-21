@@ -82,6 +82,7 @@ by the directives:
 | `.cdk-drag-handle`  | Class that is added to the host element of the cdkDragHandle directive.  |
 | `.cdk-drag-preview` | This is the element that will be rendered next to the user's cursor as they're dragging an item in a sortable list. By default the element looks exactly like the element that is being dragged. |
 | `.cdk-drag-placeholder` | This is element that will be shown instead of the real element as it's being dragged inside a `cdkDropList`. By default this will look exactly like the element that is being sorted. |
+| `.cdk-drag-anchor`  | Only relevant when `cdkDropListHasAnchor` is enabled. Element indicating the position from which the dragged item started the drag sequence. |
 | `.cdk-drop-list-dragging` | A class that is added to `cdkDropList` while the user is dragging an item.  |
 | `.cdk-drop-list-disabled` | A class that is added to `cdkDropList` when it is disabled.  |
 | `.cdk-drop-list-receiving`| A class that is added to `cdkDropList` when it can receive an item that is being dragged inside a connected drop list.  |
@@ -173,6 +174,24 @@ sorting action.
 
 <!-- example(cdk-drag-drop-mixed-sorting) -->
 
+### Copying items from one list to another
+When the user starts dragging an item in a sortable list, by default the `cdkDropList` directive
+will render out a placeholder element to show where the item will be dropped. If the item is dragged
+into another list, the placeholder will be moved into the new list together with the item.
+
+If your use case calls for the item to remain in the original list, you can set the
+`cdkDropListHasAnchor` input which will tell the `cdkDropList` to create an "anchor" element. The
+anchor differs from the placeholder in that it will stay in the original container and won't move
+to any subsequent containers that the item is dragged into. If the user moves the item back into
+the original container, the anchor will be removed automatically. It can be styled by targeting
+the `cdk-drag-anchor` CSS class.
+
+Combining `cdkDropListHasAnchor` and `cdkDropListSortingDisabled` makes it possible to construct a
+list that user copies items from, but doesn't necessarily transfer out of (e.g. a product list and
+a shopping cart).
+
+<!-- example(cdk-drag-drop-copy-list) -->
+
 ### Restricting movement within an element
 
 If you want to stop the user from being able to drag a `cdkDrag` element outside of another element,
@@ -261,3 +280,10 @@ This example shows how you can set up a table which supports re-ordering of tabs
 #### Sortable tabs
 Example of how to add sorting support to a `mat-tab-group`.
 <!-- example(cdk-drag-drop-tabs) -->
+
+#### Scrollable container
+If your draggable items are inside a scrollable container (e.g., a div with overflow: auto)
+automatic scrolling will not work unless the scrollable container has the `cdkScrollable` directive. 
+Without it, the CDK cannot detect or control the scroll behavior of the container during drag 
+operations.
+<!-- example(cdk-drag-drop-scrollable) -->

@@ -16,5 +16,4 @@ export {
   MatDialogContent,
 } from './dialog-content-directives';
 export {MatDialogContainer} from './dialog-container';
-export * from './module';
-export {matDialogAnimations, _defaultParams} from './dialog-animations';
+export * from './dialog-module';

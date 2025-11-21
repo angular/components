@@ -1,9 +1,7 @@
 import {Dir, Direction} from '@angular/cdk/bidi';
 import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {MutationObserverFactory, ObserversModule} from '@angular/cdk/observers';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 import {SharedResizeObserver} from '@angular/cdk/observers/private';
-import {PortalModule} from '@angular/cdk/portal';
-import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   createMouseEvent,
@@ -22,7 +20,6 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {MatRippleModule} from '../core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatTabHeader} from './tab-header';
@@ -34,19 +31,6 @@ describe('MatTabHeader', () => {
   let resizeEvents: Subject<ResizeObserverEntry[]>;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        PortalModule,
-        MatRippleModule,
-        ScrollingModule,
-        ObserversModule,
-        MatTabHeader,
-        MatTabLabelWrapper,
-        SimpleTabHeaderApp,
-      ],
-      providers: [ViewportRuler],
-    });
-
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
   }));

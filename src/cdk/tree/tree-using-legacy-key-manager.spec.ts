@@ -8,12 +8,7 @@ describe('CdkTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleCdkTreeApp>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkTreeModule],
-      declarations: [SimpleCdkTreeApp],
-      providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
-    });
-
+    TestBed.configureTestingModule({providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER]});
     fixture = TestBed.createComponent(SimpleCdkTreeApp);
     fixture.detectChanges();
   });
@@ -80,7 +75,7 @@ class MinimalTestData {
       </cdk-tree-node>
     </cdk-tree>
   `,
-  standalone: false,
+  imports: [CdkTreeModule],
 })
 class SimpleCdkTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;

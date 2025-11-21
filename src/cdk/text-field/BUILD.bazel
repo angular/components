@@ -1,11 +1,11 @@
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -39,7 +39,7 @@ sass_binary(
     deps = [":text_field_scss_lib"],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

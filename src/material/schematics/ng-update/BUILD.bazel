@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 
 ts_project(
@@ -68,6 +68,7 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
+        ":ng_update_index",
         ":schematics_test_cases",
         ":test_lib",
         "//src/material/schematics:collection_assets",

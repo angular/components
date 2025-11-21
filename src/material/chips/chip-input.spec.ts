@@ -1,25 +1,23 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
-import {PlatformModule} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
-  dispatchKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
-import {MatFormFieldModule} from '../form-field';
+import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
+import {MATERIAL_ANIMATIONS} from '../core';
+import {MatFormField} from '../form-field';
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipGrid,
   MatChipInput,
   MatChipInputEvent,
+  MatChipRow,
   MatChipsDefaultOptions,
-  MatChipsModule,
 } from './index';
-import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatChipInput', () => {
   let fixture: ComponentFixture<TestChipInput>;
@@ -27,24 +25,13 @@ describe('MatChipInput', () => {
   let inputDebugElement: DebugElement;
   let inputNativeElement: HTMLInputElement;
   let chipInputDirective: MatChipInput;
-  let dir = 'ltr';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [PlatformModule, MatChipsModule, MatFormFieldModule],
       providers: [
-        {
-          provide: Directionality,
-          useFactory: () => {
-            return {
-              value: dir.toLowerCase(),
-              change: new Subject(),
-            };
-          },
-        },
+        provideFakeDirectionality('ltr'),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [TestChipInput],
     });
   }));
 
@@ -249,8 +236,6 @@ describe('MatChipInput', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatChipsModule, MatFormFieldModule, PlatformModule],
-        declarations: [TestChipInput],
         providers: [
           {
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
@@ -318,6 +303,40 @@ describe('MatChipInput', () => {
 
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
+
+    it('should ignore modifier keys when `SeparatorKey.modifiers` is empty', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [{keyCode: COMMA, modifiers: []}];
+      fixture.detectChanges();
+
+      // With a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {shift: true});
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // Without a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA);
+      expect(testChipInput.add).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only allow modifiers from the `SeparatorKey.modifiers` array', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [{keyCode: COMMA, modifiers: ['ctrlKey']}];
+      fixture.detectChanges();
+
+      // Without a modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA);
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // With a different modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {shift: true});
+      expect(testChipInput.add).not.toHaveBeenCalled();
+
+      // With the correct modifier.
+      dispatchKeyboardEvent(inputNativeElement, 'keydown', COMMA, undefined, {control: true});
+      expect(testChipInput.add).toHaveBeenCalledTimes(1);
+    });
   });
 });
 
@@ -335,7 +354,7 @@ describe('MatChipInput', () => {
       </mat-chip-grid>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatFormField, MatChipGrid, MatChipRow, MatChipInput],
 })
 class TestChipInput {
   @ViewChild(MatChipGrid) chipGridInstance: MatChipGrid;

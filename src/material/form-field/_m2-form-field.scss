@@ -1,188 +1,165 @@
 @use '../core/m2/palette' as m2-palette;
-@use '../core/style/sass-utils';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
-@use '../core/tokens/m2-utils';
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:meta';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, form-field);
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    filled-active-indicator-height: 1px,
-    filled-focus-active-indicator-height: 2px,
-    filled-container-shape: 4px,
-    outlined-outline-width: 1px,
-    outlined-focus-outline-width: 2px,
-    outlined-container-shape: 4px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
-  $warn-color: inspection.get-theme-color($theme, warn);
-  $color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $on-surface: if($is-dark, #fff, #000);
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $on-surface: if($is-dark, #fff, #000);
-  $text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, text, 1));
-  $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, disabled-text, 1));
-  $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, divider, 1));
-
-  @return map.merge($color-tokens, (
-    // MDC has a token for the enabled placeholder, but not for the disabled one.
-    disabled-input-text-placeholder-color:
-      inspection.get-theme-color($theme, foreground, icon, 0.38),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
-    error-text-color: inspection.get-theme-color($theme, warn),
-
-    // On dark themes we set the native `select` color to some shade of white,
-    // however the color propagates to all of the `option` elements, which are
-    // always on a white background inside the dropdown, causing them to blend in.
-    // Since we can't change background of the dropdown, we need to explicitly
-    // reset the color of the options to something dark.
-    select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
-    // Note the spelling of the `GrayText` here which is a system color. See:
-    // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
-    select-disabled-option-text-color: if($is-dark, m2-palette.$dark-disabled-text, GrayText),
-
-    // These tokens are necessary for M3. MDC has them built in already, but:
-    // 1. They are too specific, breaking a lot of internal clients.
-    // 2. The larger selectors result in a larger bundle.
-    // Note: MDC has tokens for all the various states of the icons. Some of them are ommitted,
-    // because they resolve to the same value (e.g. focus and base states for the leading icon
-    // are the same).
-    leading-icon-color: unset,
-    disabled-leading-icon-color: unset,
-    trailing-icon-color: unset,
-    disabled-trailing-icon-color: unset,
-    error-focus-trailing-icon-color: unset,
-    error-hover-trailing-icon-color: unset,
-    error-trailing-icon-color: unset,
-    enabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
-    disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
-    filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
-    filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
-    filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    filled-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    filled-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    filled-input-text-placeholder-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-error-hover-label-text-color: $warn-color,
-    filled-error-focus-label-text-color: $warn-color,
-    filled-error-label-text-color: $warn-color,
-    filled-error-caret-color: $warn-color,
-    filled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.42),
-    filled-disabled-active-indicator-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
-    filled-hover-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
-    filled-error-active-indicator-color: $warn-color,
-    filled-error-focus-active-indicator-color: $warn-color,
-    filled-error-hover-active-indicator-color: $warn-color,
-    outlined-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    outlined-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    outlined-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    outlined-input-text-placeholder-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-error-caret-color: $warn-color,
-    outlined-error-focus-label-text-color: $warn-color,
-    outlined-error-label-text-color: $warn-color,
-    outlined-error-hover-label-text-color: $warn-color,
-    outlined-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
-    outlined-disabled-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
-    outlined-hover-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
-    outlined-error-focus-outline-color: $warn-color,
-    outlined-error-hover-outline-color: $warn-color,
-    outlined-error-outline-color: $warn-color,
-  ));
-}
-
-@function _variable-safe-mix($first-color, $second-color, $amount) {
-  @if (meta.type-of($first-color) == color and meta.type-of($second-color) == color) {
-    @return color.mix($first-color, $second-color, $amount);
+  // TODO: Use system colors instead of checking theme type
+  $is-dark: false;
+  @if (meta.type-of($theme) == map and map.get($theme, color)) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
   }
-  @return $first-color;
+
+  @return (
+    base: (
+      form-field-filled-active-indicator-height: 1px,
+      form-field-filled-focus-active-indicator-height: 2px,
+      form-field-filled-container-shape: 4px,
+      form-field-outlined-outline-width: 1px,
+      form-field-outlined-focus-outline-width: 2px,
+      form-field-outlined-container-shape: 4px,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      // MDC has a token for the enabled placeholder, but not for the disabled one.
+      form-field-disabled-input-text-placeholder-color: $disabled,
+      form-field-state-layer-color: map.get($system, on-surface),
+      form-field-error-text-color: map.get($system, error),
+
+      // On dark themes we set the native `select` color to some shade of white,
+      // however the color propagates to all of the `option` elements, which are
+      // always on a white background inside the dropdown, causing them to blend in.
+      // Since we can't change background of the dropdown, we need to explicitly
+      // reset the color of the options to something dark.
+      form-field-select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
+      // Note the spelling of the `GrayText` here which is a system color. See:
+      // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
+      form-field-select-disabled-option-text-color:
+          if($is-dark, m2-palette.$dark-disabled-text, GrayText),
+
+      // These tokens are necessary for M3. MDC has them built in already, but:
+      // 1. They are too specific, breaking a lot of internal clients.
+      // 2. The larger selectors result in a larger bundle.
+      // Note: MDC has tokens for all the various states of the icons. Some of them are ommitted,
+      // because they resolve to the same value (e.g. focus and base states for the leading icon
+      // are the same).
+      form-field-leading-icon-color: unset,
+      form-field-disabled-leading-icon-color: unset,
+      form-field-trailing-icon-color: unset,
+      form-field-disabled-trailing-icon-color: unset,
+      form-field-error-focus-trailing-icon-color: unset,
+      form-field-error-hover-trailing-icon-color: unset,
+      form-field-error-trailing-icon-color: unset,
+      form-field-enabled-select-arrow-color: map.get($system, on-surface-variant),
+      form-field-disabled-select-arrow-color: $disabled,
+      form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      form-field-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      form-field-filled-container-color: map.get($system, surface-variant),
+      form-field-filled-disabled-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 4%),
+      form-field-filled-label-text-color: map.get($system, on-surface-variant),
+      form-field-filled-hover-label-text-color: map.get($system, on-surface-variant),
+      form-field-filled-disabled-label-text-color: $disabled,
+      form-field-filled-input-text-color: map.get($system, on-surface),
+      form-field-filled-disabled-input-text-color: $disabled,
+      form-field-filled-input-text-placeholder-color: map.get($system, on-surface-variant),
+      form-field-filled-error-hover-label-text-color: map.get($system, error),
+      form-field-filled-error-focus-label-text-color: map.get($system, error),
+      form-field-filled-error-label-text-color: map.get($system, error),
+      form-field-filled-error-caret-color: map.get($system, error),
+      form-field-filled-active-indicator-color: map.get($system, on-surface-variant),
+      form-field-filled-disabled-active-indicator-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      form-field-filled-hover-active-indicator-color: map.get($system, on-surface),
+      form-field-filled-error-active-indicator-color: map.get($system, error),
+      form-field-filled-error-focus-active-indicator-color: map.get($system, error),
+      form-field-filled-error-hover-active-indicator-color: map.get($system, error),
+      form-field-outlined-label-text-color: map.get($system, on-surface-variant),
+      form-field-outlined-hover-label-text-color: map.get($system, on-surface),
+      form-field-outlined-disabled-label-text-color: $disabled,
+      form-field-outlined-input-text-color: map.get($system, on-surface),
+      form-field-outlined-disabled-input-text-color: $disabled,
+      form-field-outlined-input-text-placeholder-color: map.get($system, on-surface-variant),
+      form-field-outlined-error-caret-color: map.get($system, error),
+      form-field-outlined-error-focus-label-text-color: map.get($system, error),
+      form-field-outlined-error-label-text-color: map.get($system, error),
+      form-field-outlined-error-hover-label-text-color: map.get($system, error),
+      form-field-outlined-outline-color: map.get($system, outline-variant),
+      form-field-outlined-disabled-outline-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      form-field-outlined-hover-outline-color: map.get($system, on-surface),
+      form-field-outlined-error-focus-outline-color: map.get($system, error),
+      form-field-outlined-error-hover-outline-color: map.get($system, error),
+      form-field-outlined-error-outline-color: map.get($system, error),
+    )),
+    typography: (
+      // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
+      // shows `body1` for text fields though, so we manually override the typography.
+      // Note: Form controls inherit the typography from the parent form field.
+      form-field-container-text-font: map.get($system, body-large-font),
+      form-field-container-text-line-height: map.get($system, body-large-line-height),
+      form-field-container-text-size: map.get($system, body-large-size),
+      form-field-container-text-tracking: map.get($system, body-large-tracking),
+      form-field-container-text-weight: map.get($system, body-large-weight),
+
+      // In container styles, we updated the floating label to use the `body-1` typography level.
+      // The MDC notched outline overrides this accidentally (only when the label floats) to a
+      // `rem`-based value. This results in different label widths when floated/docked and then
+      // breaks the notch width as it has been measured in the docked state (where `body-1` is
+      // applied). We try to unset these styles set by the `mdc-notched-outline`:
+      // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
+      // This is why we can't use their `label-text-populated-size` token and we have to declare
+      // our own version of it.
+      form-field-outlined-label-text-populated-size: map.get($system, body-large-size),
+
+      form-field-subscript-text-font: map.get($system, body-small-font),
+      form-field-subscript-text-line-height: map.get($system, body-small-line-height),
+      form-field-subscript-text-size: map.get($system, body-small-size),
+      form-field-subscript-text-tracking: map.get($system, body-small-tracking),
+      form-field-subscript-text-weight: map.get($system, body-small-weight),
+      form-field-filled-label-text-font: map.get($system, body-large-font),
+      form-field-filled-label-text-size: map.get($system, body-large-size),
+      form-field-filled-label-text-tracking: map.get($system, body-large-tracking),
+      form-field-filled-label-text-weight: map.get($system, body-large-weight),
+      form-field-outlined-label-text-font: map.get($system, body-large-font),
+      form-field-outlined-label-text-size: map.get($system, body-large-size),
+      form-field-outlined-label-text-tracking: map.get($system, body-large-tracking),
+      form-field-outlined-label-text-weight: map.get($system, body-large-weight),
+    ),
+    density: get-density-tokens($theme),
+  );
 }
 
 // Generates the mapping for the properties that change based on the form field color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
-    filled-caret-color: $palette-color,
-    filled-focus-active-indicator-color: $palette-color,
-    filled-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
-    outlined-caret-color: $palette-color,
-    outlined-focus-outline-color: $palette-color,
-    outlined-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return (
-    // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
-    // shows `body1` for text fields though, so we manually override the typography.
-    // Note: Form controls inherit the typography from the parent form field.
-    container-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    container-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    container-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    container-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    container-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-
-    // In the container styles, we updated the floating label to use the `body-1` typography level.
-    // The MDC notched outline overrides this accidentally (only when the label floats) to a
-    // `rem`-based value. This results in different label widths when floated/docked and ultimately
-    // breaks the notch width as it has been measured in the docked state (where `body-1` is
-    // applied). We try to unset these styles set by the `mdc-notched-outline`:
-    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
-    // This is why we can't use their `label-text-populated-size` token and we have to declare
-    // our own version of it.
-    outlined-label-text-populated-size: inspection.get-theme-typography($theme, body-1, font-size),
-
-    subscript-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    subscript-text-line-height: inspection.get-theme-typography($theme, caption, line-height),
-    subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    subscript-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
-    subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    filled-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    filled-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    filled-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    filled-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    outlined-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    outlined-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    outlined-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    outlined-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-focus-select-arrow-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
+    form-field-filled-caret-color: map.get($system, primary),
+    form-field-filled-focus-active-indicator-color: map.get($system, primary),
+    form-field-filled-focus-label-text-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
+    form-field-outlined-caret-color: map.get($system, primary),
+    form-field-outlined-focus-outline-color: map.get($system, primary),
+    form-field-outlined-focus-label-text-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
   );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
   $size-scale: (
     0: 56px,
     -1: 52px,
@@ -224,23 +201,12 @@ $prefix: (mat, form-field);
   $vertical-padding: 16px - $vertical-deduction;
 
   @return (
-    container-height: $height,
-    filled-label-display: if($hide-label, none, block),
-    container-vertical-padding: $vertical-padding,
-    filled-with-label-container-padding-top:
+    form-field-container-height: $height,
+    form-field-filled-label-display: if($hide-label, none, block),
+    form-field-container-vertical-padding: $vertical-padding,
+    form-field-filled-with-label-container-padding-top:
       if($hide-label, $vertical-padding, $filled-with-label-padding-top),
-    filled-with-label-container-padding-bottom:
+    form-field-filled-with-label-container-padding-bottom:
       if($hide-label, $vertical-padding, $filled-with-label-padding-bottom),
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-      get-unthemable-tokens(),
-      get-color-tokens(m2-utils.$placeholder-color-config),
-      get-typography-tokens(m2-utils.$placeholder-typography-config),
-      get-density-tokens(m2-utils.$placeholder-density-config)
   );
 }

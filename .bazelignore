@@ -18,6 +18,7 @@ integration/yarn-pnp-compat/.yarn/install-state.gz
 integration/yarn-pnp-compat/node_modules
 integration/node_modules
 
+src/aria/node_modules
 src/cdk-experimental/node_modules
 src/cdk/node_modules
 src/components-examples/node_modules
@@ -31,5 +32,3 @@ src/material-moment-adapter/node_modules
 src/material/node_modules
 src/universal-app/node_modules
 src/youtube-player/node_modules
-
-tools/bazel/legacy-rnjs/node_modules

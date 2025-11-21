@@ -15,7 +15,7 @@ import {
   DomPortal,
   TemplatePortal,
 } from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -30,6 +30,7 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
+  DOCUMENT,
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
@@ -64,7 +65,7 @@ const EXIT_ANIMATION = '_mat-snack-bar-exit';
 })
 export class MatSnackBarContainer<D = unknown> extends BasePortalOutlet implements OnDestroy {
   private _ngZone = inject(NgZone);
-  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
   protected _animationsDisabled = _animationsDisabled();

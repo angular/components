@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -66,16 +66,17 @@ sass_binary(
 ng_project(
     name = "menu",
     srcs = [
+        "context-menu-trigger.ts",
         "index.ts",
         "menu.ts",
-        "menu-animations.ts",
         "menu-content.ts",
         "menu-errors.ts",
         "menu-item.ts",
+        "menu-module.ts",
         "menu-panel.ts",
         "menu-positions.ts",
         "menu-trigger.ts",
-        "module.ts",
+        "menu-trigger-base.ts",
         "public-api.ts",
     ],
     assets = [
@@ -93,7 +94,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "menu_tests_lib",
     testonly = True,
     srcs = glob(

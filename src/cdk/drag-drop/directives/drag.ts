@@ -91,7 +91,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragData') data: T;
 
   /** Locks the position of the dragged element along the specified axis. */
-  @Input('cdkDragLockAxis') lockAxis: DragAxis;
+  @Input('cdkDragLockAxis') lockAxis: DragAxis | null = null;
 
   /**
    * Selector that will be used to determine the root draggable element, starting from
@@ -248,7 +248,6 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // is too late since the two modes save different kinds of information. We work around it by
     // assigning the drop container both from here and the list.
     if (dropContainer) {
-      this._dragRef._withDropContainer(dropContainer._dropListRef);
       dropContainer.addItem(this);
 
       // The drop container reads this so we need to sync it here.
@@ -277,6 +276,11 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Resets a standalone drag item to its initial position. */
   reset(): void {
     this._dragRef.reset();
+  }
+
+  /** Resets drag item to end of boundary element. */
+  resetToBoundary() {
+    this._dragRef.resetToBoundary();
   }
 
   /**
@@ -556,10 +560,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
     this.disabled = draggingDisabled == null ? false : draggingDisabled;
     this.dragStartDelay = dragStartDelay || 0;
-
-    if (lockAxis) {
-      this.lockAxis = lockAxis;
-    }
+    this.lockAxis = lockAxis || null;
 
     if (constrainPosition) {
       this.constrainPosition = constrainPosition;

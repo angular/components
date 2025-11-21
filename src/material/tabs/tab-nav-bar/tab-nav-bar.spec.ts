@@ -1,39 +1,34 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
+import {Component, QueryList, signal, ViewChild, ViewChildren, WritableSignal} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
 import {MAT_TABS_CONFIG} from '../index';
-import {MatTabsModule} from '../module';
+import {MatTabsModule} from '../tabs-module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
 describe('MatTabNavBar', () => {
-  let dir: Direction = 'ltr';
-  let dirChange = new Subject();
+  let dir: WritableSignal<Direction>;
   let globalRippleOptions: RippleGlobalOptions;
   let resizeEvents: Subject<ResizeObserverEntry[]>;
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
+    dir = signal('ltr');
 
     TestBed.configureTestingModule({
-      imports: [
-        MatTabsModule,
-        SimpleTabNavBarTestApp,
-        TabLinkWithNgIf,
-        TabBarWithInactiveTabsOnInit,
-      ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
+        provideFakeDirectionality(dir),
       ],
     });
 
@@ -97,24 +92,6 @@ describe('MatTabNavBar', () => {
         .toBe(true);
     });
 
-    it('should update the tabindex if links are disabled', () => {
-      const tabLinkElements = fixture.debugElement
-        .queryAll(By.css('a'))
-        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
-
-      expect(tabLinkElements.map(tabLink => tabLink.tabIndex))
-        .withContext('Expected first element to be keyboard focusable by default')
-        .toEqual([0, -1, -1]);
-
-      fixture.componentInstance.disabled = true;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(tabLinkElements.every(tabLink => tabLink.tabIndex === -1))
-        .withContext('Expected element to no longer be keyboard focusable if disabled.')
-        .toBe(true);
-    });
-
     it('should mark disabled links', () => {
       const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
@@ -147,7 +124,7 @@ describe('MatTabNavBar', () => {
 
       spyOn(inkBar, 'alignToElement');
 
-      dirChange.next();
+      dir.set('rtl');
       tick();
       fixture.detectChanges();
 
@@ -291,6 +268,15 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[0].tabIndex).toBe(-1);
     expect(tabLinks[1].tabIndex).toBe(0);
     expect(tabLinks[2].tabIndex).toBe(-1);
+  });
+
+  it('should set a tabindex even if the only tab is disabled', () => {
+    const fixture = TestBed.createComponent(TabBarWithDisabledTabOnInit);
+    fixture.detectChanges();
+
+    const tab: HTMLElement = fixture.nativeElement.querySelector('.mat-mdc-tab-link');
+    expect(tab.getAttribute('aria-disabled')).toBe('true');
+    expect(tab.tabIndex).toBe(0);
   });
 
   it('should setup aria-controls properly', () => {
@@ -511,7 +497,6 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
   }));
@@ -531,12 +516,6 @@ describe('MatTabNavBar with a default config', () => {
 });
 
 describe('MatTabNavBar with enabled animations', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithCustomAnimationDuration],
-    });
-  }));
-
   it('should not throw when setting an animationDuration without units', fakeAsync(() => {
     expect(() => {
       let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
@@ -607,7 +586,7 @@ class TabLinkWithNgIf {
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       @for (tab of tabs; track tab) {
-        <a mat-tab-link [active]="false">Tab link {{label}}</a>
+        <a mat-tab-link [active]="false">Tab link {{tab}}</a>
       }
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
@@ -632,3 +611,14 @@ class TabBarWithInactiveTabsOnInit {
 class TabsWithCustomAnimationDuration {
   links = ['First', 'Second', 'Third'];
 }
+
+@Component({
+  template: `
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <a mat-tab-link disabled>Hello</a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
+  `,
+  imports: [MatTabsModule],
+})
+class TabBarWithDisabledTabOnInit {}

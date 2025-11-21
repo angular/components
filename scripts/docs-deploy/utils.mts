@@ -17,12 +17,12 @@ export class SiteTarget {
 
 /** Object capturing all site targets for the docs-app. */
 export const sites = {
-  stable: new SiteTarget('latest-material-angular-io', 'https://material.angular.io'),
-  next: new SiteTarget('next-material-angular-io', 'https://next.material.angular.io'),
-  rc: new SiteTarget('rc-material-angular-io', 'https://rc.material.angular.io'),
+  stable: new SiteTarget('latest-material-angular-io', 'https://material.angular.dev'),
+  next: new SiteTarget('next-material-angular-io', 'https://next.material.angular.dev'),
+  rc: new SiteTarget('rc-material-angular-io', 'https://rc.material.angular.dev'),
 
   forMajor: (major: number) =>
-    new SiteTarget(`v${major}-material-angular-io`, `https://v${major}.material.angular.io`),
+    new SiteTarget(`v${major}-material-angular-io`, `https://v${major}.material.angular.dev`),
 };
 
 /** Optional Github access token. Can be used for querying the active release trains. */
@@ -54,7 +54,6 @@ export async function buildDocsSite() {
   cd(projectDir);
   await $`pnpm bazel build --config=snapshot-build //docs:build.production`;
   await $`rm -Rf docs/dist`;
-  await $`mkdir -p docs/dist`;
-  await $`cp -R dist/bin/docs/material-angular-io.production docs/dist`;
-  await $`chmod -R u+w docs/dist/material-angular-io.production`;
+  await $`cp -R dist/bin/docs/dist/browser docs/dist`;
+  await $`chmod u+w -R docs/dist`;
 }

@@ -1,11 +1,10 @@
 @use '@angular/cdk';
 @use '../core/style/layout-common';
 @use '../core/tokens/token-utils';
-@use './m2-stepper';
+@use './m3-stepper';
 @use './stepper-variables';
 
-$token-prefix: m2-stepper.$prefix;
-$token-slots: m2-stepper.get-token-slots();
+$fallbacks: m3-stepper.get-tokens();
 
 .mat-step-header {
   overflow: hidden;
@@ -25,19 +24,17 @@ $token-slots: m2-stepper.get-token-slots();
     cursor: default;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
 
-    &:hover:not([aria-disabled]),
-    &:hover[aria-disabled='false'] {
-      background-color: token-utils.slot(header-hover-state-layer-color);
-      border-radius: token-utils.slot(header-hover-state-layer-shape);
-    }
+  &:hover:not([aria-disabled]),
+  &:hover[aria-disabled='false'] {
+    background-color: token-utils.slot(stepper-header-hover-state-layer-color, $fallbacks);
+    border-radius: token-utils.slot(stepper-header-hover-state-layer-shape, $fallbacks);
+  }
 
-    &.cdk-keyboard-focused,
-    &.cdk-program-focused {
-      background-color: token-utils.slot(header-focus-state-layer-color);
-      border-radius: token-utils.slot(header-focus-state-layer-shape);
-    }
+  &.cdk-keyboard-focused,
+  &.cdk-program-focused {
+    background-color: token-utils.slot(stepper-header-focus-state-layer-color, $fallbacks);
+    border-radius: token-utils.slot(stepper-header-focus-state-layer-shape, $fallbacks);
   }
 
   // On touch devices the :hover state will linger on the element after a tap.
@@ -73,10 +70,7 @@ $token-slots: m2-stepper.get-token-slots();
 
 .mat-step-optional {
   font-size: stepper-variables.$step-sub-label-font-size;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    color: token-utils.slot(header-optional-label-text-color);
-  }
+  color: token-utils.slot(stepper-header-optional-label-text-color, $fallbacks);
 }
 
 .mat-step-sub-label-error {
@@ -90,11 +84,8 @@ $token-slots: m2-stepper.get-token-slots();
   width: stepper-variables.$label-header-height;
   flex-shrink: 0;
   position: relative;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    color: token-utils.slot(header-icon-foreground-color);
-    background-color: token-utils.slot(header-icon-background-color);
-  }
+  color: token-utils.slot(stepper-header-icon-foreground-color, $fallbacks);
+  background-color: token-utils.slot(stepper-header-icon-background-color, $fallbacks);
 }
 
 .mat-step-icon-content {
@@ -116,10 +107,8 @@ $token-slots: m2-stepper.get-token-slots();
 }
 
 .mat-step-icon-state-error {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(header-error-state-icon-background-color);
-    color: token-utils.slot(header-error-state-icon-foreground-color);
-  }
+  background-color: token-utils.slot(stepper-header-error-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-error-state-icon-foreground-color, $fallbacks);
 
   .mat-icon {
     font-size: stepper-variables.$step-header-icon-size + 8;
@@ -136,25 +125,27 @@ $token-slots: m2-stepper.get-token-slots();
   min-width: stepper-variables.$label-min-width;
   vertical-align: middle;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    font-family: token-utils.slot(header-label-text-font);
-    font-size: token-utils.slot(header-label-text-size);
-    font-weight: token-utils.slot(header-label-text-weight);
-    color: token-utils.slot(header-label-text-color);
+  font-family: token-utils.slot(stepper-header-label-text-font, $fallbacks);
+  font-size: token-utils.slot(stepper-header-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(stepper-header-label-text-weight, $fallbacks);
+  color: token-utils.slot(stepper-header-label-text-color, $fallbacks);
 
-    &.mat-step-label-active {
-      color: token-utils.slot(header-selected-state-label-text-color);
-    }
+  &.mat-step-label-active {
+    color: token-utils.slot(stepper-header-selected-state-label-text-color, $fallbacks);
+  }
 
-    &.mat-step-label-error {
-      color: token-utils.slot(header-error-state-label-text-color);
-      font-size: token-utils.slot(header-error-state-label-text-size);
-    }
+  &.mat-step-label-error {
+    color: token-utils.slot(stepper-header-error-state-label-text-color, $fallbacks);
+    font-size: token-utils.slot(stepper-header-error-state-label-text-size, $fallbacks);
+  }
 
-    &.mat-step-label-selected {
-      font-size: token-utils.slot(header-selected-state-label-text-size);
-      font-weight: token-utils.slot(header-selected-state-label-text-weight);
-    }
+  &.mat-step-label-selected {
+    font-size: token-utils.slot(stepper-header-selected-state-label-text-size, $fallbacks);
+    font-weight: token-utils.slot(stepper-header-selected-state-label-text-weight, $fallbacks);
+  }
+
+  .mat-step-header-empty-label & {
+    min-width: 0;
   }
 }
 
@@ -171,22 +162,17 @@ $token-slots: m2-stepper.get-token-slots();
 }
 
 .mat-step-icon-selected {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(header-selected-state-icon-background-color);
-    color: token-utils.slot(header-selected-state-icon-foreground-color);
-  }
+  background-color: token-utils.slot(
+      stepper-header-selected-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-selected-state-icon-foreground-color, $fallbacks);
 }
 
 .mat-step-icon-state-done {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(header-done-state-icon-background-color);
-    color: token-utils.slot(header-done-state-icon-foreground-color);
-  }
+  background-color: token-utils.slot(stepper-header-done-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-done-state-icon-foreground-color, $fallbacks);
 }
 
 .mat-step-icon-state-edit {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background-color: token-utils.slot(header-edit-state-icon-background-color);
-    color: token-utils.slot(header-edit-state-icon-foreground-color);
-  }
+  background-color: token-utils.slot(stepper-header-edit-state-icon-background-color, $fallbacks);
+  color: token-utils.slot(stepper-header-edit-state-icon-foreground-color, $fallbacks);
 }

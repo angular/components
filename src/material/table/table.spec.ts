@@ -1,12 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {
-  waitForAsync,
-  ComponentFixture,
-  fakeAsync,
-  flushMicrotasks,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -14,26 +7,6 @@ import {MatSort, MatSortHeader, MatSortModule} from '../sort';
 import {MatPaginator, MatPaginatorModule} from '../paginator';
 
 describe('MatTable', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableApp,
-        MatTableWithWhenRowApp,
-        ArrayDataSourceMatTableApp,
-        NativeHtmlTableApp,
-        MatTableWithSortApp,
-        MatTableWithPaginatorApp,
-        StickyTableApp,
-        TableWithNgContainerRow,
-        NestedTableApp,
-        MatFlexTableApp,
-      ],
-    });
-  }));
-
   describe('with basic data source', () => {
     it('should be able to create a table with the right content and without when row', () => {
       let fixture = TestBed.createComponent(MatTableApp);
@@ -721,7 +694,7 @@ class FakeDataSource extends DataSource<TestData> {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
@@ -756,7 +729,7 @@ class MatTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NativeHtmlTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -810,7 +783,7 @@ class NativeHtmlTableApp {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class NestedTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -858,7 +831,7 @@ class StickyTableApp {
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
@@ -1042,7 +1015,7 @@ class MatTableWithPaginatorApp implements OnInit {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class TableWithNgContainerRow {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 }
 
@@ -1080,7 +1053,7 @@ class TableWithNgContainerRow {
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
 })
 class MatFlexTableApp {
-  dataSource: FakeDataSource | null = new FakeDataSource();
+  dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

@@ -162,7 +162,7 @@ three lines, introduce a new method to contain the logic.
 #### JsDoc comments
 
 All public APIs must have user-facing comments. These are extracted and shown in the documentation
-on [material.angular.io](https://material.angular.io).
+on [material.angular.dev](https://material.angular.dev).
 
 Private and internal APIs should have JsDoc when they are not obvious. Ultimately it is the purview
 of the code reviewer as to what is "obvious", but the rule of thumb is that *most* classes,

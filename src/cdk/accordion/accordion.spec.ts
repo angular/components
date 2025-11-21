@@ -1,4 +1,4 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkAccordion} from './accordion';
@@ -6,12 +6,6 @@ import {CdkAccordionItem} from './accordion-item';
 import {CdkAccordionModule} from './accordion-module';
 
 describe('CdkAccordion', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkAccordionModule, SetOfItems, NestedItems],
-    });
-  }));
-
   it('should ensure only one item is expanded at a time', () => {
     const fixture = TestBed.createComponent(SetOfItems);
     const [firstPanel, secondPanel] = fixture.debugElement

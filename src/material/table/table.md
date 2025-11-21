@@ -5,7 +5,7 @@ This table builds on the foundation of the CDK data-table and uses a similar int
 data input and template, except that its element and attribute selectors will be prefixed
 with `mat-` instead of `cdk-`. For more information on the interface and a detailed look at how
 the table is implemented, see the
-[guide covering the CDK data-table](https://material.angular.io/guide/cdk-table).
+[guide covering the CDK data-table](https://material.angular.dev/guide/cdk-table).
 
 ### Getting Started
 
@@ -167,7 +167,7 @@ Otherwise if you are implementing the logic to paginate your data, you will want
 paginator's `(page)` output and pass the right slice of data to your table.
 
 For more information on using and configuring the `<mat-paginator>`, check out the
-[mat-paginator docs](https://material.angular.io/components/paginator/overview).
+[mat-paginator docs](https://material.angular.dev/components/paginator/overview).
 
 The `MatPaginator` is one provided solution to paginating your table's data, but it is not the only
 option. In fact, the table can work with any custom pagination UI or strategy since the `MatTable`
@@ -178,7 +178,7 @@ and its interface is not tied to any one specific implementation.
 #### Sorting
 
 To add sorting behavior to the table, add the `matSort` directive to the table and add
-`mat-sort-header` to each column header cell that should trigger sorting. Note that you have to import `MatSortModule` in order to initialize the `matSort` directive (see [API docs](https://material.angular.io/components/sort/api)).
+`mat-sort-header` to each column header cell that should trigger sorting. Note that you have to import `MatSortModule` in order to initialize the `matSort` directive (see [API docs](https://material.angular.dev/components/sort/api)).
 
 ```html
 <!-- Name Column -->
@@ -210,7 +210,7 @@ table, since it will not automatically check the array for changes.
 <!-- example(table-sorting) -->
 
 For more information on using and configuring the sorting behavior, check out the
-[matSort docs](https://material.angular.io/components/sort/overview).
+[matSort docs](https://material.angular.dev/components/sort/overview).
 
 The `MatSort` is one provided solution to sorting your table's data, but it is not the only option.
 In fact, the table can work with any custom sorting UI or strategy since the `MatTable` and

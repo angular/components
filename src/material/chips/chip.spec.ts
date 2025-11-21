@@ -1,8 +1,7 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
 describe('MatChip', () => {
@@ -11,26 +10,9 @@ describe('MatChip', () => {
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
 
-  let dir = 'ltr';
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatChipsModule,
-        BasicChip,
-        SingleChip,
-        BasicChipWithStaticTabindex,
-        BasicChipWithBoundTabindex,
-      ],
-      providers: [
-        {
-          provide: Directionality,
-          useFactory: () => ({
-            value: dir,
-            change: new Subject(),
-          }),
-        },
-      ],
+      providers: [provideFakeDirectionality('ltr')],
     });
   }));
 
@@ -64,6 +46,17 @@ describe('MatChip', () => {
       fixture.detectChanges();
 
       expect(chip.getAttribute('tabindex')).toBe('15');
+    });
+
+    it('should disable the ripple if there are no interactive actions', () => {
+      fixture = TestBed.createComponent(BasicChip);
+      fixture.detectChanges();
+
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+
+      expect(chipInstance._hasInteractiveActions()).toBe(false);
+      expect(chipInstance._isRippleDisabled()).toBe(true);
     });
   });
 

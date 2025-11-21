@@ -1,5 +1,5 @@
 import {existsSync, readFileSync} from 'fs';
-import glob from 'glob';
+import {sync as globSync} from 'glob';
 import {basename, dirname, isAbsolute, join} from 'path';
 import semver from 'semver';
 
@@ -12,7 +12,7 @@ const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
 const externalReferencesRegex = /(templateUrl|styleUrls): *["'[]/;
 
 /** RegExp that matches common Bazel manifest paths in this workspace */
-const bazelManifestPath = /(angular_material|external)\//;
+const bazelManifestPath = /(_main|external)\//;
 
 /**
  * List of fields which are mandatory in entry-point "package.json" files and refer
@@ -146,7 +146,7 @@ export function checkMaterialPackage(packagePath: string): string[] {
   const newThemingFilePath = join(packagePath, '_index.scss');
   const failures: string[] = [];
 
-  if (glob.sync('*.css', {cwd: prebuiltThemesPath}).length === 0) {
+  if (globSync('*.css', {cwd: prebuiltThemesPath}).length === 0) {
     failures.push('No prebuilt themes could be found.');
   }
 
@@ -161,7 +161,7 @@ export function checkMaterialPackage(packagePath: string): string[] {
  * Checks whether the prebuilt CDK files are part of the release output.
  */
 export function checkCdkPackage(packagePath: string): string[] {
-  const prebuiltFiles = glob.sync('*-prebuilt.css', {cwd: packagePath}).map(path => basename(path));
+  const prebuiltFiles = globSync('*-prebuilt.css', {cwd: packagePath}).map(path => basename(path));
   const newApiFilePath = join(packagePath, '_index.scss');
   const failures = ['overlay', 'a11y', 'text-field']
     .filter(name => !prebuiltFiles.includes(`${name}-prebuilt.css`))

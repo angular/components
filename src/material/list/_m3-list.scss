@@ -2,17 +2,12 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, list);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-list.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-list
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
+
   // list-item-container-color
   // This does not match the spec, which defines this to be `md.sys.color.surface`.
   // However, this interferes with the use case of placing a list on other components. For example,
@@ -22,71 +17,77 @@ $prefix: (mat, list);
   // list-item-leading-icon-size
   // Match spec, which has list-item-leading-icon-size of 24px.
   // Current version of tokens (0_161) has 18px.
-  $tokens: (
-    active-indicator-color: map.get($systems, md-sys-color, secondary-container),
-    active-indicator-shape: map.get($systems, md-sys-shape, corner-full),
-    list-item-container-color: if($exclude-hardcoded, null, transparent),
-    list-item-container-shape: map.get($systems, md-sys-shape, corner-none),
-    list-item-disabled-label-text-color: map.get($systems, md-sys-color, on-surface),
-    list-item-disabled-label-text-opacity: if($exclude-hardcoded, null, 0.3),
-    list-item-disabled-leading-icon-color: map.get($systems, md-sys-color, on-surface),
-    list-item-disabled-leading-icon-opacity: if($exclude-hardcoded, null, 0.38),
-    list-item-disabled-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    list-item-disabled-state-layer-opacity:
-        map.get($systems, md-sys-state, focus-state-layer-opacity),
-    list-item-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
-    list-item-disabled-trailing-icon-opacity: if($exclude-hardcoded, null, 0.38),
-    list-item-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
-    list-item-focus-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    list-item-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-    list-item-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
-    list-item-hover-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    list-item-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-    list-item-label-text-color: map.get($systems, md-sys-color, on-surface),
-    list-item-label-text-font: map.get($systems, md-sys-typescale, body-large-font),
-    list-item-label-text-line-height: map.get($systems, md-sys-typescale, body-large-line-height),
-    list-item-label-text-size: map.get($systems, md-sys-typescale, body-large-size),
-    list-item-label-text-tracking: map.get($systems, md-sys-typescale, body-large-tracking),
-    list-item-label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
-    list-item-leading-avatar-color: map.get($systems, md-sys-color, primary-container),
-    list-item-leading-avatar-shape: map.get($systems, md-sys-shape, corner-full),
-    list-item-leading-avatar-size: if($exclude-hardcoded, null, 40px),
-    list-item-leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    list-item-leading-icon-size: if($exclude-hardcoded, null, 24px),
-    list-item-selected-trailing-icon-color: map.get($systems, md-sys-color, primary),
-    list-item-supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
-    list-item-supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    list-item-supporting-text-line-height:
-        map.get($systems, md-sys-typescale, body-medium-line-height),
-    list-item-supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    list-item-supporting-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
-    list-item-supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    list-item-trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    list-item-trailing-icon-size: if($exclude-hardcoded, null, 24px),
-    list-item-trailing-supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
-    list-item-trailing-supporting-text-font: map.get($systems, md-sys-typescale, label-small-font),
-    list-item-trailing-supporting-text-line-height:
-        map.get($systems, md-sys-typescale, label-small-line-height),
-    list-item-trailing-supporting-text-size: map.get($systems, md-sys-typescale, label-small-size),
-    list-item-trailing-supporting-text-tracking:
-        map.get($systems, md-sys-typescale, label-small-tracking),
-    list-item-trailing-supporting-text-weight:
-        map.get($systems, md-sys-typescale, label-small-weight),
+  @return (
+    base: (),
+    color: (
+      list-active-indicator-color: map.get($system, secondary-container),
+      list-active-indicator-shape: map.get($system, corner-full),
+      list-list-item-container-color: transparent,
+      list-list-item-container-shape: map.get($system, corner-none),
+      list-list-item-disabled-label-text-color: map.get($system, on-surface),
+      list-list-item-disabled-label-text-opacity: 0.3,
+      list-list-item-disabled-leading-icon-color: map.get($system, on-surface),
+      list-list-item-disabled-leading-icon-opacity: 0.38,
+      list-list-item-disabled-state-layer-color: map.get($system, on-surface),
+      list-list-item-disabled-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      list-list-item-disabled-trailing-icon-color: map.get($system, on-surface),
+      list-list-item-disabled-trailing-icon-opacity: 0.38,
+      list-list-item-focus-label-text-color: map.get($system, on-surface),
+      list-list-item-focus-state-layer-color: map.get($system, on-surface),
+      list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      list-list-item-hover-label-text-color: map.get($system, on-surface),
+      list-list-item-hover-state-layer-color: map.get($system, on-surface),
+      list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      list-list-item-label-text-color: map.get($system, on-surface),
+      list-list-item-leading-avatar-color: map.get($system, primary-container),
+      list-list-item-leading-avatar-shape: map.get($system, corner-full),
+      list-list-item-leading-avatar-size: 40px,
+      list-list-item-leading-icon-color: map.get($system, on-surface-variant),
+      list-list-item-leading-icon-size: 24px,
+      list-list-item-selected-trailing-icon-color: map.get($system, primary),
+      list-list-item-supporting-text-color: map.get($system, on-surface-variant),
+      list-list-item-trailing-icon-color: map.get($system, on-surface-variant),
+      list-list-item-trailing-icon-size: 24px,
+      list-list-item-trailing-supporting-text-color: map.get($system, on-surface-variant),
+      list-list-item-selected-container-color: null,
+      list-list-item-hover-leading-icon-color: null,
+      list-list-item-hover-trailing-icon-color: null,
+    ),
+    typography: (
+      list-list-item-label-text-font: map.get($system, body-large-font),
+      list-list-item-label-text-line-height: map.get($system, body-large-line-height),
+      list-list-item-label-text-size: map.get($system, body-large-size),
+      list-list-item-label-text-tracking: map.get($system, body-large-tracking),
+      list-list-item-label-text-weight: map.get($system, body-large-weight),
+      list-list-item-supporting-text-font: map.get($system, body-medium-font),
+      list-list-item-supporting-text-line-height: map.get($system, body-medium-line-height),
+      list-list-item-supporting-text-size: map.get($system, body-medium-size),
+      list-list-item-supporting-text-tracking: map.get($system, body-medium-tracking),
+      list-list-item-supporting-text-weight: map.get($system, body-medium-weight),
+      list-list-item-trailing-supporting-text-font: map.get($system, label-small-font),
+      list-list-item-trailing-supporting-text-line-height:
+          map.get($system, label-small-line-height),
+      list-list-item-trailing-supporting-text-size: map.get($system, label-small-size),
+      list-list-item-trailing-supporting-text-tracking: map.get($system, label-small-tracking),
+      list-list-item-trailing-supporting-text-weight: map.get($system, label-small-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -5);
   $index: ($scale * -1) + 1;
 
   @return (
-    list-item-leading-icon-start-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
-    list-item-leading-icon-end-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
-    list-item-one-line-container-height: list.nth((48px, 44px, 40px, 36px, 32px, 24px), $index),
-    list-item-two-line-container-height: list.nth((64px, 60px, 56px, 52px, 48px, 48px), $index),
-    list-item-three-line-container-height: list.nth((88px, 84px, 80px, 76px, 72px, 56px), $index),
+    list-list-item-leading-icon-start-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
+    list-list-item-leading-icon-end-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
+    list-list-item-one-line-container-height:
+        list.nth((48px, 44px, 40px, 36px, 32px, 24px), $index),
+    list-list-item-two-line-container-height:
+        list.nth((64px, 60px, 56px, 52px, 48px, 48px), $index),
+    list-list-item-three-line-container-height:
+        list.nth((88px, 84px, 80px, 76px, 72px, 56px), $index),
   );
 }

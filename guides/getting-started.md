@@ -15,17 +15,17 @@ ng add @angular/material
 ```
 
 The `ng add` command will install Angular Material, the
-[Component Dev Kit (CDK)](https://material.angular.io/cdk/categories),
+[Component Dev Kit (CDK)](https://material.angular.dev/cdk/categories),
 [Angular Animations](https://angular.dev/guide/animations) and ask you the following questions to
 determine which features to include:
 
 1. Choose a prebuilt theme name, or "custom" for a custom theme:
 
-   You can choose from [prebuilt material design themes](https://material.angular.io/guide/theming#pre-built-themes) or set up an extensible [custom theme](https://material.angular.io/guide/theming#defining-a-theme).
+   You can choose from [prebuilt material design themes](https://material.angular.dev/guide/theming#pre-built-themes) or set up an extensible [custom theme](https://material.angular.dev/guide/theming#defining-a-theme).
 
 2. Set up global Angular Material typography styles:
 
-   Whether to apply the global [typography](https://material.angular.io/guide/typography) styles to your application.
+   Whether to apply the global [typography](https://material.angular.dev/guide/typography) styles to your application.
 
 The `ng add` command will additionally perform the following actions:
 
@@ -74,5 +74,5 @@ Then point your browser to [http://localhost:4200](http://localhost:4200)
 You should see the Material slide toggle component on the page.
 
 In addition to the installation schematic, Angular Material comes with
-[several other schematics](https://material.angular.io/guide/schematics) (like nav, table,
+[several other schematics](https://material.angular.dev/guide/schematics) (like nav, table,
 address-form, etc.) that can be used to easily generate pre-built components in your application.

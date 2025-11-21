@@ -1,32 +1,25 @@
 import {MutationObserverFactory} from '../../observers';
-import {Overlay} from '../../overlay';
 import {ComponentPortal} from '../../portal';
-import {Component, inject} from '@angular/core';
+import {Component, inject, Injector} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {
+  AriaLivePoliteness,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LiveAnnouncerDefaultOptions,
 } from './live-announcer-tokens';
+import {createOverlayRef} from '@angular/cdk/overlay';
 
 describe('LiveAnnouncer', () => {
   let announcer: LiveAnnouncer;
-  let overlay: Overlay;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
   describe('with default element', () => {
-    beforeEach(() =>
-      TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp, TestModal],
-      }),
-    );
-
     beforeEach(fakeAsync(() => {
-      overlay = TestBed.inject(Overlay);
       announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
       fixture = TestBed.createComponent(TestApp);
@@ -125,10 +118,7 @@ describe('LiveAnnouncer', () => {
 
     it('should ensure that there is only one live element at a time', fakeAsync(() => {
       fixture.destroy();
-
-      TestBed.resetTestingModule().configureTestingModule({
-        imports: [A11yModule],
-      });
+      TestBed.resetTestingModule().configureTestingModule({});
 
       const extraElement = document.createElement('div');
       extraElement.classList.add('cdk-live-announcer-element');
@@ -172,7 +162,7 @@ describe('LiveAnnouncer', () => {
 
     it('should add aria-owns to open aria-modal elements', fakeAsync(() => {
       const portal = new ComponentPortal(TestModal);
-      const overlayRef = overlay.create();
+      const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
       fixture.detectChanges();
@@ -192,7 +182,7 @@ describe('LiveAnnouncer', () => {
 
     it('should expand aria-owns of open aria-modal elements', fakeAsync(() => {
       const portal = new ComponentPortal(TestModal);
-      const overlayRef = overlay.create();
+      const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
       fixture.detectChanges();
@@ -221,7 +211,6 @@ describe('LiveAnnouncer', () => {
       customLiveElement = document.createElement('div');
 
       return TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp],
         providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
@@ -244,7 +233,6 @@ describe('LiveAnnouncer', () => {
   describe('with a default options', () => {
     beforeEach(() => {
       return TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp],
         providers: [
           {
             provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
@@ -292,7 +280,6 @@ describe('CdkAriaLive', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule, DivWithCdkAriaLive],
       providers: [
         {
           provide: MutationObserverFactory,
@@ -414,12 +401,12 @@ class TestModal {
 @Component({
   template: `
     <div
-      [cdkAriaLive]="politeness ? politeness : null"
+      [cdkAriaLive]="politeness"
       [cdkAriaLiveDuration]="duration">{{content}}</div>`,
   imports: [A11yModule],
 })
 class DivWithCdkAriaLive {
-  politeness = 'polite';
+  politeness: AriaLivePoliteness = 'polite';
   content = 'Initial content';
   duration: number;
 }

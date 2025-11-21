@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
 import {
   Injectable,
   OnDestroy,
@@ -14,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {_CdkPrivateStyleLoader} from '../private';
 import {Platform, _isTestEnvironment} from '../platform';

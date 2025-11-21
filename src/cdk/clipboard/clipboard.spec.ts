@@ -1,4 +1,4 @@
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Clipboard} from './clipboard';
 import {PendingCopy} from './pending-copy';
@@ -14,8 +14,6 @@ describe('Clipboard', () => {
   let focusedInput: HTMLElement;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-
     clipboard = TestBed.inject(Clipboard);
     document = TestBed.inject(DOCUMENT);
     execCommand = spyOn(document, 'execCommand').and.returnValue(true);

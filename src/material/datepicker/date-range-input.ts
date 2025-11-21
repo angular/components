@@ -154,7 +154,7 @@ export class MatDateRangeInput<D>
   get dateFilter() {
     return this._dateFilter;
   }
-  set dateFilter(value: DateFilterFn<D>) {
+  set dateFilter(value: DateFilterFn<D> | null | undefined) {
     const start = this._startInput;
     const end = this._endInput;
     const wasMatchingStart = start && start._matchesFilter(start.value);
@@ -169,7 +169,7 @@ export class MatDateRangeInput<D>
       end._validatorOnChange();
     }
   }
-  private _dateFilter: DateFilterFn<D>;
+  private _dateFilter?: DateFilterFn<D> | null;
 
   /** The minimum valid date. */
   @Input()

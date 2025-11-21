@@ -23,11 +23,12 @@ import {
   Output,
   AfterViewInit,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {coerceElement} from '../../coercion';
-import {DOCUMENT} from '@angular/common';
+
 import {InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
@@ -141,7 +142,7 @@ export class FocusMonitor implements OnDestroy {
   };
 
   /** Used to reference correct document/window */
-  protected _document? = inject(DOCUMENT, {optional: true});
+  protected _document = inject(DOCUMENT);
 
   /** Subject for stopping our InputModalityDetector subscription. */
   private readonly _stopInputModalityDetector = new Subject<void>();
@@ -205,7 +206,7 @@ export class FocusMonitor implements OnDestroy {
     // If the element is inside the shadow DOM, we need to bind our focus/blur listeners to
     // the shadow root, rather than the `document`, because the browser won't emit focus events
     // to the `document`, if focus is moving within the same shadow root.
-    const rootNode = _getShadowRoot(nativeElement) || this._getDocument();
+    const rootNode = _getShadowRoot(nativeElement) || this._document;
     const cachedInfo = this._elementInfo.get(nativeElement);
 
     // Check if we're already monitoring this element.
@@ -279,7 +280,7 @@ export class FocusMonitor implements OnDestroy {
     options?: FocusOptions,
   ): void {
     const nativeElement = coerceElement(element);
-    const focusedElement = this._getDocument().activeElement;
+    const focusedElement = this._document.activeElement;
 
     // If the element is focused already, calling `focus` again won't trigger the event listener
     // which means that the focus classes won't be updated. If that's the case, update the classes
@@ -302,15 +303,9 @@ export class FocusMonitor implements OnDestroy {
     this._elementInfo.forEach((_info, element) => this.stopMonitoring(element));
   }
 
-  /** Access injected document if available or fallback to global document reference */
-  private _getDocument(): Document {
-    return this._document || document;
-  }
-
   /** Use defaultView of injected document if available or fallback to global window reference */
   private _getWindow(): Window {
-    const doc = this._getDocument();
-    return doc.defaultView || window;
+    return this._document.defaultView || window;
   }
 
   private _getFocusOrigin(focusEventTarget: HTMLElement | null): FocusOrigin {

@@ -1,10 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSelectHarness} from '@angular/material/select/testing';
+import {MATERIAL_ANIMATIONS} from '@angular/material/core';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {SelectHarnessExample} from './select-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatSelectModule} from '@angular/material/select';
 
 describe('SelectHarnessExample', () => {
   let fixture: ComponentFixture<SelectHarnessExample>;
@@ -12,7 +11,7 @@ describe('SelectHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatSelectModule, NoopAnimationsModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
     fixture = TestBed.createComponent(SelectHarnessExample);
     fixture.detectChanges();

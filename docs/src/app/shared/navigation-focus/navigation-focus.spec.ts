@@ -1,4 +1,8 @@
-import {Component, NgZone} from '@angular/core';
+import {
+  Component,
+  // tslint:disable-next-line:no-zone-dependencies
+  NgZone,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {provideRouter, Router} from '@angular/router';
 import {NavigationFocusService} from './navigation-focus.service';

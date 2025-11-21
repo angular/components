@@ -1,0 +1,75 @@
+.example-grid-container {
+  max-width: fit-content;
+}
+
+.example-grid-calendar-debug {
+  padding-bottom: 12px;
+}
+
+.example-grid-calendar-control {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.example-grid-calendar-control-button {
+  background-color: transparent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  border: 2px solid color-mix(in srgb, var(--mat-sys-outline) 40%, transparent);
+  cursor: pointer;
+}
+
+.example-grid-calendar-control-button:hover,
+.example-grid-calendar-control-button:focus {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-calendar-cell {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.example-calendar-cell[aria-disabled='true'] {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+.example-calendar-day-button {
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  border: 0;
+  background-color: transparent;
+}
+
+.example-calendar-day-button:hover {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+[data-active='true'] .example-calendar-day-button {
+  outline: 3px dashed var(--mat-sys-outline);
+  outline-offset: 3px;
+}
+
+[data-active='true']:focus-within .example-calendar-day-button {
+  outline: 3px dashed var(--mat-sys-tertiary);
+  outline-offset: 3px;
+}
+
+[aria-selected='true'] .example-calendar-day-button {
+  color: var(--mat-sys-on-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 80%, transparent);
+}

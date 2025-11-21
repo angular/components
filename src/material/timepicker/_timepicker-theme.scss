@@ -1,82 +1,52 @@
 @use 'sass:map';
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/style/sass-utils';
 @use './m2-timepicker';
+@use './m3-timepicker';
 @use '../core/tokens/token-utils';
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-timepicker.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: map.get(m2-timepicker.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-unthemable-tokens()
-      );
-    }
+    $tokens: map.get(m3-timepicker.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs color theme styles for the mat-timepicker.
-/// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the main selection: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin color($theme, $options...) {
+@mixin color($theme) {
+  $tokens: map.get(m2-timepicker.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-color-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-timepicker.get-tokens($theme), color);
   }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs typography theme styles for the mat-timepicker.
-/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: map.get(m2-timepicker.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-typography-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-timepicker.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs density theme styles for the mat-timepicker.
-/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: map.get(m2-timepicker.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-density-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-timepicker.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-timepicker.$prefix,
-      tokens: m2-timepicker.get-token-slots(),
+      namespace: timepicker,
+      tokens: token-utils.get-overrides(m3-timepicker.get-tokens(), timepicker)
     ),
   );
 }
@@ -84,41 +54,28 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-timepicker.
 /// @param {Map} $theme The theme to generate styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the main selection: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-timepicker') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+/// @param {String} $color-variant The color variant to use for the component
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-timepicker.$prefix,
-      map.get($tokens, m2-timepicker.$prefix)
-    );
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
   }
 }

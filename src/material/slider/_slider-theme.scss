@@ -1,47 +1,42 @@
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use './m2-slider';
+@use './m3-slider';
+@use 'sass:map';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-slider.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: map.get(m2-slider.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-slider.$prefix, m2-slider.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-slider.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
-///     or error (If not specified, default primary color will be used).
-@mixin color($theme, $options...) {
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-slider.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-slider.$prefix, m2-slider.get-color-tokens($theme));
+    $tokens: map.get(m3-slider.get-tokens($theme, $color-variant), color);
+  }
 
-      .mat-accent {
-        @include token-utils.create-token-values-mixed(
-          m2-slider.$prefix, m2-slider.private-get-color-palette-color-tokens($theme, accent));
-      }
+  @include token-utils.values($tokens);
 
-      .mat-warn {
-        @include token-utils.create-token-values-mixed(
-          m2-slider.$prefix, m2-slider.private-get-color-palette-color-tokens($theme, warn));
-      }
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-accent {
+      $tokens: m2-slider.private-get-color-palette-color-tokens($theme, secondary);
+      @include token-utils.values($tokens);
+    }
+
+    .mat-warn {
+      $tokens: m2-slider.private-get-color-palette-color-tokens($theme, error);
+      @include token-utils.values($tokens);
     }
   }
 }
@@ -49,35 +44,31 @@
 /// Outputs typography theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: map.get(m2-slider.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-slider.$prefix, m2-slider.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-slider.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs density theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: map.get(m2-slider.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-slider.$prefix, m2-slider.get-density-tokens($theme));
-    }
+    $tokens: map.get(m3-slider.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-slider.$prefix,
-      tokens: m2-slider.get-token-slots(),
+      namespace: slider,
+      tokens: token-utils.get-overrides(m3-slider.get-tokens(), slider)
     ),
   );
 }
@@ -85,37 +76,28 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-option.
 /// @param {Map} $theme The theme to generate styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
-///     or error (If not specified, default primary color will be used).
-@mixin theme($theme, $options...) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-slider') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-slider-tokens: token-utils.get-tokens-for($tokens, m2-slider.$prefix, $options...);
-  @include token-utils.create-token-values(m2-slider.$prefix, $mat-slider-tokens);
 }

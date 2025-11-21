@@ -1,15 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, Provider, Type, signal} from '@angular/core';
-import {MatCardModule} from './module';
 import {MatCard, MAT_CARD_CONFIG, MatCardAppearance} from './card';
 
 describe('MatCard', () => {
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [MatCardModule, component],
-      providers,
-    });
-
+    TestBed.configureTestingModule({providers});
     return TestBed.createComponent<T>(component);
   }
 
@@ -47,7 +42,7 @@ describe('MatCard', () => {
 });
 
 @Component({
-  template: '<mat-card [appearance]="appearance()"></mat-card>',
+  template: '<mat-card [appearance]="appearance()!"></mat-card>',
   imports: [MatCard],
 })
 class BasicCard {

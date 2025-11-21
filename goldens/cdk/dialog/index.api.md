@@ -38,7 +38,7 @@ import { ViewContainerRef } from '@angular/core';
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
 // @public
-export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends BasePortalOutlet implements OnDestroy {
+export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends BasePortalOutlet implements DialogContainer, OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
     _addAriaLabelledBy(id: string): void;
@@ -61,6 +61,8 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     protected _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     protected _focusTrapFactory: FocusTrapFactory;
+    // (undocumented)
+    _focusTrapped: Observable<void>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -111,7 +113,7 @@ export interface DialogCloseOptions {
 }
 
 // @public
-export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet = BasePortalOutlet> {
+export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = BasePortalOutlet> {
     ariaDescribedBy?: string | null;
     ariaLabel?: string | null;
     ariaLabelledBy?: string | null;
@@ -121,6 +123,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;
+    closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = DialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     container?: Type<C> | {
         type: Type<C>;
         providers: (config: DialogConfig<D, R, C>) => StaticProvider[];
@@ -148,6 +151,13 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     width?: string;
 }
 
+// @public
+export type DialogContainer = BasePortalOutlet & {
+    _focusTrapped?: Observable<void>;
+    _closeInteractionType?: FocusOrigin;
+    _recaptureFocus?: () => void;
+};
+
 // @public (undocumented)
 export class DialogModule {
     // (undocumented)
@@ -160,7 +170,7 @@ export class DialogModule {
 
 // @public
 export class DialogRef<R = unknown, C = unknown> {
-    constructor(overlayRef: OverlayRef, config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>);
+    constructor(overlayRef: OverlayRef, config: DialogConfig<any, DialogRef<R, C>, DialogContainer>);
     addPanelClass(classes: string | string[]): this;
     readonly backdropClick: Observable<MouseEvent>;
     close(result?: R, options?: DialogCloseOptions): void;
@@ -168,10 +178,8 @@ export class DialogRef<R = unknown, C = unknown> {
     readonly componentInstance: C | null;
     readonly componentRef: ComponentRef<C> | null;
     // (undocumented)
-    readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
-    readonly containerInstance: BasePortalOutlet & {
-        _closeInteractionType?: FocusOrigin;
-    };
+    readonly config: DialogConfig<any, DialogRef<R, C>, DialogContainer>;
+    readonly containerInstance: DialogContainer;
     disableClose: boolean | undefined;
     readonly id: string;
     readonly keydownEvents: Observable<KeyboardEvent>;

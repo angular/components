@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,6 +10,7 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
         "//src/cdk/platform",
         "//src/cdk/private",
         "//src/material/core:ripple",

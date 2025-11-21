@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -55,6 +55,7 @@ sass_library(
     srcs = ["_radio-common.scss"],
     deps = [
         ":m2",
+        "//src/cdk:sass_lib",
         "//src/material/core/tokens:token_utils",
     ],
 )
@@ -74,9 +75,9 @@ ng_project(
     name = "radio",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "radio.ts",
+        "radio-module.ts",
     ],
     assets = [
         "radio.html",
@@ -111,7 +112,7 @@ filegroup(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "radio_tests_lib",
     testonly = True,
     srcs = glob(
@@ -124,6 +125,7 @@ ts_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing/private",
+        "//src/material/core",
     ],
 )
 

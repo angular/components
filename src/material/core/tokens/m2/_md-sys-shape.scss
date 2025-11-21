@@ -1,0 +1,16 @@
+@function  md-sys-shape-values() {
+  @return (
+    corner-extra-large: 28px,
+    corner-extra-large-top: (28px 28px 0 0),
+    corner-extra-small: 4px,
+    corner-extra-small-top: (4px 4px 0 0),
+    corner-full: 9999px,
+    corner-large: 16px,
+    corner-large-end: (0 16px 16px 0),
+    corner-large-start: (16px 0 0 16px),
+    corner-large-top: (16px 16px 0 0),
+    corner-medium: 12px,
+    corner-none: 0,
+    corner-small: 8px
+  );
+}

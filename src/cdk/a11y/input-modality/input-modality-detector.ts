@@ -14,9 +14,10 @@ import {
   NgZone,
   inject,
   RendererFactory2,
+  DOCUMENT,
 } from '@angular/core';
 import {Platform, _getEventTarget} from '../../platform';
-import {DOCUMENT} from '@angular/common';
+
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {

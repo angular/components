@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -9,31 +9,27 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
+} from '@angular/cdk/testing/private';
+import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
+import {provideNativeDateAdapter} from '../core';
 import {JAN, MAR} from '../testing';
-import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
+import {MatCalendarCellClassFunction} from './calendar-body';
 
 describe('MatMultiYearView', () => {
-  let dir: {value: Direction};
+  let dir: WritableSignal<Direction>;
 
   beforeEach(waitForAsync(() => {
+    dir = signal<Direction>('ltr');
+
     TestBed.configureTestingModule({
-      imports: [
-        MatNativeDateModule,
-        MatCalendarBody,
-        MatMultiYearView,
-        // Test components.
-        StandardMultiYearView,
-        MultiYearViewWithDateFilter,
-        MultiYearViewWithMinMaxDate,
-        MultiYearViewWithDateClass,
-      ],
-      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+      providers: [provideNativeDateAdapter(), provideFakeDirectionality(dir)],
     });
   }));
 
@@ -111,7 +107,7 @@ describe('MatMultiYearView', () => {
             '.mat-calendar-body',
           ) as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
-          dir.value = 'ltr';
+          dir.set('ltr');
           fixture.componentInstance.date = new Date(2017, JAN, 3);
           fixture.changeDetectorRef.markForCheck();
           dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -451,7 +447,7 @@ class MultiYearViewWithMinMaxDate {
 })
 class MultiYearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);
-  dateClass(date: Date) {
-    return date.getFullYear() % 2 == 0 ? 'even' : undefined;
-  }
+  dateClass: MatCalendarCellClassFunction<Date> = (date: Date) => {
+    return date.getFullYear() % 2 == 0 ? 'even' : [];
+  };
 }

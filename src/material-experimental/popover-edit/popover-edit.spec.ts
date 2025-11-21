@@ -203,9 +203,9 @@ class ElementDataSource extends DataSource<PeriodicElement> {
             ${NAME_EDIT_TEMPLATE}
           </ng-template>
 
-          <span *matIfRowHovered>
+          <ng-template>
             <button matEditOpen>Edit</button>
-          </span>
+</ng-template>
         </mat-cell>
       </ng-container>
 
@@ -229,7 +229,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
       margin: 16px;
     }
   `,
-  standalone: false,
+  imports: [MatTableModule, MatPopoverEditModule, FormsModule],
 })
 class MatFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -255,9 +255,9 @@ class MatFlexTableInCell extends BaseTestComponent {
             ${NAME_EDIT_TEMPLATE}
           </ng-template>
 
-          <span *matIfRowHovered>
+          <ng-template>
             <button matEditOpen>Edit</button>
-          </span>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -281,7 +281,7 @@ class MatFlexTableInCell extends BaseTestComponent {
       margin: 16px;
     }
   `,
-  standalone: false,
+  imports: [MatTableModule, MatPopoverEditModule, FormsModule],
 })
 class MatTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -300,10 +300,6 @@ describe('Material Popover Edit', () => {
       let fixture: ComponentFixture<BaseTestComponent>;
 
       beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatTableModule, MatPopoverEditModule, FormsModule],
-          declarations: [componentClass],
-        });
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();

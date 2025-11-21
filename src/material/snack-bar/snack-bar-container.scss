@@ -1,13 +1,11 @@
 @use '@angular/cdk';
-@use './m2-snack-bar';
-@use '../button/m2-button';
+@use './m3-snack-bar';
 @use '../core/tokens/token-utils';
 @use '../core/style/elevation';
 
 $_side-padding: 8px;
 
-$token-prefix: m2-snack-bar.$prefix;
-$token-slots: m2-snack-bar.get-token-slots();
+$fallbacks: m3-snack-bar.get-tokens();
 
 @keyframes _mat-snack-bar-enter {
   from {
@@ -90,12 +88,10 @@ $token-slots: m2-snack-bar.get-token-slots();
     outline: solid 1px;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    .mat-mdc-snack-bar-container & {
-      color: token-utils.slot(supporting-text-color);
-      border-radius: token-utils.slot(container-shape);
-      background-color: token-utils.slot(container-color);
-    }
+  .mat-mdc-snack-bar-container & {
+    color: token-utils.slot(snack-bar-supporting-text-color, $fallbacks);
+    border-radius: token-utils.slot(snack-bar-container-shape, $fallbacks);
+    background-color: token-utils.slot(snack-bar-container-color, $fallbacks);
   }
 }
 
@@ -111,13 +107,11 @@ $token-slots: m2-snack-bar.get-token-slots();
     padding-right: 16px;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    .mat-mdc-snack-bar-container & {
-      font-family: token-utils.slot(supporting-text-font);
-      font-size: token-utils.slot(supporting-text-size);
-      font-weight: token-utils.slot(supporting-text-weight);
-      line-height: token-utils.slot(supporting-text-line-height);
-    }
+  .mat-mdc-snack-bar-container & {
+    font-family: token-utils.slot(snack-bar-supporting-text-font, $fallbacks);
+    font-size: token-utils.slot(snack-bar-supporting-text-size, $fallbacks);
+    font-weight: token-utils.slot(snack-bar-supporting-text-weight, $fallbacks);
+    line-height: token-utils.slot(snack-bar-supporting-text-line-height, $fallbacks);
   }
 }
 
@@ -144,15 +138,13 @@ $token-slots: m2-snack-bar.get-token-slots();
     // MDC's `action-label-text-color` should be able to do this, but the button theme has a
     // higher specificity so it ends up overriding it. Define our own variable that we can
     // use to control the color instead.
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
-      color: token-utils.slot(button-color);
-    }
+    color: token-utils.slot(snack-bar-button-color, $fallbacks);
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values-mixed(m2-button.$prefix, (
-    text-state-layer-color: currentColor,
-    text-ripple-color: currentColor,
+  @include token-utils.values((
+    button-text-state-layer-color: currentColor,
+    button-text-ripple-color: currentColor,
   ));
 
   .mat-ripple-element {

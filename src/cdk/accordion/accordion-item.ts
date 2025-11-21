@@ -16,6 +16,7 @@ import {
   booleanAttribute,
   inject,
   OnInit,
+  signal,
 } from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {UniqueSelectionDispatcher} from '../collections';
@@ -90,7 +91,14 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
   private _expanded = false;
 
   /** Whether the AccordionItem is disabled. */
-  @Input({transform: booleanAttribute}) disabled: boolean = false;
+  @Input({transform: booleanAttribute})
+  get disabled() {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  private _disabled = signal(false);
 
   /** Unregister function for _expansionDispatcher. */
   private _removeUniqueSelectionListener: () => void = () => {};

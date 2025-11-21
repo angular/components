@@ -1,5 +1,5 @@
-load("//tools:defaults2.bzl", "jasmine_test", "spec_bundle")
-load("@rules_browsers//src/server_test:index.bzl", "server_test")
+load("@rules_browsers//server_test:index.bzl", "server_test")
+load("//tools:defaults.bzl", "jasmine_test", "spec_bundle")
 
 def webdriver_test(name, deps, tags = [], **kwargs):
     spec_bundle(
@@ -12,13 +12,13 @@ def webdriver_test(name, deps, tags = [], **kwargs):
         tags = tags + ["manual"],
         data = [
             ":%s_bundle" % name,
-            "@rules_browsers//src/browsers/chromium",
+            "@rules_browsers//browsers/chromium",
         ],
         env = {
             "CHROME_HEADLESS_BIN": "$(CHROME-HEADLESS-SHELL)",
             "CHROMEDRIVER": "$(CHROMEDRIVER)",
         },
-        toolchains = ["@rules_browsers//src/browsers/chromium:toolchain_alias"],
+        toolchains = ["@rules_browsers//browsers/chromium:toolchain_alias"],
         **kwargs
     )
 

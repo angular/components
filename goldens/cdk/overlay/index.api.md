@@ -12,6 +12,7 @@ import { EmbeddedViewRef } from '@angular/core';
 import { EnvironmentInjector } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Location as Location_2 } from '@angular/common';
 import { NgIterable } from '@angular/core';
@@ -38,23 +39,27 @@ export class BlockScrollStrategy implements ScrollStrategy {
 }
 
 // @public
+export const CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG: InjectionToken<CdkConnectedOverlayConfig>;
+
+// @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     constructor(...args: unknown[]);
     readonly attach: EventEmitter<void>;
     attachOverlay(): void;
     backdropClass: string | string[];
     readonly backdropClick: EventEmitter<MouseEvent>;
+    set _config(value: string | CdkConnectedOverlayConfig);
     readonly detach: EventEmitter<void>;
     detachOverlay(): void;
     get dir(): Direction;
     disableClose: boolean;
-    get disposeOnNavigation(): boolean;
-    set disposeOnNavigation(value: boolean);
+    disposeOnNavigation: boolean;
     flexibleDimensions: boolean;
     growAfterOpen: boolean;
     hasBackdrop: boolean;
     height: number | string;
     lockPosition: boolean;
+    matchWidth: boolean;
     minHeight: number | string;
     minWidth: number | string;
     // (undocumented)
@@ -67,6 +72,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     static ngAcceptInputType_hasBackdrop: unknown;
     // (undocumented)
     static ngAcceptInputType_lockPosition: unknown;
+    // (undocumented)
+    static ngAcceptInputType_matchWidth: unknown;
     // (undocumented)
     static ngAcceptInputType_push: unknown;
     // (undocumented)
@@ -89,12 +96,63 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     push: boolean;
     scrollStrategy: ScrollStrategy;
     transformOriginSelector: string;
-    viewportMargin: number;
+    usePopover: FlexibleOverlayPopoverLocation | null;
+    viewportMargin: ViewportMargin;
     width: number | string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkConnectedOverlay, "[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]", ["cdkConnectedOverlay"], { "origin": { "alias": "cdkConnectedOverlayOrigin"; "required": false; }; "positions": { "alias": "cdkConnectedOverlayPositions"; "required": false; }; "positionStrategy": { "alias": "cdkConnectedOverlayPositionStrategy"; "required": false; }; "offsetX": { "alias": "cdkConnectedOverlayOffsetX"; "required": false; }; "offsetY": { "alias": "cdkConnectedOverlayOffsetY"; "required": false; }; "width": { "alias": "cdkConnectedOverlayWidth"; "required": false; }; "height": { "alias": "cdkConnectedOverlayHeight"; "required": false; }; "minWidth": { "alias": "cdkConnectedOverlayMinWidth"; "required": false; }; "minHeight": { "alias": "cdkConnectedOverlayMinHeight"; "required": false; }; "backdropClass": { "alias": "cdkConnectedOverlayBackdropClass"; "required": false; }; "panelClass": { "alias": "cdkConnectedOverlayPanelClass"; "required": false; }; "viewportMargin": { "alias": "cdkConnectedOverlayViewportMargin"; "required": false; }; "scrollStrategy": { "alias": "cdkConnectedOverlayScrollStrategy"; "required": false; }; "open": { "alias": "cdkConnectedOverlayOpen"; "required": false; }; "disableClose": { "alias": "cdkConnectedOverlayDisableClose"; "required": false; }; "transformOriginSelector": { "alias": "cdkConnectedOverlayTransformOriginOn"; "required": false; }; "hasBackdrop": { "alias": "cdkConnectedOverlayHasBackdrop"; "required": false; }; "lockPosition": { "alias": "cdkConnectedOverlayLockPosition"; "required": false; }; "flexibleDimensions": { "alias": "cdkConnectedOverlayFlexibleDimensions"; "required": false; }; "growAfterOpen": { "alias": "cdkConnectedOverlayGrowAfterOpen"; "required": false; }; "push": { "alias": "cdkConnectedOverlayPush"; "required": false; }; "disposeOnNavigation": { "alias": "cdkConnectedOverlayDisposeOnNavigation"; "required": false; }; "usePopover": { "alias": "cdkConnectedOverlayUsePopover"; "required": false; }; "matchWidth": { "alias": "cdkConnectedOverlayMatchWidth"; "required": false; }; "_config": { "alias": "cdkConnectedOverlay"; "required": false; }; }, { "backdropClick": "backdropClick"; "positionChange": "positionChange"; "attach": "attach"; "detach": "detach"; "overlayKeydown": "overlayKeydown"; "overlayOutsideClick": "overlayOutsideClick"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkConnectedOverlay, never>;
+}
+
+// @public
+export interface CdkConnectedOverlayConfig {
+    // (undocumented)
+    backdropClass?: string | string[];
+    // (undocumented)
+    disableClose?: boolean;
+    // (undocumented)
+    disposeOnNavigation?: boolean;
+    // (undocumented)
+    flexibleDimensions?: boolean;
+    // (undocumented)
+    growAfterOpen?: boolean;
+    // (undocumented)
+    hasBackdrop?: boolean;
+    // (undocumented)
+    height?: number | string;
+    // (undocumented)
+    lockPosition?: boolean;
+    // (undocumented)
+    matchWidth?: boolean;
+    // (undocumented)
+    minHeight?: number | string;
+    // (undocumented)
+    minWidth?: number | string;
+    // (undocumented)
+    offsetX?: number;
+    // (undocumented)
+    offsetY?: number;
+    // (undocumented)
+    origin?: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
+    // (undocumented)
+    panelClass?: string | string[];
+    // (undocumented)
+    positions?: ConnectedPosition[];
+    // (undocumented)
+    positionStrategy?: FlexibleConnectedPositionStrategy;
+    // (undocumented)
+    push?: boolean;
+    // (undocumented)
+    scrollStrategy?: ScrollStrategy;
+    // (undocumented)
+    transformOriginSelector?: string;
+    // (undocumented)
+    usePopover?: FlexibleOverlayPopoverLocation | null;
+    // (undocumented)
+    viewportMargin?: ViewportMargin;
+    // (undocumented)
+    width?: number | string;
 }
 
 // @public
@@ -198,6 +256,27 @@ export class ConnectionPositionPair {
 }
 
 // @public
+export function createBlockScrollStrategy(injector: Injector): BlockScrollStrategy;
+
+// @public
+export function createCloseScrollStrategy(injector: Injector, config?: CloseScrollStrategyConfig): CloseScrollStrategy;
+
+// @public
+export function createFlexibleConnectedPositionStrategy(injector: Injector, origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
+
+// @public
+export function createGlobalPositionStrategy(_injector: Injector): GlobalPositionStrategy;
+
+// @public
+export function createNoopScrollStrategy(): NoopScrollStrategy;
+
+// @public
+export function createOverlayRef(injector: Injector, config?: OverlayConfig): OverlayRef;
+
+// @public
+export function createRepositionScrollStrategy(injector: Injector, config?: RepositionScrollStrategyConfig): RepositionScrollStrategy;
+
+// @public
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     constructor(connectedTo: FlexibleConnectedPositionStrategyOrigin, _viewportRuler: ViewportRuler, _document: Document, _platform: Platform, _overlayContainer: OverlayContainer);
     apply(): void;
@@ -205,6 +284,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // (undocumented)
     detach(): void;
     dispose(): void;
+    getPopoverInsertionPoint(): Element | null | {
+        type: 'parent';
+        element: Element;
+    };
     _origin: FlexibleConnectedPositionStrategyOrigin;
     positionChanges: Observable<ConnectedOverlayPositionChange>;
     get positions(): ConnectionPositionPair[];
@@ -216,11 +299,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withFlexibleDimensions(flexibleDimensions?: boolean): this;
     withGrowAfterOpen(growAfterOpen?: boolean): this;
     withLockedPosition(isLocked?: boolean): this;
+    withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
     withScrollableContainers(scrollables: CdkScrollable[]): this;
     withTransformOriginOn(selector: string): this;
-    withViewportMargin(margin: number): this;
+    withViewportMargin(margin: ViewportMargin): this;
 }
 
 // @public
@@ -228,6 +312,12 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | (Po
     width?: number;
     height?: number;
 });
+
+// @public
+export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {
+    type: 'parent';
+    element: Element;
+};
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
@@ -295,6 +385,9 @@ export class Overlay {
 }
 
 // @public
+export const OVERLAY_DEFAULT_CONFIG: InjectionToken<OverlayDefaultConfig>;
+
+// @public
 export class OverlayConfig {
     constructor(config?: OverlayConfig);
     backdropClass?: string | string[];
@@ -310,6 +403,7 @@ export class OverlayConfig {
     panelClass?: string | string[];
     positionStrategy?: PositionStrategy;
     scrollStrategy?: ScrollStrategy;
+    usePopover?: boolean;
     width?: number | string;
 }
 
@@ -341,6 +435,12 @@ export class OverlayContainer implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayContainer, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<OverlayContainer>;
+}
+
+// @public
+export interface OverlayDefaultConfig {
+    // (undocumented)
+    usePopover?: boolean;
 }
 
 // @public
@@ -440,6 +540,10 @@ export interface PositionStrategy {
     attach(overlayRef: OverlayRef): void;
     detach?(): void;
     dispose(): void;
+    getPopoverInsertionPoint?(): Element | null | {
+        type: 'parent';
+        element: Element;
+    };
 }
 
 // @public
@@ -522,6 +626,14 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
 
 // @public
 export type VerticalConnectionPos = 'top' | 'center' | 'bottom';
+
+// @public
+export type ViewportMargin = number | {
+    top?: number;
+    bottom?: number;
+    start?: number;
+    end?: number;
+};
 
 // @public
 export class ViewportRuler implements OnDestroy {

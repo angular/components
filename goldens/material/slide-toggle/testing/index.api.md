@@ -27,7 +27,7 @@ export class MatSlideToggleHarness extends ComponentHarness {
     isRequired(): Promise<boolean>;
     isValid(): Promise<boolean>;
     // (undocumented)
-    _nativeElement: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    _nativeElement: () => Promise<_angular_cdk_testing.TestElement>;
     toggle(): Promise<void>;
     uncheck(): Promise<void>;
     static with<T extends MatSlideToggleHarness>(this: ComponentHarnessConstructor<T>, options?: SlideToggleHarnessFilters): HarnessPredicate<T>;

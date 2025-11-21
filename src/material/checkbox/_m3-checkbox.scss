@@ -1,103 +1,68 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, checkbox);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for mat-checkbox.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for mat-checkbox
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    disabled-label-color:
-        sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    disabled-selected-checkmark-color: map.get($systems, md-sys-color, surface),
-    disabled-selected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    disabled-unselected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    label-text-color: map.get($systems, md-sys-color, on-surface),
-    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
-    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    selected-checkmark-color: map.get($systems, md-sys-color, on-primary),
-    selected-focus-icon-color: map.get($systems, md-sys-color, primary),
-    selected-focus-state-layer-color: map.get($systems, md-sys-color, primary),
-    selected-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-    selected-hover-icon-color: map.get($systems, md-sys-color, primary),
-    selected-hover-state-layer-color: map.get($systems, md-sys-color, primary),
-    selected-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-    selected-icon-color: map.get($systems, md-sys-color, primary),
-    selected-pressed-icon-color: map.get($systems, md-sys-color, primary),
-    selected-pressed-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    selected-pressed-state-layer-opacity:
-        map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    unselected-focus-icon-color: map.get($systems, md-sys-color, on-surface),
-    unselected-focus-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    unselected-focus-state-layer-opacity:
-        map.get($systems, md-sys-state, focus-state-layer-opacity),
-    unselected-hover-icon-color: map.get($systems, md-sys-color, on-surface),
-    unselected-hover-state-layer-color: map.get($systems, md-sys-color, on-surface),
-    unselected-hover-state-layer-opacity:
-        map.get($systems, md-sys-state, hover-state-layer-opacity),
-    unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    unselected-pressed-state-layer-color: map.get($systems, md-sys-color, primary),
-    unselected-pressed-state-layer-opacity:
-        map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  );
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
 
-  $variant-tokens: (
-    primary: (), // Default, no overrides needed
-    secondary: (
-      selected-focus-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
-      selected-hover-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
-      selected-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, secondary),
-      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
-      selected-checkmark-color: map.get($systems, md-sys-color, on-secondary),
+  @return (
+    base: (
+      checkbox-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      checkbox-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      checkbox-selected-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      checkbox-unselected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      checkbox-unselected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      checkbox-unselected-pressed-state-layer-opacity:
+          map.get($system, pressed-state-layer-opacity),
+      checkbox-touch-target-size: 48px,
     ),
-    tertiary: (
-      selected-focus-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
-      selected-hover-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
-      selected-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, tertiary),
-      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
-      selected-checkmark-color: map.get($systems, md-sys-color, on-tertiary),
+    color: (
+      checkbox-disabled-label-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      checkbox-disabled-selected-checkmark-color: map.get($system, surface),
+      checkbox-disabled-selected-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      checkbox-disabled-unselected-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      checkbox-label-text-color: map.get($system, on-surface),
+      checkbox-selected-checkmark-color: map.get($system, on-primary),
+      checkbox-selected-focus-icon-color: map.get($system, primary),
+      checkbox-selected-focus-state-layer-color: map.get($system, primary),
+      checkbox-selected-hover-icon-color: map.get($system, primary),
+      checkbox-selected-hover-state-layer-color: map.get($system, primary),
+      checkbox-selected-icon-color: map.get($system, primary),
+      checkbox-selected-pressed-icon-color: map.get($system, primary),
+      checkbox-selected-pressed-state-layer-color: map.get($system, on-surface),
+      checkbox-unselected-focus-icon-color: map.get($system, on-surface),
+      checkbox-unselected-focus-state-layer-color: map.get($system, on-surface),
+      checkbox-unselected-hover-icon-color: map.get($system, on-surface),
+      checkbox-unselected-hover-state-layer-color: map.get($system, on-surface),
+      checkbox-unselected-icon-color: map.get($system, on-surface-variant),
+      checkbox-unselected-pressed-state-layer-color: map.get($system, primary),
     ),
-    error: (
-      selected-focus-icon-color: map.get($systems, md-sys-color, error),
-      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
-      selected-hover-icon-color: map.get($systems, md-sys-color, error),
-      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
-      selected-icon-color: map.get($systems, md-sys-color, error),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, error),
-      unselected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
-      selected-checkmark-color: map.get($systems, md-sys-color, on-error),
-    )
+    typography: (
+      checkbox-label-text-font: map.get($system, body-medium-font),
+      checkbox-label-text-line-height: map.get($system, body-medium-line-height),
+      checkbox-label-text-size: map.get($system, body-medium-size),
+      checkbox-label-text-tracking: map.get($system, body-medium-tracking),
+      checkbox-label-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
   $index: ($scale * -1) + 1;
 
   @return (
-    touch-target-display: list.nth((block, block, none, none), $index),
-    state-layer-size: list.nth((40px, 36px, 32px, 28px), $index)
+    checkbox-touch-target-display: list.nth((block, block, none, none), $index),
+    checkbox-state-layer-size: list.nth((40px, 36px, 32px, 28px), $index)
   );
 }

@@ -7,7 +7,7 @@
  */
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {DOCUMENT, JsonPipe} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,6 +16,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';

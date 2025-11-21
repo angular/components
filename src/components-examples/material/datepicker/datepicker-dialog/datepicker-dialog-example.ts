@@ -29,7 +29,6 @@ export class DatepickerDialogExample {
 
   openDialog() {
     const dialogRef = this.dialog.open(DatepickerDialogExampleDialog, {
-      minWidth: '500px',
       data: {selectedDate: this.selectedDate()},
     });
 

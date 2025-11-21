@@ -13,8 +13,8 @@
  *
  *  <deploy-dir> is a path to a directory which should be served and tested.
  *
- * `<url>` is the origin (scheme + hostname + port) of an material.angular.io
- *  deployment. It can be remote (e.g. `https://next.material.angular.io`) or local (e.g.
+ * `<url>` is the origin (scheme + hostname + port) of an material.angular.dev
+ *  deployment. It can be remote (e.g. `https://next.material.angular.dev`) or local (e.g.
  *  `http://localhost:4200`).
  *
  * `<delay>` is a millisecond value used with `setTimeout()` to allow a configurable delay
@@ -26,6 +26,7 @@ const sh = require('shelljs');
 sh.set('-e');
 
 const lightServer = require('light-server');
+const path = require('path');
 
 // Constants
 
@@ -45,14 +46,10 @@ const MIN_A11Y_SCORES_PER_PAGE = {
   'components/button/examples': 75,
 };
 
-/**
- * @type {{minScores: {performance: number, accessibility: number, 'best-practices': number, pwa: number, seo: number}, url: string}[]}
- */
 const MIN_SCORES_PER_PAGE = [
   {
     url: '',
     minScores: {
-      pwa: 0,
       performance: 25, // Intentionally low because Ligthouse is flaky.
       seo: 90,
       'best-practices': 90,
@@ -65,10 +62,6 @@ const MIN_SCORES_PER_PAGE = [
   })),
 ];
 
-/**
- * @param {{performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}} scores
- * @returns string scores formatted as described in the docs of lighthouse-audit.mjs's _main()
- */
 function formatScores(scores) {
   let formattedScores = '';
   Object.keys(scores).map((key, index) => {
@@ -97,7 +90,7 @@ if (!/https?:\/\//.test(urlOrDeployDir)) {
   lightServer({
     port,
     bind,
-    serve: urlOrDeployDir,
+    serve: path.join(urlOrDeployDir, 'browser'),
     quiet: true,
     noReload: true,
     historyindex: '/index.html',

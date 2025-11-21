@@ -1,9 +1,9 @@
 {
   "schematics": {
-    "migration-v20": {
-      "version": "20.0.0-0",
-      "description": "Updates the Angular Google Maps package to v20",
-      "factory": "./ng-update/index#updateToV20"
+    "migration-v21": {
+      "version": "21.0.0-0",
+      "description": "Updates the Angular Google Maps package to v21",
+      "factory": "./ng-update/index#updateToV21"
     }
   }
 }

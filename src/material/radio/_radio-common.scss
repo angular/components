@@ -1,10 +1,10 @@
-@use './m2-radio';
+@use '@angular/cdk';
+@use './m3-radio';
 @use '../core/tokens/token-utils';
 
 $_icon-size: 20px;
 
-$token-prefix: m2-radio.$prefix;
-$token-slots: m2-radio.get-token-slots();
+$fallbacks: m3-radio.get-tokens();
 
 @function _enter-transition($name) {
   @return $name 90ms cubic-bezier(0, 0, 0.2, 1);
@@ -29,10 +29,8 @@ $token-slots: m2-radio.get-token-slots();
     // Removing it will likely lead to screenshot diffs.
     will-change: opacity, transform, border-color, color;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
-      $size-token: token-utils.slot(state-layer-size);
-      padding: calc((#{$size-token} - #{$_icon-size}) / 2);
-    }
+    $size-token: token-utils.slot(radio-state-layer-size, $fallbacks);
+    padding: calc((#{$size-token} - #{$_icon-size}) / 2);
 
     @if ($is-interactive) {
       // MDC's hover indication comes from their ripple which we don't use.
@@ -45,35 +43,37 @@ $token-slots: m2-radio.get-token-slots();
 
       &:hover > .mdc-radio__native-control:not([disabled]) ~ .mdc-radio__background {
         > .mdc-radio__outer-circle {
-          @include token-utils.use-tokens($token-prefix, $token-slots) {
-            border-color: token-utils.slot(unselected-hover-icon-color);
-          }
+          border-color: token-utils.slot(radio-unselected-hover-icon-color, $fallbacks);
         }
       }
 
       &:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
-        > .mdc-radio__outer-circle,
+        $token: 'radio-selected-hover-icon-color';
+
+        > .mdc-radio__outer-circle {
+          border-color: token-utils.slot($token, $fallbacks);
+        }
+
         > .mdc-radio__inner-circle {
-          @include token-utils.use-tokens($token-prefix, $token-slots) {
-            border-color: token-utils.slot(selected-hover-icon-color);
-          }
+          background-color: token-utils.slot($token, $fallbacks, currentColor);
         }
       }
 
       &:active > .mdc-radio__native-control:enabled:not(:checked) + .mdc-radio__background {
         > .mdc-radio__outer-circle {
-          @include token-utils.use-tokens($token-prefix, $token-slots) {
-            border-color: token-utils.slot(unselected-pressed-icon-color);
-          }
+          border-color: token-utils.slot(radio-unselected-pressed-icon-color, $fallbacks);
         }
       }
 
       &:active > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
-        > .mdc-radio__outer-circle,
+        $token: 'radio-selected-pressed-icon-color';
+
+        > .mdc-radio__outer-circle {
+          border-color: token-utils.slot($token, $fallbacks);
+        }
+
         > .mdc-radio__inner-circle {
-          @include token-utils.use-tokens($token-prefix, $token-slots) {
-            border-color: token-utils.slot(selected-pressed-icon-color);
-          }
+          background-color: token-utils.slot($token, $fallbacks, currentColor);
         }
       }
     }
@@ -95,14 +95,12 @@ $token-slots: m2-radio.get-token-slots();
       content: '';
       transition: _exit-transition(opacity), _exit-transition(transform);
 
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
-        $size: token-utils.slot(state-layer-size);
-        $offset: calc(-1 * (#{$size} - #{$_icon-size}) / 2);
-        width: $size;
-        height: $size;
-        top: $offset;
-        left: $offset;
-      }
+      $size: token-utils.slot(radio-state-layer-size, $fallbacks);
+      $offset: calc(-1 * (#{$size} - #{$_icon-size}) / 2);
+      width: $size;
+      height: $size;
+      top: $offset;
+      left: $offset;
     }
   }
 
@@ -126,11 +124,16 @@ $token-slots: m2-radio.get-token-slots();
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    transform: scale(0, 0);
-    border-width: 10px;
-    border-style: solid;
+    transform: scale(0);
     border-radius: 50%;
-    transition: _exit-transition(transform), _exit-transition(border-color);
+    transition: _exit-transition(transform), _exit-transition(background-color);
+
+    @include cdk.high-contrast {
+      // Override the color, because solid colors don't show up by default in
+      // high contrast mode. We need !important here, because the various state
+      // selectors are really specific and duplicating them will be brittle.
+      background-color: CanvasText !important;
+    }
   }
 
   .mdc-radio__native-control {
@@ -143,11 +146,8 @@ $token-slots: m2-radio.get-token-slots();
     left: 0;
     cursor: inherit;
     z-index: 1;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
-      width: token-utils.slot(state-layer-size);
-      height: token-utils.slot(state-layer-size);
-    }
+    width: token-utils.slot(radio-state-layer-size, $fallbacks);
+    height: token-utils.slot(radio-state-layer-size, $fallbacks);
 
     &:checked, &:disabled {
       + .mdc-radio__background {
@@ -158,7 +158,7 @@ $token-slots: m2-radio.get-token-slots();
         }
 
         > .mdc-radio__inner-circle {
-          transition: _enter-transition(transform), _enter-transition(border-color);
+          transition: _enter-transition(transform), _enter-transition(background-color);
         }
       }
     }
@@ -172,43 +172,55 @@ $token-slots: m2-radio.get-token-slots();
     }
 
     &:disabled {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
-        &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
-          border-color: token-utils.slot(disabled-unselected-icon-color);
-          opacity: token-utils.slot(disabled-unselected-icon-opacity);
+      &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
+        border-color: token-utils.slot(radio-disabled-unselected-icon-color, $fallbacks);
+        opacity: token-utils.slot(radio-disabled-unselected-icon-opacity, $fallbacks);
+      }
+
+      + .mdc-radio__background {
+        $color-token: 'radio-disabled-selected-icon-color';
+        $opacity-token: token-utils.slot(radio-disabled-selected-icon-opacity, $fallbacks);
+        cursor: default;
+
+        > .mdc-radio__outer-circle {
+          border-color: token-utils.slot($color-token, $fallbacks);
+          opacity: $opacity-token;
         }
 
-        + .mdc-radio__background {
-          cursor: default;
-
-          > .mdc-radio__inner-circle,
-          > .mdc-radio__outer-circle {
-            border-color: token-utils.slot(disabled-selected-icon-color);
-            opacity: token-utils.slot(disabled-selected-icon-opacity);
-          }
+        > .mdc-radio__inner-circle {
+          background-color: token-utils.slot($color-token, $fallbacks, currentColor);
+          opacity: $opacity-token;
         }
       }
     }
 
     &:enabled {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
-        &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
-          border-color: token-utils.slot(unselected-icon-color);
+      &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
+        border-color: token-utils.slot(radio-unselected-icon-color, $fallbacks);
+      }
+
+      &:checked + .mdc-radio__background {
+        $token: 'radio-selected-icon-color';
+
+        > .mdc-radio__outer-circle {
+          border-color: token-utils.slot($token, $fallbacks);
         }
 
-        &:checked + .mdc-radio__background {
-          > .mdc-radio__outer-circle,
-          > .mdc-radio__inner-circle {
-            border-color: token-utils.slot(selected-icon-color);
+        > .mdc-radio__inner-circle {
+          background-color: token-utils.slot($token, $fallbacks, currentColor);
+        }
+      }
+
+      @if ($is-interactive) {
+        &:focus:checked + .mdc-radio__background {
+          $token: 'radio-selected-focus-icon-color';
+
+          > .mdc-radio__outer-circle {
+            border-color: token-utils.slot($token, $fallbacks);
           }
-        }
 
-        @if ($is-interactive) {
-          &:focus:checked + .mdc-radio__background {
-            > .mdc-radio__inner-circle,
-            > .mdc-radio__outer-circle {
-              border-color: token-utils.slot(selected-focus-icon-color);
-            }
+          > .mdc-radio__inner-circle {
+            background-color: token-utils.slot($token, $fallbacks, currentColor);
           }
         }
       }
@@ -216,7 +228,7 @@ $token-slots: m2-radio.get-token-slots();
 
     &:checked + .mdc-radio__background > .mdc-radio__inner-circle {
       transform: scale(0.5);
-      transition: _enter-transition(transform), _enter-transition(border-color);
+      transition: _enter-transition(transform), _enter-transition(background-color);
     }
   }
 
@@ -224,23 +236,28 @@ $token-slots: m2-radio.get-token-slots();
     &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
       pointer-events: auto;
 
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
-        // stylelint-disable selector-combinator-space-before
-        .mdc-radio__native-control:not(:checked) + .mdc-radio__background
-            > .mdc-radio__outer-circle {
-          border-color: token-utils.slot(disabled-unselected-icon-color);
-          opacity: token-utils.slot(disabled-unselected-icon-opacity);
-        }
-        // stylelint-enable selector-combinator-space-before
-
-        &:hover .mdc-radio__native-control:checked + .mdc-radio__background,
-        .mdc-radio__native-control:checked:focus + .mdc-radio__background,
-        .mdc-radio__native-control + .mdc-radio__background {
-          > .mdc-radio__inner-circle,
+      // stylelint-disable selector-combinator-space-before
+      .mdc-radio__native-control:not(:checked) + .mdc-radio__background
           > .mdc-radio__outer-circle {
-            border-color: token-utils.slot(disabled-selected-icon-color);
-            opacity: token-utils.slot(disabled-selected-icon-opacity);
-          }
+        border-color: token-utils.slot(radio-disabled-unselected-icon-color, $fallbacks);
+        opacity: token-utils.slot(radio-disabled-unselected-icon-opacity, $fallbacks);
+      }
+      // stylelint-enable selector-combinator-space-before
+
+      &:hover .mdc-radio__native-control:checked + .mdc-radio__background,
+      .mdc-radio__native-control:checked:focus + .mdc-radio__background,
+      .mdc-radio__native-control + .mdc-radio__background {
+        $color-token: 'radio-disabled-selected-icon-color';
+        $opacity-token: token-utils.slot(radio-disabled-selected-icon-opacity, $fallbacks);
+
+        > .mdc-radio__outer-circle {
+          border-color: token-utils.slot($color-token, $fallbacks);
+          opacity: $opacity-token;
+        }
+
+        > .mdc-radio__inner-circle {
+          background-color: token-utils.slot($color-token, $fallbacks, currentColor);
+          opacity: $opacity-token;
         }
       }
     }

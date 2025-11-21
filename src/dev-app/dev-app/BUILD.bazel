@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_project", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -14,6 +13,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/router",
+        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/material/button",

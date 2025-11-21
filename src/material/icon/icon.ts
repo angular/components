@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
   booleanAttribute,
@@ -21,6 +20,7 @@ import {
   OnInit,
   ViewEncapsulation,
   HostAttributeToken,
+  DOCUMENT,
 } from '@angular/core';
 import {ThemePalette} from '../core';
 import {Subscription} from 'rxjs';
@@ -32,10 +32,10 @@ import {MatIconRegistry} from './icon-registry';
 export interface MatIconDefaultOptions {
   /**
    * Theme color of the icon. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/icon/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/icon/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   color?: ThemePalette;
   /** Font set that the icon is a part of. */
@@ -54,7 +54,16 @@ export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions
  */
 export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
   providedIn: 'root',
-  factory: MAT_ICON_LOCATION_FACTORY,
+  factory: () => {
+    const _document = inject(DOCUMENT);
+    const _location = _document ? _document.location : null;
+
+    return {
+      // Note that this needs to be a function, rather than a property, because Angular
+      // will only resolve it once, but we want the current path on each call.
+      getPathname: () => (_location ? _location.pathname + _location.search : ''),
+    };
+  },
 });
 
 /**
@@ -63,22 +72,6 @@ export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-l
  */
 export interface MatIconLocation {
   getPathname: () => string;
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
-  const _document = inject(DOCUMENT);
-  const _location = _document ? _document.location : null;
-
-  return {
-    // Note that this needs to be a function, rather than a property, because Angular
-    // will only resolve it once, but we want the current path on each call.
-    getPathname: () => (_location ? _location.pathname + _location.search : ''),
-  };
 }
 
 /** SVG attributes that accept a FuncIRI (e.g. `url(<something>)`). */
@@ -163,10 +156,10 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
 
   /**
    * Theme color of the icon. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/icon/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/icon/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get color() {

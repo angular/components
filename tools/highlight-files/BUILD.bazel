@@ -1,11 +1,11 @@
-load("//tools:defaults2.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "sources",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(["**/*.mts"]),
     tsconfig = "//tools:tsconfig",
     deps = [
         "//:node_modules/@types/fs-extra",
@@ -20,5 +20,5 @@ js_binary(
     data = [
         ":sources",
     ],
-    entry_point = ":highlight-files.js",
+    entry_point = ":highlight-files.mjs",
 )

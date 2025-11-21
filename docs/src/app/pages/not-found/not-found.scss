@@ -10,14 +10,14 @@ main {
   font-size: 1.25rem;
 }
 
-.wrapper {
+.docs-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: $vertical-spacing;
 }
 
-.frown {
+.docs-frown {
   font-size: 150px;
   width: 150px;
   height: 150px;

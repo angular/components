@@ -9,7 +9,7 @@
 import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -31,6 +31,7 @@ import {
   inject,
   NgZone,
   Renderer2,
+  DOCUMENT,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';

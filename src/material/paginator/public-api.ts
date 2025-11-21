@@ -6,6 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './module';
+export * from './paginator-module';
 export * from './paginator';
 export * from './paginator-intl';

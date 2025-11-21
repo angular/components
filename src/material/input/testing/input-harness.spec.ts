@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '../module';
+import {MatInputModule} from '../input-module';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {MatInputHarness} from './input-harness';
 
@@ -18,8 +18,7 @@ describe('MatInputHarness', () => {
   });
 
   it('should load all input harnesses', async () => {
-    const inputs = await loader.getAllHarnesses(MatInputHarness);
-    expect(inputs.length).toBe(7);
+    expect(await loader.countHarnesses(MatInputHarness)).toBe(7);
   });
 
   it('should load input with specific id', async () => {
@@ -36,6 +35,21 @@ describe('MatInputHarness', () => {
 
   it('should load input with a specific value', async () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness.with({value: 'Sushi'}));
+    expect(inputs.length).toBe(1);
+  });
+
+  it('should load input with a specific floating label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Favorite food'}));
+    expect(inputs.length).toBe(1);
+  });
+
+  it('should load input with a specific external label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Favorite drink'}));
+    expect(inputs.length).toBe(1);
+  });
+
+  it('should load input with a specific aria label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Comment box'}));
     expect(inputs.length).toBe(1);
   });
 
@@ -62,7 +76,7 @@ describe('MatInputHarness', () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness);
     expect(inputs.length).toBe(7);
     expect(await inputs[0].getId()).toMatch(/mat-input-\w+\d+/);
-    expect(await inputs[1].getId()).toMatch(/mat-input-\w+\d+/);
+    expect(await inputs[1].getId()).toMatch('favorite-drink-input');
     expect(await inputs[2].getId()).toBe('myTextarea');
     expect(await inputs[3].getId()).toBe('nativeControl');
     expect(await inputs[4].getId()).toMatch(/mat-input-\w+\d+/);
@@ -231,12 +245,15 @@ describe('MatInputHarness', () => {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>Favorite food</mat-label>
       <input matInput placeholder="Favorite food" value="Sushi" name="favorite-food">
     </mat-form-field>
 
+    <label for="favorite-drink-input">Favorite drink</label>
     <mat-form-field>
       <input
         matInput
+        id="favorite-drink-input"
         [type]="inputType()"
         [readonly]="readonly()"
         [disabled]="disabled()"
@@ -245,7 +262,12 @@ describe('MatInputHarness', () => {
     </mat-form-field>
 
     <mat-form-field>
-      <textarea id="myTextarea" matInput placeholder="Leave a comment"></textarea>
+      <textarea
+        id="myTextarea"
+        matInput
+        placeholder="Leave a comment"
+        aria-label="Comment box"
+      ></textarea>
     </mat-form-field>
 
     <mat-form-field>

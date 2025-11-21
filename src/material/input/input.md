@@ -1,5 +1,5 @@
 `matInput` is a directive that allows native `<input>` and `<textarea>` elements to work with
-[`<mat-form-field>`](https://material.angular.io/components/form-field/overview).
+[`<mat-form-field>`](https://material.angular.dev/components/form-field/overview).
 
 <!-- example(input-overview) -->
 
@@ -35,7 +35,7 @@ be used with `matNativeControl`:
 There are a number of `<mat-form-field>` features that can be used with any `<input matNativeControl>` or
 `<textarea matNativeControl>`. These include error messages, hint text, prefix & suffix, and theming. For
 additional information about these features, see the
-[form field documentation](https://material.angular.io/components/form-field/overview).
+[form field documentation](https://material.angular.dev/components/form-field/overview).
 
 ### Placeholder
 
@@ -43,12 +43,12 @@ The placeholder is text shown when the `<mat-form-field>` label is floating but 
 It is used to give the user an additional hint about what they should type in the input. The
 placeholder can be specified by setting the `placeholder` attribute on the `<input>` or `<textarea>`
 element. In some cases that `<mat-form-field>` may use the placeholder as the label (see the
-[form field label documentation](https://material.angular.io/components/form-field/overview#floating-label)).
+[form field label documentation](https://material.angular.dev/components/form-field/overview#floating-label)).
 
 ### Changing when error messages are shown
 
 The `<mat-form-field>` allows you to
-[associate error messages](https://material.angular.io/components/form-field/overview#error-messages)
+[associate error messages](https://material.angular.dev/components/form-field/overview#error-messages)
 with your `matNativeControl`. By default, these error messages are shown when the control is invalid and
 the user has interacted with (touched) the element or the parent form has been submitted. If
 you wish to override this behavior (e.g. to show the error as soon as the invalid control is dirty
@@ -75,13 +75,13 @@ globally cause input errors to show when the input is dirty and invalid.
 ### Auto-resizing `<textarea>` elements
 
 `<textarea>` elements can be made to automatically resize by using the
-[`cdkTextareaAutosize` directive](https://material.angular.io/cdk/text-field/overview#automatically-resizing-a-textarea)
+[`cdkTextareaAutosize` directive](https://material.angular.dev/cdk/text-field/overview#automatically-resizing-a-textarea)
 available in the CDK.
 
 ### Responding to changes in the autofill state of an `<input>`
 
 The CDK provides
-[utilities](https://material.angular.io/cdk/text-field/overview#monitoring-the-autofill-state-of-an-input)
+[utilities](https://material.angular.dev/cdk/text-field/overview#monitoring-the-autofill-state-of-an-input)
 for detecting when an input becomes autofilled and changing the appearance of the autofilled state.
 
 ### Accessibility
@@ -109,5 +109,5 @@ icon or text such as "Error:" to indicate the message is an error message.
 This error is thrown when you attempt to set an input's `type` property to a value that isn't
 supported by the `matInput` directive. If you need to use an unsupported input type with
 `<mat-form-field>` consider writing a
-[custom form field control](https://material.angular.io/guide/creating-a-custom-form-field-control)
+[custom form field control](https://material.angular.dev/guide/creating-a-custom-form-field-control)
 for it.

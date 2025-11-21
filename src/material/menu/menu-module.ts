@@ -1,0 +1,40 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {NgModule} from '@angular/core';
+import {MatRippleModule} from '../core';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
+import {BidiModule} from '@angular/cdk/bidi';
+import {MatMenu} from './menu';
+import {MatMenuItem} from './menu-item';
+import {MatMenuContent} from './menu-content';
+import {MatMenuTrigger} from './menu-trigger';
+import {MatContextMenuTrigger} from './context-menu-trigger';
+
+@NgModule({
+  imports: [
+    MatRippleModule,
+    OverlayModule,
+    MatMenu,
+    MatMenuItem,
+    MatMenuContent,
+    MatMenuTrigger,
+    MatContextMenuTrigger,
+  ],
+  exports: [
+    BidiModule,
+    CdkScrollableModule,
+    MatMenu,
+    MatMenuItem,
+    MatMenuContent,
+    MatMenuTrigger,
+    MatContextMenuTrigger,
+  ],
+})
+export class MatMenuModule {}

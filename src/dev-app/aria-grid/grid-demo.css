@@ -1,0 +1,9 @@
+.demo-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+h2 {
+  font-size: 1.1rem;
+}

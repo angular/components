@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Publish material2 docs assets to the material2-docs-content repo
-# material.angular.io will pull from this assets repo to get the latest docs
+# material.angular.dev will pull from this assets repo to get the latest docs
 
 # The script should immediately exit if any command in the script fails.
 set -e

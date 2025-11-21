@@ -7,4 +7,4 @@
  */
 
 export * from './radio';
-export * from './module';
+export * from './radio-module';

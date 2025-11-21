@@ -30,7 +30,7 @@ import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
   ConnectedPosition,
-  Overlay,
+  createRepositionScrollStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -60,6 +60,8 @@ import {
   ViewEncapsulation,
   HostAttributeToken,
   Renderer2,
+  Injector,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -69,6 +71,7 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {
   _animationsDisabled,
   _countGroupLabelsBeforeOption,
@@ -97,22 +100,11 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  overlay: Overlay,
-): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
-}
 
 /** Object that can be used to configure the default options for the select module. */
 export interface MatSelectConfig {
@@ -143,17 +135,6 @@ export interface MatSelectConfig {
 
 /** Injection token that can be used to provide the default options the select module. */
 export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT_CONFIG');
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_SELECT_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
 
 /**
  * Injection token that can be used to reference instances of `MatSelectTrigger`. It serves as
@@ -197,6 +178,7 @@ export class MatSelectChange<T = any> {
     '[class.mat-mdc-select-required]': 'required',
     '[class.mat-mdc-select-empty]': 'empty',
     '[class.mat-mdc-select-multiple]': 'multiple',
+    '[class.mat-select-open]': 'panelOpen',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
@@ -412,7 +394,13 @@ export class MatSelect
 
   /** Whether ripples in the select are disabled. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   /** Tab index of the select. */
   @Input({
@@ -1474,10 +1462,12 @@ export class MatSelect
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
+    const element = this._elementRef.nativeElement;
+
     if (ids.length) {
-      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+      element.setAttribute('aria-describedby', ids.join(' '));
     } else {
-      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+      element.removeAttribute('aria-describedby');
     }
   }
 
@@ -1485,9 +1475,14 @@ export class MatSelect
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  onContainerClick() {
-    this.focus();
-    this.open();
+  onContainerClick(event: MouseEvent) {
+    const target = _getEventTarget(event) as Node | null;
+    const overlayHost = this._overlayDir.overlayRef?.hostElement;
+
+    if (!target || !overlayHost || !overlayHost.contains(target)) {
+      this.focus();
+      this.open();
+    }
   }
 
   /**

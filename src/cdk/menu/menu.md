@@ -240,4 +240,4 @@ Finally, keyboard interaction is supported as defined in the [ARIA menubar keybo
 [keyboard]:
   https://www.w3.org/TR/wai-aria-practices-1.1/#keyboard-interaction-12
   'ARIA Menubar Keyboard Interaction'
-[diagram]: https://material.angular.io/assets/img/menuaim.png 'Menu Aim Diagram'
+[diagram]: https://material.angular.dev/assets/img/menuaim.png 'Menu Aim Diagram'

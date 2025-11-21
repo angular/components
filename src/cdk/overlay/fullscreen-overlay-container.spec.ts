@@ -1,12 +1,10 @@
-import {DOCUMENT} from '@angular/common';
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef, inject} from '@angular/core';
-import {PortalModule, CdkPortal} from '../portal';
-import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
-import {TemplatePortalDirective} from '../portal/portal-directives';
+import {Component, ViewChild, ViewContainerRef, inject, DOCUMENT, Injector} from '@angular/core';
+import {CdkPortal} from '../portal';
+import {OverlayContainer, FullscreenOverlayContainer, createOverlayRef} from './index';
 
 describe('FullscreenOverlayContainer', () => {
-  let overlay: Overlay;
+  let injector: Injector;
   let fullscreenListeners: Set<Function>;
   let fakeDocument: any;
 
@@ -14,8 +12,11 @@ describe('FullscreenOverlayContainer', () => {
     fullscreenListeners = new Set();
 
     TestBed.configureTestingModule({
-      imports: [OverlayTestModule],
       providers: [
+        {
+          provide: OverlayContainer,
+          useClass: FullscreenOverlayContainer,
+        },
         {
           provide: DOCUMENT,
           useFactory: () => {
@@ -24,7 +25,7 @@ describe('FullscreenOverlayContainer', () => {
             // stubs here, we should reconsider whether to use a Proxy instead. Avoiding a proxy for
             // now since it isn't supported on IE. See:
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
-            fakeDocument = {
+            return {
               body: document.body,
               head: document.head,
               fullscreenElement: document.createElement('div'),
@@ -52,24 +53,19 @@ describe('FullscreenOverlayContainer', () => {
               createTextNode: (...args: [string]) => document.createTextNode(...args),
               createComment: (...args: [string]) => document.createComment(...args),
             };
-
-            return fakeDocument;
           },
         },
       ],
     });
 
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
+    fakeDocument = TestBed.inject(DOCUMENT);
   }));
-
-  afterEach(() => {
-    fakeDocument = null;
-  });
 
   it('should open an overlay inside a fullscreen element and move it to the body', () => {
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
     fixture.detectChanges();
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     const fullscreenElement = fakeDocument.fullscreenElement;
 
     overlayRef.attach(fixture.componentInstance.templatePortal);
@@ -91,7 +87,7 @@ describe('FullscreenOverlayContainer', () => {
 
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
     fixture.detectChanges();
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
 
     overlayRef.attach(fixture.componentInstance.templatePortal);
     fixture.detectChanges();
@@ -109,23 +105,11 @@ describe('FullscreenOverlayContainer', () => {
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
-  template: `<ng-template cdk-portal>Cake</ng-template>`,
-  providers: [Overlay],
-  imports: [TemplatePortalDirective],
+  template: `<ng-template cdkPortal>Cake</ng-template>`,
+  imports: [CdkPortal],
 })
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);
 
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 }
-
-@NgModule({
-  imports: [OverlayModule, PortalModule, TestComponentWithTemplatePortals],
-  providers: [
-    {
-      provide: OverlayContainer,
-      useClass: FullscreenOverlayContainer,
-    },
-  ],
-})
-class OverlayTestModule {}

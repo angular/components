@@ -10,20 +10,27 @@ import {NgZone} from '@angular/core';
 import {BehaviorSubject, Observable, Subscriber} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
+interface ListenerHandle {
+  remove(): void;
+}
+
 type MapEventManagerTarget =
   | {
-      addListener: (
+      addListener<T extends unknown[]>(
         name: string,
-        callback: (...args: any[]) => void,
-      ) => google.maps.MapsEventListener | undefined;
+        callback: (...args: T) => void,
+      ): google.maps.MapsEventListener | undefined;
+
+      addEventListener?<T extends unknown[]>(name: string, callback: (...args: T) => void): void;
+      removeEventListener?<T extends unknown[]>(name: string, callback: (...args: T) => void): void;
     }
   | undefined;
 
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
 export class MapEventManager {
   /** Pending listeners that were added before the target was set. */
-  private _pending: {observable: Observable<any>; observer: Subscriber<any>}[] = [];
-  private _listeners: google.maps.MapsEventListener[] = [];
+  private _pending: {observable: Observable<unknown>; observer: Subscriber<unknown>}[] = [];
+  private _listeners: ListenerHandle[] = [];
   private _targetStream = new BehaviorSubject<MapEventManagerTarget>(undefined);
 
   /** Clears all currently-registered event listeners. */
@@ -37,8 +44,12 @@ export class MapEventManager {
 
   constructor(private _ngZone: NgZone) {}
 
-  /** Gets an observable that adds an event listener to the map when a consumer subscribes to it. */
-  getLazyEmitter<T>(name: string): Observable<T> {
+  /**
+   * Gets an observable that adds an event listener to the map when a consumer subscribes to it.
+   * @param name Name of the event for which the observable is being set up.
+   * @param type Type of the event (e.g. one going to a DOM node or a custom Maps one).
+   */
+  getLazyEmitter<T>(name: string, type?: 'custom' | 'native'): Observable<T> {
     return this._targetStream.pipe(
       switchMap(target => {
         const observable = new Observable<T>(observer => {
@@ -48,19 +59,36 @@ export class MapEventManager {
             return undefined;
           }
 
-          const listener = target.addListener(name, (event: T) => {
+          let handle: ListenerHandle;
+          const listener = (event: T) => {
             this._ngZone.run(() => observer.next(event));
-          });
+          };
+
+          if (type === 'native') {
+            if (
+              (typeof ngDevMode === 'undefined' || ngDevMode) &&
+              (!target.addEventListener || !target.removeEventListener)
+            ) {
+              throw new Error(
+                'Maps event target that uses native events must have `addEventListener` and `removeEventListener` methods.',
+              );
+            }
+
+            target.addEventListener!(name, listener);
+            handle = {remove: () => target.removeEventListener!(name, listener)};
+          } else {
+            handle = target.addListener(name, listener)!;
+          }
 
           // If there's an error when initializing the Maps API (e.g. a wrong API key), it will
           // return a dummy object that returns `undefined` from `addListener` (see #26514).
-          if (!listener) {
+          if (!handle) {
             observer.complete();
             return undefined;
           }
 
-          this._listeners.push(listener);
-          return () => listener.remove();
+          this._listeners.push(handle);
+          return () => handle.remove();
         });
 
         return observable;

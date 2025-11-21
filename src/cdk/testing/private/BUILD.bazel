@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -12,6 +12,9 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
+        "//:node_modules/axe-core",
+        "//:node_modules/rxjs",
+        "//src/cdk/bidi",
         "//src/cdk/testing/testbed",
     ],
 )

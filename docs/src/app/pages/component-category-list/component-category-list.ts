@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
@@ -19,9 +27,9 @@ import {ComponentPageTitle} from '../page-title/page-title';
   imports: [NavigationFocus, RouterLink, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
-  readonly _docItems = inject(DocumentationItems);
-  private _componentPageTitle = inject(ComponentPageTitle);
-  private _route = inject(ActivatedRoute);
+  private readonly _docItems = inject(DocumentationItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
+  private readonly _route = inject(ActivatedRoute);
 
   items: DocItem[] = [];
   section = '';

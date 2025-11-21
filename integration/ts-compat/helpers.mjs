@@ -23,6 +23,10 @@ export async function runTypeScriptCompatibilityTest(tscBinPath) {
       '--lib',
       'es2015,dom',
       testFilePath,
+      '--moduleResolution',
+      'bundler',
+      '--module',
+      'es2022',
     ];
     // Run `tsc` to compile the project. The stdout/stderr output is inherited, so that
     // warnings and errors are printed to the console.

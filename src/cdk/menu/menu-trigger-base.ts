@@ -10,6 +10,7 @@ import {
   Directive,
   EventEmitter,
   inject,
+  Injectable,
   InjectionToken,
   Injector,
   OnDestroy,
@@ -18,7 +19,12 @@ import {
 } from '@angular/core';
 import {Menu} from './menu-interface';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {ConnectedPosition, Overlay, OverlayRef, ScrollStrategy} from '../overlay';
+import {
+  ConnectedPosition,
+  createRepositionScrollStrategy,
+  OverlayRef,
+  ScrollStrategy,
+} from '../overlay';
 import {TemplatePortal} from '../portal';
 import {merge, Subject} from 'rxjs';
 
@@ -31,11 +37,29 @@ export const MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
+
+/** Tracks the last open menu trigger across the entire application. */
+@Injectable({providedIn: 'root'})
+export class MenuTracker {
+  /** The last open menu trigger. */
+  private static _openMenuTrigger?: CdkMenuTriggerBase;
+
+  /**
+   * Close the previous open menu and set the given one as being open.
+   * @param trigger The trigger for the currently open Menu.
+   */
+  update(trigger: CdkMenuTriggerBase) {
+    if (MenuTracker._openMenuTrigger !== trigger) {
+      MenuTracker._openMenuTrigger?.close();
+      MenuTracker._openMenuTrigger = trigger;
+    }
+  }
+}
 
 /**
  * Abstract directive that implements shared logic common to all menu triggers.
@@ -77,6 +101,9 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
 
   /** Context data to be passed along to the menu template */
   menuData: unknown;
+
+  /** Close the opened menu. */
+  abstract close(): void;
 
   /** A reference to the overlay which manages the triggered menu */
   protected overlayRef: OverlayRef | null = null;

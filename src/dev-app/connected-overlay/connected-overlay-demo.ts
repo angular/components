@@ -9,8 +9,10 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {
   CdkOverlayOrigin,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   HorizontalConnectionPos,
-  Overlay,
   OverlayModule,
   OverlayRef,
   VerticalConnectionPos,
@@ -20,6 +22,7 @@ import {CdkOverlayBasicExample} from '@angular/components-examples/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -47,7 +50,7 @@ import {MatRadioModule} from '@angular/material/radio';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedOverlayDemo {
-  overlay = inject(Overlay);
+  private _injector = inject(Injector);
   viewContainerRef = inject(ViewContainerRef);
   dir = inject(Directionality);
 
@@ -69,9 +72,10 @@ export class ConnectedOverlayDemo {
   overlayRef: OverlayRef | null;
 
   openWithConfig() {
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this._overlayOrigin.elementRef)
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this._overlayOrigin.elementRef,
+    )
       .withFlexibleDimensions(this.isFlexible)
       .withPush(this.canPush)
       .withViewportMargin(10)
@@ -99,9 +103,9 @@ export class ConnectedOverlayDemo {
         },
       ]);
 
-    this.overlayRef = this.overlay.create({
+    this.overlayRef = createOverlayRef(this._injector, {
       positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(this._injector),
       direction: this.dir.value,
       minWidth: 200,
       minHeight: 50,

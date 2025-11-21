@@ -1,80 +1,68 @@
 @use 'sass:map';
 
 @use '../checkbox/m2-checkbox';
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
-@use '../core/theming/theming';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../radio/m2-radio';
 @use './m2-list';
 @use './m3-list';
+@use '../core/tokens/m2-utils';
+@use '../core/theming/theming';
 
 @mixin base($theme) {
-  // Add default values for tokens not related to color, typography, or density.
+  $tokens: map.get(m2-list.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-list.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: map.get(m2-list.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-list.get-tokens($theme), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values-mixed(
-        m2-radio.$prefix, m2-radio.get-color-tokens($theme, primary));
+      $tokens: m2-radio.private-get-color-palette-color-tokens($theme, primary);
+      @include token-utils.values($tokens);
     }
 
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix,
-          m2-radio.get-color-tokens($theme, accent)
-        );
+        $tokens: m2-radio.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
       }
     }
 
     .mat-warn {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix,
-          m2-radio.get-color-tokens($theme, warn)
-        );
+        $tokens: m2-radio.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
 
     .mat-mdc-list-option {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, primary)
-      );
+      $tokens: m2-checkbox.private-get-color-palette-color-tokens($theme, primary);
+      @include token-utils.values($tokens);
     }
+
     .mat-mdc-list-option.mat-accent {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, accent)
-      );
+      $tokens: m2-checkbox.private-get-color-palette-color-tokens($theme, secondary);
+      @include token-utils.values($tokens);
     }
+
     .mat-mdc-list-option.mat-warn {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, warn)
-      );
+      $tokens: m2-checkbox.private-get-color-palette-color-tokens($theme, error);
+      @include token-utils.values($tokens);
     }
 
     // There is no token for activated color on nav list.
@@ -103,21 +91,21 @@
 }
 
 @mixin density($theme) {
+  $tokens: map.get(m2-list.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(m3-list.$prefix, m3-list.get-density-tokens($theme));
-  } @else {
-    $density-scale: inspection.get-theme-density($theme);
+    $tokens: map.get(m3-list.get-tokens($theme), density);
+  }
 
-    @include sass-utils.current-selector-or-root() {
-      // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-density-tokens($theme));
-    }
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    $system: m2-utils.get-system($theme);
+    $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix, m2-radio.get-density-tokens($theme));
+      $tokens: map.get(m2-radio.get-tokens($theme), density);
+      @include token-utils.values($tokens);
     }
 
     // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
@@ -160,19 +148,20 @@
 }
 
 @mixin typography($theme) {
+  $tokens: map.get(m2-list.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-list.get-tokens($theme), typography);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     // MDC does not have tokens for the subheader.
     // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
     .mdc-list-group__subheader {
-      font: inspection.get-theme-typography($theme, subtitle-1, font);
-      letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
+      $system: m2-utils.get-system($theme);
+      font: map.get($system, label-large);
+      letter-spacing: map.get($system, label-large-tracking);
     }
   }
 }
@@ -181,42 +170,32 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-list.$prefix,
-      tokens: m2-list.get-token-slots(),
+      namespace: list,
+      tokens: token-utils.get-overrides(m3-list.get-tokens(), list)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-list-tokens: token-utils.get-tokens-for($tokens, m2-list.$prefix);
-  @include token-utils.create-token-values(m2-list.$prefix, $mat-list-tokens);
 }

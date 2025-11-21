@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatCheckboxModule} from '../module';
+import {MatCheckboxModule} from '../checkbox-module';
 import {MatCheckboxHarness} from './checkbox-harness';
 
 describe('MatCheckboxHarness', () => {
@@ -11,10 +11,6 @@ describe('MatCheckboxHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatCheckboxModule, ReactiveFormsModule, CheckboxHarnessTest],
-    });
-
     fixture = TestBed.createComponent(CheckboxHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

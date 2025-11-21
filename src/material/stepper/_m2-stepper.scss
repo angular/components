@@ -1,93 +1,65 @@
 @use 'sass:map';
-@use '../core/tokens/m2-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/style/sass-utils';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, stepper);
-
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    header-focus-state-layer-shape: 0,
-    header-hover-state-layer-shape: 0,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
-    container-color: inspection.get-theme-color($theme, background, card),
-    line-color: inspection.get-theme-color($theme, foreground, divider),
-    header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-label-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    header-optional-label-text-color: inspection.get-theme-color(
-        $theme, foreground, secondary-text),
-    header-selected-state-label-text-color: inspection.get-theme-color($theme, foreground, text),
-    header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
-    header-icon-background-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    header-error-state-icon-foreground-color: inspection.get-theme-color($theme, warn, text),
-    header-error-state-icon-background-color: transparent,
-  ));
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return (
-    container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    header-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    header-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    header-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
-    header-error-state-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    header-selected-state-label-text-size: inspection.get-theme-typography(
-        $theme, body-1, font-size),
-    header-selected-state-label-text-weight: inspection.get-theme-typography(
-        $theme, body-1, font-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
-  $height-config: (
-    0: 72px,
-    -1: 68px,
-    -2: 64px,
-    -3: 60px,
-    -4: 42px,
-  );
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
 
   @return (
-    header-height: map.get($height-config, $scale),
+    base: (
+      stepper-header-focus-state-layer-shape: 0,
+      stepper-header-hover-state-layer-shape: 0,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      stepper-container-color: map.get($system, surface),
+      stepper-line-color: map.get($system, outline),
+      stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      stepper-header-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-selected-state-label-text-color: map.get($system, on-surface),
+      stepper-header-error-state-label-text-color: map.get($system, error),
+      stepper-header-icon-background-color: map.get($system, on-surface-variant),
+      stepper-header-error-state-icon-foreground-color: map.get($system, error),
+      stepper-header-error-state-icon-background-color: transparent)
+    ),
+    typography: (
+      stepper-container-text-font: map.get($system, body-medium-font),
+      stepper-header-label-text-font: map.get($system, body-medium-font),
+      stepper-header-label-text-size: map.get($system, body-medium-size),
+      stepper-header-label-text-weight: map.get($system, body-medium-weight),
+      stepper-header-error-state-label-text-size: map.get($system, body-large-size),
+      stepper-header-selected-state-label-text-size: map.get($system, body-large-size),
+      stepper-header-selected-state-label-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (
+      stepper-header-height: map.get((
+        0: 72px,
+        -1: 68px,
+        -2: 64px,
+        -3: 60px,
+        -4: 42px,
+      ), $density-scale),
+    ),
   );
 }
 
 // Generates the tokens used to theme the stepper based on a palette.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $active-state-foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $active-state-background: inspection.get-theme-color($theme, $palette-name);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    header-icon-foreground-color: $active-state-foreground,
-    header-selected-state-icon-background-color: $active-state-background,
-    header-selected-state-icon-foreground-color: $active-state-foreground,
-    header-done-state-icon-background-color: $active-state-background,
-    header-done-state-icon-foreground-color: $active-state-foreground,
-    header-edit-state-icon-background-color: $active-state-background,
-    header-edit-state-icon-foreground-color: $active-state-foreground,
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-      get-unthemable-tokens(),
-      get-color-tokens(m2-utils.$placeholder-color-config),
-      get-typography-tokens(m2-utils.$placeholder-typography-config),
-      get-density-tokens(m2-utils.$placeholder-density-config)
+    stepper-header-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-selected-state-icon-background-color: map.get($system, primary),
+    stepper-header-selected-state-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-done-state-icon-background-color: map.get($system, primary),
+    stepper-header-done-state-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-edit-state-icon-background-color: map.get($system, primary),
+    stepper-header-edit-state-icon-foreground-color: map.get($system, on-primary),
   );
 }

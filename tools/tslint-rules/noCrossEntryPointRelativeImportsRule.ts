@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 
 import {existsSync} from 'fs';
 import {dirname, join, normalize, resolve} from 'path';

@@ -1,249 +1,190 @@
-@use 'sass:meta';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 @use '../core/style/elevation';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, button);
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+  $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    filled-container-shape: 4px,
-    filled-horizontal-padding: 16px,
-    filled-icon-offset: -4px,
-    filled-icon-spacing: 8px,
-    outlined-container-shape: 4px,
-    outlined-horizontal-padding: 15px, // Normally it's 16px, but -1px for the outline.
-    outlined-icon-offset: -4px,
-    outlined-icon-spacing: 8px,
-    outlined-keep-touch-target: false,
-    outlined-outline-width: 1px,
-    protected-container-elevation-shadow: elevation.get-box-shadow(2),
-    protected-container-shape: 4px,
-    protected-disabled-container-elevation-shadow: elevation.get-box-shadow(0),
-    protected-focus-container-elevation-shadow: elevation.get-box-shadow(4),
-    protected-horizontal-padding: 16px,
-    protected-hover-container-elevation-shadow: elevation.get-box-shadow(4),
-    protected-icon-offset: -4px,
-    protected-icon-spacing: 8px,
-    protected-pressed-container-elevation-shadow: elevation.get-box-shadow(8),
-    text-container-shape: 4px,
-    text-horizontal-padding: 8px,
-    text-icon-offset: 0,
-    text-icon-spacing: 8px,
-    text-with-icon-horizontal-padding: 8px,
-    tonal-container-shape: 4px,
-    tonal-horizontal-padding: 16px,
-    tonal-icon-offset: -4px,
-    tonal-icon-spacing: 8px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $outline: if(m2-utils.$private-is-internal-build,
-    rgba(if($is-dark, #fff, #000), 0.12),
-    inspection.get-theme-color($theme, foreground, divider)
-  );
+  $scale: theming.clamp-density(map.get($system, density-scale), -3);
+  $height: map.get((
+    0: 36px,
+    -1: 32px,
+    -2: 28px,
+    -3: 24px,
+  ), $scale);
+  $touch-target-display: if($scale < -1, none, block);
+  $touch-target-size: 48px;
 
   @return (
-    filled-container-color: inspection.get-theme-color($theme, background, card),
-    filled-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
-    filled-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    filled-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    filled-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    filled-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    filled-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    filled-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    filled-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    filled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    outlined-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    outlined-disabled-outline-color: $outline,
-    outlined-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    outlined-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    outlined-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    outlined-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    outlined-outline-color: $outline,
-    outlined-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    outlined-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    outlined-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    protected-container-color: inspection.get-theme-color($theme, background, card),
-    protected-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
-    protected-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    protected-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    protected-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    protected-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    protected-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    protected-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    protected-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    protected-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    text-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    text-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    text-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    text-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    text-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    text-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    text-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    text-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    tonal-container-color: inspection.get-theme-color($theme, background, card),
-    tonal-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
-    tonal-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    tonal-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    tonal-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    tonal-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    tonal-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    tonal-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    tonal-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    tonal-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    base: (
+      button-filled-container-shape: 4px,
+      button-filled-horizontal-padding: 16px,
+      button-filled-icon-offset: -4px,
+      button-filled-icon-spacing: 8px,
+      button-filled-touch-target-size: $touch-target-size,
+      button-outlined-container-shape: 4px,
+      button-outlined-horizontal-padding: 15px, // Normally it's 16px, but -1px for the outline.
+      button-outlined-icon-offset: -4px,
+      button-outlined-icon-spacing: 8px,
+      button-outlined-keep-touch-target: false,
+      button-outlined-outline-width: 1px,
+      button-outlined-touch-target-size: $touch-target-size,
+      button-protected-container-elevation-shadow: elevation.get-box-shadow(2),
+      button-protected-container-shape: 4px,
+      button-protected-disabled-container-elevation-shadow: elevation.get-box-shadow(0),
+      button-protected-focus-container-elevation-shadow: elevation.get-box-shadow(4),
+      button-protected-horizontal-padding: 16px,
+      button-protected-hover-container-elevation-shadow: elevation.get-box-shadow(4),
+      button-protected-icon-offset: -4px,
+      button-protected-icon-spacing: 8px,
+      button-protected-pressed-container-elevation-shadow: elevation.get-box-shadow(8),
+      button-protected-touch-target-size: $touch-target-size,
+      button-text-container-shape: 4px,
+      button-text-horizontal-padding: 8px,
+      button-text-icon-offset: 0,
+      button-text-icon-spacing: 8px,
+      button-text-with-icon-horizontal-padding: 8px,
+      button-text-touch-target-size: $touch-target-size,
+      button-tonal-container-shape: 4px,
+      button-tonal-horizontal-padding: 16px,
+      button-tonal-icon-offset: -4px,
+      button-tonal-icon-spacing: 8px,
+      button-tonal-touch-target-size: $touch-target-size,
+    ),
+    color: (
+      button-filled-container-color: map.get($system, surface),
+      button-filled-disabled-container-color: $disabled-container,
+      button-filled-disabled-label-text-color: $disabled,
+      button-filled-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-filled-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-filled-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-filled-label-text-color: map.get($system, on-surface),
+      button-filled-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-filled-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      button-filled-state-layer-color: map.get($system, on-surface),
+      button-outlined-disabled-label-text-color: $disabled,
+      button-outlined-disabled-outline-color: map.get($system, outline),
+      button-outlined-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-outlined-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-outlined-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-outlined-label-text-color: map.get($system, on-surface),
+      button-outlined-outline-color: map.get($system, outline),
+      button-outlined-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-outlined-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      button-outlined-state-layer-color: map.get($system, on-surface),
+      button-protected-container-color: map.get($system, surface),
+      button-protected-disabled-container-color: $disabled-container,
+      button-protected-disabled-label-text-color: $disabled,
+      button-protected-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-protected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-protected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-protected-label-text-color: map.get($system, on-surface),
+      button-protected-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-protected-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      button-protected-state-layer-color: map.get($system, on-surface),
+      button-text-disabled-label-text-color: $disabled,
+      button-text-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-text-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-text-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-text-label-text-color: map.get($system, on-surface),
+      button-text-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-text-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      button-text-state-layer-color: map.get($system, on-surface),
+      button-tonal-container-color: map.get($system, surface),
+      button-tonal-disabled-container-color: $disabled-container,
+      button-tonal-disabled-label-text-color: $disabled,
+      button-tonal-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-tonal-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-tonal-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-tonal-label-text-color: map.get($system, on-surface),
+      button-tonal-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-tonal-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      button-tonal-state-layer-color: map.get($system, on-surface),
+    ),
+    typography: (
+      button-filled-label-text-font: map.get($system, label-small-font),
+      button-filled-label-text-size: map.get($system, label-small-size),
+      button-filled-label-text-tracking: map.get($system, label-small-tracking),
+      button-filled-label-text-transform: none,
+      button-filled-label-text-weight: map.get($system, label-small-weight),
+      button-outlined-label-text-font: map.get($system, label-small-font),
+      button-outlined-label-text-size: map.get($system, label-small-size),
+      button-outlined-label-text-tracking: map.get($system, label-small-tracking),
+      button-outlined-label-text-transform: none,
+      button-outlined-label-text-weight: map.get($system, label-small-weight),
+      button-protected-label-text-font: map.get($system, label-small-font),
+      button-protected-label-text-size: map.get($system, label-small-size),
+      button-protected-label-text-tracking: map.get($system, label-small-tracking),
+      button-protected-label-text-transform: none,
+      button-protected-label-text-weight: map.get($system, label-small-weight),
+      button-text-label-text-font: map.get($system, label-small-font),
+      button-text-label-text-size: map.get($system, label-small-size),
+      button-text-label-text-tracking: map.get($system, label-small-tracking),
+      button-text-label-text-transform: none,
+      button-text-label-text-weight: map.get($system, label-small-weight),
+      button-tonal-label-text-font: map.get($system, label-small-font),
+      button-tonal-label-text-size: map.get($system, label-small-size),
+      button-tonal-label-text-tracking: map.get($system, label-small-tracking),
+      button-tonal-label-text-transform: none,
+      button-tonal-label-text-weight: map.get($system, label-small-weight),
+    ),
+    density: (
+      button-filled-container-height: $height,
+      button-filled-touch-target-display: $touch-target-display,
+      button-outlined-container-height: $height,
+      button-outlined-touch-target-display: $touch-target-display,
+      button-protected-container-height: $height,
+      button-protected-touch-target-display: $touch-target-display,
+      button-text-container-height: $height,
+      button-text-touch-target-display: $touch-target-display,
+      button-tonal-container-height: $height,
+      button-tonal-touch-target-display: $touch-target-display,
+    ),
   );
 }
 
 // Generates the mapping for the properties that change based on the button palette color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-  $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
-  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $container-color: inspection.get-theme-color($theme, $palette-name, default);
-  $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-  $ripple-opacity: 0.1;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  @if (m2-utils.$private-is-internal-build or
-      meta.type-of($contrast-color) != 'color') {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: m2-utils.contrast-tone($container-color, $is-dark);
-    $color: if($contrast-tone == 'dark', #000, #fff);
-    $state-layer-color: $color;
-    $ripple-color: rgba($color, 0.1);
-    $label-text-color: if($contrast-tone == 'dark', #000, #fff);
-  }
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   // outlined-outline-color:
   // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
   // there are a bunch of tests internally that depend on it. We should remove this and clean
   // up the screenshots separately.
   @return (
-    filled-container-color: $container-color,
-    filled-label-text-color: $label-text-color,
-    filled-ripple-color: $ripple-color,
-    filled-state-layer-color: $state-layer-color,
-    outlined-label-text-color: inspection.get-theme-color($theme, $palette-name, default),
-    outlined-outline-color: map.get(get-color-tokens($theme), outlined-outline-color),
-    outlined-ripple-color:
-        if(
-          meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
-          rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
-    outlined-state-layer-color: inspection.get-theme-color($theme, $palette-name),
-    protected-container-color: $container-color,
-    protected-label-text-color: $label-text-color,
-    protected-ripple-color: $ripple-color,
-    protected-state-layer-color: $state-layer-color,
-    text-label-text-color: inspection.get-theme-color($theme, $palette-name),
-    text-ripple-color:
-        if(meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
-          rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
-    text-state-layer-color: inspection.get-theme-color($theme, $palette-name),
-    tonal-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    tonal-label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
-    tonal-ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1),
-    tonal-state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $font-family: inspection.get-theme-typography($theme, button, font-family);
-  $font-size: inspection.get-theme-typography($theme, button, font-size);
-  $font-weight: inspection.get-theme-typography($theme, button, font-weight);
-  $letter-spacing: inspection.get-theme-typography($theme, button, letter-spacing);
-  $text-transform: none;
-
-  @return (
-    filled-label-text-font: $font-family,
-    filled-label-text-size: $font-size,
-    filled-label-text-tracking: $letter-spacing,
-    filled-label-text-transform: none,
-    filled-label-text-weight: $font-weight,
-    outlined-label-text-font: $font-family,
-    outlined-label-text-size: $font-size,
-    outlined-label-text-tracking: $letter-spacing,
-    outlined-label-text-transform: none,
-    outlined-label-text-weight: $font-weight,
-    protected-label-text-font: $font-family,
-    protected-label-text-size: $font-size,
-    protected-label-text-tracking: $letter-spacing,
-    protected-label-text-transform: none,
-    protected-label-text-weight: $font-weight,
-    text-label-text-font: $font-family,
-    text-label-text-size: $font-size,
-    text-label-text-tracking: $letter-spacing,
-    text-label-text-transform: none,
-    text-label-text-weight: $font-weight,
-    tonal-label-text-font: $font-family,
-    tonal-label-text-size: $font-size,
-    tonal-label-text-tracking: $letter-spacing,
-    tonal-label-text-transform: none,
-    tonal-label-text-weight: $font-weight,
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-  $sizes: (
-    0: 36px,
-    -1: 32px,
-    -2: 28px,
-    -3: 24px,
-  );
-
-  $height: map.get($sizes, $scale);
-  $touch-target-display: if($scale < -1, none, block);
-
-  @return (
-    filled-container-height: $height,
-    filled-touch-target-display: $touch-target-display,
-    outlined-container-height: $height,
-    outlined-touch-target-display: $touch-target-display,
-    protected-container-height: $height,
-    protected-touch-target-display: $touch-target-display,
-    text-container-height: $height,
-    text-touch-target-display: $touch-target-display,
-    tonal-container-height: $height,
-    tonal-touch-target-display: $touch-target-display,
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-      get-unthemable-tokens(),
-      get-color-tokens(m2-utils.$placeholder-color-config),
-      get-typography-tokens(m2-utils.$placeholder-typography-config),
-      get-density-tokens(m2-utils.$placeholder-density-config)
+    button-filled-container-color: map.get($system, primary),
+    button-filled-label-text-color: map.get($system, on-primary),
+    button-filled-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+    button-filled-state-layer-color: map.get($system, on-primary),
+    button-outlined-label-text-color: map.get($system, primary),
+    button-outlined-outline-color: map.get($system, outline),
+    button-outlined-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
+    button-outlined-state-layer-color: map.get($system, primary),
+    button-protected-container-color: map.get($system, primary),
+    button-protected-label-text-color: map.get($system, on-primary),
+    button-protected-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+    button-protected-state-layer-color: map.get($system, on-primary),
+    button-text-label-text-color: map.get($system, primary),
+    button-text-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
+    button-text-state-layer-color: map.get($system, primary),
+    button-tonal-container-color: map.get($system, primary),
+    button-tonal-label-text-color: map.get($system, on-primary),
+    button-tonal-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+    button-tonal-state-layer-color: map.get($system, on-primary),
   );
 }

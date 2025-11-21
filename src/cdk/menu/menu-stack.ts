@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
+import {inject, Injectable, InjectionToken} from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
@@ -30,8 +30,7 @@ export const MENU_STACK = new InjectionToken<MenuStack>('cdk-menu-stack');
 /** Provider that provides the parent menu stack, or a new menu stack if there is no parent one. */
 export const PARENT_OR_NEW_MENU_STACK_PROVIDER = {
   provide: MENU_STACK,
-  deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
-  useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || new MenuStack(),
+  useFactory: () => inject(MENU_STACK, {optional: true, skipSelf: true}) || new MenuStack(),
 };
 
 /** Provider that provides the parent menu stack, or a new inline menu stack if there is no parent one. */
@@ -39,8 +38,8 @@ export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER = (
   orientation: 'vertical' | 'horizontal',
 ) => ({
   provide: MENU_STACK,
-  deps: [[new Optional(), new SkipSelf(), new Inject(MENU_STACK)]],
-  useFactory: (parentMenuStack?: MenuStack) => parentMenuStack || MenuStack.inline(orientation),
+  useFactory: () =>
+    inject(MENU_STACK, {optional: true, skipSelf: true}) || MenuStack.inline(orientation),
 });
 
 /** Options that can be provided to the close or closeAll methods. */

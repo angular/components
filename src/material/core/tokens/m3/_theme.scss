@@ -1,0 +1,35 @@
+@use './md-sys-color';
+@use './md-sys-elevation';
+@use './md-sys-shape';
+@use './md-sys-state';
+@use './md-sys-typescale';
+@use 'sass:map';
+
+// Return a new map where the values are the same as the provided map's
+// keys, prefixed with "--mat-sys-". For example:
+// (key1: '', key2: '') --> (key1: --mat-sys-key1, key2: --mat-sys-key2)
+@function _create-system-app-vars-map($map) {
+  $new-map: ();
+  @each $key, $value in $map {
+    $new-map: map.set($new-map, $key, --mat-sys-#{$key});
+  }
+  @return $new-map;
+}
+
+$_sys-maps: (
+  md-sys-color.md-sys-color-values-light(),
+  md-sys-typescale.md-sys-typescale-values(),
+  md-sys-elevation.md-sys-elevation-values(),
+  md-sys-state.md-sys-state-values(),
+  md-sys-shape.md-sys-shape-values(),
+  (
+    neutral10: '', // Form field native select option text color
+    neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
+  ),
+);
+
+$_system: (density-scale: 0);
+@each $sys-map in $_sys-maps {
+  $_system: map.merge($_system, _create-system-app-vars-map($sys-map));
+}
+$sys-theme: (_mat-system: $_system);

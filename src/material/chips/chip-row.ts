@@ -46,6 +46,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[class.mat-mdc-chip-editing]': '_isEditing',
     '[class.mat-mdc-chip-editable]': 'editable',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
+    '[class.mdc-evolution-chip--with-leading-action]': '_hasLeadingActionIcon()',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
     '[class.mdc-evolution-chip--with-primary-graphic]': 'leadingIcon',
     '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
@@ -60,6 +61,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '(focus)': '_handleFocus()',
+    '(click)': 'this._hasInteractiveActions() ? _handleClick($event) : null',
     '(dblclick)': '_handleDoubleclick($event)',
   },
   providers: [
@@ -92,6 +94,15 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   /** The projected chip edit input. */
   @ContentChild(MatChipEditInput) contentEditInput?: MatChipEditInput;
 
+  /**
+   * Set on a mousedown when the chip is already focused via mouse or keyboard.
+   *
+   * This allows us to ensure chip is already focused when deciding whether to enter the
+   * edit mode on a subsequent click. Otherwise, the chip appears focused when handling the
+   * first click event.
+   */
+  private _alreadyFocused = false;
+
   _isEditing = false;
 
   constructor(...args: unknown[]);
@@ -104,7 +115,25 @@ export class MatChipRow extends MatChip implements AfterViewInit {
       if (this._isEditing && !this._editStartPending) {
         this._onEditFinish();
       }
+      this._alreadyFocused = false;
     });
+  }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+
+    // Sets _alreadyFocused (ahead of click) when chip already has focus.
+    this._ngZone.runOutsideAngular(() => {
+      this._elementRef.nativeElement.addEventListener(
+        'mousedown',
+        () => (this._alreadyFocused = this._hasFocus()),
+      );
+    });
+  }
+
+  protected _hasLeadingActionIcon() {
+    // The leading action (edit) icon is hidden while editing.
+    return !this._isEditing && !!this.editIcon;
   }
 
   override _hasTrailingIcon() {
@@ -135,16 +164,34 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
+  _handleClick(event: MouseEvent) {
+    if (!this.disabled && this.editable && !this._isEditing && this._alreadyFocused) {
+      // Ensure click event not picked up unintentionally by other listeners, as
+      // once editing starts, the source element is detached from DOM.
+      event.preventDefault();
+      event.stopPropagation();
+      this._startEditing(event);
+    }
+  }
+
   _handleDoubleclick(event: MouseEvent) {
     if (!this.disabled && this.editable) {
       this._startEditing(event);
     }
   }
 
-  private _startEditing(event: Event) {
+  override _edit(): void {
+    // markForCheck necessary for edit input to be rendered
+    this._changeDetectorRef.markForCheck();
+    this._startEditing();
+  }
+
+  private _startEditing(event?: Event) {
     if (
       !this.primaryAction ||
-      (this.removeIcon && this._getSourceAction(event.target as Node) === this.removeIcon)
+      (this.removeIcon &&
+        !!event &&
+        this._getSourceAction(event.target as Node) === this.removeIcon)
     ) {
       return;
     }
@@ -158,7 +205,9 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     afterNextRender(
       () => {
         this._getEditInput().initialize(value);
-        this._editStartPending = false;
+
+        // Necessary when using edit icon to prevent edit from aborting
+        setTimeout(() => this._ngZone.run(() => (this._editStartPending = false)));
       },
       {injector: this._injector},
     );

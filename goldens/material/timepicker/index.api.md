@@ -13,7 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i5 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
@@ -46,6 +46,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly disabled: Signal<boolean>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
     protected _getAriaLabelledby(): string | null;
+    // (undocumented)
+    _getOverlayHost(): HTMLElement | undefined;
     protected _handleAnimationEnd(event: AnimationEvent): void;
     readonly interval: InputSignalWithTransform<number | null, number | string | null>;
     readonly isOpen: Signal<boolean>;
@@ -59,7 +61,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly panelId: string;
     // (undocumented)
     protected _panelTemplate: Signal<TemplateRef<unknown>>;
-    registerInput(input: MatTimepickerInput<D>): void;
+    registerInput(input: MatTimepickerConnectedInput<D>): void;
     readonly selected: OutputEmitterRef<MatTimepickerSelected<D>>;
     protected _selectValue(option: MatOption<D>): void;
     // (undocumented)
@@ -77,7 +79,19 @@ export interface MatTimepickerConfig {
 }
 
 // @public
-export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
+export interface MatTimepickerConnectedInput<D> {
+    disabled: Signal<boolean>;
+    focus(): void;
+    getLabelId(): string | null;
+    getOverlayOrigin(): ElementRef<HTMLElement>;
+    max: Signal<D | null>;
+    min: Signal<D | null>;
+    timepickerValueAssigned(value: D | null): void;
+    value: Signal<D | null>;
+}
+
+// @public
+export class MatTimepickerInput<D> implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy {
     constructor();
     protected readonly _ariaActiveDescendant: Signal<string | null>;
     protected readonly _ariaControls: Signal<string | null>;
@@ -85,7 +99,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     readonly disabled: Signal<boolean>;
     readonly disabledInput: InputSignalWithTransform<boolean, unknown>;
     focus(): void;
-    _getLabelId(): string | null;
+    getLabelId(): string | null;
     getOverlayOrigin(): ElementRef<HTMLElement>;
     protected _handleBlur(): void;
     protected _handleInput(event: Event): void;
@@ -94,16 +108,18 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     readonly min: InputSignalWithTransform<D | null, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
+    readonly openOnClick: InputSignalWithTransform<boolean, unknown>;
     registerOnChange(fn: (value: unknown) => void): void;
     registerOnTouched(fn: () => void): void;
     registerOnValidatorChange(fn: () => void): void;
     setDisabledState(isDisabled: boolean): void;
     readonly timepicker: InputSignal<MatTimepicker<D>>;
+    timepickerValueAssigned(value: D | null): void;
     validate(control: AbstractControl): ValidationErrors | null;
     readonly value: ModelSignal<D | null>;
     writeValue(value: unknown): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerInput<any>, never>;
 }
@@ -115,7 +131,7 @@ export class MatTimepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle], [typeof i5.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle], [typeof i1.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle]>;
 }
 
 // @public

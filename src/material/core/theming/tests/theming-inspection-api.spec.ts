@@ -371,96 +371,19 @@ describe('theming inspection api', () => {
       ).toMatch('--density-scale: 0;');
     });
 
-    it('should check what information the theme has', () => {
+    it('should check that the theme has all the information', () => {
       const css = transpile(`
         $theme: mat.define-theme();
-        $color-only: mat.define-colors();
-        $typography-only: mat.define-typography();
-        $density-only: mat.define-density();
         div {
           --base: #{(
             mat.theme-has($theme, base),
-            mat.theme-has($color-only, base),
-            mat.theme-has($typography-only, base),
-            mat.theme-has($density-only, base),
-          )};
-          --color: #{(
             mat.theme-has($theme, color),
-            mat.theme-has($color-only, color),
-            mat.theme-has($typography-only, color),
-            mat.theme-has($density-only, color),
-          )};
-          --typography: #{(
             mat.theme-has($theme, typography),
-            mat.theme-has($color-only, typography),
-            mat.theme-has($typography-only, typography),
-            mat.theme-has($density-only, typography),
-          )};
-          --density: #{(
             mat.theme-has($theme, density),
-            mat.theme-has($color-only, density),
-            mat.theme-has($typography-only, density),
-            mat.theme-has($density-only, density),
           )};
         }
       `);
-      expect(css).toMatch(/--base: true, false, false, false;/);
-      expect(css).toMatch(/--color: true, true, false, false;/);
-      expect(css).toMatch(/--typography: true, false, true, false;/);
-      expect(css).toMatch(/--density: true, false, false, true;/);
-    });
-
-    it('should error when reading theme type from a theme with no color information', () => {
-      expect(() =>
-        transpile(`
-        $theme: mat.define-density();
-        div {
-          color: mat.get-theme-type($theme);
-        }
-      `),
-      ).toThrowError(/Color information is not available on this theme/);
-    });
-
-    it('should error when reading color from a theme with no color information', () => {
-      expect(() =>
-        transpile(`
-        $theme: mat.define-density();
-        div {
-          color: mat.get-theme-color($theme, primary);
-        }
-      `),
-      ).toThrowError(/Color information is not available on this theme/);
-    });
-
-    it('should error when reading typography from a theme with no typography information', () => {
-      expect(() =>
-        transpile(`
-          $theme: mat.define-density();
-          div {
-            font: mat.get-theme-typography($theme, body-small);
-          }
-        `),
-      ).toThrowError(/Typography information is not available on this theme/);
-    });
-
-    it('should error when reading density from a theme with no density information', () => {
-      expect(() =>
-        transpile(`
-          $theme: mat.define-colors();
-          div {
-            --density: #{mat.get-theme-density($theme)};
-          }
-        `),
-      ).toThrowError(/Density information is not available on this theme/);
-    });
-
-    it('should not emit styles for removed theme dimensions', () => {
-      const css = transpile(`
-        $theme: mat.theme-remove(mat.define-theme(), base, color, typography, density);
-        div {
-          @include mat.all-component-themes($theme);
-        }`);
-      expect(css.trim()).toBe('');
+      expect(css).toMatch(/--base: true, true, true, true;/);
     });
   });
 });

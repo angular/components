@@ -1,20 +1,20 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
-load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "transform-markdown",
     srcs = glob(
-        ["**/*.ts"],
+        ["**/*.mts"],
         exclude = [
-            "*.spec.ts",
+            "*.spec.mts",
         ],
     ),
     tsconfig = "//tools:tsconfig",
     deps = [
-        "//:node_modules/@types/marked",
         "//:node_modules/marked",
+        "//:node_modules/slugify",
         "//tools/highlight-files:sources",
     ],
 )
@@ -24,14 +24,14 @@ js_binary(
     data = [
         ":transform-markdown",
     ],
-    entry_point = ":transform-markdown.js",
+    entry_point = ":transform-markdown.mjs",
 )
 
 ts_project(
     name = "unit_test_lib",
     testonly = True,
     srcs = glob(
-        ["*.spec.ts"],
+        ["*.spec.mts"],
     ),
     tsconfig = "//tools:tsconfig-test",
     visibility = ["//visibility:private"],

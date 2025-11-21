@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '../core';
+import {provideNativeDateAdapter} from '../core';
 
 import {JAN, FEB, MAR} from '../testing';
 import {
@@ -13,8 +13,8 @@ describe('DefaultMatCalendarRangeStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule],
       providers: [
+        provideNativeDateAdapter(),
         {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
       ],
     });

@@ -1,18 +1,21 @@
-import {Component, ApplicationRef} from '@angular/core';
+import {Component, ApplicationRef, Injector} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {PortalModule, ComponentPortal} from '../../portal';
-import {OverlayModule, Overlay, OverlayConfig, OverlayRef} from '../index';
+import {
+  OverlayModule,
+  OverlayConfig,
+  OverlayRef,
+  createOverlayRef,
+  createGlobalPositionStrategy,
+} from '../index';
 
 describe('GlobalPositonStrategy', () => {
   let overlayRef: OverlayRef;
-  let overlay: Overlay;
+  let injector: Injector;
+  let portal: ComponentPortal<BlankPortal>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, BlankPortal],
-    });
-
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
   });
 
   afterEach(() => {
@@ -23,8 +26,8 @@ describe('GlobalPositonStrategy', () => {
   });
 
   function attachOverlay(config: OverlayConfig): OverlayRef {
-    const portal = new ComponentPortal(BlankPortal);
-    overlayRef = overlay.create(config);
+    portal = new ComponentPortal(BlankPortal);
+    overlayRef = createOverlayRef(injector, config);
     overlayRef.attach(portal);
     TestBed.inject(ApplicationRef).tick();
     return overlayRef;
@@ -32,7 +35,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should position the element to the (top, left) with an offset', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().top('10px').left('40px'),
+      positionStrategy: createGlobalPositionStrategy(injector).top('10px').left('40px'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -49,7 +52,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should position the element to the (bottom, right) with an offset', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().bottom('70px').right('15em'),
+      positionStrategy: createGlobalPositionStrategy(injector).bottom('70px').right('15em'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -65,7 +68,9 @@ describe('GlobalPositonStrategy', () => {
   });
 
   it('should overwrite previously applied positioning', () => {
-    const positionStrategy = overlay.position().global().centerHorizontally().centerVertically();
+    const positionStrategy = createGlobalPositionStrategy(injector)
+      .centerHorizontally()
+      .centerVertically();
 
     attachOverlay({positionStrategy});
     positionStrategy.top('10px').left('40%');
@@ -96,7 +101,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should not set any alignment by default', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global(),
+      positionStrategy: createGlobalPositionStrategy(injector),
     });
 
     const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
@@ -107,7 +112,9 @@ describe('GlobalPositonStrategy', () => {
 
   it('should center the element', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().centerHorizontally().centerVertically(),
+      positionStrategy: createGlobalPositionStrategy(injector)
+        .centerHorizontally()
+        .centerVertically(),
     });
 
     const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
@@ -118,9 +125,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should center the element with an offset', () => {
     attachOverlay({
-      positionStrategy: overlay
-        .position()
-        .global()
+      positionStrategy: createGlobalPositionStrategy(injector)
         .centerHorizontally('10px')
         .centerVertically('15px'),
     });
@@ -140,9 +145,7 @@ describe('GlobalPositonStrategy', () => {
   it('should center the element with an offset in rtl', () => {
     attachOverlay({
       direction: 'rtl',
-      positionStrategy: overlay
-        .position()
-        .global()
+      positionStrategy: createGlobalPositionStrategy(injector)
         .centerHorizontally('10px')
         .centerVertically('15px'),
     });
@@ -160,7 +163,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should make the element position: static', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global(),
+      positionStrategy: createGlobalPositionStrategy(injector),
     });
 
     expect(overlayRef.overlayElement.style.position).toBe('static');
@@ -168,7 +171,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should wrap the element in a `cdk-global-overlay-wrapper`', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global(),
+      positionStrategy: createGlobalPositionStrategy(injector),
     });
 
     const parent = overlayRef.overlayElement.parentNode as HTMLElement;
@@ -178,7 +181,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should remove the parent wrapper from the DOM', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global(),
+      positionStrategy: createGlobalPositionStrategy(injector),
     });
 
     const parent = overlayRef.overlayElement.parentNode!;
@@ -192,7 +195,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should set the element width', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().width('100px'),
+      positionStrategy: createGlobalPositionStrategy(injector).width('100px'),
     });
 
     expect(overlayRef.overlayElement.style.width).toBe('100px');
@@ -200,7 +203,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should set the element height', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().height('100px'),
+      positionStrategy: createGlobalPositionStrategy(injector).height('100px'),
     });
 
     expect(overlayRef.overlayElement.style.height).toBe('100px');
@@ -208,7 +211,9 @@ describe('GlobalPositonStrategy', () => {
 
   it('should reset the horizontal position and offset when the width is 100%', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().centerHorizontally('10px').width('100%'),
+      positionStrategy: createGlobalPositionStrategy(injector)
+        .centerHorizontally('10px')
+        .width('100%'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -224,7 +229,9 @@ describe('GlobalPositonStrategy', () => {
     () => {
       attachOverlay({
         maxWidth: '100%',
-        positionStrategy: overlay.position().global().centerHorizontally('10px').width('100%'),
+        positionStrategy: createGlobalPositionStrategy(injector)
+          .centerHorizontally('10px')
+          .width('100%'),
       });
 
       const elementStyle = overlayRef.overlayElement.style;
@@ -241,7 +248,9 @@ describe('GlobalPositonStrategy', () => {
     () => {
       attachOverlay({
         maxWidth: '500px',
-        positionStrategy: overlay.position().global().centerHorizontally('10px').width('100%'),
+        positionStrategy: createGlobalPositionStrategy(injector)
+          .centerHorizontally('10px')
+          .width('100%'),
       });
 
       const elementStyle = overlayRef.overlayElement.style;
@@ -254,7 +263,9 @@ describe('GlobalPositonStrategy', () => {
 
   it('should reset the vertical position and offset when the height is 100%', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().centerVertically('10px').height('100%'),
+      positionStrategy: createGlobalPositionStrategy(injector)
+        .centerVertically('10px')
+        .height('100%'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -270,7 +281,9 @@ describe('GlobalPositonStrategy', () => {
     () => {
       attachOverlay({
         maxHeight: '100%',
-        positionStrategy: overlay.position().global().centerVertically('10px').height('100%'),
+        positionStrategy: createGlobalPositionStrategy(injector)
+          .centerVertically('10px')
+          .height('100%'),
       });
 
       const elementStyle = overlayRef.overlayElement.style;
@@ -287,7 +300,9 @@ describe('GlobalPositonStrategy', () => {
     () => {
       attachOverlay({
         maxHeight: '500px',
-        positionStrategy: overlay.position().global().centerVertically('10px').height('100%'),
+        positionStrategy: createGlobalPositionStrategy(injector)
+          .centerVertically('10px')
+          .height('100%'),
       });
 
       const elementStyle = overlayRef.overlayElement.style;
@@ -299,7 +314,7 @@ describe('GlobalPositonStrategy', () => {
   );
 
   it('should not throw when attempting to apply after the overlay has been disposed', () => {
-    const positionStrategy = overlay.position().global();
+    const positionStrategy = createGlobalPositionStrategy(injector);
 
     attachOverlay({positionStrategy});
 
@@ -310,7 +325,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should take its width and height from the overlay config', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global(),
+      positionStrategy: createGlobalPositionStrategy(injector),
       width: '500px',
       height: '300px',
     });
@@ -323,7 +338,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should update the overlay size when setting it through the position strategy', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().width('500px').height('300px'),
+      positionStrategy: createGlobalPositionStrategy(injector).width('500px').height('300px'),
     });
 
     expect(overlayRef.getConfig().width).toBe('500px');
@@ -335,7 +350,7 @@ describe('GlobalPositonStrategy', () => {
       'config and the strategy',
     () => {
       attachOverlay({
-        positionStrategy: overlay.position().global().width('200px').height('100px'),
+        positionStrategy: createGlobalPositionStrategy(injector).width('200px').height('100px'),
         width: '500px',
         height: '300px',
       });
@@ -350,7 +365,9 @@ describe('GlobalPositonStrategy', () => {
   it('should center the element in RTL', () => {
     attachOverlay({
       direction: 'rtl',
-      positionStrategy: overlay.position().global().centerHorizontally().centerVertically(),
+      positionStrategy: createGlobalPositionStrategy(injector)
+        .centerHorizontally()
+        .centerVertically(),
     });
 
     const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
@@ -360,7 +377,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should invert `justify-content` when using `left` in RTL', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().left('0'),
+      positionStrategy: createGlobalPositionStrategy(injector).left('0'),
       direction: 'rtl',
     });
 
@@ -370,7 +387,7 @@ describe('GlobalPositonStrategy', () => {
 
   it('should invert `justify-content` when using `right` in RTL', () => {
     attachOverlay({
-      positionStrategy: overlay.position().global().right('0'),
+      positionStrategy: createGlobalPositionStrategy(injector).right('0'),
       direction: 'rtl',
     });
 
@@ -379,7 +396,7 @@ describe('GlobalPositonStrategy', () => {
   });
 
   it('should clean up after itself when it has been disposed', () => {
-    const positionStrategy = overlay.position().global().top('10px').left('40px');
+    const positionStrategy = createGlobalPositionStrategy(injector).top('10px').left('40px');
 
     attachOverlay({positionStrategy});
 
@@ -401,7 +418,7 @@ describe('GlobalPositonStrategy', () => {
   it('should position the overlay to the start in ltr', () => {
     attachOverlay({
       direction: 'ltr',
-      positionStrategy: overlay.position().global().start('40px'),
+      positionStrategy: createGlobalPositionStrategy(injector).start('40px'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -415,7 +432,7 @@ describe('GlobalPositonStrategy', () => {
   it('should position the overlay to the start in rtl', () => {
     attachOverlay({
       direction: 'rtl',
-      positionStrategy: overlay.position().global().start('50px'),
+      positionStrategy: createGlobalPositionStrategy(injector).start('50px'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -429,7 +446,7 @@ describe('GlobalPositonStrategy', () => {
   it('should position the overlay to the end in ltr', () => {
     attachOverlay({
       direction: 'ltr',
-      positionStrategy: overlay.position().global().end('60px'),
+      positionStrategy: createGlobalPositionStrategy(injector).end('60px'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;
@@ -443,7 +460,7 @@ describe('GlobalPositonStrategy', () => {
   it('should position the overlay to the end in rtl', () => {
     attachOverlay({
       direction: 'rtl',
-      positionStrategy: overlay.position().global().end('70px'),
+      positionStrategy: createGlobalPositionStrategy(injector).end('70px'),
     });
 
     const elementStyle = overlayRef.overlayElement.style;

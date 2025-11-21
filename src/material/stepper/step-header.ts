@@ -34,8 +34,9 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
   styleUrl: 'step-header.css',
   host: {
     'class': 'mat-step-header',
+    '[class.mat-step-header-empty-label]': '_hasEmptyLabel()',
     '[class]': '"mat-" + (color || "primary")',
-    'role': 'tab',
+    'role': '', // ignore cdk role in favor of setting appropriately in html
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,10 +77,10 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
 
   /**
    * Theme color of the step header. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/stepper/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/stepper/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette;
 
@@ -128,15 +129,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     return this._elementRef.nativeElement;
   }
 
-  /** Template context variables that are exposed to the `matStepperIcon` instances. */
-  _getIconContext(): MatStepperIconContext {
-    return {
-      index: this.index,
-      active: this.active,
-      optional: this.optional,
-    };
-  }
-
   _getDefaultTextForState(state: StepState): string {
     if (state == 'number') {
       return `${this.index + 1}`;
@@ -148,5 +140,22 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
       return 'warning';
     }
     return state;
+  }
+
+  protected _hasEmptyLabel() {
+    return (
+      !this._stringLabel() &&
+      !this._templateLabel() &&
+      !this._hasOptionalLabel() &&
+      !this._hasErrorLabel()
+    );
+  }
+
+  protected _hasOptionalLabel() {
+    return this.optional && this.state !== 'error';
+  }
+
+  protected _hasErrorLabel() {
+    return this.state === 'error';
   }
 }

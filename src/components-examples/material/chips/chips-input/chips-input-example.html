@@ -8,6 +8,9 @@
         (edited)="edit(fruit, $event)"
         [aria-description]="'press enter to edit ' + fruit.name"
       >
+        <button matChipEdit [attr.aria-label]="'edit ' + fruit.name">
+          <mat-icon>edit</mat-icon>
+        </button>      
         {{fruit.name}}
         <button matChipRemove [attr.aria-label]="'remove ' + fruit.name">
           <mat-icon>cancel</mat-icon>

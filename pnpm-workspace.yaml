@@ -2,6 +2,7 @@ packages:
   - .
   - docs
   - integration
+  - src/aria
   - src/cdk
   - src/cdk-experimental
   - src/components-examples
@@ -17,24 +18,32 @@ packages:
   - src/youtube-player
 
 catalog:
-  '@angular-devkit/architect-cli': 0.2000.0-next.5
-  '@angular-devkit/architect': 0.2000.0-next.5
-  '@angular-devkit/build-angular': 20.0.0-next.5
-  '@angular-devkit/core': 20.0.0-next.5
-  '@angular-devkit/schematics': 20.0.0-next.5
-  '@angular/animations': 20.0.0-next.5
-  '@angular/build': 20.0.0-next.5
-  '@angular/cli': 20.0.0-next.5
-  '@angular/common': 20.0.0-next.5
-  '@angular/compiler-cli': 20.0.0-next.5
-  '@angular/compiler': 20.0.0-next.5
-  '@angular/core': 20.0.0-next.5
-  '@angular/ssr': 20.0.0-next.5
-  '@angular/forms': 20.0.0-next.5
-  '@angular/localize': 20.0.0-next.5
-  '@angular/platform-browser': 20.0.0-next.5
-  '@angular/platform-browser-dynamic': 20.0.0-next.5
-  '@angular/platform-server': 20.0.0-next.5
-  '@angular/router': 20.0.0-next.5
-  '@schematics/angular': 20.0.0-next.5
+  '@angular-devkit/build-angular': 21.0.0
+  '@angular-devkit/core': 21.0.0
+  '@angular-devkit/schematics': 21.0.0
+  '@angular/build': 21.0.0
+  '@angular/cli': 21.0.0
+  '@angular/common': 21.0.0
+  '@angular/compiler-cli': 21.0.0
+  '@angular/compiler': 21.0.0
+  '@angular/core': 21.0.0
+  '@angular/ssr': 21.0.0
+  '@angular/forms': 21.0.0
+  '@angular/localize': 21.0.0
+  '@angular/platform-browser': 21.0.0
+  '@angular/platform-browser-dynamic': 21.0.0
+  '@angular/platform-server': 21.0.0
+  '@angular/router': 21.0.0
+  '@schematics/angular': 21.0.0
   'rxjs': ^6.6.7
+
+# The minimum age of a release to be considered for dependency installation.
+# The value is in minutes (1440 minutes = 1 day).
+minimumReleaseAge: 1440
+# List of packages to exclude from the minimum release age check.
+minimumReleaseAgeExclude:
+  - '@angular-devkit/*'
+  - '@angular/*'
+  - '@ngtools/webpack'
+  - '@schematics/*'
+  - 'ng-packagr'

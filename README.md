@@ -68,11 +68,11 @@ We aim for great user experience with the following screen readers:
 [Material Design]: https://material.io
 [Google Maps JavaScript API]: https://developers.google.com/maps/documentation/javascript/tutorial
 [YouTube Player API]: https://developers.google.com/youtube/iframe_api_reference
-[cdk-docs]: https://material.angular.io/cdk/categories
-[mat-docs]: https://material.angular.io
+[cdk-docs]: https://material.angular.dev/cdk/categories
+[mat-docs]: https://material.angular.dev
 [map-docs]: https://github.com/angular/components/blob/main/src/google-maps/README.md
 [ytp-docs]: https://github.com/angular/components/blob/main/src/youtube-player/README.md
-[getting-started]: https://material.angular.io/guide/getting-started
+[getting-started]: https://material.angular.dev/guide/getting-started
 [contributing]: https://github.com/angular/components/blob/main/CONTRIBUTING.md
 [help-wanted]: https://github.com/angular/components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22
 [good-first-issue]: https://github.com/angular/components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+label%3A%22good+first+issue%22

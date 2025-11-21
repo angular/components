@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {Directive, ElementRef, inject, DOCUMENT} from '@angular/core';
 
 /**
  * A directive that makes a span editable and exposes functions to modify and retrieve the

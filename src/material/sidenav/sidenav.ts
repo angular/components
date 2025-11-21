@@ -47,7 +47,9 @@ export class MatSidenavContent extends MatDrawerContent {}
   templateUrl: 'drawer.html',
   host: {
     'class': 'mat-drawer mat-sidenav',
-    'tabIndex': '-1',
+    // The sidenav container should not be focused on when used in side mode. See b/286459024 for
+    // reference. Updates tabIndex of drawer/container to default to null if in side mode.
+    '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.mat-drawer-end]': 'position === "end"',

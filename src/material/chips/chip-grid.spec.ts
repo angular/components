@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   BACKSPACE,
   DELETE,
@@ -18,28 +18,35 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   patchElementFocus,
+  provideFakeDirectionality,
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
   ChangeDetectorRef,
   Component,
   DebugElement,
-  EventEmitter,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
+  WritableSignal,
   inject,
+  signal,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
-import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
 import {MATERIAL_ANIMATIONS} from '../core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatError, MatFormField, MatHint, MatLabel} from '../form-field';
+import {
+  MatChipEvent,
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent,
+  MatChipRemove,
+  MatChipRow,
+} from './index';
 
 describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -47,7 +54,7 @@ describe('MatChipGrid', () => {
   let chipGridInstance: MatChipGrid;
   let chips: QueryList<MatChipRow>;
   let testComponent: StandardChipGrid;
-  let directionality: {value: Direction; change: EventEmitter<Direction>};
+  let directionality: WritableSignal<Direction>;
   let primaryActions: NodeListOf<HTMLElement>;
 
   const expectNoCellFocused = () => {
@@ -170,13 +177,14 @@ describe('MatChipGrid', () => {
 
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
-          const midItem = chips.get(2)!;
+          const fixture = createComponent(StandardChipGrid);
+          const midItemAction = primaryActions[2];
+          patchElementFocus(midItemAction);
 
           // Focus the middle item
-          midItem.focus();
+          midItemAction.focus();
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
@@ -188,11 +196,14 @@ describe('MatChipGrid', () => {
         });
 
         it('should focus the previous item', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
+          const lastAction = primaryActions[primaryActions.length - 1];
+
           // Focus the last item
-          chips.last.focus();
+          patchElementFocus(lastAction);
+          lastAction.focus();
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
 
           // Destroy the last item
           testComponent.chips.pop();
@@ -204,9 +215,7 @@ describe('MatChipGrid', () => {
         });
 
         it('should not focus if chip grid is not focused', fakeAsync(() => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
           const midItem = chips.get(2)!;
 
           // Focus and blur the middle item
@@ -225,9 +234,7 @@ describe('MatChipGrid', () => {
         }));
 
         it('should focus the grid if the last focused item is removed', () => {
-          // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-          // It can indicate a deeper issue with the chips.
-          const fixture = createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+          const fixture = createComponent(StandardChipGrid);
           testComponent.chips = [0];
           fixture.changeDetectorRef.markForCheck();
 
@@ -244,7 +251,7 @@ describe('MatChipGrid', () => {
       });
 
       it('should have a focus indicator', () => {
-        createComponent(StandardChipGrid, undefined, [NoopAnimationsModule]);
+        createComponent(StandardChipGrid);
         const focusIndicators = chipGridNativeElement.querySelectorAll(
           '.mat-mdc-chip-primary-focus-indicator',
         );
@@ -262,7 +269,7 @@ describe('MatChipGrid', () => {
           fixture = createComponent(ChipGridWithRemove);
           flush();
           trailingActions = chipGridNativeElement.querySelectorAll(
-            '.mdc-evolution-chip__action--trailing',
+            '.mdc-evolution-chip__action--secondary',
           );
         }));
 
@@ -441,8 +448,7 @@ describe('MatChipGrid', () => {
 
           expect(document.activeElement).toBe(primaryActions[1]);
 
-          directionality.value = 'rtl';
-          directionality.change.next('rtl');
+          directionality.set('rtl');
           fixture.detectChanges();
 
           dispatchKeyboardEvent(primaryActions[1], 'keydown', RIGHT_ARROW);
@@ -503,9 +509,7 @@ describe('MatChipGrid', () => {
   describe('FormFieldChipGrid', () => {
     describe('keyboard behavior', () => {
       it('should maintain focus if the active chip is deleted', () => {
-        // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-        // It can indicate a deeper issue with the chips.
-        const fixture = createComponent(FormFieldChipGrid, undefined, [NoopAnimationsModule]);
+        const fixture = createComponent(FormFieldChipGrid);
         const secondChip = fixture.nativeElement.querySelectorAll('.mat-mdc-chip')[1];
         const secondChipAction = secondChip.querySelector('.mdc-evolution-chip__action--primary');
 
@@ -581,14 +585,80 @@ describe('MatChipGrid', () => {
     });
   });
 
+  describe('ChipGrid without input', () => {
+    it('should not throw when used without a chip input', () => {
+      expect(() => createComponent(ChipGridWithoutInput)).not.toThrow();
+    });
+
+    it('should be able to focus the first chip', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      chipGridInstance.focus();
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(primaryActions[0]);
+    });
+
+    it('should not do anything on focus if there are no chips', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      (testComponent as unknown as ChipGridWithoutInput).chips = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      chipGridInstance.focus();
+      fixture.detectChanges();
+
+      expect(chipGridNativeElement.contains(document.activeElement)).toBe(false);
+    });
+
+    it('should have a default id on the component instance', () => {
+      createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.id).toMatch(/^mat-chip-grid-\w+$/);
+    });
+
+    it('should have empty getters that work without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.empty).toBe(false);
+
+      (testComponent as unknown as ChipGridWithoutInput).chips = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(chipGridInstance.empty).toBe(true);
+    });
+
+    it('should have a placeholder getter that works without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      (testComponent as unknown as ChipGridWithoutInput).placeholder = 'Hello';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(chipGridInstance.placeholder).toBe('Hello');
+    });
+
+    it('should have a focused getter that works without an input', () => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      expect(chipGridInstance.focused).toBe(false);
+
+      chipGridInstance.focus();
+      fixture.detectChanges();
+
+      expect(chipGridInstance.focused).toBe(true);
+    });
+
+    it('should set aria-describedby on the grid when there is no input', fakeAsync(() => {
+      const fixture = createComponent(ChipGridWithoutInput);
+      const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+      flush();
+      fixture.detectChanges();
+
+      expect(chipGridNativeElement.getAttribute('aria-describedby')).toBe(hint.id);
+    }));
+  });
+
   describe('with chip remove', () => {
     it('should properly focus next item if chip is removed through click', fakeAsync(() => {
-      // TODO(crisbeto): this test fails without the NoopAnimationsModule for some reason.
-      // It can indicate a deeper issue with the chips.
-      const fixture = createComponent(ChipGridWithRemove, undefined, [NoopAnimationsModule]);
+      const fixture = createComponent(ChipGridWithRemove);
       flush();
       const trailingActions = chipGridNativeElement.querySelectorAll<HTMLElement>(
-        '.mdc-evolution-chip__action--trailing',
+        '.mdc-evolution-chip__action--secondary',
       );
       const chip = chips.get(2)!;
       chip.focus();
@@ -1024,25 +1094,14 @@ describe('MatChipGrid', () => {
     direction: Direction = 'ltr',
     additionalImports: Type<unknown>[] = [],
   ): ComponentFixture<T> {
-    directionality = {
-      value: direction,
-      change: new EventEmitter<Direction>(),
-    } as Directionality;
+    directionality = signal(direction);
 
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatChipsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ...additionalImports,
-      ],
+      imports: additionalImports,
       providers: [
-        {provide: Directionality, useValue: directionality},
+        provideFakeDirectionality(directionality),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [component],
     });
 
     const fixture = TestBed.createComponent<T>(component);
@@ -1069,7 +1128,7 @@ describe('MatChipGrid', () => {
       }
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput],
 })
 class StandardChipGrid {
   name: string = 'Test';
@@ -1091,7 +1150,7 @@ class StandardChipGrid {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel],
 })
 class FormFieldChipGrid {
   chips = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1123,7 +1182,7 @@ class FormFieldChipGrid {
           (matChipInputTokenEnd)="add($event)"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel, ReactiveFormsModule],
 })
 class InputChipGrid {
   foods: any[] = [
@@ -1170,20 +1229,29 @@ class InputChipGrid {
 
 @Component({
   template: `
-<form #form="ngForm" novalidate>
-  <mat-form-field>
-    <mat-chip-grid #chipGrid [formControl]="formControl">
-      @for (food of foods; track food) {
-        <mat-chip-row [value]="food.value">{{food.viewValue}}</mat-chip-row>
-      }
-    </mat-chip-grid>
-    <input name="test" [matChipInputFor]="chipGrid"/>
-    <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
-    <mat-error>Should have value</mat-error>
-  </mat-form-field>
-</form>
+    <form #form="ngForm" novalidate>
+      <mat-form-field>
+        <mat-chip-grid #chipGrid [formControl]="formControl">
+          @for (food of foods; track food) {
+            <mat-chip-row [value]="food.value">{{food.viewValue}}</mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input name="test" [matChipInputFor]="chipGrid"/>
+        <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
+        <mat-error>Should have value</mat-error>
+      </mat-form-field>
+    </form>
   `,
-  standalone: false,
+  imports: [
+    MatChipGrid,
+    MatChipRow,
+    MatChipInput,
+    MatFormField,
+    MatHint,
+    MatError,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
 })
 class ChipGridWithFormErrorMessages {
   foods: any[] = [
@@ -1219,7 +1287,7 @@ class ChipGridWithFormErrorMessages {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatChipRemove],
 })
 class ChipGridWithRemove {
   chips = [0, 1, 2, 3, 4];
@@ -1227,4 +1295,23 @@ class ChipGridWithRemove {
   removeChip(event: MatChipEvent) {
     this.chips.splice(event.chip.value, 1);
   }
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Foods</mat-label>
+      <mat-chip-grid #chipGrid [placeholder]="placeholder">
+        @for (food of chips; track food) {
+          <mat-chip-row>{{ food }}</mat-chip-row>
+        }
+      </mat-chip-grid>
+      <mat-hint>Some hint</mat-hint>
+    </mat-form-field>
+  `,
+  imports: [MatChipGrid, MatChipRow, MatFormField, MatLabel, MatHint],
+})
+class ChipGridWithoutInput {
+  chips = ['Pizza', 'Pasta', 'Tacos'];
+  placeholder: string;
 }

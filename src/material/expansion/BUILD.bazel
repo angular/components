@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -83,7 +83,6 @@ ng_project(
     srcs = [
         "accordion.ts",
         "accordion-base.ts",
-        "expansion-animations.ts",
         "expansion-module.ts",
         "expansion-panel.ts",
         "expansion-panel-base.ts",
@@ -112,7 +111,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -125,6 +124,7 @@ ts_project(
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
+        "//src/material/core",
     ],
 )
 

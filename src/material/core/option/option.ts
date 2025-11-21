@@ -25,6 +25,7 @@ import {
   inject,
   isSignal,
   Signal,
+  signal,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
@@ -87,7 +88,6 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   private _signalDisableRipple = false;
   private _selected = false;
   private _active = false;
-  private _disabled = false;
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
@@ -109,11 +109,12 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   /** Whether the option is disabled. */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
-    return (this.group && this.group.disabled) || this._disabled;
+    return (this.group && this.group.disabled) || this._disabled();
   }
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled.set(value);
   }
+  private _disabled = signal(false);
 
   /** Whether ripples for the option are disabled. */
   get disableRipple(): boolean {

@@ -9,7 +9,9 @@
 import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
 import {Direction} from '../bidi';
 import {PositionStrategy, ScrollStrategy} from '../overlay';
+import {Observable} from 'rxjs';
 import {BasePortalOutlet} from '../portal';
+import {FocusOrigin} from '../a11y';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -17,8 +19,15 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 /** Valid ARIA roles for a dialog. */
 export type DialogRole = 'dialog' | 'alertdialog';
 
+/** Component that can be used as the container for the dialog. */
+export type DialogContainer = BasePortalOutlet & {
+  _focusTrapped?: Observable<void>;
+  _closeInteractionType?: FocusOrigin;
+  _recaptureFocus?: () => void;
+};
+
 /** Configuration for opening a modal dialog. */
-export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet = BasePortalOutlet> {
+export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = BasePortalOutlet> {
   /**
    * Where the attached component should live in Angular's *logical* component tree.
    * This affects what is available for injection and the change detection order for the
@@ -51,6 +60,17 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   /** Whether the dialog closes with the escape key or pointer events outside the panel element. */
   disableClose?: boolean = false;
 
+  /** Function used to determine whether the dialog is allowed to close. */
+  closePredicate?: <
+    Result = unknown,
+    Component = unknown,
+    Config extends DialogConfig = DialogConfig,
+  >(
+    result: Result | undefined,
+    config: Config,
+    componentInstance: Component | null,
+  ) => boolean;
+
   /** Width of the dialog. */
   width?: string = '';
 
@@ -63,7 +83,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   /** Min-height of the dialog. If a number is provided, assumes pixel units. */
   minHeight?: number | string;
 
-  /** Max-width of the dialog. If a number is provided, assumes pixel units. Defaults to 80vw. */
+  /** Max-width of the dialog. If a number is provided, assumes pixel units. */
   maxWidth?: number | string;
 
   /** Max-height of the dialog. If a number is provided, assumes pixel units. */

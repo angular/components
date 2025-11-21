@@ -7,7 +7,6 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +16,7 @@ import {
   ViewEncapsulation,
   inject,
   ɵNoopNgZone,
+  DOCUMENT,
 } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
@@ -24,7 +24,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
-import {RouterModule} from '@angular/router';
+import {ActivatedRoute, RouterModule} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {getAppState, setAppState} from './dev-app-state';
 import {DevAppRippleOptions} from './ripple-options';
 import {DevAppDirectionality} from './dev-app-directionality';
@@ -53,14 +55,21 @@ export class DevAppLayout {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _document = inject(DOCUMENT);
   private _iconRegistry = inject(MatIconRegistry);
+  private _route = inject(ActivatedRoute);
 
   state = getAppState();
+  testMode: Observable<boolean>;
   navItems = [
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
-    {name: 'CDK Experimental Combobox', route: '/cdk-experimental-combobox'},
-    {name: 'CDK Experimental Listbox', route: '/cdk-experimental-listbox'},
-    {name: 'CDK Experimental Tabs', route: '/cdk-experimental-tabs'},
+    {name: 'Aria Accordion', route: '/aria-accordion'},
+    {name: 'Aria Combobox', route: '/aria-combobox'},
+    {name: 'Aria Grid', route: '/aria-grid'},
+    {name: 'Aria Listbox', route: '/aria-listbox'},
+    {name: 'Aria Menu', route: '/aria-menu'},
+    {name: 'Aria Tabs', route: '/aria-tabs'},
+    {name: 'Aria Toolbar', route: '/aria-toolbar'},
+    {name: 'Aria Tree', route: '/aria-tree'},
     {name: 'CDK Listbox', route: '/cdk-listbox'},
     {name: 'CDK Menu', route: '/cdk-menu'},
     {name: 'Autocomplete', route: '/autocomplete'},
@@ -107,6 +116,8 @@ export class DevAppLayout {
     {name: 'Slider', route: '/slider'},
     {name: 'Snack Bar', route: '/snack-bar'},
     {name: 'Stepper', route: '/stepper'},
+    {name: 'System', route: '/system'},
+    {name: 'System classes', route: '/system-classes'},
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
@@ -128,6 +139,7 @@ export class DevAppLayout {
   readonly isZoneless = this._ngZone instanceof ɵNoopNgZone;
 
   constructor() {
+    this.testMode = this._route.queryParams.pipe(map(params => params['testonly'] === 'true'));
     this.toggleTheme(this.state.darkTheme);
     this.toggleSystemTheme(this.state.systemTheme);
     this.toggleStrongFocus(this.state.strongFocusEnabled);
@@ -136,6 +148,14 @@ export class DevAppLayout {
     this.toggleDirection(this.state.direction);
     this.toggleM3(this.state.m3Enabled);
     this.toggleColorApiBackCompat(this.state.colorApiBackCompat);
+
+    this.testMode.subscribe(isTestOnly => {
+      if (isTestOnly) {
+        this.toggleM3(true);
+        this.toggleSystemTheme(true);
+        this._document.body.classList.add('demo-testonly-mode');
+      }
+    });
   }
 
   toggleTheme(value = !this.state.darkTheme) {

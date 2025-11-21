@@ -1,6 +1,6 @@
 import * as Lint from 'tslint';
 import ts from 'typescript';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 
 const hooks = new Set([
   'ngOnChanges',

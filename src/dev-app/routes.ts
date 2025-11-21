@@ -41,19 +41,36 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./card/card-demo').then(m => m.CardDemo),
   },
   {
-    path: 'cdk-experimental-combobox',
-    loadComponent: () =>
-      import('./cdk-experimental-combobox/cdk-combobox-demo').then(m => m.CdkComboboxDemo),
+    path: 'aria-combobox',
+    loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
   },
   {
-    path: 'cdk-experimental-listbox',
-    loadComponent: () =>
-      import('./cdk-experimental-listbox/cdk-listbox-demo').then(m => m.CdkExperimentalListboxDemo),
+    path: 'aria-grid',
+    loadComponent: () => import('./aria-grid/grid-demo').then(m => m.GridDemo),
   },
   {
-    path: 'cdk-experimental-tabs',
-    loadComponent: () =>
-      import('./cdk-experimental-tabs/cdk-tabs-demo').then(m => m.CdkExperimentalTabsDemo),
+    path: 'aria-listbox',
+    loadComponent: () => import('./aria-listbox/listbox-demo').then(m => m.ListboxDemo),
+  },
+  {
+    path: 'aria-menu',
+    loadComponent: () => import('./aria-menu/menu-demo').then(m => m.MenuDemo),
+  },
+  {
+    path: 'aria-tabs',
+    loadComponent: () => import('./aria-tabs/tabs-demo').then(m => m.TabsDemo),
+  },
+  {
+    path: 'aria-accordion',
+    loadComponent: () => import('./aria-accordion/accordion-demo').then(m => m.AccordionDemo),
+  },
+  {
+    path: 'aria-tree',
+    loadComponent: () => import('./aria-tree/tree-demo').then(m => m.TreeDemo),
+  },
+  {
+    path: 'aria-toolbar',
+    loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },
   {
     path: 'cdk-dialog',
@@ -217,6 +234,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./stepper/stepper-demo').then(m => m.StepperDemo),
   },
   {
+    path: 'system',
+    loadComponent: () => import('./system/system-demo').then(m => m.SystemDemo),
+  },
+  {
     path: 'table',
     loadComponent: () => import('./table/table-demo').then(m => m.TableDemo),
   },
@@ -277,6 +298,11 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'selection',
     loadComponent: () => import('./selection/selection-demo').then(m => m.SelectionDemo),
+  },
+  {
+    path: 'system-classes',
+    loadComponent: () =>
+      import('./system-classes-demo/system-classes-demo').then(m => m.SystemClassesDemo),
   },
   {
     path: 'examples',

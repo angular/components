@@ -8,7 +8,11 @@
 
 import {BehaviorSubject, Subscription} from 'rxjs';
 
-/** Represents the status of auto change detection. */
+/**
+ * The status of the test harness auto change detection. If not diabled test harnesses will
+ * automatically trigger change detection after every action (such as a click) and before every read
+ * (such as getting the text of an element).
+ */
 export interface AutoChangeDetectionStatus {
   /** Whether auto change detection is disabled. */
   isDisabled: boolean;

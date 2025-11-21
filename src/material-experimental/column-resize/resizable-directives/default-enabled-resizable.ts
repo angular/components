@@ -14,16 +14,14 @@ import {
   ViewContainerRef,
   ChangeDetectorRef,
   inject,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay} from '@angular/cdk/overlay';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {
-  CdkColumnDef,
-  _CoalescedStyleScheduler,
   _COALESCED_STYLE_SCHEDULER,
-} from '@angular/cdk/table';
-import {
+  _CoalescedStyleScheduler,
   ColumnResize,
   ColumnResizeNotifierSource,
   HeaderRowEventDispatcher,
@@ -49,7 +47,6 @@ export class MatDefaultResizable extends AbstractMatResizable {
   protected readonly eventDispatcher = inject(HeaderRowEventDispatcher);
   protected readonly injector = inject(Injector);
   protected readonly ngZone = inject(NgZone);
-  protected readonly overlay = inject(Overlay);
   protected readonly resizeNotifier = inject(ColumnResizeNotifierSource);
   protected readonly resizeStrategy = inject(ResizeStrategy);
   protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);

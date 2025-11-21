@@ -1,22 +1,21 @@
 @use 'sass:map';
 @use '../core/style/elevation';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, timepicker);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-timepicker.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-timepicker
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    container-background-color: map.get($systems, md-sys-color, surface-container),
-    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-    container-elevation-shadow:
-      m3-utils.hardcode(elevation.get-box-shadow(2), $exclude-hardcoded),
-  );
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      timepicker-container-shape: map.get($system, corner-extra-small),
+    ),
+    color: (
+      timepicker-container-background-color: map.get($system, surface-container),
+      timepicker-container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    typography: (),
+    density: (),
+  );
 }

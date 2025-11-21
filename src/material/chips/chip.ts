@@ -9,7 +9,7 @@
 import {FocusMonitor, _IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentInit,
   AfterViewInit,
@@ -33,6 +33,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -42,9 +43,15 @@ import {
   _animationsDisabled,
 } from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
-import {MatChipAction} from './chip-action';
-import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
-import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {MatChipAction, MatChipContent} from './chip-action';
+import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
+import {
+  MAT_CHIP,
+  MAT_CHIP_AVATAR,
+  MAT_CHIP_EDIT,
+  MAT_CHIP_REMOVE,
+  MAT_CHIP_TRAILING_ICON,
+} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
@@ -86,7 +93,7 @@ export interface MatChipEvent {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_CHIP, useExisting: MatChip}],
-  imports: [MatChipAction],
+  imports: [MatChipContent],
 })
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
   _changeDetectorRef = inject(ChangeDetectorRef);
@@ -132,6 +139,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
   protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
 
+  /** All edit icons present in the chip. */
+  @ContentChildren(MAT_CHIP_EDIT, {descendants: true})
+  protected _allEditIcons: QueryList<MatChipEdit>;
+
   /** All remove icons present in the chip. */
   @ContentChildren(MAT_CHIP_REMOVE, {descendants: true})
   protected _allRemoveIcons: QueryList<MatChipRemove>;
@@ -155,11 +166,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** ARIA description for the content of the chip. */
   @Input('aria-description') ariaDescription: string | null = null;
 
-  /** Id of a span that contains this chip's aria description. */
-  _ariaDescriptionId = `${this.id}-aria-description`;
-
   /** Whether the chip list is disabled. */
   _chipListDisabled: boolean = false;
+
+  /** Whether the chip was focused when it was removed. */
+  _hadFocusOnRemove = false;
 
   private _textElement!: HTMLElement;
 
@@ -179,10 +190,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
   /**
    * Theme color of the chip. This API is supported in M2 themes only, it has no
-   * effect in M3 themes. For color customization in M3, see https://material.angular.io/components/chips/styling.
+   * effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/chips/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color?: string | null;
 
@@ -223,6 +234,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** The chip's leading icon. */
   @ContentChild(MAT_CHIP_AVATAR) leadingIcon: MatChipAvatar;
+
+  /** The chip's leading edit icon. */
+  @ContentChild(MAT_CHIP_EDIT) editIcon: MatChipEdit;
 
   /** The chip's trailing icon. */
   @ContentChild(MAT_CHIP_TRAILING_ICON) trailingIcon: MatChipTrailingIcon;
@@ -278,6 +292,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     this._actionChanges = merge(
       this._allLeadingIcons.changes,
       this._allTrailingIcons.changes,
+      this._allEditIcons.changes,
       this._allRemoveIcons.changes,
     ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
@@ -301,6 +316,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    */
   remove(): void {
     if (this.removable) {
+      this._hadFocusOnRemove = this._hasFocus();
       this.removed.emit({chip: this});
     }
   }
@@ -312,6 +328,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
       this.disableRipple ||
       this._animationsDisabled ||
       this._isBasicChip ||
+      !this._hasInteractiveActions() ||
       !!this._globalRippleOptions?.disabled
     );
   }
@@ -357,6 +374,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   _getActions(): MatChipAction[] {
     const result: MatChipAction[] = [];
 
+    if (this.editIcon) {
+      result.push(this.editIcon);
+    }
+
     if (this.primaryAction) {
       result.push(this.primaryAction);
     }
@@ -365,15 +386,21 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
       result.push(this.removeIcon);
     }
 
-    if (this.trailingIcon) {
-      result.push(this.trailingIcon);
-    }
-
     return result;
   }
 
   /** Handles interactions with the primary action of the chip. */
   _handlePrimaryActionInteraction() {
+    // Empty here, but is overwritten in child classes.
+  }
+
+  /** Returns whether the chip has any interactive actions. */
+  _hasInteractiveActions(): boolean {
+    return this._getActions().length > 0;
+  }
+
+  /** Handles interactions with the edit action of the chip. */
+  _edit(event: Event) {
     // Empty here, but is overwritten in child classes.
   }
 

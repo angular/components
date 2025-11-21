@@ -8,7 +8,7 @@
 
 /** Possible states of the lifecycle of a dialog. */
 import {FocusOrigin} from '@angular/cdk/a11y';
-import {merge, Observable, Subject} from 'rxjs';
+import {merge, Observable, ReplaySubject} from 'rxjs';
 import {DialogRef} from '@angular/cdk/dialog';
 import {DialogPosition, MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
@@ -43,10 +43,10 @@ export class MatDialogRef<T, R = any> {
   id: string;
 
   /** Subject for notifying the user that the dialog has finished opening. */
-  private readonly _afterOpened = new Subject<void>();
+  private readonly _afterOpened = new ReplaySubject<void>(1);
 
   /** Subject for notifying the user that the dialog has started closing. */
-  private readonly _beforeClosed = new Subject<R | undefined>();
+  private readonly _beforeClosed = new ReplaySubject<R | undefined>(1);
 
   /** Result to be passed to afterClosed. */
   private _result: R | undefined;
@@ -66,10 +66,10 @@ export class MatDialogRef<T, R = any> {
 
   constructor(
     private _ref: DialogRef<R, T>,
-    config: MatDialogConfig,
+    private _config: MatDialogConfig,
     public _containerInstance: MatDialogContainer,
   ) {
-    this.disableClose = config.disableClose;
+    this.disableClose = _config.disableClose;
     this.id = _ref.id;
 
     // Used to target panels specifically tied to dialogs.
@@ -121,6 +121,12 @@ export class MatDialogRef<T, R = any> {
    * @param dialogResult Optional result to return to the dialog opener.
    */
   close(dialogResult?: R): void {
+    const closePredicate = this._config.closePredicate;
+
+    if (closePredicate && !closePredicate(dialogResult, this._config, this.componentInstance)) {
+      return;
+    }
+
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.

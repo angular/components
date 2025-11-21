@@ -7,6 +7,7 @@
  */
 
 export * from './chip-avatar-harness';
+export * from './chip-edit-harness';
 export * from './chip-harness';
 export * from './chip-harness-filters';
 export * from './chip-input-harness';

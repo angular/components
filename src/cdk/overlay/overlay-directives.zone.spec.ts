@@ -14,7 +14,6 @@ describe('Overlay directives Zone.js integration', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [provideZoneChangeDetection()],
     });
   });
@@ -110,15 +109,4 @@ class ConnectedOverlayDirectiveTest {
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
   transformOriginSelector: string;
-}
-
-@Component({
-  template: `
-    <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
-    <ng-template cdk-connected-overlay>Menu content</ng-template>`,
-  imports: [OverlayModule],
-})
-class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
 }

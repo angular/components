@@ -1,0 +1,26 @@
+.example-grid-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.example-grid {
+  border-spacing: 4px;
+}
+
+.example-grid[aria-disabled='true'] {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-cell {
+  height: 50px;
+  width: 50px;
+  border: 1px solid;
+}
+
+.example-grid-shortcuts {
+  margin-left: 12px;
+}

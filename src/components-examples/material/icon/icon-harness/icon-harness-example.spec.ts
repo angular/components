@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {IconHarnessExample} from './icon-harness-example';
-import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatIconRegistry} from '@angular/material/icon';
 import {MatIconHarness} from '@angular/material/icon/testing';
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -11,9 +11,6 @@ describe('IconHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatIconModule],
-    });
     const registry = TestBed.inject(MatIconRegistry);
     const sanitizer = TestBed.inject(DomSanitizer);
 

@@ -3,7 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
+import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
 import {
   MatDatepickerModule,
   MatDateRangeInput,
@@ -11,6 +11,7 @@ import {
   MatEndDate,
   MatStartDate,
 } from '../../datepicker';
+import {MatFormFieldModule} from '../../form-field';
 import {MatCalendarHarness} from './calendar-harness';
 import {
   MatDateRangeInputHarness,
@@ -24,8 +25,11 @@ describe('matDateRangeInputHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule, FormsModule, DateRangeInputHarnessTest],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      imports: [MatDatepickerModule, FormsModule, DateRangeInputHarnessTest],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
     fixture = TestBed.createComponent(DateRangeInputHarnessTest);
     fixture.detectChanges();
@@ -34,7 +38,14 @@ describe('matDateRangeInputHarness', () => {
 
   it('should load all date range input harnesses', async () => {
     const inputs = await loader.getAllHarnesses(MatDateRangeInputHarness);
-    expect(inputs.length).toBe(2);
+    expect(inputs.length).toBe(3);
+  });
+
+  it('should load date range input with a specific label', async () => {
+    const inputs = await loader.getAllHarnesses(
+      MatDateRangeInputHarness.with({label: 'Date range'}),
+    );
+    expect(inputs.length).toBe(1);
   });
 
   it('should get whether the input is disabled', async () => {
@@ -261,13 +272,21 @@ describe('matDateRangeInputHarness', () => {
       <input matStartDate>
       <input matEndDate>
     </mat-date-range-input>
+
+    <mat-form-field>
+      <mat-label>Date range</mat-label>
+      <mat-date-range-input basic>
+      <input matStartDate>
+      <input matEndDate>
+    </mat-date-range-input>
+    </mat-form-field>
   `,
   imports: [
-    MatNativeDateModule,
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
     MatDateRangePicker,
+    MatFormFieldModule,
     FormsModule,
   ],
 })

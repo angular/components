@@ -1,25 +1,26 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, snack-bar);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-snack-bar.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-snack-bar
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    button-color: map.get($systems, md-sys-color, inverse-primary),
-    container-color: map.get($systems, md-sys-color, inverse-surface),
-    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-    supporting-text-color: map.get($systems, md-sys-color, inverse-on-surface),
-    supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    supporting-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-    supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-  );
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      snack-bar-container-shape: map.get($system, corner-extra-small),
+    ),
+    color: (
+      snack-bar-button-color: map.get($system, inverse-primary),
+      snack-bar-container-color: map.get($system, inverse-surface),
+      snack-bar-supporting-text-color: map.get($system, inverse-on-surface),
+    ),
+    typography: (
+      snack-bar-supporting-text-font: map.get($system, body-medium-font),
+      snack-bar-supporting-text-line-height: map.get($system, body-medium-line-height),
+      snack-bar-supporting-text-size: map.get($system, body-medium-size),
+      snack-bar-supporting-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: (),
+  );
 }

@@ -7,15 +7,17 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { MatFormFieldControlHarnessBase } from '@angular/material/form-field/testing/control';
+import { MatFormFieldControlHarnessFilters } from '@angular/material/form-field/testing/control';
 
 // @public
-export interface InputHarnessFilters extends BaseHarnessFilters {
+export interface InputHarnessFilters extends MatFormFieldControlHarnessFilters {
     placeholder?: string | RegExp;
     value?: string | RegExp;
 }
 
 // @public
-export class MatInputHarness extends MatFormFieldControlHarness {
+export class MatInputHarness extends MatFormFieldControlHarnessBase {
     blur(): Promise<void>;
     focus(): Promise<void>;
     getId(): Promise<string>;
@@ -44,7 +46,7 @@ export class MatNativeOptionHarness extends ComponentHarness {
 }
 
 // @public
-export class MatNativeSelectHarness extends MatFormFieldControlHarness {
+export class MatNativeSelectHarness extends MatFormFieldControlHarnessBase_2 {
     blur(): Promise<void>;
     focus(): Promise<void>;
     getId(): Promise<string>;
@@ -71,7 +73,7 @@ export interface NativeOptionHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export interface NativeSelectHarnessFilters extends BaseHarnessFilters {
+export interface NativeSelectHarnessFilters extends MatFormFieldControlHarnessFilters {
 }
 
 // (No @packageDocumentation comment for this package)

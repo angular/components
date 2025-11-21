@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -143,10 +143,10 @@ ng_project(
     srcs = [
         "button.ts",
         "button-base.ts",
+        "button-module.ts",
         "fab.ts",
         "icon-button.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [
@@ -163,7 +163,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "button_tests_lib",
     testonly = True,
     srcs = glob(
@@ -193,7 +193,11 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":theme"],
+    srcs = [
+        ":fab_theme",
+        ":icon_button_theme",
+        ":theme",
+    ],
 )
 
 filegroup(

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './module';
+export * from './tabs-module';
 export {ScrollDirection, MatPaginatedTabHeader} from './paginated-tab-header';
 export {
   MatTabBodyPortal,
@@ -20,12 +20,7 @@ export {MatTabLabel, MAT_TAB_LABEL} from './tab-label';
 export {MatTab} from './tab';
 export {MAT_TAB, MatTabBase} from './tab-token';
 export {MAT_TAB_GROUP, MatTabGroupBase} from './tab-group-token';
-export {
-  MatInkBar,
-  _MatInkBarPositioner,
-  _MAT_INK_BAR_POSITIONER_FACTORY,
-  _MAT_INK_BAR_POSITIONER,
-} from './ink-bar';
+export {MatInkBar, _MatInkBarPositioner, _MAT_INK_BAR_POSITIONER} from './ink-bar';
 export {MatTabHeader} from './tab-header';
 export {
   MatTabGroup,
@@ -34,5 +29,4 @@ export {
   MatTabHeaderPosition,
 } from './tab-group';
 export {MatTabNav, MatTabNavPanel, MatTabLink} from './tab-nav-bar/tab-nav-bar';
-export {matTabsAnimations} from './tabs-animations';
 export {MatTabLabelWrapper} from './tab-label-wrapper';

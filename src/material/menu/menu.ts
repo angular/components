@@ -29,6 +29,7 @@ import {
   AfterRenderRef,
   inject,
   Injector,
+  signal,
 } from '@angular/core';
 import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
@@ -78,23 +79,14 @@ export const MAT_MENU_DEFAULT_OPTIONS = new InjectionToken<MatMenuDefaultOptions
   'mat-menu-default-options',
   {
     providedIn: 'root',
-    factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      overlapTrigger: false,
+      xPosition: 'after',
+      yPosition: 'below',
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
-  return {
-    overlapTrigger: false,
-    xPosition: 'after',
-    yPosition: 'below',
-    backdropClass: 'cdk-overlay-transparent-backdrop',
-  };
-}
 
 /** Name of the enter animation `@keyframes`. */
 const ENTER_ANIMATION = '_mat-menu-enter';
@@ -146,7 +138,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   readonly _animationDone = new Subject<'void' | 'enter'>();
 
   /** Whether the menu is animating. */
-  _isAnimating = false;
+  _isAnimating = signal(false);
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -470,13 +462,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
         this._exitFallbackTimeout = undefined;
       }
       this._animationDone.next(isExit ? 'void' : 'enter');
-      this._isAnimating = false;
+      this._isAnimating.set(false);
     }
   }
 
   protected _onAnimationStart(state: string) {
     if (state === ENTER_ANIMATION || state === EXIT_ANIMATION) {
-      this._isAnimating = true;
+      this._isAnimating.set(true);
     }
   }
 

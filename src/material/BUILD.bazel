@@ -1,13 +1,11 @@
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load(
     "//src/material:config.bzl",
     "MATERIAL_ENTRYPOINTS",
     "MATERIAL_TARGETS",
     "MATERIAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "sass_library")
-load("//tools:defaults2.bzl", "ts_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -67,7 +65,8 @@ sass_library(
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_palettes",
         "//src/material/core/theming:core_all_theme",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:classes",
+        "//src/material/core/tokens:system",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
         "//src/material/core/typography:utils",
@@ -142,7 +141,7 @@ ng_package(
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_palettes",
         "//src/material/core/theming:core_all_theme",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:system",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
         "//src/material/core/typography:utils",
@@ -193,5 +192,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [get_legacy_label(t) for t in MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS],
+    deps = MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS,
 )

@@ -161,8 +161,8 @@ describe('MapPolyline', () => {
 })
 class TestApp {
   @ViewChild(MapPolyline) polyline: MapPolyline;
-  options?: google.maps.PolylineOptions;
-  path?: google.maps.LatLngLiteral[];
+  options: google.maps.PolylineOptions;
+  path: google.maps.LatLngLiteral[];
 
   handleClick() {}
 

@@ -6,8 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Injectable, Injector, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {
+  Injectable,
+  Injector,
+  NgZone,
+  OnDestroy,
+  RendererFactory2,
+  inject,
+  DOCUMENT,
+} from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleRenderer,

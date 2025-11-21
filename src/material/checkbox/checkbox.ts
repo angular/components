@@ -26,6 +26,7 @@ import {
   numberAttribute,
   inject,
   HostAttributeToken,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -42,8 +43,8 @@ import {
   _animationsDisabled,
 } from '../core';
 import {
+  checkboxDefaults,
   MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
   MatCheckboxDefaultOptions,
 } from './checkbox-config';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
@@ -70,9 +71,6 @@ export class MatCheckboxChange {
   /** The new `checked` value of the checkbox. */
   checked: boolean;
 }
-
-// Default checkbox configuration.
-const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
 
 @Component({
   selector: 'mat-checkbox',
@@ -220,10 +218,10 @@ export class MatCheckbox
   // the lack of type checking previously and assigning random strings.
   /**
    * Theme color of the checkbox. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/checkbox/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/checkbox/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: string | undefined;
 
@@ -247,8 +245,8 @@ export class MatCheckbox
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
-    this._options = this._options || defaults;
-    this.color = this._options.color || defaults.color;
+    this._options = this._options || checkboxDefaults;
+    this.color = this._options.color || checkboxDefaults.color;
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
     this.id = this._uniqueId = inject(_IdGenerator).getId('mat-mdc-checkbox-');
     this.disabledInteractive = this._options?.disabledInteractive ?? false;
@@ -261,7 +259,7 @@ export class MatCheckbox
   }
 
   ngAfterViewInit() {
-    this._syncIndeterminate(this._indeterminate);
+    this._syncIndeterminate(this.indeterminate);
   }
 
   /** Whether the checkbox is checked. */
@@ -298,26 +296,26 @@ export class MatCheckbox
    */
   @Input({transform: booleanAttribute})
   get indeterminate(): boolean {
-    return this._indeterminate;
+    return this._indeterminate();
   }
   set indeterminate(value: boolean) {
-    const changed = value != this._indeterminate;
-    this._indeterminate = value;
+    const changed = value != this._indeterminate();
+    this._indeterminate.set(value);
 
     if (changed) {
-      if (this._indeterminate) {
+      if (value) {
         this._transitionCheckState(TransitionCheckState.Indeterminate);
       } else {
         this._transitionCheckState(
           this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked,
         );
       }
-      this.indeterminateChange.emit(this._indeterminate);
+      this.indeterminateChange.emit(value);
     }
 
-    this._syncIndeterminate(this._indeterminate);
+    this._syncIndeterminate(value);
   }
-  private _indeterminate: boolean = false;
+  private _indeterminate = signal(false);
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
@@ -419,8 +417,8 @@ export class MatCheckbox
       // When user manually click on the checkbox, `indeterminate` is set to false.
       if (this.indeterminate && clickAction !== 'check') {
         Promise.resolve().then(() => {
-          this._indeterminate = false;
-          this.indeterminateChange.emit(this._indeterminate);
+          this._indeterminate.set(false);
+          this.indeterminateChange.emit(false);
         });
       }
 

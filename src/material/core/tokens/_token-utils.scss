@@ -1,41 +1,7 @@
-@use '../style/elevation';
 @use '../style/sass-utils';
-@use './m3-system';
 @use 'sass:list';
-@use 'sass:meta';
 @use 'sass:map';
 @use 'sass:string';
-
-$_tokens: null;
-$_component-prefix: null;
-$_system-fallbacks: m3-system.create-system-fallbacks();
-
-// Sets the token prefix and map to use when creating token slots.
-@mixin use-tokens($prefix, $tokens) {
-  $_component-prefix: $prefix !global;
-  $_tokens: $tokens !global;
-
-  @content;
-
-  $_component-prefix: null !global;
-  $_tokens: null !global;
-}
-
-// Combines a prefix and a string to generate a CSS variable name for a token.
-@function _create-var-name($prefix, $token) {
-  @if $prefix == null or $token == null {
-    @error 'Must specify both prefix and name when generating token';
-  }
-
-  $string-prefix: '';
-
-  // Prefixes are lists so we need to combine them.
-  @each $part in $prefix {
-    $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
-  }
-
-  @return string.unquote('--#{$string-prefix}-#{$token}');
-}
 
 // Creates a CSS variable, including the fallback if provided.
 @function _create-var($name, $fallback: null) {
@@ -46,186 +12,78 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   }
 }
 
-// Gets the value of the token given the current global context state.
-@function _get-token-value($token, $fallback) {
-  $var-name: _create-var-name($_component-prefix, $token);
-  $fallback: _get-token-fallback($token, $fallback);
-  @return _create-var($var-name, $fallback);
+// Returns a list of overrides for the given M3 get-tokens mixin and prefix. Each token has its
+// prefix removed since the overrides API expects its absence. The returned map includes "all" for
+// all override tokens, and also the subsets with keys base, color, typography, and density.
+@function get-overrides($tokens, $prefix) {
+  $base: remove-token-prefixes(map.get($tokens, base), $prefix);
+  $color: remove-token-prefixes(map.get($tokens, color), $prefix);
+  $typography: remove-token-prefixes(map.get($tokens, typography), $prefix);
+  $density: remove-token-prefixes(map.get($tokens, density), $prefix);
+  $all: ();
+  @each $map in ($base, $color, $typography, $density) {
+    $all: map.merge($all, $map);
+  }
+
+  @return (
+    all: $all,
+    base: $base,
+    color: $color,
+    typography: $typography,
+    density: $density,
+  );
 }
 
-// Assertion mixin that throws an error if the global state has not been set up by wrapping
-// calls with `use-tokens`.
-@function _assert-use-tokens($token) {
-  @if $_component-prefix == null or $_tokens == null {
-    @error 'Function was not called within a wrapping call of `use-tokens`';
+// Removes a prefix from each component token in the provided map of prefixed tokens.
+@function remove-token-prefixes($prefixed-tokens: (), $prefix) {
+  $tokens: ();
+  @each $prefixed-token, $value in $prefixed-tokens {
+    $token: string.slice($prefixed-token, string.length($prefix) + 2);
+    $tokens: map.set($tokens, $token, $value);
   }
-  @if not map.has-key($_tokens, $token) {
-    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
-  }
-
-  @return true;
+  @return $tokens;
 }
 
 // Returns the token slot value.
 // Accepts an optional fallback parameter to include in the CSS variable.
 // If $fallback is `true`, then use the tokens map to get the fallback.
-// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
-@function slot($token, $fallback: null) {
-  $_assert: _assert-use-tokens($token);
-  @return _get-token-value($token, $fallback);
-}
-
-// Returns the name of a token including the current prefix. Intended to be used in calculations
-// involving tokens. `create-token-slot` should be used when outputting tokens.
-@function get-token-variable-name($token) {
-  $_assert: _assert-use-tokens($token);
-  @return _create-var-name($_component-prefix, $token);
-}
-
-// Gets the token's fallback value. Prefers adding a system-level fallback if one exists, otherwise
-// use the provided fallback.
-@function _get-token-fallback($token, $fallback: null) {
-  // If the $fallback is `true`, this is the component's signal to use the current token map value
-  @if ($fallback == true) {
-    $fallback: map.get($_tokens, $token);
+@function slot($token, $fallbacks, $fallback: null) {
+  // Fallbacks are a map of base, color, typography, and density tokens. To simplify
+  // lookup, flatten these token groups into a single map.
+  $fallbacks-flattened: ();
+  @each $tokens in map.values($fallbacks) {
+    @each $token, $value in $tokens {
+      $fallbacks-flattened: map.set($fallbacks-flattened, $token, $value);
+    }
+  }
+  @if not map.has-key($fallbacks-flattened, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are:' +
+        #{map.keys($fallbacks-flattened)};
   }
 
-  // Check whether there's a system-level fallback. If not, return the optional
-  // provided fallback (otherwise null).
-  $sys-fallback: map.get($_system-fallbacks, $_component-prefix, $token);
-  @if (not $sys-fallback) {
-    @return $fallback;
-  }
-
+  $sys-fallback: map.get($fallbacks-flattened, $token);
   @if (sass-utils.is-css-var-name($sys-fallback)) {
-    @return _create-var($sys-fallback, $fallback);
+    $sys-fallback: _create-var($sys-fallback, $fallback);
   }
 
-  @return $sys-fallback;
+  @return _create-var(--mat-#{$token}, $sys-fallback);
 }
 
-// Outputs a map of tokens under a specific prefix.
-@mixin create-token-values($prefix, $tokens) {
-  @include _create-token-values-internal($prefix, $tokens, false);
-}
-
-// Outputs a map of tokens under a specific prefix in scenarios where tokens may be mixed with
-// other declarations (e.g. M2 themes). Used to avoid https://sass-lang.com/documentation/breaking-changes/mixed-decls/
-@mixin create-token-values-mixed($prefix, $tokens) {
-  @include _create-token-values-internal($prefix, $tokens, true);
-}
-
-@mixin _create-token-values-internal($prefix, $tokens, $in-place) {
-  @if ($tokens != null) {
-    @if ($in-place) {
-      & {
-        @each $key, $value in $tokens {
-          @if $value != null {
-            @include define-css_var($prefix, $key, $value);
-          }
-        }
-      }
-    } @else {
-      @each $key, $value in $tokens {
-        @if $value != null {
-          @include define-css-var($prefix, $key, $value);
-        }
+// Outputs a map of token values as CSS variable definitions.
+@mixin values($tokens) {
+  @include sass-utils.current-selector-or-root() {
+    @each $key, $value in $tokens {
+      @if $value != null {
+        --mat-#{$key}: #{$value};
       }
     }
   }
-}
-
-@mixin define-css-var($prefix, $key, $value) {
-  $name: _create-var-name($prefix, $key);
-  #{$name}: #{$value};
-}
-
-// MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
-// the elevation and shadow-color tokens into a full box-shadow and use it as the value for the
-// elevation token.
-@function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
-  $elevation: map.get($tokens, $elevation-token);
-  $shadow-color: map.get($tokens, $shadow-color-token);
-  @return map.merge(
-    $tokens,
-    (
-      $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
-      $shadow-color-token: null,
-    )
-  );
-}
-
-/// Checks whether a list starts wih a given prefix
-/// @param {List} $list The list value to check the prefix of.
-/// @param {List} $prefix The prefix to check.
-/// @return {Boolean} Whether the list starts with the prefix.
-@function _is-prefix($list, $prefix) {
-  @for $i from 1 through list.length($prefix) {
-    @if list.nth($list, $i) != list.nth($prefix, $i) {
-      @return false;
-    }
-  }
-  @return true;
-}
-
-/// Gets the supported color variants in the given token set for the given prefix.
-/// @param {Map} $tokens The full token map.
-/// @param {List} $prefix The component prefix to get color variants for.
-/// @return {List} The supported color variants.
-@function _supported-color-variants($tokens, $prefix) {
-  $result: ();
-  @each $namespace in map.keys($tokens) {
-    @if list.length($prefix) == list.length($namespace) - 1 and _is-prefix($namespace, $prefix) {
-      $result: list.append($result, list.nth($namespace, list.length($namespace)), comma);
-    }
-  }
-  @return $result;
-}
-
-/// Gets the token values for the given components prefix with the given options.
-/// @param {Map} $tokens The full token map.
-/// @param {List} $prefix The component prefix to get the token values for.
-/// @param {ArgList} Any additional options
-///   Currently the additional supported options are:
-//     - $color-variant - The color variant to use for the component
-//     - $emit-overrides-only - Whether to emit *only* the overrides for the
-//                              specific color variant, or all color styles. Defaults to false.
-/// @throws If given options are invalid
-/// @return {Map} The token values for the requested component.
-@function get-tokens-for($tokens, $prefix, $options...) {
-  $options: sass-utils.validate-keyword-args($options, (color-variant, emit-overrides-only));
-  @if $tokens == () {
-    @return ();
-  }
-  $values: map.get($tokens, $prefix);
-  @if ($values == null) {
-    @return ();
-  }
-
-  $color-variant: map.get($options, color-variant);
-  $emit-overrides-only: map.get($options, emit-overrides-only);
-  @if $color-variant == null {
-    @return $values;
-  }
-  $overrides: map.get($tokens, list.append($prefix, $color-variant));
-  @if $overrides == null {
-    $variants: _supported-color-variants($tokens, $prefix);
-    $secondary-message: if(
-      $variants == (),
-      'Mixin does not support color variants',
-      'Supported color variants are: #{$variants}'
-    );
-
-    @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
-  }
-
-  @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
 }
 
 /// Emits new token values for the given token overrides.
 /// Verifies that the overrides passed in are valid tokens.
 /// New token values are emitted under the current selector or root.
-@mixin batch-create-token-values($overrides: (), $namespace-configs...) {
+@mixin batch-create-token-values($overrides: (), $namespace-configs) {
   @include sass-utils.current-selector-or-root() {
     $prefixed-name-data: ();
     $all-names: ();
@@ -233,7 +91,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
     @each $config in $namespace-configs {
       $namespace: map.get($config, namespace);
       $prefix: if(map.has-key($config, prefix), map.get($config, prefix), '');
-      $tokens: _filter-nulls(map.get($config, tokens));
+      $tokens: map.get(map.get($config, tokens), all);
       @each $name, $value in $tokens {
         $prefixed-name: $prefix + $name;
         $all-names: list.append($all-names, $prefixed-name, $separator: comma);
@@ -246,62 +104,11 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
         $data: map.get($prefixed-name-data, $name);
         $namespace: list.nth($data, 1);
         $name: list.nth($data, 2);
-        @include create-token-values(
-          $namespace,
-          (
-            $name: $value,
-          )
-        );
+        $prefixed-name: $namespace + '-' + $name;
+        @include values(($prefixed-name: $value));
       } @else {
         @error #{'Invalid token name `'}#{$name}#{'`. '}#{'Valid tokens are: '}#{$all-names};
       }
     }
   }
-}
-
-/// Filters keys with a null value out of the map.
-/// @param {Map} $map The map to filter.
-/// @return {Map} The given map with all of the null keys filtered out.
-@function _filter-nulls($map) {
-  $result: ();
-  @each $key, $val in $map {
-    @if $val != null {
-      $result: map.set($result, $key, $val);
-    }
-  }
-  @return $result;
-}
-
-/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
-/// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
-///  This param may also be a tuple of maps, the first one representing the default M3 token values,
-//   and the second containing overrides for different color variants.
-//   Single map example:
-//     (token1: green, token2: 2px)
-//   Tuple example:
-//     (
-//       (token1: green, token2: 2px),
-//       (
-//         secondary: (token1: blue),
-//         error: (token1: red),
-//       )
-//     )
-/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
-/// @param {String|null} $variant The name of the variant the token values are for.
-/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function namespace-tokens($prefix, $values, $slots, $variant: null) {
-  $result: ();
-  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
-    $variants: list.nth($values, 2);
-    $values: list.nth($values, 1);
-    @each $variant, $overrides in $variants {
-
-      $result: map.merge($result, namespace-tokens($prefix, $overrides, $slots, $variant));
-    }
-  }
-  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
-  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
-  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
-  @return map.merge($result, ($prefix: $used-m3-tokens));
 }

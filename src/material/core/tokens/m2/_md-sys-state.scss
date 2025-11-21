@@ -1,0 +1,8 @@
+@function md-sys-state-values($exclude-hardcoded-values: false) {
+  @return (
+    dragged-state-layer-opacity: 0.16,
+    focus-state-layer-opacity: 0.12,
+    hover-state-layer-opacity: 0.04,
+    pressed-state-layer-opacity: 0.12,
+  );
+}

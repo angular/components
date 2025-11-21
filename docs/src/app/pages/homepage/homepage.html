@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <mat-divider></mat-divider>
+  <mat-divider />
 
   <div class="docs-homepage-featured-components docs-homepage-carousel-row">
     <div class="docs-homepage-header">
@@ -53,8 +53,8 @@
       </a>
     </div>
     <app-carousel [aria-label]="'Featured components'">
-      @for (comp of getTopComponents(); track comp) {
-        <a carousel-item class="carousel-item docs-featured-components-carousel-item"
+      @for (comp of topComponents; track comp) {
+        <a carousel-item class="docs-carousel-item docs-featured-components-carousel-item"
            routerLink="/components/{{comp}}">
           <div class="docs-homepage-img-container">
             <img alt="" src="../../../assets/screenshots/{{comp}}.scene.png" role="presentation">
@@ -65,7 +65,7 @@
     </app-carousel>
   </div>
 
-  <mat-divider></mat-divider>
+  <mat-divider />
 
   <div class="docs-homepage-guides docs-homepage-carousel-row">
     <div class="docs-homepage-header">
@@ -78,7 +78,7 @@
     </div>
     <app-carousel aria-label="Guides">
       @for (guide of guideItems.getAllItems(); track guide) {
-        <a carousel-item class="carousel-item docs-homepage-guides-carousel-item"
+        <a carousel-item class="docs-carousel-item docs-homepage-guides-carousel-item"
            routerLink="/guide/{{guide.id}}"
            matRipple>
           <mat-card class="docs-homepage-guides-card" appearance="outlined">
@@ -92,5 +92,5 @@
 
 </main>
 
-<app-support></app-support>
-<app-footer></app-footer>
+<app-support />
+<app-footer />

@@ -163,10 +163,10 @@ describe('DeprecatedMapMarkerClusterer', () => {
       ignoreHidden: false,
       imageExtension: 'jpeg',
     };
-    fixture.componentInstance.enableRetinaIcons = expectedOptions.enableRetinaIcons;
-    fixture.componentInstance.gridSize = expectedOptions.gridSize;
-    fixture.componentInstance.ignoreHidden = expectedOptions.ignoreHidden;
-    fixture.componentInstance.imageExtension = expectedOptions.imageExtension;
+    fixture.componentInstance.enableRetinaIcons = expectedOptions.enableRetinaIcons!;
+    fixture.componentInstance.gridSize = expectedOptions.gridSize!;
+    fixture.componentInstance.ignoreHidden = expectedOptions.ignoreHidden!;
+    fixture.componentInstance.imageExtension = expectedOptions.imageExtension!;
     fixture.componentInstance.options = options;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -347,25 +347,25 @@ describe('DeprecatedMapMarkerClusterer', () => {
 class TestApp {
   @ViewChild(DeprecatedMapMarkerClusterer) markerClusterer: DeprecatedMapMarkerClusterer;
 
-  ariaLabelFn?: AriaLabelFn;
-  averageCenter?: boolean;
-  batchSize?: number;
-  batchSizeIE?: number;
-  calculator?: Calculator;
-  clusterClass?: string;
-  enableRetinaIcons?: boolean;
-  gridSize?: number;
-  ignoreHidden?: boolean;
-  imageExtension?: string;
-  imagePath?: string;
-  imageSizes?: number[];
-  maxZoom?: number;
-  minimumClusterSize?: number;
-  styles?: ClusterIconStyle[];
-  title?: string;
-  zIndex?: number;
-  zoomOnClick?: boolean;
-  options?: MarkerClustererOptions;
+  ariaLabelFn: AriaLabelFn;
+  averageCenter: boolean;
+  batchSize: number;
+  batchSizeIE: number;
+  calculator: Calculator;
+  clusterClass: string;
+  enableRetinaIcons: boolean;
+  gridSize: number;
+  ignoreHidden: boolean;
+  imageExtension: string;
+  imagePath: string;
+  imageSizes: number[];
+  maxZoom: number;
+  minimumClusterSize: number;
+  styles: ClusterIconStyle[];
+  title: string;
+  zIndex: number;
+  zoomOnClick: boolean;
+  options: MarkerClustererOptions;
 
   state = 'state1';
 

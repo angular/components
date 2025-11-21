@@ -1,6 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {
   Component,
-  HostBinding,
   Input,
   OnInit,
   ViewContainerRef,
@@ -16,12 +23,14 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
   selector: 'app-scene-viewer',
   templateUrl: './scene-viewer.html',
   styleUrls: ['./scene-viewer.scss'],
+  host: {
+    '[style.filter]': 'filter',
+  },
 })
 export class SceneViewer implements OnInit {
-  private route = inject(ActivatedRoute);
-  private sanitizer = inject(DomSanitizer);
-
-  @HostBinding('style.filter') filter: SafeStyle | undefined;
+  private _route = inject(ActivatedRoute);
+  private _sanitizer = inject(DomSanitizer);
+  protected filter: SafeStyle | undefined;
 
   /**
    * Degree to change hue of scene by. All scenes default to a reddish hue.
@@ -36,7 +45,7 @@ export class SceneViewer implements OnInit {
     this._hueRotation = deg;
     // Modern browsers have security built in so this is just bypassing Angular's redundant checks.
     // Furthermore these checks will soon be removed.
-    this.filter = this.sanitizer.bypassSecurityTrustStyle(`hue-rotate(${this.hueRotation}deg)`);
+    this.filter = this._sanitizer.bypassSecurityTrustStyle(`hue-rotate(${this.hueRotation}deg)`);
   }
   private _hueRotation = 0;
 
@@ -49,9 +58,9 @@ export class SceneViewer implements OnInit {
   readonly scene = viewChild.required('scene', {read: ViewContainerRef});
 
   constructor() {
-    this.hueRotation = this.route.snapshot.data['hueRotate'];
-    this.component = this.route.snapshot.data['scene'];
-    this.scale = this.route.snapshot.data['scale'];
+    this.hueRotation = this._route.snapshot.data['hueRotate'];
+    this.component = this._route.snapshot.data['scene'];
+    this.scale = this._route.snapshot.data['scale'];
   }
 
   ngOnInit() {

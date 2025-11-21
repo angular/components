@@ -37,6 +37,7 @@ export class A11yModule {
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
 }
 
 // @public
@@ -169,13 +170,14 @@ export interface FocusableOption extends ListKeyManagerOption {
 export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
     setFocusOrigin(origin: FocusOrigin): this;
 }
 
 // @public
 export class FocusMonitor implements OnDestroy {
     constructor(...args: unknown[]);
-    protected _document?: Document | null | undefined;
+    protected _document: Document;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions_2): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions_2): void;
     monitor(element: HTMLElement, checkChildren?: boolean): Observable<FocusOrigin>;
@@ -293,7 +295,7 @@ export interface Highlightable extends ListKeyManagerOption {
 
 // @public
 export class _IdGenerator {
-    getId(prefix: string): string;
+    getId(prefix: string, randomize?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_IdGenerator, never>;
     // (undocumented)
@@ -366,6 +368,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     onKeydown(event: KeyboardEvent): void;
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
     setFirstItemActive(): void;
     setLastItemActive(): void;
     setNextItemActive(): void;
@@ -398,9 +401,6 @@ export const LIVE_ANNOUNCER_DEFAULT_OPTIONS: InjectionToken<LiveAnnouncerDefault
 // @public (undocumented)
 export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 
-// @public @deprecated
-export function LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY(): null;
-
 // @public (undocumented)
 export class LiveAnnouncer implements OnDestroy {
     constructor(...args: unknown[]);
@@ -425,9 +425,6 @@ export interface LiveAnnouncerDefaultOptions {
 
 // @public @deprecated
 export const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container";
-
-// @public @deprecated
-export function NOOP_TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T>;
 
 // @public @deprecated
 export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER: Provider;
@@ -461,15 +458,6 @@ export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: 
 
 // @public
 export const TREE_KEY_MANAGER: InjectionToken<TreeKeyManagerFactory<any>>;
-
-// @public @deprecated
-export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T>;
-
-// @public @deprecated
-export const TREE_KEY_MANAGER_FACTORY_PROVIDER: {
-    provide: InjectionToken<TreeKeyManagerFactory<any>>;
-    useFactory: typeof TREE_KEY_MANAGER_FACTORY;
-};
 
 // @public
 export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyManagerStrategy<T> {

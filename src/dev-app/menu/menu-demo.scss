@@ -11,3 +11,13 @@
     justify-content: flex-end;
   }
 }
+
+.demo-context-menu-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 500px;
+  max-width: 500px;
+  outline: dashed 1px;
+}

@@ -1,8 +1,8 @@
 # Creating a custom stepper using the CDK stepper
 
-The [CDK stepper](https://material.angular.io/cdk/stepper/overview) allows to build a custom stepper which you can completely style yourself without any specific Material Design styling.
+The [CDK stepper](https://material.angular.dev/cdk/stepper/overview) allows you to build a custom stepper which you can completely style yourself without any specific Material Design styling.
 
-In this guide, we'll learn how we can build our own custom stepper using the CDK stepper. Here is what we'll build by the end of this guide:
+In this guide, we'll learn how to build our own custom stepper using the CDK stepper. Here is what we'll build by the end of this guide:
 
 <!-- example(cdk-custom-stepper-without-form) -->
 
@@ -28,7 +28,7 @@ export class CustomStepperComponent extends CdkStepper {
 }
 ```
 
-After we've extended our component class from `CdkStepper` we can now access different properties from this class like `linear`, `selectedIndex` and `steps` which are defined in the [API documentation](https://material.angular.io/cdk/stepper/api#CdkStepper).
+After we've extended our component class from `CdkStepper` we can now access different properties from this class like `linear`, `selectedIndex` and `steps` which are defined in the [API documentation](https://material.angular.dev/cdk/stepper/api#CdkStepper).
 
 This is the HTML template of our custom stepper component:
 
@@ -45,8 +45,8 @@ This is the HTML template of our custom stepper component:
 
   <footer class="step-navigation-bar">
     <button class="nav-button" cdkStepperPrevious>&larr;</button>
-    @for (step of steps; track step) {
-      <button class="step" [class.active]="selectedIndex === $index" (click)="onClick(i)">
+    @for (step of steps; track step; let i = $index) {
+      <button class="step" [class.active]="selectedIndex === i" (click)="onClick(i)">
         Step {{i + 1}}
       </button>
     }
@@ -126,7 +126,7 @@ If you want to iterate over your steps and use your own custom component you can
 
 The above example allows the user to freely navigate between all steps. The `CdkStepper` additionally provides the linear mode which requires the user to complete previous steps before proceeding.
 
-A simple example without using forms could look this way:
+A simple example without using forms could look like this:
 
 **app.component.html**
 

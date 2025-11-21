@@ -1,9 +1,9 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatNativeDateModule, DateAdapter} from '../core';
-import {DEC, FEB, JAN} from '../testing';
 import {By} from '@angular/platform-browser';
+import {DateAdapter, provideNativeDateAdapter} from '../core';
+import {DEC, FEB, JAN} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
@@ -12,14 +12,8 @@ import {yearsPerPage} from './multi-year-view';
 describe('MatCalendarHeader', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatNativeDateModule,
-        MatDatepickerModule,
-        // Test components.
-        StandardCalendar,
-        CalendarWithMinMaxDate,
-      ],
-      providers: [MatDatepickerIntl, {provide: Directionality, useFactory: () => ({value: 'ltr'})}],
+      imports: [MatDatepickerModule],
+      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr'), provideNativeDateAdapter()],
     });
   }));
 
@@ -246,7 +240,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(prevButton.disabled).toBe(true);
+      expect(prevButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should enable the page after the one showing minDate', () => {
@@ -255,7 +249,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(false);
+      expect(nextButton.hasAttribute('aria-disabled')).toBe(false);
     });
   });
 
@@ -300,7 +294,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(true);
+      expect(nextButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should enable the page before the one showing maxDate', () => {
@@ -309,7 +303,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(prevButton.disabled).toBe(false);
+      expect(prevButton.hasAttribute('aria-disabled')).toBe(false);
     });
   });
 
@@ -356,7 +350,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(true);
+      expect(nextButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should disable the page before the one showing minDate', () => {
@@ -371,7 +365,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.activeDate).toEqual(new Date(2018 - yearsPerPage, JAN, 1));
-      expect(prevButton.disabled).toBe(true);
+      expect(prevButton.getAttribute('aria-disabled')).toBe('true');
     });
   });
 });
@@ -384,7 +378,7 @@ describe('MatCalendarHeader', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
-  imports: [MatNativeDateModule, MatDatepickerModule],
+  imports: [MatDatepickerModule],
 })
 class StandardCalendar {
   selected: Date;
@@ -401,7 +395,7 @@ class StandardCalendar {
       [maxDate]="maxDate">
     </mat-calendar>
   `,
-  imports: [MatNativeDateModule, MatDatepickerModule],
+  imports: [MatDatepickerModule],
 })
 class CalendarWithMinMaxDate {
   startAt = new Date(2018, JAN, 1);

@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -82,8 +82,8 @@ ng_project(
         "chip-row.ts",
         "chip-set.ts",
         "chip-text-control.ts",
+        "chips-module.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "tokens.ts",
     ],
@@ -95,7 +95,6 @@ ng_project(
         ":chip_set_css",
     ],
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
@@ -106,7 +105,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "chips_tests_lib",
     testonly = True,
     srcs = glob(
@@ -115,7 +114,6 @@ ts_project(
     ),
     deps = [
         ":chips",
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",

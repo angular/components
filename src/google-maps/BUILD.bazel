@@ -1,6 +1,5 @@
-load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "ng_package", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -15,6 +14,15 @@ rules_js_tsconfig(
     ],
 )
 
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig-build.json",
+    deps = [
+        "//:node_modules/@types/google.maps",
+        "//src:build-tsconfig",
+    ],
+)
+
 ng_project(
     name = "google-maps",
     srcs = glob(
@@ -23,6 +31,7 @@ ng_project(
             "**/*.spec.ts",
         ],
     ),
+    tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -44,7 +53,7 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":google-maps_legacy"],
+    deps = [":google-maps"],
 )
 
 filegroup(
@@ -52,7 +61,7 @@ filegroup(
     srcs = glob(["**/*.ts"]),
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

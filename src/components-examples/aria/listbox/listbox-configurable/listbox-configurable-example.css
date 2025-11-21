@@ -1,0 +1,52 @@
+.example-listbox-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.example-listbox {
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  max-height: 300px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  overflow: scroll;
+  user-select: none;
+}
+
+.example-listbox[aria-orientation='horizontal'] {
+  flex-direction: row;
+}
+
+.example-listbox[aria-orientation='horizontal'] .example-option::before {
+  display: none;
+}
+
+.example-listbox[aria-orientation='horizontal'] .example-option[aria-selected='true']::before {
+  display: block;
+}
+
+.example-listbox[aria-disabled='true'] .example-option {
+  pointer-events: none;
+}
+
+.example-label {
+  padding: 16px;
+  flex-shrink: 0;
+}
+
+.example-option {
+  gap: 16px;
+  padding: 16px;
+  display: flex;
+  cursor: pointer;
+  position: relative;
+  align-items: center;
+  border-radius: var(--mat-sys-corner-extra-small);
+}

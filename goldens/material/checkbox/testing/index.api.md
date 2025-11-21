@@ -31,7 +31,7 @@ export class MatCheckboxHarness extends ComponentHarness {
     // (undocumented)
     static hostSelector: string;
     // (undocumented)
-    _input: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    _input: () => Promise<_angular_cdk_testing.TestElement>;
     isChecked(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;

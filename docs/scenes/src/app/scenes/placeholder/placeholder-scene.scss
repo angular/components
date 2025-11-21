@@ -1,4 +1,4 @@
-.circle-big {
+.scene-circle-big {
   position: absolute;
   width: 140px;
   height: 140px;
@@ -8,7 +8,7 @@
   left: 50px;
 }
 
-.circle-small {
+.scene-circle-small {
   position: absolute;
   width: 70px;
   height: 70px;
@@ -17,7 +17,7 @@
   background: rgba(rosybrown, 0.5);
 }
 
-.half-circle {
+.scene-half-circle {
   transform: rotate(145deg);
   position: absolute;
   left: 200px;

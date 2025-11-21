@@ -9,8 +9,6 @@
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 import {
   CdkTable,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
   CDK_TABLE,
   STICKY_POSITIONING_LISTENER,
   HeaderRowOutlet,
@@ -39,7 +37,6 @@ export class MatRecycleRows {}
   exportAs: 'matTable',
   // Note that according to MDN, the `caption` element has to be projected as the **first**
   // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
-  // We can't reuse `CDK_TABLE_TEMPLATE` because it's incompatible with local compilation mode.
   template: `
     <ng-content select="caption"/>
     <ng-content select="colgroup, col"/>
@@ -78,7 +75,6 @@ export class MatRecycleRows {}
   providers: [
     {provide: CdkTable, useExisting: MatTable},
     {provide: CDK_TABLE, useExisting: MatTable},
-    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
     // TODO(michaeljamesparsons) Abstract the view repeater strategy to a directive API so this code
     //  is only included in the build if used.
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},

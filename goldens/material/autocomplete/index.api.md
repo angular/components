@@ -15,15 +15,14 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
@@ -36,21 +35,8 @@ export function getMatAutocompleteMissingPanelError(): Error;
 // @public
 export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS: InjectionToken<MatAutocompleteDefaultOptions>;
 
-// @public @deprecated
-export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefaultOptions;
-
 // @public
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
-
-// @public @deprecated
-export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY;
-};
 
 // @public
 export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
@@ -145,7 +131,7 @@ export class MatAutocompleteModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatCommonModule, typeof MatAutocomplete, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin], [typeof i5.CdkScrollableModule, typeof MatAutocomplete, typeof MatOptionModule, typeof MatCommonModule, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatAutocomplete, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin], [typeof i1.CdkScrollableModule, typeof MatAutocomplete, typeof MatOptionModule, typeof i2$1.BidiModule, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin]>;
 }
 
 // @public
@@ -197,6 +183,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     _onTouched: () => void;
     openPanel(): void;
     readonly optionSelections: Observable<MatOptionSelectionChange>;
+    readonly _overlayPanelClass: string[];
     get panelClosingActions(): Observable<MatOptionSelectionChange | null>;
     get panelOpen(): boolean;
     position: 'auto' | 'above' | 'below';

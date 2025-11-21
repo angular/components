@@ -22,6 +22,8 @@ import {
   ViewEncapsulation,
   inject,
   HostAttributeToken,
+  signal,
+  computed,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -39,7 +41,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
-import {MatPaginatedTabHeader} from '../paginated-tab-header';
+import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
@@ -70,6 +72,8 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
+  _focusedItem = signal<MatPaginatedTabHeaderItem | null>(null);
+
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
@@ -102,10 +106,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   /**
    * Theme color of the background of the tab nav. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get backgroundColor(): ThemePalette {
@@ -127,14 +131,20 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   /** Whether the ripple effect is disabled or not. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   /**
    * Theme color of the nav bar. This API is supported in M2 themes only, it has
-   * no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette = 'primary';
 
@@ -183,6 +193,11 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
       .subscribe(() => this.updateActiveLink());
 
     super.ngAfterContentInit();
+
+    // Turn the `change` stream into a signal to try and avoid "changed after checked" errors.
+    this._keyManager!.change.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() =>
+      this._focusedItem.set(this._keyManager?.activeItem || null),
+    );
   }
 
   override ngAfterViewInit() {
@@ -203,12 +218,13 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     for (let i = 0; i < items.length; i++) {
       if (items[i].active) {
         this.selectedIndex = i;
-        this._changeDetectorRef.markForCheck();
-
         if (this.tabPanel) {
           this.tabPanel._activeTabId = items[i].id;
         }
-
+        // Updating the `selectedIndex` won't trigger the `change` event on
+        // the key manager so we need to set the signal from here.
+        this._focusedItem.set(items[i]);
+        this._changeDetectorRef.markForCheck();
         return;
       }
     }
@@ -218,6 +234,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   _getRole(): string | null {
     return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
+  }
+
+  _hasFocus(link: MatTabLink): boolean {
+    return this._keyManager?.activeItem === link;
   }
 }
 
@@ -238,7 +258,7 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-selected]': '_getAriaSelected()',
     '[attr.id]': 'id',
-    '[attr.tabIndex]': '_getTabIndex()',
+    '[attr.tabIndex]': '_tabIndex()',
     '[attr.role]': '_getRole()',
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[class.mdc-tab--active]': 'active',
@@ -260,6 +280,10 @@ export class MatTabLink
   /** Whether the tab link is active or not. */
   protected _isActive: boolean = false;
 
+  protected _tabIndex = computed(() =>
+    this._tabNavBar._focusedItem() === this ? this.tabIndex : -1,
+  );
+
   /** Whether the link is active. */
   @Input({transform: booleanAttribute})
   get active(): boolean {
@@ -279,7 +303,13 @@ export class MatTabLink
 
   /** Whether ripples are disabled on the tab link. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   @Input({
     transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
@@ -392,14 +422,6 @@ export class MatTabLink
 
   _getRole(): string | null {
     return this._tabNavBar.tabPanel ? 'tab' : this.elementRef.nativeElement.getAttribute('role');
-  }
-
-  _getTabIndex(): number {
-    if (this._tabNavBar.tabPanel) {
-      return this._isActive && !this.disabled ? 0 : -1;
-    } else {
-      return this.disabled ? -1 : this.tabIndex;
-    }
   }
 }
 

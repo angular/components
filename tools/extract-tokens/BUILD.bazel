@@ -1,11 +1,11 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "extract_tokens_lib",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(["**/*.mts"]),
     tsconfig = "//tools:tsconfig",
     deps = [
         "//:node_modules/sass",
@@ -18,5 +18,5 @@ js_binary(
     data = [
         ":extract_tokens_lib",
     ],
-    entry_point = ":extract-tokens.js",
+    entry_point = ":extract-tokens.mjs",
 )

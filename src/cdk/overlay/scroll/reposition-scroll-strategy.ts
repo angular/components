@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NgZone} from '@angular/core';
+import {Injector, NgZone} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {ScrollDispatcher, ViewportRuler} from '../../scrolling';
@@ -22,6 +22,23 @@ export interface RepositionScrollStrategyConfig {
 
   /** Whether to close the overlay once the user has scrolled away completely. */
   autoClose?: boolean;
+}
+
+/**
+ * Creates a scroll strategy that updates the overlay's position when the user scrolls.
+ * @param injector Injector used to resolve dependencies of the scroll strategy.
+ * @param config Configuration options for the scroll strategy.
+ */
+export function createRepositionScrollStrategy(
+  injector: Injector,
+  config?: RepositionScrollStrategyConfig,
+): RepositionScrollStrategy {
+  return new RepositionScrollStrategy(
+    injector.get(ScrollDispatcher),
+    injector.get(ViewportRuler),
+    injector.get(NgZone),
+    config,
+  );
 }
 
 /**

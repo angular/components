@@ -1,105 +1,73 @@
 @use 'sass:map';
-@use '../core/tokens/m2-utils';
-@use '../core/style/sass-utils';
-@use '../core/theming/inspection';
 @use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, slider);
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
   @return (
-    active-track-height: 6px,
-    active-track-shape: 9999px,
-    handle-elevation: elevation.get-box-shadow(1),
-    handle-height: 20px,
-    handle-shape: 50%,
-    handle-width: 20px,
-    inactive-track-height: 4px,
-    inactive-track-shape: 9999px,
-    value-indicator-border-radius: 4px,
-    value-indicator-caret-display: block,
-    value-indicator-container-transform: translateX(-50%),
-    value-indicator-height: 32px,
-    value-indicator-padding: 0 12px,
-    value-indicator-text-transform: none,
-    value-indicator-width: auto,
-    with-overlap-handle-outline-width: 1px,
-    with-tick-marks-active-container-opacity: 0.6,
-    with-tick-marks-container-shape: 50%,
-    with-tick-marks-container-size: 2px,
-    with-tick-marks-inactive-container-opacity: 0.6,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $elevation: inspection.get-theme-color($theme, foreground, elevation);
-  $on-surface: if($is-dark, #fff, #000);
-
-  @return map.merge(
-    $theme-color-tokens,
-    (
-      disabled-active-track-color: $on-surface,
-      disabled-handle-color: $on-surface,
-      disabled-inactive-track-color: $on-surface,
-      label-container-color: $on-surface,
-      label-label-text-color: if($is-dark, #000, #fff),
-      value-indicator-opacity: if($is-dark, 0.9, 0.6),
-      with-overlap-handle-outline-color: #fff,
-      with-tick-marks-disabled-container-color: $on-surface,
+    base: (
+      slider-active-track-height: 6px,
+      slider-active-track-shape: 9999px,
+      slider-handle-elevation: elevation.get-box-shadow(1),
+      slider-handle-height: 20px,
+      slider-handle-shape: 50%,
+      slider-handle-width: 20px,
+      slider-inactive-track-height: 4px,
+      slider-inactive-track-shape: 9999px,
+      slider-value-indicator-border-radius: 4px,
+      slider-value-indicator-caret-display: block,
+      slider-value-indicator-container-transform: translateX(-50%),
+      slider-value-indicator-height: 32px,
+      slider-value-indicator-padding: 0 12px,
+      slider-value-indicator-text-transform: none,
+      slider-value-indicator-width: auto,
+      slider-with-overlap-handle-outline-width: 1px,
+      slider-with-tick-marks-active-container-opacity: 0.6,
+      slider-with-tick-marks-container-shape: 50%,
+      slider-with-tick-marks-container-size: 2px,
+      slider-with-tick-marks-inactive-container-opacity: 0.6,
+      slider-value-indicator-transform-origin: bottom,
     ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      slider-disabled-active-track-color: map.get($system, on-surface),
+      slider-disabled-handle-color: map.get($system, on-surface),
+      slider-disabled-inactive-track-color: map.get($system, on-surface),
+      slider-label-container-color: map.get($system, inverse-surface),
+      slider-label-label-text-color: map.get($system, inverse-on-surface),
+      slider-value-indicator-opacity: 1,
+      slider-with-overlap-handle-outline-color: map.get($system, on-surface),
+      slider-with-tick-marks-disabled-container-color: map.get($system, on-surface)),
+    ),
+    typography: (
+      slider-label-label-text-font: map.get($system, label-medium-font),
+      slider-label-label-text-size: map.get($system, label-medium-size),
+      slider-label-label-text-line-height: map.get($system, label-medium-line-height),
+      slider-label-label-text-tracking: map.get($system, label-medium-tracking),
+      slider-label-label-text-weight: map.get($system, label-medium-weight),
+    ),
+    density: (),
   );
 }
 
 // Generates tokens for the slider properties that change based on the theme.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-  $hover-ripple-color: if($color == null, null, #{rgba($color, 0.05)});
-  $focus-ripple-color: if($color == null, null, #{rgba($color, 0.2)});
-  $on-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    active-track-color: $color,
-    focus-handle-color: $color,
-    focus-state-layer-color: $focus-ripple-color,
-    handle-color: $color,
-    hover-handle-color: $color,
-    hover-state-layer-color: $hover-ripple-color,
-    inactive-track-color: $color,
-    ripple-color: $color,
-    with-tick-marks-active-container-color: $on-color,
-    with-tick-marks-inactive-container-color: $color,
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return (
-    label-label-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    label-label-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    label-label-text-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
-    label-label-text-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
-    label-label-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-    get-unthemable-tokens(),
-    get-color-tokens(m2-utils.$placeholder-color-config),
-    get-typography-tokens(m2-utils.$placeholder-typography-config),
-    get-density-tokens(m2-utils.$placeholder-density-config)
+    slider-active-track-color: map.get($system, primary),
+    slider-focus-handle-color: map.get($system, primary),
+    slider-handle-color: map.get($system, primary),
+    slider-hover-handle-color: map.get($system, primary),
+    slider-focus-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, focus-state-layer-opacity)),
+    slider-hover-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, hover-state-layer-opacity)),
+    slider-inactive-track-color: map.get($system, primary),
+    slider-ripple-color: map.get($system, primary),
+    slider-with-tick-marks-active-container-color: map.get($system, on-primary),
+    slider-with-tick-marks-inactive-container-color: map.get($system, primary),
   );
 }

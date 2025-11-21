@@ -2,7 +2,7 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '../../core';
+import {provideNativeDateAdapter} from '../../core';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
@@ -20,8 +20,8 @@ describe('MatCalendarHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule, CalendarHarnessTest],
       providers: [
+        provideNativeDateAdapter(),
         {
           // Usually it's the date range picker that provides the default range selection strategy,
           // but since we're testing the calendar on its own, we have to provide it manually.
@@ -329,7 +329,7 @@ describe('MatCalendarHarness', () => {
       [comparisonEnd]="comparisonEnd"
       (selectedChange)="rangeChanged($event)"></mat-calendar>
   `,
-  imports: [MatNativeDateModule, MatDatepickerModule],
+  imports: [MatDatepickerModule],
 })
 class CalendarHarnessTest {
   // Start the datepickers off at a specific date so tests

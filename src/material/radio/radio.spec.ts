@@ -10,30 +10,9 @@ import {
   MatRadioGroup,
   MatRadioModule,
 } from './index';
+import {ThemePalette} from '../core';
 
 describe('MatRadio', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatRadioModule,
-        FormsModule,
-        ReactiveFormsModule,
-        DisableableRadioButton,
-        FocusableRadioButton,
-        RadiosInsideRadioGroup,
-        RadioGroupWithNgModel,
-        RadioGroupWithFormControl,
-        StandaloneRadioButtons,
-        InterleavedRadioGroup,
-        TranscludingWrapper,
-        RadioButtonWithPredefinedTabindex,
-        RadioButtonWithPredefinedAriaAttributes,
-        RadiosInsidePreCheckedRadioGroup,
-        PreselectedRadioWithStaticValueAndNgIf,
-      ],
-    });
-  }));
-
   describe('inside of a group', () => {
     let fixture: ComponentFixture<RadiosInsideRadioGroup>;
     let groupDebugElement: DebugElement;
@@ -432,7 +411,7 @@ describe('MatRadio', () => {
         .withContext('Expected every radio element to use the primary color from the binding.')
         .toBe(true);
 
-      testComponent.color = null;
+      testComponent.color = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1034,7 +1013,6 @@ describe('MatRadioDefaultOverrides', () => {
   describe('when MAT_RADIO_DEFAULT_OPTIONS overridden', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatRadioModule, FormsModule, DefaultRadioButton, RadioButtonWithColorBinding],
         providers: [
           {
             provide: MAT_RADIO_DEFAULT_OPTIONS,
@@ -1099,7 +1077,7 @@ class RadiosInsideRadioGroup {
   isGroupDisabledInteractive = false;
   groupValue: string | null = null;
   disableRipple = false;
-  color: string | null;
+  color: ThemePalette;
   isFirstShown = true;
 }
 

@@ -85,9 +85,8 @@ export function crossEnvironmentSpecs(
         await countersLoader.getHarness(SubComponentHarness);
         fail('Expected to throw');
       } catch (e) {
-        expect((e as Error).message).toBe(
-          'Failed to find element matching one of the following queries:' +
-            '\n(SubComponentHarness with host element matching selector: "test-sub")',
+        expect((e as Error).message).toMatch(
+          /Failed to find element matching one of the following queries:\n\(_?SubComponentHarness with host element matching selector: "test-sub"\)/,
         );
       }
     });
@@ -225,10 +224,8 @@ export function crossEnvironmentSpecs(
         await harness.requiredAncestorRestrictedMissingSubcomponent();
         fail('Expected to throw');
       } catch (e) {
-        expect((e as Error).message).toBe(
-          'Failed to find element matching one of the following queries:' +
-            '\n(SubComponentHarness with host element matching selector: "test-sub"' +
-            ' satisfying the constraints: has ancestor matching selector ".not-found")',
+        expect((e as Error).message).toMatch(
+          /Failed to find element matching one of the following queries:\n\(_?SubComponentHarness with host element matching selector: "test-sub" satisfying the constraints: has ancestor matching selector ".not-found"\)/,
         );
       }
     });
@@ -334,10 +331,8 @@ export function crossEnvironmentSpecs(
         await harness.requiredFourIteamToolsLists();
         fail('Expected to throw');
       } catch (e) {
-        expect((e as Error).message).toBe(
-          'Failed to find element matching one of the following queries:' +
-            '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +
-            ' the constraints: title = "List of test tools", item count = 4)',
+        expect((e as Error).message).toMatch(
+          /Failed to find element matching one of the following queries:\n\(_?SubComponentHarness with host element matching selector: "test-sub" satisfying the constraints: title = "List of test tools", item count = 4\)/,
         );
       }
     });
@@ -695,11 +690,8 @@ export function crossEnvironmentSpecs(
         await harness.missingElementsAndHarnesses();
         fail('Expected to throw.');
       } catch (e) {
-        expect((e as Error).message).toBe(
-          'Failed to find element matching one of the following queries:' +
-            '\n(TestElement for element matching selector: ".not-found"),' +
-            '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +
-            ' the constraints: title = /not found/)',
+        expect((e as Error).message).toMatch(
+          /Failed to find element matching one of the following queries:\n\(TestElement for element matching selector: ".not-found"\),\n\(_?SubComponentHarness with host element matching selector: "test-sub" satisfying the constraints: title = \/not found\/\)/,
         );
       }
     });
@@ -721,9 +713,7 @@ export function crossEnvironmentSpecs(
       const element = await harness.contenteditable();
       expect(await element.text()).not.toBe('hello');
 
-      // @breaking-change 16.0.0 Remove non-null assertion once `setContenteditableValue`
-      // becomes a required method.
-      await element.setContenteditableValue!('hello');
+      await element.setContenteditableValue('hello');
 
       expect(await element.text()).toBe('hello');
     });

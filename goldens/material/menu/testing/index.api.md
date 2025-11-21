@@ -11,6 +11,24 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
+export interface ContextMenuHarnessFilters extends BaseHarnessFilters {
+}
+
+// @public
+export class MatContextMenuHarness extends ContentContainerComponentHarness<string> {
+    clickItem(itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>, ...subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[]): Promise<void>;
+    close(): Promise<void>;
+    getItems(filters?: Omit<MenuItemHarnessFilters, 'ancestor'>): Promise<MatMenuItemHarness[]>;
+    // (undocumented)
+    protected getRootHarnessLoader(): Promise<HarnessLoader>;
+    static hostSelector: string;
+    isDisabled(): Promise<boolean>;
+    isOpen(): Promise<boolean>;
+    open(relativeX?: number, relativeY?: number): Promise<void>;
+    static with<T extends MatContextMenuHarness>(this: ComponentHarnessConstructor<T>, options?: ContextMenuHarnessFilters): HarnessPredicate<T>;
+}
+
+// @public
 export class MatMenuHarness extends ContentContainerComponentHarness<string> {
     blur(): Promise<void>;
     clickItem(itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>, ...subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[]): Promise<void>;
@@ -44,6 +62,7 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
 
 // @public
 export interface MenuHarnessFilters extends BaseHarnessFilters {
+    triggerIconName?: string | RegExp;
     triggerText?: string | RegExp;
 }
 

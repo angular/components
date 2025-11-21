@@ -10,6 +10,7 @@ import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatAccordion,
+  MatAccordionTogglePosition,
   MatExpansionModule,
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -19,17 +20,6 @@ describe('MatAccordion', () => {
   let focusMonitor: FocusMonitor;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatExpansionModule,
-        AccordionWithHideToggle,
-        AccordionWithTogglePosition,
-        NestedPanel,
-        SetOfItems,
-        NestedAccordions,
-      ],
-    });
-
     focusMonitor = TestBed.inject(FocusMonitor);
   }));
 
@@ -395,5 +385,5 @@ class AccordionWithHideToggle {
   imports: [MatExpansionModule],
 })
 class AccordionWithTogglePosition {
-  togglePosition = 'after';
+  togglePosition: MatAccordionTogglePosition = 'after';
 }

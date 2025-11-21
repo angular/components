@@ -26,12 +26,6 @@ describe('CdkCopyToClipboard', () => {
   let fixture: ComponentFixture<CopyToClipboardHost>;
   let clipboard: Clipboard;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ClipboardModule, CopyToClipboardHost],
-    });
-  }));
-
   beforeEach(() => {
     fixture = TestBed.createComponent(CopyToClipboardHost);
 

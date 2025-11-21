@@ -3,11 +3,6 @@ load("//tools:defaults.bzl", "sass_library")
 package(default_visibility = ["//visibility:public"])
 
 sass_library(
-    name = "format_tokens",
-    srcs = ["_format-tokens.scss"],
-)
-
-sass_library(
     name = "m3_utils",
     srcs = ["_m3-utils.scss"],
 )
@@ -18,15 +13,15 @@ sass_library(
         "_token-utils.scss",
     ],
     deps = [
-        ":m3_system",
+        ":system",
         "//src/material/core/style:elevation",
         "//src/material/core/style:sass_utils",
     ],
 )
 
 sass_library(
-    name = "m3_system",
-    srcs = ["_m3-system.scss"],
+    name = "system",
+    srcs = ["_system.scss"],
     deps = [
         ":m3_tokens",
         "//src/material/core/style:elevation",
@@ -47,8 +42,6 @@ sass_library(
     name = "m3_tokens",
     srcs = ["_m3-tokens.scss"],
     deps = [
-        ":format_tokens",
-        ":m2_tokens",
         "//src/material/autocomplete:m3",
         "//src/material/badge:m3",
         "//src/material/bottom-sheet:m3",
@@ -95,50 +88,6 @@ sass_library(
 )
 
 sass_library(
-    name = "m2_tokens",
-    srcs = ["_m2-tokens.scss"],
-    deps = [
-        ":format_tokens",
-        "//src/material/autocomplete:m2",
-        "//src/material/badge:m2",
-        "//src/material/bottom-sheet:m2",
-        "//src/material/button:m2",
-        "//src/material/button-toggle:m2",
-        "//src/material/card:m2",
-        "//src/material/checkbox:m2",
-        "//src/material/chips:m2",
-        "//src/material/core:m2",
-        "//src/material/core:ripple_m2",
-        "//src/material/core/m2:m2_sass",
-        "//src/material/core/option:m2",
-        "//src/material/core/selection/pseudo-checkbox:m2",
-        "//src/material/core/style:sass_utils",
-        "//src/material/core/theming",
-        "//src/material/datepicker:m2",
-        "//src/material/dialog:m2",
-        "//src/material/divider:m2",
-        "//src/material/expansion:m2",
-        "//src/material/form-field:m2",
-        "//src/material/grid-list:m2",
-        "//src/material/icon:m2",
-        "//src/material/list:m2",
-        "//src/material/menu:m2",
-        "//src/material/paginator:m2",
-        "//src/material/progress-bar:m2",
-        "//src/material/progress-spinner:m2",
-        "//src/material/radio:m2",
-        "//src/material/select:m2",
-        "//src/material/sidenav:m2",
-        "//src/material/slide-toggle:m2",
-        "//src/material/slider:m2",
-        "//src/material/snack-bar:m2",
-        "//src/material/sort:m2",
-        "//src/material/stepper:m2",
-        "//src/material/table:m2",
-        "//src/material/tabs:m2",
-        "//src/material/timepicker:m2",
-        "//src/material/toolbar:m2",
-        "//src/material/tooltip:m2",
-        "//src/material/tree:m2",
-    ],
+    name = "classes",
+    srcs = ["_classes.scss"],
 )

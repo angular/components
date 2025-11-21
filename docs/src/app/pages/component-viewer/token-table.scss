@@ -14,7 +14,7 @@ thead {
   z-index: 1;
 }
 
-.filters {
+.docs-filters {
   display: flex;
   align-items: center;
   margin: 24px 0;
@@ -23,15 +23,15 @@ thead {
   gap: 16px;
 }
 
-.name-field {
+.docs-name-field {
   width: 380px;
   max-width: 100%;
 }
 
-.type-header {
+.docs-type-header {
   width: 10%;
 }
 
-.system-header {
+.docs-system-header {
   width: 30%;
 }

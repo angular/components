@@ -1,72 +1,68 @@
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/style/sass-utils';
-@use '../core/m2/theming' as m2-theming;
-@use '../core/m2/palette' as m2-palette;
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, checkbox);
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
   @return (
-    disabled-selected-checkmark-color: #fff,
-    selected-focus-state-layer-opacity: 0.16,
-    selected-hover-state-layer-opacity: 0.04,
-    selected-pressed-state-layer-opacity: 0.16,
-    unselected-focus-state-layer-opacity: 0.16,
-    unselected-hover-state-layer-opacity: 0.04,
-    unselected-pressed-state-layer-opacity: 0.16,
+    base: (
+      checkbox-disabled-selected-checkmark-color: map.get($system, surface),
+      checkbox-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      checkbox-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      checkbox-selected-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      checkbox-unselected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      checkbox-unselected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      checkbox-unselected-pressed-state-layer-opacity:
+          map.get($system, pressed-state-layer-opacity),
+      checkbox-touch-target-size: 48px,
+    ),
+    color: private-get-color-palette-color-tokens($theme, secondary),
+    typography: (
+      checkbox-label-text-font: map.get($system, body-medium-font),
+      checkbox-label-text-line-height: map.get($system, body-medium-line-height),
+      checkbox-label-text-size: map.get($system, body-medium-size),
+      checkbox-label-text-tracking: map.get($system, body-medium-tracking),
+      checkbox-label-text-weight: map.get($system, body-medium-weight)
+    ),
+    density: (
+      checkbox-touch-target-display: if($density-scale < -1, none, block),
+      checkbox-state-layer-size: map.get((
+        0: 40px,
+        -1: 36px,
+        -2: 32px,
+        -3: 28px,
+      ), $density-scale)
+    ),
   );
 }
 
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: accent, $exclude: ()) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $palette-default: inspection.get-theme-color($theme, $palette-name, default);
-  $disabled-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.38);
-  $palette-selected: inspection.get-theme-color($theme, $palette-name);
-  $border-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
-  $active-border-color:
-    m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
-  $selected-checkmark-color: null;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  @if (m2-utils.$private-is-internal-build) {
-    $contrast-tone: m2-utils.contrast-tone($palette-selected, $is-dark);
-    $selected-checkmark-color: if($contrast-tone == 'dark', #000, #fff);
-  }
-  @else {
-    $selected-checkmark-color:
-      inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-  }
+@function private-get-color-palette-color-tokens($theme, $color-variant, $exclude: ()) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   $tokens: (
-    disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
-    label-text-color: inspection.get-theme-color($theme, foreground, text),
-    disabled-selected-icon-color: $disabled-color,
-    disabled-unselected-icon-color: $disabled-color,
-    selected-checkmark-color: $selected-checkmark-color,
-    selected-focus-icon-color: $palette-selected,
-    selected-hover-icon-color: $palette-selected,
-    selected-icon-color: $palette-selected,
-    selected-pressed-icon-color: $palette-selected,
-    unselected-focus-icon-color: $active-border-color,
-    unselected-hover-icon-color: $active-border-color,
-    unselected-icon-color: $border-color,
-    selected-focus-state-layer-color: $palette-default,
-    selected-hover-state-layer-color: $palette-default,
-    selected-pressed-state-layer-color: $palette-default,
-    unselected-focus-state-layer-color: $foreground-base,
-    unselected-hover-state-layer-color: $foreground-base,
-    unselected-pressed-state-layer-color: $foreground-base,
+    checkbox-disabled-label-color: $disabled,
+    checkbox-label-text-color: map.get($system, on-surface),
+    checkbox-disabled-selected-icon-color: $disabled,
+    checkbox-disabled-unselected-icon-color: $disabled,
+    checkbox-selected-checkmark-color: map.get($system, on-secondary),
+    checkbox-selected-focus-icon-color: map.get($system, secondary),
+    checkbox-selected-hover-icon-color: map.get($system, secondary),
+    checkbox-selected-icon-color: map.get($system, secondary),
+    checkbox-selected-pressed-icon-color: map.get($system, secondary),
+    checkbox-unselected-focus-icon-color: map.get($system, on-surface),
+    checkbox-unselected-hover-icon-color: map.get($system, on-surface),
+    checkbox-unselected-icon-color: map.get($system, on-surface-variant),
+    checkbox-selected-focus-state-layer-color: map.get($system, secondary),
+    checkbox-selected-hover-state-layer-color: map.get($system, secondary),
+    checkbox-selected-pressed-state-layer-color: map.get($system, secondary),
+    checkbox-unselected-focus-state-layer-color: map.get($system, on-surface),
+    checkbox-unselected-hover-state-layer-color: map.get($system, on-surface),
+    checkbox-unselected-pressed-state-layer-color: map.get($system, on-surface),
   );
 
   @each $token in $exclude {
@@ -74,41 +70,4 @@ $prefix: (mat, checkbox);
   }
 
   @return $tokens;
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return (
-    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-
-  @return (
-    touch-target-display: if($scale < -1, none, block),
-    state-layer-size: map.get((
-      0: 40px,
-      -1: 36px,
-      -2: 32px,
-      -3: 28px,
-    ), $scale)
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-    get-unthemable-tokens(),
-    get-color-tokens(m2-utils.$placeholder-color-config),
-    get-typography-tokens(m2-utils.$placeholder-typography-config),
-    get-density-tokens(m2-utils.$placeholder-density-config)
-  );
 }

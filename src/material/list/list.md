@@ -241,6 +241,35 @@ anchors, including buttons and checkboxes.
 Always provide an accessible label for the `<mat-nav-list>` element via `aria-label` or
 `aria-labelledby`.
 
+To provide the best screen reader experience for a list, wrap each anchor element with a `<li>` or `<div role="listitem">` element and wrap all of the anchor elements with a `<ul>` element or `<div role="list">` element.
+
+```html
+<mat-nav-list aria-label="Select a folder">
+  <ul>
+    @for (link of list; track link) {
+    <li>
+      <a mat-list-item href="..." [activated]="link.isActive">{{ link }}</a>
+    </li>
+    }
+  </ul>
+</mat-nav-list>
+```
+
+#### Action
+
+To provide the best screen reader experience for a list, wrap each button element with a `<li>` or `<div role="listitem">` element and add `role="list"` to `<mat-action-list>`.
+
+```html
+<mat-action-list role="list" aria-label="Post actions">
+  <li>
+    <button mat-list-item (click)="save()">Save</button>
+  </li>
+  <li>
+    <button mat-list-item (click)="undo()">Undo</button>
+  </li>
+</mat-action-list>
+```
+
 #### Selection
 
 You should use `MatSelectionList` and `MatListOption` for lists that allow the user to select one

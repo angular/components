@@ -36,7 +36,7 @@ Users can move through the chips using the arrow keys and select/deselect them w
 
 Use `<mat-chip-grid>` and `<mat-chip-row>` for assisting users with text entry.
 
-Chips are always used inside a container. To create chips connected to an input field, start by creating a `<mat-chip-grid>` as the container. Add an `<input/>` element, and register it to the `<mat-chip-grid>` by passing the `matChipInputFor` Input. Always use an `<input/>` element with `<mat-chip-grid>`. Nest a `<mat-chip-row>` element inside the `<mat-chip-grid>` for each piece of data entered by the user. An example of using chips for text input.
+Chips are always used inside a container. To create chips connected to an input field, start by creating a `<mat-chip-grid>` as the container. Add an `<input/>` element, and register it to the `<mat-chip-grid>` by passing the `matChipInputFor` Input. Nest a `<mat-chip-row>` element inside the `<mat-chip-grid>` for each piece of data entered by the user. An example of using chips for text input.
 
 <!-- example(chips-input) -->
 
@@ -64,6 +64,9 @@ Users can press delete to remove a chip. Pressing delete triggers the `removed` 
 #### Autocomplete
 
 A `<mat-chip-grid>` can be combined with `<mat-autocomplete>` to enable free-form chip input with suggestions.
+
+> _Please note: when using `MatChipsModule` together with `MatAutocompleteModule`, the order in which modules are imported matters._
+> _To ensure correct behavior (e.g., preventing adding typed text when autocomplete option is selected via keyboard), make sure to import `MatAutocompleteModule` before `MatChipsModule`._
 
 <!-- example(chips-autocomplete) -->
 
@@ -141,7 +144,7 @@ The chips components support 3 user interaction patterns, each with its own cont
 
 `<mat-chip-grid>` and `<mat-chip-row>` : These elements implement a grid accessibility pattern. Use them as part of a free form input that allows users to enter text to add chips.
 
-Note : be sure to have the input element be a sibling of mat-chip-grid to ensure accessibility of the input element by accessibility devices such as Voice Control. It is also recommended to apply an appropriate `aria-label` to the input to optimize accessibility of the input.
+> _Please note: be sure to have the input element be a sibling of `mat-chip-grid` to ensure accessibility of the input element by accessibility devices such as Voice Control. It is also recommended to apply an appropriate `aria-label` to the input to optimize accessibility of the input._
 
 ```html
 <mat-form-field>

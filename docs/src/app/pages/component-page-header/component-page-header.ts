@@ -1,4 +1,12 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {Component, output} from '@angular/core';
 
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -10,5 +18,5 @@ import {MatIcon} from '@angular/material/icon';
   imports: [MatButton, MatIcon],
 })
 export class ComponentPageHeader {
-  @Output() toggleSidenav = new EventEmitter<void>();
+  readonly toggleSidenav = output<void>();
 }

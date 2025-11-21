@@ -1,9 +1,12 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, Directive, ElementRef, Provider, signal, Type, ViewChild} from '@angular/core';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
+} from '@angular/cdk/testing/private';
+import {Component, Directive, ElementRef, Provider, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
@@ -16,7 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../core';
+import {ErrorStateMatcher, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {MatFormField, MatFormFieldModule, MatLabel} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatDateRangeInput} from './date-range-input';
@@ -33,11 +36,11 @@ describe('MatDateRangeInput', () => {
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
-        MatNativeDateModule,
         component,
       ],
       providers: [
         ...providers,
+        provideNativeDateAdapter(),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
     });
@@ -829,15 +832,7 @@ describe('MatDateRangeInput', () => {
   });
 
   it('moves focus between fields with arrow keys when cursor is at edge (RTL)', () => {
-    class RTL extends Directionality {
-      override readonly valueSignal = signal<Direction>('rtl');
-    }
-    const fixture = createComponent(StandardRangePicker, [
-      {
-        provide: Directionality,
-        useFactory: () => new RTL(null),
-      },
-    ]);
+    const fixture = createComponent(StandardRangePicker, [provideFakeDirectionality('rtl')]);
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance;
 
@@ -1218,7 +1213,7 @@ class StandardRangePicker {
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  imports: [MatDateRangeInput, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoStart {}
 
@@ -1232,7 +1227,7 @@ class RangePickerNoStart {}
       <mat-date-range-picker #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `,
-  imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  imports: [MatDateRangeInput, MatStartDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoEnd {}
 

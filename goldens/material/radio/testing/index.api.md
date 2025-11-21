@@ -15,7 +15,7 @@ export class MatRadioButtonHarness extends ComponentHarness {
     blur(): Promise<void>;
     check(): Promise<void>;
     // (undocumented)
-    protected _clickLabel: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    protected _clickLabel: () => Promise<_angular_cdk_testing.TestElement>;
     focus(): Promise<void>;
     getId(): Promise<string | null>;
     getLabelText(): Promise<string>;
@@ -27,7 +27,7 @@ export class MatRadioButtonHarness extends ComponentHarness {
     isFocused(): Promise<boolean>;
     isRequired(): Promise<boolean>;
     // (undocumented)
-    protected _textLabel: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    protected _textLabel: () => Promise<_angular_cdk_testing.TestElement>;
     static with<T extends MatRadioButtonHarness>(this: ComponentHarnessConstructor<T>, options?: RadioButtonHarnessFilters): HarnessPredicate<T>;
 }
 

@@ -1,1 +1,1 @@
-Please see the official documentation at https://material.angular.io/components/component/table
+Please see the official documentation at https://material.angular.dev/components/component/table

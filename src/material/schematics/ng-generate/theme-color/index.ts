@@ -292,6 +292,7 @@ function getHighContrastOverides(colorScheme: DynamicScheme): Map<string, string
   overrides.set('surface', hexFromArgb(colorScheme.surface));
   overrides.set('surface-dim', hexFromArgb(colorScheme.surfaceDim));
   overrides.set('surface-bright', hexFromArgb(colorScheme.surfaceBright));
+  overrides.set('surface-container-low', hexFromArgb(colorScheme.surfaceContainerLow));
   overrides.set('surface-container-lowest', hexFromArgb(colorScheme.surfaceContainerLowest));
   overrides.set('surface-container', hexFromArgb(colorScheme.surfaceContainer));
   overrides.set('surface-container-high', hexFromArgb(colorScheme.surfaceContainerHigh));
@@ -530,8 +531,8 @@ function getColorSysVariablesCSS(
   css += createLightDarkVar(
     leftSpacing,
     'on-tertiary',
-    isHighContrast ? lightScheme.tertiary : lightScheme.tertiaryPalette.tone(100),
-    isHighContrast ? darkScheme.tertiary : darkScheme.tertiaryPalette.tone(20),
+    isHighContrast ? lightScheme.onTertiary : lightScheme.tertiaryPalette.tone(100),
+    isHighContrast ? darkScheme.onTertiary : darkScheme.tertiaryPalette.tone(20),
   );
   css += createLightDarkVar(
     leftSpacing,
@@ -596,6 +597,12 @@ function getColorSysVariablesCSS(
     'surface-bright',
     lightScheme.surfaceBright,
     darkScheme.surfaceBright,
+  );
+  css += createLightDarkVar(
+    leftSpacing,
+    'surface-container-low',
+    lightScheme.surfaceContainerLow,
+    darkScheme.surfaceContainerLow,
   );
   css += createLightDarkVar(
     leftSpacing,

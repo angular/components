@@ -1,82 +1,45 @@
 @use 'sass:color';
 @use 'sass:map';
 @use './m2-datepicker';
-@use '../core/theming/theming';
+@use './m3-datepicker';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
-@use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../button/icon-button-theme';
-
-// TODO(crisbeto): these variables aren't used anymore and should be removed.
-$selected-today-box-shadow-width: 1px;
-$selected-fade-amount: 0.6;
-$range-fade-amount: 0.2;
-$today-fade-amount: 0.2;
-$calendar-body-font-size: 13px !default;
-$calendar-weekday-table-font-size: 11px !default;
-
-@mixin _calendar-color($theme, $palette-name) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
-  $range-color: m2-datepicker.private-get-range-background-color($palette-color);
-  $range-tokens: m2-datepicker.get-range-color-tokens($range-color);
-  $calendar-tokens: m2-datepicker.private-get-calendar-color-palette-color-tokens(
-    $theme,
-    $palette-name
-  );
-
-  @include token-utils.create-token-values-mixed(
-    m2-datepicker.$prefix, map.merge($calendar-tokens, $range-tokens));
-}
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-datepicker.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: map.get(m2-datepicker.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-datepicker.$prefix, m2-datepicker.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the main selection: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin color($theme, $options...) {
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-datepicker.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-datepicker.$prefix, m2-datepicker.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme, $color-variant), color);
+  }
 
-    .mat-datepicker-content {
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-datepicker-content, .mat-datepicker-toggle-active {
       &.mat-accent {
-        @include _calendar-color($theme, accent);
+        $tokens: m2-datepicker.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include _calendar-color($theme, warn);
-      }
-    }
-
-    .mat-datepicker-toggle-active {
-      &.mat-accent {
-        $accent-tokens: m2-datepicker.private-get-toggle-color-palette-color-tokens($theme, accent);
-        @include token-utils.create-token-values-mixed(m2-datepicker.$prefix, $accent-tokens);
-      }
-
-      &.mat-warn {
-        $warn-tokens: m2-datepicker.private-get-toggle-color-palette-color-tokens($theme, warn);
-        @include token-utils.create-token-values-mixed(m2-datepicker.$prefix, $warn-tokens);
+        $tokens: m2-datepicker.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
   }
@@ -85,43 +48,39 @@ $calendar-weekday-table-font-size: 11px !default;
 /// Outputs typography theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: map.get(m2-datepicker.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-datepicker.$prefix,
-        m2-datepicker.get-typography-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin date-range-colors(
   $range-color,
-  $comparison-color: m2-datepicker.$private-default-comparison-color,
-  $overlap-color: m2-datepicker.$private-default-overlap-color,
-  $overlap-selected-color:
-    m2-datepicker.private-get-default-overlap-selected-color($overlap-color)
+  $comparison-color: rgba(#f9ab00, 0.2),
+  $overlap-color: #a8dab5,
+  $overlap-selected-color: color.adjust($overlap-color, $lightness: -30%)
 ) {
-  $tokens: m2-datepicker.get-range-color-tokens(
-    $range-color: $range-color,
-    $comparison-color: $comparison-color,
-    $overlap-color: $overlap-color,
-    $overlap-selected-color: $overlap-selected-color,
-  );
-
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values-mixed(m2-datepicker.$prefix, $tokens);
-  }
+  @include overrides((
+    calendar-date-in-range-state-background-color: $range-color,
+    calendar-date-in-comparison-range-state-background-color: $comparison-color,
+    calendar-date-in-overlap-range-state-background-color: $overlap-color,
+    calendar-date-in-overlap-range-selected-state-background-color: $overlap-selected-color,
+  ));
 }
 
 /// Outputs density theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: map.get(m2-datepicker.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
+    $tokens: map.get(m3-datepicker.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     // TODO(crisbeto): move this into the structural styles
     // once the icon button density is switched to tokens.
 
@@ -137,8 +96,8 @@ $calendar-weekday-table-font-size: 11px !default;
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-datepicker.$prefix,
-      tokens: m2-datepicker.get-token-slots(),
+      namespace: datepicker,
+      tokens: token-utils.get-overrides(m3-datepicker.get-tokens(), datepicker)
     ),
   );
 }
@@ -146,38 +105,28 @@ $calendar-weekday-table-font-size: 11px !default;
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the main selection: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin theme($theme, $options...) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-datepicker') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-datepicker-tokens: token-utils.get-tokens-for(
-    $tokens, m2-datepicker.$prefix, $options...);
-  @include token-utils.create-token-values(m2-datepicker.$prefix, $mat-datepicker-tokens);
 }

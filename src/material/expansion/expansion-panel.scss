@@ -1,12 +1,11 @@
 
 @use '@angular/cdk';
-@use './m2-expansion';
+@use './m3-expansion';
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/elevation';
 
-$token-prefix: m2-expansion.$prefix;
-$token-slots: m2-expansion.get-token-slots();
+$fallbacks: m3-expansion.get-tokens();
 
 .mat-expansion-panel {
   box-sizing: content-box;
@@ -23,29 +22,27 @@ $token-slots: m2-expansion.get-token-slots();
   // focus indicator relatively positions the header.
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    background: token-utils.slot(container-background-color);
-    color: token-utils.slot(container-text-color);
-    border-radius: token-utils.slot(container-shape);
-  }
+  background: token-utils.slot(expansion-container-background-color, $fallbacks);
+  color: token-utils.slot(expansion-container-text-color, $fallbacks);
+  border-radius: token-utils.slot(expansion-container-shape, $fallbacks);
 
-  @include elevation.overridable-elevation(2);
+  &:not([class*='#{elevation.$prefix}']) {
+    box-shadow: token-utils.slot(expansion-container-elevation-shadow, $fallbacks);
+  }
 
   .mat-accordion & {
     &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {
       border-radius: 0;
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
-      &:first-of-type {
-        border-top-right-radius: token-utils.slot(container-shape);
-        border-top-left-radius: token-utils.slot(container-shape);
-      }
+    &:first-of-type {
+      border-top-right-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+      border-top-left-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+    }
 
-      &:last-of-type {
-        border-bottom-right-radius: token-utils.slot(container-shape);
-        border-bottom-left-radius: token-utils.slot(container-shape);
-      }
+    &:last-of-type {
+      border-bottom-right-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+      border-bottom-left-radius: token-utils.slot(expansion-container-shape, $fallbacks);
     }
   }
 
@@ -105,13 +102,11 @@ $token-slots: m2-expansion.get-token-slots();
     visibility: visible;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    font-family: token-utils.slot(container-text-font);
-    font-size: token-utils.slot(container-text-size);
-    font-weight: token-utils.slot(container-text-weight);
-    line-height: token-utils.slot(container-text-line-height);
-    letter-spacing: token-utils.slot(container-text-tracking);
-  }
+  font-family: token-utils.slot(expansion-container-text-font, $fallbacks);
+  font-size: token-utils.slot(expansion-container-text-size, $fallbacks);
+  font-weight: token-utils.slot(expansion-container-text-weight, $fallbacks);
+  line-height: token-utils.slot(expansion-container-text-line-height, $fallbacks);
+  letter-spacing: token-utils.slot(expansion-container-text-tracking, $fallbacks);
 }
 
 .mat-expansion-panel-body {
@@ -140,9 +135,7 @@ $token-slots: m2-expansion.get-token-slots();
   justify-content: flex-end;
   padding: 16px 8px 16px 24px;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
-    border-top-color: token-utils.slot(actions-divider-color);
-  }
+  border-top-color: token-utils.slot(expansion-actions-divider-color, $fallbacks);
 
   .mat-button-base, .mat-mdc-button-base {
     margin-left: 8px;

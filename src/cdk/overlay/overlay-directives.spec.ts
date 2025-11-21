@@ -1,14 +1,14 @@
-import {Directionality} from '../bidi';
-import {A, ESCAPE} from '../keycodes';
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
+import {Component, ElementRef, Injector, signal, ViewChild, WritableSignal} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
+import {Direction} from '../bidi';
+import {A, ESCAPE} from '../keycodes';
 import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../testing/private';
+import {provideFakeDirectionality} from '../testing/private/fake-directionality';
 import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
-  Overlay,
+  createCloseScrollStrategy,
   OverlayModule,
   ScrollDispatcher,
   ScrollStrategy,
@@ -19,22 +19,23 @@ import {
   ConnectionPositionPair,
 } from './position/connected-position';
 import {
+  createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './position/flexible-connected-position-strategy';
 
 describe('Overlay directives', () => {
-  let overlay: Overlay;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
-  let dir: {value: string};
+  let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
   beforeEach(() => {
+    dir = signal<Direction>('ltr');
+
     TestBed.configureTestingModule({
-      imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
-        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+        provideFakeDirectionality(dir),
         {
           provide: ScrollDispatcher,
           useFactory: () => ({
@@ -44,7 +45,6 @@ describe('Overlay directives', () => {
       ],
     });
 
-    overlay = TestBed.inject(Overlay);
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
     fixture.detectChanges();
@@ -70,9 +70,10 @@ describe('Overlay directives', () => {
   });
 
   it('can change positionStrategy via input', () => {
-    const expectedPositionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(document.body)
+    const expectedPositionStrategy = createFlexibleConnectedPositionStrategy(
+      TestBed.inject(Injector),
+      document.body,
+    )
       .withFlexibleDimensions(true)
       .withPositions([{originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top'}]);
     fixture.componentInstance.isOpen = true;
@@ -115,7 +116,7 @@ describe('Overlay directives', () => {
   });
 
   it('should set and update the `dir` attribute', () => {
-    dir.value = 'rtl';
+    dir.set('rtl');
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -130,7 +131,7 @@ describe('Overlay directives', () => {
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
-    dir.value = 'ltr';
+    dir.set('ltr');
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -379,7 +380,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the offsetY', () => {
-      const trigger = fixture.debugElement.query(By.css('button'))!.nativeElement;
+      const trigger = fixture.nativeElement.querySelector('button');
       trigger.style.position = 'absolute';
       trigger.style.top = '30px';
       trigger.style.height = '20px';
@@ -625,6 +626,19 @@ describe('Overlay directives', () => {
 
       expect(target.style.transformOrigin).toContain('left bottom');
     });
+
+    it('should match the trigger width', () => {
+      const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLElement;
+      trigger.style.width = '128px';
+
+      fixture.componentInstance.matchWidth = true;
+      fixture.componentInstance.isOpen = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.style.width).toBe('128px');
+    });
   });
 
   describe('outputs', () => {
@@ -705,7 +719,9 @@ describe('Overlay directives', () => {
 
     it('should emit when detached externally', () => {
       expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
-      fixture.componentInstance.scrollStrategy = overlay.scrollStrategies.close();
+      fixture.componentInstance.scrollStrategy = createCloseScrollStrategy(
+        TestBed.inject(Injector),
+      );
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -739,11 +755,11 @@ describe('Overlay directives', () => {
 
 @Component({
   template: `
-  <button cdk-overlay-origin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
-  <button cdk-overlay-origin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
+  <button cdkOverlayOrigin id="trigger" #trigger="cdkOverlayOrigin">Toggle menu</button>
+  <button cdkOverlayOrigin id="otherTrigger" #otherTrigger="cdkOverlayOrigin">Toggle menu</button>
   <button id="nonDirectiveTrigger" #nonDirectiveTrigger>Toggle menu</button>
 
-  <ng-template cdk-connected-overlay
+  <ng-template cdkConnectedOverlay
             [cdkConnectedOverlayOpen]="isOpen"
             [cdkConnectedOverlayWidth]="width"
             [cdkConnectedOverlayHeight]="height"
@@ -768,7 +784,8 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayMinWidth]="minWidth"
             [cdkConnectedOverlayMinHeight]="minHeight"
             [cdkConnectedOverlayPositions]="positionOverrides"
-            [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector">
+            [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector"
+            [cdkConnectedOverlayMatchWidth]="matchWidth">
     <p>Menu content</p>
   </ng-template>`,
   imports: [OverlayModule],
@@ -806,12 +823,14 @@ class ConnectedOverlayDirectiveTest {
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
   transformOriginSelector: string;
+  matchWidth = false;
 }
 
 @Component({
   template: `
-  <button cdk-overlay-origin #trigger="cdkOverlayOrigin">Toggle menu</button>
-  <ng-template cdk-connected-overlay>Menu content</ng-template>`,
+    <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">Toggle menu</button>
+    <ng-template cdk-connected-overlay>Menu content</ng-template>
+  `,
   imports: [OverlayModule],
 })
 class ConnectedOverlayPropertyInitOrder {

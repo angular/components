@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnInit, inject} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 import {RouterLink} from '@angular/router';
@@ -13,12 +21,12 @@ import {MatRipple} from '@angular/material/core';
   styleUrls: ['./guide-list.scss'],
   imports: [NavigationFocus, RouterLink, MatCard, MatCardTitle, MatCardContent, Footer, MatRipple],
   host: {
-    'class': 'main-content',
+    'class': 'docs-main-content',
   },
 })
 export class GuideList implements OnInit {
-  guideItems = inject(GuideItems);
-  _componentPageTitle = inject(ComponentPageTitle);
+  readonly guideItems = inject(GuideItems);
+  private readonly _componentPageTitle = inject(ComponentPageTitle);
 
   ngOnInit(): void {
     this._componentPageTitle.title = 'Guides';

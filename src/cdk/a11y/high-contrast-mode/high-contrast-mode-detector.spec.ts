@@ -7,9 +7,7 @@ import {
 } from './high-contrast-mode-detector';
 import {Platform} from '../../platform';
 import {TestBed} from '@angular/core/testing';
-import {Provider} from '@angular/core';
-import {A11yModule} from '../a11y-module';
-import {DOCUMENT} from '@angular/common';
+import {Provider, DOCUMENT} from '@angular/core';
 
 describe('HighContrastModeDetector', () => {
   function getDetector(document: unknown, platform?: Platform) {
@@ -19,7 +17,7 @@ describe('HighContrastModeDetector', () => {
       providers.push({provide: Platform, useValue: platform});
     }
 
-    TestBed.configureTestingModule({imports: [A11yModule], providers});
+    TestBed.configureTestingModule({providers});
     return TestBed.inject(HighContrastModeDetector);
   }
 

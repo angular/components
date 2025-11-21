@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, ElementRef, inject, RendererFactory2} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {Injectable, NgZone, ElementRef, inject, RendererFactory2, DOCUMENT} from '@angular/core';
+
 import {ViewportRuler} from '../scrolling';
 import {DragRef, DragRefConfig} from './drag-ref';
 import {DropListRef} from './drop-list-ref';

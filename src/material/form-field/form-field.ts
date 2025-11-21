@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {NgTemplateOutlet} from '@angular/common';
@@ -30,6 +30,7 @@ import {
   afterRenderEffect,
   computed,
   contentChild,
+  effect,
   inject,
   signal,
   viewChild,
@@ -74,10 +75,10 @@ export interface MatFormFieldDefaultOptions {
   appearance?: MatFormFieldAppearance;
   /**
    * Default theme color of the form field. This API is supported in M2 themes only, it has no
-   * effect in M3 themes. For color customization in M3, see https://material.angular.io/components/form-field/styling.
+   * effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/form-field/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   color?: ThemePalette;
   /** Whether the required marker should be hidden by default. */
@@ -105,6 +106,11 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDefaultOptions>(
   'MAT_FORM_FIELD_DEFAULT_OPTIONS',
 );
+
+/** Styles that are to be applied to the label elements in the outlined appearance. */
+type OutlinedLabelStyles =
+  | [floatingLabelTransform: string, notchedOutlineWidth: number | null]
+  | null;
 
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
@@ -155,7 +161,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
     '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-hide-placeholder]': '_hasFloatingLabel() && !_shouldLabelFloat()',
-    '[class.mat-focused]': '_control.focused',
     '[class.mat-primary]': 'color !== "accent" && color !== "warn"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
@@ -186,13 +191,13 @@ export class MatFormField
 {
   _elementRef = inject(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _dir = inject(Directionality);
   private _platform = inject(Platform);
   private _idGenerator = inject(_IdGenerator);
   private _ngZone = inject(NgZone);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
+  private _currentDirection: Direction;
 
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
@@ -238,10 +243,10 @@ export class MatFormField
 
   /**
    * Theme color of the form field. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/form-field/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/form-field/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette = 'primary';
 
@@ -335,12 +340,14 @@ export class MatFormField
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
+  private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
   protected readonly _animationsDisabled = _animationsDisabled();
 
   constructor(...args: unknown[]);
 
   constructor() {
     const defaults = this._defaults;
+    const dir = inject(Directionality);
 
     if (defaults) {
       if (defaults.appearance) {
@@ -352,6 +359,10 @@ export class MatFormField
       }
     }
 
+    // We need this value inside a `afterRenderEffect`, however at the time of writing, reading the
+    // signal directly causes a memory leak (see https://github.com/angular/angular/issues/62980).
+    // TODO(crisbeto): clean this up once the framework issue is resolved.
+    effect(() => (this._currentDirection = dir.valueSignal()));
     this._syncOutlineLabelOffset();
   }
 
@@ -539,26 +550,24 @@ export class MatFormField
   }
 
   private _updateFocusState() {
+    const controlFocused = this._control.focused;
+
     // Usually the MDC foundation would call "activateFocus" and "deactivateFocus" whenever
     // certain DOM events are emitted. This is not possible in our implementation of the
     // form field because we support abstract form field controls which are not necessarily
     // of type input, nor do we have a reference to a native form field control element. Instead
     // we handle the focus by checking if the abstract form field control focused state changes.
-    if (this._control.focused && !this._isFocused) {
+    if (controlFocused && !this._isFocused) {
       this._isFocused = true;
       this._lineRipple?.activate();
-    } else if (!this._control.focused && (this._isFocused || this._isFocused === null)) {
+    } else if (!controlFocused && (this._isFocused || this._isFocused === null)) {
       this._isFocused = false;
       this._lineRipple?.deactivate();
     }
 
-    this._textField?.nativeElement.classList.toggle(
-      'mdc-text-field--focused',
-      this._control.focused,
-    );
+    this._elementRef.nativeElement.classList.toggle('mat-focused', controlFocused);
+    this._textField?.nativeElement.classList.toggle('mdc-text-field--focused', controlFocused);
   }
-
-  private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
 
   /**
    * The floating label in the docked state needs to account for prefixes. The horizontal offset
@@ -567,27 +576,27 @@ export class MatFormField
    * trigger the label offset update.
    */
   private _syncOutlineLabelOffset() {
-    // Whenever the prefix changes, schedule an update of the label offset.
-    // TODO(mmalerba): Split this into separate `afterRender` calls using the `EarlyRead` and
-    //  `Write` phases.
-    afterRenderEffect(() => {
-      if (this._appearanceSignal() === 'outline') {
-        this._updateOutlineLabelOffset();
-        if (!globalThis.ResizeObserver) {
-          return;
+    afterRenderEffect({
+      earlyRead: () => {
+        if (this._appearanceSignal() !== 'outline') {
+          this._outlineLabelOffsetResizeObserver?.disconnect();
+          return null;
         }
 
         // Setup a resize observer to monitor changes to the size of the prefix / suffix and
         // readjust the label offset.
-        this._outlineLabelOffsetResizeObserver ||= new globalThis.ResizeObserver(() =>
-          this._updateOutlineLabelOffset(),
-        );
-        for (const el of this._prefixSuffixContainers()) {
-          this._outlineLabelOffsetResizeObserver.observe(el, {box: 'border-box'});
+        if (globalThis.ResizeObserver) {
+          this._outlineLabelOffsetResizeObserver ||= new globalThis.ResizeObserver(() => {
+            this._writeOutlinedLabelStyles(this._getOutlinedLabelOffset());
+          });
+          for (const el of this._prefixSuffixContainers()) {
+            this._outlineLabelOffsetResizeObserver.observe(el, {box: 'border-box'});
+          }
         }
-      } else {
-        this._outlineLabelOffsetResizeObserver?.disconnect();
-      }
+
+        return this._getOutlinedLabelOffset();
+      },
+      write: labelStyles => this._writeOutlinedLabelStyles(labelStyles()),
     });
   }
 
@@ -740,7 +749,7 @@ export class MatFormField
   }
 
   /**
-   * Updates the horizontal offset of the label in the outline appearance. In the outline
+   * Calculates the horizontal offset of the label in the outline appearance. In the outline
    * appearance, the notched-outline and label are not relative to the infix container because
    * the outline intends to surround prefixes, suffixes and the infix. This means that the
    * floating label by default overlaps prefixes in the docked state. To avoid this, we need to
@@ -748,22 +757,19 @@ export class MatFormField
    * not need to do this because they use a fixed width for prefixes. Hence, they can simply
    * incorporate the horizontal offset into their default text-field styles.
    */
-  private _updateOutlineLabelOffset() {
-    const dir = this._dir.valueSignal();
+  private _getOutlinedLabelOffset(): OutlinedLabelStyles {
     if (!this._hasOutline() || !this._floatingLabel) {
-      return;
+      return null;
     }
-    const floatingLabel = this._floatingLabel.element;
     // If no prefix is displayed, reset the outline label offset from potential
     // previous label offset updates.
-    if (!(this._iconPrefixContainer || this._textPrefixContainer)) {
-      floatingLabel.style.transform = '';
-      return;
+    if (!this._iconPrefixContainer && !this._textPrefixContainer) {
+      return ['', null];
     }
     // If the form field is not attached to the DOM yet (e.g. in a tab), we defer
     // the label offset update until the zone stabilizes.
     if (!this._isAttachedToDom()) {
-      return;
+      return null;
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
     const textPrefixContainer = this._textPrefixContainer?.nativeElement;
@@ -775,7 +781,7 @@ export class MatFormField
     const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
-    const negate = dir === 'rtl' ? '-1' : '1';
+    const negate = this._currentDirection === 'rtl' ? '-1' : '1';
     const prefixWidth = `${iconPrefixContainerWidth + textPrefixContainerWidth}px`;
     const labelOffset = `var(--mat-mdc-form-field-label-offset-x, 0px)`;
     const labelHorizontalOffset = `calc(${negate} * (${prefixWidth} + ${labelOffset}))`;
@@ -783,21 +789,33 @@ export class MatFormField
     // Update the translateX of the floating label to account for the prefix container,
     // but allow the CSS to override this setting via a CSS variable when the label is
     // floating.
-    floatingLabel.style.transform = `var(
-        --mat-mdc-form-field-label-transform,
-        ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
-    )`;
+    const floatingLabelTransform =
+      'var(--mat-mdc-form-field-label-transform, ' +
+      `${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset}))`;
 
     // Prevent the label from overlapping the suffix when in resting position.
-    const prefixAndSuffixWidth =
+    const notchedOutlineWidth =
       iconPrefixContainerWidth +
       textPrefixContainerWidth +
       iconSuffixContainerWidth +
       textSuffixContainerWidth;
-    this._elementRef.nativeElement.style.setProperty(
-      '--mat-form-field-notch-max-width',
-      `calc(100% - ${prefixAndSuffixWidth}px)`,
-    );
+
+    return [floatingLabelTransform, notchedOutlineWidth];
+  }
+
+  /** Writes the styles produced by `_getOutlineLabelOffset` synchronously to the DOM. */
+  private _writeOutlinedLabelStyles(styles: OutlinedLabelStyles): void {
+    if (styles !== null) {
+      const [floatingLabelTransform, notchedOutlineWidth] = styles;
+
+      if (this._floatingLabel) {
+        this._floatingLabel.element.style.transform = floatingLabelTransform;
+      }
+
+      if (notchedOutlineWidth !== null) {
+        this._notchedOutline?._setMaxWidth(notchedOutlineWidth);
+      }
+    }
   }
 
   /** Checks whether the form field is attached to the DOM. */

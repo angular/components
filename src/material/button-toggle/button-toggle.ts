@@ -9,7 +9,15 @@
 import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  ENTER,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW,
+  hasModifierKey,
+} from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
@@ -31,8 +39,10 @@ import {
   OnInit,
   Output,
   QueryList,
+  signal,
   ViewChild,
   ViewEncapsulation,
+  WritableSignal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {_animationsDisabled, _StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '../core';
@@ -72,22 +82,13 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonTog
   'MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS',
   {
     providedIn: 'root',
-    factory: MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY,
+    factory: () => ({
+      hideSingleSelectionIndicator: false,
+      hideMultipleSelectionIndicator: false,
+      disabledInteractive: false,
+    }),
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions {
-  return {
-    hideSingleSelectionIndicator: false,
-    hideMultipleSelectionIndicator: false,
-    disabledInteractive: false,
-  };
-}
 
 /**
  * Injection token that can be used to reference instances of `MatButtonToggleGroup`.
@@ -329,7 +330,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
   /** Handle keydown event calling to single-select button toggle. */
   protected _keydown(event: KeyboardEvent) {
-    if (this.multiple || this.disabled) {
+    if (this.multiple || this.disabled || hasModifierKey(event)) {
       return;
     }
 
@@ -450,7 +451,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
         }
       }
     }
-    this._markButtonsForCheck();
   }
 
   /** Obtain the subsequent toggle to which the focus shifts. */
@@ -613,15 +613,12 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   /** Tabindex of the toggle. */
   @Input()
   get tabIndex(): number | null {
-    return this._tabIndex;
+    return this._tabIndex();
   }
   set tabIndex(value: number | null) {
-    if (value !== this._tabIndex) {
-      this._tabIndex = value;
-      this._markForCheck();
-    }
+    this._tabIndex.set(value);
   }
-  private _tabIndex: number | null;
+  private _tabIndex: WritableSignal<number | null>;
 
   /** Whether ripples are disabled on the button toggle. */
   @Input({transform: booleanAttribute}) disableRipple: boolean;
@@ -691,7 +688,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
       {optional: true},
     );
 
-    this._tabIndex = parseInt(defaultTabIndex) || 0;
+    this._tabIndex = signal<number | null>(parseInt(defaultTabIndex) || 0);
     this.buttonToggleGroup = toggleGroup;
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
@@ -719,7 +716,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // This serves two purposes:
     // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
     //    delay adding the class until the view is rendered.
-    // 2. We don't want animation if the `NoopAnimationsModule` is provided.
+    // 2. We don't want to animate if animations are disabled.
     if (!this._animationDisabled) {
       this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
     }

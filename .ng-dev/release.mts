@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import semver from 'semver';
 import {ReleaseConfig} from '@angular/ng-dev';
 import {assertValidUpdateMigrationCollections} from '../tools/release-checks/check-migration-collections.mjs';
@@ -10,6 +18,7 @@ import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-o
  * appear in the changelog.
  */
 export const releasePackages = [
+  'aria',
   'cdk',
   'material',
   'google-maps',

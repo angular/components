@@ -63,7 +63,7 @@ export class DropListRef<T = any> {
   sortingDisabled: boolean = false;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  lockAxis: 'x' | 'y';
+  lockAxis: 'x' | 'y' | null = null;
 
   /**
    * Whether auto-scrolling the view when the user
@@ -73,6 +73,11 @@ export class DropListRef<T = any> {
 
   /** Number of pixels to scroll for each frame when auto-scrolling an element. */
   autoScrollStep: number = 2;
+
+  /**
+   * Whether the items in the list should leave an anchor node when leaving the initial container.
+   */
+  hasAnchor: boolean = false;
 
   /**
    * Function that is used to determine whether an item
@@ -438,6 +443,16 @@ export class DropListRef<T = any> {
     return this._isDragging
       ? this._sortStrategy.getItemIndex(item)
       : this._draggables.indexOf(item);
+  }
+
+  /**
+   * Gets the item at a specific index.
+   * @param index Index at which to retrieve the item.
+   */
+  getItemAtIndex(index: number): DragRef | null {
+    return this._isDragging
+      ? this._sortStrategy.getItemAtIndex(index)
+      : this._draggables[index] || null;
   }
 
   /**

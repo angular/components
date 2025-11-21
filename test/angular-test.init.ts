@@ -8,24 +8,13 @@
 
 import 'zone.js';
 import 'zone.js/testing';
-import 'reflect-metadata';
 
-import {ErrorHandler, NgModule, provideExperimentalZonelessChangeDetection} from '@angular/core';
+import {NgModule, provideCheckNoChangesConfig, provideZonelessChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {BrowserTestingModule, platformBrowserTesting} from '@angular/platform-browser/testing';
 
 @NgModule({
-  providers: [
-    provideExperimentalZonelessChangeDetection(),
-    {
-      provide: ErrorHandler,
-      useValue: {
-        handleError: (e: any) => {
-          throw e;
-        },
-      },
-    },
-  ],
+  providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({exhaustive: true})],
 })
 export class TestModule {}
 

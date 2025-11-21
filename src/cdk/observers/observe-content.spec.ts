@@ -4,12 +4,6 @@ import {ContentObserver, MutationObserverFactory, ObserversModule} from './obser
 
 describe('Observe content directive', () => {
   describe('basic usage', () => {
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ObserversModule, ComponentWithTextContent, ComponentWithChildTextContent],
-      });
-    }));
-
     it('should trigger the callback when the content of the element changes', done => {
       let fixture = TestBed.createComponent(ComponentWithTextContent);
       fixture.detectChanges();
@@ -52,7 +46,6 @@ describe('Observe content directive', () => {
       // test this scenario reliably without risking flaky tests, which is why we supply a mock
       // MutationObserver and check that the methods are called at the right time.
       TestBed.overrideProvider(MutationObserverFactory, {
-        deps: [],
         useFactory: () => ({
           create: () => ({observe: observeSpy, disconnect: disconnectSpy}),
         }),
@@ -82,7 +75,6 @@ describe('Observe content directive', () => {
       callbacks = [];
 
       TestBed.configureTestingModule({
-        imports: [ObserversModule, ComponentWithDebouncedListener],
         providers: [
           {
             provide: MutationObserverFactory,
@@ -124,7 +116,6 @@ describe('ContentObserver injectable', () => {
       callbacks = [];
 
       TestBed.configureTestingModule({
-        imports: [ObserversModule, UnobservedComponentWithTextContent],
         providers: [
           {
             provide: MutationObserverFactory,
@@ -193,10 +184,6 @@ describe('ContentObserver injectable', () => {
     let contentObserver: ContentObserver;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ObserversModule, UnobservedComponentWithTextContent],
-      });
-
       const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
       fixture.autoDetectChanges();
       spy = jasmine.createSpy('content observer');
@@ -288,6 +275,7 @@ class ComponentWithChildTextContent {
 class ComponentWithDebouncedListener {
   debounce = 500;
   spy = jasmine.createSpy('MutationObserver callback');
+  text = '';
 }
 
 @Component({

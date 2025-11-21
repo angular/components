@@ -1,79 +1,65 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, radio);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-radio.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-radio
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
   $tokens: (
-    ripple-color: map.get($systems, md-sys-color, on-surface),
-    checked-ripple-color: map.get($systems, md-sys-color, primary),
-    disabled-label-color:
-    sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    label-text-color: map.get($systems, md-sys-color, on-surface),
-    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
-    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    disabled-selected-icon-color: map.get($systems, md-sys-color, on-surface),
-    disabled-selected-icon-opacity: if($exclude-hardcoded, null, 0.38),
-    disabled-unselected-icon-color: map.get($systems, md-sys-color, on-surface),
-    disabled-unselected-icon-opacity: if($exclude-hardcoded, null, 0.38),
-    selected-focus-icon-color: map.get($systems, md-sys-color, primary),
-    selected-hover-icon-color: map.get($systems, md-sys-color, primary),
-    selected-icon-color: map.get($systems, md-sys-color, primary),
-    selected-pressed-icon-color: map.get($systems, md-sys-color, primary),
-    unselected-focus-icon-color: map.get($systems, md-sys-color, on-surface),
-    unselected-hover-icon-color: map.get($systems, md-sys-color, on-surface),
-    unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    unselected-pressed-icon-color: map.get($systems, md-sys-color, on-surface),
+    base: (
+      radio-disabled-unselected-icon-opacity: 0.38,
+      radio-disabled-selected-icon-opacity: 0.38,
+      radio-touch-target-size: 48px,
+    ),
+    color: (
+      radio-checked-ripple-color: map.get($system, primary),
+      radio-disabled-label-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      radio-disabled-selected-icon-color: map.get($system, on-surface),
+      radio-disabled-unselected-icon-color: map.get($system, on-surface),
+      radio-label-text-color: map.get($system, on-surface),
+      radio-ripple-color: map.get($system, on-surface),
+      radio-selected-focus-icon-color: map.get($system, primary),
+      radio-selected-hover-icon-color: map.get($system, primary),
+      radio-selected-icon-color: map.get($system, primary),
+      radio-selected-pressed-icon-color: map.get($system, primary),
+      radio-unselected-focus-icon-color: map.get($system, on-surface),
+      radio-unselected-hover-icon-color: map.get($system, on-surface),
+      radio-unselected-icon-color: map.get($system, on-surface-variant),
+      radio-unselected-pressed-icon-color: map.get($system, on-surface),
+    ),
+    typography: (
+      radio-label-text-font: map.get($system, body-medium-font),
+      radio-label-text-line-height: map.get($system, body-medium-line-height),
+      radio-label-text-size: map.get($system, body-medium-size),
+      radio-label-text-tracking: map.get($system, body-medium-tracking),
+      radio-label-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 
-  $variant-tokens: (
-    primary: (), // Default, no overrides needed
-    secondary: (
-      checked-ripple-color: map.get($systems, md-sys-color, secondary),
-      selected-focus-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-hover-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-icon-color: map.get($systems, md-sys-color, secondary),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, secondary),
-    ),
-    tertiary: (
-      checked-ripple-color: map.get($systems, md-sys-color, tertiary),
-      selected-focus-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-hover-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-icon-color: map.get($systems, md-sys-color, tertiary),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, tertiary),
-    ),
-    error: (
-      checked-ripple-color: map.get($systems, md-sys-color, error),
-      selected-focus-icon-color: map.get($systems, md-sys-color, error),
-      selected-hover-icon-color: map.get($systems, md-sys-color, error),
-      selected-icon-color: map.get($systems, md-sys-color, error),
-      selected-pressed-icon-color: map.get($systems, md-sys-color, error),
-    ),
-  );
+  // Temporary removal where color variants previously did not include the
+  // unselected icon color. Remove this and approve internal screenshot changes.
+  @if $color-variant {
+    $tokens: map.deep-remove($tokens, color, radio-unselected-icon-color);
+  }
 
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
   $index: ($scale * -1) + 1;
 
   @return (
-    touch-target-display: list.nth((block, block, none, none), $index),
-    state-layer-size: list.nth((40px, 36px, 32px, 28px), $index),
+    radio-touch-target-display: list.nth((block, block, none, none), $index),
+    radio-state-layer-size: list.nth((40px, 36px, 32px, 28px), $index),
   );
 }

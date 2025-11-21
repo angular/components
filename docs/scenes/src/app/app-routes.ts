@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {ComponentType} from '@angular/cdk/overlay';
 import {SceneViewer} from './scene-viewer/scene-viewer';
 import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
@@ -93,5 +101,10 @@ export const routes: SceneViewerRoute[] = [
   {path: 'tooltip', component: SceneViewer, data: {scene: TooltipScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
 ]
-  .sort((a, b) => (a.path > b.path ? 1 : b.path > a.path ? -1 : 0))
+  .sort((a, b) => {
+    if (a.path > b.path) {
+      return 1;
+    }
+    return b.path > a.path ? -1 : 0;
+  })
   .map((route: SceneViewerRoute) => ({...route, data: {...route.data, hueRotate: 15 * hue++}}));

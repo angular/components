@@ -15,9 +15,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -30,9 +31,6 @@ import { TemplateRef } from '@angular/core';
 
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
-
-// @public @deprecated
-export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner;
 
 // @public
 export const MAT_TAB: InjectionToken<MatTabBase>;
@@ -98,6 +96,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     abstract _items: QueryList<MatPaginatedTabHeaderItem>;
     protected abstract _itemSelected(event: KeyboardEvent): void;
+    protected _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem> | undefined;
     // (undocumented)
     abstract _nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
@@ -251,7 +250,7 @@ export class MatTabGroup implements MatTabGroupBase, AfterViewInit, AfterContent
     get animationDuration(): string;
     set animationDuration(value: string | number);
     // (undocumented)
-    _animationsDisabled: boolean;
+    protected _animationsDisabled(): boolean;
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
@@ -407,7 +406,8 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     get active(): boolean;
     set active(value: boolean);
     disabled: boolean;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     // (undocumented)
     elementRef: ElementRef<any>;
     focus(): void;
@@ -419,8 +419,6 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     _getAriaSelected(): string | null;
     // (undocumented)
     _getRole(): string | null;
-    // (undocumented)
-    _getTabIndex(): number;
     // (undocumented)
     _handleFocus(): void;
     // (undocumented)
@@ -444,6 +442,8 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     tabIndex: number;
     // (undocumented)
+    protected _tabIndex: i0.Signal<number>;
+    // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, never>;
@@ -458,13 +458,18 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     get fitInkBarToContent(): boolean;
     set fitInkBarToContent(value: boolean);
     // (undocumented)
     _fitInkBarToContent: BehaviorSubject<boolean>;
     // (undocumented)
+    _focusedItem: i0.WritableSignal<MatPaginatedTabHeaderItem | null>;
+    // (undocumented)
     _getRole(): string | null;
+    // (undocumented)
+    _hasFocus(link: MatTabLink): boolean;
     // (undocumented)
     _inkBar: MatInkBar;
     _items: QueryList<MatTabLink>;
@@ -509,11 +514,6 @@ export class MatTabNavPanel {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNavPanel, never>;
 }
 
-// @public @deprecated
-export const matTabsAnimations: {
-    readonly translateTab: any;
-};
-
 // @public
 export interface MatTabsConfig {
     alignTabs?: 'start' | 'center' | 'end';
@@ -533,7 +533,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof i2.BidiModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
 }
 
 // @public

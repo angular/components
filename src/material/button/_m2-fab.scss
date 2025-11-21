@@ -1,132 +1,96 @@
+@use 'sass:map';
 @use 'sass:meta';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 @use '../core/style/elevation';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, fab);
-
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    container-elevation-shadow: elevation.get-box-shadow(6),
-    container-shape: 50%,
-    extended-container-elevation-shadow: elevation.get-box-shadow(6),
-    extended-container-height: 48px,
-    extended-container-shape: 24px,
-    extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    small-container-elevation-shadow: elevation.get-box-shadow(6),
-    small-container-shape: 50%,
-    small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  // TODO: Use system colors instead of checking theme type
+  $is-dark: false;
+  @if (meta.type-of($theme) == map and map.get($theme, color)) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+  }
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+  $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+  $touch-target-size: 48px;
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, card),
-    disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    foreground-color: inspection.get-theme-color($theme, foreground, base),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    small-container-color: inspection.get-theme-color($theme, background, card),
-    small-disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    small-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    small-foreground-color: inspection.get-theme-color($theme, foreground, base),
-    small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    base: (
+      fab-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-container-shape: 50%,
+      fab-touch-target-size: $touch-target-size,
+      fab-extended-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-extended-container-height: 48px,
+      fab-extended-container-shape: 24px,
+      fab-extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+      fab-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+      fab-small-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-small-container-shape: 50%,
+      fab-small-touch-target-size: $touch-target-size,
+      fab-small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    ),
+    color: (
+      fab-container-color: map.get($system, surface),
+      fab-disabled-state-container-color: $disabled-container,
+      fab-disabled-state-foreground-color: $disabled,
+      fab-disabled-state-layer-color: map.get($system, on-surface-variant),
+      fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-foreground-color: map.get($system, on-surface),
+      fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      fab-small-container-color: map.get($system, surface),
+      fab-small-disabled-state-container-color: $disabled-container,
+      fab-small-disabled-state-foreground-color: $disabled,
+      fab-small-disabled-state-layer-color: map.get($system, on-surface-variant),
+      fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-small-foreground-color: map.get($system, on-surface),
+      fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-small-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      fab-small-state-layer-color: map.get($system, on-surface),
+      fab-state-layer-color: map.get($system, on-surface),
+    ),
+    typography: (
+      fab-extended-label-text-font: map.get($system, label-small-font),
+      fab-extended-label-text-size: map.get($system, label-small-size),
+      fab-extended-label-text-tracking: map.get($system, label-small-tracking),
+      fab-extended-label-text-weight: map.get($system, label-small-weight)
+    ),
+    density: (
+      fab-small-touch-target-display: if($density-scale < -1, none, block),
+      fab-touch-target-display: if($density-scale < -1, none, block),
+    ),
   );
 }
 
 // Generates the mapping for the properties that change based on the FAB palette color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $foreground-color: null;
-  $state-layer-color: null;
-  $ripple-color: null;
-  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-
-  @if (m2-utils.$private-is-internal-build or
-      meta.type-of($contrast-color) != 'color') {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: m2-utils.contrast-tone($container-color, $is-dark);
-    $color: if($contrast-tone == 'dark', #000, #fff);
-    $foreground-color: $color;
-    $state-layer-color: $color;
-    $ripple-color: rgba($color, 0.1);
-  }
-  @else {
-    $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-    $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-    $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
-  }
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    container-color: inspection.get-theme-color($theme, $palette-name, default),
-    foreground-color: $foreground-color,
-    ripple-color: $ripple-color,
-    small-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    small-foreground-color: $foreground-color,
-    small-ripple-color: $ripple-color,
-    small-state-layer-color: $state-layer-color,
-    state-layer-color: $state-layer-color,
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return (
-    extended-label-text-font: inspection.get-theme-typography($theme, button, font-family),
-    extended-label-text-size: inspection.get-theme-typography($theme, button, font-size),
-    extended-label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    extended-label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-
-  @return (
-    small-touch-target-display: if($density-scale < -1, none, block),
-    touch-target-display: if($density-scale < -1, none, block),
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-      get-unthemable-tokens(),
-      get-color-tokens(m2-utils.$placeholder-color-config),
-      get-typography-tokens(m2-utils.$placeholder-typography-config),
-      get-density-tokens(m2-utils.$placeholder-density-config)
+    fab-container-color: map.get($system, primary),
+    fab-foreground-color: map.get($system, on-primary),
+    fab-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
+    fab-small-container-color: map.get($system, primary),
+    fab-small-foreground-color: map.get($system, on-primary),
+    fab-small-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+    fab-small-state-layer-color: map.get($system, on-primary),
+    fab-state-layer-color: map.get($system, on-primary),
   );
 }

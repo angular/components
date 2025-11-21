@@ -1,0 +1,57 @@
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
+load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "accordion",
+    srcs = [
+        "accordion.ts",
+        "index.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/private",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = [
+        "accordion.spec.ts",
+    ],
+    deps = [
+        ":accordion",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+)
+
+extract_api_to_json(
+    name = "json_api",
+    srcs = [
+        ":source-files",
+    ],
+    entry_point = ":index.ts",
+    module_name = "@angular/aria/accordion",
+    output_name = "aria-accordion.json",
+    private_modules = [""],
+    repo = "angular/components",
+)

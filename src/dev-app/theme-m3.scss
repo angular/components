@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 
 // Plus imports for other components in your app.
 
@@ -38,7 +39,7 @@ html {
     @include mat.system-level-colors($light-theme);
     @include mat.system-level-typography($light-theme);
     // TODO(mmalerba): Support M3 for experimental components.
-    // @include matx.column-resize-theme($light-theme);
+    @include matx.column-resize-theme($light-theme);
     // @include matx.popover-edit-theme($light-theme);
   }
 
@@ -52,6 +53,8 @@ html {
       density: 0,
     ));
   }
+
+  @include mat.system-classes();
 }
 
 @include mat.typography-hierarchy($light-theme);

@@ -161,36 +161,8 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return new Date();
   }
 
-  parse(value: any, parseFormat: string | string[]): Date | null {
-    if (typeof value == 'string' && value.length > 0) {
-      const iso8601Date = parseISO(value);
-
-      if (this.isValid(iso8601Date)) {
-        return iso8601Date;
-      }
-
-      const formats = Array.isArray(parseFormat) ? parseFormat : [parseFormat];
-
-      if (!parseFormat.length) {
-        throw Error('Formats array must not be empty.');
-      }
-
-      for (const currentFormat of formats) {
-        const fromFormat = parse(value, currentFormat, new Date(), {locale: this.locale});
-
-        if (this.isValid(fromFormat)) {
-          return fromFormat;
-        }
-      }
-
-      return this.invalid();
-    } else if (typeof value === 'number') {
-      return new Date(value);
-    } else if (value instanceof Date) {
-      return this.clone(value);
-    }
-
-    return null;
+  parse(value: unknown, parseFormat: string | string[]): Date | null {
+    return this._parse(value, parseFormat);
   }
 
   format(date: Date, displayFormat: string): string {
@@ -222,7 +194,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
    * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
    * invalid date for all other values.
    */
-  override deserialize(value: any): Date | null {
+  override deserialize(value: unknown): Date | null {
     if (typeof value === 'string') {
       if (!value) {
         return null;
@@ -235,7 +207,7 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return super.deserialize(value);
   }
 
-  isDateInstance(obj: any): boolean {
+  isDateInstance(obj: unknown): obj is Date {
     return isDate(obj);
   }
 
@@ -277,11 +249,49 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
     return getSeconds(date);
   }
 
-  override parseTime(value: any, parseFormat: string | string[]): Date | null {
-    return this.parse(value, parseFormat);
+  override parseTime(value: unknown, parseFormat: string | string[]): Date | null {
+    return this._parse(value, parseFormat, false);
   }
 
   override addSeconds(date: Date, amount: number): Date {
     return addSeconds(date, amount);
+  }
+
+  private _parse(
+    value: unknown,
+    parseFormat: string | string[],
+    shouldTryParseIso = true,
+  ): Date | null {
+    if (typeof value == 'string' && value.length > 0) {
+      if (shouldTryParseIso) {
+        const iso8601Date = parseISO(value);
+
+        if (this.isValid(iso8601Date)) {
+          return iso8601Date;
+        }
+      }
+
+      const formats = Array.isArray(parseFormat) ? parseFormat : [parseFormat];
+
+      if (!parseFormat.length) {
+        throw Error('Formats array must not be empty.');
+      }
+
+      for (const currentFormat of formats) {
+        const fromFormat = parse(value, currentFormat, new Date(), {locale: this.locale});
+
+        if (this.isValid(fromFormat)) {
+          return fromFormat;
+        }
+      }
+
+      return this.invalid();
+    } else if (typeof value === 'number') {
+      return new Date(value);
+    } else if (value instanceof Date) {
+      return this.clone(value);
+    }
+
+    return null;
   }
 }

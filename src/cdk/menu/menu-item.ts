@@ -40,11 +40,12 @@ import {eventDispatchesNativeClick} from './event-detection';
   host: {
     'role': 'menuitem',
     'class': 'cdk-menu-item',
+    '[class.cdk-menu-item-disabled]': 'disabled',
     '[tabindex]': '_tabindex',
     '[attr.aria-disabled]': 'disabled || null',
     '(blur)': '_resetTabIndex()',
     '(focus)': '_setTabIndex()',
-    '(click)': 'trigger()',
+    '(click)': '_handleClick($event)',
     '(keydown)': '_onKeydown($event)',
   },
 })
@@ -63,7 +64,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private readonly _menuStack = inject(MENU_STACK);
 
   /** The parent menu in which this menuitem resides. */
-  private readonly _parentMenu = inject(CDK_MENU, {optional: true});
+  readonly _parentMenu = inject(CDK_MENU, {optional: true});
 
   /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
   private readonly _menuTrigger = inject(CdkMenuTrigger, {optional: true, self: true});
@@ -178,6 +179,16 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     // don't set the tabindex if there are no open sibling or parent menus
     if (!event || !this._menuStack.isEmpty()) {
       this._tabindex = 0;
+    }
+  }
+
+  /** Handles click events on the item. */
+  protected _handleClick(event: MouseEvent) {
+    if (this.disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.trigger();
     }
   }
 

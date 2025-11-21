@@ -47,5 +47,5 @@ describe('MapTrafficLayer', () => {
   imports: [GoogleMap, MapTrafficLayer],
 })
 class TestApp {
-  autoRefresh?: boolean;
+  autoRefresh: boolean;
 }

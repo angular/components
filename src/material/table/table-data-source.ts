@@ -103,16 +103,16 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * Instance of the MatSort directive used by the table to control its sorting. Sort changes
    * emitted by the MatSort will trigger an update to the table's rendered data.
    */
-  get sort(): MatSort | null {
+  get sort(): MatSort | null | undefined {
     return this._sort;
   }
 
-  set sort(sort: MatSort | null) {
+  set sort(sort: MatSort | null | undefined) {
     this._sort = sort;
     this._updateChangeSubscription();
   }
 
-  private _sort: MatSort | null;
+  private _sort: MatSort | null | undefined;
 
   /**
    * Instance of the paginator component used by the table to control what page of the data is
@@ -124,16 +124,16 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * e.g. `[pageLength]=100` or `[pageIndex]=1`, then be sure that the paginator's view has been
    * initialized before assigning it to this data source.
    */
-  get paginator(): P | null {
+  get paginator(): P | null | undefined {
     return this._paginator;
   }
 
-  set paginator(paginator: P | null) {
+  set paginator(paginator: P | null | undefined) {
     this._paginator = paginator;
     this._updateChangeSubscription();
   }
 
-  private _paginator: P | null;
+  private _paginator: P | null | undefined;
 
   /**
    * Data accessor function that is used for accessing data properties for sorting through

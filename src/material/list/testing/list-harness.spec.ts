@@ -45,10 +45,6 @@ function runBaseListFunctionalityTests<
 
     beforeEach(async () => {
       const testComponent = testComponentFn();
-      TestBed.configureTestingModule({
-        imports: [MatListModule, testComponent],
-      });
-
       fixture = TestBed.createComponent(testComponent);
       fixture.detectChanges();
       const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -319,10 +315,6 @@ describe('MatActionListHarness', () => {
     let fixture: ComponentFixture<ActionListHarnessTest>;
 
     beforeEach(async () => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, ActionListHarnessTest],
-      });
-
       fixture = TestBed.createComponent(ActionListHarnessTest);
       fixture.detectChanges();
       const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -352,10 +344,6 @@ describe('MatNavListHarness', () => {
     let fixture: ComponentFixture<NavListHarnessTest>;
 
     beforeEach(async () => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, NavListHarnessTest],
-      });
-
       fixture = TestBed.createComponent(NavListHarnessTest);
       fixture.detectChanges();
       const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -421,10 +409,6 @@ describe('MatSelectionListHarness', () => {
     let fixture: ComponentFixture<SelectionListHarnessTest>;
 
     beforeEach(async () => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SelectionListHarnessTest],
-      });
-
       fixture = TestBed.createComponent(SelectionListHarnessTest);
       fixture.detectChanges();
       const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -599,7 +583,7 @@ class ActionListHarnessTest {
         </a>
         <div matSubheader>Section 1</div>
         <mat-divider></mat-divider>
-        <a mat-list-item activated href (click)="onClick($event, 'Item 2')">
+        <a mat-list-item [activated]="true" href (click)="onClick($event, 'Item 2')">
           <span class="test-item-content">Item 2</span>
         </a>
         <a

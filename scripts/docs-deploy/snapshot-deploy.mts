@@ -20,7 +20,7 @@ export type DeploymentConfig = {
  * One downside is that the docs site might be ahead of what is available
  * on NPM, potentially causing examples to not work in StackBlitz. These should
  * never break though since the stable release train is supposed to never receive
- * breaking changes (i.e. `material.angular.io` Stackblitz should work as expected).
+ * breaking changes (i.e. `material.angular.dev` Stackblitz should work as expected).
  *
  * Building based on the NPM packages would result in some inevitable complexity.
  * For example: we would know that `13.2.0` is our latest release. We would need

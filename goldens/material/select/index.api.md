@@ -24,10 +24,10 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i1 from '@angular/cdk/scrolling';
+import * as i1_2 from '@angular/cdk/observers';
+import * as i2$1 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/overlay';
-import * as i2_2 from '@angular/cdk/observers';
-import * as i5 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -35,7 +35,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -48,16 +47,6 @@ export const MAT_SELECT_CONFIG: InjectionToken<MatSelectConfig>;
 
 // @public
 export const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
 // @public
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
@@ -82,8 +71,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     get appearance(): MatFormFieldAppearance;
     set appearance(value: MatFormFieldAppearance);
     color: ThemePalette;
-    get _control(): MatFormFieldControl_2<any>;
-    set _control(value: MatFormFieldControl_2<any>);
+    get _control(): MatFormFieldControl<any>;
+    set _control(value: MatFormFieldControl<any>);
     // (undocumented)
     _elementRef: ElementRef<any>;
     // (undocumented)
@@ -94,7 +83,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     set floatLabel(value: FloatLabelType);
     _forceDisplayInfixLabel(): boolean | 0;
     // (undocumented)
-    _formFieldControl: MatFormFieldControl_2<any>;
+    _formFieldControl: MatFormFieldControl<any>;
     getConnectedOverlayOrigin(): ElementRef;
     getLabelId: i0.Signal<string | null>;
     _getSubscriptMessageType(): 'error' | 'hint';
@@ -248,7 +237,7 @@ export class MatPrefix {
 }
 
 // @public (undocumented)
-export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any> {
+export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl_2<any> {
     constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
@@ -271,7 +260,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     readonly disableAutomaticLabeling = true;
     disabled: boolean;
     disableOptionCentering: boolean;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     // (undocumented)
     readonly _elementRef: ElementRef<any>;
     get empty(): boolean;
@@ -326,7 +316,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     ngOnInit(): void;
     _onBlur(): void;
     _onChange: (value: any) => void;
-    onContainerClick(): void;
+    onContainerClick(event: MouseEvent): void;
     // (undocumented)
     _onFocus(): void;
     _onTouched: () => void;
@@ -387,11 +377,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelect, never>;
 }
 
-// @public @deprecated
-export const matSelectAnimations: {
-    readonly transformPanel: any;
-};
-
 // @public
 export class MatSelectChange<T = any> {
     constructor(
@@ -418,7 +403,7 @@ export class MatSelectModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSelectModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatCommonModule, typeof MatSelect, typeof MatSelectTrigger], [typeof i5.CdkScrollableModule, typeof MatFormFieldModule, typeof MatSelect, typeof MatSelectTrigger, typeof MatOptionModule, typeof MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatSelect, typeof MatSelectTrigger], [typeof i2$1.BidiModule, typeof i1.CdkScrollableModule, typeof MatFormFieldModule, typeof MatSelect, typeof MatSelectTrigger, typeof MatOptionModule]>;
 }
 
 // @public

@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "http_server", "ng_project")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
+load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -26,6 +25,14 @@ ng_project(
         "//:node_modules/@angular/router",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
+        "//src/dev-app/aria-accordion",
+        "//src/dev-app/aria-combobox",
+        "//src/dev-app/aria-grid",
+        "//src/dev-app/aria-listbox",
+        "//src/dev-app/aria-menu",
+        "//src/dev-app/aria-tabs",
+        "//src/dev-app/aria-toolbar",
+        "//src/dev-app/aria-tree",
         "//src/dev-app/autocomplete",
         "//src/dev-app/badge",
         "//src/dev-app/baseline",
@@ -34,9 +41,6 @@ ng_project(
         "//src/dev-app/button-toggle",
         "//src/dev-app/card",
         "//src/dev-app/cdk-dialog",
-        "//src/dev-app/cdk-experimental-combobox",
-        "//src/dev-app/cdk-experimental-listbox",
-        "//src/dev-app/cdk-experimental-tabs",
         "//src/dev-app/cdk-listbox",
         "//src/dev-app/cdk-menu",
         "//src/dev-app/checkbox",
@@ -81,6 +85,8 @@ ng_project(
         "//src/dev-app/slider",
         "//src/dev-app/snack-bar",
         "//src/dev-app/stepper",
+        "//src/dev-app/system",
+        "//src/dev-app/system-classes-demo",
         "//src/dev-app/table",
         "//src/dev-app/table-scroll-container",
         "//src/dev-app/tabs",
@@ -107,7 +113,6 @@ esbuild(
         ":main.js",
         ":polyfills.js",
     ] + ["%s:index.js" % e for e in ALL_EXAMPLES],
-    minify = True,
     platform = "browser",
     sourcemap = "linked",
     sources_content = True,
@@ -152,6 +157,7 @@ filegroup(
 filegroup(
     name = "dev_app_static_files",
     srcs = [
+        "common-classes.css",
         "favicon.ico",
         "index.html",
         ":theme",
@@ -167,7 +173,7 @@ http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     enable_dev_ui = True,
     # List of environment variables that will be made available as `window.<NAME>` in the

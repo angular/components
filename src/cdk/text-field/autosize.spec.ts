@@ -1,12 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../testing/private';
@@ -17,19 +10,6 @@ describe('CdkTextareaAutosize', () => {
   let fixture: ComponentFixture<AutosizeTextAreaWithContent>;
   let textarea: HTMLTextAreaElement;
   let autosize: CdkTextareaAutosize;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        TextFieldModule,
-        AutosizeTextAreaWithContent,
-        AutosizeTextAreaWithValue,
-        AutosizeTextareaWithNgModel,
-        AutosizeTextareaWithoutAutosize,
-      ],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AutosizeTextAreaWithContent);
@@ -415,15 +395,6 @@ class AutosizeTextAreaWithContent {
   maxRows: number | null = null;
   content: string = '';
   placeholder: string = '';
-}
-
-@Component({
-  template: `<textarea cdkTextareaAutosize [value]="value"></textarea>`,
-  styles: textareaStyleReset,
-  imports: [FormsModule, TextFieldModule],
-})
-class AutosizeTextAreaWithValue {
-  value: string = '';
 }
 
 @Component({

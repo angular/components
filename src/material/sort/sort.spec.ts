@@ -27,25 +27,6 @@ describe('MatSort', () => {
     let fixture: ComponentFixture<SimpleMatSortApp>;
     let component: SimpleMatSortApp;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatSortModule,
-          MatTableModule,
-          CdkTableModule,
-          SimpleMatSortApp,
-          CdkTableMatSortApp,
-          MatTableMatSortApp,
-          MatSortHeaderMissingMatSortApp,
-          MatSortDuplicateMatSortableIdsApp,
-          MatSortableMissingIdApp,
-          MatSortableInvalidDirection,
-          MatSortableInvalidDirection,
-          MatSortWithArrowPosition,
-        ],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMatSortApp);
       component = fixture.componentInstance;
@@ -357,7 +338,6 @@ describe('MatSort', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatSortModule, MatTableModule, CdkTableModule, MatSortWithoutExplicitInputs],
         providers: [
           {
             provide: MAT_SORT_DEFAULT_OPTIONS,
@@ -390,7 +370,6 @@ describe('MatSort', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatSortModule, MatTableModule, CdkTableModule, MatSortWithoutInputs],
         providers: [
           {
             provide: MAT_SORT_DEFAULT_OPTIONS,
@@ -623,7 +602,7 @@ class MatSortableMissingIdApp {}
 
 @Component({
   template: `
-    <div matSort matSortDirection="ascending">
+    <div matSort [matSortDirection]="$any('ascending')">
       <div mat-sort-header="a"> A </div>
     </div>
   `,
@@ -677,7 +656,7 @@ class MatSortWithoutExplicitInputs {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithArrowPosition {
-  arrowPosition?: 'before' | 'after';
+  arrowPosition: 'before' | 'after';
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild('defaultA') defaultA: MatSortHeader;
   @ViewChild('defaultB') defaultB: MatSortHeader;

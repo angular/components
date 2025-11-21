@@ -24,22 +24,23 @@
   },
   "homepage": "https://github.com/angular/components#readme",
   "peerDependencies": {
+    "@angular/aria": "0.0.0-PLACEHOLDER",
     "@angular/cdk": "0.0.0-PLACEHOLDER",
     "@angular/cdk-experimental": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
     "@angular/common": "0.0.0-NG",
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/material-experimental": "0.0.0-PLACEHOLDER",
-    "@angular/material-moment-adapter": "0.0.0-PLACEHOLDER",
     "@angular/material-luxon-adapter": "0.0.0-PLACEHOLDER",
     "@angular/material-date-fns-adapter": "0.0.0-PLACEHOLDER"
   },
   "devDependencies": {
+    "@angular/aria": "workspace:*",
     "@angular/cdk": "workspace:*",
     "@angular/cdk-experimental": "workspace:*",
     "@angular/material": "workspace:*",
     "@angular/material-experimental": "workspace:*",
-    "@angular/material-moment-adapter": "workspace:*"
+    "@angular/material-luxon-adapter": "workspace:*"
   },
   "dependencies": {
     "tslib": "^2.3.0"

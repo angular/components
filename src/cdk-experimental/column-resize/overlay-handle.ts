@@ -18,7 +18,7 @@ import {
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {Subject, merge, Observable} from 'rxjs';
 import {
   distinctUntilChanged,
@@ -36,6 +36,7 @@ import {HEADER_CELL_SELECTOR} from './selectors';
 import {ColumnResizeNotifierSource} from './column-resize-notifier';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 // TODO: Take another look at using cdk drag drop. IIRC I ran into a couple
 // good reasons for not using it but I don't remember what they were at this point.

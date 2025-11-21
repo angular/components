@@ -9,11 +9,10 @@
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import {Schema as ComponentOptions} from '@schematics/angular/component/schema';
 import {InsertChange} from '@schematics/angular/utility/change';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace} from '@schematics/angular/utility';
 import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
 import {addImportToModule} from '@schematics/angular/utility/ast-utils';
 import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
-import {workspaces} from '@angular-devkit/core';
 import * as ts from 'typescript';
 import {getProjectMainFile} from './project-main-file';
 
@@ -31,7 +30,7 @@ export function addModuleImportToRootModule(
   host: Tree,
   moduleName: string,
   src: string,
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
 ) {
   const modulePath = getAppModulePath(host, getProjectMainFile(project));
   addModuleImportToModule(host, modulePath, moduleName, src);
@@ -73,7 +72,7 @@ export async function findModuleFromOptions(
   host: Tree,
   options: ComponentOptions,
 ): Promise<string | undefined> {
-  const workspace = await getWorkspace(host);
+  const workspace = await readWorkspace(host);
 
   if (!options.project) {
     options.project = Array.from(workspace.projects.keys())[0];

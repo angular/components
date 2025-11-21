@@ -34,6 +34,7 @@
     "types": [],
     "skipLibCheck": true,
     "paths": {
+      "@angular/aria/*": ["./aria/*"],
       "@angular/cdk-experimental/*": ["./cdk-experimental/*"],
       "@angular/cdk/*": ["./cdk/*"],
       "@angular/components-examples": ["./components-examples"],
@@ -51,6 +52,10 @@
   "angularCompilerOptions": {
     "strictTemplates": true,
     "typeCheckHostBindings": true,
+    "strictInputAccessModifiers": true,
+    "strictInputTypes": true,
+    "strictOutputEventTypes": true,
+    "strictDomEventTypes": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }

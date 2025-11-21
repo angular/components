@@ -1,0 +1,25 @@
+<!-- Disabled Options are Focusable -->
+<div class="example-container">
+  <ul
+    ngListbox
+    [softDisabled]="true"
+    class="example-listbox example-parent"
+    aria-labelledby="disabled-focusable-label"
+  >
+    <label class="example-label" id="disabled-focusable-label">Disabled Focusable Fruits</label>
+    @for (fruit of fruits; track fruit; let i = $index) {
+      <li
+        class="example-option example-stateful example-selectable"
+        [value]="fruit"
+        [disabled]="i % 2 === 0"
+        ngOption
+        #option="ngOption"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

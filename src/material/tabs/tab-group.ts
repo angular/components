@@ -100,8 +100,7 @@ export class MatTabGroup
   private _tabsSubscription = Subscription.EMPTY;
   private _tabLabelSubscription = Subscription.EMPTY;
   private _tabBodySubscription = Subscription.EMPTY;
-
-  _animationsDisabled = _animationsDisabled();
+  private _diAnimationsDisabled = _animationsDisabled();
 
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
@@ -126,10 +125,10 @@ export class MatTabGroup
 
   /**
    * Theme color of the tab group. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   color: ThemePalette;
@@ -219,10 +218,10 @@ export class MatTabGroup
 
   /**
    * Theme color of the background of the tab group. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    *
    * @deprecated The background color should be customized through Sass theming APIs.
    * @breaking-change 20.0.0 Remove this input
@@ -577,6 +576,14 @@ export class MatTabGroup
     if (isCenter) {
       this._tabBodies?.forEach((body, i) => body._setActiveClass(i === this._selectedIndex));
     }
+  }
+
+  protected _animationsDisabled(): boolean {
+    return (
+      this._diAnimationsDisabled ||
+      this.animationDuration === '0' ||
+      this.animationDuration === '0ms'
+    );
   }
 }
 

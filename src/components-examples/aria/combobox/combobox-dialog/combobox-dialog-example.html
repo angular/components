@@ -1,0 +1,49 @@
+<div ngCombobox #combobox="ngCombobox" class="example-combobox-container" [readonly]="true">
+  <div class="example-combobox-input-container">
+    <input
+      ngComboboxInput
+      class="example-combobox-input"
+      placeholder="Select a state..."
+      [value]="value()"
+    />
+    <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
+  </div>
+
+  <ng-template ngComboboxPopupContainer>
+    <dialog ngComboboxDialog class="example-dialog">
+      <div
+        ngCombobox
+        #combobox="ngCombobox"
+        filterMode="manual"
+        [alwaysExpanded]="true"
+        class="example-combobox-container"
+      >
+        <!-- TODO: Don't clear selection on backspace for manual filter mode -->
+        <div class="example-combobox-input-container">
+          <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+          <input
+            ngComboboxInput
+            class="example-combobox-input"
+            placeholder="Search..."
+            [(value)]="searchString"
+          />
+        </div>
+
+        <ng-template ngComboboxPopupContainer>
+          <div ngListbox class="example-listbox" [(values)]="selectedStates">
+            @for (option of options(); track option) {
+              <div class="example-option" ngOption [value]="option" [label]="option">
+                <span>{{option}}</span>
+                <span
+                  aria-hidden="true"
+                  class="material-symbols-outlined example-icon example-selected-icon"
+                  >check</span
+                >
+              </div>
+            }
+          </div>
+        </ng-template>
+      </div>
+    </dialog>
+  </ng-template>
+</div>

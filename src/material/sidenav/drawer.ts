@@ -17,7 +17,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentInit,
   afterNextRender,
@@ -41,6 +41,8 @@ import {
   Renderer2,
   ViewChild,
   ViewEncapsulation,
+  DOCUMENT,
+  signal,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
@@ -68,7 +70,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
   'MAT_DRAWER_DEFAULT_AUTOSIZE',
   {
     providedIn: 'root',
-    factory: MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY,
+    factory: () => false,
   },
 );
 
@@ -77,15 +79,6 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
  * @docs-private
  */
 export const MAT_DRAWER_CONTAINER = new InjectionToken('MAT_DRAWER_CONTAINER');
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
-  return false;
-}
 
 @Component({
   selector: 'mat-drawer-content',
@@ -164,7 +157,9 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // this was also done by the animations module which some internal tests seem to depend on.
     // Simulate it by toggling the `hidden` attribute instead.
     '[style.visibility]': '(!_container && !opened) ? "hidden" : null',
-    'tabIndex': '-1',
+    // The sidenav container should not be focused on when used in side mode. See b/286459024 for
+    // reference. Updates tabIndex of drawer/container to default to null if in side mode.
+    '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -178,7 +173,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
-  private _doc = inject(DOCUMENT, {optional: true})!;
+  private _doc = inject(DOCUMENT);
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
 
   private _focusTrap: FocusTrap | null = null;
@@ -270,12 +265,12 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
    */
   @Input()
   get opened(): boolean {
-    return this._opened;
+    return this._opened();
   }
   set opened(value: BooleanInput) {
     this.toggle(coerceBooleanProperty(value));
   }
-  private _opened: boolean = false;
+  private _opened = signal(false);
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
   private _openedVia: FocusOrigin | null;
@@ -343,9 +338,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   constructor() {
     this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
-        if (this._doc) {
-          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-        }
+        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
         this._takeFocus();
       } else if (this._isFocusWithinDrawer()) {
         this._restoreFocus(this._openedVia || 'program');
@@ -382,7 +375,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     });
 
     this._animationEnd.subscribe(() => {
-      this.openedChange.emit(this._opened);
+      this.openedChange.emit(this.opened);
     });
   }
 
@@ -573,11 +566,11 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     restoreFocus: boolean,
     focusOrigin: Exclude<FocusOrigin, null>,
   ): Promise<MatDrawerToggleResult> {
-    if (isOpen === this._opened) {
+    if (isOpen === this.opened) {
       return Promise.resolve(isOpen ? 'open' : 'close');
     }
 
-    this._opened = isOpen;
+    this._opened.set(isOpen);
 
     if (this._container?._transitionsEnabled) {
       // Note: it's importatnt to set this as early as possible,

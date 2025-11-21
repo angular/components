@@ -132,7 +132,18 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /** Whether the slider displays tick marks along the slider track. */
   @Input({transform: booleanAttribute})
-  showTickMarks: boolean = false;
+  get showTickMarks(): boolean {
+    return this._showTickMarks;
+  }
+  set showTickMarks(value: boolean) {
+    this._showTickMarks = value;
+
+    if (this._hasViewInitialized) {
+      this._updateTickMarkUI();
+      this._updateTickMarkTrackUI();
+    }
+  }
+  private _showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
   @Input({transform: numberAttribute})
@@ -149,10 +160,10 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /**
    * Theme color of the slider. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/slider/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/slider/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   color: ThemePalette;

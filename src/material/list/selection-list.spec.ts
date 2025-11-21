@@ -43,20 +43,6 @@ describe('MatSelectionList without forms', () => {
     let selectionList: DebugElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatListModule,
-          SelectionListWithListOptions,
-          SelectionListWithCheckboxPositionAfter,
-          SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption,
-          SelectionListWithIndirectChildOptions,
-          SelectionListWithSelectedOptionAndValue,
-        ],
-      });
-    }));
-
-    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.detectChanges();
 
@@ -706,12 +692,6 @@ describe('MatSelectionList without forms', () => {
     let selectionList: DebugElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SelectionListWithSelectedOption],
-      });
-    }));
-
-    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithSelectedOption);
       listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
@@ -740,12 +720,6 @@ describe('MatSelectionList without forms', () => {
   describe('single-selection with list option selected', () => {
     let fixture: ComponentFixture<SingleSelectionListWithSelectedOption>;
     let listOptionElements: DebugElement[];
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SingleSelectionListWithSelectedOption],
-      });
-    }));
 
     beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SingleSelectionListWithSelectedOption);
@@ -778,7 +752,6 @@ describe('MatSelectionList without forms', () => {
       const matListConfig: MatListConfig = {hideSingleSelectionIndicator: true};
 
       TestBed.configureTestingModule({
-        imports: [MatListModule, SingleSelectionListWithSelectedOption],
         providers: [{provide: MAT_LIST_CONFIG, useValue: matListConfig}],
       });
     }));
@@ -808,12 +781,6 @@ describe('MatSelectionList without forms', () => {
     let fixture: ComponentFixture<SelectionListWithDisabledOption>;
     let listOptionEl: HTMLElement;
     let listOption: MatListOption;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SelectionListWithDisabledOption],
-      });
-    }));
 
     beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithDisabledOption);
@@ -855,18 +822,6 @@ describe('MatSelectionList without forms', () => {
     let fixture: ComponentFixture<SelectionListWithListDisabled>;
     let listOption: DebugElement[];
     let selectionList: DebugElement;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatListModule,
-          SelectionListWithListOptions,
-          SelectionListWithCheckboxPositionAfter,
-          SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption,
-        ],
-      });
-    }));
 
     beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithListDisabled);
@@ -956,18 +911,6 @@ describe('MatSelectionList without forms', () => {
     let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatListModule,
-          SelectionListWithListOptions,
-          SelectionListWithCheckboxPositionAfter,
-          SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption,
-        ],
-      });
-    }));
-
-    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
       fixture.detectChanges();
     }));
@@ -983,12 +926,6 @@ describe('MatSelectionList without forms', () => {
   });
 
   describe('with list item elements', () => {
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SelectionListWithAvatar, SelectionListWithIcon],
-      });
-    }));
-
     function expectCheckboxAtPosition(
       listItemElement: HTMLElement,
       position: MatListOptionTogglePosition,
@@ -1116,10 +1053,6 @@ describe('MatSelectionList without forms', () => {
     let selectionList: DebugElement;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, SelectionListWithListOptions],
-      });
-
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.componentInstance.multiple = false;
       fixture.changeDetectorRef.markForCheck();
@@ -1242,10 +1175,6 @@ describe('MatSelectionList without forms', () => {
     let option: MatListOption;
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule, ListOptionWithTwoWayBinding],
-      });
-
       fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
       fixture.detectChanges();
       const optionDebug = fixture.debugElement.query(By.directive(MatListOption));
@@ -1275,22 +1204,6 @@ describe('MatSelectionList without forms', () => {
 });
 
 describe('MatSelectionList with forms', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatListModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SelectionListWithModel,
-        SelectionListWithFormControl,
-        SelectionListWithPreselectedOption,
-        SelectionListWithPreselectedOptionAndModel,
-        SelectionListWithPreselectedFormControlOnPush,
-        SelectionListWithCustomComparator,
-      ],
-    });
-  }));
-
   describe('and ngModel', () => {
     let fixture: ComponentFixture<SelectionListWithModel>;
     let selectionListDebug: DebugElement;
@@ -1889,17 +1802,6 @@ class SelectionListWithSelectedOptionAndValue {
 
 @Component({
   template: `
-  <mat-selection-list id="selection-list-4">
-    <mat-list-option togglePosition="after" class="test-focus" id="123">
-      Inbox
-    </mat-list-option>
-  </mat-selection-list>`,
-  imports: [MatListModule],
-})
-class SelectionListWithOnlyOneOption {}
-
-@Component({
-  template: `
     <mat-selection-list
       [(ngModel)]="selectedOptions"
       (ngModelChange)="modelChangeSpy()"
@@ -1990,7 +1892,7 @@ class SelectionListWithPreselectedFormControlOnPush {
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
   selectedOptions: {id: number; label: string}[] = [];
-  compareWith?: (o1: any, o2: any) => boolean;
+  compareWith: (o1: any, o2: any) => boolean;
   options = [
     {id: 1, label: 'One'},
     {id: 2, label: 'Two'},
@@ -2010,7 +1912,7 @@ class SelectionListWithCustomComparator {
   imports: [MatListModule],
 })
 class SelectionListWithAvatar {
-  togglePosition: MatListOptionTogglePosition | undefined;
+  togglePosition: MatListOptionTogglePosition;
 }
 
 @Component({
@@ -2025,7 +1927,7 @@ class SelectionListWithAvatar {
   imports: [MatListModule],
 })
 class SelectionListWithIcon {
-  togglePosition: MatListOptionTogglePosition | undefined;
+  togglePosition: MatListOptionTogglePosition;
 }
 
 @Component({

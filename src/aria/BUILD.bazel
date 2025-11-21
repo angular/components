@@ -1,0 +1,57 @@
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//src/aria:config.bzl", "ARIA_TARGETS")
+load("//tools:defaults.bzl", "ng_package", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "aria",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = ["//:node_modules/@angular/core"],
+)
+
+ng_package(
+    name = "npm_package",
+    package_name = "@angular/aria",
+    srcs = ["package.json"],
+    nested_packages = [
+        ":adev_assets",
+    ],
+    package_deps = [
+        ":node_modules/@angular/cdk",
+    ],
+    replace_prefixes = {
+        "adev_assets/": "_adev_assets/",
+    },
+    tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+        "//src/material-experimental:__subpackages__",
+    ],
+    deps = ARIA_TARGETS,
+)
+
+copy_to_directory(
+    name = "adev_assets",
+    srcs = [
+        "//src/aria/accordion:json_api",
+        "//src/aria/combobox:json_api",
+        "//src/aria/grid:json_api",
+        "//src/aria/listbox:json_api",
+        "//src/aria/menu:json_api",
+        "//src/aria/tabs:json_api",
+        "//src/aria/toolbar:json_api",
+        "//src/aria/tree:json_api",
+    ],
+    replace_prefixes = {
+        "**/": "",
+    },
+)

@@ -1,0 +1,45 @@
+.example-grid-chips {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.example-grid-chips,
+.example-chip-icon {
+  font-size: 0.825rem;
+}
+
+.example-grid-chip {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  padding: 4px;
+}
+
+.example-grid-chip:hover,
+.example-grid-chip:focus-within {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 10%, transparent);
+}
+
+.example-chip-label {
+  padding: 0 8px;
+}
+
+.example-chip-remove-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  background: color-mix(in srgb, var(--mat-sys-secondary) 80%, transparent);
+  color: var(--mat-sys-on-secondary);
+  height: 1rem;
+  width: 1rem;
+}
+
+.example-chip-empty {
+  color: color-mix(in srgb, var(--mat-sys-on-background) 60%, transparent);
+}

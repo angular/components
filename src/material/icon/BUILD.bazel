@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -68,7 +68,6 @@ ng_project(
         "icon-registry.ts",
         "index.ts",
         "public-api.ts",
-        "trusted-types.ts",
     ],
     assets = [
         ":css",
@@ -79,11 +78,12 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
+        "//src/cdk/private",
         "//src/material/core",
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

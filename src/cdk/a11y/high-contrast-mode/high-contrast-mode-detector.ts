@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable, OnDestroy} from '@angular/core';
+import {inject, Injectable, OnDestroy, DOCUMENT} from '@angular/core';
 import {BreakpointObserver} from '../../layout';
 import {Platform} from '../../platform';
-import {DOCUMENT} from '@angular/common';
+
 import {Subscription} from 'rxjs';
 
 /** Set of possible high-contrast mode backgrounds. */

@@ -26,10 +26,6 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MenuCheckboxGroup],
-      });
-
       fixture = TestBed.createComponent(MenuCheckboxGroup);
       fixture.detectChanges();
 
@@ -59,12 +55,6 @@ describe('Menu', () => {
     let fixture: ComponentFixture<InlineMenu>;
     let nativeMenu: HTMLElement;
     let nativeMenuItems: HTMLElement[];
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, InlineMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(InlineMenu);
@@ -134,12 +124,6 @@ describe('Menu', () => {
       let nativeShareTrigger: HTMLElement | undefined;
 
       let nativeMenus: HTMLElement[];
-
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, WithComplexNestedMenus],
-        });
-      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenus);
@@ -326,12 +310,6 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
-        });
-      }));
-
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenusOnBottom);
         detectChanges();
@@ -502,6 +480,35 @@ describe('Menu', () => {
       }));
     });
   });
+
+  describe('menu with active item', () => {
+    let fixture: ComponentFixture<MenuWithActiveItem>;
+    let nativeMenuItems: HTMLElement[];
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MenuWithActiveItem);
+      fixture.detectChanges();
+
+      nativeMenuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItem))
+        .map(e => e.nativeElement);
+    });
+
+    it('should set the active item with setActiveMenuItem', () => {
+      fixture.componentInstance.menu.setActiveMenuItem(2);
+      expect(document.activeElement).toEqual(nativeMenuItems[2]);
+    });
+  });
+
+  it('should not pick up items from nested menu', () => {
+    const getItemsText = (menu: CdkMenu) =>
+      menu.items.map(i => i._elementRef.nativeElement.textContent?.trim());
+    const fixture = TestBed.createComponent(NestedMenuDefinition);
+    fixture.detectChanges();
+
+    expect(getItemsText(fixture.componentInstance.root)).toEqual(['One', 'Two']);
+    expect(getItemsText(fixture.componentInstance.inner)).toEqual(['Three', 'Four', 'Five']);
+  });
 });
 
 @Component({
@@ -654,4 +661,39 @@ class WithComplexNestedMenusOnBottom {
   @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
+
+@Component({
+  template: `
+    <div cdkMenu>
+      <button cdkMenuItem>Inbox</button>
+      <button cdkMenuItem>Starred</button>
+      <button cdkMenuItem>Foo</button>
+      <button cdkMenuItem>Bar</button>
+    </div>
+  `,
+  imports: [CdkMenuModule],
+})
+class MenuWithActiveItem {
+  @ViewChild(CdkMenu) menu: CdkMenu;
+}
+
+@Component({
+  template: `
+    <div cdkMenu #root>
+      <button cdkMenuItem>One</button>
+      <button cdkMenuItem>Two</button>
+
+      <div cdkMenu #inner>
+        <button cdkMenuItem>Three</button>
+        <button cdkMenuItem>Four</button>
+        <button cdkMenuItem>Five</button>
+      </div>
+    </div>
+  `,
+  imports: [CdkMenuModule],
+})
+class NestedMenuDefinition {
+  @ViewChild('root', {read: CdkMenu}) root: CdkMenu;
+  @ViewChild('inner', {read: CdkMenu}) inner: CdkMenu;
 }

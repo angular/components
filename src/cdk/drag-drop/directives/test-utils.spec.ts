@@ -30,7 +30,6 @@ export function createComponent<T>(
   };
 
   TestBed.configureTestingModule({
-    imports: [componentType],
     providers: [
       {
         provide: CDK_DRAG_CONFIG,

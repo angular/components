@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatPseudoCheckboxModule, MatRippleModule, MatCommonModule} from '../core';
+import {MatPseudoCheckboxModule, MatRippleModule} from '../core';
 import {MatDividerModule, MatDivider} from '../divider';
 import {MatActionList} from './action-list';
 import {MatList, MatListItem} from './list';
@@ -23,6 +23,7 @@ import {
 import {MatNavList} from './nav-list';
 import {MatSelectionList} from './selection-list';
 import {ObserversModule} from '@angular/cdk/observers';
+import {BidiModule} from '@angular/cdk/bidi';
 
 // Export required to fix compiler confusion about import module paths
 export {MatDivider};
@@ -30,7 +31,6 @@ export {MatDivider};
 @NgModule({
   imports: [
     ObserversModule,
-    MatCommonModule,
     MatRippleModule,
     MatPseudoCheckboxModule,
     MatList,
@@ -47,6 +47,7 @@ export {MatDivider};
     MatListItemMeta,
   ],
   exports: [
+    BidiModule,
     MatList,
     MatActionList,
     MatNavList,

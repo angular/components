@@ -2,10 +2,10 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -39,6 +39,7 @@ sass_library(
         "_form-field-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
@@ -98,11 +99,10 @@ ng_project(
     name = "form-field",
     srcs = [
         "form-field.ts",
-        "form-field-animations.ts",
         "form-field-control.ts",
         "form-field-errors.ts",
+        "form-field-module.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

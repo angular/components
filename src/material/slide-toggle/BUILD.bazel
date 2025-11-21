@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -66,17 +66,16 @@ ng_project(
     name = "slide-toggle",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "slide-toggle.ts",
         "slide-toggle-config.ts",
+        "slide-toggle-module.ts",
     ],
     assets = [
         "slide-toggle.html",
         ":css",
     ],
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
@@ -84,7 +83,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "slide_toggle_tests_lib",
     testonly = True,
     srcs = glob(

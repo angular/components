@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {
@@ -39,7 +47,7 @@ import {MatTabLink, MatTabNav, MatTabNavPanel} from '@angular/material/tabs';
   ],
 })
 export class ComponentViewer implements OnDestroy {
-  private router = inject(Router);
+  private _router = inject(Router);
   componentPageTitle = inject(ComponentPageTitle);
   readonly docItems = inject(DocumentationItems);
 
@@ -70,7 +78,7 @@ export class ComponentViewer implements OnDestroy {
       )
       .subscribe(({doc, section}) => {
         if (!doc) {
-          this.router.navigate(['/' + section]);
+          this._router.navigate(['/' + section]);
           return;
         }
 
@@ -105,7 +113,7 @@ export class ComponentViewer implements OnDestroy {
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
   componentViewer = inject(ComponentViewer);
-  private changeDetectorRef = inject(ChangeDetectorRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   readonly tableOfContents = viewChild<TableOfContents>('toc');
   readonly viewers = viewChildren(DocViewer);
@@ -118,7 +126,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
 
     this.showToc = breakpointObserver.observe('(max-width: 1200px)').pipe(
       map(result => {
-        this.changeDetectorRef.detectChanges();
+        this._changeDetectorRef.detectChanges();
         return !result.matches;
       }),
     );

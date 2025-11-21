@@ -1,7 +1,7 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -11,7 +11,7 @@ import {
   dispatchMouseEvent,
   patchElementFocus,
 } from '@angular/cdk/testing/private';
-import {Location} from '@angular/common';
+import {AsyncPipe, Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
@@ -39,6 +39,7 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 import {
   MAT_DIALOG_DATA,
@@ -47,7 +48,6 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogModule,
   MatDialogRef,
   MatDialogState,
   MatDialogTitle,
@@ -66,17 +66,6 @@ describe('MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        ComponentWithChildViewContainer,
-        ComponentWithTemplateRef,
-        PizzaMsg,
-        ContentElementDialog,
-        DialogWithInjectedData,
-        DialogWithoutFocusableElements,
-        DirectiveWithViewContainer,
-        ComponentWithContentElementTemplateRef,
-      ],
       providers: [
         {provide: Location, useClass: SpyLocation},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -238,10 +227,9 @@ describe('MatDialog', () => {
   }));
 
   it('should dispatch the beforeClosed and afterClosed events when the overlay is detached externally', fakeAsync(() => {
-    const overlay = TestBed.inject(Overlay);
     const dialogRef = dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef,
-      scrollStrategy: overlay.scrollStrategies.close(),
+      scrollStrategy: createCloseScrollStrategy(TestBed.inject(Injector)),
     });
     const beforeClosedCallback = jasmine.createSpy('beforeClosed callback');
     const afterCloseCallback = jasmine.createSpy('afterClosed callback');
@@ -1022,6 +1010,171 @@ describe('MatDialog', () => {
     );
   });
 
+  describe('closePredicate option', () => {
+    function getDialogs() {
+      return overlayContainerElement.querySelectorAll('mat-dialog-container');
+    }
+
+    it('should determine whether closing via the backdrop is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.afterClosed().subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should determine whether closing via the escape key is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.afterClosed().subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should determine whether closing via the `close` method is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.afterClosed().subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      ref.close();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      ref.close('hello');
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+      expect(closedSpy).toHaveBeenCalledWith('hello');
+    }));
+
+    it('should not be closed by `closeAll` if not allowed by the predicate', fakeAsync(() => {
+      let canClose = false;
+      const config = {closePredicate: () => canClose};
+      const spy = jasmine.createSpy('afterAllClosed spy');
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+
+      const subscription = dialog.afterAllClosed.subscribe(spy);
+      expect(getDialogs().length).toBe(3);
+      expect(dialog.openDialogs.length).toBe(3);
+
+      dialog.closeAll();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(3);
+      expect(dialog.openDialogs.length).toBe(3);
+      expect(spy).not.toHaveBeenCalled();
+
+      canClose = true;
+      dialog.closeAll();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(dialog.openDialogs.length).toBe(0);
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      subscription.unsubscribe();
+    }));
+
+    it('should recapture focus to the first tabbable element when clicking on the backdrop while the `closePredicate` is blocking the close sequence', fakeAsync(() => {
+      // When testing focus, all of the elements must be in the DOM.
+      document.body.appendChild(overlayContainerElement);
+
+      dialog.open(PizzaMsg, {
+        closePredicate: () => false,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      viewContainerFixture.detectChanges();
+      flush();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      const backdrop = overlayContainerElement.querySelector(
+        '.cdk-overlay-backdrop',
+      ) as HTMLElement;
+      const input = overlayContainerElement.querySelector('input') as HTMLInputElement;
+
+      expect(document.activeElement)
+        .withContext('Expected input to be focused on open')
+        .toBe(input);
+
+      input.blur(); // Programmatic clicks might not move focus so we simulate it.
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(document.activeElement)
+        .withContext('Expected input to stay focused after click')
+        .toBe(input);
+
+      overlayContainerElement.remove();
+    }));
+  });
+
   it(
     'should recapture focus to the first header when clicking on the backdrop with ' +
       'autoFocus set to "first-heading"',
@@ -1087,6 +1240,14 @@ describe('MatDialog', () => {
         .toBe(firstButton);
     }),
   );
+
+  it('should be able to use afterOpened in the template while animations are disabled', async () => {
+    const ref = dialog.open(DialogWithAfterOpenSubscription);
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    expect(ref.componentInstance.animations.animationsDisabled).toBe(true);
+    expect(overlayContainerElement.textContent).toContain('The dialog is now open!');
+  });
 
   describe('hasBackdrop option', () => {
     it('should have a backdrop', () => {
@@ -1871,7 +2032,6 @@ describe('MatDialog with a parent MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentThatProvidesMatDialog],
       providers: [
         {
           provide: OverlayContainer,
@@ -1980,7 +2140,6 @@ describe('MatDialog with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
       providers: [
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -2041,10 +2200,6 @@ describe('MatDialog with animations enabled', () => {
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
-    });
-
     dialog = TestBed.inject(MatDialog);
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
@@ -2095,10 +2250,6 @@ describe('MatDialog with explicit injector provided', () => {
   let fixture: ComponentFixture<ModuleBoundDialogParentComponent>;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatDialogModule, ModuleBoundDialogParentComponent],
-    });
-
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ModuleBoundDialogParentComponent);
   }));
@@ -2123,7 +2274,6 @@ class DirectiveWithViewContainer {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
-  standalone: false,
 })
 class ComponentWithOnPushViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -2265,7 +2415,6 @@ class DialogWithoutFocusableElements {}
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false,
 })
 class ShadowDomComponent {}
 
@@ -2310,3 +2459,15 @@ class ModuleBoundDialogChildComponent {
   providers: [ModuleBoundDialogService],
 })
 class ModuleBoundDialogModule {}
+
+@Component({
+  template: `{{message | async}}`,
+  imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DialogWithAfterOpenSubscription {
+  dialogRef = inject(MatDialogRef);
+  animations = inject(MATERIAL_ANIMATIONS);
+
+  protected message = this.dialogRef.afterOpened().pipe(map(() => 'The dialog is now open!'));
+}

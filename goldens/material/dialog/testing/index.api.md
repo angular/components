@@ -13,6 +13,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { Dialog } from '@angular/cdk/dialog';
+import { DialogConfig } from '@angular/cdk/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
@@ -33,10 +34,10 @@ export interface DialogHarnessFilters extends BaseHarnessFilters {
 // @public
 export class MatDialogHarness extends ContentContainerComponentHarness<MatDialogSection | string> {
     // (undocumented)
-    protected _actions: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement | null>;
+    protected _actions: () => Promise<_angular_cdk_testing.TestElement | null>;
     close(): Promise<void>;
     // (undocumented)
-    protected _content: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement | null>;
+    protected _content: () => Promise<_angular_cdk_testing.TestElement | null>;
     getActionsText(): Promise<string>;
     getAriaDescribedby(): Promise<string | null>;
     getAriaLabel(): Promise<string | null>;
@@ -48,7 +49,7 @@ export class MatDialogHarness extends ContentContainerComponentHarness<MatDialog
     getTitleText(): Promise<string>;
     static hostSelector: string;
     // (undocumented)
-    protected _title: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement | null>;
+    protected _title: () => Promise<_angular_cdk_testing.TestElement | null>;
     static with<T extends MatDialogHarness>(this: ComponentHarnessConstructor<T>, options?: DialogHarnessFilters): HarnessPredicate<T>;
 }
 

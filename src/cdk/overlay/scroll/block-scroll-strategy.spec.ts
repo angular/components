@@ -1,9 +1,16 @@
-import {Component} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Platform} from '../../platform';
 import {ViewportRuler} from '../../scrolling';
-import {Overlay, OverlayContainer, OverlayModule, OverlayRef, OverlayConfig} from '../index';
+import {
+  OverlayContainer,
+  OverlayModule,
+  OverlayRef,
+  OverlayConfig,
+  createBlockScrollStrategy,
+  createOverlayRef,
+} from '../index';
 
 describe('BlockScrollStrategy', () => {
   let platform: Platform;
@@ -15,15 +22,13 @@ describe('BlockScrollStrategy', () => {
   let overlayContainer: OverlayContainer;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({imports: [OverlayModule, PortalModule, FocacciaMsg]});
-
-    const overlay = TestBed.inject(Overlay);
-    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.block()});
+    const injector = TestBed.inject(Injector);
+    const overlayConfig = new OverlayConfig({scrollStrategy: createBlockScrollStrategy(injector)});
 
     viewport = TestBed.inject(ViewportRuler);
     platform = TestBed.inject(Platform);
     overlayContainer = TestBed.inject(OverlayContainer);
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(FocacciaMsg);
     documentElement = document.documentElement!;
     documentElement.classList.remove('cdk-global-scrollblock');
@@ -146,6 +151,57 @@ describe('BlockScrollStrategy', () => {
       forceScrollElement.style.display = 'none';
       overlayRef.attach(componentPortal);
       expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+    }),
+  );
+
+  it(
+    `should't do anything if the page isn't scrollable while zoomed out`,
+    skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
+      forceScrollElement.style.display = 'none';
+      document.body.style.zoom = '75%';
+      overlayRef.attach(componentPortal);
+      expect(document.body.scrollWidth).toBeGreaterThan(window.innerWidth);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      overlayRef.detach();
+      document.body.style.zoom = '100%';
+
+      document.documentElement.style.zoom = '75%';
+      overlayRef.attach(componentPortal);
+      expect(document.body.scrollWidth).toBeGreaterThan(window.innerWidth);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      document.documentElement.style.zoom = '100%';
+    }),
+  );
+
+  it(
+    `should add cdk-global-scrollblock while zoomed in`,
+    skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
+      forceScrollElement.style.width = window.innerWidth - 20 + 'px';
+      forceScrollElement.style.height = window.innerHeight - 20 + 'px';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      overlayRef.detach();
+
+      document.body.style.zoom = '200%';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).toContain('cdk-global-scrollblock');
+      document.body.style.zoom = '100%';
+      overlayRef.detach();
+
+      document.documentElement.style.zoom = '200%';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).toContain('cdk-global-scrollblock');
+      document.documentElement.style.zoom = '100%';
     }),
   );
 

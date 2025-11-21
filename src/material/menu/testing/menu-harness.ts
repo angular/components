@@ -14,6 +14,7 @@ import {
   TestElement,
 } from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {MatIconHarness} from '@angular/material/icon/testing';
 import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters';
 
 /** Harness for interacting with a mat-menu in tests. */
@@ -32,11 +33,16 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
     this: ComponentHarnessConstructor<T>,
     options: MenuHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption(
-      'triggerText',
-      options.triggerText,
-      (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text),
-    );
+    return new HarnessPredicate(this, options)
+      .addOption('triggerText', options.triggerText, (harness, text) =>
+        HarnessPredicate.stringMatches(harness.getTriggerText(), text),
+      )
+      .addOption('triggerIconName', options.triggerIconName, async (harness, triggerIconName) => {
+        const result = await harness.locatorForOptional(
+          MatIconHarness.with({name: triggerIconName}),
+        )();
+        return result !== null;
+      });
   }
 
   /** Whether the menu is disabled. */
@@ -117,20 +123,7 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
     ...subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[]
   ): Promise<void> {
     await this.open();
-    const items = await this.getItems(itemFilter);
-    if (!items.length) {
-      throw Error(`Could not find item matching ${JSON.stringify(itemFilter)}`);
-    }
-
-    if (!subItemFilters.length) {
-      return await items[0].click();
-    }
-
-    const menu = await items[0].getSubmenu();
-    if (!menu) {
-      throw Error(`Item matching ${JSON.stringify(itemFilter)} does not have a submenu`);
-    }
-    return menu.clickItem(...(subItemFilters as [Omit<MenuItemHarnessFilters, 'ancestor'>]));
+    return clickItemImplementation(await this.getItems(itemFilter), itemFilter, subItemFilters);
   }
 
   protected override async getRootHarnessLoader(): Promise<HarnessLoader> {
@@ -218,4 +211,24 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
     }
     return null;
   }
+}
+
+export async function clickItemImplementation(
+  items: MatMenuItemHarness[],
+  itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>,
+  subItemFilters: Omit<MenuItemHarnessFilters, 'ancestor'>[],
+): Promise<void> {
+  if (!items.length) {
+    throw Error(`Could not find item matching ${JSON.stringify(itemFilter)}`);
+  }
+
+  if (!subItemFilters.length) {
+    return await items[0].click();
+  }
+
+  const menu = await items[0].getSubmenu();
+  if (!menu) {
+    throw Error(`Item matching ${JSON.stringify(itemFilter)} does not have a submenu`);
+  }
+  return menu.clickItem(...(subItemFilters as [Omit<MenuItemHarnessFilters, 'ancestor'>]));
 }

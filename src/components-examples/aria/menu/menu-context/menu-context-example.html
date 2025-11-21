@@ -1,0 +1,45 @@
+<div class="example-context-menu-container" (contextmenu)="open($event)">
+  Right-click for context menu
+</div>
+
+<div
+  ng-menu
+  #contextMenu
+  (click)="close($event)"
+  (focusout)="close($event)"
+  class="example-context-menu"
+>
+  <ng-template ngMenuContent>
+    <div ng-menu-item value="Cut">
+      <span ng-menu-item-icon>content_cut</span>
+      <span ng-menu-item-text>Cut</span>
+      <span ng-menu-item-shortcut>⌘X</span>
+    </div>
+
+    <div ng-menu-item value="Copy">
+      <span ng-menu-item-icon>content_copy</span>
+      <span ng-menu-item-text>Copy</span>
+      <span ng-menu-item-shortcut>⌘C</span>
+    </div>
+
+    <div ng-menu-item value="Paste" [submenu]="pasteMenu">
+      <span ng-menu-item-icon>content_paste</span>
+      <span ng-menu-item-text>Paste</span>
+      <span ng-menu-item-icon class="example-arrow">arrow_right</span>
+    </div>
+
+    <div ng-menu #pasteMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ng-menu-item value="Paste as plain text">
+          <span ng-menu-item-text>Paste as plain text</span>
+          <span ng-menu-item-shortcut>⌘⇧V</span>
+        </div>
+
+        <div ng-menu-item value="Paste without formatting">
+          <span ng-menu-item-text>Paste without formatting</span>
+          <span ng-menu-item-shortcut>⌘⇧V</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

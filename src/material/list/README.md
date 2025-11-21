@@ -1,1 +1,1 @@
-Please see the official documentation at https://material.angular.io/components/component/list
+Please see the official documentation at https://material.angular.dev/components/component/list

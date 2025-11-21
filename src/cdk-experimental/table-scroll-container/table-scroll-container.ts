@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CSP_NONCE, Directive, ElementRef, OnDestroy, OnInit, inject} from '@angular/core';
+import {CSP_NONCE, Directive, ElementRef, OnDestroy, OnInit, inject, DOCUMENT} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {DOCUMENT} from '@angular/common';
+
 import {Directionality} from '@angular/cdk/bidi';
 import {_getShadowRoot} from '@angular/cdk/platform';
 import {

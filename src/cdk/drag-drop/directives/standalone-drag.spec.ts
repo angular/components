@@ -33,6 +33,7 @@ import {
   startDraggingViaMouse,
   startDraggingViaTouch,
 } from './test-utils.spec';
+import {isInsideClientRect, isOverflowingParent} from '../dom/dom-rect';
 
 describe('Standalone CdkDrag', () => {
   describe('mouse dragging', () => {
@@ -44,6 +45,95 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+    }));
+
+    it('should reset drag item to boundary', fakeAsync(() => {
+      const fixture = createComponent(DragWithResizeableBoundary);
+      fixture.detectChanges();
+      let boundaryElement = fixture.componentInstance.boundaryElement.nativeElement;
+      let dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      dragElementViaMouse(fixture, dragElement, 50, 100);
+
+      // check if the drag element is within the boundary or not
+      expect(
+        isInsideClientRect(
+          boundaryElement.getBoundingClientRect(),
+          fixture.componentInstance.dragInstance.getFreeDragPosition().x,
+          fixture.componentInstance.dragInstance.getFreeDragPosition().y,
+        ),
+      ).toBeTrue();
+
+      // drag it till the end of the boundary
+      dragElementViaMouse(fixture, dragElement, 400, 400);
+
+      // it should still be present within the boundary
+      expect(
+        isInsideClientRect(
+          boundaryElement.getBoundingClientRect(),
+          fixture.componentInstance.dragInstance.getFreeDragPosition().x,
+          fixture.componentInstance.dragInstance.getFreeDragPosition().y,
+        ),
+      ).toBeTrue();
+
+      // shrink boundary to check if we are within boundary or not
+      fixture.componentInstance.setBoundary('200px', '200px');
+      fixture.detectChanges();
+
+      // it should not be within the boundary anymore as we shrinked it
+      expect(
+        isInsideClientRect(
+          boundaryElement.getBoundingClientRect(),
+          fixture.componentInstance.dragInstance.getFreeDragPosition().x,
+          fixture.componentInstance.dragInstance.getFreeDragPosition().y,
+        ),
+      ).toBeFalse();
+
+      fixture.componentInstance.dragInstance.resetToBoundary();
+      fixture.detectChanges();
+
+      // should be be within bounding box of its boundary now that we have reseted it
+      expect(
+        isInsideClientRect(
+          boundaryElement.getBoundingClientRect(),
+          fixture.componentInstance.dragInstance.getFreeDragPosition().x,
+          fixture.componentInstance.dragInstance.getFreeDragPosition().y,
+        ),
+      ).toBeTrue();
+
+      // expand the boundary enough that so can we can make the draggable item to be overflown
+      // of its parent from top side
+      fixture.componentInstance.setBoundary('500px', '500px');
+      fixture.detectChanges();
+
+      // drag it till the end of the boundary
+      dragElementViaMouse(fixture, dragElement, 500, 500);
+
+      // shrink boundary to make draggable item to be overflown
+      fixture.componentInstance.setBoundary('400px', '400px');
+      fixture.detectChanges();
+
+      // should be within bounding rect but it's overflowing as it was placed in a way that
+      // it is overflowing
+      expect(
+        isOverflowingParent(
+          boundaryElement.getBoundingClientRect(),
+          dragElement.getBoundingClientRect(),
+        ),
+      ).toBeTrue();
+
+      // reset it so that overflowing offset is fixed
+      fixture.componentInstance.dragInstance.resetToBoundary();
+      fixture.detectChanges();
+
+      // should be within bounding rect but it's overflowing as it was placed in a way that
+      // it is overflowing
+      expect(
+        isOverflowingParent(
+          boundaryElement.getBoundingClientRect(),
+          dragElement.getBoundingClientRect(),
+        ),
+      ).toBeFalse();
     }));
 
     it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
@@ -2046,4 +2136,26 @@ class PlainStandaloneDraggable {
 })
 class StandaloneDraggableWithExternalTemplateHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+}
+
+@Component({
+  template: `
+    <div #boundaryElement class="example-boundary" style="width: 400px; height: 400px">
+      <div #dragElement class="example-box" cdkDragBoundary=".example-boundary" cdkDrag style="width: 100px; height: 100px">
+        I can only be dragged within the container
+      </div>
+    </div>
+  `,
+  imports: [CdkDrag],
+})
+class DragWithResizeableBoundary {
+  @ViewChild('boundaryElement') boundaryElement: ElementRef<HTMLElement>;
+
+  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+
+  setBoundary(height: string, width: string) {
+    this.boundaryElement.nativeElement.style.height = height;
+    this.boundaryElement.nativeElement.style.width = width;
+  }
 }

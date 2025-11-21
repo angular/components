@@ -2,10 +2,10 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -29,8 +29,8 @@ ng_project(
         "index.ts",
         "input.ts",
         "input-errors.ts",
+        "input-module.ts",
         "input-value-accessor.ts",
-        "module.ts",
         "public-api.ts",
     ],
     deps = [
@@ -47,7 +47,7 @@ ng_project(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "input_tests_lib",
     testonly = True,
     srcs = glob(

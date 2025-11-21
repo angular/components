@@ -73,3 +73,10 @@ body {
   display: flex;
   align-items: center;
 }
+
+.demo-testonly-mode {
+  .demo-menu-button,
+  .demo-config-buttons {
+    display: none;
+  }
+}

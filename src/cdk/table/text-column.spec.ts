@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {
   getTableTextColumnMissingNameError,
@@ -13,12 +13,6 @@ describe('CdkTextColumn', () => {
   let fixture: ComponentFixture<BasicTextColumnApp>;
   let component: BasicTextColumnApp;
   let tableElement: HTMLElement;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BasicTextColumnApp);
@@ -105,7 +99,6 @@ describe('CdkTextColumn', () => {
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [CdkTableModule, BasicTextColumnApp],
         providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}],
       });
 
@@ -179,7 +172,7 @@ class BasicTextColumnApp {
 
   headerTextB: string;
   dataAccessorA: (data: TestData) => string;
-  justifyC = 'start';
+  justifyC = 'start' as const;
 }
 
 @Component({

@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -87,7 +87,6 @@ ng_project(
         "step-header.ts",
         "step-label.ts",
         "stepper.ts",
-        "stepper-animations.ts",
         "stepper-button.ts",
         "stepper-icon.ts",
         "stepper-intl.ts",
@@ -115,7 +114,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(

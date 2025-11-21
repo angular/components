@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -70,14 +70,13 @@ ng_project(
     name = "snack-bar",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "simple-snack-bar.ts",
         "snack-bar.ts",
-        "snack-bar-animations.ts",
         "snack-bar-config.ts",
         "snack-bar-container.ts",
         "snack-bar-content.ts",
+        "snack-bar-module.ts",
         "snack-bar-ref.ts",
     ],
     assets = [
@@ -102,7 +101,7 @@ ng_project(
 # Testing
 ###########
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -117,6 +116,7 @@ ts_project(
         "//src/cdk/a11y",
         "//src/cdk/overlay",
         "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 

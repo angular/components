@@ -1,26 +1,25 @@
 import {ESCAPE} from '../../keycodes';
 import {ComponentPortal} from '../../portal';
-import {ApplicationRef, Component} from '@angular/core';
+import {ApplicationRef, Component, Injector} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
-import {Overlay, OverlayModule} from '../index';
+import {createOverlayRef} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 
 describe('OverlayKeyboardDispatcher', () => {
   let appRef: ApplicationRef;
   let keyboardDispatcher: OverlayKeyboardDispatcher;
-  let overlay: Overlay;
+  let injector: Injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [OverlayModule, TestComponent]});
     appRef = TestBed.inject(ApplicationRef);
     keyboardDispatcher = TestBed.inject(OverlayKeyboardDispatcher);
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
   });
 
   it('should track overlays in order as they are attached and detached', () => {
-    const overlayOne = overlay.create();
-    const overlayTwo = overlay.create();
+    const overlayOne = createOverlayRef(injector);
+    const overlayTwo = createOverlayRef(injector);
 
     // Attach overlays
     keyboardDispatcher.add(overlayOne);
@@ -49,8 +48,8 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should dispatch body keyboard events to the most recently attached overlay', () => {
-    const overlayOne = overlay.create();
-    const overlayTwo = overlay.create();
+    const overlayOne = createOverlayRef(injector);
+    const overlayTwo = createOverlayRef(injector);
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
     const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
 
@@ -69,7 +68,7 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should not dispatch keyboard events when propagation is stopped', () => {
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     const spy = jasmine.createSpy('keyboard event spy');
     const button = document.createElement('button');
 
@@ -85,7 +84,7 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should complete the keydown stream on dispose', () => {
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     const completeSpy = jasmine.createSpy('keydown complete spy');
 
     overlayRef.keydownEvents().subscribe({complete: completeSpy});
@@ -96,7 +95,7 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should stop emitting events to detached overlays', () => {
-    const instance = overlay.create();
+    const instance = createOverlayRef(injector);
     const spy = jasmine.createSpy('keyboard event spy');
 
     instance.attach(new ComponentPortal(TestComponent));
@@ -112,7 +111,7 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should stop emitting events to disposed overlays', () => {
-    const instance = overlay.create();
+    const instance = createOverlayRef(injector);
     const spy = jasmine.createSpy('keyboard event spy');
 
     instance.attach(new ComponentPortal(TestComponent));
@@ -128,7 +127,7 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should dispose of the global keyboard event handler correctly', () => {
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     const body = document.body;
     spyOn(body, 'addEventListener');
     spyOn(body, 'removeEventListener');
@@ -145,8 +144,8 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should skip overlays that do not have keydown event subscriptions', () => {
-    const overlayOne = overlay.create();
-    const overlayTwo = overlay.create();
+    const overlayOne = createOverlayRef(injector);
+    const overlayTwo = createOverlayRef(injector);
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
 
     overlayOne.keydownEvents().subscribe(overlayOneSpy);
@@ -159,8 +158,8 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 
   it('should not add the same overlay to the stack multiple times', () => {
-    const overlayOne = overlay.create();
-    const overlayTwo = overlay.create();
+    const overlayOne = createOverlayRef(injector);
+    const overlayTwo = createOverlayRef(injector);
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
     const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
 
@@ -181,7 +180,7 @@ describe('OverlayKeyboardDispatcher', () => {
 
   it('should not run change detection if there are no `keydownEvents` observers', () => {
     spyOn(appRef, 'tick');
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     keyboardDispatcher.add(overlayRef);
 
     expect(appRef.tick).toHaveBeenCalledTimes(0);
@@ -190,8 +189,5 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 });
 
-@Component({
-  template: 'Hello',
-  imports: [OverlayModule],
-})
+@Component({template: 'Hello'})
 class TestComponent {}

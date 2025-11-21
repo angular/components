@@ -67,12 +67,15 @@ export abstract class CdkMenuBase
   /** The directionality (text direction) of the current page. */
   protected readonly dir = inject(Directionality, {optional: true});
 
+  /** All items inside the menu, including ones that belong to other menus. */
+  @ContentChildren(CdkMenuItem, {descendants: true})
+  protected _allItems: QueryList<CdkMenuItem>;
+
   /** The id of the menu's host element. */
   @Input() id: string = inject(_IdGenerator).getId('cdk-menu-');
 
-  /** All child MenuItem elements nested in this Menu. */
-  @ContentChildren(CdkMenuItem, {descendants: true})
-  readonly items: QueryList<CdkMenuItem>;
+  /** All child MenuItem elements belonging to this Menu. */
+  readonly items: QueryList<CdkMenuItem> = new QueryList();
 
   /** The direction items in the menu flow. */
   orientation: 'horizontal' | 'vertical' = 'vertical';
@@ -107,6 +110,7 @@ export abstract class CdkMenuBase
     if (!this.isInline) {
       this.menuStack.push(this);
     }
+    this._setItems();
     this._setKeyManager();
     this._handleFocus();
     this._subscribeToMenuStackHasFocus();
@@ -141,6 +145,14 @@ export abstract class CdkMenuBase
     this.keyManager.setLastItemActive();
   }
 
+  /**
+   * Sets the active item to the item at the specified index and focuses the newly active item.
+   * @param item The index of the item to be set as active, or the CdkMenuItem instance.
+   */
+  setActiveMenuItem(item: number | CdkMenuItem) {
+    this.keyManager?.setActiveItem(item);
+  }
+
   /** Gets the tabindex for this menu. */
   _getTabIndex() {
     return this._tabIndexSignal();
@@ -170,9 +182,25 @@ export abstract class CdkMenuBase
     }
   }
 
+  /** Sets up the subscription that keeps the items list in sync. */
+  private _setItems() {
+    // Since the items query has `descendants: true`, we need
+    // to filter out items belonging to a different menu.
+    this._allItems.changes
+      .pipe(startWith(this._allItems), takeUntil(this.destroyed))
+      .subscribe((items: QueryList<CdkMenuItem>) => {
+        this.items.reset(items.filter(item => item._parentMenu === this));
+        this.items.notifyOnChanges();
+      });
+  }
+
   /** Setup the FocusKeyManager with the correct orientation for the menu. */
   private _setKeyManager() {
-    this.keyManager = new FocusKeyManager(this.items).withWrap().withTypeAhead().withHomeAndEnd();
+    this.keyManager = new FocusKeyManager(this.items)
+      .withWrap()
+      .withTypeAhead()
+      .withHomeAndEnd()
+      .skipPredicate(() => false);
 
     if (this.orientation === 'horizontal') {
       this.keyManager.withHorizontalOrientation(this.dir?.value || 'ltr');

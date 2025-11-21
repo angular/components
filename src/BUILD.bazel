@@ -1,10 +1,10 @@
-load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
+load("//tools:defaults.bzl", "ts_project")
 load("//tools/dgeni:index.bzl", "dgeni_api_docs")
-load("//tools:defaults2.bzl", "ts_project")
-load("@aspect_rules_js//js:defs.bzl", "js_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -41,7 +41,6 @@ dgeni_api_docs(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/platform-browser",
     ],
     entry_points = {

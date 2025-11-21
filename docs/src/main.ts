@@ -1,13 +1,20 @@
-import {ErrorHandler} from '@angular/core';
-import {provideHttpClient} from '@angular/common/http';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
 
-import {unregisterServiceWorkers} from './unregister-service-workers';
+import {ErrorHandler, provideZoneChangeDetection} from '@angular/core';
+
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideRouter, withInMemoryScrolling} from '@angular/router';
 import {MaterialDocsApp} from './app/material-docs-app';
 import {MATERIAL_DOCS_ROUTES} from './app/routes';
-import {withInMemoryScrolling, provideRouter} from '@angular/router';
-import {bootstrapApplication} from '@angular/platform-browser';
 import {AnalyticsErrorReportHandler} from './app/shared/analytics/error-report-handler';
-import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {unregisterServiceWorkers} from './unregister-service-workers';
 
 // Unregister all installed service workers and force reload the page if there was
 // an old service worker from a previous version of the docs.
@@ -24,6 +31,6 @@ bootstrapApplication(MaterialDocsApp, {
         anchorScrolling: 'enabled',
       }),
     ),
-    provideHttpClient(),
+    provideZoneChangeDetection(),
   ],
 }).catch(err => console.error(err));

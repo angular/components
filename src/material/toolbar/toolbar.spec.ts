@@ -1,21 +1,9 @@
 import {Component, signal} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatToolbarModule} from './index';
 
 describe('MatToolbar', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatToolbarModule,
-        ToolbarSingleRow,
-        ToolbarMultipleRows,
-        ToolbarMixedRowModes,
-        ToolbarMultipleIndirectRows,
-      ],
-    });
-  }));
-
   describe('with single row', () => {
     let fixture: ComponentFixture<ToolbarSingleRow>;
     let testComponent: ToolbarSingleRow;
@@ -72,18 +60,6 @@ describe('MatToolbar', () => {
       }).toThrowError(/attempting to combine different/i);
     });
 
-    it('should throw an error if a toolbar-row is added later', () => {
-      const fixture = TestBed.createComponent(ToolbarMixedRowModes);
-
-      expect(() => {
-        fixture.componentInstance.showToolbarRow.set(false);
-        fixture.detectChanges();
-
-        fixture.componentInstance.showToolbarRow.set(true);
-        fixture.detectChanges();
-      }).toThrowError(/attempting to combine different/i);
-    });
-
     it('should pick up indirect descendant rows', () => {
       const fixture = TestBed.createComponent(ToolbarMultipleIndirectRows);
       fixture.detectChanges();
@@ -121,7 +97,7 @@ class ToolbarMultipleRows {}
   template: `
     <mat-toolbar>
       First Row
-      @if (showToolbarRow) {
+      @if (showToolbarRow()) {
         <mat-toolbar-row>Second Row</mat-toolbar-row>
       }
     </mat-toolbar>
@@ -138,6 +114,8 @@ class ToolbarMixedRowModes {
     <mat-toolbar>
       @if (true) {
         <mat-toolbar-row>First Row</mat-toolbar-row>
+      }
+      @if (true) {
         <mat-toolbar-row>Second Row</mat-toolbar-row>
       }
     </mat-toolbar>

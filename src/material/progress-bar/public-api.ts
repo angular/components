@@ -7,4 +7,4 @@
  */
 
 export * from './progress-bar';
-export * from './module';
+export * from './progress-bar-module';

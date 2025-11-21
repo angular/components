@@ -1,89 +1,76 @@
 @use 'sass:map';
 @use './m2-optgroup';
+@use './m3-optgroup';
 @use '../tokens/token-utils';
-@use '../style/sass-utils';
-@use '../theming/theming';
-@use '../theming/validation';
 @use '../theming/inspection';
 @use '../typography/typography';
 
 @mixin base($theme) {
+  $tokens: map.get(m2-optgroup.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
+    $tokens: map.get(m3-optgroup.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: map.get(m2-optgroup.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-optgroup.$prefix, m2-optgroup.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-optgroup.get-tokens($theme), color);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin typography($theme) {
+  $tokens: map.get(m2-optgroup.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-optgroup.$prefix, m2-optgroup.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-optgroup.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin density($theme) {
+  $tokens: map.get(m2-optgroup.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
+    $tokens: map.get(m3-optgroup.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-optgroup.$prefix,
-      tokens: m2-optgroup.get-token-slots(),
+      namespace: optgroup,
+      tokens: token-utils.get-overrides(m3-optgroup.get-tokens(), optgroup)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-optgroup') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-optgroup.$prefix,
-      map.get($tokens, m2-optgroup.$prefix)
-    );
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
   }
 }

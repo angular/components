@@ -263,15 +263,12 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
 
   /** Gets the index of a specific item. */
   getItemIndex(item: DragRef): number {
-    // Items are sorted always by top/left in the cache, however they flow differently in RTL.
-    // The rest of the logic still stands no matter what orientation we're in, however
-    // we need to invert the array when determining the index.
-    const items =
-      this.orientation === 'horizontal' && this.direction === 'rtl'
-        ? this._itemPositions.slice().reverse()
-        : this._itemPositions;
+    return this._getVisualItemPositions().findIndex(currentItem => currentItem.drag === item);
+  }
 
-    return items.findIndex(currentItem => currentItem.drag === item);
+  /** Gets the item at a specific index. */
+  getItemAtIndex(index: number): DragRef | null {
+    return this._getVisualItemPositions()[index]?.drag || null;
   }
 
   /** Used to notify the strategy that the scroll position has changed. */
@@ -318,6 +315,15 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
           ? a.clientRect.left - b.clientRect.left
           : a.clientRect.top - b.clientRect.top;
       });
+  }
+
+  private _getVisualItemPositions() {
+    // Items are sorted always by top/left in the cache, however they flow differently in RTL.
+    // The rest of the logic still stands no matter what orientation we're in, however
+    // we need to invert the array when determining the index.
+    return this.orientation === 'horizontal' && this.direction === 'rtl'
+      ? this._itemPositions.slice().reverse()
+      : this._itemPositions;
   }
 
   /**

@@ -18,6 +18,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  input,
   NgZone,
   OnDestroy,
   Output,
@@ -68,10 +69,10 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
   /**
    * Theme color for the particular step. This API is supported in M2 themes
-   * only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/stepper/styling.
+   * only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/stepper/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette;
 
@@ -130,8 +131,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     '[class.mat-stepper-header-position-bottom]': 'headerPosition === "bottom"',
     '[class.mat-stepper-animating]': '_isAnimating()',
     '[style.--mat-stepper-animation-duration]': '_getAnimationDuration()',
-    '[attr.aria-orientation]': 'orientation',
-    'role': 'tablist',
   },
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
@@ -168,10 +167,10 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
 
   /**
    * Theme color for all of the steps in stepper. This API is supported in M2
-   * themes only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/stepper/styling.
+   * themes only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/stepper/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette;
 
@@ -188,6 +187,9 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
    */
   @Input()
   headerPosition: 'top' | 'bottom' = 'top';
+
+  /** The content prefix to use in the stepper header. */
+  readonly headerPrefix = input<TemplateRef<unknown> | null>(null);
 
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>> = {};
@@ -281,10 +283,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     this._cleanupTransition?.();
-  }
-
-  _stepIsNavigable(index: number, step: MatStep): boolean {
-    return step.completed || this.selectedIndex === index || !this.linear;
   }
 
   _getAnimationDuration() {

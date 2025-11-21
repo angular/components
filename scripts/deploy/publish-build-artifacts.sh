@@ -17,13 +17,14 @@ fi
 
 # Release packages that need to published as snapshots.
 PACKAGES=(
+  aria
   cdk
   cdk-experimental
   material
   material-experimental
   material-moment-adapter
-  # material-luxon-adapter TODO(crisbeto): enable this once we have a builds repo
-  # material-date-fns-adapter TODO(crisbeto): enable this once we have a builds repo
+  material-luxon-adapter
+  material-date-fns-adapter
   google-maps
   youtube-player
 )

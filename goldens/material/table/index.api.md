@@ -24,8 +24,8 @@ import { CdkTextColumn } from '@angular/cdk/table';
 import { DataSource } from '@angular/cdk/collections';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/table';
+import * as i1 from '@angular/cdk/table';
+import * as i2 from '@angular/cdk/bidi';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -130,8 +130,9 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {
 
 // @public
 export class MatNoDataRow extends CdkNoDataRow {
+    constructor();
     // (undocumented)
-    _contentClassName: string;
+    _cellSelector: string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatNoDataRow, "ng-template[matNoDataRow]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -186,11 +187,11 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     filterPredicate: (data: T, filter: string) => boolean;
     _orderData(data: T[]): T[];
     _pageData(data: T[]): T[];
-    get paginator(): P | null;
-    set paginator(paginator: P | null);
+    get paginator(): P | null | undefined;
+    set paginator(paginator: P | null | undefined);
     _renderChangesSubscription: Subscription | null;
-    get sort(): MatSort | null;
-    set sort(sort: MatSort | null);
+    get sort(): MatSort | null | undefined;
+    set sort(sort: MatSort | null | undefined);
     sortData: (data: T[], sort: MatSort) => T[];
     sortingDataAccessor: (data: T, sortHeaderId: string) => string | number;
     _updateChangeSubscription(): void;
@@ -204,7 +205,7 @@ export class MatTableModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTableModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTableModule, never, [typeof MatCommonModule, typeof i2.CdkTableModule, typeof MatTable, typeof MatRecycleRows, typeof MatHeaderCellDef, typeof MatHeaderRowDef, typeof MatColumnDef, typeof MatCellDef, typeof MatRowDef, typeof MatFooterCellDef, typeof MatFooterRowDef, typeof MatHeaderCell, typeof MatCell, typeof MatFooterCell, typeof MatHeaderRow, typeof MatRow, typeof MatFooterRow, typeof MatNoDataRow, typeof MatTextColumn], [typeof MatCommonModule, typeof MatTable, typeof MatRecycleRows, typeof MatHeaderCellDef, typeof MatHeaderRowDef, typeof MatColumnDef, typeof MatCellDef, typeof MatRowDef, typeof MatFooterCellDef, typeof MatFooterRowDef, typeof MatHeaderCell, typeof MatCell, typeof MatFooterCell, typeof MatHeaderRow, typeof MatRow, typeof MatFooterRow, typeof MatNoDataRow, typeof MatTextColumn]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTableModule, never, [typeof i1.CdkTableModule, typeof MatTable, typeof MatRecycleRows, typeof MatHeaderCellDef, typeof MatHeaderRowDef, typeof MatColumnDef, typeof MatCellDef, typeof MatRowDef, typeof MatFooterCellDef, typeof MatFooterRowDef, typeof MatHeaderCell, typeof MatCell, typeof MatFooterCell, typeof MatHeaderRow, typeof MatRow, typeof MatFooterRow, typeof MatNoDataRow, typeof MatTextColumn], [typeof i2.BidiModule, typeof MatTable, typeof MatRecycleRows, typeof MatHeaderCellDef, typeof MatHeaderRowDef, typeof MatColumnDef, typeof MatCellDef, typeof MatRowDef, typeof MatFooterCellDef, typeof MatFooterRowDef, typeof MatHeaderCell, typeof MatCell, typeof MatFooterCell, typeof MatHeaderRow, typeof MatRow, typeof MatFooterRow, typeof MatNoDataRow, typeof MatTextColumn]>;
 }
 
 // @public

@@ -1,6 +1,8 @@
-@use './m2-sort';
+@use './m3-sort';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private';
+
+$fallbacks: m3-sort.get-tokens();
 
 .mat-sort-header {
   cursor: pointer;
@@ -76,10 +78,7 @@
   transition: transform $timing, opacity $timing;
   opacity: 0;
   overflow: visible;
-
-  @include token-utils.use-tokens(m2-sort.$prefix, m2-sort.get-token-slots()) {
-    color: token-utils.slot(arrow-color);
-  }
+  color: token-utils.slot(sort-arrow-color, $fallbacks);
 
   .mat-sort-header.cdk-keyboard-focused &,
   .mat-sort-header.cdk-program-focused &,
@@ -115,7 +114,7 @@
     animation-duration: 0ms;
   }
 
-  svg {
+  > svg, [matSortHeaderIcon] {
     // Even though this is 24x24, the actual `path` inside ends up being 12x12.
     width: 24px;
     height: 24px;

@@ -1,6 +1,5 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {CdkScrollable, OverlayModule} from '@angular/cdk/overlay';
-import {dispatchFakeEvent} from '@angular/cdk/testing/private';
+import {dispatchFakeEvent, provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
@@ -10,23 +9,15 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
-import {MatTooltipModule} from './module';
-import {MatTooltip} from './tooltip';
+import {MatTooltipModule} from './tooltip-module';
+import {MatTooltip, TooltipPosition} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';
 
 describe('MatTooltip Zone.js integration', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTooltipModule, OverlayModule, ScrollableTooltipDemo],
-      providers: [
-        provideZoneChangeDetection(),
-        {
-          provide: Directionality,
-          useFactory: () => ({value: 'ltr', change: new Subject()}),
-        },
-      ],
+      providers: [provideZoneChangeDetection(), provideFakeDirectionality('rtl')],
     });
   }));
 
@@ -77,7 +68,7 @@ describe('MatTooltip Zone.js integration', () => {
   imports: [MatTooltipModule, OverlayModule],
 })
 class ScrollableTooltipDemo {
-  position: string = 'below';
+  position: TooltipPosition = 'below';
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 

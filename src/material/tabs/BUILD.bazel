@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -17,6 +17,7 @@ sass_library(
     ],
     deps = [
         "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
         "//src/material/core/tokens:m3_utils",
     ],
 )
@@ -40,6 +41,7 @@ sass_library(
         "_tabs-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
@@ -108,7 +110,6 @@ ng_project(
     srcs = [
         "index.ts",
         "ink-bar.ts",
-        "module.ts",
         "paginated-tab-header.ts",
         "public-api.ts",
         "tab.ts",
@@ -123,6 +124,7 @@ ng_project(
         "tab-nav-bar/tab-nav-bar.ts",
         "tab-token.ts",
         "tabs-animations.ts",
+        "tabs-module.ts",
     ],
     assets = [
         "tab-body.html",
@@ -155,7 +157,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "tabs_tests_lib",
     testonly = True,
     srcs = glob(

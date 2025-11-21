@@ -1,30 +1,22 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-// Depending on whether rollup is used, moment needs to be imported differently.
-// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
-// syntax. However, rollup creates a synthetic default module and we thus need to import it using
-// the `default as` syntax.
-import * as _moment from 'moment';
-// tslint:disable-next-line:no-duplicate-imports
-import {default as _rollupMoment} from 'moment';
+import {DateTime} from 'luxon';
 
-const moment = _rollupMoment || _moment;
-
-// See the Moment.js docs for the meaning of these formats:
-// https://momentjs.com/docs/#/displaying/format/
+// See the Luxon docs for the meaning of these formats:
+// https://moment.github.io/luxon/#/formatting
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'LL',
+    dateInput: 'DDD',
   },
   display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
+    dateInput: 'DDD',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'DDD',
+    monthYearA11yLabel: 'MMMM yyyy',
   },
 };
 
@@ -33,10 +25,10 @@ export const MY_FORMATS = {
   selector: 'datepicker-formats-example',
   templateUrl: 'datepicker-formats-example.html',
   providers: [
-    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // Luxon can be provided globally to your app by adding `provideLuxonDateAdapter`
     // to your app config. We provide it at the component level here, due to limitations
     // of our example generation script.
-    provideMomentDateAdapter(MY_FORMATS),
+    provideLuxonDateAdapter(MY_FORMATS),
   ],
   imports: [
     MatFormFieldModule,
@@ -48,5 +40,5 @@ export const MY_FORMATS = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerFormatsExample {
-  readonly date = new FormControl(moment());
+  readonly date = new FormControl(DateTime.now());
 }

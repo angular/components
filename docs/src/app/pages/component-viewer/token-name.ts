@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, input, inject} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {Clipboard} from '@angular/cdk/clipboard';
@@ -29,13 +37,13 @@ import {MatTooltip} from '@angular/material/tooltip';
   imports: [MatIconButton, MatIcon, MatTooltip],
 })
 export class TokenName {
-  private clipboard = inject(Clipboard);
-  private snackbar = inject(MatSnackBar);
+  private _clipboard = inject(Clipboard);
+  private _snackbar = inject(MatSnackBar);
 
   name = input.required<string>();
 
   protected copy(name: string): void {
-    const message = this.clipboard.copy(name) ? 'Copied token name' : 'Failed to copy token name';
-    this.snackbar.open(message, undefined, {duration: 2500});
+    const message = this._clipboard.copy(name) ? 'Copied token name' : 'Failed to copy token name';
+    this._snackbar.open(message, undefined, {duration: 2500});
   }
 }

@@ -6,13 +6,14 @@ sass_library(
     name = "m3",
     srcs = [
         "_index.scss",
-        "_md-ref-palette.scss",
-        "_md-ref-typeface.scss",
         "_md-sys-color.scss",
+        "_md-sys-color-internal.scss",
         "_md-sys-elevation.scss",
         "_md-sys-motion.scss",
         "_md-sys-shape.scss",
         "_md-sys-state.scss",
         "_md-sys-typescale.scss",
+        "_md-sys-typescale-internal.scss",
+        "_theme.scss",
     ],
 )

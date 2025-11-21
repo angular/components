@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatTableModule} from '../module';
+import {MatTableModule} from '../table-module';
 import {MatTableHarness} from './table-harness';
 
 describe('MatTableHarness', () => {
@@ -10,10 +10,6 @@ describe('MatTableHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTableModule, TableHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TableHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -180,11 +176,24 @@ describe('MatTableHarness', () => {
       symbol: 'H',
     });
   });
+
+  it('should be able to get the "no data" row', async () => {
+    const table = await loader.getHarness(MatTableHarness);
+    expect(await table.getNoDataRow()).toBe(null);
+
+    fixture.componentInstance.dataSource.set([]);
+    const row = await table.getNoDataRow();
+    const cells = await row?.getCells();
+
+    expect(row).toBeTruthy();
+    expect(cells?.length).toBe(1);
+    expect(await cells?.[0].getText()).toBe('No data');
+  });
 });
 
 @Component({
   template: `
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource()">
       <ng-container matColumnDef="position">
         <th mat-header-cell *matHeaderCellDef>No.</th>
         <td mat-cell *matCellDef="let element">{{element.position}}</td>
@@ -212,13 +221,17 @@ describe('MatTableHarness', () => {
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr *matNoDataRow>
+        <td>No data</td>
+      </tr>
     </table>
   `,
   imports: [MatTableModule],
 })
 class TableHarnessTest {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = [
+  dataSource = signal([
     {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
     {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
     {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
@@ -229,5 +242,5 @@ class TableHarnessTest {
     {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
     {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
     {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  ];
+  ]);
 }

@@ -8,11 +8,7 @@
 
 import {Subject} from 'rxjs';
 import {TREE_KEY_MANAGER} from './tree-key-manager';
-import {
-  TreeKeyManagerFactory,
-  TreeKeyManagerItem,
-  TreeKeyManagerStrategy,
-} from './tree-key-manager-strategy';
+import {TreeKeyManagerItem, TreeKeyManagerStrategy} from './tree-key-manager-strategy';
 import {Provider} from '@angular/core';
 
 // NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
@@ -82,28 +78,7 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
  *
  * @breaking-change 21.0.0
  */
-export function NOOP_TREE_KEY_MANAGER_FACTORY<
-  T extends TreeKeyManagerItem,
->(): TreeKeyManagerFactory<T> {
-  return () => new NoopTreeKeyManager<T>();
-}
-
-/**
- * @docs-private
- *
- * Opt-out of Tree of key manager behavior.
- *
- * When provided, Tree has same focus management behavior as before TreeKeyManager was introduced.
- *  - Tree does not respond to keyboard interaction
- *  - Tree node allows tabindex to be set by Input binding
- *  - Tree node allows tabindex to be set by attribute binding
- *
- * @deprecated NoopTreeKeyManager deprecated. Use TreeKeyManager or inject a
- * TreeKeyManagerStrategy instead. To be removed in a future version.
- *
- * @breaking-change 21.0.0
- */
 export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER: Provider = {
   provide: TREE_KEY_MANAGER,
-  useFactory: NOOP_TREE_KEY_MANAGER_FACTORY,
+  useFactory: () => () => new NoopTreeKeyManager(),
 };

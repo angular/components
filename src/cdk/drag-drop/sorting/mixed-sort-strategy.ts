@@ -141,6 +141,14 @@ export class MixedSortStrategy implements DropListSortStrategy {
    *   out automatically.
    */
   enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void {
+    // Remove the item from current set of items first so that it doesn't throw off the indexes
+    // further down in this method. See https://github.com/angular/components/issues/31505
+    const currentIndex = this._activeItems.indexOf(item);
+
+    if (currentIndex > -1) {
+      this._activeItems.splice(currentIndex, 1);
+    }
+
     let enterIndex =
       index == null || index < 0
         ? this._getItemIndexFromPointerPosition(item, pointerX, pointerY)
@@ -154,11 +162,6 @@ export class MixedSortStrategy implements DropListSortStrategy {
     }
 
     const targetItem = this._activeItems[enterIndex] as DragRef | undefined;
-    const currentIndex = this._activeItems.indexOf(item);
-
-    if (currentIndex > -1) {
-      this._activeItems.splice(currentIndex, 1);
-    }
 
     if (targetItem && !this._dragDropRegistry.isDragging(targetItem)) {
       this._activeItems.splice(enterIndex, 0, item);
@@ -220,6 +223,11 @@ export class MixedSortStrategy implements DropListSortStrategy {
   /** Gets the index of a specific item. */
   getItemIndex(item: DragRef): number {
     return this._activeItems.indexOf(item);
+  }
+
+  /** Gets the item at a specific index. */
+  getItemAtIndex(index: number): DragRef | null {
+    return this._activeItems[index] || null;
   }
 
   /** Used to notify the strategy that the scroll position has changed. */

@@ -2,53 +2,49 @@
 @use './m2-chip';
 @use './m3-chip';
 @use '../core/tokens/token-utils';
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/typography/typography';
+@use 'sass:map';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-chips.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-unthemable-tokens());
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), base));
     }
   }
 }
 
 /// Outputs color theme styles for the mat-chips.
 /// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the selected chip: primary, secondary, tertiary,
-///      or error (If not specified, default secondary color will be used).
-@mixin color($theme, $options...) {
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+    @include token-utils.values(
+        map.get(m3-chip.get-tokens($theme, $color-variant), color));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-color-tokens($theme));
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), color));
 
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, primary));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, primary));
         }
 
         &.mat-accent {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, accent));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, secondary));
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, warn));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, error));
         }
       }
     }
@@ -59,12 +55,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), typography));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-typography-tokens($theme)
-      );
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), typography));
     }
   }
 }
@@ -73,12 +67,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(m3-chip.$prefix, m3-chip.get-density-tokens($theme));
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), density));
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-density-tokens($theme)
-      );
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), density));
     }
   }
 }
@@ -87,8 +79,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-chip.$prefix,
-      tokens: m2-chip.get-token-slots(),
+      namespace: chip,
+      tokens: token-utils.get-overrides(m3-chip.get-tokens(), chip)
     ),
   );
 }
@@ -96,40 +88,28 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-chips.
 /// @param {Map} $theme The theme to generate styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the selected chip: primary, secondary, tertiary,
-///      or error (If not specified, default secondary color will be used).
-@mixin theme($theme, $options...) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-chip-tokens: token-utils.get-tokens-for($tokens, m2-chip.$prefix, $options...);
-  @include token-utils.create-token-values(m2-chip.$prefix, $mat-chip-tokens);
 }

@@ -1,12 +1,13 @@
 @use '@angular/cdk';
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @function _hover-content-background($direction, $background-color) {
   @return linear-gradient($direction, rgba($background-color, 0), $background-color 8px);
 }
 
 @mixin color($theme) {
-  $background-color: mat.get-theme-color($theme, background, 'card');
+  $background-color: map.get($theme, _mat-system, surface);
 
   // TODO: these structural styles don't belong in the `color` part of a theme.
   // We should figure out a better place for them.
@@ -153,15 +154,13 @@
 @mixin density($theme) {}
 
 @mixin theme($theme) {
-  @include mat.private-check-duplicate-theme-styles($theme, 'mat-popover-edit') {
-    @if mat.theme-has($theme, color) {
-      @include color($theme);
-    }
-    @if mat.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if mat.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+  @if mat.theme-has($theme, density) {
+    @include density($theme);
+  }
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
   }
 }

@@ -7,7 +7,7 @@
  */
 
 import {_IdGenerator, AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
-import {DOCUMENT} from '@angular/common';
+
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -22,6 +22,7 @@ import {
   Renderer2,
   ViewEncapsulation,
   HOST_TAG_NAME,
+  DOCUMENT,
 } from '@angular/core';
 import {_animationsDisabled, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
@@ -81,10 +82,10 @@ export class MatBadge implements OnInit, OnDestroy {
 
   /**
    * Theme color of the badge. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/badge/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/badge/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input('matBadgeColor')
   get color(): ThemePalette {
@@ -166,7 +167,7 @@ export class MatBadge implements OnInit, OnDestroy {
 
       // Heads-up for developers to avoid putting matBadge on <mat-icon>
       // as it is aria-hidden by default docs mention this at:
-      // https://material.angular.io/components/badge/overview#accessibility
+      // https://material.angular.dev/components/badge/overview#accessibility
       if (
         tagName.toLowerCase() === 'mat-icon' &&
         nativeElement.getAttribute('aria-hidden') === 'true'

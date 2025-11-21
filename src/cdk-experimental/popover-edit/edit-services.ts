@@ -9,7 +9,6 @@
 import {Injectable, NgZone, inject} from '@angular/core';
 import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay} from '@angular/cdk/overlay';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 
 import {EditEventDispatcher} from './edit-event-dispatcher';
@@ -29,7 +28,6 @@ export class EditServices {
   readonly focusDispatcher = inject(FocusDispatcher);
   readonly focusTrapFactory = inject(FocusTrapFactory);
   readonly ngZone = inject(NgZone);
-  readonly overlay = inject(Overlay);
   readonly scrollDispatcher = inject(ScrollDispatcher);
   readonly viewportRuler = inject(ViewportRuler);
 }

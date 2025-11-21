@@ -6,7 +6,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MATERIAL_ANIMATIONS} from '../../core';
 import {MatFormFieldModule} from '../../form-field';
-import {MatSelectModule} from '../module';
+import {MatSelectModule} from '../select-module';
 import {MatSelectHarness} from './select-harness';
 
 describe('MatSelectHarness', () => {
@@ -50,6 +50,11 @@ describe('MatSelectHarness', () => {
 
     expect(enabledSelects.length).toBe(3);
     expect(disabledSelects.length).toBe(1);
+  });
+
+  it('should load select with a specific label', async () => {
+    const selects = await loader.getAllHarnesses(MatSelectHarness.with({label: 'US States'}));
+    expect(selects.length).toBe(1);
   });
 
   it('should be able to check whether a select is in multi-selection mode', async () => {
@@ -265,6 +270,7 @@ describe('MatSelectHarness', () => {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>US States</mat-label>
       <mat-select [disabled]="isDisabled()" [required]="isRequired()" id="single-selection">
         @for (state of states; track state) {
           <mat-option [value]="state.code">{{ state.name }}</mat-option>

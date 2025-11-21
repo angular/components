@@ -1,4 +1,4 @@
-import {Component, inject, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
@@ -28,7 +28,7 @@ import {MatTimepickerToggle} from './timepicker-toggle';
 import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {Overlay} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {Subject} from 'rxjs';
 
 describe('MatTimepicker', () => {
@@ -463,10 +463,7 @@ describe('MatTimepicker', () => {
         },
         {
           provide: MAT_TIMEPICKER_SCROLL_STRATEGY,
-          useFactory: () => {
-            const overlay = inject(Overlay);
-            return () => overlay.scrollStrategies.close();
-          },
+          useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
         },
       ]);
 
@@ -483,6 +480,15 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(getPanel()).toBeTruthy();
     }));
+
+    it('should be able to opt out of opening on click', () => {
+      const fixture = TestBed.createComponent(StandaloneTimepicker);
+      fixture.componentInstance.openOnClick.set(false);
+      fixture.detectChanges();
+      getInput(fixture).click();
+      fixture.detectChanges();
+      expect(getPanel()).toBeFalsy();
+    });
   });
 
   // Note: these tests intentionally don't cover the full option generation logic
@@ -1150,6 +1156,75 @@ describe('MatTimepicker', () => {
       expect(input.disabled).toBe(true);
       expect(fixture.componentInstance.input.disabled()).toBe(true);
     });
+
+    it('should emit to valueChange before assigning control value when typing', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.input.value.subscribe(value => {
+        eventValue = value;
+        controlValue = control.value;
+      });
+
+      typeInElement(getInput(fixture), '1:37 PM');
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
+
+    it('should emit to valueChange before assigning control value when clicking an option', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.input.value.subscribe(value => {
+        eventValue = value;
+        controlValue = control.value;
+      });
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      getOptions()[5].click();
+      fixture.detectChanges();
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
+
+    it('should emit to selected event before assigning control value when clicking an option', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const control = fixture.componentInstance.control;
+      let eventValue: Date | null = null;
+      let controlValue: Date | null = null;
+      fixture.detectChanges();
+
+      const subscription = fixture.componentInstance.timepicker.selected.subscribe(event => {
+        eventValue = event.value;
+        controlValue = control.value;
+      });
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      getOptions()[5].click();
+      fixture.detectChanges();
+      fixture.detectChanges();
+
+      expect(eventValue).toBeTruthy();
+      expect(controlValue).toBeTruthy();
+      expectSameTime(eventValue, controlValue);
+      subscription.unsubscribe();
+    });
   });
 
   describe('timepicker toggle', () => {
@@ -1316,6 +1391,7 @@ describe('MatTimepicker', () => {
       [disabled]="disabled()"
       [matTimepickerMin]="min()"
       [matTimepickerMax]="max()"
+      [matTimepickerOpenOnClick]="openOnClick()"
       [value]="value()"/>
     <mat-timepicker
       #picker
@@ -1344,10 +1420,11 @@ class StandaloneTimepicker {
   readonly max = signal<Date | string | null>(null);
   readonly ariaLabel = signal<string | null>(null);
   readonly ariaLabelledby = signal<string | null>(null);
-  readonly toggleAriaLabel = signal<string | null>(null);
+  readonly toggleAriaLabel = signal<string | undefined>(undefined);
   readonly toggleDisabled = signal<boolean>(false);
   readonly toggleTabIndex = signal<number>(0);
   readonly customOptions = signal<MatTimepickerOption<Date>[] | null>(null);
+  readonly openOnClick = signal(true);
   readonly openedSpy = jasmine.createSpy('opened');
   readonly closedSpy = jasmine.createSpy('closed');
   readonly selectedSpy = jasmine.createSpy('selected');
@@ -1402,6 +1479,7 @@ class TimepickerTwoWayBinding {
 })
 class TimepickerWithForms {
   @ViewChild(MatTimepickerInput) input: MatTimepickerInput<Date>;
+  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
   readonly control = new FormControl<Date | null>(null, [Validators.required]);
   readonly min = signal<Date | null>(null);
   readonly max = signal<Date | null>(null);

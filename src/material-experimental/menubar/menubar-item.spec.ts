@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ComponentFixture, waitForAsync, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkMenuItem, CdkMenuModule, CdkMenu} from '@angular/cdk/menu';
 import {MatMenuBarItem} from './menubar-item';
 import {MatMenuBarModule} from './menubar-module';
@@ -7,12 +7,6 @@ import {MatMenuBarModule} from './menubar-module';
 describe('MatMenuBarItem', () => {
   let fixture: ComponentFixture<SimpleMenuBarItem>;
   let nativeMenubarItem: HTMLElement;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatMenuBarModule, CdkMenuModule, SimpleMenuBarItem],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMenuBarItem);

@@ -12,8 +12,10 @@ import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   OverlayRef,
   PositionStrategy,
@@ -29,6 +31,7 @@ import {
   ElementRef,
   EnvironmentInjector,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnChanges,
@@ -41,6 +44,7 @@ import {
   forwardRef,
   inject,
 } from '@angular/core';
+import {coerceArray} from '@angular/cdk/coercion';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   MatOption,
@@ -87,31 +91,11 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
-}
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY,
-};
 
 /** Base class with all of the `MatAutocompleteTrigger` functionality. */
 @Directive({
@@ -141,7 +125,7 @@ export class MatAutocompleteTrigger
 {
   private _environmentInjector = inject(EnvironmentInjector);
   private _element = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
   private _zone = inject(NgZone);
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -207,6 +191,9 @@ export class MatAutocompleteTrigger
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
+
+  /** Classes to apply to the panel. Exposed as a public property for internal usage. */
+  readonly _overlayPanelClass = coerceArray(this._defaults?.overlayPanelClass || []);
 
   /**
    * Event handler for when the window is blurred. Needs to be an
@@ -790,7 +777,7 @@ export class MatAutocompleteTrigger
       this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef, {
         id: this._formField?.getLabelId(),
       });
-      overlayRef = this._overlay.create(this._getOverlayConfig());
+      overlayRef = createOverlayRef(this._injector, this._getOverlayConfig());
       this._overlayRef = overlayRef;
       this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
         if (this.panelOpen && overlayRef) {
@@ -904,19 +891,21 @@ export class MatAutocompleteTrigger
       width: this._getPanelWidth(),
       direction: this._dir ?? undefined,
       hasBackdrop: this._defaults?.hasBackdrop,
-      backdropClass: this._defaults?.backdropClass,
-      panelClass: this._defaults?.overlayPanelClass,
+      backdropClass: this._defaults?.backdropClass || 'cdk-overlay-transparent-backdrop',
+      panelClass: this._overlayPanelClass,
       disableAnimations: this._animationsDisabled,
     });
   }
 
   private _getOverlayPosition(): PositionStrategy {
     // Set default Overlay Position
-    const strategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this._getConnectedElement())
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this._getConnectedElement(),
+    )
       .withFlexibleDimensions(false)
-      .withPush(false);
+      .withPush(false)
+      .withPopoverLocation('inline');
 
     this._setStrategyPositions(strategy);
     this._positionStrategy = strategy;

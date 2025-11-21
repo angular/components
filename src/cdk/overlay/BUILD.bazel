@@ -2,11 +2,12 @@ load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
+    "ts_project",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -56,7 +57,7 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -67,7 +68,6 @@ ts_project(
         ":overlay",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -94,7 +94,7 @@ ts_project(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources_legacy",
+        ":e2e_test_sources",
     ],
 )
 

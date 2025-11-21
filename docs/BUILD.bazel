@@ -1,6 +1,7 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library", "js_test")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_angular//src/architect:ng_config.bzl", "ng_config")
 load("//docs:defs.bzl", "ng_app")
 
 package(default_visibility = ["//visibility:public"])
@@ -12,9 +13,7 @@ npm_link_all_packages(name = "node_modules")
 copy_to_bin(
     name = "ng-base-config",
     srcs = [
-        "angular.json",
         "package.json",
-        "tsconfig.json",
     ],
 )
 
@@ -26,12 +25,8 @@ copy_to_bin(
     ],
 )
 
-# Lint config files
-copy_to_bin(
-    name = "ng-base-lint-config",
-    srcs = [
-        ".eslintrc.json",
-    ],
+ng_config(
+    name = "config",
 )
 
 # The main application
@@ -41,10 +36,15 @@ ng_app(
     deps = [
         "//docs:node_modules/@angular/components-examples",
         "//docs:node_modules/@stackblitz/sdk",
-        "//docs:node_modules/moment",
+        "//docs:node_modules/luxon",
         "//docs:node_modules/path-normalize",
         "//docs/src/assets/tokens",
     ],
+)
+
+alias(
+    name = "serve",
+    actual = ":build.serve",
 )
 
 js_library(
@@ -59,7 +59,7 @@ js_library(
         "//docs:node_modules/lighthouse-logger",
         "//docs:node_modules/puppeteer-core",
         "//docs:node_modules/shelljs",
-        "@rules_browsers//src/browsers/chromium",
+        "@rules_browsers//browsers/chromium",
     ],
 )
 
@@ -71,7 +71,7 @@ js_binary(
         "CHROMIUM_BIN": "$(CHROME-HEADLESS-SHELL)",
     },
     toolchains = [
-        "@rules_browsers//src/browsers/chromium:toolchain_alias",
+        "@rules_browsers//browsers/chromium:toolchain_alias",
     ],
 )
 
@@ -90,6 +90,6 @@ js_test(
     },
     tags = ["audit"],
     toolchains = [
-        "@rules_browsers//src/browsers/chromium:toolchain_alias",
+        "@rules_browsers//browsers/chromium:toolchain_alias",
     ],
 )

@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatSlideToggleModule} from '../module';
+import {MatSlideToggleModule} from '../slide-toggle-module';
 import {MatSlideToggleHarness} from './slide-toggle-harness';
 
 describe('MatSlideToggleHarness', () => {
@@ -11,10 +11,6 @@ describe('MatSlideToggleHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, ReactiveFormsModule, SlideToggleHarnessTest],
-    });
-
     fixture = TestBed.createComponent(SlideToggleHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

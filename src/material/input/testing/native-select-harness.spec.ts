@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '../module';
+import {MatInputModule} from '../input-module';
 import {MatNativeSelectHarness} from './native-select-harness';
 
 describe('MatNativeSelectHarness', () => {
@@ -19,6 +19,13 @@ describe('MatNativeSelectHarness', () => {
   it('should load all select harnesses', async () => {
     const selects = await loader.getAllHarnesses(MatNativeSelectHarness);
     expect(selects.length).toBe(2);
+  });
+
+  it('should load select with a specific label', async () => {
+    const inputs = await loader.getAllHarnesses(
+      MatNativeSelectHarness.with({label: 'Favorite food'}),
+    );
+    expect(inputs.length).toBe(1);
   });
 
   it('should get the id of a select', async () => {
@@ -187,6 +194,7 @@ describe('MatNativeSelectHarness', () => {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>Favorite food</mat-label>
       <select
         id="food"
         matNativeControl

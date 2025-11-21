@@ -1,142 +1,125 @@
-@use './theming/theming';
 @use './theming/inspection';
-@use './theming/validation';
 @use './ripple/ripple-theme';
 @use './option/option-theme';
 @use './option/optgroup-theme';
 @use './selection/pseudo-checkbox/pseudo-checkbox-theme';
-@use './style/sass-utils';
 @use './typography/typography';
 @use './tokens/token-utils';
 @use './m2-app';
-@use 'ripple/m2-ripple';
-@use 'option/m2-option';
-@use 'option/m2-optgroup';
-@use 'selection/pseudo-checkbox/m2-pseudo-checkbox';
+@use './m3-app';
+@use 'ripple/m3-ripple';
+@use 'option/m3-option';
+@use 'option/m3-optgroup';
+@use 'selection/pseudo-checkbox/m3-pseudo-checkbox';
+@use 'sass:map';
 
 @mixin base($theme) {
+  $tokens: map.get(m2-app.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
-  } @else {
-    @include ripple-theme.base($theme);
-    @include option-theme.base($theme);
-    @include optgroup-theme.base($theme);
-    @include pseudo-checkbox-theme.base($theme);
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-app.$prefix, m2-app.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-app.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
+
+  @include ripple-theme.base($theme);
+  @include option-theme.base($theme);
+  @include optgroup-theme.base($theme);
+  @include pseudo-checkbox-theme.base($theme);
 }
 
 @mixin color($theme) {
+  $tokens: map.get(m2-app.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
-  } @else {
-    @include ripple-theme.color($theme);
-    @include option-theme.color($theme);
-    @include optgroup-theme.color($theme);
-    @include pseudo-checkbox-theme.color($theme);
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-app.$prefix, m2-app.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-app.get-tokens($theme), color);
   }
+
+  @include token-utils.values($tokens);
+
+  @include ripple-theme.color($theme);
+  @include option-theme.color($theme);
+  @include optgroup-theme.color($theme);
+  @include pseudo-checkbox-theme.color($theme);
 }
 
 @mixin typography($theme) {
+  $tokens: map.get(m2-app.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
-  } @else {
-    @include option-theme.typography($theme);
-    @include optgroup-theme.typography($theme);
-    @include pseudo-checkbox-theme.typography($theme);
-    @include ripple-theme.typography($theme);
+    $tokens: map.get(m3-app.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
+
+  @include ripple-theme.typography($theme);
+  @include option-theme.typography($theme);
+  @include optgroup-theme.typography($theme);
+  @include pseudo-checkbox-theme.typography($theme);
 }
 
 @mixin density($theme) {
+  $tokens: map.get(m2-app.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
-    @include option-theme.density($theme);
-    @include optgroup-theme.density($theme);
-    @include pseudo-checkbox-theme.density($theme);
-    @include ripple-theme.density($theme);
+    $tokens: map.get(m3-app.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
+
+  @include ripple-theme.density($theme);
+  @include option-theme.density($theme);
+  @include optgroup-theme.density($theme);
+  @include pseudo-checkbox-theme.density($theme);
 }
 
 @function _define-overrides() {
-  $app-tokens: m2-app.get-token-slots();
-  $ripple-tokens: m2-ripple.get-token-slots();
-  $option-tokens: m2-option.get-token-slots();
-  $optgroup-tokens: m2-optgroup.get-token-slots();
-  $pseudo-checkbox-tokens: m2-pseudo-checkbox.get-token-slots();
-
   @return (
-    (namespace: m2-app.$prefix, tokens: $app-tokens, prefix: 'app-'),
-    (namespace: m2-ripple.$prefix, tokens: $ripple-tokens, prefix: 'ripple-'),
-    (namespace: m2-option.$prefix, tokens: $option-tokens, prefix: 'option-'),
-    (namespace: m2-optgroup.$prefix, tokens: $optgroup-tokens, prefix: 'optgroup-'),
     (
-      namespace: m2-pseudo-checkbox.$prefix,
-      tokens: m2-pseudo-checkbox.get-token-slots(),
+      namespace: app,
+      tokens: token-utils.get-overrides(m3-app.get-tokens(), app),
+      prefix: 'app-'
+    ),
+    (
+      namespace: ripple,
+      tokens: token-utils.get-overrides(m3-ripple.get-tokens(), ripple),
+      prefix: 'ripple-'
+    ),
+    (
+      namespace: option,
+      tokens: token-utils.get-overrides(m3-option.get-tokens(), option),
+      prefix: 'option-'
+    ),
+    (
+      namespace: optgroup,
+      tokens: token-utils.get-overrides(m3-optgroup.get-tokens(), optgroup),
+      prefix: 'optgroup-'
+    ),
+    (
+      namespace: pseudo-checkbox,
+      tokens: token-utils.get-overrides(m3-pseudo-checkbox.get-tokens(), pseudo-checkbox),
       prefix: 'pseudo-checkbox-'
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+  @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
-@mixin theme($theme, $options...) {
-  // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
-  // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
-  // the imported themes (such as `mat-ripple-theme`) should not report again.
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
+@mixin theme($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-app-tokens: token-utils.get-tokens-for($tokens, m2-app.$prefix, $options...);
-  $mat-ripple-tokens: token-utils.get-tokens-for($tokens, m2-ripple.$prefix, $options...);
-  $mat-option-tokens: token-utils.get-tokens-for($tokens, m2-option.$prefix, $options...);
-  $mat-optgroup-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-optgroup.$prefix,
-    $options...
-  );
-  $mat-pseudo-checkbox-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-pseudo-checkbox.$prefix,
-    $options...
-  );
-
-  @include token-utils.create-token-values(m2-app.$prefix, $mat-app-tokens);
-  @include token-utils.create-token-values(m2-ripple.$prefix, $mat-ripple-tokens);
-  @include token-utils.create-token-values(m2-option.$prefix, $mat-option-tokens);
-  @include token-utils.create-token-values(m2-optgroup.$prefix, $mat-optgroup-tokens);
-  @include token-utils.create-token-values(
-    m2-pseudo-checkbox.$prefix,
-    $mat-pseudo-checkbox-tokens
-  );
 }

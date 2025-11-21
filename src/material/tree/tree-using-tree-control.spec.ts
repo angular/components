@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree';
-import {Component, ViewChild, Type} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -23,17 +24,9 @@ type TreeContent = NodeContent[];
 
 describe('MatTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
-  const _ = '';
-
+  const _ = {};
   let treeElement: HTMLElement;
   let underlyingDataSource: FakeDataSource;
-
-  function configureMatTreeTestingModule(declarations: Type<unknown>[]) {
-    TestBed.configureTestingModule({
-      imports: [MatTreeModule],
-      declarations: declarations,
-    });
-  }
 
   describe('flat tree', () => {
     describe('should initialize', () => {
@@ -41,13 +34,10 @@ describe('MatTree', () => {
       let component: SimpleMatTreeApp;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([SimpleMatTreeApp]);
         fixture = TestBed.createComponent(SimpleMatTreeApp);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -123,13 +113,10 @@ describe('MatTree', () => {
       let component: MatTreeAppWithToggle;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([MatTreeAppWithToggle]);
         fixture = TestBed.createComponent(MatTreeAppWithToggle);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -255,13 +242,10 @@ describe('MatTree', () => {
       let component: WhenNodeMatTreeApp;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([WhenNodeMatTreeApp]);
         fixture = TestBed.createComponent(WhenNodeMatTreeApp);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -283,10 +267,8 @@ describe('MatTree', () => {
       let fixture: ComponentFixture<MatTreeWithNullOrUndefinedChild>;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([MatTreeWithNullOrUndefinedChild]);
         fixture = TestBed.createComponent(MatTreeWithNullOrUndefinedChild);
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -304,10 +286,8 @@ describe('MatTree', () => {
       let fixture: ComponentFixture<MatNestedTreeWithNullOrUndefinedChild>;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([MatNestedTreeWithNullOrUndefinedChild]);
         fixture = TestBed.createComponent(MatNestedTreeWithNullOrUndefinedChild);
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -325,13 +305,10 @@ describe('MatTree', () => {
       let component: NestedMatTreeApp;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([NestedMatTreeApp]);
         fixture = TestBed.createComponent(NestedMatTreeApp);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -431,13 +408,10 @@ describe('MatTree', () => {
       let component: WhenNodeNestedMatTreeApp;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([WhenNodeNestedMatTreeApp]);
         fixture = TestBed.createComponent(WhenNodeNestedMatTreeApp);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -457,13 +431,10 @@ describe('MatTree', () => {
       let component: NestedMatTreeAppWithToggle;
 
       beforeEach(() => {
-        configureMatTreeTestingModule([NestedMatTreeAppWithToggle]);
         fixture = TestBed.createComponent(NestedMatTreeAppWithToggle);
-
         component = fixture.componentInstance;
         underlyingDataSource = component.underlyingDataSource;
         treeElement = fixture.nativeElement.querySelector('mat-tree');
-
         fixture.detectChanges();
       });
 
@@ -582,10 +553,8 @@ describe('MatTree', () => {
     let tree: MatTree<TestData>;
 
     beforeEach(() => {
-      configureMatTreeTestingModule([NestedMatTreeApp]);
       fixture = TestBed.createComponent(NestedMatTreeApp);
       fixture.detectChanges();
-
       component = fixture.componentInstance;
       underlyingDataSource = component.underlyingDataSource as FakeDataSource;
       const data = underlyingDataSource.data;
@@ -593,7 +562,6 @@ describe('MatTree', () => {
       underlyingDataSource.addChild(child, false);
       underlyingDataSource.addChild(child, false);
       fixture.detectChanges();
-
       tree = component.tree;
       treeElement = fixture.nativeElement.querySelector('mat-tree');
       nodes = getNodes(treeElement);
@@ -887,7 +855,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: TreeCont
       </mat-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class SimpleMatTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -965,7 +933,7 @@ const TREE_DATA: FoodNode[] = [
       </mat-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class MatTreeWithNullOrUndefinedChild {
   private _transformer = (node: FoodNode, level: number) => {
@@ -1002,7 +970,7 @@ class MatTreeWithNullOrUndefinedChild {
       </mat-nested-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class MatNestedTreeWithNullOrUndefinedChild {
   treeControl: NestedTreeControl<FoodNode>;
@@ -1028,7 +996,7 @@ class MatNestedTreeWithNullOrUndefinedChild {
       </mat-nested-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule, AsyncPipe],
 })
 class NestedMatTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1037,7 +1005,7 @@ class NestedMatTreeApp {
 
   treeControl = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
@@ -1059,13 +1027,13 @@ class NestedMatTreeApp {
        <mat-nested-tree-node *matTreeNodeDef="let node; when: isSpecial"
                              matTreeNodeToggle>
                      >>> {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-         <div *ngIf="treeControl.isExpanded(node)">
-            <ng-template matTreeNodeOutlet></ng-template>
-         </div>
+        @if (treeControl.isExpanded(node)) {
+          <ng-template matTreeNodeOutlet></ng-template>
+        }
       </mat-nested-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class WhenNodeNestedMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;
@@ -1074,7 +1042,7 @@ class WhenNodeNestedMatTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
@@ -1098,7 +1066,7 @@ class WhenNodeNestedMatTreeApp {
       </mat-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class MatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1140,13 +1108,14 @@ class MatTreeAppWithToggle {
                             matTreeNodeToggle
                             [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-        <div *ngIf="treeControl.isExpanded(node)">
+
+        @if (treeControl.isExpanded(node)) {
           <ng-template matTreeNodeOutlet></ng-template>
-        </div>
+        }
       </mat-nested-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule, AsyncPipe],
 })
 class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1156,7 +1125,7 @@ class NestedMatTreeAppWithToggle {
     node.observableChildren.pipe(map(children => children.length > 0));
 
   treeControl = new NestedTreeControl(this.getChildren);
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
@@ -1183,7 +1152,7 @@ class NestedMatTreeAppWithToggle {
       </mat-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class WhenNodeMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;

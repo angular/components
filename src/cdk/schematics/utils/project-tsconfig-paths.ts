@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {normalize, workspaces} from '@angular-devkit/core';
+import {normalize} from '@angular-devkit/core';
 import {Tree} from '@angular-devkit/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace, WorkspaceDefinition} from '@schematics/angular/utility';
 import {WorkspacePath} from '../update-tool/file-system';
 
 /** Name of the default Angular CLI workspace configuration files. */
@@ -16,7 +16,7 @@ const defaultWorkspaceConfigPaths = ['/angular.json', '/.angular.json'];
 
 /** Gets the tsconfig path from the given target within the specified project. */
 export function getTargetTsconfigPath(
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
   targetName: string,
 ): WorkspacePath | null {
   const tsconfig = project.targets?.get(targetName)?.options?.['tsConfig'];
@@ -26,7 +26,7 @@ export function getTargetTsconfigPath(
 /** Resolve the workspace configuration of the specified tree gracefully. */
 export async function getWorkspaceConfigGracefully(
   tree: Tree,
-): Promise<workspaces.WorkspaceDefinition | null> {
+): Promise<WorkspaceDefinition | null> {
   const path = defaultWorkspaceConfigPaths.find(filePath => tree.exists(filePath));
 
   if (!path) {
@@ -34,7 +34,7 @@ export async function getWorkspaceConfigGracefully(
   }
 
   try {
-    return getWorkspace(tree, path);
+    return readWorkspace(tree, path);
   } catch {
     return null;
   }

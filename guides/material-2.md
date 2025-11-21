@@ -17,9 +17,9 @@ see [Angular Material Typography][mat-typography]. For guidance on building comp
 customizable with this system, see [Theming your own components][theme-your-own].
 
 [material-design-theming]: https://m2.material.io/design/material-theming/overview.html
-[theming]: https://material.angular.io/guide/theming
-[mat-typography]: https://material.angular.io/guide/typography
-[theme-your-own]: https://material.angular.io/guide/theming-your-components
+[theming]: https://material.angular.dev/guide/theming
+[mat-typography]: https://material.angular.dev/guide/typography
+[theme-your-own]: https://material.angular.dev/guide/theming-your-components
 
 ### Sass
 
@@ -909,7 +909,7 @@ The following example demonstrates usage of the typography styles emitted by the
 #### Reading typography values from a config
 
 It is possible to read typography properties from a theme for use in your own components. For more
-information about this see our section on [Theming your own components](https://material.angular.io/guide/material-2-theming#theming-your-components),
+information about this see our section on [Theming your own components](https://material.angular.dev/guide/material-2-theming#theming-your-components),
 
 ### Step-by-step example
 
@@ -1073,7 +1073,7 @@ removed.
 The simplest way to accomplish this is by checking the theme version and emitting different styles
 for M2 vs M3. You can check the theme version using the `get-theme-version` function from
 `@angular/material`. The function will return `0` for an M2 theme or `1` for an M3 theme (see
-[theme your own components using a Material 3 theme](https://material.angular.io/guide/theming#theme-your-own-components-using-a-material-3-theme)
+[theme your own components using a Material 3 theme](https://material.angular.dev/guide/theming#theme-your-own-components-using-a-material-3-theme)
 for how to read values from an M3 theme).
 
 ```scss

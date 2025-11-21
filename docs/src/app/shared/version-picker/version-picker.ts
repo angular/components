@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
@@ -7,7 +15,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {normalizedMaterialVersion} from '../normalized-version';
 
-const versionUrl = 'https://material.angular.io/assets/versions.json';
+const versionUrl = 'https://material.angular.dev/assets/versions.json';
 
 /** Version information with title and redirect url */
 interface VersionInfo {

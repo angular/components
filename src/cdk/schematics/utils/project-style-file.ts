@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {isJsonArray, normalize, workspaces} from '@angular-devkit/core';
+import {isJsonArray, normalize} from '@angular-devkit/core';
 import {getProjectTargetOptions} from './project-targets';
+import {ProjectDefinition} from '@schematics/angular/utility';
 
 /** Regular expression that matches all possible Angular CLI default style files. */
 const defaultStyleFileRegex = /styles\.(c|le|sc)ss/;
@@ -19,10 +20,7 @@ const validStyleFileRegex = /\.(c|le|sc)ss/;
  * Gets a style file with the given extension in a project and returns its path. If no
  * extension is specified, any style file with a valid extension will be returned.
  */
-export function getProjectStyleFile(
-  project: workspaces.ProjectDefinition,
-  extension?: string,
-): string | null {
+export function getProjectStyleFile(project: ProjectDefinition, extension?: string): string | null {
   const buildOptions = getProjectTargetOptions(project, 'build');
   const buildStyles = buildOptions['styles'];
 

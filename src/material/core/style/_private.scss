@@ -1,18 +1,15 @@
 @use './elevation';
-@use '../theming/inspection';
+@use '../tokens/m2-utils';
+@use 'sass:map';
 
 @mixin private-theme-elevation($zValue, $theme) {
-  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
-  $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
-
-  @include elevation.elevation($zValue, $elevation-color-or-default);
+  $system: m2-utils.get-system($theme);
+  @include elevation.elevation($zValue, map.get($system, shadow));
 }
 
 @mixin private-theme-overridable-elevation($zValue, $theme) {
-  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
-  $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
-
-  @include elevation.overridable-elevation($zValue, $elevation-color-or-default);
+  $system: m2-utils.get-system($theme);
+  @include elevation.overridable-elevation($zValue, map.get($system, shadow));
 }
 
 // If the mat-animation-noop class is present on the components root element,

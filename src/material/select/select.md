@@ -1,7 +1,7 @@
 `<mat-select>` is a form control for selecting a value from a set of options, similar to the native
 `<select>` element. You can read more about selects in the
 [Material Design spec](https://material.io/design/components/menus.html). It is designed to work
-inside of a [`<mat-form-field>`](https://material.angular.io/components/form-field/overview)
+inside of a [`<mat-form-field>`](https://material.angular.dev/components/form-field/overview)
 element.
 
 To add options to the select, add `<mat-option>` elements to the `<mat-select>`. Each `<mat-option>`
@@ -11,7 +11,7 @@ this option. The content of the `<mat-option>` is what will be shown to the user
 Angular Material also supports use of the native `<select>` element inside of
 `<mat-form-field>`. The native control has several performance, accessibility,
 and usability advantages. See [the documentation for
-form-field](https://material.angular.io/components/form-field) for more information.
+form-field](https://material.angular.dev/components/form-field) for more information.
 
 To use a native select inside `<mat-form-field>`, import `MatInputModule` and add the
 `matNativeControl` attribute to the `<select>` element.
@@ -38,7 +38,7 @@ function can be found in the
 There are a number of `<mat-form-field>` features that can be used with both `<select>` and `<mat-select>`. These
 include error messages, hint text, prefix & suffix, and theming. For additional information about
 these features, see the
-[form field documentation](https://material.angular.io/components/form-field/overview).
+[form field documentation](https://material.angular.dev/components/form-field/overview).
 
 <!-- example(select-hint-error) -->
 
@@ -48,7 +48,7 @@ The placeholder is text shown when the `<mat-form-field>` label is floating but 
 is empty. It is used to give the user an additional hint about the value they should select. The
 placeholder can be specified by setting the `placeholder` attribute on the `<mat-select>` element.
 In some cases that `<mat-form-field>` may use the placeholder as the label (see the
-[form field label documentation](https://material.angular.io/components/form-field/overview#floating-label)).
+[form field label documentation](https://material.angular.dev/components/form-field/overview#floating-label)).
 
 ### Disabling the select or individual options
 
@@ -121,7 +121,7 @@ which can be used to apply additional CSS classes to the dropdown panel.
 ### Changing when error messages are shown
 
 The `<mat-form-field>` allows you to
-[associate error messages](https://material.angular.io/components/form-field/overview#error-messages)
+[associate error messages](https://material.angular.dev/components/form-field/overview#error-messages)
 with your `<select>` or `<mat-select>`. By default, these error messages are shown when the control is invalid and
 either the user has interacted with (touched) the element or the parent form has been submitted. If
 you wish to override this behavior (e.g. to show the error as soon as the invalid control is dirty

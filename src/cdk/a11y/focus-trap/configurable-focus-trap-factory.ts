@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Injectable, Injector, NgZone, inject} from '@angular/core';
+import {Injectable, Injector, NgZone, inject, DOCUMENT} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';

@@ -19,3 +19,4 @@ export * from './resizable';
 export * from './resize-ref';
 export * from './resize-strategy';
 export * from './overlay-handle';
+export * from './coalesced-style-scheduler';

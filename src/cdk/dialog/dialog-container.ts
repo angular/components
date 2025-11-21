@@ -13,7 +13,6 @@ import {
   FocusTrapFactory,
   InteractivityChecker,
 } from '../a11y';
-import {OverlayRef} from '../overlay';
 import {Platform, _getFocusedElementPierceShadowDom} from '../platform';
 import {
   BasePortalOutlet,
@@ -22,7 +21,7 @@ import {
   DomPortal,
   TemplatePortal,
 } from '../portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -38,8 +37,10 @@ import {
   ViewEncapsulation,
   afterNextRender,
   inject,
+  DOCUMENT,
 } from '@angular/core';
-import {DialogConfig} from './dialog-config';
+import {DialogConfig, DialogContainer} from './dialog-config';
+import {Observable, Subject} from 'rxjs';
 
 export function throwDialogContentAlreadyAttachedError() {
   throw Error('Attempting to attach dialog content after content is already attached');
@@ -71,22 +72,24 @@ export function throwDialogContentAlreadyAttachedError() {
 })
 export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
-  implements OnDestroy
+  implements DialogContainer, OnDestroy
 {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _focusTrapFactory = inject(FocusTrapFactory);
   readonly _config: C;
   private _interactivityChecker = inject(InteractivityChecker);
   protected _ngZone = inject(NgZone);
-  private _overlayRef = inject(OverlayRef);
   private _focusMonitor = inject(FocusMonitor);
   private _renderer = inject(Renderer2);
-
+  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private _injector = inject(Injector);
   private _platform = inject(Platform);
-  protected _document = inject(DOCUMENT, {optional: true})!;
+  protected _document = inject(DOCUMENT);
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+
+  _focusTrapped: Observable<void> = new Subject<void>();
 
   /** The class that traps and manages focus within the dialog. */
   private _focusTrap: FocusTrap | null = null;
@@ -108,10 +111,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * the rest are present.
    */
   _ariaLabelledByQueue: string[] = [];
-
-  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
-  private _injector = inject(Injector);
 
   private _isDestroyed = false;
 
@@ -145,7 +144,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   protected _contentAttached() {
     this._initializeFocusTrap();
-    this._handleBackdropClicks();
     this._captureInitialFocus();
   }
 
@@ -158,6 +156,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   ngOnDestroy() {
+    (this._focusTrapped as Subject<void>).complete();
     this._isDestroyed = true;
     this._restoreFocus();
   }
@@ -293,6 +292,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
             this._focusByCssSelector(this._config.autoFocus!, options);
             break;
         }
+        (this._focusTrapped as Subject<void>).next();
       },
       {injector: this._injector},
     );
@@ -347,9 +347,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   /** Focuses the dialog container. */
   private _focusDialogContainer(options?: FocusOptions) {
     // Note that there is no focus method when rendering on the server.
-    if (this._elementRef.nativeElement.focus) {
-      this._elementRef.nativeElement.focus(options);
-    }
+    this._elementRef.nativeElement.focus?.(options);
   }
 
   /** Returns whether focus is inside the dialog. */
@@ -370,16 +368,5 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
       }
     }
-  }
-
-  /** Sets up the listener that handles clicks on the dialog backdrop. */
-  private _handleBackdropClicks() {
-    // Clicking on the backdrop will move focus out of dialog.
-    // Recapture it if closing via the backdrop is disabled.
-    this._overlayRef.backdropClick().subscribe(() => {
-      if (this._config.disableClose) {
-        this._recaptureFocus();
-      }
-    });
   }
 }

@@ -21,4 +21,10 @@ export interface PositionStrategy {
 
   /** Cleans up any DOM modifications made by the position strategy, if necessary. */
   dispose(): void;
+
+  /**
+   * Gets the element in the DOM after which to insert
+   * the overlay when it is rendered out as a popover.
+   */
+  getPopoverInsertionPoint?(): Element | null | {type: 'parent'; element: Element};
 }

@@ -14,7 +14,7 @@ const projectDir = path.join(dirname, '../');
 const reportsDir = path.join(projectDir, 'dist/reports');
 
 // Constants
-const AUDIT_CATEGORIES = ['accessibility', 'best-practices', 'performance', 'pwa', 'seo'];
+const AUDIT_CATEGORIES = ['accessibility', 'best-practices', 'performance', 'seo'];
 
 /**
  * @type {LH.Flags}
@@ -34,16 +34,16 @@ _main(process.argv.slice(2)).then(() => console.log('Audit completed.'));
 /**
  * Usage:
  * ```sh
- * node tools/lighthouse-audit <url> <min-scores> [<log-file>]
+ * node tools/lighthouse-audit {{url}} {{min-scores}} [{{log-file}}]
  * ```
  *
  * Runs audits against the specified URL on specific categories (accessibility,
  * best practices, performance, PWA, SEO). It fails, if the score in any
- * category is below the score specified in `<min-scores>`. (Only runs audits
+ * category is below the score specified in `{{min-scores}}`. (Only runs audits
  * for the specified categories.)
  *
- * `<min-scores>` is either a number (in which case it is interpreted as
- * `all:<min-score>`) or a list of comma-separated strings of the form
+ * `{{min-scores}}` is either a number (in which case it is interpreted as
+ * `all:{{min-score}}`) or a list of comma-separated strings of the form
  * `key:value`, where `key` is one of `accessibility`, `best-practices`,
  * `performance`, `pwa`, `seo` or `all` and `value` is a number (between 0 and 100).
  *
@@ -55,15 +55,13 @@ _main(process.argv.slice(2)).then(() => console.log('Audit completed.'));
  * - `performance:90`: Only run audits for the `performance` category and require a score of 90
  *    or higher.
  *
- * If `<log-file>` is defined, the full results will be logged there.
+ * If `{{log-file}}` is defined, the full results will be logged there.
  *
  * Skips HTTPS-related audits, when run for an HTTP URL.
  *
  * Originally from https://github.com/angular/angular/blob/ab8199f7c909eaa8937d293ab44405fe263417cd/aio/scripts/audit-web-app.js
  *
- * @param {string[]} args <url> <min-scores> [<log-file>]
- * @returns {Promise<void>}
- * @private
+ * @param args {{url}} {{min-scores}} [{{log-file}}]
  */
 async function _main(args) {
   const {url, minScores} = parseInput(args);
@@ -132,15 +130,16 @@ function formatScore(score) {
 }
 
 /**
- * @param {string} url the URL to run Lighthouse against
- * @param {LH.Flags} flags Lighthouse flags
- * @param {LH.Config.Json} config Lighthouse JSON config
- * @returns {Promise<LH.RunnerResult | undefined>} the result of the Lighthouse run
+ * @param url the URL to run Lighthouse against
+ * @param flags Lighthouse flags
+ * @param config Lighthouse JSON config
+ * @returns the result of the Lighthouse run
  */
 async function launchChromeAndRunLighthouse(url, flags, config) {
   const browser = await puppeteer.launch({
     // Allow for a custom chromium to be provided (e.g. for M1 native support)
     executablePath: process.env.CHROMIUM_BIN,
+    args: ['--no-sandbox'],
     headless: 'new',
   });
 
@@ -173,8 +172,6 @@ async function cleanupAndPrepareReportsDir() {
 
 /**
  * Parse CLI args and throw errors if any are invalid.
- * @param {string[]} args <url> <min-scores> [<log-file>]
- * @returns {{url: string, minScores: {all?: number, performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}}}
  *  the validated URL, parsed minimum scores, and optional file path to write the report to
  */
 function parseInput(args) {
@@ -243,10 +240,10 @@ function parseMinScores(raw) {
 }
 
 /**
- * @param {LH.RunnerResult} results from a Lighthouse run
- * @param {{all?: number, performance?: number, accessibility?: number, 'best-practices'?: number, pwa?: number, seo?: number}} minScores the minimum acceptable scores for each audit category
- * @param {string=} logFile optional file path to write the report to
- * @returns {Promise<boolean>} true if all of the scores were above the required min scores, false otherwise
+ * @param results from a Lighthouse run
+ * @param minScores the minimum acceptable scores for each audit category
+ * @param logFile optional file path to write the report to
+ * @returns true if all of the scores were above the required min scores, false otherwise
  */
 async function processResults(results, minScores, logFile) {
   const lhVersion = results.lhr.lighthouseVersion;

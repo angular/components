@@ -1,127 +1,85 @@
 @use 'sass:map';
-@use 'sass:meta';
-@use 'sass:color';
-@use '../core/tokens/m2-utils';
-@use '../core/theming/inspection';
-@use '../core/style/sass-utils';
-@use '../core/m2/palette' as m2-palette;
 @use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, chip);
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
   @return (
-    container-shape-radius: 16px,
-    disabled-container-opacity: 0.4,
-    disabled-outline-color: transparent,
-    flat-selected-outline-width: 0,
-    focus-outline-color: transparent,
-    hover-state-layer-opacity: 0.04,
-    outline-color: transparent,
-    outline-width: 0,
-    selected-hover-state-layer-opacity: 0.04,
-    selected-trailing-action-state-layer-color: transparent,
-    trailing-action-focus-opacity: 1,
-    trailing-action-focus-state-layer-opacity: 0,
-    trailing-action-hover-state-layer-opacity: 0,
-    trailing-action-opacity: 0.54,
-    trailing-action-state-layer-color: transparent,
-    with-avatar-avatar-shape-radius: 14px,
-    with-avatar-avatar-size: 28px,
-    with-avatar-disabled-avatar-opacity: 1,
-    with-icon-disabled-icon-opacity: 1,
-    with-icon-icon-size: 18px,
-    with-trailing-icon-disabled-trailing-icon-opacity: 1,
+    base: (
+      chip-container-shape-radius: 16px,
+      chip-disabled-container-opacity: 0.4,
+      chip-disabled-outline-color: transparent,
+      chip-flat-selected-outline-width: 0,
+      chip-focus-outline-color: transparent,
+      chip-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-outline-color: transparent,
+      chip-outline-width: 0,
+      chip-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-selected-trailing-action-state-layer-color: transparent,
+      chip-trailing-action-focus-opacity: 1,
+      chip-trailing-action-focus-state-layer-opacity: 0,
+      chip-trailing-action-hover-state-layer-opacity: 0,
+      chip-trailing-action-opacity: 0.54,
+      chip-trailing-action-state-layer-color: transparent,
+      chip-with-avatar-avatar-shape-radius: 14px,
+      chip-with-avatar-avatar-size: 28px,
+      chip-with-avatar-disabled-avatar-opacity: 1,
+      chip-with-icon-disabled-icon-opacity: 1,
+      chip-with-icon-icon-size: 18px,
+      chip-with-trailing-icon-disabled-trailing-icon-opacity: 1,
+    ),
+    color: private-get-color-palette-color-tokens($theme, null),
+    typography: (
+      chip-label-text-font: map.get($system, body-medium-font),
+      chip-label-text-line-height: map.get($system, body-medium-line-height),
+      chip-label-text-size: map.get($system, body-medium-size),
+      chip-label-text-tracking: map.get($system, body-medium-tracking),
+      chip-label-text-weight: map.get($system, body-medium-weight)
+    ),
+    density: (
+      chip-container-height: map.get((
+        0: 32px,
+        -1: 28px,
+        -2: 24px), $density-scale)
+    ),
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: null) {
-  $foreground: null;
-  $background: null;
-  $state-layer-color: inspection.get-theme-color($theme, foreground, base);
-  $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
-  $surface: inspection.get-theme-color($theme, background, card);
+@function private-get-color-palette-color-tokens($theme, $color-variant: null) {
+  $system: m2-utils.get-system($theme);
+  $background: m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
+  $foreground: map.get($system, on-surface);
 
-  @if $palette-name == null {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $grey-50: map.get(m2-palette.$grey-palette, 50);
-    $grey-900: map.get(m2-palette.$grey-palette, 900);
-    $foreground: if($is-dark, $grey-50, $grey-900);
-
-    $surface: inspection.get-theme-color($theme, background, card);
-    $background: if(
-        meta.type-of($state-layer-color) == color and meta.type-of($surface) == color,
-        color.mix($state-layer-color, $surface, 12%),
-        $state-layer-color
-    );
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+    $background: map.get($system, primary);
+    $foreground: map.get($system, on-primary);
   }
-  @else {
-    $background: inspection.get-theme-color($theme, $palette-name);
-    $foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  }
-  @return (
-    disabled-label-text-color: $foreground,
-    elevated-container-color: $background,
-    elevated-disabled-container-color: $background,
-    elevated-selected-container-color: $background,
-    flat-disabled-selected-container-color: $background,
-    focus-state-layer-color: $state-layer-color,
-    focus-state-layer-opacity: $state-layer-opacity,
-    hover-state-layer-color: $state-layer-color,
-    label-text-color: $foreground,
-    selected-disabled-trailing-icon-color: $foreground,
-    selected-focus-state-layer-color: $state-layer-color,
-    selected-focus-state-layer-opacity: $state-layer-opacity,
-    selected-hover-state-layer-color: $state-layer-color,
-    selected-label-text-color: $foreground,
-    selected-trailing-icon-color: $foreground,
-    with-icon-disabled-icon-color: $foreground,
-    with-icon-icon-color: $foreground,
-    with-icon-selected-icon-color: $foreground,
-    with-trailing-icon-disabled-trailing-icon-color: $foreground,
-    with-trailing-icon-trailing-icon-color: $foreground,
-  );
-}
 
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
   @return (
-    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
-  @return (
-    // The height of the chip.
-    container-height:
-    map.get(
-        (
-          0: 32px,
-          -1: 28px,
-          -2: 24px,
-        ),
-        $scale
-    )
-  );
-}
-
-// Combines the tokens generated by the above functions into a single map with placeholder values.
-// This is used to create token slots.
-@function get-token-slots() {
-  @return sass-utils.deep-merge-all(
-      get-unthemable-tokens(),
-      get-color-tokens(m2-utils.$placeholder-color-config),
-      get-typography-tokens(m2-utils.$placeholder-typography-config),
-      get-density-tokens(m2-utils.$placeholder-density-config)
+    chip-disabled-label-text-color: $foreground,
+    chip-elevated-container-color: $background,
+    chip-elevated-disabled-container-color: $background,
+    chip-elevated-selected-container-color: $background,
+    chip-flat-disabled-selected-container-color: $background,
+    chip-focus-state-layer-color: map.get($system, on-surface),
+    chip-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    chip-hover-state-layer-color: map.get($system, on-surface),
+    chip-label-text-color: $foreground,
+    chip-selected-disabled-trailing-icon-color: $foreground,
+    chip-selected-focus-state-layer-color: map.get($system, focus-state-layer-opacity),
+    chip-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    chip-selected-hover-state-layer-color: map.get($system, hover-state-layer-opacity),
+    chip-selected-label-text-color: $foreground,
+    chip-selected-trailing-icon-color: $foreground,
+    chip-with-icon-disabled-icon-color: $foreground,
+    chip-with-icon-icon-color: $foreground,
+    chip-with-icon-selected-icon-color: $foreground,
+    chip-with-trailing-icon-disabled-trailing-icon-color: $foreground,
+    chip-with-trailing-icon-trailing-icon-color: $foreground,
   );
 }

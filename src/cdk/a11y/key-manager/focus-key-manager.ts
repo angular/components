@@ -44,6 +44,12 @@ export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
    */
   override setActiveItem(item: T): void;
 
+  /**
+   * Sets the active item to the item that is specified and focuses it.
+   * @param item Item to be set as active.
+   */
+  override setActiveItem(item: T | number): void;
+
   override setActiveItem(item: any): void {
     super.setActiveItem(item);
 

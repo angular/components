@@ -26,7 +26,7 @@ import {
 import {Observable, Subject, merge} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
-import {MatChipAction} from './chip-action';
+import {MatChipAction, MatChipContent} from './chip-action';
 
 /**
  * Basic container component for the MatChip component.
@@ -266,10 +266,9 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
    * Determines if key manager should avoid putting a given chip action in the tab index. Skip
    * non-interactive and disabled actions since the user can't do anything with them.
    */
-  protected _skipPredicate(action: MatChipAction): boolean {
-    // Skip chips that the user cannot interact with. `mat-chip-set` does not permit focusing disabled
-    // chips.
-    return !action.isInteractive || action.disabled;
+  protected _skipPredicate(action: MatChipContent): boolean {
+    // `mat-chip-set` does not permit focusing disabled chips.
+    return action.disabled;
   }
 
   /** Listens to changes in the chip set and syncs up the state of the individual chips. */
@@ -288,14 +287,25 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   /** Starts tracking the destroyed chips in order to capture the focused one. */
   private _trackDestroyedFocusedChip() {
     this.chipDestroyedChanges.pipe(takeUntil(this._destroyed)).subscribe((event: MatChipEvent) => {
-      const chipArray = this._chips.toArray();
-      const chipIndex = chipArray.indexOf(event.chip);
-
       // If the focused chip is destroyed, save its index so that we can move focus to the next
       // chip. We only save the index here, rather than move the focus immediately, because we want
       // to wait until the chip is removed from the chip list before focusing the next one. This
       // allows us to keep focus on the same index if the chip gets swapped out.
-      if (this._isValidIndex(chipIndex) && event.chip._hasFocus()) {
+      const chipArray = this._chips.toArray();
+      const chipIndex = chipArray.indexOf(event.chip);
+      const hasFocus = event.chip._hasFocus();
+      const wasLastFocused =
+        event.chip._hadFocusOnRemove &&
+        this._keyManager.activeItem &&
+        event.chip._getActions().includes(this._keyManager.activeItem);
+
+      // Note that depending on the timing, the chip might've already lost focus by the
+      // time we check this. We need the `wasLastFocused` as a fallback to detect such cases.
+      // In `wasLastFocused` we also need to ensure that the chip actually had focus when it was
+      // deleted so that we don't steal away the user's focus after they've moved on from the chip.
+      const shouldMoveFocus = hasFocus || wasLastFocused;
+
+      if (this._isValidIndex(chipIndex) && shouldMoveFocus) {
         this._lastDestroyedFocusedChipIndex = chipIndex;
       }
     });

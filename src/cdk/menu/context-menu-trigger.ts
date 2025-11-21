@@ -11,14 +11,15 @@ import {
   ChangeDetectorRef,
   Directive,
   inject,
-  Injectable,
+  Injector,
   Input,
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '../bidi';
 import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '../overlay';
@@ -26,7 +27,7 @@ import {_getEventTarget} from '../platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
+import {CdkMenuTriggerBase, MENU_TRIGGER, MenuTracker} from './menu-trigger-base';
 
 /** The preferred menu positions for the context menu. */
 const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position => {
@@ -37,23 +38,11 @@ const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position =>
   return {...position, offsetX, offsetY};
 });
 
-/** Tracks the last open context menu trigger across the entire application. */
-@Injectable({providedIn: 'root'})
-export class ContextMenuTracker {
-  /** The last open context menu trigger. */
-  private static _openContextMenuTrigger?: CdkContextMenuTrigger;
-
-  /**
-   * Close the previous open context menu and set the given one as being open.
-   * @param trigger The trigger for the currently open Context Menu.
-   */
-  update(trigger: CdkContextMenuTrigger) {
-    if (ContextMenuTracker._openContextMenuTrigger !== trigger) {
-      ContextMenuTracker._openContextMenuTrigger?.close();
-      ContextMenuTracker._openContextMenuTrigger = trigger;
-    }
-  }
-}
+/**
+ * @deprecated Will be removed. Use `MenuTracker` instead.
+ * @breaking-change 22.0.0
+ */
+export {MenuTracker as ContextMenuTracker};
 
 /** The coordinates where the context menu should open. */
 export type ContextMenuCoordinates = {x: number; y: number};
@@ -81,14 +70,11 @@ export type ContextMenuCoordinates = {x: number; y: number};
   ],
 })
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
-  /** The CDK overlay service. */
-  private readonly _overlay = inject(Overlay);
-
-  /** The directionality of the page. */
+  private readonly _injector = inject(Injector);
   private readonly _directionality = inject(Directionality, {optional: true});
 
-  /** The app's context menu tracking registry */
-  private readonly _contextMenuTracker = inject(ContextMenuTracker);
+  /** The app's menu tracking registry */
+  private readonly _menuTracker = inject(MenuTracker);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -128,7 +114,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       // resulting in multiple stacked context menus being displayed.
       event.stopPropagation();
 
-      this._contextMenuTracker.update(this);
+      this._menuTracker.update(this);
       this._open(event, {x: event.clientX, y: event.clientY});
 
       // A context menu can be triggered via a mouse right click or a keyboard shortcut.
@@ -161,9 +147,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private _getOverlayPositionStrategy(
     coordinates: ContextMenuCoordinates,
   ): FlexibleConnectedPositionStrategy {
-    return this._overlay
-      .position()
-      .flexibleConnectedTo(coordinates)
+    return createFlexibleConnectedPositionStrategy(this._injector, coordinates)
       .withLockedPosition()
       .withGrowAfterOpen()
       .withPositions(this.menuPosition ?? CONTEXT_MENU_POSITIONS);
@@ -244,7 +228,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
         ).setOrigin(coordinates);
         this.overlayRef.updatePosition();
       } else {
-        this.overlayRef = this._overlay.create(this._getOverlayConfig(coordinates));
+        this.overlayRef = createOverlayRef(this._injector, this._getOverlayConfig(coordinates));
       }
 
       this.overlayRef.attach(this.getMenuContentPortal());

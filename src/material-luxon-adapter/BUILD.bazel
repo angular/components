@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "ng_package", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -18,7 +17,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -52,5 +51,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":material-luxon-adapter_legacy"],
+    deps = [":material-luxon-adapter"],
 )

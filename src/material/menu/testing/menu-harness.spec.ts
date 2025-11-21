@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
+import {MatIconModule} from '@angular/material/icon';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatMenuModule} from '../module';
+import {MatMenuModule} from '../menu-module';
 import {MatMenuHarness} from './menu-harness';
 
 describe('MatMenuHarness', () => {
@@ -18,7 +19,7 @@ describe('MatMenuHarness', () => {
 
     it('should load all menu harnesses', async () => {
       const menues = await loader.getAllHarnesses(MatMenuHarness);
-      expect(menues.length).toBe(2);
+      expect(menues.length).toBe(3);
     });
 
     it('should load menu with exact text', async () => {
@@ -31,6 +32,12 @@ describe('MatMenuHarness', () => {
       const menus = await loader.getAllHarnesses(MatMenuHarness.with({triggerText: /settings/i}));
       expect(menus.length).toBe(1);
       expect(await menus[0].getTriggerText()).toBe('Settings');
+    });
+
+    it('should load menu by icon name', async () => {
+      const menus = await loader.getAllHarnesses(MatMenuHarness.with({triggerIconName: 'wrench'}));
+      expect(menus.length).toBe(1);
+      expect(await (await menus[0].host()).getAttribute('id')).toBe('with-icon');
     });
 
     it('should get disabled state', async () => {
@@ -146,39 +153,42 @@ describe('MatMenuHarness', () => {
 
 @Component({
   template: `
-      <button type="button" id="settings" [matMenuTriggerFor]="settingsMenu">Settings</button>
-      <button type="button" disabled [matMenuTriggerFor]="settingsMenu">Disabled menu</button>
+    <button type="button" id="settings" [matMenuTriggerFor]="settingsMenu">Settings</button>
+    <button type="button" disabled [matMenuTriggerFor]="settingsMenu">Disabled menu</button>
+    <button type="button" id="with-icon" [matMenuTriggerFor]="settingsMenu">
+      <mat-icon>wrench</mat-icon>
+    </button>
 
-      <mat-menu #settingsMenu>
-        <menu mat-menu-item>Profile</menu>
-        <menu mat-menu-item>Account</menu>
-      </mat-menu>
+    <mat-menu #settingsMenu>
+      <menu mat-menu-item>Profile</menu>
+      <menu mat-menu-item>Account</menu>
+    </mat-menu>
   `,
-  imports: [MatMenuModule],
+  imports: [MatMenuModule, MatIconModule],
 })
 class MenuHarnessTest {}
 
 @Component({
   template: `
-      <button [matMenuTriggerFor]="menu1">Menu 1</button>
+    <button [matMenuTriggerFor]="menu1">Menu 1</button>
 
-      <mat-menu #menu1>
-        <button mat-menu-item [matMenuTriggerFor]="menu2">Menu 2</button>
-        <button mat-menu-item (click)="lastClickedLeaf = 1">Leaf Item 1</button>
-        <button mat-menu-item [matMenuTriggerFor]="menu3">Menu 3</button>
-      </mat-menu>
+    <mat-menu #menu1>
+      <button mat-menu-item [matMenuTriggerFor]="menu2">Menu 2</button>
+      <button mat-menu-item (click)="lastClickedLeaf = 1">Leaf Item 1</button>
+      <button mat-menu-item [matMenuTriggerFor]="menu3">Menu 3</button>
+    </mat-menu>
 
-      <mat-menu #menu2>
-        <button mat-menu-item (click)="lastClickedLeaf = 2">Leaf Item 2</button>
-      </mat-menu>
+    <mat-menu #menu2>
+      <button mat-menu-item (click)="lastClickedLeaf = 2">Leaf Item 2</button>
+    </mat-menu>
 
-      <mat-menu #menu3>
-        <button mat-menu-item [matMenuTriggerFor]="menu4">Menu 4</button>
-      </mat-menu>
+    <mat-menu #menu3>
+      <button mat-menu-item [matMenuTriggerFor]="menu4">Menu 4</button>
+    </mat-menu>
 
-      <mat-menu #menu4>
-        <button mat-menu-item (click)="lastClickedLeaf = 3">Leaf Item 3</button>
-      </mat-menu>
+    <mat-menu #menu4>
+      <button mat-menu-item (click)="lastClickedLeaf = 3">Leaf Item 3</button>
+    </mat-menu>
   `,
   imports: [MatMenuModule],
 })

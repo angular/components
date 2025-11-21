@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {
   ComponentType,
   ComponentPortal,
@@ -22,6 +30,7 @@ import {
   ViewContainerRef,
   input,
   inject,
+  Type,
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -29,6 +38,7 @@ import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 import {DeprecatedFieldComponent} from './deprecated-tooltip';
 import {ModuleImportCopyButton} from './module-import-copy-button';
+import {AngularAriaBanner} from './angular-aria-banner/angular-aria-banner';
 
 @Injectable({providedIn: 'root'})
 class DocFetcher {
@@ -50,7 +60,7 @@ class DocFetcher {
   selector: 'doc-viewer',
   template: `
     @if (portal) {
-      <ng-template [cdkPortalOutlet]="portal"></ng-template>
+      <ng-template [cdkPortalOutlet]="portal" />
     } @else {
       Loading document...
     }
@@ -83,6 +93,7 @@ export class DocViewer implements OnDestroy {
       // Resolving and creating components dynamically in Angular happens synchronously, but since
       // we want to emit the output if the components are actually rendered completely, we wait
       // until the Angular zone becomes stable.
+      // tslint:disable-next-line:no-zone-dependencies
       this._ngZone.onStable
         .pipe(take(1))
         .subscribe(() => this.contentRendered.next(this._elementRef.nativeElement));
@@ -94,7 +105,7 @@ export class DocViewer implements OnDestroy {
   /** The document text. It should not be HTML encoded. */
   textContent = '';
 
-  private static initExampleViewer(
+  private static _initExampleViewer(
     exampleViewerComponent: ExampleViewer,
     example: string,
     file: string | null,
@@ -104,17 +115,17 @@ export class DocViewer implements OnDestroy {
     if (file) {
       // if the html div has field `file` then it should be in compact view to show the code
       // snippet
-      exampleViewerComponent.view = 'snippet';
-      exampleViewerComponent.showCompactToggle = true;
-      exampleViewerComponent.file = file;
+      exampleViewerComponent.view.set('snippet');
+      exampleViewerComponent.showCompactToggle.set(true);
+      exampleViewerComponent.file.set(file);
       if (region) {
         // `region` should only exist when `file` exists but not vice versa
         // It is valid for embedded example snippets to show the whole file (esp short files)
-        exampleViewerComponent.region = region;
+        exampleViewerComponent.region.set(region);
       }
     } else {
       // otherwise it is an embedded demo
-      exampleViewerComponent.view = 'demo';
+      exampleViewerComponent.view.set('demo');
     }
   }
 
@@ -122,8 +133,8 @@ export class DocViewer implements OnDestroy {
   private _fetchDocument(url: string) {
     this._documentFetchSubscription?.unsubscribe();
     this._documentFetchSubscription = this._docFetcher.fetchDocument(url).subscribe(
-      document => this.updateDocument(document),
-      error => this.showError(url, error),
+      document => this._updateDocument(document),
+      error => this._showError(url, error),
     );
   }
 
@@ -131,7 +142,7 @@ export class DocViewer implements OnDestroy {
    * Updates the displayed document.
    * @param rawDocument The raw document content to show.
    */
-  private updateDocument(rawDocument: string) {
+  private _updateDocument(rawDocument: string) {
     // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
     // "/components/button/api#my-section". This is necessary because otherwise these fragment
     // links would redirect to "/#my-section".
@@ -144,6 +155,9 @@ export class DocViewer implements OnDestroy {
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);
 
+    // Inject Angular Aria banner for specific CDK components
+    this._injectAngularAriaBanner();
+
     // Create tooltips for the deprecated fields
     this._createTooltipsForDeprecated();
 
@@ -153,19 +167,20 @@ export class DocViewer implements OnDestroy {
     // Resolving and creating components dynamically in Angular happens synchronously, but since
     // we want to emit the output if the components are actually rendered completely, we wait
     // until the Angular zone becomes stable.
+    // tslint:disable-next-line:no-zone-dependencies
     this._ngZone.onStable
       .pipe(take(1))
       .subscribe(() => this.contentRendered.next(this._elementRef.nativeElement));
   }
 
   /** Show an error that occurred when fetching a document. */
-  private showError(url: string, error: HttpErrorResponse) {
+  private _showError(url: string, error: HttpErrorResponse) {
     console.error(error);
     this._elementRef.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
   }
 
   /** Instantiate a ExampleViewer for each example. */
-  private _loadComponents(componentName: string, componentClass: any) {
+  private _loadComponents(componentName: string, componentClass: Type<ExampleViewer | HeaderLink>) {
     const exampleElements = this._elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
     [...exampleElements].forEach((element: Element) => {
@@ -175,9 +190,18 @@ export class DocViewer implements OnDestroy {
       const portalHost = new DomPortalOutlet(element, this._appRef, this._injector);
       const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const exampleViewer = portalHost.attach(examplePortal);
-      const exampleViewerComponent = exampleViewer.instance as ExampleViewer;
+      const exampleViewerComponent = exampleViewer.instance;
       if (example !== null) {
-        DocViewer.initExampleViewer(exampleViewerComponent, example, file, region);
+        if (componentClass === ExampleViewer) {
+          DocViewer._initExampleViewer(
+            exampleViewerComponent as ExampleViewer,
+            example,
+            file,
+            region,
+          );
+        } else {
+          (exampleViewerComponent as HeaderLink).example.set(example);
+        }
       }
       this._portalHosts.push(portalHost);
     });
@@ -246,5 +270,38 @@ export class DocViewer implements OnDestroy {
 
       this._portalHosts.push(elementPortalOutlet);
     });
+  }
+
+  /**
+   * Injects the Angular Aria migration banner for specific CDK components.
+   */
+  private _injectAngularAriaBanner() {
+    const componentName = this.name();
+    const componentsWithAriaBanner = ['listbox', 'tree', 'accordion', 'menu'];
+
+    if (!componentName || !componentsWithAriaBanner.includes(componentName.toLowerCase())) {
+      return;
+    }
+
+    // Create a container div for the banner at the beginning of the document
+    const bannerContainer = document.createElement('div');
+    bannerContainer.setAttribute('angular-aria-banner', '');
+    bannerContainer.setAttribute('componentName', componentName);
+
+    // Insert the banner at the beginning of the document content
+    const firstChild = this._elementRef.nativeElement.firstChild;
+    if (firstChild) {
+      this._elementRef.nativeElement.insertBefore(bannerContainer, firstChild);
+    } else {
+      this._elementRef.nativeElement.appendChild(bannerContainer);
+    }
+
+    // Create and attach the banner component
+    const portalHost = new DomPortalOutlet(bannerContainer, this._appRef, this._injector);
+    const bannerPortal = new ComponentPortal(AngularAriaBanner, this._viewContainerRef);
+    const bannerComponent = portalHost.attach(bannerPortal);
+    bannerComponent.instance.componentName = componentName;
+
+    this._portalHosts.push(portalHost);
   }
 }

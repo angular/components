@@ -1,18 +1,17 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {ENTER, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {DateAdapter, MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
+import {DateAdapter, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
   let adapter: DateAdapter<Date>;
@@ -20,15 +19,7 @@ describe('MatCalendar', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule],
-      providers: [MatDatepickerIntl, {provide: Directionality, useFactory: () => ({value: 'ltr'})}],
-      declarations: [
-        // Test components.
-        StandardCalendar,
-        CalendarWithMinMax,
-        CalendarWithDateFilter,
-        CalendarWithSelectableMinDate,
-      ],
+      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr'), provideNativeDateAdapter()],
     });
 
     adapter = TestBed.inject(DateAdapter);
@@ -363,13 +354,17 @@ describe('MatCalendar', () => {
         '.mat-calendar-previous-button',
       ) as HTMLButtonElement;
 
-      expect(prevButton.disabled).withContext('previous button should not be disabled').toBe(false);
+      expect(prevButton.hasAttribute('aria-disabled'))
+        .withContext('previous button should not be disabled')
+        .toBe(false);
       expect(calendarInstance.activeDate).toEqual(new Date(2016, FEB, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(prevButton.disabled).withContext('previous button should be disabled').toBe(true);
+      expect(prevButton.getAttribute('aria-disabled'))
+        .withContext('previous button should be disabled')
+        .toBe('true');
       expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 1));
 
       prevButton.click();
@@ -387,13 +382,17 @@ describe('MatCalendar', () => {
         '.mat-calendar-next-button',
       ) as HTMLButtonElement;
 
-      expect(nextButton.disabled).withContext('next button should not be disabled').toBe(false);
+      expect(nextButton.hasAttribute('aria-disabled'))
+        .withContext('next button should not be disabled')
+        .toBe(false);
       expect(calendarInstance.activeDate).toEqual(new Date(2017, DEC, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(nextButton.disabled).withContext('next button should be disabled').toBe(true);
+      expect(nextButton.getAttribute('aria-disabled'))
+        .withContext('next button should be disabled')
+        .toBe('true');
       expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 1));
 
       nextButton.click();
@@ -650,7 +649,7 @@ describe('MatCalendar', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class StandardCalendar {
   selected: Date;
@@ -663,7 +662,7 @@ class StandardCalendar {
   template: `
     <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithMinMax {
   startAt: Date;
@@ -676,7 +675,7 @@ class CalendarWithMinMax {
     <mat-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
     </mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithDateFilter {
   selected: Date;
@@ -696,7 +695,7 @@ class CalendarWithDateFilter {
       [minDate]="selected">
     </mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);

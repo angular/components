@@ -5,7 +5,7 @@
     "outDir": "./dist/packages/all",
     "experimentalDecorators": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
@@ -25,6 +25,8 @@
     "types": ["jasmine"],
     "baseUrl": ".",
     "paths": {
+      "@angular/aria": ["./src/aria"],
+      "@angular/aria/*": ["./src/aria/*"],
       "@angular/cdk": ["./src/cdk"],
       "@angular/cdk/*": ["./src/cdk/*"],
       "@angular/material/*": ["./src/material/*"],
@@ -44,6 +46,10 @@
   "angularCompilerOptions": {
     "strictTemplates": true,
     "typeCheckHostBindings": true,
+    "strictInputAccessModifiers": true,
+    "strictInputTypes": true,
+    "strictOutputEventTypes": true,
+    "strictDomEventTypes": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }
@@ -53,8 +59,10 @@
     "e2e/**/*.ts",
     "test/**/*.ts",
     "tools/**/*.ts",
+    "tools/**/*.mts",
     "integration/**/*.ts",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "docs/**/*.ts"
   ],
   "exclude": [
     // Exclude files that depend on Node APIs because those depend on the Node types and therefore

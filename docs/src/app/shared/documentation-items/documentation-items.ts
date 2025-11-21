@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Injectable} from '@angular/core';
 import type {LiveExample} from '@angular/components-examples';
 
@@ -97,7 +105,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'button-toggle',
-      name: 'Button toggle',
+      name: 'Button Toggle',
       summary: 'A groupable on/off toggle for enabling and disabling options.',
       exampleSpecs: {
         prefix: 'button-toggle-',
@@ -178,7 +186,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'form-field',
-      name: 'Form field',
+      name: 'Form Field',
       summary: 'Wraps input fields so they are displayed consistently.',
       exampleSpecs: {
         prefix: 'form-field-',
@@ -187,7 +195,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'grid-list',
-      name: 'Grid list',
+      name: 'Grid List',
       summary: 'A flexible structure for presenting content items in a grid.',
       exampleSpecs: {
         prefix: 'grid-list-',
@@ -241,7 +249,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'progress-bar',
-      name: 'Progress bar',
+      name: 'Progress Bar',
       summary: 'A linear progress indicator.',
       exampleSpecs: {
         prefix: 'progress-bar-',
@@ -250,7 +258,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'progress-spinner',
-      name: 'Progress spinner',
+      name: 'Progress Spinner',
       summary: 'A circular progress indicator.',
       exampleSpecs: {
         prefix: 'progress-spinner-',
@@ -259,7 +267,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'radio',
-      name: 'Radio button',
+      name: 'Radio Button',
       summary: 'Allows the user to select one option from a group.',
       exampleSpecs: {
         prefix: 'radio-',
@@ -296,7 +304,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'slide-toggle',
-      name: 'Slide toggle',
+      name: 'Slide Toggle',
       summary: 'Captures boolean values as a clickable and draggable switch.',
       exampleSpecs: {
         prefix: 'slide-toggle-',
@@ -323,7 +331,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'sort',
-      name: 'Sort header',
+      name: 'Sort Header',
       summary: 'Allows the user to configure how tabular data is sorted.',
       exampleSpecs: {
         prefix: 'sort-',
@@ -560,7 +568,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     },
     {
       id: 'text-field',
-      name: 'Text field',
+      name: 'Text Field',
       summary: 'Utilities for working with text input fields.',
       exampleSpecs: {
         prefix: 'text-field-',

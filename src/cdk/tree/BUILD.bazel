@@ -1,10 +1,9 @@
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_project",
     "ng_web_test_suite",
 )
-load("//tools:defaults2.bzl", "ts_project")
-load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -26,7 +25,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -35,12 +34,14 @@ ts_project(
     ),
     deps = [
         ":tree",
+        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
     ],
 )

@@ -1,0 +1,68 @@
+@use 'sass:map';
+@use 'sass:string';
+@use 'sass:meta';
+
+@function md-sys-typescale-values($config) {
+  // Mapping is according to the old 2014 version of the typography spec.
+  $sys-to-config: (
+    body-large: subheading-1,
+    body-medium: body-1,
+    body-small: caption,
+    display-large: display-4,
+    display-medium: display-4,
+    display-small: display-4,
+    headline-large: display-3,
+    headline-medium: display-2,
+    headline-small: display-1,
+    label-large: subheading-2,
+    label-medium: body-2,
+    label-small: button,
+    title-large: headline,
+    title-medium: headline,
+    title-small: title,
+  );
+
+  // If the config is based on the updated 2018 version of the typography spec, then
+  // use the correct config keys mapping.
+  @if (map.get($config, headline-1) != null) {
+    $sys-to-config: (
+      body-large: body-1,
+      body-medium: body-2,
+      body-small: caption,
+      label-large: subtitle-1,
+      label-medium: subtitle-2,
+      label-small: button,
+      display-large: headline-1,
+      display-medium: headline-1,
+      display-small: headline-1,
+      headline-large: headline-2,
+      headline-medium: headline-3,
+      headline-small: headline-4,
+      title-large: headline-5,
+      title-medium: headline-5,
+      title-small: headline-6,
+    );
+  }
+
+  $typography: ();
+  @each $sys-key, $config-key in $sys-to-config {
+    $font: map.get($config, $config-key, font-family);
+    @if (meta.type-of($font) == 'string') {
+      $font: string.unquote($font);
+    }
+    $line-height: map.get($config, $config-key, line-height);
+    $size: map.get($config, $config-key, font-size);
+    $tracking: map.get($config, $config-key, letter-spacing);
+    $weight: map.get($config, $config-key, font-weight);
+    $typography: map.merge($typography, (
+      #{$sys-key}: $weight $size #{'/'} $line-height $font,
+      #{$sys-key}-font: $font,
+      #{$sys-key}-line-height: $line-height,
+      #{$sys-key}-size: $size,
+      #{$sys-key}-tracking: $tracking,
+      #{$sys-key}-weight: $weight,
+    ));
+  }
+
+  @return $typography;
+}

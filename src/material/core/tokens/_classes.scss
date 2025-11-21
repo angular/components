@@ -1,0 +1,398 @@
+// Utility classes that can be used to style elements with the most commonly used system tokens in
+// Material Design. Includes color, typography, elevation, state, and shape.
+@mixin system-classes() {
+
+  // ***********************************************************************************************
+  // Background - Applies background colors defined by Material Design.
+  // See https://m3.material.io/styles/color/roles for detailed guidance.
+  // ***********************************************************************************************
+
+  // Styles an element with a primary color background. Use for key components across the UI, such
+  // as buttons that have greater importance on the page. In Angular Material, this is used for the
+  // selected date in a datepicker, the handle of a slider, and the background of a checkbox.
+  .mat-bg-primary {
+    background-color: var(--mat-sys-primary);
+  }
+
+  // Styles an element with a primary container color background. Use for filling components that
+  // should stand out on a surface. In Angular Material, this is used for the container of a
+  // floating action button.
+  .mat-bg-primary-container {
+    background-color: var(--mat-sys-primary-container);
+  }
+
+  // Styles an element with a secondary color background. Use for less prominent components in the
+  // UI that have a different color scheme than the primary.
+  .mat-bg-secondary {
+    background-color: var(--mat-sys-secondary);
+  }
+
+  // Styles an element with a secondary container color background. Use for components that need
+  // less emphasis than secondary, such as filter chips. In Angular Material, this is used for
+  // selected items in a list and the container of a tonal button.
+  .mat-bg-secondary-container {
+    background-color: var(--mat-sys-secondary-container);
+  }
+
+  // Styles an element with an error color background. Use for indicating an error state, such as
+  // an invalid text field, or for the background of an important notification. In Angular
+  // Material, this is used for the background of a badge.
+  .mat-bg-error {
+    background-color: var(--mat-sys-error);
+  }
+
+  // Styles an element with an error container color background. Use for components that need less
+  // emphasis than error, such as a container for error text.
+  .mat-bg-error-container {
+    background-color: var(--mat-sys-error-container);
+  }
+
+  // Styles an element with a surface color background. Use for general surfaces of components. In
+  // Angular Material, this is used for the background of many components, like tables, dialogs,
+  // menus, and toolbars.
+  .mat-bg-surface {
+    background-color: var(--mat-sys-surface);
+  }
+
+  // Styles an element with a surface variant color background. Use for surfaces that need to stand
+  // out from the main surface color. In Angular Material, this is used for the background of a
+  // filled form field and the track of a progress bar.
+  .mat-bg-surface-variant {
+    background-color: var(--mat-sys-surface-variant);
+  }
+
+  // Styles an element with the "highest" surface container color background. Use for surfaces that
+  // need the most emphasis against the main surface color. In Angular Material, this is used for
+  // the background of a filled card.
+  .mat-bg-surface-container-highest {
+    background-color: var(--mat-sys-surface-container-highest);
+  }
+
+  // Styles an element with a "high" surface container color background. Use for surfaces that need
+  // more emphasis against the main surface color. In Angular Material, this is used for the
+  // background of a datepicker.
+  .mat-bg-surface-container-high {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  // Styles an element with a surface container color background. Use for surfaces that need to
+  // stand out from the main surface color. In Angular Material, this is used for the background
+  // of a menu.
+  .mat-bg-surface-container {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  // Styles an element with a "low" surface container color background. Use for surfaces that need
+  // less emphasis against the main surface color. In Angular Material, this is used for the
+  // background of a bottom sheet.
+  .mat-bg-surface-container-low {
+    background-color: var(--mat-sys-surface-container-low);
+  }
+
+  // Styles an element with the "lowest" surface container color background. Use for surfaces that
+  // need the least emphasis against the main surface color.
+  .mat-bg-surface-container-lowest {
+    background-color: var(--mat-sys-surface-container-lowest);
+  }
+
+  // Styles an element with an inverse surface color background. Use for making elements stand out
+  // against the default color scheme. Good for temporary notifications. In Angular Material, this
+  // is used for the background of a snackbar and a tooltip.
+  .mat-bg-inverse-surface {
+    background-color: var(--mat-sys-inverse-surface);
+  }
+
+  // Styles an element with a disabled color background. Use for disabled components. In Angular
+  // Material, this is used for components generally filled with the primary color but are
+  // currently disabled.
+  .mat-bg-disabled {
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  }
+
+
+  // ***********************************************************************************************
+  // Text - Apply colors to text
+  // ***********************************************************************************************
+
+  // Styles the text of an element with the primary color. Use for text that needs to stand out.
+  // In Angular Material, this is used for the text of a text button and the selected tab label.
+  .mat-text-primary {
+    color: var(--mat-sys-primary);
+  }
+
+  // Styles the text of an element with the secondary color. Use for text that needs to stand out.
+  .mat-text-secondary {
+    color: var(--mat-sys-secondary);
+  }
+
+  // Styles the text of an element with the error color. Use for text that indicates an error, such
+  // as validation messages. In Angular Material, this is used for the error text in a form field.
+  .mat-text-error {
+    color: var(--mat-sys-error);
+  }
+
+  // Styles the text of an element with the disabled color. Use for text in disabled components.
+  .mat-text-disabled {
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  }
+
+  // Styles the text of an element with the on-surface-variant color. Use for text that should have
+  // a lower emphasis than the surrounding text. This can include subheading, captions, and hint
+  // text.
+  .mat-text-on-surface-variant {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a primary background.
+  .mat-text-on-primary {
+    color: var(--mat-sys-on-primary);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a primary-container
+  // background.
+  .mat-text-on-primary-container {
+    color: var(--mat-sys-on-primary-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a secondary background.
+  .mat-text-on-secondary {
+    color: var(--mat-sys-on-secondary);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a secondary-container
+  // background.
+  .mat-text-on-secondary-container {
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an error background.
+  .mat-text-on-error {
+    color: var(--mat-sys-on-error);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an error-container
+  // background.
+  .mat-text-on-error-container {
+    color: var(--mat-sys-on-error-container);
+  }
+
+  // Styles the text of an element with a color that contrasts well against a surface background.
+  .mat-text-on-surface {
+    color: var(--mat-sys-on-surface);
+  }
+
+  // Styles the text of an element with a color that contrasts well against an inverse-surface
+  // background.
+  .mat-text-inverse-on-surface {
+    color: var(--mat-sys-inverse-on-surface);
+  }
+
+  // ***********************************************************************************************
+  // Font - Apply typography styles
+  // See https://m3.material.io/styles/typography/applying-type for guidance.
+  // ***********************************************************************************************
+
+  // Sets the font to the body small typeface. Use for small body text, such as captions. In Angular
+  // Material, this is used for the subscript text in a form field and the text in a paginator.
+  .mat-font-body-sm {
+    font: var(--mat-sys-body-small);
+    letter-spacing: var(--mat-sys-body-small-tracking);
+  }
+
+  // Sets the font to the body medium typeface. Use for medium body text, this is the default
+  // body font. In Angular Material, this is used for the text in a table row and the supporting
+  // text in a dialog.
+  .mat-font-body-md {
+    font: var(--mat-sys-body-medium);
+    letter-spacing: var(--mat-sys-body-medium-tracking);
+  }
+
+  // Sets the font to the body large typeface. Use for large body text, such as an introductory
+  // paragraph. In Angular Material, this is used for the text in a list item and the text in a
+  // select trigger.
+  .mat-font-body-lg {
+    font: var(--mat-sys-body-large);
+    letter-spacing: var(--mat-sys-body-large-tracking);
+  }
+
+  // Sets the font to the display small typeface. Use for small display text, such as a date.
+  .mat-font-display-sm {
+    font: var(--mat-sys-display-small);
+    letter-spacing: var(--mat-sys-display-small-tracking);
+  }
+
+  // Sets the font to the display medium typeface. Use for medium display text, such as a hero
+  // title.
+  .mat-font-display-md {
+    font: var(--mat-sys-display-medium);
+    letter-spacing: var(--mat-sys-display-medium-tracking);
+  }
+
+  // Sets the font to the display large typeface. Use for large display text, such as a hero title.
+  .mat-font-display-lg {
+    font: var(--mat-sys-display-large);
+    letter-spacing: var(--mat-sys-display-large-tracking);
+  }
+
+  // Sets the font to the headline small typeface. Use for small headlines, such as a page title. In
+  // Angular Material, this is used for the headline in a dialog.
+  .mat-font-headline-sm {
+    font: var(--mat-sys-headline-small);
+    letter-spacing: var(--mat-sys-headline-small-tracking);
+  }
+
+  // Sets the font to the headline medium typeface. Use for medium headlines, such as a section
+  // title.
+  .mat-font-headline-md {
+    font: var(--mat-sys-headline-medium);
+    letter-spacing: var(--mat-sys-headline-medium-tracking);
+  }
+
+  // Sets the font to the headline large typeface. Use for large headlines, such as a page title on
+  // a large screen.
+  .mat-font-headline-lg {
+    font: var(--mat-sys-headline-large);
+    letter-spacing: var(--mat-sys-headline-large-tracking);
+  }
+
+  // Sets the font to the label small typeface. Use for small labels, such as text in a badge.
+  .mat-font-label-sm {
+    font: var(--mat-sys-label-small);
+    letter-spacing: var(--mat-sys-label-small-tracking);
+  }
+
+  // Sets the font to the label medium typeface. Use for medium labels. In Angular Material, this
+  // is used for the slider label.
+  .mat-font-label-md {
+    font: var(--mat-sys-label-medium);
+    letter-spacing: var(--mat-sys-label-medium-tracking);
+  }
+
+  // Sets the font to the label large typeface. Use for large labels. In Angular Material, this is
+  // used for buttons, chips, and menu labels.
+  .mat-font-label-lg {
+    font: var(--mat-sys-label-large);
+    letter-spacing: var(--mat-sys-label-large-tracking);
+  }
+
+  // Sets the font to the title small typeface. Use for small titles, such as a card title. In
+  // Angular Material, this is used for the header of a table and the label of an option group.
+  .mat-font-title-sm {
+    font: var(--mat-sys-title-small);
+    letter-spacing: var(--mat-sys-title-small-tracking);
+  }
+
+  // Sets the font to the title medium typeface. Use for medium titles, such as a dialog title
+  // or the primary text in a list item. In Angular Material, this is used for the subtitle
+  // of a card and the header of an expansion panel.
+  .mat-font-title-md {
+    font: var(--mat-sys-title-medium);
+    letter-spacing: var(--mat-sys-title-medium-tracking);
+  }
+
+  // Sets the font to the title large typeface. Use for large titles, such as a page title on a
+  // small screen. In Angular Material, this is used for the title of a card and the title of a
+  // toolbar.
+  .mat-font-title-lg {
+    font: var(--mat-sys-title-large);
+    letter-spacing: var(--mat-sys-title-large-tracking);
+  }
+
+
+  // ***********************************************************************************************
+  // Corner - Apply varying amounts of a border radius
+  // See https://m3.material.io/styles/shape/corner-radius-scale for guidance.
+  // ***********************************************************************************************
+
+  // Sets the border radius to extra small. Use for components that need a small amount of rounding,
+  // such as a chip. In Angular Material, this is used for the shape of a snackbar and a tooltip.
+  .mat-corner-xs {
+    border-radius: var(--mat-sys-corner-extra-small);
+  }
+
+  // Sets the border radius to small. Use for components that need a small amount of rounding, such
+  // as a text field.
+  .mat-corner-sm {
+    border-radius: var(--mat-sys-corner-small);
+  }
+
+  // Sets the border radius to medium. Use for components that need a medium amount of rounding,
+  // such as a button. In Angular Material, this is used for the shape of a card.
+  .mat-corner-md {
+    border-radius: var(--mat-sys-corner-medium);
+  }
+
+  // Sets the border radius to large. Use for components that need a large amount of rounding, such
+  // as a card. In Angular Material, this is used for the shape of a floating action button and a
+  // datepicker.
+  .mat-corner-lg {
+    border-radius: var(--mat-sys-corner-large);
+  }
+
+  // Sets the border radius to extra large. Use for components that need a large amount of
+  // rounding. In Angular Material, this is used for the shape of a button toggle and the shape of
+  // a dialog.
+  .mat-corner-xl {
+    border-radius: var(--mat-sys-corner-extra-large);
+  }
+
+  // Sets the border radius to full. Use for components that are circular, such as a user avatar.
+  // In Angular Material, this is used for the shape of a badge and the shape of a button.
+  .mat-corner-full {
+    border-radius: var(--mat-sys-corner-full);
+  }
+
+
+  // ***********************************************************************************************
+  // Border - Applies a 1px solid border
+  // ***********************************************************************************************
+
+  // Adds an outline to an element. Use for components that need a visible boundary. In Angular
+  // Material, this is used for the outline of an outlined button.
+  .mat-border {
+    border: 1px solid var(--mat-sys-outline);
+  }
+
+  // Adds a less prominent outline to an element. Use for components that need a less obvious
+  // boundary. In Angular Material, this is used for the outline of an outlined card and the color
+  // of the divider
+  .mat-border-subtle {
+    border: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  // ***********************************************************************************************
+  // Shadow - Applies elevation levels through box-shadow
+  // See https://m3.material.io/styles/elevation/applying-elevation for guidance.
+  // ***********************************************************************************************
+
+  // Use to slightly raise the appearance of a surface. In Angular Material, this is used for the
+  // elevation of an elevated card and the handle of a slider.
+  .mat-shadow-1 {
+    box-shadow: var(--mat-sys-level1);
+  }
+
+  // Use to raise the appearance of a surface. In Angular Material, this is used for the
+  // elevation of a menu and a select panel.
+  .mat-shadow-2 {
+    box-shadow: var(--mat-sys-level2);
+  }
+
+  // Used to raise the appearance of a surface. In Angular Material, this is used for the elevation
+  // of a floating action button.
+  .mat-shadow-3 {
+    box-shadow: var(--mat-sys-level3);
+  }
+
+  // Used to raise the appearance of a surface. This is generally reserved for elevation changes
+  // due to interaction like focus and hover. In Angular Material, this is used for the elevation
+  // of a hovered floating action button.
+  .mat-shadow-4 {
+    box-shadow: var(--mat-sys-level4);
+  }
+
+  // Used to greatly raise the appearance of a surface. This is generally reserved for elevation
+  // changes due to interaction like focus and hover.
+  .mat-shadow-5 {
+    box-shadow: var(--mat-sys-level5);
+  }
+}

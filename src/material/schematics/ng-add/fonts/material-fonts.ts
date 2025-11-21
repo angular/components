@@ -12,13 +12,13 @@ import {
   getProjectFromWorkspace,
   getProjectIndexFiles,
 } from '@angular/cdk/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {readWorkspace} from '@schematics/angular/utility';
 import {Schema} from '../schema';
 
 /** Adds the Material Design fonts to the index HTML file. */
 export function addFontsToIndex(options: Schema): Rule {
   return async (host: Tree) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const projectIndexFiles = getProjectIndexFiles(project);
 
@@ -26,12 +26,20 @@ export function addFontsToIndex(options: Schema): Rule {
       throw new SchematicsException('No project index HTML file could be found.');
     }
 
+    const preconnectLinks = [
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    ];
+
     const fonts = [
       'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap',
       'https://fonts.googleapis.com/icon?family=Material+Icons',
     ];
 
     projectIndexFiles.forEach(indexFilePath => {
+      preconnectLinks.forEach(link => {
+        appendHtmlElementToHead(host, indexFilePath, link);
+      });
       fonts.forEach(font => {
         appendHtmlElementToHead(host, indexFilePath, `<link href="${font}" rel="stylesheet">`);
       });

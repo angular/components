@@ -12,14 +12,24 @@ import {
   ContentContainerComponentHarness,
   HarnessPredicate,
 } from '@angular/cdk/testing';
-import {ButtonAppearance, ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
+import {MatIconHarness} from '@angular/material/icon/testing';
+import {
+  ButtonAppearance,
+  ButtonHarnessFilters,
+  ButtonType,
+  ButtonVariant,
+} from './button-harness-filters';
 
 /** Harness for interacting with a mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
-  // TODO(jelbourn) use a single class, like `.mat-button-base`
-  static hostSelector = `[matButton], [mat-button], [matIconButton], [matFab], [matMiniFab],
-    [mat-raised-button], [mat-flat-button], [mat-icon-button], [mat-stroked-button], [mat-fab],
-    [mat-mini-fab]`;
+  // Note: `.mat-mdc-button-base` should be enough for all buttons, however some apps are using
+  // the harness without actually having an applied button. Keep the attributes for backwards
+  // compatibility.
+
+  /** Selector for the harness. */
+  static hostSelector = `.mat-mdc-button-base, [matButton], [mat-button], [matIconButton],
+    [matFab], [matMiniFab], [mat-raised-button], [mat-flat-button], [mat-icon-button],
+    [mat-stroked-button], [mat-fab], [mat-mini-fab]`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a button with specific attributes.
@@ -46,6 +56,13 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       )
       .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
+      })
+      .addOption('buttonType', options.buttonType, (harness, buttonType) =>
+        HarnessPredicate.stringMatches(harness.getType(), buttonType),
+      )
+      .addOption('iconName', options.iconName, async (harness, iconName) => {
+        const result = await harness.locatorForOptional(MatIconHarness.with({name: iconName}))();
+        return result !== null;
       });
   }
 
@@ -144,6 +161,18 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       return 'tonal';
     }
 
+    return null;
+  }
+
+  /**
+   * Gets the type of the button. Supported values are 'button', 'submit', and 'reset'.
+   */
+  async getType(): Promise<ButtonType | null> {
+    const host = await this.host();
+    const buttonType = await host.getAttribute('type');
+    if (buttonType === 'button' || buttonType === 'submit' || buttonType === 'reset') {
+      return buttonType;
+    }
     return null;
   }
 }

@@ -2,7 +2,7 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
+import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
 import {MatDatepickerModule} from '../../datepicker';
 import {MatCalendarHarness} from './calendar-harness';
 import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
@@ -13,8 +13,10 @@ describe('MatDatepickerToggleHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
     fixture = TestBed.createComponent(DatepickerToggleHarnessTest);
     fixture.detectChanges();
@@ -83,7 +85,7 @@ describe('MatDatepickerToggleHarness', () => {
 
     <mat-datepicker-toggle id="no-calendar"></mat-datepicker-toggle>
   `,
-  imports: [MatNativeDateModule, MatDatepickerModule],
+  imports: [MatDatepickerModule],
 })
 class DatepickerToggleHarnessTest {
   touchUi = false;

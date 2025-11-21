@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
-import {ElementRef} from '@angular/core';
+import {DOCUMENT, ElementRef, Injector} from '@angular/core';
 import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '../../scrolling';
 import {
   ConnectedOverlayPositionChange,
@@ -15,13 +15,14 @@ import {
   ScrollingVisibility,
   validateHorizontalPosition,
   validateVerticalPosition,
+  ViewportMargin,
 } from './connected-position';
 import {Observable, Subscription, Subject} from 'rxjs';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
 import {coerceCssPixelValue, coerceArray} from '../../coercion';
 import {Platform} from '../../platform';
 import {OverlayContainer} from '../overlay-container';
-import {OverlayRef} from '../overlay-ref';
+import {isElement, OverlayRef} from '../overlay-ref';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -43,6 +44,30 @@ export type FlexibleConnectedPositionStrategyOrigin =
 
 /** Equivalent of `DOMRect` without some of the properties we don't care about. */
 type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
+
+/**
+ * Creates a flexible position strategy.
+ * @param injector Injector used to resolve dependnecies for the position strategy.
+ * @param origin Origin relative to which to position the overlay.
+ */
+export function createFlexibleConnectedPositionStrategy(
+  injector: Injector,
+  origin: FlexibleConnectedPositionStrategyOrigin,
+): FlexibleConnectedPositionStrategy {
+  return new FlexibleConnectedPositionStrategy(
+    origin,
+    injector.get(ViewportRuler),
+    injector.get(DOCUMENT),
+    injector.get(Platform),
+    injector.get(OverlayContainer),
+  );
+}
+
+/** Supported locations in the DOM for connected overlays. */
+export type FlexibleOverlayPopoverLocation =
+  | 'global'
+  | 'inline'
+  | {type: 'parent'; element: Element};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -88,8 +113,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Cached container dimensions */
   private _containerRect: Dimensions;
 
-  /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
-  private _viewportMargin = 0;
+  /** Amount of space that must be maintained between the overlay and the right edge of the viewport. */
+  private _viewportMargin: ViewportMargin = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
   private _scrollables: CdkScrollable[] = [];
@@ -138,6 +163,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
   private _previousPushAmount: {x: number; y: number} | null;
+
+  /** Configures where in the DOM to insert the overlay when popovers are enabled. */
+  private _popoverLocation: FlexibleOverlayPopoverLocation = 'global';
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
@@ -411,10 +439,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Sets a minimum distance the overlay may be positioned to the edge of the viewport.
-   * @param margin Required margin between the overlay and the viewport edge in pixels.
+   * Sets a minimum distance the overlay may be positioned from the bottom edge of the viewport.
+   * @param margin Required margin between the overlay and the viewport.
+   * It can be a number to be applied to all directions, or an object to supply different values for each direction.
    */
-  withViewportMargin(margin: number): this {
+  withViewportMargin(margin: ViewportMargin): this {
     this._viewportMargin = margin;
     return this;
   }
@@ -489,6 +518,36 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   withTransformOriginOn(selector: string): this {
     this._transformOriginSelector = selector;
     return this;
+  }
+
+  /**
+   * Determines where in the DOM the overlay will be rendered when popover mode is enabled.
+   * @param location Configures the location in the DOM. Supports the following values:
+   *  - `global` - The default which inserts the overlay inside the overlay container.
+   *  - `inline` - Inserts the overlay next to the trigger.
+   *  - {type: 'parent', element: element} - Inserts the overlay to a child of a custom parent
+   *  element.
+   */
+  withPopoverLocation(location: FlexibleOverlayPopoverLocation): this {
+    this._popoverLocation = location;
+    return this;
+  }
+
+  /** @docs-private */
+  getPopoverInsertionPoint(): Element | null | {type: 'parent'; element: Element} {
+    if (this._popoverLocation === 'global') {
+      return null;
+    } else if (this._popoverLocation !== 'inline') {
+      return this._popoverLocation;
+    }
+
+    if (this._origin instanceof ElementRef) {
+      return this._origin.nativeElement;
+    } else if (isElement(this._origin)) {
+      return this._origin;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -682,13 +741,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (overlay.width <= viewport.width) {
       pushX = overflowLeft || -overflowRight;
     } else {
-      pushX = start.x < this._viewportMargin ? viewport.left - scrollPosition.left - start.x : 0;
+      pushX =
+        start.x < this._getViewportMarginStart()
+          ? viewport.left - scrollPosition.left - start.x
+          : 0;
     }
 
     if (overlay.height <= viewport.height) {
       pushY = overflowTop || -overflowBottom;
     } else {
-      pushY = start.y < this._viewportMargin ? viewport.top - scrollPosition.top - start.y : 0;
+      pushY =
+        start.y < this._getViewportMarginTop() ? viewport.top - scrollPosition.top - start.y : 0;
     }
 
     this._previousPushAmount = {x: pushX, y: pushY};
@@ -777,13 +840,14 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (position.overlayY === 'top') {
       // Overlay is opening "downward" and thus is bound by the bottom viewport edge.
       top = origin.y;
-      height = viewport.height - top + this._viewportMargin;
+      height = viewport.height - top + this._getViewportMarginBottom();
     } else if (position.overlayY === 'bottom') {
       // Overlay is opening "upward" and thus is bound by the top viewport edge. We need to add
       // the viewport margin back in, because the viewport rect is narrowed down to remove the
       // margin, whereas the `origin` position is calculated based on its `DOMRect`.
-      bottom = viewport.height - origin.y + this._viewportMargin * 2;
-      height = viewport.height - bottom + this._viewportMargin;
+      bottom =
+        viewport.height - origin.y + this._getViewportMarginTop() + this._getViewportMarginBottom();
+      height = viewport.height - bottom + this._getViewportMarginTop();
     } else {
       // If neither top nor bottom, it means that the overlay is vertically centered on the
       // origin point. Note that we want the position relative to the viewport, rather than
@@ -815,11 +879,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     let width: number, left: number, right: number;
 
     if (isBoundedByLeftViewportEdge) {
-      right = viewport.width - origin.x + this._viewportMargin * 2;
-      width = origin.x - this._viewportMargin;
+      right =
+        viewport.width - origin.x + this._getViewportMarginStart() + this._getViewportMarginEnd();
+      width = origin.x - this._getViewportMarginStart();
     } else if (isBoundedByRightViewportEdge) {
       left = origin.x;
-      width = viewport.right - origin.x;
+      width = viewport.right - origin.x - this._getViewportMarginEnd();
     } else {
       // If neither start nor end, it means that the overlay is horizontally centered on the
       // origin point. Note that we want the position relative to the viewport, rather than
@@ -863,18 +928,19 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
-      styles.bottom = styles.right = styles.maxHeight = styles.maxWidth = '';
+      styles.bottom = styles.right = 'auto';
+      styles.maxHeight = styles.maxWidth = '';
       styles.width = styles.height = '100%';
     } else {
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
 
-      styles.height = coerceCssPixelValue(boundingBoxRect.height);
-      styles.top = coerceCssPixelValue(boundingBoxRect.top);
-      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom);
       styles.width = coerceCssPixelValue(boundingBoxRect.width);
-      styles.left = coerceCssPixelValue(boundingBoxRect.left);
-      styles.right = coerceCssPixelValue(boundingBoxRect.right);
+      styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      styles.top = coerceCssPixelValue(boundingBoxRect.top) || 'auto';
+      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom) || 'auto';
+      styles.left = coerceCssPixelValue(boundingBoxRect.left) || 'auto';
+      styles.right = coerceCssPixelValue(boundingBoxRect.right) || 'auto';
 
       // Push the pane content towards the proper direction.
       if (position.overlayX === 'center') {
@@ -1098,12 +1164,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     return {
-      top: scrollPosition.top + this._viewportMargin,
-      left: scrollPosition.left + this._viewportMargin,
-      right: scrollPosition.left + width - this._viewportMargin,
-      bottom: scrollPosition.top + height - this._viewportMargin,
-      width: width - 2 * this._viewportMargin,
-      height: height - 2 * this._viewportMargin,
+      top: scrollPosition.top + this._getViewportMarginTop(),
+      left: scrollPosition.left + this._getViewportMarginStart(),
+      right: scrollPosition.left + width - this._getViewportMarginEnd(),
+      bottom: scrollPosition.top + height - this._getViewportMarginBottom(),
+      width: width - this._getViewportMarginStart() - this._getViewportMarginEnd(),
+      height: height - this._getViewportMarginTop() - this._getViewportMarginBottom(),
     };
   }
 
@@ -1166,6 +1232,42 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       });
       this._appliedPanelClasses = [];
     }
+  }
+
+  /**
+   * Returns either the _viewportMargin directly (if it is a number) or its 'start' value.
+   * @private
+   */
+  private _getViewportMarginStart(): number {
+    if (typeof this._viewportMargin === 'number') return this._viewportMargin;
+    return this._viewportMargin?.start ?? 0;
+  }
+
+  /**
+   * Returns either the _viewportMargin directly (if it is a number) or its 'end' value.
+   * @private
+   */
+  private _getViewportMarginEnd(): number {
+    if (typeof this._viewportMargin === 'number') return this._viewportMargin;
+    return this._viewportMargin?.end ?? 0;
+  }
+
+  /**
+   * Returns either the _viewportMargin directly (if it is a number) or its 'top' value.
+   * @private
+   */
+  private _getViewportMarginTop(): number {
+    if (typeof this._viewportMargin === 'number') return this._viewportMargin;
+    return this._viewportMargin?.top ?? 0;
+  }
+
+  /**
+   * Returns either the _viewportMargin directly (if it is a number) or its 'bottom' value.
+   * @private
+   */
+  private _getViewportMarginBottom(): number {
+    if (typeof this._viewportMargin === 'number') return this._viewportMargin;
+    return this._viewportMargin?.bottom ?? 0;
   }
 
   /** Returns the DOMRect of the current origin. */

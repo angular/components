@@ -1,11 +1,11 @@
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load(
     "//tools:defaults.bzl",
     "ng_package",
+    "ng_project",
     "ng_web_test_suite",
     "sass_binary",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -64,10 +64,10 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":youtube-player_legacy"],
+    deps = [":youtube-player"],
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = ["fake-youtube-player.ts"] + glob(

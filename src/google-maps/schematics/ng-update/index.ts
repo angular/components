@@ -6,5 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/** Entry point for the migration schematics with target of Angular Material v20 */
-export function updateToV20(): void {}
+import {Rule} from '@angular-devkit/schematics';
+
+/** Entry point for the migration schematics with target of Angular Material v21 */
+export function updateToV21(): Rule {
+  return () => {};
+}

@@ -119,7 +119,7 @@ export abstract class MatPaginatedTabHeader
   private _scrollDistanceChanged: boolean;
 
   /** Used to manage focus between the tabs. */
-  private _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem>;
+  protected _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem> | undefined;
 
   /** Cached text content of the header. */
   private _currentTextContent: string;
@@ -218,7 +218,9 @@ export abstract class MatPaginatedTabHeader
       // Allow focus to land on disabled tabs, as per https://w3c.github.io/aria-practices/#kbd_disabled_controls
       .skipPredicate(() => false);
 
-    this._keyManager.updateActiveItem(this._selectedIndex);
+    // Fall back to the first link as being active if there isn't a selected one.
+    // This is relevant primarily for the tab nav bar.
+    this._keyManager.updateActiveItem(Math.max(this._selectedIndex, 0));
 
     // Note: We do not need to realign after the first render for proper functioning of the tabs
     // the resize events above should fire when we first start observing the element. However,
@@ -243,7 +245,7 @@ export abstract class MatPaginatedTabHeader
             realign();
           });
         });
-        this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
+        this._keyManager?.withHorizontalOrientation(this._getLayoutDirection());
       });
 
     // If there is a change in the focus key manager we need to emit the `indexFocused`
@@ -339,7 +341,7 @@ export abstract class MatPaginatedTabHeader
         }
         break;
       default:
-        this._keyManager.onKeydown(event);
+        this._keyManager?.onKeydown(event);
     }
   }
 

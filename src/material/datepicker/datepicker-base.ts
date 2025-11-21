@@ -21,15 +21,19 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
+  createBlockScrollStrategy,
+  createFlexibleConnectedPositionStrategy,
+  createGlobalPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   afterNextRender,
   AfterViewInit,
@@ -54,6 +58,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  DOCUMENT,
 } from '@angular/core';
 import {MatButton} from '../button';
 import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
@@ -81,37 +86,17 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
-}
 
 /** Possible positions for the datepicker dropdown along the X axis. */
 export type DatepickerDropdownPositionX = 'start' | 'end';
 
 /** Possible positions for the datepicker dropdown along the Y axis. */
 export type DatepickerDropdownPositionY = 'above' | 'below';
-
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-  provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
-};
 
 /**
  * Component used as the content for the datepicker overlay. We use this instead of using
@@ -159,10 +144,10 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   /**
    * Theme color of the internal calendar. This API is supported in M2 themes
-   * only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/datepicker/styling.
+   * only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/datepicker/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette;
 
@@ -340,13 +325,13 @@ export interface MatDatepickerControl<D> {
   min: D | null;
   max: D | null;
   disabled: boolean;
-  dateFilter: DateFilterFn<D>;
+  dateFilter: DateFilterFn<D> | null | undefined;
   getConnectedOverlayOrigin(): ElementRef;
   getOverlayLabelId(): string | null;
   stateChanges: Observable<void>;
 }
 
-/** A datepicker that can be attached to a {@link MatDatepickerControl}. */
+/** A datepicker that can be attached to a `MatDatepickerControl`. */
 export interface MatDatepickerPanel<
   C extends MatDatepickerControl<D>,
   S,
@@ -356,10 +341,10 @@ export interface MatDatepickerPanel<
   closedStream: EventEmitter<void>;
   /**
    * Color palette to use on the datepicker's calendar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/datepicker/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/datepicker/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   color: ThemePalette;
   /** The input element the datepicker is associated with. */
@@ -389,7 +374,7 @@ export abstract class MatDatepickerBase<
   >
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dir = inject(Directionality, {optional: true});
@@ -420,10 +405,10 @@ export abstract class MatDatepickerBase<
 
   /**
    * Theme color of the datepicker's calendar. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/datepicker/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/datepicker/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get color(): ThemePalette {
@@ -539,7 +524,7 @@ export abstract class MatDatepickerBase<
     return this.datepickerInput && this.datepickerInput.max;
   }
 
-  _getDateFilter(): DateFilterFn<D> {
+  _getDateFilter(): DateFilterFn<D> | null | undefined {
     return this.datepickerInput && this.datepickerInput.dateFilter;
   }
 
@@ -563,8 +548,6 @@ export abstract class MatDatepickerBase<
 
   /** Emits when the datepicker's state changes. */
   readonly stateChanges = new Subject<void>();
-
-  private _injector = inject(Injector);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -759,7 +742,8 @@ export abstract class MatDatepickerBase<
       MatDatepickerContent,
       this._viewContainerRef,
     );
-    const overlayRef = (this._overlayRef = this._overlay.create(
+    const overlayRef = (this._overlayRef = createOverlayRef(
+      this._injector,
       new OverlayConfig({
         positionStrategy: isDialog ? this._getDialogStrategy() : this._getDropdownStrategy(),
         hasBackdrop: true,
@@ -768,7 +752,9 @@ export abstract class MatDatepickerBase<
           this._backdropHarnessClass,
         ],
         direction: this._dir || 'ltr',
-        scrollStrategy: isDialog ? this._overlay.scrollStrategies.block() : this._scrollStrategy(),
+        scrollStrategy: isDialog
+          ? createBlockScrollStrategy(this._injector)
+          : this._scrollStrategy(),
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
         disableAnimations: this._animationsDisabled,
       }),
@@ -824,14 +810,15 @@ export abstract class MatDatepickerBase<
 
   /** Gets a position strategy that will open the calendar as a dropdown. */
   private _getDialogStrategy() {
-    return this._overlay.position().global().centerHorizontally().centerVertically();
+    return createGlobalPositionStrategy(this._injector).centerHorizontally().centerVertically();
   }
 
   /** Gets a position strategy that will open the calendar as a dropdown. */
   private _getDropdownStrategy() {
-    const strategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this.datepickerInput.getConnectedOverlayOrigin())
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this.datepickerInput.getConnectedOverlayOrigin(),
+    )
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)
