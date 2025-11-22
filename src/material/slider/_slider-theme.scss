@@ -79,7 +79,7 @@
     @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
-/// Outputs all (base, color, typography, and density) theme styles for the mat-option.
+/// Outputs all (base, color, typography, and density) theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin theme($theme, $color-variant: null) {
