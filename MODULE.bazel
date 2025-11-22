@@ -4,11 +4,11 @@ module(
     name = "components",
 )
 
-bazel_dep(name = "yq.bzl", version = "0.3.1")
-bazel_dep(name = "rules_nodejs", version = "6.6.0")
-bazel_dep(name = "aspect_rules_js", version = "2.8.0")
+bazel_dep(name = "yq.bzl", version = "0.3.2")
+bazel_dep(name = "rules_nodejs", version = "6.6.2")
+bazel_dep(name = "aspect_rules_js", version = "2.8.2")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
-bazel_dep(name = "tar.bzl", version = "0.6.0")
+bazel_dep(name = "tar.bzl", version = "0.7.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
 bazel_dep(name = "aspect_rules_esbuild", version = "0.24.0")
 bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
@@ -18,7 +18,7 @@ bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "6a699bf3e896690e2923cf3ade29fbd4e492e366",
+    commit = "f066f614451374721fac787fb1f0dbbd818d50d4",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
