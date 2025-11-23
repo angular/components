@@ -45,6 +45,15 @@ mat-icon {
   }
 }
 
+// Firefox excludes `user-select: none` elements from the copied text which ended up inserting a
+// stray line break whenever mat-icon was copied inside a table cell. Allow selection in Firefox
+// to keep the clipboard content intact. See: https://github.com/angular/components/issues/32289
+@supports (-moz-appearance: none) {
+  .mat-icon {
+    user-select: auto;
+  }
+}
+
 // Icons that will be mirrored in RTL.
 [dir='rtl'] .mat-icon-rtl-mirror {
   transform: scale(-1, 1);
