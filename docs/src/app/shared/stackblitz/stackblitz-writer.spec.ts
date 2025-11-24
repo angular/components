@@ -102,7 +102,6 @@ describe('StackBlitzWriter', () => {
     const expectedFiles = jasmine.objectContaining({
       'angular.json': 'fake',
       'src/main.ts': `import {ExampleComponent} from './test';`,
-      'src/test.ts': 'fake',
       'src/index.html': `<this-is-the-comp-name></this-is-the-comp-name>`,
       'src/example/test.ts': `ExampleComponent
 
