@@ -79,10 +79,8 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "main": "src/test.ts",
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "css",
             "assets": ["src/assets"],
             "styles": ["src/styles.css", "@angular/material/prebuilt-themes/azure-blue.css"],
