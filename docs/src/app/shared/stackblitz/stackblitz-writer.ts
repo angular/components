@@ -40,7 +40,6 @@ const TEMPLATE_PATH = '/assets/stackblitz/';
  */
 export const TEMPLATE_FILES = [
   'angular.json',
-  'karma.conf.js',
   'package.json',
   'package-lock.json',
   'tsconfig.app.json',
@@ -49,7 +48,6 @@ export const TEMPLATE_FILES = [
   'src/index.html',
   'src/main.ts',
   'src/styles.css',
-  'src/test.ts',
 ];
 
 /**
