@@ -91,6 +91,9 @@ export class MenuPattern<V> {
   /** Whether the menu has received focus. */
   hasBeenFocused = signal(false);
 
+  /** Whether the menu trigger has been hovered. */
+  hasBeenHovered = signal(false);
+
   /** Timeout used to open sub-menus on hover. */
   _openTimeout: any;
 
@@ -195,6 +198,7 @@ export class MenuPattern<V> {
       return;
     }
 
+    this.hasBeenHovered.set(true);
     const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
 
     if (!item) {
