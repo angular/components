@@ -76,7 +76,7 @@ import {
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
 describe('MatSelect', () => {
-  let overlayContainerElement: HTMLElement;
+  const supportsPopover = 'showPopover' in document.body;
   let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
@@ -94,9 +94,22 @@ describe('MatSelect', () => {
         },
       ],
     });
-
-    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
   });
+
+  function getOverlayHost(fixture: ComponentFixture<unknown>): HTMLElement | null {
+    return supportsPopover
+      ? fixture.nativeElement.querySelector('.cdk-overlay-popover')
+      : TestBed.inject(OverlayContainer)
+          .getContainerElement()
+          .querySelector('.cdk-overlay-connected-position-bounding-box');
+  }
+
+  function getBackdrop(fixture: ComponentFixture<unknown>): HTMLElement | null {
+    const parent = supportsPopover
+      ? fixture.nativeElement
+      : TestBed.inject(OverlayContainer).getContainerElement();
+    return parent.querySelector('.cdk-overlay-backdrop');
+  }
 
   describe('core', () => {
     describe('accessibility', () => {
@@ -414,7 +427,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          (overlayContainerElement.querySelectorAll('mat-option')[3] as HTMLElement).click();
+          (getOverlayHost(fixture)?.querySelectorAll('mat-option')[3] as HTMLElement).click();
           fixture.detectChanges();
           flush();
 
@@ -769,7 +782,7 @@ describe('MatSelect', () => {
           multiFixture.componentInstance.select.open();
           multiFixture.detectChanges();
 
-          const options = overlayContainerElement.querySelectorAll(
+          const options = getOverlayHost(multiFixture)!.querySelectorAll(
             'mat-option',
           ) as NodeListOf<HTMLElement>;
 
@@ -982,7 +995,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          const options = overlayContainerElement.querySelectorAll('mat-option');
+          const options = getOverlayHost(fixture)!.querySelectorAll('mat-option');
 
           expect(host.getAttribute('aria-activedescendant'))
             .withContext('Expected aria-activedescendant to match the active option.')
@@ -1004,7 +1017,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          const options = overlayContainerElement.querySelectorAll('mat-option');
+          const options = getOverlayHost(fixture)!.querySelectorAll('mat-option');
 
           expect(host.getAttribute('aria-activedescendant')).toBe(options[0].id);
 
@@ -1028,7 +1041,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          const options = overlayContainerElement.querySelectorAll('mat-option');
+          const options = getOverlayHost(fixture)!.querySelectorAll('mat-option');
 
           expect(host.getAttribute('aria-activedescendant')).toBe(options[0].id);
 
@@ -1055,7 +1068,7 @@ describe('MatSelect', () => {
           select.blur();
           expect(document.activeElement).not.toBe(select, 'Expected trigger not to be focused.');
 
-          const option = overlayContainerElement.querySelector('mat-option')! as HTMLElement;
+          const option = getOverlayHost(multiFixture)!.querySelector('mat-option')! as HTMLElement;
           option.click();
           multiFixture.detectChanges();
 
@@ -1154,7 +1167,9 @@ describe('MatSelect', () => {
           trigger.click();
           fixture.detectChanges();
 
-          options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+          options = Array.from<HTMLElement>(
+            getOverlayHost(fixture)!.querySelectorAll('mat-option'),
+          );
         });
 
         it('should set the role of mat-option to option', fakeAsync(() => {
@@ -1202,7 +1217,9 @@ describe('MatSelect', () => {
           trigger.click();
           multiFixture.detectChanges();
 
-          options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+          options = Array.from<HTMLElement>(
+            getOverlayHost(multiFixture)!.querySelectorAll('mat-option'),
+          );
 
           expect(
             options.every(
@@ -1340,7 +1357,9 @@ describe('MatSelect', () => {
           multiFixture.detectChanges();
           flush();
 
-          options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+          options = Array.from<HTMLElement>(
+            getOverlayHost(multiFixture)!.querySelectorAll('mat-option'),
+          );
           const pseudoCheckboxes = options
             .map(option => option.querySelector('.mat-pseudo-checkbox.mat-pseudo-checkbox-full'))
             .filter((x): x is HTMLElement => !!x);
@@ -1366,7 +1385,7 @@ describe('MatSelect', () => {
           trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
           trigger.click();
           fixture.detectChanges();
-          groups = overlayContainerElement.querySelectorAll(
+          groups = getOverlayHost(fixture)!.querySelectorAll(
             'mat-optgroup',
           ) as NodeListOf<HTMLElement>;
         });
@@ -1431,10 +1450,11 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
+        const overlay = getOverlayHost(fixture)!;
         expect(fixture.componentInstance.select.panelOpen).toBe(true);
-        expect(overlayContainerElement.textContent).toContain('Steak');
-        expect(overlayContainerElement.textContent).toContain('Pizza');
-        expect(overlayContainerElement.textContent).toContain('Tacos');
+        expect(overlay.textContent).toContain('Steak');
+        expect(overlay.textContent).toContain('Pizza');
+        expect(overlay.textContent).toContain('Tacos');
       }));
 
       it('should close the panel when an item is clicked', fakeAsync(() => {
@@ -1442,12 +1462,12 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
 
-        expect(overlayContainerElement.textContent).toEqual('');
+        expect(getOverlayHost(fixture)!).toBeFalsy();
         expect(fixture.componentInstance.select.panelOpen).toBe(false);
       }));
 
@@ -1456,15 +1476,11 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const backdrop = overlayContainerElement.querySelector(
-          '.cdk-overlay-backdrop',
-        ) as HTMLElement;
-
-        backdrop.click();
+        getBackdrop(fixture)!.click();
         fixture.detectChanges();
         flush();
 
-        expect(overlayContainerElement.textContent).toEqual('');
+        expect(getOverlayHost(fixture)!).toBeFalsy();
         expect(fixture.componentInstance.select.panelOpen).toBe(false);
       }));
 
@@ -1475,7 +1491,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const pane = getOverlayHost(fixture)?.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.width).toBe('200px');
       }));
 
@@ -1486,7 +1502,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const pane = getOverlayHost(fixture)?.querySelector('.cdk-overlay-pane') as HTMLElement;
         const initialWidth = parseInt(pane.style.width || '0');
 
         expect(initialWidth).toBeGreaterThan(0);
@@ -1509,7 +1525,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const pane = getOverlayHost(fixture)?.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.width).toBe('42px');
       }));
 
@@ -1522,7 +1538,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const pane = getOverlayHost(fixture)?.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.width).toBeFalsy();
       }));
 
@@ -1535,7 +1551,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const pane = getOverlayHost(fixture)?.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.width).toBeFalsy();
       }));
 
@@ -1590,7 +1606,7 @@ describe('MatSelect', () => {
 
         expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
-        const panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')!;
+        const panel = getOverlayHost(fixture)!.querySelector('.mat-mdc-select-panel')!;
         dispatchKeyboardEvent(panel, 'keydown', TAB);
         fixture.detectChanges();
         flush();
@@ -1663,7 +1679,9 @@ describe('MatSelect', () => {
         trigger.click();
         fixture.detectChanges();
 
-        const panel = overlayContainerElement.querySelector('.mat-mdc-select-panel') as HTMLElement;
+        const panel = getOverlayHost(fixture)!.querySelector(
+          '.mat-mdc-select-panel',
+        ) as HTMLElement;
 
         expect(panel.classList).toContain('custom-one');
         expect(panel.classList).toContain('custom-two');
@@ -1694,7 +1712,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option')!;
+        const option = getOverlayHost(fixture)!.querySelector('mat-option')!;
 
         dispatchFakeEvent(option, 'mousedown');
         dispatchFakeEvent(option, 'mouseup');
@@ -1711,7 +1729,7 @@ describe('MatSelect', () => {
         trigger.click();
         groupFixture.detectChanges();
 
-        expect(document.querySelectorAll('.cdk-overlay-container mat-option').length)
+        expect(getOverlayHost(groupFixture)!.querySelectorAll('mat-option').length)
           .withContext('Expected at least one option to be rendered.')
           .toBeGreaterThan(0);
       });
@@ -1804,7 +1822,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        let option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        let option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -1813,7 +1831,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
 
         expect(option.classList).toContain('mdc-list-item--selected');
         expect(fixture.componentInstance.options.first.selected).toBe(true);
@@ -1829,7 +1847,7 @@ describe('MatSelect', () => {
 
         const optionInstances = fixture.componentInstance.options.toArray();
         const optionNodes: NodeListOf<HTMLElement> =
-          overlayContainerElement.querySelectorAll('mat-option');
+          getOverlayHost(fixture)!.querySelectorAll('mat-option');
 
         optionInstances[1].select();
         fixture.detectChanges();
@@ -1844,7 +1862,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        let options = overlayContainerElement.querySelectorAll(
+        let options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
 
@@ -1856,7 +1874,9 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+        options = getOverlayHost(fixture)!.querySelectorAll(
+          'mat-option',
+        ) as NodeListOf<HTMLElement>;
         expect(options[1].classList).not.toContain('mdc-list-item--selected');
         expect(options[2].classList).not.toContain('mdc-list-item--selected');
 
@@ -1873,7 +1893,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        let options = overlayContainerElement.querySelectorAll(
+        let options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
 
@@ -1888,7 +1908,9 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+        options = getOverlayHost(fixture)!.querySelectorAll(
+          'mat-option',
+        ) as NodeListOf<HTMLElement>;
 
         expect(options[0].classList).not.toContain(
           'mdc-list-item--selected',
@@ -1915,7 +1937,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        let firstOption = overlayContainerElement.querySelectorAll('mat-option')[0] as HTMLElement;
+        let firstOption = getOverlayHost(fixture)!.querySelectorAll('mat-option')[0] as HTMLElement;
 
         firstOption.click();
         fixture.detectChanges();
@@ -1939,7 +1961,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -1974,7 +1996,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         options[8].click();
@@ -2018,7 +2040,7 @@ describe('MatSelect', () => {
         trigger.click();
         fixture.detectChanges();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         options[2].click();
@@ -2037,7 +2059,7 @@ describe('MatSelect', () => {
         groupFixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement.click();
         groupFixture.detectChanges();
 
-        const disabledGroup = overlayContainerElement.querySelectorAll('mat-optgroup')[1];
+        const disabledGroup = getOverlayHost(groupFixture)!.querySelectorAll('mat-optgroup')[1];
         const options = disabledGroup.querySelectorAll('mat-option');
 
         (options[0] as HTMLElement).click();
@@ -2059,7 +2081,7 @@ describe('MatSelect', () => {
 
         const spy = jasmine.createSpy('option selection spy');
         const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -2088,7 +2110,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -2106,7 +2128,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+          const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
           option.click();
           fixture.detectChanges();
           flush();
@@ -2169,7 +2191,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         expect(options[1].classList)
@@ -2193,7 +2215,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         expect(options[1].classList)
@@ -2210,7 +2232,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -2240,7 +2262,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         expect(options[1].classList).not.toContain(
@@ -2269,7 +2291,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const options = overlayContainerElement.querySelectorAll(
+        const options = getOverlayHost(fixture)!.querySelectorAll(
           'mat-option',
         ) as NodeListOf<HTMLElement>;
         expect(options[1].classList).not.toContain(
@@ -2292,10 +2314,7 @@ describe('MatSelect', () => {
           .withContext(`Expected the control to stay untouched when menu opened.`)
           .toEqual(false);
 
-        const backdrop = overlayContainerElement.querySelector(
-          '.cdk-overlay-backdrop',
-        ) as HTMLElement;
-        backdrop.click();
+        getBackdrop(fixture)!.click();
         dispatchFakeEvent(trigger, 'blur');
         fixture.detectChanges();
         flush();
@@ -2350,7 +2369,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
         option.click();
         fixture.detectChanges();
         flush();
@@ -2417,9 +2436,9 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        expect(overlayContainerElement.textContent)
+        expect(getOverlayHost(fixture)?.querySelector('.mat-mdc-select-panel'))
           .withContext(`Expected select panel to stay closed.`)
-          .toEqual('');
+          .toBeFalsy();
         expect(fixture.componentInstance.select.panelOpen)
           .withContext(`Expected select panelOpen property to stay false.`)
           .toBe(false);
@@ -2434,7 +2453,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        expect(overlayContainerElement.textContent)
+        expect(getOverlayHost(fixture)?.querySelector('.mat-mdc-select-panel')?.textContent)
           .withContext(`Expected select panel to open normally on re-enabled control`)
           .toContain('Steak');
         expect(fixture.componentInstance.select.panelOpen)
@@ -2478,7 +2497,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
 
         host = fixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-        panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')! as HTMLElement;
+        panel = getOverlayHost(fixture)!.querySelector('.mat-mdc-select-panel')! as HTMLElement;
       }));
 
       it('should not scroll to options that are completely in the view', () => {
@@ -2527,7 +2546,9 @@ describe('MatSelect', () => {
         flush();
 
         host = groupFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-        panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')! as HTMLElement;
+        panel = getOverlayHost(groupFixture)!.querySelector(
+          '.mat-mdc-select-panel',
+        )! as HTMLElement;
 
         for (let i = 0; i < 8; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
@@ -2649,7 +2670,9 @@ describe('MatSelect', () => {
         flush();
 
         host = groupFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-        panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')! as HTMLElement;
+        panel = getOverlayHost(groupFixture)!.querySelector(
+          '.mat-mdc-select-panel',
+        )! as HTMLElement;
 
         for (let i = 0; i < 5; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
@@ -2703,7 +2726,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
 
       expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
     });
@@ -2712,7 +2735,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+      const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
 
       option.click();
       option.click();
@@ -2750,9 +2773,9 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      expect(overlayContainerElement.textContent)
+      expect(getOverlayHost(fixture)?.querySelector('.mat-mdc-select-panel'))
         .withContext(`Expected select panel to stay closed.`)
-        .toEqual('');
+        .toBeFalsy();
       expect(fixture.componentInstance.select.panelOpen)
         .withContext(`Expected select panelOpen property to stay false.`)
         .toBe(false);
@@ -2771,7 +2794,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      expect(overlayContainerElement.textContent)
+      expect(getOverlayHost(fixture)?.querySelector('.mat-mdc-select-panel')?.textContent)
         .withContext(`Expected select panel to open normally on re-enabled control`)
         .toContain('Steak');
       expect(fixture.componentInstance.select.panelOpen)
@@ -2802,13 +2825,13 @@ describe('MatSelect', () => {
         .withContext(`Expected trigger to be populated by the control's initial value.`)
         .toContain('Pizza');
 
-      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const pane = getOverlayHost(fixture)!.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.style.width).toEqual('300px');
 
       expect(fixture.componentInstance.select.panelOpen).toBe(true);
-      expect(overlayContainerElement.textContent).toContain('Steak');
-      expect(overlayContainerElement.textContent).toContain('Pizza');
-      expect(overlayContainerElement.textContent).toContain('Tacos');
+      expect(pane.textContent).toContain('Steak');
+      expect(pane.textContent).toContain('Pizza');
+      expect(pane.textContent).toContain('Tacos');
     }));
   });
 
@@ -2826,7 +2849,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      options = getOverlayHost(fixture)!.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
     }));
 
     it('should set the option id', fakeAsync(() => {
@@ -2837,10 +2860,7 @@ describe('MatSelect', () => {
         .toContain('mat-option');
       expect(options[0].id).not.toEqual(options[1].id, `Expected option IDs to be unique.`);
 
-      const backdrop = overlayContainerElement.querySelector(
-        '.cdk-overlay-backdrop',
-      ) as HTMLElement;
-      backdrop.click();
+      getBackdrop(fixture)!.click();
       fixture.detectChanges();
       flush();
 
@@ -2848,7 +2868,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      options = getOverlayHost(fixture)!.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options[0].id)
         .withContext(`Expected option ID to have the correct prefix.`)
         .toContain('mat-option');
@@ -2963,7 +2983,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const pane = getOverlayHost(fixture)!.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.style.width).toBe('300px');
     }));
   });
@@ -2979,7 +2999,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const pane = getOverlayHost(fixture)!.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(parseInt(pane.style.width as string)).toBeGreaterThan(0);
     }));
   });
@@ -3000,7 +3020,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const panel = overlayContainerElement.querySelector('.mat-mdc-select-panel')! as HTMLElement;
+      const panel = getOverlayHost(fixture)!.querySelector('.mat-mdc-select-panel')! as HTMLElement;
       expect(panel.classList).toContain('mat-warn');
     });
   });
@@ -3329,7 +3349,7 @@ describe('MatSelect', () => {
       expect(fixture.componentInstance.options.first.selected)
         .withContext('Expected first option to be selected')
         .toBe(true);
-      expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
+      expect(getOverlayHost(fixture)!.querySelectorAll('mat-option')[0].classList)
         .withContext('Expected first option to be selected')
         .toContain('mdc-list-item--selected');
     }));
@@ -3409,7 +3429,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      options = getOverlayHost(fixture)!.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       options[0].click();
       fixture.detectChanges();
       flush();
@@ -3504,7 +3524,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      options = getOverlayHost(fixture)!.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       options[0].click();
       fixture.detectChanges();
       flush();
@@ -3590,7 +3610,7 @@ describe('MatSelect', () => {
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
       trigger.click();
       fixture.detectChanges();
-      options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+      options = Array.from<HTMLElement>(getOverlayHost(fixture)!.querySelectorAll('mat-option'));
     });
 
     it('should set the select value', fakeAsync(() => {
@@ -3648,7 +3668,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3660,7 +3680,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelectorAll('mat-option')[2] as HTMLElement).click();
+      (getOverlayHost(fixture)!.querySelectorAll('mat-option')[2] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3684,7 +3704,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const option = overlayContainerElement.querySelectorAll('mat-option')[2];
+      const option = getOverlayHost(fixture)!.querySelectorAll('mat-option')[2];
 
       expect(option.classList).toContain('mdc-list-item--selected');
       expect(fixture.componentInstance.select.value).toBe('sandwich-2');
@@ -3702,7 +3722,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3732,7 +3752,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const option = overlayContainerElement.querySelectorAll('mat-option')[1];
+      const option = getOverlayHost(fixture)!.querySelectorAll('mat-option')[1];
 
       expect(option.classList).toContain('mdc-list-item--selected');
       expect(fixture.componentInstance.select.value).toBe('pizza-1');
@@ -3750,7 +3770,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -3784,7 +3804,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3806,7 +3826,7 @@ describe('MatSelect', () => {
       expect(document.activeElement).withContext('Expected trigger to be focused.').toBe(select);
 
       select.blur(); // Blur manually since the programmatic click might not do it.
-      (overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement).click();
+      getBackdrop(fixture)!.click();
       fixture.detectChanges();
       flush();
 
@@ -3827,7 +3847,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3931,7 +3951,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -3957,7 +3977,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
         fixture.detectChanges();
         flush();
 
@@ -3967,7 +3987,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        (getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement).click();
         fixture.detectChanges();
         flush();
 
@@ -4031,7 +4051,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      const panel = getOverlayHost(fixture)!.querySelector('.cdk-overlay-pane')!;
       const paneRect = panel.getBoundingClientRect();
       const formFieldWrapperRect = formFieldWrapper.getBoundingClientRect();
 
@@ -4049,7 +4069,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      const panel = getOverlayHost(fixture)!.querySelector('.cdk-overlay-pane')!;
       const paneRect = panel.getBoundingClientRect();
       const formFieldWrapperRect = formFieldWrapper.getBoundingClientRect();
 
@@ -4076,7 +4096,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4092,7 +4112,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+      const option = getOverlayHost(fixture)?.querySelector('mat-option') as HTMLElement;
 
       option.click();
       fixture.detectChanges();
@@ -4110,7 +4130,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4132,7 +4152,7 @@ describe('MatSelect', () => {
       testInstance.control.setValue(['steak-0', 'eggs-5']);
       fixture.detectChanges();
 
-      const optionNodes = overlayContainerElement.querySelectorAll(
+      const optionNodes = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4149,7 +4169,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4171,7 +4191,7 @@ describe('MatSelect', () => {
 
       expect(testInstance.select.panelOpen).toBe(true);
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4187,7 +4207,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4206,7 +4226,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4230,7 +4250,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4303,7 +4323,7 @@ describe('MatSelect', () => {
 
       expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(0);
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4325,7 +4345,7 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const options = overlayContainerElement.querySelectorAll(
+      const options = getOverlayHost(fixture)!.querySelectorAll(
         'mat-option',
       ) as NodeListOf<HTMLElement>;
 
@@ -4479,7 +4499,9 @@ describe('MatSelect', () => {
       trigger.click();
       fixture.detectChanges();
 
-      const optionNodes = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+      const optionNodes = Array.from<HTMLElement>(
+        getOverlayHost(fixture)!.querySelectorAll('mat-option'),
+      );
       const optionInstances = testInstance.options.toArray();
 
       expect(optionNodes.map(node => node.classList.contains('mdc-list-item--selected'))).toEqual([
@@ -4508,7 +4530,7 @@ describe('MatSelect', () => {
       fixture.detectChanges();
 
       const optionNodes = Array.from<HTMLElement>(
-        overlayContainerElement.querySelectorAll('mat-option'),
+        getOverlayHost(fixture)!.querySelectorAll('mat-option'),
       );
       const optionInstances = testInstance.options.toArray();
 

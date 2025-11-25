@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {TrustedHTML, trustedHTMLFromString} from '@angular/cdk/private';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {
   ErrorHandler,
@@ -19,7 +20,6 @@ import {
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';
 import {catchError, finalize, map, share, tap} from 'rxjs/operators';
-import {TrustedHTML, trustedHTMLFromString} from './trusted-types';
 
 /**
  * Returns an exception to be thrown in the case when attempting to

@@ -476,7 +476,6 @@ describe('Menu Trigger Pattern', () => {
   };
 
   function setupMenu() {
-    TestBed.configureTestingModule({});
     fixture = TestBed.createComponent(MenuTriggerExample);
     fixture.detectChanges();
     getItem('Apple')?.focus();

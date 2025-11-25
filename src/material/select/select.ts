@@ -1476,13 +1476,23 @@ export class MatSelect
    * @docs-private
    */
   onContainerClick(event: MouseEvent) {
-    const target = _getEventTarget(event) as Node | null;
-    const overlayHost = this._overlayDir.overlayRef?.hostElement;
+    const target = _getEventTarget(event) as HTMLElement | null;
 
-    if (!target || !overlayHost || !overlayHost.contains(target)) {
-      this.focus();
-      this.open();
+    // Since the overlay is inside the form field, this handler can fire for interactions
+    // with the container. Note that while it's redundant to select both for the popover
+    // and select panel, we need to do it because it tests the clicks can occur after
+    // the panel was detached from the popover.
+    if (
+      target &&
+      (target.tagName === 'MAT-OPTION' ||
+        target.classList.contains('cdk-overlay-backdrop') ||
+        target.closest('.mat-mdc-select-panel'))
+    ) {
+      return;
     }
+
+    this.focus();
+    this.open();
   }
 
   /**

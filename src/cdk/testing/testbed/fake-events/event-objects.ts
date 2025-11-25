@@ -35,7 +35,7 @@ export function createMouseEvent(
     bubbles: true,
     cancelable: true,
     composed: true, // Required for shadow DOM events.
-    view: window,
+    view: getEventView(),
     detail: 1,
     relatedTarget: null,
     screenX,
@@ -85,7 +85,7 @@ export function createPointerEvent(
     bubbles: true,
     cancelable: true,
     composed: true, // Required for shadow DOM events.
-    view: window,
+    view: getEventView(),
     clientX,
     clientY,
     ...options,
@@ -139,7 +139,7 @@ export function createKeyboardEvent(
     bubbles: true,
     cancelable: true,
     composed: true, // Required for shadow DOM events.
-    view: window,
+    view: getEventView(),
     keyCode,
     key,
     shiftKey: modifiers.shift,
@@ -164,4 +164,14 @@ export function createFakeEvent(type: string, bubbles = false, cancelable = true
  */
 function defineReadonlyEventProperty(event: Event, propertyName: string, value: any) {
   Object.defineProperty(event, propertyName, {get: () => value, configurable: true});
+}
+
+/** Gets the `view` that should be passed to synthetically-created DOM events */
+function getEventView(): Window | undefined {
+  // Passing `window` as the `view` on for events when the environment is using jsdom
+  // ends up throwing `member view is not of type Window` (see #32389). Leave it as
+  // `undefined` for such cases.
+  return typeof window !== 'undefined' && window && !(window as Window & {jsdom?: unknown}).jsdom
+    ? window
+    : undefined;
 }

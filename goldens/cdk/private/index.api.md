@@ -16,6 +16,15 @@ export class _CdkPrivateStyleLoader {
     static ɵprov: i0.ɵɵInjectableDeclaration<_CdkPrivateStyleLoader>;
 }
 
+// @public (undocumented)
+export interface TrustedHTML {
+    // (undocumented)
+    __brand__: 'TrustedHTML';
+}
+
+// @public
+export function trustedHTMLFromString(html: string): TrustedHTML;
+
 // @public
 export class _VisuallyHiddenLoader {
     // (undocumented)
