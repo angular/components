@@ -64,6 +64,7 @@ export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this.keyManager;
 
+    // Now that menu overlays can be inlined, need to verify triggering on own events.
     const element = this._elementRef.nativeElement;
     const target = _getEventTarget(event) as HTMLElement;
     if (target !== element && target.parentElement !== element) {
