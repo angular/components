@@ -1,5 +1,11 @@
 import {BidiModule, Direction} from '../bidi';
-import {CollectionViewer, DataSource} from '../collections';
+import {
+  CollectionViewer,
+  DataSource,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY,
+  _ViewRepeaterItemContext,
+} from '../collections';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -373,6 +379,56 @@ describe('CdkTable', () => {
     const table = fixture.debugElement.query(By.directive(CdkTable))
       .componentInstance as CdkTable<unknown>;
     expect(() => table.renderRows()).not.toThrow();
+  });
+
+  describe('with recycled rows', () => {
+    beforeEach(() => {
+      setupTableTestApp(CdkTableRecycleRowsApp);
+      component = fixture.componentInstance as CdkTableRecycleRowsApp;
+      tableElement = fixture.nativeElement.querySelector('.cdk-table');
+    });
+
+    it('should re-render cached rows when columns change', () => {
+      component.addExtraRows(3);
+      fixture.detectChanges();
+
+      component.setShortList();
+      fixture.detectChanges();
+
+      component.showSingleColumn();
+      fixture.detectChanges();
+
+      const rows = getRows(tableElement);
+      expect(rows.length).toBe(component.dataSource.data.length);
+      rows.forEach(row => {
+        expect(getCells(row).length).toBe(component.displayedColumns.length);
+      });
+    });
+  });
+
+  describe('view repeater cleanup', () => {
+    beforeEach(() => {
+      setupTableTestApp(CdkTableWithCustomStrategyApp);
+      component = fixture.componentInstance as CdkTableWithCustomStrategyApp;
+    });
+
+    it('should detach the view repeater when forcing a re-render', () => {
+      const strategy = TestRecycleViewRepeaterStrategy.lastInstance!;
+      expect(strategy.detachCallCount).toBe(0);
+
+      component.table['_forceRenderDataRows']();
+
+      expect(strategy.detachCallCount).toBe(1);
+    });
+
+    it('should detach the view repeater when the table is destroyed', () => {
+      const destroyFixture = TestBed.createComponent(CdkTableWithCustomStrategyApp);
+      destroyFixture.detectChanges();
+      const strategy = TestRecycleViewRepeaterStrategy.lastInstance!;
+      expect(strategy.detachCallCount).toBe(0);
+      destroyFixture.destroy();
+      expect(strategy.detachCallCount).toBe(1);
+    });
   });
 
   describe('with different data inputs other than data source', () => {
@@ -3174,6 +3230,93 @@ class NativeHtmlTableAppOnPush {
 })
 class WrapNativeHtmlTableAppOnPush {
   dataSource = new FakeDataSource();
+}
+
+@Component({
+  template: `
+    <table cdk-table recycleRows [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <th cdk-header-cell *cdkHeaderCellDef> Column C</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  `,
+  imports: [CdkTableModule],
+})
+class CdkTableRecycleRowsApp {
+  private _longColumnSet = ['column_a', 'column_b', 'column_c'];
+  private _shortColumnSet = ['column_a'];
+  private _shortListLength = 3;
+  dataSource = new FakeDataSource();
+  displayedColumns = this._longColumnSet.slice();
+
+  addExtraRows(count: number) {
+    for (let i = 0; i < count; i++) {
+      this.dataSource.addData();
+    }
+  }
+
+  setShortList() {
+    this.dataSource.data = this.dataSource.data.slice(0, this._shortListLength);
+  }
+
+  showSingleColumn() {
+    this.displayedColumns = this._shortColumnSet.slice();
+  }
+}
+
+class TestRecycleViewRepeaterStrategy<
+  T,
+  R,
+  C extends _ViewRepeaterItemContext<T>,
+> extends _RecycleViewRepeaterStrategy<T, R, C> {
+  static lastInstance: TestRecycleViewRepeaterStrategy<any, any, any> | null = null;
+  detachCallCount = 0;
+
+  constructor() {
+    super();
+    TestRecycleViewRepeaterStrategy.lastInstance = this;
+  }
+
+  override detach() {
+    super.detach();
+    this.detachCallCount++;
+  }
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender"></tr>
+    </cdk-table>
+  `,
+  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: TestRecycleViewRepeaterStrategy}],
+  imports: [CdkTableModule],
+})
+class CdkTableWithCustomStrategyApp {
+  dataSource = new FakeDataSource();
+  columnsToRender = ['column_a'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
