@@ -55,7 +55,6 @@ describe('Combobox', () => {
     function setupCombobox(
       opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
     ) {
-      TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxListboxExample);
       const testComponent = fixture.componentInstance;
 
@@ -608,7 +607,6 @@ describe('Combobox', () => {
     function setupCombobox(
       opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
     ) {
-      TestBed.configureTestingModule({});
       fixture = TestBed.createComponent(ComboboxTreeExample);
       const testComponent = fixture.componentInstance;
 
