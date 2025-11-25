@@ -444,6 +444,16 @@ describe('Standalone Menu Pattern', () => {
       expect(document.activeElement).toBe(berries);
     });
   });
+
+  it('should not reset default state on hover triggers expansion', async () => {
+    TestBed.configureTestingModule({});
+    fixture = TestBed.createComponent(StandaloneMenuExample);
+    fixture.detectChanges();
+
+    const berries = getItem('Berries');
+    await mouseover(berries!);
+    expect(berries?.getAttribute('data-active')).toBe('true');
+  });
 });
 
 describe('Menu Trigger Pattern', () => {
