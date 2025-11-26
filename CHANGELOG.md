@@ -1,3 +1,20 @@
+<a name="21.0.1"></a>
+# 21.0.1 "sulfur-snack" (2025-11-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ccc12c387](https://github.com/angular/components/commit/ccc12c3879b3b58d6821e80ba1ef79db25a49572) | fix | **testing:** errors in harnesses when using Vitest ([#32399](https://github.com/angular/components/pull/32399)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [043d9cacc](https://github.com/angular/components/commit/043d9cacc7d76828d02f921447b48688ab3d4129) | fix | **select:** render panel next to trigger ([#32363](https://github.com/angular/components/pull/32363)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [02965bb0e](https://github.com/angular/components/commit/02965bb0eee969549518a49a796497ae1fe89569) | fix | resolve forward ref errors ([#32413](https://github.com/angular/components/pull/32413)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0"></a>
 # 21.0.0 "damask-dachshund" (2025-11-19)
 ## Breaking Changes
