@@ -412,13 +412,15 @@ describe('CdkTable', () => {
       component = fixture.componentInstance as CdkTableWithCustomStrategyApp;
     });
 
-    it('should detach the view repeater when forcing a re-render', () => {
+    it('should clear the recycled row cache when forcing a re-render', () => {
       const strategy = TestRecycleViewRepeaterStrategy.lastInstance!;
+      expect(strategy.clearCacheCallCount).toBe(0);
       expect(strategy.detachCallCount).toBe(0);
 
       component.table['_forceRenderDataRows']();
 
-      expect(strategy.detachCallCount).toBe(1);
+      expect(strategy.clearCacheCallCount).toBe(1);
+      expect(strategy.detachCallCount).toBe(0);
     });
 
     it('should detach the view repeater when the table is destroyed', () => {
@@ -3285,6 +3287,7 @@ class TestRecycleViewRepeaterStrategy<
 > extends _RecycleViewRepeaterStrategy<T, R, C> {
   static lastInstance: TestRecycleViewRepeaterStrategy<any, any, any> | null = null;
   detachCallCount = 0;
+  clearCacheCallCount = 0;
 
   constructor() {
     super();
@@ -3294,6 +3297,11 @@ class TestRecycleViewRepeaterStrategy<
   override detach() {
     super.detach();
     this.detachCallCount++;
+  }
+
+  override clearCache() {
+    super.clearCache();
+    this.clearCacheCallCount++;
   }
 }
 

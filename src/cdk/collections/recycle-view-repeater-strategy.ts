@@ -106,10 +106,12 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   }
 
   detach() {
-    for (const view of this._viewCache) {
-      view.destroy();
-    }
-    this._viewCache = [];
+    this.clearCache();
+  }
+
+  /** Clears any currently cached views without destroying the repeater. */
+  clearCache() {
+    this._destroyCachedViews();
   }
 
   /**
@@ -187,5 +189,13 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       viewContainerRef.insert(cachedView, index);
     }
     return cachedView || null;
+  }
+
+  /** Destroys all cached views. */
+  private _destroyCachedViews() {
+    for (const view of this._viewCache) {
+      view.destroy();
+    }
+    this._viewCache = [];
   }
 }
