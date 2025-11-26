@@ -13,6 +13,7 @@ import {
   contentChildren,
   Directive,
   ElementRef,
+  forwardRef,
   inject,
   input,
   model,
@@ -81,7 +82,13 @@ export class Listbox<V> {
   private readonly _directionality = inject(Directionality);
 
   /** The Options nested inside of the Listbox. */
-  private readonly _options = contentChildren(Option, {descendants: true});
+  private readonly _options = contentChildren(
+    // We need a `forwardRef` here, because the option class is declared further down
+    // in the same file. When the reference is written to Angular's metadata this can
+    // cause an attempt to access the class before it's defined.
+    forwardRef(() => Option),
+    {descendants: true},
+  );
 
   /** A signal wrapper for directionality. */
   protected textDirection = toSignal(this._directionality.change, {
