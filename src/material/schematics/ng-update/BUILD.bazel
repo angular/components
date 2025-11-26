@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "jasmine_test", "ts_project")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
 
 ts_project(
     name = "ng_update_lib",
@@ -59,6 +59,7 @@ ts_project(
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@bazel/runfiles",
+        "//:node_modules/parse5",
         "//src/cdk/schematics/testing",
         "//src/material/schematics:node_modules/@angular/cdk/schematics",
         "//src/material/schematics:paths",

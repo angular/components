@@ -93,6 +93,7 @@ ts_project(
         "//:node_modules/@schematics/angular",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//:node_modules/parse5",
         "//:node_modules/typescript",
         "//src/cdk/schematics/testing",
         "//src/cdk/schematics/update-tool",
