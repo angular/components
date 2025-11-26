@@ -1,3 +1,25 @@
+<a name="21.1.0-next.0"></a>
+# 21.1.0-next.0 "sulfur-sombrero" (2025-11-26)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b45cda3f9](https://github.com/angular/components/commit/b45cda3f975433e08c8d5b8099357bfbf7b79de3) | fix | **ui-patterns:** enable overwriting `preventDefault` to allow triggering hyperlinks using enter key ([#32123](https://github.com/angular/components/pull/32123)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a20aeabbe](https://github.com/angular/components/commit/a20aeabbec9151d382b421074cdc88226a07f9f2) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32386](https://github.com/angular/components/pull/32386)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef1355914](https://github.com/angular/components/commit/ef1355914a9dcabd8f00820ad3f2ea67fb5074fe) | feat | **schematics:** add preconnect links for Google Fonts in index.html ([#32238](https://github.com/angular/components/pull/32238)) |
+| [6b9decb77](https://github.com/angular/components/commit/6b9decb77a0628875d0562bba37a95c19d07982d) | feat | **stepper:** add a prefix section to the horizontal stepper header ([#32184](https://github.com/angular/components/pull/32184)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [29e2c4633](https://github.com/angular/components/commit/29e2c463334589429ca2df8a43e9a4c20d72e0f9) | fix | **column-resize:** add null checks for overlay ([#32259](https://github.com/angular/components/pull/32259)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.1"></a>
 # 21.0.1 "sulfur-snack" (2025-11-26)
 ### cdk
