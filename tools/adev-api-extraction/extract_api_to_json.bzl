@@ -1,3 +1,5 @@
+load("@aspect_rules_js//js:providers.bzl", "JsInfo")
+
 def _extract_api_to_json(ctx):
     """Implementation of the extract_api_to_json rule"""
 
@@ -35,11 +37,43 @@ def _extract_api_to_json(ctx):
     # specifying them
     # https://github.com/bazelbuild/rules_nodejs/blob/5.x/internal/linker/link_node_modules.bzl#L236
     path_map = {}
-    for target, path in ctx.attr.import_map.items():
+    import_map_files = []
+    for path, target in ctx.attr.import_map.items():
         files = target.files.to_list()
-        if len(files) != 1:
-            fail("Expected a single file in import_map target %s" % target.label)
-        path_map[path] = files[0].path
+
+        # Include transitive declarations if available in JsInfo
+        if JsInfo in target:
+            files.extend(target[JsInfo].transitive_types.to_list())
+
+        import_map_files.extend(files)
+        if len(files) == 1:
+            path_map[path] = files[0].path
+        else:
+            found_path = None
+            for f in files:
+                if f.path.endswith("/node_modules/" + path):
+                    found_path = f.path
+                    break
+
+                # Handle @angular package subentries
+                if path.startswith("@angular/"):
+                    parts = path.split("/")
+                    if len(parts) > 2:
+                        pkg_name = "/".join(parts[:2])
+                        if f.path.endswith("/node_modules/" + pkg_name):
+                            subentry = parts[-1]
+                            found_path = f.path + "/types/" + subentry + ".d.ts"
+                            break
+
+            if not found_path:
+                candidates = [f for f in files if f.path.endswith("/index.d.ts")]
+                sorted_candidates = sorted(candidates, key = lambda f: len(f.path))
+                found_path = sorted_candidates[0].path
+
+            if found_path:
+                path_map[path] = found_path
+            else:
+                fail("Expected a single file in import_map target %s, but found %s. Could not determine entry point. Files: %s" % (target.label, len(files), [f.path for f in files]))
     args.add(json.encode(path_map))
 
     # Pass the set of (optional) extra entries
@@ -48,7 +82,7 @@ def _extract_api_to_json(ctx):
     # Define an action that runs the nodejs_binary executable. This is
     # the main thing that this rule does.
     ctx.actions.run(
-        inputs = depset(ctx.files.srcs + ctx.files.extra_entries),
+        inputs = depset(ctx.files.srcs + ctx.files.extra_entries + import_map_files),
         executable = ctx.executable._extract_api_to_json,
         outputs = [json_output],
         arguments = [args],
@@ -86,7 +120,7 @@ extract_api_to_json = rule(
         "private_modules": attr.string_list(
             doc = """List of private modules that should not be included in the API symbol linking""",
         ),
-        "import_map": attr.label_keyed_string_dict(
+        "import_map": attr.string_keyed_label_dict(
             doc = """Map of import path to the index.ts file for that import""",
             allow_files = True,
         ),

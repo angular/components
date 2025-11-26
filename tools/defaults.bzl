@@ -14,6 +14,7 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
+load("//tools/adev-api-extraction:extract_api_to_json.bzl", _extract_api_to_json = "extract_api_to_json")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
 load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
@@ -245,5 +246,16 @@ def protractor_web_test_suite(name, deps, **kwargs):
             "//:node_modules/protractor",
             "//:node_modules/selenium-webdriver",
         ],
+        **kwargs
+    )
+
+def extract_api_to_json(**kwargs):
+    _extract_api_to_json(
+        import_map = {
+            "@angular/core": "//:node_modules/@angular/core",
+            "@angular/core/*": "//:node_modules/@angular/core",
+            "@angular/cdk/bidi": "//src/cdk/bidi",
+            "@angular/aria/private": "//src/aria/private",
+        },
         **kwargs
     )
