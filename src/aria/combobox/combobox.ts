@@ -13,6 +13,7 @@ import {
   contentChild,
   Directive,
   ElementRef,
+  forwardRef,
   inject,
   input,
   model,
@@ -98,7 +99,12 @@ export class Combobox<V> {
   private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
 
   /** The combobox popup. */
-  readonly popup = contentChild<ComboboxPopup<V>>(ComboboxPopup);
+  readonly popup = contentChild<ComboboxPopup<V>>(
+    // We need a `forwardRef` here, because the popup class is declared further down
+    // in the same file. When the reference is written to Angular's metadata this can
+    // cause an attempt to access the class before it's defined.
+    forwardRef(() => ComboboxPopup),
+  );
 
   /**
    * The filter mode for the combobox.
