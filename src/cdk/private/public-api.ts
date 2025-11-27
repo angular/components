@@ -9,3 +9,4 @@
 export * from './style-loader';
 export * from './visually-hidden/visually-hidden';
 export {TrustedHTML, trustedHTMLFromString} from './trusted-types';
+export {_setInnerHtml} from './inner-html';

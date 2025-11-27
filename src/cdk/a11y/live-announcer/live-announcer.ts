@@ -18,6 +18,7 @@ import {
   inject,
   DOCUMENT,
 } from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {Subscription} from 'rxjs';
 import {
   AriaLivePoliteness,
@@ -25,9 +26,12 @@ import {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
 } from './live-announcer-tokens';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader, _setInnerHtml} from '../../private';
 
 let uniqueIds = 0;
+
+/** Possible types for a message that can be announced by the `LiveAnnouncer`. */
+export type LiveAnnouncerMessage = string | SafeHtml;
 
 @Injectable({providedIn: 'root'})
 export class LiveAnnouncer implements OnDestroy {
@@ -38,6 +42,7 @@ export class LiveAnnouncer implements OnDestroy {
 
   private _liveElement: HTMLElement;
   private _document = inject(DOCUMENT);
+  private _sanitizer = inject(DomSanitizer);
   private _previousTimeout: ReturnType<typeof setTimeout>;
   private _currentPromise: Promise<void> | undefined;
   private _currentResolve: (() => void) | undefined;
@@ -54,7 +59,7 @@ export class LiveAnnouncer implements OnDestroy {
    * @param message Message to be announced to the screen reader.
    * @returns Promise that will be resolved when the message is added to the DOM.
    */
-  announce(message: string): Promise<void>;
+  announce(message: LiveAnnouncerMessage): Promise<void>;
 
   /**
    * Announces a message to screen readers.
@@ -62,7 +67,7 @@ export class LiveAnnouncer implements OnDestroy {
    * @param politeness The politeness of the announcer element.
    * @returns Promise that will be resolved when the message is added to the DOM.
    */
-  announce(message: string, politeness?: AriaLivePoliteness): Promise<void>;
+  announce(message: LiveAnnouncerMessage, politeness?: AriaLivePoliteness): Promise<void>;
 
   /**
    * Announces a message to screen readers.
@@ -72,7 +77,7 @@ export class LiveAnnouncer implements OnDestroy {
    *   100ms after `announce` has been called.
    * @returns Promise that will be resolved when the message is added to the DOM.
    */
-  announce(message: string, duration?: number): Promise<void>;
+  announce(message: LiveAnnouncerMessage, duration?: number): Promise<void>;
 
   /**
    * Announces a message to screen readers.
@@ -83,9 +88,13 @@ export class LiveAnnouncer implements OnDestroy {
    *   100ms after `announce` has been called.
    * @returns Promise that will be resolved when the message is added to the DOM.
    */
-  announce(message: string, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
+  announce(
+    message: LiveAnnouncerMessage,
+    politeness?: AriaLivePoliteness,
+    duration?: number,
+  ): Promise<void>;
 
-  announce(message: string, ...args: any[]): Promise<void> {
+  announce(message: LiveAnnouncerMessage, ...args: any[]): Promise<void> {
     const defaultOptions = this._defaultOptions;
     let politeness: AriaLivePoliteness | undefined;
     let duration: number | undefined;
@@ -127,7 +136,11 @@ export class LiveAnnouncer implements OnDestroy {
 
       clearTimeout(this._previousTimeout);
       this._previousTimeout = setTimeout(() => {
-        this._liveElement.textContent = message;
+        if (!message || typeof message === 'string') {
+          this._liveElement.textContent = message;
+        } else {
+          _setInnerHtml(this._liveElement, message, this._sanitizer);
+        }
 
         if (typeof duration === 'number') {
           this._previousTimeout = setTimeout(() => this.clear(), duration);
