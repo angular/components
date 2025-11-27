@@ -81,6 +81,7 @@ export class DocViewer implements OnDestroy {
   protected portal: Portal<any> | undefined;
 
   readonly name = input<string>();
+  readonly packageName = input<string>();
 
   /** The document to display, either as a URL to a markdown file or a component to create. */
   @Input()
@@ -277,9 +278,13 @@ export class DocViewer implements OnDestroy {
    */
   private _injectAngularAriaBanner() {
     const componentName = this.name();
-    const componentsWithAriaBanner = ['listbox', 'tree', 'accordion', 'menu'];
+    const packageName = this.packageName();
 
-    if (!componentName || !componentsWithAriaBanner.includes(componentName.toLowerCase())) {
+    if (
+      !componentName ||
+      packageName !== 'cdk' ||
+      !['listbox', 'tree', 'accordion', 'menu'].includes(componentName.toLowerCase())
+    ) {
       return;
     }
 
@@ -289,12 +294,7 @@ export class DocViewer implements OnDestroy {
     bannerContainer.setAttribute('componentName', componentName);
 
     // Insert the banner at the beginning of the document content
-    const firstChild = this._elementRef.nativeElement.firstChild;
-    if (firstChild) {
-      this._elementRef.nativeElement.insertBefore(bannerContainer, firstChild);
-    } else {
-      this._elementRef.nativeElement.appendChild(bannerContainer);
-    }
+    this._elementRef.nativeElement.prepend(bannerContainer);
 
     // Create and attach the banner component
     const portalHost = new DomPortalOutlet(bannerContainer, this._appRef, this._injector);
