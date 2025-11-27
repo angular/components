@@ -4,7 +4,7 @@
  *   - `browserstack`: Launches the browser within BrowserStack
  */
 const browserConfig = {
-  'Safari16': {unitTest: {target: 'browserstack'}},
+  'Safari26': {unitTest: {target: 'browserstack'}},
 };
 
 /** Exports all available custom Karma browsers. */
