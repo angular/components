@@ -1,4 +1,12 @@
-import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Injector,
+  Provider,
+  signal,
+  viewChild,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
@@ -26,7 +34,7 @@ import {MatTimepickerInput} from './timepicker-input';
 import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
 import {MatTimepickerToggle} from './timepicker-toggle';
 import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {Subject} from 'rxjs';
@@ -907,6 +915,23 @@ describe('MatTimepicker', () => {
   });
 
   describe('forms integration', () => {
+    it('should not emit form control value changes on init due to validator effect', () => {
+      const fixture = TestBed.createComponent(TimepickerInFormGroup);
+      const control = fixture.componentInstance.form.get('time')!;
+      const spy = jasmine.createSpy('valueChanges');
+      const subscription = control.valueChanges.subscribe(spy);
+
+      fixture.detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+
+      fixture.componentInstance.min.set(createTime(1, 0));
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      subscription.unsubscribe();
+    });
+
     it('should propagate value typed into the input to the form control', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const input = getInput(fixture);
@@ -1483,6 +1508,22 @@ class TimepickerWithForms {
   readonly control = new FormControl<Date | null>(null, [Validators.required]);
   readonly min = signal<Date | null>(null);
   readonly max = signal<Date | null>(null);
+}
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <input [matTimepicker]="picker" [matTimepickerMin]="min()" formControlName="time" />
+      <mat-timepicker #picker />
+    </form>
+  `,
+  imports: [MatTimepicker, MatTimepickerInput, ReactiveFormsModule],
+})
+class TimepickerInFormGroup {
+  readonly input = viewChild<MatTimepickerInput<Date>>(MatTimepickerInput);
+  readonly timepicker = viewChild<MatTimepicker<Date>>(MatTimepicker);
+  readonly form = new FormGroup({time: new FormControl<Date | null>(null)});
+  readonly min = signal<Date | null>(null);
 }
 
 @Component({

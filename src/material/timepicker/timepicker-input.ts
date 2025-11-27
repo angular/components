@@ -368,10 +368,17 @@ export class MatTimepickerInput<D>
 
   /** Sets up the logic that adjusts the input if the min/max changes. */
   private _respondToMinMaxChanges(): void {
+    let isInitialRun = true;
+
     effect(() => {
       // Read the min/max so the effect knows when to fire.
       this.min();
       this.max();
+      if (isInitialRun) {
+        isInitialRun = false;
+        return;
+      }
+
       this._validatorOnChange?.();
     });
   }
