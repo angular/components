@@ -3,7 +3,6 @@ import {
   CollectionViewer,
   DataSource,
   _RecycleViewRepeaterStrategy,
-  _VIEW_REPEATER_STRATEGY,
   _ViewRepeaterItemContext,
 } from '../collections';
 import {
@@ -31,7 +30,7 @@ import {
   StickyPositioningListener,
   StickyUpdate,
 } from './index';
-import {CdkCellOutlet, CdkHeaderRowDef, CdkNoDataRow, CdkRowDef} from './row';
+import {BaseRowDef, CdkCellOutlet, CdkHeaderRowDef, CdkNoDataRow, CdkRowDef} from './row';
 import {CdkTable} from './table';
 import {
   getTableDuplicateColumnNameError,
@@ -395,41 +394,63 @@ describe('CdkTable', () => {
       component.setShortList();
       fixture.detectChanges();
 
-      component.showSingleColumn();
+      const newColumns = ['column_a'];
+      const tableInstance = component.table as CdkTable<TestData>;
+      const forceColumns = (defs: BaseRowDef[]) => {
+        defs.forEach(def => {
+          def.columns = newColumns;
+          (def as any)._columnsDiffer?.diff(newColumns);
+        });
+      };
+
+      forceColumns(tableInstance['_rowDefs']);
+      forceColumns(tableInstance['_headerRowDefs']);
+
+      tableInstance['_forceRenderDataRows']();
+      tableInstance['_forceRenderHeaderRows']();
       fixture.detectChanges();
 
       const rows = getRows(tableElement);
       expect(rows.length).toBe(component.dataSource.data.length);
       rows.forEach(row => {
-        expect(getCells(row).length).toBe(component.displayedColumns.length);
+        expect(getCells(row).length).toBe(newColumns.length);
       });
     });
   });
 
   describe('view repeater cleanup', () => {
     beforeEach(() => {
-      setupTableTestApp(CdkTableWithCustomStrategyApp);
-      component = fixture.componentInstance as CdkTableWithCustomStrategyApp;
+      setupTableTestApp(CdkTableRecycleRowsSpyApp);
+      component = fixture.componentInstance as CdkTableRecycleRowsSpyApp;
     });
 
     it('should clear the recycled row cache when forcing a re-render', () => {
-      const strategy = TestRecycleViewRepeaterStrategy.lastInstance!;
-      expect(strategy.clearCacheCallCount).toBe(0);
-      expect(strategy.detachCallCount).toBe(0);
+      const repeater = component.table['_viewRepeater'] as _RecycleViewRepeaterStrategy<
+        unknown,
+        unknown,
+        _ViewRepeaterItemContext<unknown>
+      >;
+      spyOn(repeater, 'clearCache');
 
       component.table['_forceRenderDataRows']();
 
-      expect(strategy.clearCacheCallCount).toBe(1);
-      expect(strategy.detachCallCount).toBe(0);
+      expect(repeater.clearCache).toHaveBeenCalledTimes(1);
     });
 
     it('should detach the view repeater when the table is destroyed', () => {
-      const destroyFixture = TestBed.createComponent(CdkTableWithCustomStrategyApp);
+      const destroyFixture = TestBed.createComponent(CdkTableRecycleRowsSpyApp);
       destroyFixture.detectChanges();
-      const strategy = TestRecycleViewRepeaterStrategy.lastInstance!;
-      expect(strategy.detachCallCount).toBe(0);
+      const table = destroyFixture.componentInstance.table;
+      const repeater = table['_viewRepeater'] as _RecycleViewRepeaterStrategy<
+        unknown,
+        unknown,
+        _ViewRepeaterItemContext<unknown>
+      >;
+      spyOn(repeater, 'detach');
+
       destroyFixture.destroy();
-      expect(strategy.detachCallCount).toBe(1);
+
+      expect(repeater.detach).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -3242,6 +3263,26 @@ class WrapNativeHtmlTableAppOnPush {
         <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
       </ng-container>
 
+      <tr cdk-header-row *cdkHeaderRowDef="['column_a']"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: ['column_a']"></tr>
+    </table>
+  `,
+  imports: [CdkTableModule],
+})
+class CdkTableRecycleRowsSpyApp {
+  dataSource = new FakeDataSource();
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table cdk-table recycleRows [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
       <ng-container cdkColumnDef="column_b">
         <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
@@ -3259,11 +3300,11 @@ class WrapNativeHtmlTableAppOnPush {
   imports: [CdkTableModule],
 })
 class CdkTableRecycleRowsApp {
-  private _longColumnSet = ['column_a', 'column_b', 'column_c'];
-  private _shortColumnSet = ['column_a'];
+  private _longColumnSet: string[] = ['column_a', 'column_b', 'column_c'];
   private _shortListLength = 3;
   dataSource = new FakeDataSource();
-  displayedColumns = this._longColumnSet.slice();
+  displayedColumns = this._longColumnSet;
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
 
   addExtraRows(count: number) {
     for (let i = 0; i < count; i++) {
@@ -3274,57 +3315,6 @@ class CdkTableRecycleRowsApp {
   setShortList() {
     this.dataSource.data = this.dataSource.data.slice(0, this._shortListLength);
   }
-
-  showSingleColumn() {
-    this.displayedColumns = this._shortColumnSet.slice();
-  }
-}
-
-class TestRecycleViewRepeaterStrategy<
-  T,
-  R,
-  C extends _ViewRepeaterItemContext<T>,
-> extends _RecycleViewRepeaterStrategy<T, R, C> {
-  static lastInstance: TestRecycleViewRepeaterStrategy<any, any, any> | null = null;
-  detachCallCount = 0;
-  clearCacheCallCount = 0;
-
-  constructor() {
-    super();
-    TestRecycleViewRepeaterStrategy.lastInstance = this;
-  }
-
-  override detach() {
-    super.detach();
-    this.detachCallCount++;
-  }
-
-  override clearCache() {
-    super.clearCache();
-    this.clearCacheCallCount++;
-  }
-}
-
-@Component({
-  template: `
-    <cdk-table [dataSource]="dataSource">
-      <ng-container cdkColumnDef="column_a">
-        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
-      </ng-container>
-
-      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
-      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender"></tr>
-    </cdk-table>
-  `,
-  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: TestRecycleViewRepeaterStrategy}],
-  imports: [CdkTableModule],
-})
-class CdkTableWithCustomStrategyApp {
-  dataSource = new FakeDataSource();
-  columnsToRender = ['column_a'];
-
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
