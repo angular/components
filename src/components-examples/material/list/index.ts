@@ -5,3 +5,6 @@ export {ListSingleSelectionExample} from './list-single-selection/list-single-se
 export {ListSingleSelectionReactiveFormExample} from './list-single-selection-reactive-form/list-single-selection-reactive-form-example';
 export {ListHarnessExample} from './list-harness/list-harness-example';
 export {ListVariantsExample} from './list-variants/list-variants-example';
+export {ListActionExample} from './list-action/list-action-example';
+export {ListAvatarExample} from './list-avatar/list-avatar-example';
+export {ListNavigationExample} from './list-navigation/list-navigation-example';
