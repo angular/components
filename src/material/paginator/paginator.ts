@@ -230,7 +230,7 @@ export class MatPaginator implements OnInit, OnDestroy {
       }
     }
 
-    this._formFieldAppearance = defaults?.formFieldAppearance || 'outline';
+    this._formFieldAppearance = defaults?.formFieldAppearance || 'fill';
   }
 
   ngOnInit() {
