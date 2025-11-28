@@ -97,6 +97,8 @@ export class MatTimepickerInput<D>
   private _timepickerSubscription: OutputRefSubscription | undefined;
   private _validator: ValidatorFn;
   private _lastValueValid = true;
+  private _minValid = true;
+  private _maxValid = true;
   private _lastValidDate: D | null = null;
 
   /** Value of the `aria-activedescendant` attribute. */
@@ -173,8 +175,7 @@ export class MatTimepickerInput<D>
 
     const renderer = inject(Renderer2);
     this._validator = this._getValidator();
-    this._respondToValueChanges();
-    this._respondToMinMaxChanges();
+    this._updateFormsState();
     this._registerTimepicker();
     this._localeSubscription = this._dateAdapter.localeChanges.subscribe(() => {
       if (!this._hasFocus()) {
@@ -334,24 +335,37 @@ export class MatTimepickerInput<D>
     }
   }
 
-  /** Sets up the code that watches for changes in the value and adjusts the input. */
-  private _respondToValueChanges(): void {
+  /** Sets up the code that keeps the input state in sync with the forms module. */
+  private _updateFormsState(): void {
     effect(() => {
-      const value = this._dateAdapter.deserialize(this.value());
-      const wasValid = this._lastValueValid;
-      this._lastValueValid = this._isValid(value);
+      const {
+        _dateAdapter: adapter,
+        _lastValueValid: prevValueValid,
+        _minValid: prevMinValid,
+        _maxValid: prevMaxValid,
+      } = this;
+      const value = adapter.deserialize(this.value());
+      const min = this.min();
+      const max = this.max();
+      const valueValid = (this._lastValueValid = this._isValid(value));
+      this._minValid = !min || !value || !valueValid || adapter.compareTime(min, value) <= 0;
+      this._maxValid = !max || !value || !valueValid || adapter.compareTime(max, value) >= 0;
+      const stateChanged =
+        prevValueValid !== valueValid ||
+        prevMinValid !== this._minValid ||
+        prevMaxValid !== this._maxValid;
 
       // Reformat the value if it changes while the user isn't interacting.
       if (!this._hasFocus()) {
         this._formatValue(value);
       }
 
-      if (value && this._lastValueValid) {
+      if (value && valueValid) {
         this._lastValidDate = value;
       }
 
       // Trigger the validator if the state changed.
-      if (wasValid !== this._lastValueValid) {
+      if (stateChanged) {
         this._validatorOnChange?.();
       }
     });
@@ -363,16 +377,6 @@ export class MatTimepickerInput<D>
       const timepicker = this.timepicker();
       timepicker.registerInput(this);
       timepicker.closed.subscribe(() => this._onTouched?.());
-    });
-  }
-
-  /** Sets up the logic that adjusts the input if the min/max changes. */
-  private _respondToMinMaxChanges(): void {
-    effect(() => {
-      // Read the min/max so the effect knows when to fire.
-      this.min();
-      this.max();
-      this._validatorOnChange?.();
     });
   }
 
@@ -441,24 +445,28 @@ export class MatTimepickerInput<D>
         this._lastValueValid
           ? null
           : {'matTimepickerParse': {'text': this._elementRef.nativeElement.value}},
-      control => {
-        const controlValue = this._dateAdapter.getValidDateOrNull(
-          this._dateAdapter.deserialize(control.value),
-        );
-        const min = this.min();
-        return !min || !controlValue || this._dateAdapter.compareTime(min, controlValue) <= 0
+      control =>
+        this._minValid
           ? null
-          : {'matTimepickerMin': {'min': min, 'actual': controlValue}};
-      },
-      control => {
-        const controlValue = this._dateAdapter.getValidDateOrNull(
-          this._dateAdapter.deserialize(control.value),
-        );
-        const max = this.max();
-        return !max || !controlValue || this._dateAdapter.compareTime(max, controlValue) >= 0
+          : {
+              'matTimepickerMin': {
+                'min': this.min(),
+                'actual': this._dateAdapter.getValidDateOrNull(
+                  this._dateAdapter.deserialize(control.value),
+                ),
+              },
+            },
+      control =>
+        this._maxValid
           ? null
-          : {'matTimepickerMax': {'max': max, 'actual': controlValue}};
-      },
+          : {
+              'matTimepickerMax': {
+                'max': this.max(),
+                'actual': this._dateAdapter.getValidDateOrNull(
+                  this._dateAdapter.deserialize(control.value),
+                ),
+              },
+            },
     ])!;
   }
 }
