@@ -357,23 +357,19 @@ export class MenuPattern<V> {
   submit(item = this.inputs.activeItem()) {
     const root = this.root();
 
-    if (item && !item.disabled()) {
+    if (item && !item.disabled() && !item.submenu()) {
       const isMenu = root instanceof MenuPattern;
       const isMenuBar = root instanceof MenuBarPattern;
       const isMenuTrigger = root instanceof MenuTriggerPattern;
-
-      if (!item.submenu() && isMenuTrigger) {
+      if (isMenuTrigger) {
         root.close({refocus: true});
-      }
-
-      if (!item.submenu() && isMenuBar) {
+        root.menu()?.inputs.onSelect?.(item.value());
+      } else if (isMenuBar) {
         root.close();
-        root?.inputs.onSelect?.(item.value());
-      }
-
-      if (!item.submenu() && isMenu) {
+        root.inputs.onSelect?.(item.value());
+      } else if (isMenu) {
         root.inputs.activeItem()?.close({refocus: true});
-        root?.inputs.onSelect?.(item.value());
+        root.inputs.onSelect?.(item.value());
       }
     }
   }
