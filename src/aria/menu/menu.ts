@@ -45,8 +45,8 @@ import {Directionality} from '@angular/cdk/bidi';
  * <button ngMenuTrigger [menu]="myMenu">Open Menu</button>
  *
  * <div ngMenu #myMenu="ngMenu">
- *   <div ngMenuItem>Item 1</div>
- *   <div ngMenuItem>Item 2</div>
+ *   <div ngMenuItem value="Item 1">Item 1</div>
+ *   <div ngMenuItem value="Item 2">Item 2</div>
  * </div>
  * ```
  *
@@ -127,14 +127,14 @@ export class MenuTrigger<V> {
  * <button ngMenuTrigger [menu]="myMenu">Options</button>
  *
  * <div ngMenu #myMenu="ngMenu">
- *   <div ngMenuItem>Star</div>
- *   <div ngMenuItem>Edit</div>
- *   <div ngMenuItem [submenu]="subMenu">More</div>
+ *   <div ngMenuItem value="Star">Star</div>
+ *   <div ngMenuItem value="Edit">Edit</div>
+ *   <div ngMenuItem value="More" [submenu]="subMenu">More</div>
  * </div>
  *
  * <div ngMenu #subMenu="ngMenu">
- *   <div ngMenuItem>Sub Item 1</div>
- *   <div ngMenuItem>Sub Item 2</div>
+ *   <div ngMenuItem value="Sub Item 1">Sub Item 1</div>
+ *   <div ngMenuItem value="Sub Item 2">Sub Item 2</div>
  * </div>
  * ```
  *
@@ -287,13 +287,13 @@ export class Menu<V> {
  * </div>
  *
  * <div ngMenu #fileMenu="ngMenu">
- *   <div ngMenuItem>New</div>
- *   <div ngMenuItem>Open</div>
+ *   <div ngMenuItem value="New">New</div>
+ *   <div ngMenuItem value="Open">Open</div>
  * </div>
  *
  * <div ngMenu #editMenu="ngMenu">
- *   <div ngMenuItem>Cut</div>
- *   <div ngMenuItem>Copy</div>
+ *   <div ngMenuItem value="Cut">Cut</div>
+ *   <div ngMenuItem value="Copy">Copy</div>
  * </div>
  * ```
  *
@@ -392,9 +392,9 @@ export class MenuBar<V> {
  * or action a user can take. They can also act as triggers for sub-menus.
  *
  * ```html
- * <div ngMenuItem (onSelect)="doAction()">Action Item</div>
+ * <div ngMenuItem value="Action Item" (onSelect)="doAction()">Action Item</div>
  *
- * <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ * <div ngMenuItem value="Submenu Trigger" [submenu]="anotherMenu">Submenu Trigger</div>
  * ```
  *
  * @developerPreview 21.0
@@ -490,8 +490,8 @@ export class MenuItem<V> {
  * ```html
  * <div ngMenu #myMenu="ngMenu">
  *   <ng-template ngMenuContent>
- *     <div ngMenuItem>Lazy Item 1</div>
- *     <div ngMenuItem>Lazy Item 2</div>
+ *     <div ngMenuItem value="Lazy Item 1">Lazy Item 1</div>
+ *     <div ngMenuItem value="Lazy Item 2">Lazy Item 2</div>
  *   </ng-template>
  * </div>
  * ```
