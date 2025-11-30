@@ -39,14 +39,14 @@ import {MENU_COMPONENT} from './menu-tokens';
  * <button ngMenuTrigger [menu]="myMenu">Options</button>
  *
  * <div ngMenu #myMenu="ngMenu">
- *   <div ngMenuItem>Star</div>
- *   <div ngMenuItem>Edit</div>
- *   <div ngMenuItem [submenu]="subMenu">More</div>
+ *   <div ngMenuItem value="Star">Star</div>
+ *   <div ngMenuItem value="Edit">Edit</div>
+ *   <div ngMenuItem value="More" [submenu]="subMenu">More</div>
  * </div>
  *
  * <div ngMenu #subMenu="ngMenu">
- *   <div ngMenuItem>Sub Item 1</div>
- *   <div ngMenuItem>Sub Item 2</div>
+ *   <div ngMenuItem value="Sub Item 1">Sub Item 1</div>
+ *   <div ngMenuItem value="Sub Item 2">Sub Item 2</div>
  * </div>
  * ```
  *
