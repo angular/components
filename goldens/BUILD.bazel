@@ -39,3 +39,10 @@ api_golden_test_npm_package(
         "//:node_modules/@types/youtube": "youtube",
     },
 )
+
+api_golden_test_npm_package(
+    name = "aria_api",
+    data = glob(["aria/**"]) + ["//src/aria:npm_package"],
+    golden_dir = "goldens/aria",
+    npm_package = "src/aria/npm_package",
+)
