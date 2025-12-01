@@ -185,6 +185,24 @@ describe('FocusTrap', () => {
       expect(() => focusTrapInstance.focusFirstTabbableElement()).not.toThrow();
       expect(() => focusTrapInstance.focusLastTabbableElement()).not.toThrow();
     });
+
+    it('should find tabbable elements in shadow DOM', () => {
+      if (!_supportsShadowDom()) {
+        return;
+      }
+
+      const fixture = TestBed.createComponent(FocusTrapWithShadowDom);
+      fixture.detectChanges();
+      const focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+
+      // The shadow button should be found as the first tabbable element
+      expect(focusTrapInstance.focusFirstTabbableElement()).toBe(true);
+      expect(getActiveElement().textContent?.trim()).toBe('Shadow Button');
+
+      // The shadow button should also be found as the last tabbable element
+      expect(focusTrapInstance.focusLastTabbableElement()).toBe(true);
+      expect(getActiveElement().textContent?.trim()).toBe('Shadow Button');
+    });
   });
 
   describe('with autoCapture', () => {
@@ -447,4 +465,26 @@ class FocusTrapInsidePortal {
 
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
+}
+
+@Component({
+  template: `
+    <div cdkTrapFocus>
+      <div #shadowHost></div>
+    </div>
+  `,
+  imports: [A11yModule],
+})
+class FocusTrapWithShadowDom {
+  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild('shadowHost', {static: true}) shadowHost: any;
+
+  ngAfterViewInit() {
+    if (_supportsShadowDom()) {
+      const shadowRoot = this.shadowHost.nativeElement.attachShadow({mode: 'open'});
+      const shadowButton = document.createElement('button');
+      shadowButton.textContent = 'Shadow Button';
+      shadowRoot.appendChild(shadowButton);
+    }
+  }
 }
