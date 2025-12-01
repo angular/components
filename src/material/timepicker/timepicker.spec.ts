@@ -1225,6 +1225,20 @@ describe('MatTimepicker', () => {
       expectSameTime(eventValue, controlValue);
       subscription.unsubscribe();
     });
+
+    it('should not emit toValueOnChanges on init', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      const spy = jasmine.createSpy('valueChanges');
+      const subscription = fixture.componentInstance.control.valueChanges.subscribe(spy);
+      fixture.detectChanges();
+      expect(spy).not.toHaveBeenCalled();
+
+      typeInElement(getInput(fixture), '1:37 PM');
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
+    });
   });
 
   describe('timepicker toggle', () => {
