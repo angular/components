@@ -2,7 +2,9 @@
   <h2 class="cdk-visually-hidden" tabindex="-1">
     Overview for {{docItem.id}}
   </h2>
-  <doc-viewer [name]="docItem.id"
+  <doc-viewer
+    [name]="docItem.id"
+    [packageName]="docItem.packageName"
     [document]="getOverviewDocumentUrl(docItem)"
     class="docs-component-view-text-content docs-component-overview"
     (contentRendered)="updateTableOfContents('Overview Content', $event)" />

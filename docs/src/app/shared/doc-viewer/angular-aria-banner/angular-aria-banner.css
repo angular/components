@@ -11,24 +11,27 @@
   line-height: 1.6;
 }
 
-.docs-angular-aria-banner-icon {
-  font-size: 20px;
+mat-icon {
   flex-shrink: 0;
-  fill: var(--mat-sys-primary);
+  color: var(--mat-sys-primary);
 }
 
 .docs-angular-aria-banner-content {
   flex: 1;
 }
 
-.docs-angular-aria-banner-content strong {
+strong {
   color: var(--mat-sys-primary);
 }
 
-.docs-angular-aria-banner-content a {
+a {
   color: var(--mat-sys-primary);
   text-decoration: underline;
   font-weight: 500;
+}
+
+p {
+  margin: 0;
 }
 
 @media (max-width: 600px) {
@@ -37,7 +40,7 @@
     gap: 8px;
   }
 
-  .docs-angular-aria-banner-icon {
+  mat-icon {
     font-size: 18px;
   }
 }
