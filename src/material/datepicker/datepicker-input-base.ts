@@ -289,22 +289,27 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     return this._validator ? this._validator(c) : null;
   }
 
-  // Implemented as part of ControlValueAccessor.
+  /** Implemented as part of ControlValueAccessor. */
   writeValue(value: D): void {
-    this._assignValueProgrammatically(value);
+    // We produce a different date object on each keystroke which can cause signal forms'
+    // interop logic to keep calling `writeValue` with the same value as the user is typing.
+    // Skip such cases since they can prevent the user from typing (see #32442).
+    if (!value || value !== this.value) {
+      this._assignValueProgrammatically(value);
+    }
   }
 
-  // Implemented as part of ControlValueAccessor.
+  /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void): void {
     this._cvaOnChange = fn;
   }
 
-  // Implemented as part of ControlValueAccessor.
+  /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
 
-  // Implemented as part of ControlValueAccessor.
+  /** Implemented as part of ControlValueAccessor. */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
