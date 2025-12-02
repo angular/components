@@ -1160,6 +1160,22 @@ describe('MatDatepicker', () => {
 
         expect(formControl.hasError('matDatepickerParse')).toBe(true);
       });
+
+      it('should not re-format the input value if the forms module re-assigns the same date', () => {
+        const input = fixture.nativeElement.querySelector('input');
+        const date = new Date(2017, JAN, 1);
+        testComponent.formControl.setValue(date);
+        fixture.detectChanges();
+        expect(input.value).toContain('2017');
+
+        // Note: this isn't how users would behave, but it captures
+        // the sequence of events with signal forms.
+        input.value = 'foo';
+        testComponent.formControl.setValue(date);
+        fixture.detectChanges();
+
+        expect(input.value).toBe('foo');
+      });
     });
 
     describe('datepicker with mat-datepicker-toggle', () => {
