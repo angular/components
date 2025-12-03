@@ -25,10 +25,6 @@ import {
 } from './sticky-position-listener';
 import {_TABLE_VIEW_CHANGE_STRATEGY, CdkTable, RenderRow, RowContext} from './table';
 
-/** @docs-private */
-export const _TABLE_VIRTUAL_SCROLL_COLLECTION_VIEWER_FACTORY = () =>
-  new BehaviorSubject<ListRange>({start: 0, end: 0});
-
 /**
  * Scheduler to be used for scroll events. Needs to fall back to
  * something that doesn't rely on requestAnimationFrame on environments
@@ -48,11 +44,11 @@ const SCROLL_SCHEDULER =
   providers: [
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy},
     {provide: STICKY_POSITIONING_LISTENER, useExisting: CdkTableVirtualScroll},
-    // Initially emit an empty range. The virtual scroll viewport will update the range after it is
-    // initialized.
     {
       provide: _TABLE_VIEW_CHANGE_STRATEGY,
-      useFactory: _TABLE_VIRTUAL_SCROLL_COLLECTION_VIEWER_FACTORY,
+      // Initially emit an empty range. The virtual scroll
+      // viewport will update the range after it is initialized.
+      useFactory: () => new BehaviorSubject<ListRange>({start: 0, end: 0}),
     },
   ],
   host: {
