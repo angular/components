@@ -7,8 +7,16 @@
  */
 import {Directive, inject, Input, OnDestroy} from '@angular/core';
 import {_RecycleViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY, ListRange} from '../collections';
-import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {shareReplay, takeUntil} from 'rxjs/operators';
+import {
+  animationFrameScheduler,
+  asapScheduler,
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
+import {auditTime, shareReplay, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollRepeater, CdkVirtualScrollViewport} from '../scrolling';
 import {
   StickyPositioningListener,
@@ -60,6 +68,16 @@ export class _PositioningListenerProxy implements StickyPositioningListener {
 /** @docs-private */
 export const _TABLE_VIRTUAL_SCROLL_COLLECTION_VIEWER_FACTORY = () =>
   new BehaviorSubject<ListRange>({start: 0, end: 0});
+
+/**
+ * Scheduler to be used for scroll events. Needs to fall back to
+ * something that doesn't rely on requestAnimationFrame on environments
+ * that don't support it (e.g. server-side rendering).
+ *
+ * This is identical to the scheduler used by the virtual scroll module.
+ */
+const SCROLL_SCHEDULER =
+  typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 /**
  * A directive that enables virtual scroll for a {@link CdkTable}.
@@ -148,7 +166,12 @@ export class CdkTableVirtualScroll<T>
       });
 
     // Forward the rendered range computed by the virtual scroll viewport to the table.
-    this._viewport.renderedRangeStream.pipe(takeUntil(this._destroyed)).subscribe(this._viewChange);
+    this._viewport.renderedRangeStream
+      // We need the scheduler here, because the virtual scrolling module uses an identical
+      // one for scroll listeners. Without it the two go out of sync and the list starts
+      // jumping back to the beginning whenever it needs to re-render.
+      .pipe(auditTime(0, SCROLL_SCHEDULER), takeUntil(this._destroyed))
+      .subscribe(this._viewChange);
     this._viewport.attach(this);
   }
 
