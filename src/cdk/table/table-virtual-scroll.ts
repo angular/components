@@ -25,46 +25,6 @@ import {
 } from './sticky-position-listener';
 import {_TABLE_VIEW_CHANGE_STRATEGY, CdkTable, RenderRow, RowContext} from './table';
 
-/**
- * An implementation of {@link StickyPositioningListener} that forwards sticky updates to another
- * listener.
- *
- * The {@link CdkTableVirtualScroll} directive cannot provide itself as a
- * {@link StickyPositioningListener} because the providers for both entities would point to the same
- * instance. The {@link CdkTable} depends on the sticky positioning listener and the table virtual
- * scroll depends on the table. Since the sticky positioning listener and table virtual scroll would
- * be the same instance, this would create a circular dependency.
- *
- * The {@link CdkTableVirtualScroll} instead provides this class and attaches itself as the
- * receiving listener so {@link StickyPositioningListener} and {@link CdkTableVirtualScroll} are
- * provided as separate instances.
- *
- * @docs-private
- */
-export class _PositioningListenerProxy implements StickyPositioningListener {
-  private _listener?: StickyPositioningListener;
-
-  setListener(listener: StickyPositioningListener) {
-    this._listener = listener;
-  }
-
-  stickyColumnsUpdated(update: StickyUpdate): void {
-    this._listener?.stickyColumnsUpdated(update);
-  }
-
-  stickyEndColumnsUpdated(update: StickyUpdate): void {
-    this._listener?.stickyEndColumnsUpdated(update);
-  }
-
-  stickyFooterRowsUpdated(update: StickyUpdate): void {
-    this._listener?.stickyFooterRowsUpdated(update);
-  }
-
-  stickyHeaderRowsUpdated(update: StickyUpdate): void {
-    this._listener?.stickyHeaderRowsUpdated(update);
-  }
-}
-
 /** @docs-private */
 export const _TABLE_VIRTUAL_SCROLL_COLLECTION_VIEWER_FACTORY = () =>
   new BehaviorSubject<ListRange>({start: 0, end: 0});
@@ -84,12 +44,10 @@ const SCROLL_SCHEDULER =
  */
 @Directive({
   selector: 'cdk-table[virtualScroll], table[cdk-table][virtualScroll]',
-  exportAs: 'cdkVirtualScroll',
+  exportAs: 'cdkTableVirtualScroll',
   providers: [
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy},
-    // The directive cannot provide itself as the sticky positions listener because it introduces
-    // a circular dependency. Use an intermediate listener as a proxy.
-    {provide: STICKY_POSITIONING_LISTENER, useClass: _PositioningListenerProxy},
+    {provide: STICKY_POSITIONING_LISTENER, useExisting: CdkTableVirtualScroll},
     // Initially emit an empty range. The virtual scroll viewport will update the range after it is
     // initialized.
     {
@@ -141,9 +99,6 @@ export class CdkTableVirtualScroll<T>
   }
 
   constructor() {
-    const positioningListener = inject<_PositioningListenerProxy>(STICKY_POSITIONING_LISTENER);
-    positioningListener.setListener(this);
-
     // Force the table to enable `fixedLayout` to prevent column widths from changing as the user
     // scrolls. This also enables caching in the table's sticky styler which reduces calls to
     // expensive DOM APIs, such as `getBoundingClientRect()`, and improves overall performance.
@@ -193,13 +148,9 @@ export class CdkTableVirtualScroll<T>
     return 0;
   }
 
-  stickyColumnsUpdated(update: StickyUpdate): void {
-    // no-op
-  }
+  stickyColumnsUpdated(): void {}
 
-  stickyEndColumnsUpdated(update: StickyUpdate): void {
-    // no-op
-  }
+  stickyEndColumnsUpdated(): void {}
 
   stickyHeaderRowsUpdated(update: StickyUpdate): void {
     this._headerRowStickyUpdates.next(update);
