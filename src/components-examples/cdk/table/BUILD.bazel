@@ -13,6 +13,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/cdk/table",
+        "//src/cdk/scrolling",
     ],
 )
 

@@ -35,10 +35,11 @@ import {
   asapScheduler,
   Observable,
   Observer,
+  OperatorFunction,
   Subject,
   Subscription,
 } from 'rxjs';
-import {auditTime, startWith, takeUntil} from 'rxjs/operators';
+import {auditTime, distinctUntilChanged, filter, startWith, takeUntil} from 'rxjs/operators';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
@@ -102,6 +103,15 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Emits when the rendered range changes. */
   private readonly _renderedRangeSubject = new Subject<ListRange>();
+
+  /**
+   * Emits the offset from the start of the viewport to the start of the rendered data (in pixels).
+   */
+  private readonly _renderedContentOffsetRenderedSubject = new Subject<number | null>();
+  readonly _renderedContentOffsetRendered = this._renderedContentOffsetRenderedSubject.pipe(
+    filter(offset => offset !== null) as OperatorFunction<number | null, number>,
+    distinctUntilChanged(),
+  );
 
   /** The direction the viewport scrolls. */
   @Input()
@@ -537,6 +547,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
       // the `Number` function first to coerce it to a numeric value.
       this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
+      // Emit the offset to rendered content start when it is in sync with what is rendered in the
+      // DOM.
+      this._renderedContentOffsetRenderedSubject.next(this.getOffsetToRenderedContentStart());
 
       afterNextRender(
         () => {
