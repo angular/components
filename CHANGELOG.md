@@ -1,3 +1,19 @@
+<a name="21.0.2"></a>
+# 21.0.2 "babefphite-button" (2025-12-03)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b8f2151d0](https://github.com/angular/components/commit/b8f2151d02f7d3220750b8e60783cfeedd5a39d1) | fix | **menu:** focus flicker bug |
+| [591c3d8cc](https://github.com/angular/components/commit/591c3d8ccd8a6875c57f47357b2b1c0127fb4704) | fix | **menu:** update api goldens ([#32463](https://github.com/angular/components/pull/32463)) |
+| [bfe017741](https://github.com/angular/components/commit/bfe0177411c679b03d457532dfd5b82b235576df) | fix | **menu:** update unit tests to use ngMenuContent |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a6de52a67](https://github.com/angular/components/commit/a6de52a67c9caafce5dde03a24a7042315091771) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
+| [ef8388b71](https://github.com/angular/components/commit/ef8388b714ca88def0bad2f9fa5ca544dd5260e1) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0-next.0"></a>
 # 21.1.0-next.0 "sulfur-sombrero" (2025-11-26)
 ### aria
