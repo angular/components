@@ -27,6 +27,9 @@ export type _Bottom = {
 };
 
 // @public
+export const CDK_VIRTUAL_SCROLL_VIEWPORT: InjectionToken<CdkVirtualScrollViewport>;
+
+// @public
 export class CdkFixedSizeVirtualScroll implements OnChanges {
     get itemSize(): number;
     set itemSize(value: NumberInput);

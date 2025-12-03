@@ -36,7 +36,7 @@ import {NumberInput, coerceNumberProperty} from '../coercion';
 import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
-import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
+import {CDK_VIRTUAL_SCROLL_VIEWPORT} from './virtual-scroll-viewport';
 
 /** The context for an item rendered by `CdkVirtualForOf` */
 export type CdkVirtualForOfContext<T> = {
@@ -87,7 +87,7 @@ export class CdkVirtualForOf<T>
   private _template = inject<TemplateRef<CdkVirtualForOfContext<T>>>(TemplateRef);
   private _differs = inject(IterableDiffers);
   private _viewRepeater = new _RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>();
-  private _viewport = inject(CdkVirtualScrollViewport, {skipSelf: true});
+  private _viewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {skipSelf: true});
 
   /** Emits when the rendered view of the data changes. */
   readonly viewChange = new Subject<ListRange>();
