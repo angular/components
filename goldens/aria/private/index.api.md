@@ -583,6 +583,7 @@ export class MenuPattern<V> {
     expand(): void;
     first(): void;
     hasBeenFocused: _angular_core.WritableSignal<boolean>;
+    hasBeenHovered: _angular_core.WritableSignal<boolean>;
     id: SignalLike<string>;
     // (undocumented)
     readonly inputs: MenuInputs<V>;
