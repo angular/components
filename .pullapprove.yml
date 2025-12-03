@@ -1,0 +1,107 @@
+version: 3
+
+# Add users here if they're temporarily unavailable.
+#availability:
+#  users_unavailable: []
+
+# Meta field that goes unused by PullApprove to allow for defining aliases to be
+# used throughout the config.
+meta:
+  no-groups-above-this-active: &no-groups-above-this-active len(groups.active.exclude("components-team")) == 0
+
+  defaults: &defaults
+    reviews:
+      # Authors provide their approval implicitly, this approval allows for a reviewer
+      # from a group not to need a review specifically for an area of the repository
+      # they own.  This is coupled with the `required-minimum-review` group which requires
+      # that all PRs are reviewed by at least one team member who is not the author of
+      # the PR.
+      author_value: 1
+
+# turn on 'draft' support
+# https://docs.pullapprove.com/config/github-api-version/
+# https://developer.github.com/v3/previews/#draft-pull-requests
+github_api_version: 'shadow-cat-preview'
+
+# https://docs.pullapprove.com/config/overrides/
+# Note that overrides are processed in order.
+overrides:
+  # For PRs which are still being worked on, either still in draft mode or indicated through WIP in
+  # title or label, PullApprove stays in a pending state until its ready for review.
+  - if: "draft or 'WIP' in title or 'PR state: WIP' in labels"
+    status: pending
+    explanation: 'Waiting to send reviews as PR is WIP'
+  # Disable PullApprove on specific PRs by adding the `PullApprove: disable` label
+  - if: "'PullApprove: disable' in labels"
+    status: success
+    explanation: "PullApprove skipped because of 'PullApprove: disable' label"
+  # If no file matching based groups are active, report this pull request as failing. Most likely,
+  # the PR author would need to update the PullApprove config, or create new group.
+  - if: len(groups.active) == 0
+    status: failure
+    explanation: 'At least one group must match this PR. Please update an existing review group, or create a new group.'
+
+groups:
+  components-infra:
+    <<: *defaults
+    conditions:
+      - author not in ["angular-robot"]
+      - >
+        contains_any_globs(files, [
+          '.bazel_fix_commands.json',
+          '.bazelignore',
+          '.bazelrc',
+          '.bazelversion',
+          '.firebaserc',
+          '.git-blame-ignore-revs',
+          '.gitignore',
+          '.npmrc',
+          '.nvmrc',
+          '.pullapprove.yml',
+          'firebase.json',
+          'LICENSE',
+          'renovate.json',
+          'tsconfig.json',
+          '.github/**/{*,.*}',
+          '.husky/**/{*,.*}',
+          '.ng-dev/**/{*,.*}',
+          '.vscode/**/{*,.*}',
+          'scripts/**/{*,.*}',
+          'test/**/{*,.*}',
+          'tools/**/{*,.*}',
+        ])
+    reviews:
+      request: 1 # Request at least one review
+      required: 1 # Require that all PRs have approval from at least one of the users in the group
+      author_value: 0 # The author of the PR cannot provide an approval for themself
+    reviewers:
+      users:
+        - crisbeto
+        - devversion
+        - andrewseguin
+        - josephperrott
+
+  components-team:
+    <<: *defaults
+    conditions:
+      - *no-groups-above-this-active
+      - >
+        contains_any_globs(files, [
+          '**/{.*,*}/**',
+          '**/{.*,*}',
+        ])
+    reviews:
+      request: 2 # Request at least two reviews
+      required: 1 # Require that all PRs have approval from at least one of the users in the group
+      author_value: 0 # The author of the PR cannot provide an approval for themself
+    reviewers:
+      users:
+        - adolgachev
+        - crisbeto
+        - mmalerba
+        - andrewseguin
+        - wagnermaciel
+        - tjshiu
+        - ok7sai
+        - ~devversion
+        - ~josephperrott
