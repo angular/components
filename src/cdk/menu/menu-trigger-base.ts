@@ -102,6 +102,12 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
   /** Context data to be passed along to the menu template */
   menuData: unknown;
 
+  /**
+   * Selector for the element on which to set the transform origin once the menu is open.
+   * This makes it easier to implement animations that start from the attachment point of the menu.
+   */
+  transformOriginSelector: string | null = null;
+
   /** Close the opened menu. */
   abstract close(): void;
 
