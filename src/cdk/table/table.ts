@@ -17,6 +17,7 @@ import {
   _ViewRepeaterItemChange,
   _ViewRepeaterItemInsertArgs,
   _ViewRepeaterOperation,
+  ListRange,
 } from '../collections';
 import {Platform} from '../platform';
 import {ViewportRuler} from '../scrolling';
@@ -50,9 +51,11 @@ import {
   Injector,
   HostAttributeToken,
   DOCUMENT,
+  InjectionToken,
 } from '@angular/core';
 import {
   BehaviorSubject,
+  combineLatest,
   isObservable,
   Observable,
   of as observableOf,
@@ -100,6 +103,26 @@ export interface RowOutlet {
 
 /** Possible types that can be set as the data source for a `CdkTable`. */
 export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observable<readonly T[]>;
+
+/** A strategy that implements the behavior for the table's `viewChange` observable. */
+interface TableViewChangeStrategy {
+  /**
+   * A stream that emits whenever the table starts rendering a subset of the data. The `start` index
+   * is inclusive, while the `end` is exclusive.
+   */
+  viewChange: BehaviorSubject<ListRange>;
+}
+
+/**
+ * Injection token for the `CdkTable` view change strategy.
+ *
+ * The table will emit a `viewChange` range that spans the entire data set. This provider overrides
+ * its `viewChange` observable so its behavior can be overridden from another component or
+ * directive.
+ */
+export const _TABLE_VIEW_CHANGE_STRATEGY = new InjectionToken<TableViewChangeStrategy>(
+  'TABLE_VIEW_CHANGE_STRATEGY',
+);
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
@@ -281,7 +304,8 @@ export class CdkTable<T>
   private _platform = inject(Platform);
   protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
-  protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
+  protected readonly _positioningListener = inject(STICKY_POSITIONING_LISTENER, {optional: true});
+  protected readonly _parentPositioningListener = inject<StickyPositioningListener>(
     STICKY_POSITIONING_LISTENER,
     {optional: true, skipSelf: true},
   )!;
@@ -290,6 +314,9 @@ export class CdkTable<T>
 
   /** Latest data provided by the data source. */
   protected _data: readonly T[] | undefined;
+
+  /** Latest range of data rendered. */
+  protected _renderedRange?: ListRange;
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -497,9 +524,14 @@ export class CdkTable<T>
   set dataSource(dataSource: CdkTableDataSourceInput<T>) {
     if (this._dataSource !== dataSource) {
       this._switchDataSource(dataSource);
+      this._changeDetectorRef.markForCheck();
     }
   }
   private _dataSource: CdkTableDataSourceInput<T>;
+  /** Emits when the data source changes. */
+  readonly _dataSourceChanges = new Subject<CdkTableDataSourceInput<T>>();
+  /** Observable that emits the data source's complete data set. */
+  readonly _dataStream = new Subject<readonly T[]>();
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
@@ -553,18 +585,15 @@ export class CdkTable<T>
   @Output()
   readonly contentChanged = new EventEmitter<void>();
 
-  // TODO(andrewseguin): Remove max value as the end index
-  //   and instead calculate the view on init and scroll.
   /**
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    *
    * @docs-private
    */
-  readonly viewChange = new BehaviorSubject<{start: number; end: number}>({
-    start: 0,
-    end: Number.MAX_VALUE,
-  });
+  readonly viewChange =
+    inject<BehaviorSubject<ListRange>>(_TABLE_VIEW_CHANGE_STRATEGY, {optional: true}) ||
+    new BehaviorSubject<ListRange>({start: 0, end: Number.MAX_VALUE});
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
   _rowOutlet: DataRowOutlet;
@@ -609,6 +638,9 @@ export class CdkTable<T>
 
     this._isServer = !this._platform.isBrowser;
     this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
+    this._parentPositioningListener = this._positioningListener ?? this._parentPositioningListener;
+    this.viewChange =
+      this.viewChange ?? new BehaviorSubject<ListRange>({start: 0, end: Number.MAX_VALUE});
 
     // Set up the trackBy function so that it uses the `RenderRow` as its identity by default. If
     // the user has provided a custom trackBy, return the result of that function as evaluated
@@ -965,6 +997,9 @@ export class CdkTable<T>
    * so that the differ equates their references.
    */
   private _getAllRenderRows(): RenderRow<T>[] {
+    const dataWithinRange = this._renderedRange
+      ? (this._data || []).slice(this._renderedRange.start, this._renderedRange.end)
+      : [];
     const renderRows: RenderRow<T>[] = [];
 
     // Store the cache and create a new one. Any re-used RenderRow objects will be moved into the
@@ -978,8 +1013,8 @@ export class CdkTable<T>
 
     // For each data object, get the list of rows that should be rendered, represented by the
     // respective `RenderRow` object which is the pair of `data` and `CdkRowDef`.
-    for (let i = 0; i < this._data.length; i++) {
-      let data = this._data[i];
+    for (let i = 0; i < dataWithinRange.length; i++) {
+      let data = dataWithinRange[i];
       const renderRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
 
       if (!this._cachedRenderRowsMap.has(data)) {
@@ -1153,10 +1188,12 @@ export class CdkTable<T>
       throw getTableUnknownDataSourceError();
     }
 
-    this._renderChangeSubscription = dataStream!
+    this._renderChangeSubscription = combineLatest([dataStream!, this.viewChange])
       .pipe(takeUntil(this._onDestroy))
-      .subscribe(data => {
+      .subscribe(([data, range]) => {
         this._data = data || [];
+        this._renderedRange = range;
+        this._dataStream.next(data);
         this.renderRows();
       });
   }
@@ -1384,7 +1421,7 @@ export class CdkTable<T>
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       direction,
-      this._stickyPositioningListener,
+      this._parentPositioningListener,
       this._injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())

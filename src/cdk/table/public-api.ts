@@ -13,6 +13,7 @@ export * from './table-module';
 export * from './sticky-position-listener';
 export * from './text-column';
 export * from './tokens';
+export * from './table-virtual-scroll';
 
 /** Re-export DataSource for a more intuitive experience for users of just the table. */
 export {DataSource} from '../collections';
