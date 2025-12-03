@@ -34,8 +34,8 @@ jobs:
         run: |
           bazel build //:entry_points_manifest
           pnpm check-entry-point-setup $(bazel info bazel-bin)/entry_points_manifest.json
-      - name: Check OWNERS file
-        run: pnpm ownerslint
+      - name: Validate pull approve configuration
+        run: pnpm ng-dev pullapprove verify
       - name: Check for component id collisions
         run: pnpm detect-component-id-collisions
       - name: Check style lint
