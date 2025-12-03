@@ -13,7 +13,6 @@ import {
   ListRange,
   isDataSource,
   _RecycleViewRepeaterStrategy,
-  _VIEW_REPEATER_STRATEGY,
   _ViewRepeaterItemInsertArgs,
 } from '../collections';
 import {
@@ -80,7 +79,6 @@ function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 
  */
 @Directive({
   selector: '[cdkVirtualFor][cdkVirtualForOf]',
-  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
 })
 export class CdkVirtualForOf<T>
   implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy
@@ -88,8 +86,7 @@ export class CdkVirtualForOf<T>
   private _viewContainerRef = inject(ViewContainerRef);
   private _template = inject<TemplateRef<CdkVirtualForOfContext<T>>>(TemplateRef);
   private _differs = inject(IterableDiffers);
-  private _viewRepeater =
-    inject<_RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>>(_VIEW_REPEATER_STRATEGY);
+  private _viewRepeater = new _RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>();
   private _viewport = inject(CdkVirtualScrollViewport, {skipSelf: true});
 
   /** Emits when the rendered view of the data changes. */

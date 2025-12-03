@@ -13,7 +13,6 @@ import {
   _DisposeViewRepeaterStrategy,
   _RecycleViewRepeaterStrategy,
   isDataSource,
-  _VIEW_REPEATER_STRATEGY,
   _ViewRepeater,
   _ViewRepeaterItemChange,
   _ViewRepeaterItemInsertArgs,
@@ -87,11 +86,11 @@ import {CDK_TABLE} from './tokens';
 /**
  * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
  * tables that animate rows.
+ *
+ * @deprecated This directive is a no-op and will be removed.
+ * @breaking-change 23.0.0
  */
-@Directive({
-  selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]',
-  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
-})
+@Directive({selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]'})
 export class CdkRecycleRows {}
 
 /** Interface used to provide an outlet for rows to be inserted into. */
@@ -268,7 +267,6 @@ export interface RenderRow<T> {
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
@@ -282,8 +280,7 @@ export class CdkTable<T>
   protected readonly _elementRef = inject(ElementRef);
   protected readonly _dir = inject(Directionality, {optional: true});
   private _platform = inject(Platform);
-  protected readonly _viewRepeater =
-    inject<_ViewRepeater<T, RenderRow<T>, RowContext<T>>>(_VIEW_REPEATER_STRATEGY);
+  protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
   protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
     STICKY_POSITIONING_LISTENER,
@@ -545,6 +542,12 @@ export class CdkTable<T>
   private _fixedLayout: boolean = false;
 
   /**
+   * Whether rows should be recycled which reduces latency, but is not compatible with tables
+   * that animate rows. Note that this input cannot change after the table is initialized.
+   */
+  @Input({transform: booleanAttribute}) recycleRows = false;
+
+  /**
    * Emits when the table completes rendering a set of data rows based on the latest data from the
    * data source, even if the set of rows is empty.
    */
@@ -628,6 +631,9 @@ export class CdkTable<T>
   }
 
   ngAfterContentInit() {
+    this._viewRepeater = this.recycleRows
+      ? new _RecycleViewRepeaterStrategy()
+      : new _DisposeViewRepeaterStrategy();
     this._hasInitialized = true;
   }
 
