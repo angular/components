@@ -854,10 +854,13 @@ describe('MatIcon', () => {
       // Stub out console.warn so we don't pollute our logs with Angular's warnings.
       // Jasmine will tear the spy down at the end of the test.
       spyOn(console, 'warn');
+      iconRegistry.addSvgIconLiteral('circle', '<svg><circle></svg>');
 
       expect(() => {
-        iconRegistry.addSvgIconLiteral('circle', '<svg><circle></svg>');
-      }).toThrowError(/was not trusted as safe HTML/);
+        const fixture = TestBed.createComponent(IconFromSvgName);
+        fixture.componentInstance.iconName = 'circle';
+        fixture.detectChanges();
+      }).toThrowError(/Could not sanitize HTML/);
     });
 
     it('should extract an icon from SVG icon set', () => {

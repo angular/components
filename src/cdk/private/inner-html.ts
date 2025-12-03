@@ -18,7 +18,7 @@ import {trustedHTMLFromString} from './trusted-types';
 export function _setInnerHtml(element: HTMLElement, html: SafeHtml, sanitizer: DomSanitizer): void {
   const cleanHtml = sanitizer.sanitize(SecurityContext.HTML, html);
 
-  if (cleanHtml === null && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+  if (!cleanHtml && (typeof ngDevMode === 'undefined' || ngDevMode)) {
     throw new Error(`Could not sanitize HTML: ${html}`);
   }
 
