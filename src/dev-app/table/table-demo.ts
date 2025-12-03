@@ -11,6 +11,8 @@ import {
   CdkTableFixedLayoutExample,
   CdkTableFlexBasicExample,
   CdkTableRecycleRowsExample,
+  CdkVirtualFlexTableExample,
+  CdkVirtualTableExample,
 } from '@angular/components-examples/cdk/table';
 import {
   TableBasicExample,
@@ -73,6 +75,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TableReorderableExample,
     TableRecycleRowsExample,
     TableFlexLargeRowExample,
+    CdkVirtualFlexTableExample,
+    CdkVirtualTableExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
