@@ -19,6 +19,7 @@ import {
   effect,
   ElementRef,
   inject,
+  InjectionToken,
   Injector,
   Input,
   OnDestroy,
@@ -57,6 +58,14 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
 const SCROLL_SCHEDULER =
   typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
+/**
+ * Lightweight token that can be used to inject the `CdkVirtualScrollViewport`
+ * without introducing a hard dependency on it.
+ */
+export const CDK_VIRTUAL_SCROLL_VIEWPORT = new InjectionToken<CdkVirtualScrollViewport>(
+  'CDK_VIRTUAL_SCROLL_VIEWPORT',
+);
+
 /** A viewport that virtualizes its scrolling with the help of `CdkVirtualForOf`. */
 @Component({
   selector: 'cdk-virtual-scroll-viewport',
@@ -75,6 +84,7 @@ const SCROLL_SCHEDULER =
       useFactory: () =>
         inject(VIRTUAL_SCROLLABLE, {optional: true}) || inject(CdkVirtualScrollViewport),
     },
+    {provide: CDK_VIRTUAL_SCROLL_VIEWPORT, useExisting: CdkVirtualScrollViewport},
   ],
 })
 export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
