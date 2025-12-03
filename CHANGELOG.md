@@ -1,3 +1,23 @@
+<a name="21.1.0-next.1"></a>
+# 21.1.0-next.1 "babingtonite-blinds" (2025-12-03)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8533f4285](https://github.com/angular/components/commit/8533f4285f74791f483bf80fef14343dcc1de550) | fix | **menu:** focus flicker bug |
+| [c097570e2](https://github.com/angular/components/commit/c097570e2856f919ebd5ca3accd79d2ec42f9627) | fix | **menu:** update api goldens ([#32463](https://github.com/angular/components/pull/32463)) |
+| [5c7b36fe1](https://github.com/angular/components/commit/5c7b36fe13912c395a6c62e833b541aa40ea0b45) | fix | **menu:** update unit tests to use ngMenuContent |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [75b373bbc](https://github.com/angular/components/commit/75b373bbcf2c38115b8c4fe32cbf96c097fe6e49) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32412](https://github.com/angular/components/pull/32412)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4cc5880d4](https://github.com/angular/components/commit/4cc5880d42eacf4d0793e2f84d925f4b7cabd29e) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
+| [cd22ab69f](https://github.com/angular/components/commit/cd22ab69f0760843fa452b366e707c00c098dd6b) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.2"></a>
 # 21.0.2 "babefphite-button" (2025-12-03)
 ### aria
