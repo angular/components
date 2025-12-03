@@ -64,7 +64,7 @@ export class StickyStyler {
     private _isBrowser = true,
     private readonly _needsPositionStickyOnElement = true,
     public direction: Direction,
-    private readonly _positionListener: StickyPositioningListener,
+    private readonly _positionListener: StickyPositioningListener | null,
     private readonly _tableInjector: Injector,
   ) {
     this._borderCellCss = {

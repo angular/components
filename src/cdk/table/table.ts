@@ -304,11 +304,7 @@ export class CdkTable<T>
   private _platform = inject(Platform);
   protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
-  protected readonly _positioningListener = inject(STICKY_POSITIONING_LISTENER, {optional: true});
-  protected readonly _parentPositioningListener = inject<StickyPositioningListener>(
-    STICKY_POSITIONING_LISTENER,
-    {optional: true, skipSelf: true},
-  )!;
+  private _injector = inject(Injector);
 
   private _document = inject(DOCUMENT);
 
@@ -625,8 +621,6 @@ export class CdkTable<T>
   /** Row definition that will only be rendered if there's no data in the table. */
   @ContentChild(CdkNoDataRow) _noDataRow: CdkNoDataRow;
 
-  private _injector = inject(Injector);
-
   constructor(...args: unknown[]);
 
   constructor() {
@@ -638,7 +632,6 @@ export class CdkTable<T>
 
     this._isServer = !this._platform.isBrowser;
     this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
-    this._parentPositioningListener = this._positioningListener ?? this._parentPositioningListener;
     this.viewChange =
       this.viewChange ?? new BehaviorSubject<ListRange>({start: 0, end: Number.MAX_VALUE});
 
@@ -1415,14 +1408,19 @@ export class CdkTable<T>
    */
   private _setupStickyStyler() {
     const direction: Direction = this._dir ? this._dir.value : 'ltr';
+    const injector = this._injector;
+    const positioningListener =
+      injector.get(STICKY_POSITIONING_LISTENER, null, {optional: true}) ||
+      injector.get(STICKY_POSITIONING_LISTENER, null, {optional: true, skipSelf: true});
+
     this._stickyStyler = new StickyStyler(
       this._isNativeHtmlTable,
       this.stickyCssClass,
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       direction,
-      this._parentPositioningListener,
-      this._injector,
+      positioningListener,
+      injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())
       .pipe(takeUntil(this._onDestroy))
