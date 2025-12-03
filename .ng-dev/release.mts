@@ -6,6 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import semver from 'semver';
+import {ReleaseConfig} from '@angular/ng-dev';
+import {assertValidUpdateMigrationCollections} from '../tools/release-checks/check-migration-collections.mjs';
+import {assertValidNpmPackageOutput} from '../tools/release-checks/npm-package-output/index.mjs';
+
 /**
  * Packages that will be published as part of the project.
  *
@@ -25,12 +30,8 @@ export const releasePackages = [
   'material-date-fns-adapter',
 ];
 
-/**
- * Configuration for the `ng-dev release` command.
- *
- * @type { import("@angular/ng-dev").ReleaseConfig }
- */
-export const release = {
+/** Configuration for the `ng-dev release` command. */
+export const release: ReleaseConfig = {
   releaseNotes: {
     useReleaseTitle: true,
     groupOrder: releasePackages,
@@ -57,13 +58,6 @@ export const release = {
     return performNpmReleaseBuild();
   },
   prereleaseCheck: async (newVersionStr, builtPackagesWithInfo) => {
-    const semver = await import('semver');
-    const assertValidUpdateMigrationCollections = await import(
-      '../tools/release-checks/check-migration-collections.mjs'
-    );
-    const assertValidNpmPackageOutput = await import(
-      '../tools/release-checks/npm-package-output/index.mjs'
-    );
     const newVersion = new semver.SemVer(newVersionStr);
 
     await assertValidUpdateMigrationCollections(newVersion);

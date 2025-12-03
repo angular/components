@@ -12,5 +12,5 @@
     "downlevelIteration": true,
     "types": ["node"]
   },
-  "exclude": ["**/*.spec.ts", "**/*.spec.mts", "adev-api-extraction/**", "release-checks/**"]
+  "exclude": ["**/*.spec.ts", "**/*.spec.mts", "adev-api-extraction/**"]
 }
