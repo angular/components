@@ -139,7 +139,7 @@ export class MatNoDataRow extends CdkNoDataRow {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatNoDataRow, never>;
 }
 
-// @public
+// @public @deprecated
 export class MatRecycleRows {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatRecycleRows, "mat-table[recycleRows], table[mat-table][recycleRows]", never, {}, {}, never, never, true, never>;

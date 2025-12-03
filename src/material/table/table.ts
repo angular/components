@@ -16,20 +16,16 @@ import {
   NoDataRowOutlet,
   FooterRowOutlet,
 } from '@angular/cdk/table';
-import {
-  _DisposeViewRepeaterStrategy,
-  _RecycleViewRepeaterStrategy,
-  _VIEW_REPEATER_STRATEGY,
-} from '@angular/cdk/collections';
+import {_DisposeViewRepeaterStrategy, _RecycleViewRepeaterStrategy} from '@angular/cdk/collections';
 
 /**
  * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
  * tables that animate rows.
+ *
+ * @deprecated This directive is a no-op and will be removed.
+ * @breaking-change 23.0.0
  */
-@Directive({
-  selector: 'mat-table[recycleRows], table[mat-table][recycleRows]',
-  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
-})
+@Directive({selector: 'mat-table[recycleRows], table[mat-table][recycleRows]'})
 export class MatRecycleRows {}
 
 @Component({
@@ -75,9 +71,6 @@ export class MatRecycleRows {}
   providers: [
     {provide: CdkTable, useExisting: MatTable},
     {provide: CDK_TABLE, useExisting: MatTable},
-    // TODO(michaeljamesparsons) Abstract the view repeater strategy to a directive API so this code
-    //  is only included in the build if used.
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
