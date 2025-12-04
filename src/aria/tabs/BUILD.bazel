@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+load("//tools:defaults.bzl", "extract_api_to_json", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
