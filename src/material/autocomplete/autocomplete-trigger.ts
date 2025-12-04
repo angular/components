@@ -932,9 +932,24 @@ export class MatAutocompleteTrigger
     // the opposite end has rounded corners. We apply a CSS class to swap the
     // border-radius based on the overlay position.
     const panelClass = this._aboveClass;
+
+    // Calculate the vertical offset for the overlay when the input field has an outline appearance.
+    // In the outline appearance, the overlay should have extra space to display the label correctly.
+    let offsetY = 0;
+    if (this._formField?._hasOutline()) {
+      offsetY = -(this._formField?._floatingLabel?.element.getBoundingClientRect().height || 0) / 2;
+    }
+
     const abovePositions: ConnectedPosition[] = [
-      {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', panelClass},
-      {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', panelClass},
+      {
+        originX: 'start',
+        originY: 'top',
+        overlayX: 'start',
+        overlayY: 'bottom',
+        panelClass,
+        offsetY,
+      },
+      {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', panelClass, offsetY},
     ];
 
     let positions: ConnectedPosition[];
