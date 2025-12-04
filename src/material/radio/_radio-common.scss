@@ -32,6 +32,11 @@ $fallbacks: m3-radio.get-tokens();
     $size-token: token-utils.slot(radio-state-layer-size, $fallbacks);
     padding: calc((#{$size-token} - #{$_icon-size}) / 2);
 
+    .mdc-radio--disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+
     @if ($is-interactive) {
       // MDC's hover indication comes from their ripple which we don't use.
       &:hover > .mdc-radio__native-control:not([disabled]):not(:focus) {
