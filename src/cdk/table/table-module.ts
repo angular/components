@@ -36,7 +36,6 @@ import {
 } from './cell';
 import {CdkTextColumn} from './text-column';
 import {ScrollingModule} from '../scrolling';
-import {CdkTableVirtualScroll} from './table-virtual-scroll';
 
 const EXPORTED_DECLARATIONS = [
   CdkTable,
@@ -61,7 +60,6 @@ const EXPORTED_DECLARATIONS = [
   CdkNoDataRow,
   CdkRecycleRows,
   NoDataRowOutlet,
-  CdkTableVirtualScroll,
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
 <cdk-virtual-scroll-viewport class="example-container" [itemSize]="48" [maxBufferPx]="1200" [minBufferPx]="400">
-  <table class="example-virtual-table" cdk-table fixedLayout virtualScroll [dataSource]="dataSource" [trackBy]="trackBy">
+  <table class="example-virtual-table" cdk-table [dataSource]="dataSource" [trackBy]="trackBy">
     <!-- Position Column -->
     <ng-container cdkColumnDef="position">
       <th cdk-header-cell *cdkHeaderCellDef> No. </th>
