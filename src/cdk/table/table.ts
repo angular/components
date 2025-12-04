@@ -67,7 +67,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {auditTime, filter, map, takeUntil} from 'rxjs/operators';
+import {auditTime, takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {
   BaseRowDef,
@@ -1489,26 +1489,15 @@ export class CdkTable<T>
 
     viewport.attach({
       dataStream: this._dataStream,
-      measureRangeSize: () => {
-        // TODO(crisbeto): implement this method so autosizing works.
-        if (typeof ngDevMode === 'undefined' || ngDevMode) {
-          throw new Error('autoSize is not supported for tables with virtual scroll enabled.');
-        }
-        return 0;
-      },
+      measureRangeSize: (range, orientation) => this._measureRangeSize(range, orientation),
     });
-
-    const offsetFromTopStream = this.viewChange.pipe(
-      map(() => viewport.getOffsetToRenderedContentStart()),
-      filter(offset => offset !== null),
-    );
 
     // The `StyickyStyler` sticks elements by applying a `top` or `bottom` position offset to
     // them. However, the virtual scroll viewport applies a `translateY` offset to a container
     // div that encapsulates the table. The translation causes the rows to also be offset by the
     // distance from the top of the scroll viewport in addition to their `top` offset. This logic
     // negates the translation to move the rows to their correct positions.
-    combineLatest([offsetFromTopStream, this._headerRowStickyUpdates])
+    combineLatest([viewport.renderedContentOffset, this._headerRowStickyUpdates])
       .pipe(takeUntil(this._onDestroy))
       .subscribe(([offsetFromTop, update]) => {
         if (!update.sizes || !update.offsets || !update.elements) {
@@ -1530,7 +1519,7 @@ export class CdkTable<T>
         }
       });
 
-    combineLatest([offsetFromTopStream, this._footerRowStickyUpdates])
+    combineLatest([viewport.renderedContentOffset, this._footerRowStickyUpdates])
       .pipe(takeUntil(this._onDestroy))
       .subscribe(([offsetFromTop, update]) => {
         if (!update.sizes || !update.offsets || !update.elements) {
@@ -1593,6 +1582,51 @@ export class CdkTable<T>
     this._isShowingNoDataRow = shouldShow;
 
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Measures the size of the rendered range in the table.
+   * This is used for virtual scrolling when auto-sizing is enabled.
+   */
+  private _measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number {
+    if (range.start >= range.end || orientation !== 'vertical') {
+      return 0;
+    }
+
+    const renderedRange = this.viewChange.value;
+    const viewContainerRef = this._rowOutlet.viewContainer;
+
+    if (
+      (range.start < renderedRange.start || range.end > renderedRange.end) &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
+      throw Error(`Error: attempted to measure an item that isn't rendered.`);
+    }
+
+    const renderedStartIndex = range.start - renderedRange.start;
+    const rangeLen = range.end - range.start;
+    let firstNode: HTMLElement | undefined;
+    let lastNode: HTMLElement | undefined;
+
+    for (let i = 0; i < rangeLen; i++) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        firstNode = lastNode = view.rootNodes[0];
+        break;
+      }
+    }
+
+    for (let i = rangeLen - 1; i > -1; i--) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        lastNode = view.rootNodes[view.rootNodes.length - 1];
+        break;
+      }
+    }
+
+    const startRect = firstNode?.getBoundingClientRect?.();
+    const endRect = lastNode?.getBoundingClientRect?.();
+    return startRect && endRect ? endRect.bottom - startRect.top : 0;
   }
 }
 
