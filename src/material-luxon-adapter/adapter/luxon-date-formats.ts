@@ -8,7 +8,7 @@
 
 import {MatDateFormats} from '@angular/material/core';
 
-export const MAT_LUXON_DATE_FORMATS: MatDateFormats = {
+export const MAT_LUXON_DATE_FORMATS: MatDateFormats<string, string | string[]> = {
   parse: {
     dateInput: 'D',
     timeInput: 't',
