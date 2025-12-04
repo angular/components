@@ -1,3 +1,4 @@
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@devinfra//bazel/validation:defs.bzl", "validate_ts_version_matching")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
@@ -42,4 +43,16 @@ genrule(
 validate_ts_version_matching(
     module_lock_file = "MODULE.bazel.lock",
     package_json = "package.json",
+)
+
+bool_flag(
+    name = "enable_snapshot_adev_assets",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "snapshot_adev_assets",
+    flag_values = {
+        ":enable_snapshot_adev_assets": "true",
+    },
 )
