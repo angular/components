@@ -1,0 +1,459 @@
+<div ngMenuBar dir="rtl">
+  <div
+    ngMenuItem
+    #fileEl
+    #fileItem="ngMenuItem"
+    class="menu-bar-item"
+    value="File"
+    [submenu]="fileMenu()"
+  >
+    File
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: fileEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #fileMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="New">
+          <span class="example-icon material-symbols-outlined" translate="no">article</span>
+          <span class="example-label">New</span>
+          <span class="example-shortcut">⌘N</span>
+        </div>
+
+        <div ngMenuItem value="Open">
+          <span class="example-icon material-symbols-outlined" translate="no">folder</span>
+          <span class="example-label">Open</span>
+          <span class="example-shortcut">⌘O</span>
+        </div>
+
+        <div ngMenuItem value="Make a copy">
+          <span class="example-icon material-symbols-outlined" translate="no">file_copy</span>
+          <span class="example-label">Make a copy</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem #shareEl value="Share" [submenu]="shareMenu()">
+          <span class="example-icon material-symbols-outlined" translate="no">person_add</span>
+          <span class="example-label">Share</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!fileItem.expanded()"
+          [cdkConnectedOverlay]="{origin: shareEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #shareMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Share with others">
+                <span class="example-icon material-symbols-outlined" translate="no">person_add</span>
+                <span class="example-label">Share with others</span>
+              </div>
+
+              <div ngMenuItem value="Publish to web">
+                <span class="example-icon material-symbols-outlined" translate="no">public</span>
+                <span class="example-label">Publish to web</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem value="Download">
+          <span class="example-icon material-symbols-outlined" translate="no">download</span>
+          <span class="example-label">Download</span>
+        </div>
+
+        <div ngMenuItem value="Print">
+          <span class="example-icon material-symbols-outlined" translate="no">print</span>
+          <span class="example-label">Print</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem value="Rename">
+          <span class="example-icon material-symbols-outlined" translate="no">edit</span>
+          <span class="example-label">Rename</span>
+        </div>
+
+        <div ngMenuItem value="Delete">
+          <span class="example-icon material-symbols-outlined" translate="no">delete</span>
+          <span class="example-label">Move to trash</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #editEl
+    #editItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Edit"
+    [submenu]="editMenu()"
+  >
+    Edit
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: editEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #editMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Undo">
+          <span class="example-icon material-symbols-outlined" translate="no">undo</span>
+          <span class="example-label">Undo</span>
+          <span class="example-shortcut">⌘Z</span>
+        </div>
+
+        <div ngMenuItem value="Redo">
+          <span class="example-icon material-symbols-outlined" translate="no">redo</span>
+          <span class="example-label">Redo</span>
+          <span class="example-shortcut">⌘Y</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem value="Cut">
+          <span class="example-icon material-symbols-outlined" translate="no">content_cut</span>
+          <span class="example-label">Cut</span>
+          <span class="example-shortcut">⌘X</span>
+        </div>
+
+        <div ngMenuItem value="Copy">
+          <span class="example-icon material-symbols-outlined" translate="no">content_copy</span>
+          <span class="example-label">Copy</span>
+          <span class="example-shortcut">⌘C</span>
+        </div>
+
+        <div ngMenuItem value="Paste">
+          <span class="example-icon material-symbols-outlined" translate="no">content_paste</span>
+          <span class="example-label">Paste</span>
+          <span class="example-shortcut">⌘V</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem value="Find and replace">
+          <span class="example-icon material-symbols-outlined" translate="no">find_replace</span>
+          <span class="example-label">Find and replace</span>
+          <span class="example-shortcut">⇧⌘H</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #viewEl
+    #viewItem="ngMenuItem"
+    class="menu-bar-item"
+    value="View"
+    [submenu]="viewMenu()"
+  >
+    View
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: viewEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #viewMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Show print layout" [disabled]="true">
+          <span class="example-icon material-symbols-outlined" translate="no">check</span>
+          <span class="example-label">Show print layout</span>
+        </div>
+
+        <div ngMenuItem value="Show ruler" [disabled]="true">
+          <span class="example-icon material-symbols-outlined" translate="no">check</span>
+          <span class="example-label">Show ruler</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem value="Zoom in">
+          <span class="example-label">Zoom in</span>
+          <span class="example-shortcut">⌘+</span>
+        </div>
+
+        <div ngMenuItem value="Zoom out">
+          <span class="example-label">Zoom out</span>
+          <span class="example-shortcut">⌘-</span>
+        </div>
+
+        <div role="separator" class="example-separator"></div>
+
+        <div ngMenuItem value="Full screen">
+          <span class="example-label">Full screen</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #insertEl
+    #insertItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Insert"
+    [submenu]="insertMenu()"
+  >
+    Insert
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: insertEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #insertMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem #imageEl value="Image" [submenu]="imageMenu()">
+          <span class="example-icon material-symbols-outlined" translate="no">image</span>
+          <span class="example-label">Image</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!insertItem.expanded()"
+          [cdkConnectedOverlay]="{origin: imageEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #imageMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Upload from computer">
+                <span class="example-icon material-symbols-outlined" translate="no">upload</span>
+                <span class="example-label">Upload from computer</span>
+              </div>
+
+              <div ngMenuItem value="Search the web">
+                <span class="example-icon material-symbols-outlined" translate="no">search</span>
+                <span class="example-label">Search the web</span>
+              </div>
+
+              <div ngMenuItem value="By URL">
+                <span class="example-icon material-symbols-outlined" translate="no">link</span>
+                <span class="example-label">By URL</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem value="Table">
+          <span class="example-icon material-symbols-outlined" translate="no">table_chart</span>
+          <span class="example-label">Table</span>
+        </div>
+
+        <div ngMenuItem #chartEl value="Chart" [submenu]="chartMenu()">
+          <span class="example-icon material-symbols-outlined" translate="no">insert_chart</span>
+          <span class="example-label">Chart</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!insertItem.expanded()"
+          [cdkConnectedOverlay]="{origin: chartEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #chartMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Bar">
+                <span class="example-icon material-symbols-outlined" translate="no">bar_chart</span>
+                <span class="example-label">Bar</span>
+              </div>
+
+              <div ngMenuItem value="Column">
+                <span class="example-icon material-symbols-outlined" translate="no">insert_chart</span>
+                <span class="example-label">Column</span>
+              </div>
+
+              <div ngMenuItem value="Line">
+                <span class="example-icon material-symbols-outlined" translate="no">show_chart</span>
+                <span class="example-label">Line</span>
+              </div>
+
+              <div ngMenuItem value="Pie">
+                <span class="example-icon material-symbols-outlined" translate="no">pie_chart</span>
+                <span class="example-label">Pie</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem value="Horizontal line">
+          <span class="example-icon material-symbols-outlined" translate="no">horizontal_rule</span>
+          <span class="example-label">Horizontal line</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #formatEl
+    #formatItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Format"
+    [submenu]="formatMenu()"
+  >
+    Format
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: formatEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #formatMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem #textEl #textItem="ngMenuItem" value="Text" [submenu]="textMenu()">
+          <span class="example-icon material-symbols-outlined" translate="no">format_bold</span>
+          <span class="example-label">Text</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
+          [cdkConnectedOverlay]="{origin: textEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #textMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Bold">
+                <span class="example-icon material-symbols-outlined" translate="no">format_bold</span>
+                <span class="example-label">Bold</span>
+                <span class="example-shortcut">⌘B</span>
+              </div>
+
+              <div ngMenuItem value="Italic">
+                <span class="example-icon material-symbols-outlined" translate="no">format_italic</span>
+                <span class="example-label">Italic</span>
+                <span class="example-shortcut">⌘I</span>
+              </div>
+
+              <div ngMenuItem value="Underline">
+                <span class="example-icon material-symbols-outlined" translate="no">format_underlined</span>
+                <span class="example-label">Underline</span>
+                <span class="example-shortcut">⌘U</span>
+              </div>
+
+              <div ngMenuItem value="Strikethrough">
+                <span class="example-icon material-symbols-outlined" translate="no">strikethrough_s</span>
+                <span class="example-label">Strikethrough</span>
+                <span class="example-shortcut">⇧⌘X</span>
+              </div>
+
+              <div role="separator" class="example-separator"></div>
+
+              <div ngMenuItem #sizeEl value="Size" [submenu]="sizeMenu()">
+                <span class="example-label">Size</span>
+                <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+              </div>
+
+              <ng-template
+                [cdkConnectedOverlayOpen]="!!textItem.expanded()"
+                [cdkConnectedOverlay]="{origin: sizeEl, usePopover: 'inline'}"
+                [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+                cdkAttachPopoverAsChild
+              >
+                <div ngMenu #sizeMenu="ngMenu">
+                  <ng-template ngMenuContent>
+                    <div ngMenuItem value="Increase font size">
+                      <span class="example-label">Increase font size</span>
+                      <span class="example-shortcut">⇧⌘.</span>
+                    </div>
+
+                    <div ngMenuItem value="Decrease font size">
+                      <span class="example-label">Decrease font size</span>
+                      <span class="example-shortcut">⇧⌘,</span>
+                    </div>
+                  </ng-template>
+                </div>
+              </ng-template>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem #paragraphEl value="Paragraph styles" [submenu]="paragraphMenu()">
+          <span class="example-icon material-symbols-outlined" translate="no">format_align_justify</span>
+          <span class="example-label">Paragraph styles</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
+          [cdkConnectedOverlay]="{origin: paragraphEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #paragraphMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Normal text">Normal text</div>
+              <div ngMenuItem value="Heading 1">Heading 1</div>
+              <div ngMenuItem value="Heading 2">Heading 2</div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem #alignEl [submenu]="alignMenu()" value="Align & indent">
+          <span class="example-icon material-symbols-outlined" translate="no">format_indent_increase</span>
+          <span class="example-label">Align & indent</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_left</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
+          [cdkConnectedOverlay]="{origin: alignEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: -6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #alignMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Align left">
+                <span class="example-icon material-symbols-outlined" translate="no">format_align_left</span>
+                <span class="example-label">Align left</span>
+              </div>
+
+              <div ngMenuItem value="Align center">
+                <span class="example-icon material-symbols-outlined" translate="no"
+                  >format_align_center</span
+                >
+                <span class="example-label">Align center</span>
+              </div>
+
+              <div ngMenuItem value="Align right">
+                <span class="example-icon material-symbols-outlined" translate="no"
+                  >format_align_right</span
+                >
+                <span class="example-label">Align right</span>
+              </div>
+
+              <div ngMenuItem value="Justify">
+                <span class="example-icon material-symbols-outlined" translate="no"
+                  >format_align_justify</span
+                >
+                <span class="example-label">Justify</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

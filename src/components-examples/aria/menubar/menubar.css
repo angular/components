@@ -1,0 +1,80 @@
+:host {
+  --border-color: color-mix(in srgb, var(--mat-sys-outline) 40%, transparent);
+}
+
+[ngMenuBar] {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  border: 1px solid var(--border-color);
+  background-color: var(--mat-sys-surface);
+
+  /* stylelint-disable-next-line material/no-prefixes -- Valid in all remotely recent browsers. */
+  width: fit-content;
+}
+
+[ngMenuBar] > [ngMenuItem] {
+  padding: 0.25rem 0.5rem;
+}
+
+[ngMenu] {
+  margin: 0;
+  width: 15rem;
+  padding: 0.25rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  border: 1px solid var(--border-color);
+  background-color: var(--mat-sys-surface);
+}
+
+[ngMenu][data-visible='false'] {
+  display: none;
+}
+
+[ngMenuItem] {
+  outline: none;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+[ngMenuItem][aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.5;
+}
+
+[ngMenuItem][data-active='true'] {
+  background: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+[ngMenuItem]:focus {
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+[ngMenuItem] .example-icon {
+  opacity: 0.875;
+  font-size: 1.25rem;
+}
+
+[ngMenuItem] .example-label {
+  flex: 1;
+  opacity: 0.875;
+  font-size: 0.875rem;
+}
+
+[ngMenuItem]:not([aria-expanded='true']) .example-arrow {
+  opacity: 0.5;
+}
+
+[ngMenu] .example-separator {
+  border-top: 1px solid var(--border-color);
+  margin: 0.25rem 0;
+}
+
+[ngMenu] .example-shortcut {
+  opacity: 0.65;
+}
