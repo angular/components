@@ -123,10 +123,29 @@ export class MatDialogRef<T, R = any> {
   close(dialogResult?: R): void {
     const closePredicate = this._config.closePredicate;
 
-    if (closePredicate && !closePredicate(dialogResult, this._config, this.componentInstance)) {
-      return;
+    if (closePredicate) {
+      const result = closePredicate(dialogResult, this._config, this.componentInstance);
+
+      if (result instanceof Promise) {
+        result.then(canClose => {
+          if (canClose) {
+            this._performClose(dialogResult);
+          }
+        });
+        return;
+      } else if (!result) {
+        return;
+      }
     }
 
+    this._performClose(dialogResult);
+  }
+
+  /**
+   * Performs the actual dialog close operation.
+   * @param dialogResult Optional result to return to the dialog opener.
+   */
+  private _performClose(dialogResult?: R): void {
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.
