@@ -1,0 +1,21 @@
+<div ngCombobox #combobox="ngCombobox">
+  <input ngComboboxInput #comboboxInput="ngComboboxInput"
+         #inputElement
+         placeholder="Favorite biome"
+         [value]="initialValue.name"
+         (input)="filterBiomes($event.target.value)"/>
+
+    <ng-template
+      [cdkConnectedOverlay]="{origin: inputElement, usePopover: 'inline', matchWidth: true}"
+      [cdkConnectedOverlayOpen]="combobox.expanded()">
+      <div [(value)]="currentSelection" ngListbox>
+        @for (biomeOption of biomeOptions(); track biomeOption) {
+          <div ngOption [value]="biomeOption.id" [label]="biomeOption.name">
+            {{biomeOption.name}}
+          </div>
+        } @empty {
+          No matching biomes.
+        }
+      </div>
+    </ng-template>
+  </div>

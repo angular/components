@@ -1,0 +1,147 @@
+/** Accordion */
+
+[ngAccordionTrigger] {
+  display: inline-flex;
+  background: inherit;
+  border: none;
+  align-items: center;
+  font-size: inherit;
+  height: 36px;
+}
+
+[ngAccordionTrigger] svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease-in-out;
+  transform: rotate(90deg);
+}
+
+[ngAccordionTrigger][aria-expanded='true'] svg {
+  transform: rotate(-90deg);
+}
+
+/** Grid */
+
+[ngGrid] {
+  display: flex;
+  flex-direction: column;
+}
+
+[ngGridRow] {
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+[ngGridCell] {
+  padding: 8px;
+}
+
+button[ngGridCellWidget] {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  padding: 8px;
+}
+
+/** Combobox */
+
+[ngCombobox] [ngListbox] {
+  background: light-dark(white, black);
+  border: 1px solid;
+  padding: 8px;
+}
+
+[ngCombobox] [ngOption][aria-selected='true'] {
+  font-weight: bold;
+}
+
+[ngCombobox]:focus-within [ngOption][data-active='true'] {
+  border: 1px solid;
+}
+
+/** Listbox */
+
+[ngListbox] {
+  list-style-type: none;
+  padding: 0;
+}
+
+[ngOption] {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+[ngListbox]:focus-within [ngOption][data-active='true'] {
+  font-weight: bold;
+}
+
+[ngOption] .demo-selection-indicator {
+  font-size: 2rem;
+}
+
+[ngOption][aria-selected='false'] .demo-selection-indicator::before {
+  content: '-';
+}
+
+[ngOption][aria-selected='true'] .demo-selection-indicator::before {
+  content: '✓';
+}
+
+/** Menu */
+
+[ngMenuItem] {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  height: 36px;
+}
+
+/** Radio */
+
+[ngRadioGroup] {
+  list-style-type: none;
+  padding: 0;
+}
+
+[ngRadioButton] {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  cursor: pointer;
+}
+
+[ngRadioButton] .demo-selection-indicator {
+  padding-right: 8px;
+}
+
+[ngRadioButton][aria-checked='true'] .demo-selection-indicator::before {
+  content: '◉';
+}
+
+[ngRadioButton][aria-checked='false'] .demo-selection-indicator::before {
+  content: '◯';
+}
+
+[ngTabList] {
+  list-style-type: none;
+  display: flex;
+  padding: 0;
+}
+
+[ngToolbar] {
+  display: flex;
+  height: 36px;
+  align-items: center;
+}
+
+[ngToolbar] [ngRadioGroup] {
+  display: flex;
+}
+
+/* Tree */
+
+[ngTreeItem][aria-expanded='false'] > [ngTreeItem] {
+  display: none;
+}
