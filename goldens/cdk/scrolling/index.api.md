@@ -199,6 +199,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     ngOnInit(): void;
     get orientation(): "horizontal" | "vertical";
     set orientation(orientation: 'horizontal' | 'vertical');
+    readonly renderedContentOffset: Observable<number>;
     readonly renderedRangeStream: Observable<ListRange>;
     // (undocumented)
     scrollable: CdkVirtualScrollable;
