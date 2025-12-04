@@ -22,7 +22,7 @@ import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scrol
 import {coerceCssPixelValue, coerceArray} from '../../coercion';
 import {Platform} from '../../platform';
 import {OverlayContainer} from '../overlay-container';
-import {OverlayRef} from '../overlay-ref';
+import {isElement, OverlayRef} from '../overlay-ref';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -537,32 +537,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   getPopoverInsertionPoint(): Element | null | {type: 'parent'; element: Element} {
     if (this._popoverLocation === 'global') {
       return null;
+    } else if (this._popoverLocation !== 'inline') {
+      return this._popoverLocation;
     }
 
-    let hostElement: Element | null = null;
-
-    if (this._popoverLocation === 'inline') {
-      if (this._origin instanceof ElementRef) {
-        hostElement = this._origin.nativeElement;
-      } else if (this._origin instanceof Element) {
-        hostElement = this._origin;
-      }
+    if (this._origin instanceof ElementRef) {
+      return this._origin.nativeElement;
+    } else if (isElement(this._origin)) {
+      return this._origin;
     } else {
-      // this._popoverLocation is {type: 'parent', element: Element}
-      hostElement = this._popoverLocation.element;
+      return null;
     }
-
-    // If the location is 'inline', we're inserting as a sibling.
-    if (this._popoverLocation === 'inline') {
-      return hostElement;
-    }
-
-    // Otherwise we're inserting as a child.
-    if (hostElement) {
-      return {type: 'parent', element: hostElement};
-    }
-
-    return null;
   }
 
   /**

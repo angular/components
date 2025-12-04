@@ -4,7 +4,9 @@
 
 ```ts
 
+import { DomSanitizer } from '@angular/platform-browser';
 import * as i0 from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 import { Type } from '@angular/core';
 
 // @public
@@ -15,6 +17,18 @@ export class _CdkPrivateStyleLoader {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<_CdkPrivateStyleLoader>;
 }
+
+// @public
+export function _setInnerHtml(element: HTMLElement, html: SafeHtml, sanitizer: DomSanitizer): void;
+
+// @public (undocumented)
+export interface TrustedHTML {
+    // (undocumented)
+    __brand__: 'TrustedHTML';
+}
+
+// @public
+export function trustedHTMLFromString(html: string): TrustedHTML;
 
 // @public
 export class _VisuallyHiddenLoader {

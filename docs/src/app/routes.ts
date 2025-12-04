@@ -6,13 +6,23 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Routes} from '@angular/router';
+import {Component} from '@angular/core';
+import {Route, Routes} from '@angular/router';
 import {CanActivateComponentSidenav} from './pages/component-sidenav/component-sidenav-can-load-guard';
 
-function externalRedirect(target: string) {
-  return () => {
-    window.location.href = target;
-    return ''; // unused due to redirect above
+@Component({template: ''})
+export class RedirectPlaceholder {}
+
+function externalRedirect(target: string): Partial<Route> {
+  return {
+    // The router requires a `component`.
+    component: RedirectPlaceholder,
+    canActivate: [
+      () => {
+        window.location.href = target;
+        return false;
+      },
+    ],
   };
 }
 
@@ -35,27 +45,27 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   // Component harness, drag & drop docs have moved to angular.dev
   {
     path: 'cdk/testing',
-    redirectTo: externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
+    ...externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
   },
   {
     path: 'cdk/testing/api',
-    redirectTo: externalRedirect('https://angular.dev/api#angular_cdk_testing'),
+    ...externalRedirect('https://angular.dev/api#angular_cdk_testing'),
   },
   {
     path: 'cdk/testing/:tab',
-    redirectTo: externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
+    ...externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
   },
   {
     path: 'cdk/drag-drop',
-    redirectTo: externalRedirect('https://angular.dev/guide/drag-drop'),
+    ...externalRedirect('https://angular.dev/guide/drag-drop'),
   },
   {
     path: 'cdk/drag-drop/api',
-    redirectTo: externalRedirect('https://angular.dev/api#angular_cdk_drag-drop'),
+    ...externalRedirect('https://angular.dev/api#angular_cdk_drag-drop'),
   },
   {
     path: 'cdk/drag-drop/:tab',
-    redirectTo: externalRedirect('https://angular.dev/guide/drag-drop'),
+    ...externalRedirect('https://angular.dev/guide/drag-drop'),
   },
   {path: 'guide/system-variables', redirectTo: '/guide/theming-your-components'},
   // In v19, the theming system became based on system variables and the mat.theme mixin.

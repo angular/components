@@ -8,7 +8,6 @@ describe('DocViewer', () => {
   let docsItems: DocumentationItems;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     docsItems = TestBed.inject(DocumentationItems);
   });
 

@@ -4,11 +4,11 @@ module(
     name = "components",
 )
 
-bazel_dep(name = "yq.bzl", version = "0.3.1")
-bazel_dep(name = "rules_nodejs", version = "6.6.0")
-bazel_dep(name = "aspect_rules_js", version = "2.8.0")
+bazel_dep(name = "yq.bzl", version = "0.3.2")
+bazel_dep(name = "rules_nodejs", version = "6.6.2")
+bazel_dep(name = "aspect_rules_js", version = "2.8.2")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
-bazel_dep(name = "tar.bzl", version = "0.6.0")
+bazel_dep(name = "tar.bzl", version = "0.7.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
 bazel_dep(name = "aspect_rules_esbuild", version = "0.24.0")
 bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
@@ -18,7 +18,7 @@ bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "6a699bf3e896690e2923cf3ade29fbd4e492e366",
+    commit = "f066f614451374721fac787fb1f0dbbd818d50d4",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
@@ -32,14 +32,14 @@ git_override(
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "f56849353ab74c3f5ede0efa7d0bf7266fddddcb",
+    commit = "9b751f826628cab386d1e8ae9c1fa766dbc6a495",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
 bazel_dep(name = "devinfra")
 git_override(
     module_name = "devinfra",
-    commit = "7fa1ab52a99168e16ea3722e4b7313839daea490",
+    commit = "95e3a0ede6dfa1aedd34b03918ad72b18f87e5ae",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
@@ -97,30 +97,52 @@ npm.npm_translate_lock(
         "@angular/aria": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/components-examples:__subpackages__",
+            "//src/dev-app:__subpackages__",
         ],
         "@angular/cdk": [
-            "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//integration:__subpackages__",
+            "//src/aria:__subpackages__",
+            "//src/cdk-experimental:__subpackages__",
+            "//src/components-examples:__subpackages__",
+            "//src/dev-app:__subpackages__",
+            "//src/material-experimental:__subpackages__",
+            "//src/material:__subpackages__",
+            "//src/e2e-app:__subpackages__",
         ],
         "@angular/cdk-experimental": [
-            "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//integration:__subpackages__",
+            "//src/components-examples:__subpackages__",
+            "//src/dev-app:__subpackages__",
+            "//src/material-experimental:__subpackages__",
+            "//src/e2e-app:__subpackages__",
         ],
         "@angular/material": [
-            "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//integration:__subpackages__",
+            "//src/components-examples:__subpackages__",
+            "//src/dev-app:__subpackages__",
+            "//src/material-experimental:__subpackages__",
+            "//src/material-moment-adapter:__subpackages__",
+            "//src/e2e-app:__subpackages__",
         ],
         "@angular/material-experimental": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/components-examples:__subpackages__",
+            "//src/dev-app:__subpackages__",
         ],
         "@angular/google-maps": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/dev-app:__subpackages__",
         ],
         "@angular/youtube-player": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/dev-app:__subpackages__",
         ],
         "@angular/material-moment-adapter": [
             "//integration:__subpackages__",
@@ -133,6 +155,7 @@ npm.npm_translate_lock(
         "@angular/material-luxon-adapter": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/components-examples:__subpackages__",
         ],
     },
     pnpm_lock = "//:pnpm-lock.yaml",

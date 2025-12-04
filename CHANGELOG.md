@@ -1,3 +1,78 @@
+<a name="21.1.0-next.1"></a>
+# 21.1.0-next.1 "babingtonite-blinds" (2025-12-03)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8533f4285](https://github.com/angular/components/commit/8533f4285f74791f483bf80fef14343dcc1de550) | fix | **menu:** focus flicker bug |
+| [c097570e2](https://github.com/angular/components/commit/c097570e2856f919ebd5ca3accd79d2ec42f9627) | fix | **menu:** update api goldens ([#32463](https://github.com/angular/components/pull/32463)) |
+| [5c7b36fe1](https://github.com/angular/components/commit/5c7b36fe13912c395a6c62e833b541aa40ea0b45) | fix | **menu:** update unit tests to use ngMenuContent |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [75b373bbc](https://github.com/angular/components/commit/75b373bbcf2c38115b8c4fe32cbf96c097fe6e49) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32412](https://github.com/angular/components/pull/32412)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4cc5880d4](https://github.com/angular/components/commit/4cc5880d42eacf4d0793e2f84d925f4b7cabd29e) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
+| [cd22ab69f](https://github.com/angular/components/commit/cd22ab69f0760843fa452b366e707c00c098dd6b) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.2"></a>
+# 21.0.2 "babefphite-button" (2025-12-03)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b8f2151d0](https://github.com/angular/components/commit/b8f2151d02f7d3220750b8e60783cfeedd5a39d1) | fix | **menu:** focus flicker bug |
+| [591c3d8cc](https://github.com/angular/components/commit/591c3d8ccd8a6875c57f47357b2b1c0127fb4704) | fix | **menu:** update api goldens ([#32463](https://github.com/angular/components/pull/32463)) |
+| [bfe017741](https://github.com/angular/components/commit/bfe0177411c679b03d457532dfd5b82b235576df) | fix | **menu:** update unit tests to use ngMenuContent |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a6de52a67](https://github.com/angular/components/commit/a6de52a67c9caafce5dde03a24a7042315091771) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
+| [ef8388b71](https://github.com/angular/components/commit/ef8388b714ca88def0bad2f9fa5ca544dd5260e1) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.1.0-next.0"></a>
+# 21.1.0-next.0 "sulfur-sombrero" (2025-11-26)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b45cda3f9](https://github.com/angular/components/commit/b45cda3f975433e08c8d5b8099357bfbf7b79de3) | fix | **ui-patterns:** enable overwriting `preventDefault` to allow triggering hyperlinks using enter key ([#32123](https://github.com/angular/components/pull/32123)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a20aeabbe](https://github.com/angular/components/commit/a20aeabbec9151d382b421074cdc88226a07f9f2) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32386](https://github.com/angular/components/pull/32386)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef1355914](https://github.com/angular/components/commit/ef1355914a9dcabd8f00820ad3f2ea67fb5074fe) | feat | **schematics:** add preconnect links for Google Fonts in index.html ([#32238](https://github.com/angular/components/pull/32238)) |
+| [6b9decb77](https://github.com/angular/components/commit/6b9decb77a0628875d0562bba37a95c19d07982d) | feat | **stepper:** add a prefix section to the horizontal stepper header ([#32184](https://github.com/angular/components/pull/32184)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [29e2c4633](https://github.com/angular/components/commit/29e2c463334589429ca2df8a43e9a4c20d72e0f9) | fix | **column-resize:** add null checks for overlay ([#32259](https://github.com/angular/components/pull/32259)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.1"></a>
+# 21.0.1 "sulfur-snack" (2025-11-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ccc12c387](https://github.com/angular/components/commit/ccc12c3879b3b58d6821e80ba1ef79db25a49572) | fix | **testing:** errors in harnesses when using Vitest ([#32399](https://github.com/angular/components/pull/32399)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [043d9cacc](https://github.com/angular/components/commit/043d9cacc7d76828d02f921447b48688ab3d4129) | fix | **select:** render panel next to trigger ([#32363](https://github.com/angular/components/pull/32363)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [02965bb0e](https://github.com/angular/components/commit/02965bb0eee969549518a49a796497ae1fe89569) | fix | resolve forward ref errors ([#32413](https://github.com/angular/components/pull/32413)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.0"></a>
 # 21.0.0 "damask-dachshund" (2025-11-19)
 ## Breaking Changes

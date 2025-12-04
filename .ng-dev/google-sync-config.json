@@ -28,6 +28,7 @@
     "src/**/*spec.ts",
     "src/cdk/schematics/**/*",
     "src/cdk/testing/private/**/*",
+    "src/cdk/private/inner-html.ts",
     "src/material/schematics/**/*",
     "src/material/schematics/ng-generate/theme-color/**/*.bazel",
     "src/material/schematics/ng-generate/theme-color/index_bundled.d.ts",

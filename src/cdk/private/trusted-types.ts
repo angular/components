@@ -6,21 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/**
- * @fileoverview
- * A module to facilitate use of a Trusted Types policy internally within
- * Angular Material. It lazily constructs the Trusted Types policy, providing
- * helper utilities for promoting strings to Trusted Types. When Trusted Types
- * are not available, strings are used as a fallback.
- * @security All use of this module is security-sensitive and should go through
- * security review.
- */
+// A module to facilitate use of a Trusted Types policy internally within
+// Angular Material. It lazily constructs the Trusted Types policy, providing
+// helper utilities for promoting strings to Trusted Types. When Trusted Types
+// are not available, strings are used as a fallback.
+// All use of this module is security-sensitive and should go through security review.
 
-export declare interface TrustedHTML {
+export interface TrustedHTML {
   __brand__: 'TrustedHTML';
 }
 
-export declare interface TrustedTypePolicyFactory {
+interface TrustedTypePolicyFactory {
   createPolicy(
     policyName: string,
     policyOptions: {
@@ -29,7 +25,7 @@ export declare interface TrustedTypePolicyFactory {
   ): TrustedTypePolicy;
 }
 
-export declare interface TrustedTypePolicy {
+interface TrustedTypePolicy {
   createHTML(input: string): TrustedHTML;
 }
 
@@ -61,7 +57,8 @@ function getPolicy(): TrustedTypePolicy | null {
 /**
  * Unsafely promote a string to a TrustedHTML, falling back to strings when
  * Trusted Types are not available.
- * @security This is a security-sensitive function; any use of this function
+ *
+ * Important!!! This is a security-sensitive function; any use of this function
  * must go through security review. In particular, it must be assured that the
  * provided string will never cause an XSS vulnerability if used in a context
  * that will be interpreted as HTML by a browser, e.g. when assigning to

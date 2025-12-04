@@ -1,9 +1,9 @@
 {
-  "BROWSERSTACK_SAFARI16": {
+  "BROWSERSTACK_SAFARI26": {
     "base": "BrowserStack",
     "browser": "Safari",
-    "browser_version": "16.0",
+    "browser_version": "26.0",
     "os": "OS X",
-    "os_version": "Ventura"
+    "os_version": "Tahoe"
   }
 }

@@ -767,8 +767,15 @@ export class MatAutocompleteTrigger
   }
 
   private _attachOverlay(valueOnAttach: string): void {
-    if (!this.autocomplete && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw getMatAutocompleteMissingPanelError();
+    if (!this.autocomplete) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw getMatAutocompleteMissingPanelError();
+      } else {
+        // This shouldn't happen only in production mode, but some internal teams have
+        // observed it in their production logging. Return since the rest of the function
+        // assumes that the autocomplete is defined.
+        return;
+      }
     }
 
     let overlayRef = this._overlayRef;
