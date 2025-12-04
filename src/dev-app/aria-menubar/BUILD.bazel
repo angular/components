@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-menubar",
+    srcs = ["menubar-demo.ts"],
+    assets = [
+        "menubar-demo.html",
+        "menubar-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/aria/menubar",
+    ],
+)
