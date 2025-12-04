@@ -50,7 +50,10 @@
   }
   <div class="mat-mdc-form-field-flex">
     @if (_hasOutline()) {
-      <div matFormFieldNotchedOutline [matFormFieldNotchedOutlineOpen]="_shouldLabelFloat()">
+      <div
+        matFormFieldNotchedOutline
+        [matFormFieldNotchedOutlineOpen]="_shouldLabelFloat()"
+        [matFormFieldHasFloatingLabel]="_hasFloatingLabel()">
         @if (!_forceDisplayInfixLabel()) {
           <ng-template [ngTemplateOutlet]="labelTemplate"></ng-template>
         }
