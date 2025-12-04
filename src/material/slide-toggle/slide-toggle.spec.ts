@@ -654,6 +654,8 @@ describe('MatSlideToggle with forms', () => {
 
     it('should update checked state on click if control is checked initially', fakeAsync(() => {
       fixture = TestBed.createComponent(SlideToggleWithModel);
+      fixture.detectChanges();
+
       slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.componentInstance;
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
 
