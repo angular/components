@@ -12,6 +12,10 @@
   <mat-slide-toggle labelPosition="before" [disabled]="firstToggle">Disable Bound</mat-slide-toggle>
   <mat-slide-toggle labelPosition="before" hideIcon [(ngModel)]="firstToggle">No icon</mat-slide-toggle>
 
+  <p>With no label.</p>
+
+  <mat-slide-toggle aria-label="Toggle only" hideLabel color="primary" [(ngModel)]="firstToggle" />
+
   <p>Example where the slide toggle is required inside of a form.</p>
 
   <form #form="ngForm" (ngSubmit)="onFormSubmit()">
