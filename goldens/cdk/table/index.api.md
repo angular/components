@@ -291,7 +291,7 @@ export class CdkRowDef<T> extends BaseRowDef {
 }
 
 // @public
-export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit, StickyPositioningListener {
     constructor(...args: unknown[]);
     addColumnDef(columnDef: CdkColumnDef): void;
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
@@ -307,6 +307,8 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     protected _data: readonly T[] | undefined;
     get dataSource(): CdkTableDataSourceInput<T>;
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
+    readonly _dataSourceChanges: Subject<CdkTableDataSourceInput<T>>;
+    readonly _dataStream: Subject<readonly T[]>;
     // (undocumented)
     protected readonly _differs: IterableDiffers;
     // (undocumented)
@@ -352,22 +354,22 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     removeFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
     removeRowDef(rowDef: CdkRowDef<T>): void;
+    protected _renderedRange?: ListRange;
     renderRows(): void;
     // (undocumented)
     _rowOutlet: DataRowOutlet;
     setNoDataRow(noDataRow: CdkNoDataRow | null): void;
+    stickyColumnsUpdated(update: StickyUpdate): void;
     protected stickyCssClass: string;
-    // (undocumented)
-    protected readonly _stickyPositioningListener: StickyPositioningListener;
+    stickyEndColumnsUpdated(update: StickyUpdate): void;
+    stickyFooterRowsUpdated(update: StickyUpdate): void;
+    stickyHeaderRowsUpdated(update: StickyUpdate): void;
     get trackBy(): TrackByFunction<T>;
     set trackBy(fn: TrackByFunction<T>);
     updateStickyColumnStyles(): void;
     updateStickyFooterRowStyles(): void;
     updateStickyHeaderRowStyles(): void;
-    readonly viewChange: BehaviorSubject<{
-        start: number;
-        end: number;
-    }>;
+    readonly viewChange: BehaviorSubject<ListRange>;
     // (undocumented)
     protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
     // (undocumented)
