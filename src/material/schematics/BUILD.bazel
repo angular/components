@@ -126,6 +126,7 @@ ts_project(
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",
+        "//:node_modules/parse5",
         "//src/cdk/schematics/testing",
     ],
 )

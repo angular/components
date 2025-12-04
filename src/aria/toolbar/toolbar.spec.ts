@@ -545,7 +545,6 @@ describe('Toolbar', () => {
         const widgets = fixture.debugElement
           .queryAll(By.css('[toolbar-button]'))
           .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
-        console.log('clicking:', widgets[0]);
         click(widgets[0]);
         expect(document.activeElement).toBe(widgets[0]);
       });

@@ -11,6 +11,7 @@ ng_project(
     assets = [":visually-hidden-styles"],
     deps = [
         "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
     ],
 )
 

@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.23.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.22.0"
+    "pnpm": "10.23.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -27,7 +27,7 @@
     "test-local": "pnpm -s test --local",
     "test-firefox": "pnpm -s test --firefox",
     "test-tsec": "pnpm bazelisk test //... --build_tag_filters=tsec --test_tag_filters=tsec",
-    "lint": "pnpm -s tslint && pnpm -s stylelint && pnpm -s ownerslint && pnpm -s ng-dev format changed --check",
+    "lint": "pnpm -s tslint && pnpm -s stylelint && pnpm -s ng-dev format changed --check",
     "e2e": "bazel test //src/... --build_tag_filters=e2e --test_tag_filters=e2e --build_tests_only",
     "deploy-dev-app": "node ./scripts/deploy-dev-app.js",
     "breaking-changes": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/breaking-changes.mts",
@@ -35,7 +35,6 @@
     "check-package-externals": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/check-package-externals.mts",
     "format": "pnpm -s ng-dev format changed",
     "cherry-pick-patch": "ts-node --project tools/cherry-pick-patch/tsconfig.json tools/cherry-pick-patch/cherry-pick-patch.ts",
-    "ownerslint": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/ownerslint.mts",
     "detect-component-id-collisions": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/detect-component-id-collisions.mts",
     "tslint": "tslint -c tslint.json --project ./tsconfig.json",
     "stylelint": "stylelint \"(src|docs)/**/*.+(css|scss)\" --config .stylelintrc.json",
@@ -53,7 +52,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "21.1.0-next.0",
+  "version": "21.1.0-next.1",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -76,7 +75,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#39869500e7723f91e1797f575d663afaff1b97e7",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#4c28145df03aff8c74d0a53f4f5602140e4d1a23",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
@@ -107,7 +106,7 @@
     "esbuild": "^0.27.0",
     "firebase-tools": "14.26.0",
     "fs-extra": "^11.0.0",
-    "glob": "^11.0.3",
+    "glob": "^13.0.0",
     "highlight.js": "^11.0.0",
     "husky": "^9.0.1",
     "jasmine": "^5.6.0",
@@ -130,7 +129,7 @@
     "protractor": "^7.0.0",
     "requirejs": "^2.3.6",
     "rollup": "^4.52.3",
-    "rollup-plugin-dts": "6.2.3",
+    "rollup-plugin-dts": "6.3.0",
     "rollup-plugin-sourcemaps2": "0.5.4",
     "sass": "^1.80.6",
     "selenium-webdriver": "^3.6.0",

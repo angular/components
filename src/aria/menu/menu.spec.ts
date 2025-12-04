@@ -1,7 +1,7 @@
 import {Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Menu, MenuBar, MenuItem, MenuTrigger} from './menu';
+import {Menu, MenuBar, MenuContent, MenuItem, MenuTrigger} from './menu';
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 
 describe('Standalone Menu Pattern', () => {
@@ -227,25 +227,24 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(true);
-      expect(document.activeElement).toBe(blueberry);
+      expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
     it('should close submenu on arrow left', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowRight');
+      const blueberry = getItem('Blueberry');
       keydown(blueberry!, 'ArrowLeft');
 
       expect(isSubmenuExpanded()).toBe(false);
@@ -254,12 +253,11 @@ describe('Standalone Menu Pattern', () => {
 
     it('should close submenu on click outside', () => {
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       click(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
-      focusout(blueberry!, document.body);
+      focusout(getItem('Blueberry')!, document.body);
       expect(isSubmenuExpanded()).toBe(false);
     });
 
@@ -267,41 +265,39 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'Enter');
 
       expect(isSubmenuExpanded()).toBe(true);
-      expect(document.activeElement).toBe(blueberry);
+      expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
     it('should expand submenu on space', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, ' ');
 
       expect(isSubmenuExpanded()).toBe(true);
-      expect(document.activeElement).toBe(blueberry);
+      expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
     it('should close submenu on escape', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(true);
+      const blueberry = getItem('Blueberry');
       expect(document.activeElement).toBe(blueberry);
 
       keydown(blueberry!, 'Escape');
@@ -332,11 +328,11 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'Enter'); // open submenu
+      const blueberry = getItem('Blueberry');
 
       expect(document.activeElement).toBe(blueberry);
 
@@ -351,11 +347,11 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, ' '); // open submenu
+      const blueberry = getItem('Blueberry');
 
       expect(document.activeElement).toBe(blueberry);
 
@@ -369,12 +365,12 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowRight');
       expect(isSubmenuExpanded()).toBe(true);
+      const blueberry = getItem('Blueberry');
       expect(document.activeElement).toBe(blueberry);
 
       const externalElement = document.createElement('button');
@@ -424,37 +420,52 @@ describe('Standalone Menu Pattern', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowLeft');
 
       expect(isSubmenuExpanded()).toBe(true);
-      expect(document.activeElement).toBe(blueberry);
+      expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
     it('should close submenu on arrow right', () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
-      const blueberry = getItem('Blueberry');
 
       keydown(apple!, 'ArrowDown');
       keydown(banana!, 'ArrowDown');
       keydown(berries!, 'ArrowLeft');
+      const blueberry = getItem('Blueberry');
       keydown(blueberry!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(false);
       expect(document.activeElement).toBe(berries);
     });
   });
+
+  it('should not reset default state on hover triggers expansion', async () => {
+    TestBed.configureTestingModule({});
+    fixture = TestBed.createComponent(StandaloneMenuExample);
+    fixture.detectChanges();
+
+    const berries = getItem('Berries');
+    await mouseover(berries!);
+    expect(berries?.getAttribute('data-active')).toBe('true');
+  });
 });
 
 describe('Menu Trigger Pattern', () => {
   let fixture: ComponentFixture<MenuTriggerExample>;
 
+  const focusin = (element: Element) => {
+    element.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+    fixture.detectChanges();
+  };
+
   const keydown = (element: Element, key: string, modifierKeys: {} = {}) => {
+    focusin(element);
     element.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -466,6 +477,7 @@ describe('Menu Trigger Pattern', () => {
   };
 
   const click = (element: Element, eventInit?: PointerEventInit) => {
+    focusin(element);
     element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
     fixture.detectChanges();
   };
@@ -478,7 +490,6 @@ describe('Menu Trigger Pattern', () => {
   function setupMenu() {
     fixture = TestBed.createComponent(MenuTriggerExample);
     fixture.detectChanges();
-    getItem('Apple')?.focus();
   }
 
   function getTrigger(): HTMLElement {
@@ -597,7 +608,7 @@ describe('Menu Trigger Pattern', () => {
       expect(isExpanded()).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close on selecting an item on space', async () => {
       click(getTrigger());
       keydown(getItem('Apple')!, ' ');
       expect(isExpanded()).toBe(false);
@@ -945,20 +956,24 @@ describe('Menu Bar Pattern', () => {
 @Component({
   template: `
 <div ngMenu [expansionDelay]="0" (onSelect)="onSelect($event)">
-  <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
-  <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-  <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+  <ng-template ngMenuContent>
+    <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
+    <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
+    <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
-    <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
-    <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
-    <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
-  </div>
+    <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
+        <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
+        <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+      </ng-template>
+    </div>
 
-  <div ngMenuItem value='Cherry' searchTerm='Cherry' [disabled]="true">Cherry</div>
+    <div ngMenuItem value='Cherry' searchTerm='Cherry' [disabled]="true">Cherry</div>
+  </ng-template>
 </div>
   `,
-  imports: [Menu, MenuItem],
+  imports: [Menu, MenuItem, MenuContent],
 })
 class StandaloneMenuExample {
   onSelect(value: string) {}
@@ -969,20 +984,24 @@ class StandaloneMenuExample {
 <button ngMenuTrigger [menu]="menu">Open menu</button>
 
 <div ngMenu [expansionDelay]="0" #menu="ngMenu">
-  <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
-  <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-  <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+  <ng-template ngMenuContent>
+    <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
+    <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
+    <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
 
-  <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
-    <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
-    <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
-    <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
-  </div>
+    <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
+        <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
+        <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+      </ng-template>
+    </div>
 
-  <div ngMenuItem value='Cherry' searchTerm='Cherry'>Cherry</div>
+    <div ngMenuItem value='Cherry' searchTerm='Cherry'>Cherry</div>
+  </ng-template>
 </div>
   `,
-  imports: [Menu, MenuItem, MenuTrigger],
+  imports: [Menu, MenuItem, MenuTrigger, MenuContent],
 })
 class MenuTriggerExample {}
 
@@ -993,26 +1012,32 @@ class MenuTriggerExample {}
   <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu">Edit</div>
 
   <div ngMenu [expansionDelay]="0" #editMenu="ngMenu">
-    <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
-    <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
+    <ng-template ngMenuContent>
+      <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
+      <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
+    </ng-template>
   </div>
 
   <div ngMenuItem [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
 
   <div ngMenu [expansionDelay]="0" #viewMenu="ngMenu">
-    <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
-    <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
-    <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
+    <ng-template ngMenuContent>
+      <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
+      <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
+      <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
+    </ng-template>
   </div>
 
   <div ngMenuItem [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
 
   <div ngMenu [expansionDelay]="0" #helpMenu="ngMenu">
-    <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
-    <div ngMenuItem value='About' searchTerm='About'>About</div>
+    <ng-template ngMenuContent>
+      <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
+      <div ngMenuItem value='About' searchTerm='About'>About</div>
+    </ng-template>
   </div>
 </div>
   `,
-  imports: [Menu, MenuBar, MenuItem],
+  imports: [Menu, MenuBar, MenuItem, MenuContent],
 })
 class MenuBarExample {}

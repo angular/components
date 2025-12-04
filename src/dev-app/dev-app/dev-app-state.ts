@@ -43,7 +43,7 @@ export function getAppState(): DevAppState {
       animations: true,
       zoneless: false,
       darkTheme: false,
-      systemTheme: false,
+      systemTheme: true,
       rippleDisabled: false,
       strongFocusEnabled: false,
       m3Enabled: true,

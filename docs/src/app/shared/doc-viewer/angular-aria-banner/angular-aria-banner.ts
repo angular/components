@@ -7,6 +7,7 @@
  */
 
 import {Component, Input} from '@angular/core';
+import {MatIcon} from '@angular/material/icon';
 
 /**
  * Mapping of CDK component names to their Angular Aria documentation URLs.
@@ -26,6 +27,7 @@ const ANGULAR_ARIA_LINKS: Record<string, string> = {
   selector: 'angular-aria-banner',
   templateUrl: 'angular-aria-banner.html',
   styleUrl: 'angular-aria-banner.css',
+  imports: [MatIcon],
 })
 export class AngularAriaBanner {
   @Input() componentName: string = '';
