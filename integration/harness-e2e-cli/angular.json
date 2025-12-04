@@ -5,7 +5,8 @@
   "cli": {
     "cache": {
       "enabled": false
-    }
+    },
+    "analytics": false
   },
   "projects": {
     "harness-e2e-cli": {
