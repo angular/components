@@ -63,11 +63,7 @@ build:release --stamp
 
 build:snapshot-build --workspace_status_command="pnpm -s ng-dev:stamp --mode=snapshot"
 build:snapshot-build --stamp
-
-##################################
-# Always enable Ivy compilation  #
-##################################
-build --define=angular_ivy_enabled=True
+build:snapshot-build --//:enable_snapshot_adev_assets
 
 ################################
 # Remote Execution Setup       #
