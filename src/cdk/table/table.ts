@@ -20,7 +20,11 @@ import {
   ListRange,
 } from '../collections';
 import {Platform} from '../platform';
-import {ViewportRuler} from '../scrolling';
+import {
+  CDK_VIRTUAL_SCROLL_VIEWPORT,
+  type CdkVirtualScrollViewport,
+  ViewportRuler,
+} from '../scrolling';
 
 import {
   AfterContentChecked,
@@ -51,9 +55,10 @@ import {
   Injector,
   HostAttributeToken,
   DOCUMENT,
-  InjectionToken,
 } from '@angular/core';
 import {
+  animationFrameScheduler,
+  asapScheduler,
   BehaviorSubject,
   combineLatest,
   isObservable,
@@ -62,7 +67,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {auditTime, filter, map, takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {
   BaseRowDef,
@@ -83,7 +88,11 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError,
 } from './table-errors';
-import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
+import {
+  STICKY_POSITIONING_LISTENER,
+  StickyPositioningListener,
+  StickyUpdate,
+} from './sticky-position-listener';
 import {CDK_TABLE} from './tokens';
 
 /**
@@ -103,26 +112,6 @@ export interface RowOutlet {
 
 /** Possible types that can be set as the data source for a `CdkTable`. */
 export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observable<readonly T[]>;
-
-/** A strategy that implements the behavior for the table's `viewChange` observable. */
-interface TableViewChangeStrategy {
-  /**
-   * A stream that emits whenever the table starts rendering a subset of the data. The `start` index
-   * is inclusive, while the `end` is exclusive.
-   */
-  viewChange: BehaviorSubject<ListRange>;
-}
-
-/**
- * Injection token for the `CdkTable` view change strategy.
- *
- * The table will emit a `viewChange` range that spans the entire data set. This provider overrides
- * its `viewChange` observable so its behavior can be overridden from another component or
- * directive.
- */
-export const _TABLE_VIEW_CHANGE_STRATEGY = new InjectionToken<TableViewChangeStrategy>(
-  'TABLE_VIEW_CHANGE_STRATEGY',
-);
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
@@ -295,7 +284,13 @@ export interface RenderRow<T> {
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
 export class CdkTable<T>
-  implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit
+  implements
+    AfterContentInit,
+    AfterContentChecked,
+    CollectionViewer,
+    OnDestroy,
+    OnInit,
+    StickyPositioningListener
 {
   protected readonly _differs = inject(IterableDiffers);
   protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
@@ -305,6 +300,10 @@ export class CdkTable<T>
   protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
   private _injector = inject(Injector);
+  private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {optional: true});
+  private _positionListener =
+    inject(STICKY_POSITIONING_LISTENER, {optional: true}) ||
+    inject(STICKY_POSITIONING_LISTENER, {optional: true, skipSelf: true});
 
   private _document = inject(DOCUMENT);
 
@@ -461,6 +460,12 @@ export class CdkTable<T>
   /** Whether the table is done initializing. */
   private _hasInitialized = false;
 
+  /** Emits when the header rows sticky state changes. */
+  private readonly _headerRowStickyUpdates = new Subject<StickyUpdate>();
+
+  /** Emits when the footer rows sticky state changes. */
+  private readonly _footerRowStickyUpdates = new Subject<StickyUpdate>();
+
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
     // Perform this lazily in case the table's role was updated by a directive after construction.
@@ -557,7 +562,9 @@ export class CdkTable<T>
    */
   @Input({transform: booleanAttribute})
   get fixedLayout(): boolean {
-    return this._fixedLayout;
+    // Require a fixed layout when virtual scrolling is enabled, otherwise
+    // the element the header can jump around as the user is scrolling.
+    return this._virtualScrollViewport ? true : this._fixedLayout;
   }
   set fixedLayout(value: boolean) {
     this._fixedLayout = value;
@@ -587,9 +594,7 @@ export class CdkTable<T>
    *
    * @docs-private
    */
-  readonly viewChange =
-    inject<BehaviorSubject<ListRange>>(_TABLE_VIEW_CHANGE_STRATEGY, {optional: true}) ||
-    new BehaviorSubject<ListRange>({start: 0, end: Number.MAX_VALUE});
+  readonly viewChange: BehaviorSubject<ListRange>;
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
   _rowOutlet: DataRowOutlet;
@@ -632,8 +637,10 @@ export class CdkTable<T>
 
     this._isServer = !this._platform.isBrowser;
     this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
-    this.viewChange =
-      this.viewChange ?? new BehaviorSubject<ListRange>({start: 0, end: Number.MAX_VALUE});
+    this.viewChange = new BehaviorSubject<ListRange>({
+      start: 0,
+      end: this._virtualScrollViewport ? 0 : Number.MAX_VALUE,
+    });
 
     // Set up the trackBy function so that it uses the `RenderRow` as its identity by default. If
     // the user has provided a custom trackBy, return the result of that function as evaluated
@@ -641,6 +648,10 @@ export class CdkTable<T>
     this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: RenderRow<T>) => {
       return this.trackBy ? this.trackBy(dataRow.dataIndex, dataRow.data) : dataRow;
     });
+
+    if (this._virtualScrollViewport) {
+      this._setupVirtualScrolling(this._virtualScrollViewport);
+    }
   }
 
   ngOnInit() {
@@ -655,9 +666,10 @@ export class CdkTable<T>
   }
 
   ngAfterContentInit() {
-    this._viewRepeater = this.recycleRows
-      ? new _RecycleViewRepeaterStrategy()
-      : new _DisposeViewRepeaterStrategy();
+    this._viewRepeater =
+      this.recycleRows || this._virtualScrollViewport
+        ? new _RecycleViewRepeaterStrategy()
+        : new _DisposeViewRepeaterStrategy();
     this._hasInitialized = true;
   }
 
@@ -688,6 +700,8 @@ export class CdkTable<T>
     this._headerRowDefs = [];
     this._footerRowDefs = [];
     this._defaultRowDef = null;
+    this._headerRowStickyUpdates.complete();
+    this._footerRowStickyUpdates.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
 
@@ -870,7 +884,7 @@ export class CdkTable<T>
     // In a table using a fixed layout, row content won't affect column width, so sticky styles
     // don't need to be cleared unless either the sticky column config changes or one of the row
     // defs change.
-    if ((this._isNativeHtmlTable && !this._fixedLayout) || this._stickyColumnStylesNeedReset) {
+    if ((this._isNativeHtmlTable && !this.fixedLayout) || this._stickyColumnStylesNeedReset) {
       // Clear the left and right positioning from all columns in the table across all rows since
       // sticky columns span across all table sections (header, data, footer)
       this._stickyStyler.clearStickyPositioning(
@@ -905,6 +919,40 @@ export class CdkTable<T>
 
     // Reset the dirty state of the sticky input change since it has been used.
     Array.from(this._columnDefsByName.values()).forEach(def => def.resetStickyChanged());
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyColumnsUpdated(update: StickyUpdate): void {
+    this._positionListener?.stickyColumnsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyEndColumnsUpdated(update: StickyUpdate): void {
+    this._positionListener?.stickyEndColumnsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyHeaderRowsUpdated(update: StickyUpdate): void {
+    this._headerRowStickyUpdates.next(update);
+    this._positionListener?.stickyHeaderRowsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyFooterRowsUpdated(update: StickyUpdate): void {
+    this._footerRowStickyUpdates.next(update);
+    this._positionListener?.stickyFooterRowsUpdated(update);
   }
 
   /** Invoked whenever an outlet is created and has been assigned to the table. */
@@ -1234,7 +1282,7 @@ export class CdkTable<T>
       rows,
       stickyStartStates,
       stickyEndStates,
-      !this._fixedLayout || this._forceRecalculateCellWidths,
+      !this.fixedLayout || this._forceRecalculateCellWidths,
     );
   }
 
@@ -1409,9 +1457,6 @@ export class CdkTable<T>
   private _setupStickyStyler() {
     const direction: Direction = this._dir ? this._dir.value : 'ltr';
     const injector = this._injector;
-    const positioningListener =
-      injector.get(STICKY_POSITIONING_LISTENER, null, {optional: true}) ||
-      injector.get(STICKY_POSITIONING_LISTENER, null, {optional: true, skipSelf: true});
 
     this._stickyStyler = new StickyStyler(
       this._isNativeHtmlTable,
@@ -1419,7 +1464,7 @@ export class CdkTable<T>
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       direction,
-      positioningListener,
+      this,
       injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())
@@ -1427,6 +1472,80 @@ export class CdkTable<T>
       .subscribe(value => {
         this._stickyStyler.direction = value;
         this.updateStickyColumnStyles();
+      });
+  }
+
+  private _setupVirtualScrolling(viewport: CdkVirtualScrollViewport) {
+    const virtualScrollScheduler =
+      typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
+
+    // Forward the rendered range computed by the virtual scroll viewport to the table.
+    viewport.renderedRangeStream
+      // We need the scheduler here, because the virtual scrolling module uses an identical
+      // one for scroll listeners. Without it the two go out of sync and the list starts
+      // jumping back to the beginning whenever it needs to re-render.
+      .pipe(auditTime(0, virtualScrollScheduler), takeUntil(this._onDestroy))
+      .subscribe(this.viewChange);
+
+    viewport.attach({
+      dataStream: this._dataStream,
+      measureRangeSize: () => {
+        // TODO(crisbeto): implement this method so autosizing works.
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          throw new Error('autoSize is not supported for tables with virtual scroll enabled.');
+        }
+        return 0;
+      },
+    });
+
+    const offsetFromTopStream = this.viewChange.pipe(
+      map(() => viewport.getOffsetToRenderedContentStart()),
+      filter(offset => offset !== null),
+    );
+
+    // The `StyickyStyler` sticks elements by applying a `top` or `bottom` position offset to
+    // them. However, the virtual scroll viewport applies a `translateY` offset to a container
+    // div that encapsulates the table. The translation causes the rows to also be offset by the
+    // distance from the top of the scroll viewport in addition to their `top` offset. This logic
+    // negates the translation to move the rows to their correct positions.
+    combineLatest([offsetFromTopStream, this._headerRowStickyUpdates])
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(([offsetFromTop, update]) => {
+        if (!update.sizes || !update.offsets || !update.elements) {
+          return;
+        }
+
+        for (let i = 0; i < update.elements.length; i++) {
+          const cells = update.elements[i];
+
+          if (cells) {
+            const current = update.offsets[i]!;
+            const offset =
+              offsetFromTop !== 0 ? Math.max(offsetFromTop - current, current) : -current;
+
+            for (const cell of cells) {
+              cell.style.top = `${-offset}px`;
+            }
+          }
+        }
+      });
+
+    combineLatest([offsetFromTopStream, this._footerRowStickyUpdates])
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(([offsetFromTop, update]) => {
+        if (!update.sizes || !update.offsets || !update.elements) {
+          return;
+        }
+
+        for (let i = 0; i < update.elements.length; i++) {
+          const cells = update.elements[i];
+
+          if (cells) {
+            for (const cell of cells) {
+              cell.style.bottom = `${offsetFromTop + update.offsets[i]!}px`;
+            }
+          }
+        }
       });
   }
 
