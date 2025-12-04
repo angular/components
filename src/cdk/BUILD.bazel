@@ -60,8 +60,10 @@ ng_package(
     ] + prebuiltStyleTargets + CDK_SCSS_LIBS,
     nested_packages = [
         "//src/cdk/schematics:npm_package",
-        ":adev_assets",
-    ],
+    ] + select({
+        "//:snapshot_adev_assets": [":adev_assets"],
+        "//conditions:default": [],
+    }),
     replace_prefixes = {
         "adev_assets/": "_adev_assets/",
     },
