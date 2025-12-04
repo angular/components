@@ -135,8 +135,8 @@ jobs:
         uses: angular/dev-infra/github-actions/bazel/configure-remote@95e3a0ede6dfa1aedd34b03918ad72b18f87e5ae
       - name: Install node modules
         run: pnpm install --frozen-lockfile
-      - name: Build and Verify Release Output
-        run: pnpm build-and-check-release-output
+      - name: Build Snapshots
+        run: pnpm build-snapshots
       - name: Verify tooling setup
         run: pnpm check-tooling-setup
       - name: Build Docs Content

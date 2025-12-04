@@ -20,6 +20,7 @@
     "build": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-packages-dist-main.mts",
     "build-docs-content": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-docs-content-main.mts",
     "build-and-check-release-output": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/build-and-check-release-output.mts",
+    "build-snapshots": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/build-packages-dist-main.mts",
     "dev-app": "ibazel run //src/dev-app:devserver",
     "docs-app": "ibazel run //docs:serve",
     "universal-app": "bazel run //src/universal-app:server",
