@@ -186,6 +186,9 @@ export class MatSlideToggle
   /** Whether to hide the icon inside of the slide toggle. */
   @Input({transform: booleanAttribute}) hideIcon: boolean;
 
+  /** Whether to hide label for the slide toggle. */
+  @Input({transform: booleanAttribute}) hideLabel: boolean;
+
   /** Whether the slide toggle should remain interactive when it is disabled. */
   @Input({transform: booleanAttribute}) disabledInteractive: boolean;
 
