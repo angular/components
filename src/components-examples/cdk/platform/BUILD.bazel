@@ -5,10 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ng_project(
     name = "platform",
     srcs = glob(["**/*.ts"]),
-    assets = glob([
-        "**/*.html",
-        "**/*.css",
-    ]),
+    assets = glob(["**/*.html"]),
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk/platform",
@@ -19,7 +16,6 @@ filegroup(
     name = "source-files",
     srcs = glob([
         "**/*.html",
-        "**/*.css",
         "**/*.ts",
     ]),
 )

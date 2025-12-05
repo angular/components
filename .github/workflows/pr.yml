@@ -25,11 +25,11 @@ jobs:
       - name: Checking package externals
         run: |
           bazel build //:package_externals
-          pnpm check-package-externals $(bazel info bazel-bin)/package_externals.json
+          pnpm check-package-externals $(bazel --ignore_all_rc_files info bazel-bin)/package_externals.json
       - name: Checking entry-points configuration
         run: |
           bazel build //:entry_points_manifest
-          pnpm check-entry-point-setup $(bazel info bazel-bin)/entry_points_manifest.json
+          pnpm check-entry-point-setup $(bazel --ignore_all_rc_files info bazel-bin)/entry_points_manifest.json
       - name: Validate pull approve configuration
         run: pnpm ng-dev pullapprove verify
       - name: Check for component id collisions

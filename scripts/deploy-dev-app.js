@@ -18,7 +18,7 @@ const projectDirPath = join(__dirname, '../');
 cd(projectDirPath);
 
 /** Path to the bazel-bin directory. */
-const bazelBinPath = exec(`pnpm -s bazel info bazel-bin`).stdout.trim();
+const bazelBinPath = exec(`pnpm -s bazel --ignore_all_rc_files info bazel-bin`).stdout.trim();
 
 /** Output path for the Bazel dev-app web package target. */
 const webPackagePath = join(bazelBinPath, 'src/dev-app/web_package');
