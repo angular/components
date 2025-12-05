@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as _angular_aria_private_public_api from '@angular/aria/private/public-api';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { ComboboxDialogPattern } from '@angular/aria/private';
@@ -11,8 +12,6 @@ import { ComboboxListboxControls } from '@angular/aria/private';
 import { ComboboxPattern } from '@angular/aria/private';
 import { ComboboxTreeControls } from '@angular/aria/private';
 import * as i1 from '@angular/aria/private';
-import { ListboxPattern } from '@angular/aria/private';
-import { OptionPattern } from '@angular/aria/private';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -23,7 +22,7 @@ export class Listbox<V> {
     focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     gotoFirst(): void;
     readonly id: _angular_core.InputSignal<string>;
-    protected items: _angular_core.Signal<any[]>;
+    protected items: _angular_core.Signal<_angular_aria_private_public_api.OptionPattern<any>[]>;
     multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     _onFocus(): void;
