@@ -48,6 +48,8 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/collections",
+        "//src/cdk/scrolling",
+        "//src/cdk/testing/private",
     ],
 )
 

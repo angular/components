@@ -175,6 +175,16 @@ and its interface is not tied to any one specific implementation.
 
 <!-- example(table-pagination) -->
 
+#### Virtual scrolling
+
+An alternative approach to showing a large amount of data inside a Material table is to use
+virtual scrolling which will only render the the visible rows in the DOM as the user is scrolling.
+
+To enable virtual scrolling you have to wrap the Material table in a `<cdk-virtual-scroll-viewport>`
+element and add CSS to make the viewport scrollable.
+
+<!-- example(table-virtual-scroll) -->
+
 #### Sorting
 
 To add sorting behavior to the table, add the `matSort` directive to the table and add

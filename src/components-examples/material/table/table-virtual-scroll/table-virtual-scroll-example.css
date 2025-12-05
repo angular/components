@@ -1,0 +1,9 @@
+/* Make the container scrollable */
+.example-container {
+  height: 600px;
+  overflow: auto;
+}
+
+.example-container table {
+  width: 100%;
+}

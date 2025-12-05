@@ -38,7 +38,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {auditTime, startWith, takeUntil} from 'rxjs/operators';
+import {auditTime, distinctUntilChanged, filter, startWith, takeUntil} from 'rxjs/operators';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
@@ -102,6 +102,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Emits when the rendered range changes. */
   private readonly _renderedRangeSubject = new Subject<ListRange>();
+  private readonly _renderedContentOffsetSubject = new Subject<number | null>();
 
   /** The direction the viewport scrolls. */
   @Input()
@@ -140,6 +141,14 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** A stream that emits whenever the rendered range changes. */
   readonly renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject;
+
+  /**
+   * Emits the offset from the start of the viewport to the start of the rendered data (in pixels).
+   */
+  readonly renderedContentOffset: Observable<number> = this._renderedContentOffsetSubject.pipe(
+    filter(offset => offset !== null),
+    distinctUntilChanged(),
+  );
 
   /**
    * The total size of all content (in pixels), including content that is not currently rendered.
@@ -537,6 +546,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
       // the `Number` function first to coerce it to a numeric value.
       this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+      this._renderedContentOffsetSubject.next(this.getOffsetToRenderedContentStart());
 
       afterNextRender(
         () => {
