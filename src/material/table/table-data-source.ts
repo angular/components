@@ -41,7 +41,8 @@ const MAX_SAFE_INTEGER = 9007199254740991;
  * own `DataSource`.
  */
 export class MatTableDataSource<
-  T extends object | ArrayLike<unknown>,
+  // TODO: Remove `any` type below in a breaking change:
+  T extends object | ArrayLike<unknown> | any,
   P extends MatPaginator = MatPaginator,
 > extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */

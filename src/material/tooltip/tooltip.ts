@@ -319,7 +319,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     return this._message;
   }
 
-  set message(value: unknown) {
+  set message(value: string | number | null | undefined) {
     const oldMessage = this._message;
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
