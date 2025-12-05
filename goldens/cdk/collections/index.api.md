@@ -5,7 +5,6 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import { InjectionToken } from '@angular/core';
 import { IterableChangeRecord } from '@angular/core';
 import { IterableChanges } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -109,9 +108,6 @@ export class UniqueSelectionDispatcher implements OnDestroy {
 
 // @public (undocumented)
 export type UniqueSelectionDispatcherListener = (id: string, name: string) => void;
-
-// @public
-export const _VIEW_REPEATER_STRATEGY: InjectionToken<_ViewRepeater<unknown, unknown, _ViewRepeaterItemContext<unknown>>>;
 
 // @public
 export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {

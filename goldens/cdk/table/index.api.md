@@ -262,7 +262,7 @@ export class CdkNoDataRow {
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkNoDataRow, never>;
 }
 
-// @public
+// @public @deprecated
 export class CdkRecycleRows {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkRecycleRows, "cdk-table[recycleRows], table[cdk-table][recycleRows]", never, {}, {}, never, never, true, never>;
@@ -334,6 +334,8 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     // (undocumented)
     static ngAcceptInputType_multiTemplateDataRows: unknown;
     // (undocumented)
+    static ngAcceptInputType_recycleRows: unknown;
+    // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -345,6 +347,7 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;
     _outletAssigned(): void;
+    recycleRows: boolean;
     removeColumnDef(columnDef: CdkColumnDef): void;
     removeFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
@@ -366,9 +369,9 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
         end: number;
     }>;
     // (undocumented)
-    protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
+    protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; "recycleRows": { "alias": "recycleRows"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, never>;
 }

@@ -20,9 +20,10 @@ ng_package(
     name = "npm_package",
     package_name = "@angular/aria",
     srcs = ["package.json"],
-    nested_packages = [
-        ":adev_assets",
-    ],
+    nested_packages = select({
+        "//:snapshot_adev_assets": [":adev_assets"],
+        "//conditions:default": [],
+    }),
     package_deps = [
         ":node_modules/@angular/cdk",
     ],

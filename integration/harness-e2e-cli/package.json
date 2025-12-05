@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "run-e2e-specs": "node --loader ts-node/esm node_modules/jasmine/bin/jasmine --config=e2e/jasmine.json",
-    "wait-and-run-e2e": "wait-on http://localhost:4200 && pnpm run-e2e-specs",
-    "e2e": "concurrently -s first -k 'pnpm ng serve' 'pnpm wait-and-run-e2e'"
+    "wait-and-run-e2e": "for i in {1..25}; do curl -s --fail http://localhost:4200 > /dev/null && break || (echo 'Waiting for server... attempt '$i' of 25'; sleep 2); done; pnpm run run-e2e-specs",
+    "e2e": "concurrently -s first -k 'pnpm run ng serve' 'pnpm run wait-and-run-e2e'"
   },
   "private": true,
   "dependencies": {
@@ -26,7 +26,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "20.2.0",
+    "@angular/build": "20.2.0",
     "@angular/cli": "20.2.0",
     "@angular/compiler-cli": "20.2.0",
     "@types/jasmine": "5.1.8",
@@ -35,14 +35,8 @@
     "concurrently": "^9.0.0",
     "jasmine": "5.8.0",
     "jasmine-core": "5.8.0",
-    "karma": "6.4.4",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
     "selenium-webdriver": "3.6.0",
     "ts-node": "~10.9.1",
-    "typescript": "5.8.3",
-    "wait-on": "^8.0.0"
+    "typescript": "5.8.3"
   }
 }

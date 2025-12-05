@@ -8,9 +8,6 @@
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {
-  MenuBarExample,
-  MenuBarRTLExample,
-  MenuBarDisabledExample,
   MenuContextExample,
   MenuTriggerExample,
   MenuStandaloneExample,
@@ -24,9 +21,6 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MenuBarExample,
-    MenuBarRTLExample,
-    MenuBarDisabledExample,
     MenuContextExample,
     MenuTriggerExample,
     MenuTriggerDisabledExample,

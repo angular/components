@@ -57,6 +57,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-menu/menu-demo').then(m => m.MenuDemo),
   },
   {
+    path: 'aria-menubar',
+    loadComponent: () => import('./aria-menubar/menubar-demo').then(m => m.MenubarDemo),
+  },
+  {
     path: 'aria-tabs',
     loadComponent: () => import('./aria-tabs/tabs-demo').then(m => m.TabsDemo),
   },

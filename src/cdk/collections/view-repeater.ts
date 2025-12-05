@@ -6,13 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  InjectionToken,
-  IterableChangeRecord,
-  IterableChanges,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import {IterableChangeRecord, IterableChanges, TemplateRef, ViewContainerRef} from '@angular/core';
 
 /**
  * The context for an embedded view in the repeater's view container.
@@ -110,11 +104,3 @@ export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {
 
   detach(): void;
 }
-
-/**
- * Injection token for `_ViewRepeater`. This token is for use by Angular Material only.
- * @docs-private
- */
-export const _VIEW_REPEATER_STRATEGY = new InjectionToken<
-  _ViewRepeater<unknown, unknown, _ViewRepeaterItemContext<unknown>>
->('_ViewRepeater');
