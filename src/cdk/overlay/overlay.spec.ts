@@ -495,6 +495,13 @@ describe('Overlay', () => {
     expect(paneElement.childNodes.length).toBe(0);
   }));
 
+  it('should do nothing when trying to attach a disposed overlay', () => {
+    const overlayRef = createOverlayRef(injector);
+    overlayRef.dispose();
+    overlayRef.attach(componentPortal);
+    expect(document.querySelector('.cdk-overlay-pane')).toBeFalsy();
+  });
+
   describe('positioning', () => {
     let config: OverlayConfig;
 
