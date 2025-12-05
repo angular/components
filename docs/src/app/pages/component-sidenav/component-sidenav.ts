@@ -9,17 +9,13 @@
 import {Component, ViewEncapsulation, forwardRef, inject, viewChild} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
-import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
-import {ActivatedRoute, Routes, RouterOutlet, RouterLinkActive, RouterLink} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
-
+import {Routes, RouterOutlet} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {Footer} from '../../shared/footer/footer';
-
 import {NavigationFocusService} from '../../shared/navigation-focus/navigation-focus.service';
-
 import {ComponentCategoryList} from '../component-category-list/component-category-list';
 import {ComponentPageHeader} from '../component-page-header/component-page-header';
 import {
@@ -29,6 +25,7 @@ import {
   ComponentViewer,
 } from '../component-viewer/component-viewer';
 import {ComponentStyling} from '../component-viewer/component-styling';
+import {ComponentNav} from '../component-nav/component-nav';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
@@ -91,21 +88,6 @@ export class ComponentSidenav {
   toggleSidenav(): void {
     this.sidenav()?.toggle();
   }
-}
-
-@Component({
-  selector: 'app-component-nav',
-  templateUrl: './component-nav.html',
-  imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, AsyncPipe],
-})
-export class ComponentNav {
-  private _docItems = inject(DocumentationItems);
-  private _route = inject(ActivatedRoute);
-  protected _params = this._route.params;
-
-  items = this._params.pipe(
-    switchMap(params => (params?.section ? this._docItems.getItems(params.section) : of([]))),
-  );
 }
 
 export const componentSidenavRoutes: Routes = [
