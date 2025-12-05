@@ -17,8 +17,10 @@ const projectDirPath = join(__dirname, '../');
 // Go to project directory.
 cd(projectDirPath);
 
+// TODO: Remove --ignore_all_rc_files flag once a repository can be loaded in bazelrc during info
+// commands again. See https://github.com/bazelbuild/bazel/issues/25145 for more context.
 /** Path to the bazel-bin directory. */
-const bazelBinPath = exec(`pnpm -s bazel info bazel-bin`).stdout.trim();
+const bazelBinPath = exec(`pnpm -s bazel --ignore_all_rc_files info bazel-bin`).stdout.trim();
 
 /** Output path for the Bazel dev-app web package target. */
 const webPackagePath = join(bazelBinPath, 'src/dev-app/web_package');

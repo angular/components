@@ -55,7 +55,9 @@ function buildReleasePackages(distPath: string, isSnapshotBuild: boolean): Built
   // List of targets to build. e.g. "src/cdk:npm_package", or "src/material:npm_package".
   const targets = exec(queryPackagesCmd, true).split(/\r?\n/);
   const packageNames = getPackageNamesOfTargets(targets);
-  const bazelBinPath = exec(`${bazelCmd} info bazel-bin`, true);
+  // TODO: Remove --ignore_all_rc_files flag once a repository can be loaded in bazelrc during info
+  // commands again. See https://github.com/bazelbuild/bazel/issues/25145 for more context.
+  const bazelBinPath = exec(`${bazelCmd} --ignore_all_rc_files info bazel-bin`, true);
   const getBazelOutputPath = (pkgName: string) => join(bazelBinPath, 'src', pkgName, 'npm_package');
   const getDistPath = (pkgName: string) => join(distPath, pkgName);
 
