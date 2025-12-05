@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {CdkTableModule} from '@angular/cdk/table';
-import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {MatTableModule} from '@angular/material/table';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 export interface PeriodicElement {
   name: string;
@@ -23,22 +23,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 const EXPANDED_ELEMENT_DATA: PeriodicElement[] = [];
-for (let x = 0; x < 100; x++) {
+for (let x = 0; x < 250; x++) {
   for (const entry of ELEMENT_DATA) {
     EXPANDED_ELEMENT_DATA.push({...entry, position: entry.position + 10 * x});
   }
 }
 
 /**
- * @title Example of a flex table with virtual scroll enabled.
+ * @title Example of a Material table with virtual scroll enabled.
  */
 @Component({
-  selector: 'cdk-virtual-flex-table-example',
-  styleUrls: ['cdk-virtual-flex-table-example.css'],
-  templateUrl: 'cdk-virtual-flex-table-example.html',
-  imports: [CdkTableModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll],
+  selector: 'table-virtual-scroll-example',
+  styleUrls: ['table-virtual-scroll-example.css'],
+  templateUrl: 'table-virtual-scroll-example.html',
+  imports: [MatTableModule, ScrollingModule],
 })
-export class CdkVirtualFlexTableExample {
+export class TableVirtualScrollExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = EXPANDED_ELEMENT_DATA;
   trackBy = (index: number, el: PeriodicElement) => el.position;

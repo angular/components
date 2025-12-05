@@ -1,6 +1,6 @@
-import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {Component} from '@angular/core';
 import {CdkTableModule} from '@angular/cdk/table';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 export interface PeriodicElement {
   name: string;
@@ -23,23 +23,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 const EXPANDED_ELEMENT_DATA: PeriodicElement[] = [];
-for (let x = 0; x < 100; x++) {
+for (let x = 0; x < 250; x++) {
   for (const entry of ELEMENT_DATA) {
     EXPANDED_ELEMENT_DATA.push({...entry, position: entry.position + 10 * x});
   }
 }
 
 /**
- * @title Example of a native table with virtual scroll enabled.
+ * @title Example of a CDK table with virtual scroll enabled.
  */
 @Component({
-  selector: 'cdk-virtual-table-example',
-  styleUrls: ['cdk-virtual-table-example.css'],
-  templateUrl: 'cdk-virtual-table-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CdkTableModule, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll],
+  selector: 'cdk-table-virtual-scroll-example',
+  styleUrls: ['cdk-table-virtual-scroll-example.css'],
+  templateUrl: 'cdk-table-virtual-scroll-example.html',
+  imports: [CdkTableModule, ScrollingModule],
 })
-export class CdkVirtualTableExample {
+export class CdkTableVirtualScrollExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = EXPANDED_ELEMENT_DATA;
   trackBy = (index: number, el: PeriodicElement) => el.position;
