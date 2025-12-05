@@ -23,7 +23,6 @@ import {
   signal,
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Subject} from 'rxjs';
 import {
   _MatThumb,
   MatSliderDragEvent,
@@ -254,9 +253,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** Defined when a user is using a form control to manage slider value & validation. */
   private _formControl: FormControl | undefined;
 
-  /** Emits when the component is destroyed. */
-  protected readonly _destroyed = new Subject<void>();
-
   /**
    * Indicates whether UI updates should be skipped.
    *
@@ -297,8 +293,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   ngOnDestroy(): void {
     this._listenerCleanups.forEach(cleanup => cleanup());
-    this._destroyed.next();
-    this._destroyed.complete();
     this.dragStart.complete();
     this.dragEnd.complete();
   }
