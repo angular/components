@@ -131,15 +131,6 @@ ts_project(
     ],
 )
 
-filegroup(
-    name = "schematics_test_cases",
-    testonly = True,
-    srcs = glob([
-        "ng-update/test-cases/**/*_input.ts",
-        "ng-update/test-cases/**/*_expected_output.ts",
-    ]),
-)
-
 jasmine_test(
     name = "unit_tests",
     data = [
@@ -147,7 +138,6 @@ jasmine_test(
         ":ng_generate_assets",
         ":schema_assets",
         ":schematics",
-        ":schematics_test_cases",
         ":unit_test_sources",
         "//src/material/schematics:package_json",
     ],

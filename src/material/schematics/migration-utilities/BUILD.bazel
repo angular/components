@@ -17,7 +17,7 @@ ts_project(
 ts_project(
     name = "unit_tests_lib",
     testonly = True,
-    srcs = glob(["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"]),
+    srcs = glob(["**/*.spec.ts"]),
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
         ":migration-utilities",

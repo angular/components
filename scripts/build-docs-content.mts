@@ -36,7 +36,7 @@ export function buildDocsContentPackage(): BuiltPackage {
   sh.cd(projectDir);
 
   /** Path to the bazel bin output directory. */
-  const bazelBinPath = sh.exec(`${bazelCmd} info bazel-bin`).stdout.trim();
+  const bazelBinPath = sh.exec(`${bazelCmd} --ignore_all_rc_files info bazel-bin`).stdout.trim();
 
   /** Path where the NPM package is built into by Bazel. */
   const bazelBinOutDir = join(bazelBinPath, 'src/components-examples/npm_package');
