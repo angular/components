@@ -174,7 +174,7 @@ export class MatTable<T> extends CdkTable<T> {
 }
 
 // @public
-export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
+export class MatTableDataSource<T extends object | any, P extends MatPaginator = MatPaginator> extends DataSource<T> {
     constructor(initialData?: T[]);
     connect(): BehaviorSubject<T[]>;
     get data(): T[];
