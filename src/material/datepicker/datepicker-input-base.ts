@@ -94,7 +94,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     return this._model ? this._getValueFromModel(this._model.selection) : this._pendingValue;
   }
   set value(value: any) {
-    this._assignValueProgrammatically(value);
+    this._assignValueProgrammatically(value, true);
   }
   protected _model: MatDateSelectionModel<S, D> | undefined;
 
@@ -259,7 +259,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = this._dateAdapter.localeChanges.subscribe(() => {
-      this._assignValueProgrammatically(this.value);
+      this._assignValueProgrammatically(this.value, true);
     });
   }
 
@@ -293,10 +293,8 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   writeValue(value: D): void {
     // We produce a different date object on each keystroke which can cause signal forms'
     // interop logic to keep calling `writeValue` with the same value as the user is typing.
-    // Skip such cases since they can prevent the user from typing (see #32442).
-    if (!value || value !== this.value) {
-      this._assignValueProgrammatically(value);
-    }
+    // Skip such cases since they can prevent the user from typing (see #32442 and #32475).
+    this._assignValueProgrammatically(value, value !== this.value);
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -403,12 +401,15 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   }
 
   /** Programmatically assigns a value to the input. */
-  protected _assignValueProgrammatically(value: D | null) {
+  protected _assignValueProgrammatically(value: D | null, reformat: boolean) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = this._isValidValue(value);
     value = this._dateAdapter.getValidDateOrNull(value);
     this._assignValue(value);
-    this._formatValue(value);
+
+    if (reformat) {
+      this._formatValue(value);
+    }
   }
 
   /** Gets whether a value matches the current date filter. */
