@@ -14,17 +14,22 @@
         <map-advanced-marker
           #firstMarker="mapAdvancedMarker"
           [position]="center"
-          (mapClick)="infoWindow.open(firstMarker)"></map-advanced-marker>
+          (mapClick)="infoWindow.open(firstMarker)"
+          (mapRightclick)="handleMarkerRightclick($event)"
+        ></map-advanced-marker>
         @for (markerPosition of markerPositions; track markerPosition) {
           <map-advanced-marker #marker="mapAdvancedMarker"
             [position]="markerPosition"
-            (mapClick)="infoWindow.open(marker)"></map-advanced-marker>
+            (mapClick)="infoWindow.open(marker)"
+            (mapRightclick)="handleMarkerRightclick($event)"
+          ></map-advanced-marker>
         }
       </map-marker-clusterer>
       @if (hasCustomContentMarker) {
         <map-advanced-marker
           #secondMarker="mapAdvancedMarker"
           (mapClick)="infoWindow.open(secondMarker)"
+          (mapRightclick)="handleMarkerRightclick($event)"
           title="Advanced Marker"
           [gmpDraggable]="false"
           [content]="advancedMarkerContent"
