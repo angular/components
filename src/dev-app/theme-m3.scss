@@ -59,10 +59,7 @@ html {
 @include mat.typography-hierarchy($light-theme);
 
 .demo-strong-focus {
-  // Note: we can theme the indicators directly through `strong-focus-indicators` as well.
-  // Use the theme so we have some coverage over the entire API surface.
   @include mat.strong-focus-indicators();
-  @include mat.strong-focus-indicators-theme($light-theme);
 }
 
 // Include the alternative theme styles inside of a block with a CSS class. You can make this
@@ -78,11 +75,6 @@ body.demo-unicorn-dark-theme {
     // TODO(mmalerba): Support M3 for experimental components.
     // @include matx.column-resize-color($dark-theme);
     // @include matx.popover-edit-color($dark-theme);
-  }
-
-  // Include the dark theme colors for focus indicators.
-  &.demo-strong-focus {
-    @include mat.strong-focus-indicators-color($dark-theme);
   }
 }
 
