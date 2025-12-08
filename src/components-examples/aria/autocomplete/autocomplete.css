@@ -1,0 +1,103 @@
+.example-autocomplete {
+  display: flex;
+  position: relative;
+  align-items: center;
+
+  /* stylelint-disable-next-line material/no-prefixes -- Valid in all remotely recent browsers. */
+  width: fit-content;
+}
+
+.example-search-icon,
+.example-check-icon {
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.example-search-icon {
+  left: 0.75rem;
+  position: absolute;
+}
+
+[ngComboboxInput] {
+  width: 13rem;
+  font-size: 0.9rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  padding: 0.7rem 0.7rem 0.7rem 2.5rem;
+  outline-color: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-outline);
+  background-color: var(--mat-sys-surface);
+}
+
+[ngComboboxInput][aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.5;
+  background-color: var(--mat-sys-surface-dim);
+}
+
+[ngCombobox]:has([aria-expanded='false']) .example-popup {
+  display: none;
+}
+
+.example-popup {
+  width: 100%;
+  margin-top: 2px;
+  padding: 0.1rem;
+  max-height: 11rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.example-no-results {
+  padding: 1rem;
+}
+
+[ngListbox] {
+  gap: 2px;
+  height: 100%;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+}
+
+[ngOption] {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  margin: 1px;
+  font-size: 0.9rem;
+  padding: 0.7rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+[ngOption][aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.5;
+  background-color: var(--mat-sys-surface-dim);
+}
+
+[ngOption]:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+}
+
+[ngOption][data-active='true'] {
+  outline-offset: -2px;
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+[ngOption][aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+[ngOption]:not([aria-selected='true']) .example-check-icon {
+  display: none;
+}
+
+.example-option-label {
+  flex: 1;
+}
+
+.example-check-icon {
+  font-size: 0.9rem;
+}
