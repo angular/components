@@ -69,13 +69,13 @@ describe('timepicker utilities', () => {
   });
 
   describe('generateOptions', () => {
-    let adapter: DateAdapter<Date>;
-    let formats: MatDateFormats;
+    let adapter: DateAdapter<Date, string, Intl.DateTimeFormatOptions, null>;
+    let formats: MatDateFormats<Intl.DateTimeFormatOptions, null>;
 
     beforeEach(() => {
       TestBed.configureTestingModule({providers: [provideNativeDateAdapter()]});
       adapter = TestBed.inject(DateAdapter);
-      formats = TestBed.inject(MAT_DATE_FORMATS);
+      formats = TestBed.inject<MatDateFormats<Intl.DateTimeFormatOptions, null>>(MAT_DATE_FORMATS);
       adapter.setLocale('en-US');
     });
 

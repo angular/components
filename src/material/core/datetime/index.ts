@@ -8,7 +8,7 @@
 
 import {NgModule, Provider} from '@angular/core';
 import {DateAdapter} from './date-adapter';
-import {MAT_DATE_FORMATS, MatDateFormats} from './date-formats';
+import {MAT_DATE_FORMATS} from './date-formats';
 import {NativeDateAdapter} from './native-date-adapter';
 import {MAT_NATIVE_DATE_FORMATS} from './native-date-formats';
 
@@ -27,9 +27,7 @@ export class NativeDateModule {}
 })
 export class MatNativeDateModule {}
 
-export function provideNativeDateAdapter(
-  formats: MatDateFormats = MAT_NATIVE_DATE_FORMATS,
-): Provider[] {
+export function provideNativeDateAdapter(formats = MAT_NATIVE_DATE_FORMATS): Provider[] {
   return [
     {provide: DateAdapter, useClass: NativeDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: formats},

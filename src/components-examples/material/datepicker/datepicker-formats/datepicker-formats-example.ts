@@ -11,6 +11,7 @@ import {DateTime} from 'luxon';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DDD',
+    timeInput: 'HH:mm',
   },
   display: {
     dateInput: 'DDD',

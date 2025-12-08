@@ -56,13 +56,15 @@ const DAY_OF_WEEK_FORMATS = {
 
 /** Adds date-fns support to Angular Material. */
 @Injectable()
-export class DateFnsAdapter extends DateAdapter<Date, Locale> {
+export class DateFnsAdapter extends DateAdapter<Date, Locale, string, string | string[]> {
   constructor(...args: unknown[]);
 
   constructor() {
     super();
-    const matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
-    this.setLocale(matDateLocale as Locale);
+    const matDateLocale = inject<Locale>(MAT_DATE_LOCALE, {optional: true});
+    if (matDateLocale) {
+      this.setLocale(matDateLocale);
+    }
   }
 
   getYear(date: Date): number {

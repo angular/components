@@ -41,22 +41,24 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
-export class NativeDateAdapter extends DateAdapter<Date> {
+export class NativeDateAdapter extends DateAdapter<Date, string, Intl.DateTimeFormatOptions, null> {
   /** The injected locale. */
-  private readonly _matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+  private readonly _matDateLocale = inject<string>(MAT_DATE_LOCALE, {optional: true});
 
   constructor(...args: unknown[]);
 
   constructor() {
     super();
 
-    const matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+    const matDateLocale = inject<string>(MAT_DATE_LOCALE, {optional: true});
 
     if (matDateLocale !== undefined) {
       this._matDateLocale = matDateLocale;
     }
 
-    super.setLocale(this._matDateLocale);
+    if (this._matDateLocale) {
+      super.setLocale(this._matDateLocale);
+    }
   }
 
   getYear(date: Date): number {
@@ -153,16 +155,16 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date();
   }
 
-  parse(value: any, parseFormat?: any): Date | null {
+  parse(value: unknown, _parseFormat?: null): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
     if (typeof value == 'number') {
       return new Date(value);
     }
-    return value ? new Date(Date.parse(value)) : null;
+    return value ? new Date(Date.parse(String(value))) : null;
   }
 
-  format(date: Date, displayFormat: Object): string {
+  format(date: Date, displayFormat: Intl.DateTimeFormatOptions): string {
     if (!this.isValid(date)) {
       throw Error('NativeDateAdapter: Cannot format invalid date.');
     }
@@ -214,7 +216,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
    * invalid date for all other values.
    */
-  override deserialize(value: any): Date | null {
+  override deserialize(value: unknown): Date | null {
     if (typeof value === 'string') {
       if (!value) {
         return null;
@@ -231,11 +233,11 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return super.deserialize(value);
   }
 
-  isDateInstance(obj: any) {
+  isDateInstance(obj: unknown): obj is Date {
     return obj instanceof Date;
   }
 
-  isValid(date: Date) {
+  isValid(date: Date): boolean {
     return !isNaN(date.getTime());
   }
 
@@ -275,7 +277,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return date.getSeconds();
   }
 
-  override parseTime(userValue: any, parseFormat?: any): Date | null {
+  override parseTime(userValue: unknown, _parseFormat?: null): Date | null {
     if (typeof userValue !== 'string') {
       return userValue instanceof Date ? new Date(userValue.getTime()) : null;
     }

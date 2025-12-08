@@ -7,7 +7,7 @@
  */
 
 import {NgModule, Provider} from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import {DateFnsAdapter} from './date-fns-adapter';
 import {MAT_DATE_FNS_FORMATS} from './date-fns-formats';
 
@@ -29,7 +29,7 @@ export class DateFnsModule {}
 })
 export class MatDateFnsModule {}
 
-export function provideDateFnsAdapter(formats: MatDateFormats = MAT_DATE_FNS_FORMATS): Provider[] {
+export function provideDateFnsAdapter(formats = MAT_DATE_FNS_FORMATS): Provider[] {
   return [
     {
       provide: DateAdapter,

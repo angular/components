@@ -14,17 +14,15 @@ import {
   ElementRef,
   inject,
   input,
-  InputSignal,
   InputSignalWithTransform,
   model,
-  ModelSignal,
   OnDestroy,
   OutputRefSubscription,
   Renderer2,
   Signal,
   signal,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS} from '../core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -80,12 +78,23 @@ import {_getEventTarget, _getFocusedElementPierceShadowDom} from '@angular/cdk/p
     },
   ],
 })
-export class MatTimepickerInput<D>
+export class MatTimepickerInput<
+    D,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
   implements MatTimepickerConnectedInput<D>, ControlValueAccessor, Validator, OnDestroy
 {
   private _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
-  private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
+  private _dateFormats = inject<MatDateFormats<DisplayFormatType, ParseFormatType>>(
+    MAT_DATE_FORMATS,
+    {optional: true},
+  )!;
   private _formField = inject(MAT_FORM_FIELD, {optional: true});
 
   private _onChange: ((value: any) => void) | undefined;
@@ -119,10 +128,10 @@ export class MatTimepickerInput<D>
   });
 
   /** Current value of the input. */
-  readonly value: ModelSignal<D | null> = model<D | null>(null);
+  readonly value = model<D | null>(null);
 
   /** Timepicker that the input is associated with. */
-  readonly timepicker: InputSignal<MatTimepicker<D>> = input.required<MatTimepicker<D>>({
+  readonly timepicker = input.required<MatTimepicker<D, L, DisplayFormatType, ParseFormatType>>({
     alias: 'matTimepicker',
   });
 
@@ -416,7 +425,7 @@ export class MatTimepickerInput<D>
   private _formatValue(value: D | null): void {
     value = this._dateAdapter.getValidDateOrNull(value);
     this._elementRef.nativeElement.value =
-      value == null ? '' : this._dateAdapter.format(value, this._dateFormats.display.timeInput);
+      value == null ? '' : this._dateAdapter.format(value, this._dateFormats.display.timeInput!);
   }
 
   /** Checks whether a value is valid. */

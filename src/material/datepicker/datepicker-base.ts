@@ -120,14 +120,21 @@ export type DatepickerDropdownPositionY = 'above' | 'below';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTrapFocus, MatCalendar, CdkPortalOutlet, MatButton],
 })
-export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
+export class MatDatepickerContent<
+    S,
+    D = ExtractDateTypeFromSelection<S>,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
+  >
   implements AfterViewInit, OnDestroy
 {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _animationsDisabled = _animationsDisabled();
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _globalModel = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter)!;
+  private _dateAdapter =
+    inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(DateAdapter)!;
   private _ngZone = inject(NgZone);
   private _rangeSelectionStrategy = inject<MatDateRangeSelectionStrategy<D>>(
     MAT_DATE_RANGE_SELECTION_STRATEGY,
@@ -152,7 +159,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   @Input() color: ThemePalette;
 
   /** Reference to the datepicker that created the overlay. */
-  datepicker: MatDatepickerBase<any, S, D>;
+  datepicker: MatDatepickerBase<any, S, D, L, DisplayFormatType, ParseFormatType>;
 
   /** Start of the comparison range. */
   comparisonStart: D | null;
@@ -371,12 +378,18 @@ export abstract class MatDatepickerBase<
     C extends MatDatepickerControl<D>,
     S,
     D = ExtractDateTypeFromSelection<S>,
+    L = any,
+    DisplayFormatType = string,
+    ParseFormatType = DisplayFormatType,
   >
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
-  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateAdapter = inject<DateAdapter<D, L, DisplayFormatType, ParseFormatType>>(
+    DateAdapter,
+    {optional: true},
+  )!;
   private _dir = inject(Directionality, {optional: true});
   private _model = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
   private _animationsDisabled = _animationsDisabled();
@@ -532,7 +545,9 @@ export abstract class MatDatepickerBase<
   private _overlayRef: OverlayRef | null;
 
   /** Reference to the component instance rendered in the overlay. */
-  private _componentRef: ComponentRef<MatDatepickerContent<S, D>> | null;
+  private _componentRef: ComponentRef<
+    MatDatepickerContent<S, D, L, DisplayFormatType, ParseFormatType>
+  > | null;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
@@ -726,7 +741,9 @@ export abstract class MatDatepickerBase<
   }
 
   /** Forwards relevant values from the datepicker to the datepicker content inside the overlay. */
-  protected _forwardContentValues(instance: MatDatepickerContent<S, D>) {
+  protected _forwardContentValues(
+    instance: MatDatepickerContent<S, D, L, DisplayFormatType, ParseFormatType>,
+  ) {
     instance.datepicker = this;
     instance.color = this.color;
     instance._dialogLabelId = this.datepickerInput.getOverlayLabelId();
@@ -738,10 +755,9 @@ export abstract class MatDatepickerBase<
     this._destroyOverlay();
 
     const isDialog = this.touchUi;
-    const portal = new ComponentPortal<MatDatepickerContent<S, D>>(
-      MatDatepickerContent,
-      this._viewContainerRef,
-    );
+    const portal = new ComponentPortal<
+      MatDatepickerContent<S, D, L, DisplayFormatType, ParseFormatType>
+    >(MatDatepickerContent, this._viewContainerRef);
     const overlayRef = (this._overlayRef = createOverlayRef(
       this._injector,
       new OverlayConfig({
