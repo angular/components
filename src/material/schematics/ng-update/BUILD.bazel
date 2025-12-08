@@ -40,15 +40,6 @@ esbuild(
     deps = [":ng_update_lib"],
 )
 
-filegroup(
-    name = "schematics_test_cases",
-    testonly = True,
-    srcs = glob([
-        "test-cases/**/*_input.ts",
-        "test-cases/**/*_expected_output.ts",
-    ]),
-)
-
 ts_project(
     name = "test_lib",
     testonly = True,
@@ -70,7 +61,6 @@ jasmine_test(
     name = "test",
     data = [
         ":ng_update_index",
-        ":schematics_test_cases",
         ":test_lib",
         "//src/material/schematics:collection_assets",
         "//src/material/schematics:node_modules/@angular/cdk/schematics",

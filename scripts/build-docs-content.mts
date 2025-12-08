@@ -35,8 +35,10 @@ export function buildDocsContentPackage(): BuiltPackage {
   // Go to project directory.
   sh.cd(projectDir);
 
+  // TODO: Remove --ignore_all_rc_files flag once a repository can be loaded in bazelrc during info
+  // commands again. See https://github.com/bazelbuild/bazel/issues/25145 for more context.
   /** Path to the bazel bin output directory. */
-  const bazelBinPath = sh.exec(`${bazelCmd} info bazel-bin`).stdout.trim();
+  const bazelBinPath = sh.exec(`${bazelCmd} --ignore_all_rc_files info bazel-bin`).stdout.trim();
 
   /** Path where the NPM package is built into by Bazel. */
   const bazelBinOutDir = join(bazelBinPath, 'src/components-examples/npm_package');
