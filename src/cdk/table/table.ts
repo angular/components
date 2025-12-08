@@ -646,6 +646,7 @@ export class CdkTable<T>
 
   ngOnDestroy() {
     this._stickyStyler?.destroy();
+    this._viewRepeater.detach();
 
     [
       this._rowOutlet?.viewContainer,
@@ -1336,9 +1337,17 @@ export class CdkTable<T>
    * `multiTemplateDataRows` or adding/removing row definitions.
    */
   private _forceRenderDataRows() {
+    this._clearReusableRowCache();
     this._dataDiffer.diff([]);
     this._rowOutlet.viewContainer.clear();
     this.renderRows();
+  }
+
+  /** Clears any cached data rows that were being reused. */
+  private _clearReusableRowCache() {
+    if (this._viewRepeater instanceof _RecycleViewRepeaterStrategy) {
+      this._viewRepeater.clearCache();
+    }
   }
 
   /**
