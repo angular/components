@@ -78,7 +78,7 @@ $default-border-radius: 4px;
 @mixin strong-focus-indicators($config: ()) {
   // Default focus indicator config.
   $default-config: (
-    border-color: black,
+    border-color: var(--mat-sys-secondary, black),
     display: block,
   );
 
