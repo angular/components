@@ -40,6 +40,8 @@ export interface DocItem {
   additionalApiDocs?: AdditionalApiDoc[];
   /** Whether the doc item can display styling information. */
   hasStyling?: boolean;
+  /** External URL to the item's docs. */
+  externalRedirect?: string;
 }
 
 export interface DocSection {
@@ -462,6 +464,7 @@ const DOCS: {[key: string]: DocItem[]} = {
       id: 'drag-drop',
       name: 'Drag and Drop',
       summary: 'Directives enabling drag-and-drop interactions',
+      externalRedirect: 'https://angular.dev/guide/drag-drop',
       exampleSpecs: {
         prefix: 'cdk-drag-drop-',
       },
