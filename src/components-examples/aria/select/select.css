@@ -1,10 +1,12 @@
 .example-select {
-  width: fit-content;
   position: relative;
   display: flex;
   align-items: center;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
+
+  /* stylelint-disable-next-line material/no-prefixes -- Valid in all remotely recent browsers. */
+  width: fit-content;
 }
 
 .example-select:has([ngComboboxInput][aria-disabled='true']) {
