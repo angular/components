@@ -300,7 +300,12 @@ export class CdkTable<T>
   protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
   private _injector = inject(Injector);
-  private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {optional: true});
+  private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {
+    optional: true,
+    // Virtual scrolling can only be enabled by a viewport in
+    // the same host, don't try to resolve in parent components.
+    host: true,
+  });
   private _positionListener =
     inject(STICKY_POSITIONING_LISTENER, {optional: true}) ||
     inject(STICKY_POSITIONING_LISTENER, {optional: true, skipSelf: true});
@@ -466,6 +471,14 @@ export class CdkTable<T>
   /** Emits when the footer rows sticky state changes. */
   private readonly _footerRowStickyUpdates = new Subject<StickyUpdate>();
 
+  /**
+   * Whether to explicitly disable virtual scrolling even if there is a virtual scroll viewport
+   * parent. This can't be changed externally, whereas internally it is turned into an input that
+   * we use to opt out existing apps that were implementing virtual scroll before we added support
+   * for it.
+   */
+  private readonly _disableVirtualScrolling = false;
+
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
     // Perform this lazily in case the table's role was updated by a directive after construction.
@@ -564,7 +577,7 @@ export class CdkTable<T>
   get fixedLayout(): boolean {
     // Require a fixed layout when virtual scrolling is enabled, otherwise
     // the element the header can jump around as the user is scrolling.
-    return this._virtualScrollViewport ? true : this._fixedLayout;
+    return this._virtualScrollEnabled() ? true : this._fixedLayout;
   }
   set fixedLayout(value: boolean) {
     this._fixedLayout = value;
@@ -594,7 +607,10 @@ export class CdkTable<T>
    *
    * @docs-private
    */
-  readonly viewChange: BehaviorSubject<ListRange>;
+  readonly viewChange: BehaviorSubject<ListRange> = new BehaviorSubject({
+    start: 0,
+    end: Number.MAX_VALUE,
+  });
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
   _rowOutlet: DataRowOutlet;
@@ -637,10 +653,6 @@ export class CdkTable<T>
 
     this._isServer = !this._platform.isBrowser;
     this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
-    this.viewChange = new BehaviorSubject<ListRange>({
-      start: 0,
-      end: this._virtualScrollViewport ? 0 : Number.MAX_VALUE,
-    });
 
     // Set up the trackBy function so that it uses the `RenderRow` as its identity by default. If
     // the user has provided a custom trackBy, return the result of that function as evaluated
@@ -648,10 +660,6 @@ export class CdkTable<T>
     this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: RenderRow<T>) => {
       return this.trackBy ? this.trackBy(dataRow.dataIndex, dataRow.data) : dataRow;
     });
-
-    if (this._virtualScrollViewport) {
-      this._setupVirtualScrolling(this._virtualScrollViewport);
-    }
   }
 
   ngOnInit() {
@@ -667,9 +675,14 @@ export class CdkTable<T>
 
   ngAfterContentInit() {
     this._viewRepeater =
-      this.recycleRows || this._virtualScrollViewport
+      this.recycleRows || this._virtualScrollEnabled()
         ? new _RecycleViewRepeaterStrategy()
         : new _DisposeViewRepeaterStrategy();
+
+    if (this._virtualScrollEnabled()) {
+      this._setupVirtualScrolling(this._virtualScrollViewport!);
+    }
+
     this._hasInitialized = true;
   }
 
@@ -1038,24 +1051,23 @@ export class CdkTable<T>
    * so that the differ equates their references.
    */
   private _getAllRenderRows(): RenderRow<T>[] {
-    const dataWithinRange = this._renderedRange
-      ? (this._data || []).slice(this._renderedRange.start, this._renderedRange.end)
-      : [];
+    // Note: the `_data` is typed as an array, but some internal apps end up passing diffrent types.
+    if (!Array.isArray(this._data) || !this._renderedRange) {
+      return [];
+    }
+
     const renderRows: RenderRow<T>[] = [];
+    const end = Math.min(this._data.length, this._renderedRange.end);
 
     // Store the cache and create a new one. Any re-used RenderRow objects will be moved into the
     // new cache while unused ones can be picked up by garbage collection.
     const prevCachedRenderRows = this._cachedRenderRowsMap;
     this._cachedRenderRowsMap = new Map();
 
-    if (!this._data) {
-      return renderRows;
-    }
-
     // For each data object, get the list of rows that should be rendered, represented by the
     // respective `RenderRow` object which is the pair of `data` and `CdkRowDef`.
-    for (let i = 0; i < dataWithinRange.length; i++) {
-      let data = dataWithinRange[i];
+    for (let i = this._renderedRange.start; i < end; i++) {
+      const data = this._data[i];
       const renderRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
 
       if (!this._cachedRenderRowsMap.has(data)) {
@@ -1479,6 +1491,9 @@ export class CdkTable<T>
     const virtualScrollScheduler =
       typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
+    // Render nothing since the virtual scroll viewport will take over.
+    this.viewChange.next({start: 0, end: 0});
+
     // Forward the rendered range computed by the virtual scroll viewport to the table.
     viewport.renderedRangeStream
       // We need the scheduler here, because the virtual scrolling module uses an identical
@@ -1627,6 +1642,10 @@ export class CdkTable<T>
     const startRect = firstNode?.getBoundingClientRect?.();
     const endRect = lastNode?.getBoundingClientRect?.();
     return startRect && endRect ? endRect.bottom - startRect.top : 0;
+  }
+
+  private _virtualScrollEnabled(): boolean {
+    return !this._disableVirtualScrolling && this._virtualScrollViewport != null;
   }
 }
 
