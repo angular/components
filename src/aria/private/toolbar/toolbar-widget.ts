@@ -13,8 +13,10 @@ import type {ToolbarPattern} from './toolbar';
 import {ToolbarWidgetGroupPattern} from './toolbar-widget-group';
 
 /** Represents the required inputs for a toolbar widget in a toolbar. */
-export interface ToolbarWidgetInputs<V>
-  extends Omit<ListItem<V>, 'searchTerm' | 'index' | 'selectable'> {
+export interface ToolbarWidgetInputs<V> extends Omit<
+  ListItem<V>,
+  'searchTerm' | 'index' | 'selectable'
+> {
   /** A reference to the parent toolbar. */
   toolbar: SignalLike<ToolbarPattern<V>>;
 

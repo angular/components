@@ -53,9 +53,10 @@ export interface DateSelectionModelChange<S> {
  * @docs-private
  */
 @Injectable()
-export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
-  implements OnDestroy
-{
+export abstract class MatDateSelectionModel<
+  S,
+  D = ExtractDateTypeFromSelection<S>,
+> implements OnDestroy {
   private readonly _selectionChanged = new Subject<DateSelectionModelChange<S>>();
 
   /** Emits when the selection has changed. */

@@ -20,8 +20,7 @@ import {
 
 /** The required inputs to tabs. */
 export interface TabInputs
-  extends Omit<ListNavigationItem, 'index'>,
-    Omit<ExpansionItem, 'expandable'> {
+  extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
   /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
 
@@ -123,7 +122,8 @@ export class TabPanelPattern {
 
 /** The required inputs for the tablist. */
 export interface TabListInputs
-  extends Omit<ListNavigationInputs<TabPattern>, 'multi'>,
+  extends
+    Omit<ListNavigationInputs<TabPattern>, 'multi'>,
     Omit<ListExpansionInputs, 'multiExpandable' | 'items'> {
   /** The selection strategy used by the tablist. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
