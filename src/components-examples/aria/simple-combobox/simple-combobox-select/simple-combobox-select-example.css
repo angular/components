@@ -1,0 +1,94 @@
+.example-select {
+  display: flex;
+  position: relative;
+  align-items: center;
+  color: var(--mat-sys-on-primary);
+  font-size: var(--mat-sys-label-large);
+  background-color: var(--mat-sys-primary);
+  border-radius: var(--mat-sys-corner-extra-large);
+  padding: 0 2rem;
+  height: 3rem;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.example-select:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 90%, transparent);
+}
+
+.example-select:focus {
+  outline-offset: 2px;
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+.example-combobox-text {
+  width: 9rem;
+}
+
+.example-arrow {
+  pointer-events: none;
+  transition: transform 150ms ease-in-out;
+}
+
+[ngCombobox][aria-expanded='true'] .example-arrow {
+  transform: rotate(180deg);
+}
+
+.example-popup-container {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 8px;
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[ngListbox] {
+  gap: 4px;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  max-height: 13rem;
+}
+
+[ngOption] {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  padding: 0 1rem;
+  min-height: 3rem;
+  color: var(--mat-sys-on-surface);
+  font-size: var(--mat-sys-label-large);
+  border-radius: var(--mat-sys-corner-extra-large);
+}
+
+[ngOption]:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+}
+
+[ngOption][data-active='true'] {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+}
+
+[ngOption][aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+.example-option-icon {
+  padding-right: 1rem;
+}
+
+.example-option-check,
+.example-option-icon {
+  font-size: var(--mat-sys-label-large);
+}
+
+[ngOption]:not([aria-selected='true']) .example-option-check {
+  display: none;
+}
+
+.example-option-text {
+  flex: 1;
+}
