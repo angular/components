@@ -73,6 +73,11 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-tree/tree-demo').then(m => m.TreeDemo),
   },
   {
+    path: 'aria-autocomplete',
+    loadComponent: () =>
+      import('./aria-autocomplete/autocomplete-demo').then(m => m.AutocompleteDemo),
+  },
+  {
     path: 'aria-toolbar',
     loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },
