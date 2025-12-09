@@ -1,0 +1,33 @@
+<div ngCombobox filterMode="highlight">
+  <div #origin class="example-autocomplete">
+    <span class="example-search-icon material-symbols-outlined" translate="no">search</span>
+    <input
+      aria-label="Label dropdown"
+      placeholder="Select a country"
+      [(ngModel)]="query"
+      ngComboboxInput
+    />
+  </div>
+
+  <ng-template ngComboboxPopupContainer>
+    <ng-template
+      [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+      [cdkConnectedOverlayOpen]="true"
+    >
+      <div class="example-popup">
+        @if (countries().length === 0) {
+          <div class="example-no-results">No results found</div>
+        }
+
+        <div ngListbox>
+          @for (country of countries(); track country) {
+            <div ngOption [value]="country" [label]="country" [disabled]="country === 'Brazil'">
+              <span class="example-option-label">{{country}}</span>
+              <span class="example-check-icon material-symbols-outlined" translate="no">check</span>
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

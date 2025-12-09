@@ -26,6 +26,7 @@ ng_project(
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/dev-app/aria-accordion",
+        "//src/dev-app/aria-autocomplete",
         "//src/dev-app/aria-combobox",
         "//src/dev-app/aria-grid",
         "//src/dev-app/aria-listbox",

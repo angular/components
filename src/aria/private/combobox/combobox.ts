@@ -390,6 +390,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     ) {
       this.isFocused.set(false);
 
+      if (!this.expanded()) {
+        return;
+      }
+
       if (this.readonly()) {
         this.close();
         return;
@@ -632,6 +636,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
     const controls = this.listControls();
+
+    const item = opts.item ?? controls?.getActiveItem();
+
+    if (item?.disabled()) {
+      return;
+    }
 
     if (opts.item) {
       controls?.focus(opts.item, {focusElement: false});
