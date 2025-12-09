@@ -26,3 +26,4 @@ export * from './grid/cell';
 export * from './grid/widget';
 export * from './deferred-content';
 export * from './utils/element';
+export * from './simple-combobox/simple-combobox';
