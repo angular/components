@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "ts_project")
 load("//integration/module-tests:index.bzl", "module_test")
+load("//tools:defaults.bzl", "ts_project")
 
 ts_project(
     name = "test_lib",

@@ -368,10 +368,10 @@ export interface MatDatepickerPanel<
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<
-    C extends MatDatepickerControl<D>,
-    S,
-    D = ExtractDateTypeFromSelection<S>,
-  >
+  C extends MatDatepickerControl<D>,
+  S,
+  D = ExtractDateTypeFromSelection<S>,
+>
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _injector = inject(Injector);

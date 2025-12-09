@@ -14,8 +14,7 @@ import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/
 
 /** Represents the required inputs for a tree item. */
 export interface TreeItemInputs<V>
-  extends Omit<ListItem<V>, 'index'>,
-    Omit<ExpansionItem, 'expandable'> {
+  extends Omit<ListItem<V>, 'index'>, Omit<ExpansionItem, 'expandable'> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 

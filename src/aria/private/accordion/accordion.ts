@@ -18,13 +18,12 @@ import {
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 
 /** Inputs of the AccordionGroupPattern. */
-export interface AccordionGroupInputs
-  extends Omit<
-    ListNavigationInputs<AccordionTriggerPattern> &
-      ListFocusInputs<AccordionTriggerPattern> &
-      Omit<ListExpansionInputs, 'items'>,
-    'focusMode'
-  > {
+export interface AccordionGroupInputs extends Omit<
+  ListNavigationInputs<AccordionTriggerPattern> &
+    ListFocusInputs<AccordionTriggerPattern> &
+    Omit<ListExpansionInputs, 'items'>,
+  'focusMode'
+> {
   /** A function that returns the trigger associated with a given element. */
   getItem: (e: Element | null | undefined) => AccordionTriggerPattern | undefined;
 }
@@ -124,8 +123,7 @@ export class AccordionGroupPattern {
 
 /** Inputs for the AccordionTriggerPattern. */
 export interface AccordionTriggerInputs
-  extends Omit<ListNavigationItem & ListFocusItem, 'index'>,
-    Omit<ExpansionItem, 'expandable'> {
+  extends Omit<ListNavigationItem & ListFocusItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
   /** A local unique identifier for the trigger's corresponding panel. */
   panelId: SignalLike<string>;
 

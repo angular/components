@@ -1,5 +1,5 @@
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//integration/ts-compat:import-all-entry-points.bzl", "generate_import_all_entry_points_file")
 
 package(default_visibility = ["//visibility:public"])

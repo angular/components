@@ -1,6 +1,6 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
-load("//tools:defaults.bzl", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("//tools:defaults.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
