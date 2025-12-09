@@ -6,5 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Listbox} from './listbox';
-export {Option} from './option';
+import {InjectionToken} from '@angular/core';
+import type {Listbox} from './listbox';
+
+export const LISTBOX = new InjectionToken<Listbox<any>>('LISTBOX');

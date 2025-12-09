@@ -1,5 +1,6 @@
 import {Component, DebugElement, signal} from '@angular/core';
-import {Listbox, Option} from './listbox';
+import {Listbox} from './listbox';
+import {Option} from './option';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
