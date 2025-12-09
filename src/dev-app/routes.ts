@@ -45,6 +45,11 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
   },
   {
+    path: 'aria-simple-combobox',
+    loadComponent: () =>
+      import('./aria-simple-combobox/simple-combobox-demo').then(m => m.ComboboxDemo),
+  },
+  {
     path: 'aria-grid',
     loadComponent: () => import('./aria-grid/grid-demo').then(m => m.GridDemo),
   },
