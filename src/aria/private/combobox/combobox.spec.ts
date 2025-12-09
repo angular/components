@@ -327,6 +327,15 @@ describe('Combobox with Listbox Pattern', () => {
       expect(combobox.expanded()).toBe(false);
     });
 
+    it('should not close on Enter if the option is disabled', () => {
+      const {combobox, options} = getPatterns();
+      options()[0].disabled.set(true);
+      combobox.onKeydown(down());
+      expect(combobox.expanded()).toBe(true);
+      combobox.onKeydown(enter());
+      expect(combobox.expanded()).toBe(true);
+    });
+
     it('should close on focusout', () => {
       const {combobox} = getPatterns();
       combobox.onKeydown(down());

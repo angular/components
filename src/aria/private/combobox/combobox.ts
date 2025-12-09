@@ -637,6 +637,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
     const controls = this.listControls();
 
+    const item = opts.item ?? controls?.getActiveItem();
+
+    if (item?.disabled()) {
+      return;
+    }
+
     if (opts.item) {
       controls?.focus(opts.item, {focusElement: false});
     }
