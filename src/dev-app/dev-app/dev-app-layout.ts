@@ -65,6 +65,7 @@ export class DevAppLayout {
     {name: 'Aria Accordion', route: '/aria-accordion'},
     {name: 'Aria Combobox', route: '/aria-combobox'},
     {name: 'Aria Autocomplete', route: '/aria-autocomplete'},
+    {name: 'Aria Simple Combobox', route: '/aria-simple-combobox'},
     {name: 'Aria Grid', route: '/aria-grid'},
     {name: 'Aria Listbox', route: '/aria-listbox'},
     {name: 'Aria Menu', route: '/aria-menu'},
