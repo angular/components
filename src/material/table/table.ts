@@ -70,7 +70,7 @@ export class MatRecycleRows {}
   styleUrl: 'table.css',
   host: {
     'class': 'mat-mdc-table mdc-data-table__table',
-    '[class.mdc-table-fixed-layout]': 'fixedLayout',
+    '[class.mat-table-fixed-layout]': 'fixedLayout',
   },
   providers: [
     {provide: CdkTable, useExisting: MatTable},

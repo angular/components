@@ -30,6 +30,12 @@ $fallbacks: m3-table.get-tokens();
   background-color: token-utils.slot(table-background-color, $fallbacks);
 }
 
+// These styles already come from a similar class in the CDK,
+// but the `.mat-mdc-table` styles override them.
+.mat-table-fixed-layout {
+  table-layout: fixed;
+}
+
 .mdc-data-table__cell {
   box-sizing: border-box;
   overflow: hidden;
