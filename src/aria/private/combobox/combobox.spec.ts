@@ -488,6 +488,13 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');
       });
+
+      it('should not commit an option on focusout if the popup is closed', () => {
+        type('A');
+        combobox.onKeydown(escape());
+        combobox.onFocusOut(new FocusEvent('focusout'));
+        expect(inputEl.value).toBe('A');
+      });
     });
 
     describe('when filterMode is "highlight"', () => {

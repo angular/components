@@ -390,6 +390,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     ) {
       this.isFocused.set(false);
 
+      if (!this.expanded()) {
+        return;
+      }
+
       if (this.readonly()) {
         this.close();
         return;
