@@ -7,13 +7,17 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {SelectMultiExample, SelectExample} from '@angular/components-examples/aria/select';
+import {
+  SelectDisabledExample,
+  SelectMultiExample,
+  SelectExample,
+} from '@angular/components-examples/aria/select';
 
 @Component({
   templateUrl: 'select-demo.html',
   styleUrl: 'select-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SelectMultiExample, SelectExample],
+  imports: [SelectDisabledExample, SelectMultiExample, SelectExample],
 })
 export class SelectDemo {}
