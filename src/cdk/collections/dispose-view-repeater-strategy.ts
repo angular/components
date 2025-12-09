@@ -30,9 +30,11 @@ import {
  * @template R The type for the item in each IterableDiffer change record.
  * @template C The type for the context passed to each embedded view.
  */
-export class _DisposeViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>>
-  implements _ViewRepeater<T, R, C>
-{
+export class _DisposeViewRepeaterStrategy<
+  T,
+  R,
+  C extends _ViewRepeaterItemContext<T>,
+> implements _ViewRepeater<T, R, C> {
   applyChanges(
     changes: IterableChanges<R>,
     viewContainerRef: ViewContainerRef,

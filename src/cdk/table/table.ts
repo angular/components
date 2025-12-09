@@ -188,8 +188,7 @@ export class NoDataRowOutlet implements RowOutlet {
  * @docs-private
  */
 export interface RowContext<T>
-  extends CdkCellOutletMultiRowContext<T>,
-    CdkCellOutletRowContext<T> {}
+  extends CdkCellOutletMultiRowContext<T>, CdkCellOutletRowContext<T> {}
 
 /**
  * Class used to conveniently type the embedded view ref for rows with a context.

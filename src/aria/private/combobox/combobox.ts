@@ -105,8 +105,10 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
 }
 
-export interface ComboboxTreeControls<T extends ListItem<V>, V>
-  extends ComboboxListboxControls<T, V> {
+export interface ComboboxTreeControls<T extends ListItem<V>, V> extends ComboboxListboxControls<
+  T,
+  V
+> {
   /** Whether the currently active item in the popup is collapsible. */
   isItemCollapsible: () => boolean;
 
