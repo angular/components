@@ -16,7 +16,6 @@ import {
 @Component({
   templateUrl: 'select-demo.html',
   styleUrl: 'select-demo.css',
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SelectDisabledExample, SelectMultiExample, SelectExample],
 })
