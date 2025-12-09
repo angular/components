@@ -1,0 +1,135 @@
+.example-select {
+  width: fit-content;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-select:has([ngComboboxInput][aria-disabled='true']) {
+  opacity: 0.7;
+  background-color: var(--mat-sys-surface-dim);
+}
+
+.example-select:focus-within {
+  outline-offset: -2px;
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+.example-arrow,
+.example-select-value {
+  position: absolute;
+  pointer-events: none;
+}
+
+.example-select-value {
+  display: flex;
+  gap: 1rem;
+  left: 1rem;
+  width: calc(100% - 4rem);
+}
+
+.example-select-label {
+  text-overflow: ellipsis;
+  text-wrap-mode: nowrap;
+  overflow: hidden;
+}
+
+.example-arrow,
+.example-select-icon {
+  font-size: 1.25rem;
+  opacity: 0.875;
+}
+
+.example-arrow {
+  right: 1rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+[ngComboboxInput] {
+  cursor: pointer;
+  padding: 0.7rem 3rem;
+  opacity: 0;
+}
+
+[ngComboboxInput][aria-disabled='true'] {
+  cursor: default;
+}
+
+[ngComboboxInput][aria-expanded='true'] + .example-arrow {
+  transform: rotate(180deg);
+}
+
+[ngCombobox]:has([aria-expanded='false']) .example-popup {
+  display: none;
+}
+
+.example-popup {
+  width: 100%;
+  margin-top: 2px;
+  padding: 0.1rem;
+  max-height: 11rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline);
+}
+
+.example-no-results {
+  padding: 1rem;
+}
+
+[ngListbox] {
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+}
+
+[ngOption] {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  margin: 1px;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+[ngOption][aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.5;
+  background-color: var(--mat-sys-surface-dim);
+}
+
+[ngOption]:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
+}
+
+[ngOption][data-active='true'] {
+  outline-offset: -2px;
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+[ngOption][aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+}
+
+[ngOption]:not([aria-selected='true']) .example-option-check {
+  display: none;
+}
+
+.example-option-text {
+  flex: 1;
+}
+
+.example-option-icon {
+  font-size: 1.25rem;
+}
+
+.example-option-check {
+  font-size: 1rem;
+}
