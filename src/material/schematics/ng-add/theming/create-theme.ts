@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/** Create custom theme for the given application configuration. */
-export function createCustomTheme(userPaletteChoice: string): string {
-  const colorPalettes = new Map<string, {primary: string; tertiary: string}>([
+/** Create theme for the given application configuration. */
+export function createTheme(userPaletteChoice: string): string {
+  const colorPalettes = new Map([
     ['azure-blue', {primary: 'azure', tertiary: 'blue'}],
     ['rose-red', {primary: 'rose', tertiary: 'red'}],
     ['magenta-violet', {primary: 'magenta', tertiary: 'violet'}],
@@ -23,6 +23,7 @@ export function createCustomTheme(userPaletteChoice: string): string {
 @use '@angular/material' as mat;
 
 html {
+  height: 100%;
   @include mat.theme((
     color: (
       primary: mat.$${colorPalettes.get(userPaletteChoice)!.primary}-palette,
@@ -48,6 +49,7 @@ body {
 
   // Reset the user agent margin.
   margin: 0;
+  height: 100%;
 }
 `;
 }
