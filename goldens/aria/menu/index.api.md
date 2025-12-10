@@ -41,7 +41,7 @@ export class Menu<V> {
 // @public
 export class MenuBar<V> {
     constructor();
-    readonly _allItems: Signal<readonly MenuItem<V>[]>;
+    readonly _allItems: _angular_core.Signal<readonly MenuItem<V>[]>;
     close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
@@ -71,12 +71,12 @@ export class MenuContent {
 // @public
 export class MenuItem<V> {
     constructor();
-    readonly active: Signal<boolean>;
+    readonly active: _angular_core.Signal<boolean>;
     close(): void;
     readonly disabled: _angular_core.InputSignal<boolean>;
     readonly element: HTMLElement;
-    readonly expanded: Signal<boolean | null>;
-    readonly hasPopup: Signal<boolean>;
+    readonly expanded: _angular_core.Signal<boolean | null>;
+    readonly hasPopup: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
@@ -96,8 +96,8 @@ export class MenuTrigger<V> {
     close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly expanded: Signal<boolean>;
-    readonly hasPopup: Signal<boolean>;
+    readonly expanded: _angular_core.Signal<boolean>;
+    readonly hasPopup: _angular_core.Signal<boolean>;
     menu: _angular_core.InputSignal<Menu<V> | undefined>;
     open(): void;
     _pattern: MenuTriggerPattern<V>;
