@@ -56,7 +56,7 @@
     }
   }
 
-  &:focus > .mat-focus-indicator::before {
+  &:focus-visible > .mat-focus-indicator::before {
     content: '';
 
     @if ($focus-indicator-inherits-shape) {

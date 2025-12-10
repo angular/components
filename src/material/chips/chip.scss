@@ -737,7 +737,7 @@ $fallbacks: m3-chip.get-tokens();
 
 // The chip has multiple focus targets so we have to put the indicator on
 // a separate element, rather than on the focusable element itself.
-.mat-mdc-chip-action:focus .mat-focus-indicator::before {
+.mat-mdc-chip-action:focus-visible .mat-focus-indicator::before {
   content: '';
 }
 
