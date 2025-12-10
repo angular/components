@@ -1,8 +1,12 @@
 import {Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Menu, MenuBar, MenuContent, MenuItem, MenuTrigger} from './menu';
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
+import {Menu} from './menu';
+import {MenuBar} from './menu-bar';
+import {MenuContent} from './menu-content';
+import {MenuItem} from './menu-item';
+import {MenuTrigger} from './menu-trigger';
 
 describe('Standalone Menu Pattern', () => {
   let fixture: ComponentFixture<StandaloneMenuExample>;
