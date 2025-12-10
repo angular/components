@@ -6,4 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent} from './accordion';
+export {AccordionPanel} from './accordion-panel';
+export {AccordionGroup} from './accordion-group';
+export {AccordionTrigger} from './accordion-trigger';
+export {AccordionContent} from './accordion-content';
