@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import * as i1 from '@angular/aria/private';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ToolbarPattern } from '@angular/aria/private';
@@ -17,7 +18,7 @@ export class Toolbar<V> {
     constructor();
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern<V>[]>;
+    readonly _itemPatterns: _angular_core.Signal<i1.ToolbarWidgetPattern<V>[]>;
     // (undocumented)
     _onFocus(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
@@ -41,7 +42,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
     readonly active: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly _group: ToolbarWidgetGroup<any> | null;
+    readonly _group: ToolbarWidgetGroup<V> | null;
     readonly hardDisabled: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -50,7 +51,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
     ngOnInit(): void;
     readonly _pattern: ToolbarWidgetPattern<V>;
     readonly selected: () => boolean;
-    readonly _toolbarPattern: _angular_core.Signal<ToolbarPattern<any>>;
+    readonly _toolbarPattern: _angular_core.Signal<i1.ToolbarPattern<V>>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidget<any>, "[ngToolbarWidget]", ["ngToolbarWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
