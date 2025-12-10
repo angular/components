@@ -1,3 +1,21 @@
+<a name="21.1.0-next.2"></a>
+# 21.1.0-next.2 "plastic-monkey" (2025-12-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [439d1f92a8](https://github.com/angular/components/commit/439d1f92a81246dc77be1e19c0296a1740511fc6) | feat | **table:** add virtual scrolling support |
+| [67f213a351](https://github.com/angular/components/commit/67f213a3510b09e0a3fec3054052f49d0c02be00) | fix | **a11y:** add `@angular/platform-browser` to peer dependencies ([#32471](https://github.com/angular/components/pull/32471)) |
+| [789274f423](https://github.com/angular/components/commit/789274f423581235e97948c708d0bb2d42e60b11) | fix | **menu:** allow user to pass selector for transform origin ([#32462](https://github.com/angular/components/pull/32462)) |
+| [52720a3688](https://github.com/angular/components/commit/52720a368855b1fd2baaab8263341060a77a7173) | fix | **overlay:** error when attempting to attach disposed overlay ([#32489](https://github.com/angular/components/pull/32489)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ed7e1dab2f](https://github.com/angular/components/commit/ed7e1dab2f3bc4acc849169bd65d5c44c219242f) | fix | **core:** default secondary color for focus indicator ([#32491](https://github.com/angular/components/pull/32491)) |
+| [29a8a2fddc](https://github.com/angular/components/commit/29a8a2fddcc67ac82fbc9c6d744959945f5ae139) | fix | **datepicker:** value reset when invalid value is entered using signal forms ([#32485](https://github.com/angular/components/pull/32485)) |
+| [1fab386620](https://github.com/angular/components/commit/1fab386620dd0541d928c3272c403d52f1192d41) | fix | **table:** fixed layout not working ([#32494](https://github.com/angular/components/pull/32494)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.3"></a>
 # 21.0.3 "plastic-moose" (2025-12-10)
 ### cdk
