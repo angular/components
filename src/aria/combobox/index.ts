@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {
-  Combobox,
-  ComboboxDialog,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from './combobox';
+export {Combobox} from './combobox';
+export {ComboboxDialog} from './combobox-dialog';
+export {ComboboxInput} from './combobox-input';
+export {ComboboxPopup} from './combobox-popup';
+export {ComboboxPopupContainer} from './combobox-popup-container';

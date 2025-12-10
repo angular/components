@@ -12,7 +12,6 @@ import { ComboboxListboxControls } from '@angular/aria/private';
 import { ComboboxPattern } from '@angular/aria/private';
 import { ComboboxTreeControls } from '@angular/aria/private';
 import * as i1 from '@angular/aria/private';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class Listbox<V> {
