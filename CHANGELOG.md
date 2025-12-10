@@ -1,3 +1,19 @@
+<a name="21.0.3"></a>
+# 21.0.3 "test" (2025-12-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fd2213c5e](https://github.com/angular/components/commit/fd2213c5e742697da4d7f68d8e4040f6eaeadfff) | fix | **menu:** allow user to pass selector for transform origin ([#32462](https://github.com/angular/components/pull/32462)) |
+| [09ec44973](https://github.com/angular/components/commit/09ec44973f8993b2a131aff30a0d68a45067f1ea) | fix | **overlay:** error when attempting to attach disposed overlay ([#32489](https://github.com/angular/components/pull/32489)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [151322f3b](https://github.com/angular/components/commit/151322f3b3dd96e66f923dc4b0b4f81226ee44e6) | fix | **core:** default secondary color for focus indicator ([#32491](https://github.com/angular/components/pull/32491)) |
+| [b1287cf9a](https://github.com/angular/components/commit/b1287cf9a64a0663ac6a5ce3222a695cd502b8bc) | fix | **datepicker:** value reset when invalid value is entered using signal forms ([#32485](https://github.com/angular/components/pull/32485)) |
+| [f4af3981b](https://github.com/angular/components/commit/f4af3981b64bfca7cfe4ea1413c40446731ff3fe) | fix | **table:** fixed layout not working ([#32494](https://github.com/angular/components/pull/32494)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.2"></a>
 # 21.0.2 "babefphite-button" (2025-12-03)
 ### aria
