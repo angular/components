@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator} from '@angular/cdk/a11y';
 import {
   afterRenderEffect,
   booleanAttribute,
@@ -16,12 +15,11 @@ import {
   ElementRef,
   inject,
   input,
-  output,
-  model,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridPattern, GridRowPattern, GridCellPattern, GridCellWidgetPattern} from '../private';
+import {GridPattern, GridCellPattern} from '../private';
+import {GRID_ROW} from './grid-tokens';
 
 /**
  * The container for a grid. It provides keyboard navigation and focus management for the grid's
@@ -68,12 +66,10 @@ export class Grid {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The rows that make up the grid. */
-  private readonly _rows = contentChildren(GridRow, {descendants: true});
+  private readonly _rows = contentChildren(GRID_ROW, {descendants: true});
 
   /** The UI patterns for the rows in the grid. */
-  private readonly _rowPatterns: Signal<GridRowPattern[]> = computed(() =>
-    this._rows().map(r => r._pattern),
-  );
+  private readonly _rowPatterns: Signal<any[]> = computed(() => this._rows().map(r => r._pattern));
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -159,297 +155,5 @@ export class Grid {
     }
 
     return undefined;
-  }
-}
-
-/**
- * Represents a row within a grid. It is a container for `ngGridCell` directives.
- *
- * ```html
- * <tr ngGridRow>
- *   <!-- ... cells ... -->
- * </tr>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: '[ngGridRow]',
-  exportAs: 'ngGridRow',
-  host: {
-    'role': 'row',
-    '[attr.aria-rowindex]': '_pattern.rowIndex()',
-  },
-})
-export class GridRow {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** The cells that make up this row. */
-  private readonly _cells = contentChildren(GridCell, {descendants: true});
-
-  /** The UI patterns for the cells in this row. */
-  private readonly _cellPatterns: Signal<GridCellPattern[]> = computed(() =>
-    this._cells().map(c => c._pattern),
-  );
-
-  /** The parent grid. */
-  private readonly _grid = inject(Grid);
-
-  /** The parent grid UI pattern. */
-  readonly _gridPattern = computed(() => this._grid._pattern);
-
-  /** The index of this row within the grid. */
-  readonly rowIndex = input<number>();
-
-  /** The UI pattern for the grid row. */
-  readonly _pattern = new GridRowPattern({
-    ...this,
-    cells: this._cellPatterns,
-    grid: this._gridPattern,
-  });
-}
-
-/**
- * Represents a cell within a grid row. It is the primary focusable element
- * within the grid. It can be disabled and can have its selection state managed
- * through the `selected` input.
- *
- * ```html
- * <td ngGridCell [disabled]="isDisabled" [(selected)]="isSelected">
- *   Cell Content
- * </td>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: '[ngGridCell]',
-  exportAs: 'ngGridCell',
-  host: {
-    '[attr.role]': 'role()',
-    '[attr.id]': '_pattern.id()',
-    '[attr.rowspan]': '_pattern.rowSpan()',
-    '[attr.colspan]': '_pattern.colSpan()',
-    '[attr.data-active]': 'active()',
-    '[attr.data-anchor]': '_pattern.anchor()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-rowspan]': '_pattern.rowSpan()',
-    '[attr.aria-colspan]': '_pattern.colSpan()',
-    '[attr.aria-rowindex]': '_pattern.ariaRowIndex()',
-    '[attr.aria-colindex]': '_pattern.ariaColIndex()',
-    '[attr.aria-selected]': '_pattern.ariaSelected()',
-    '[tabindex]': '_tabIndex()',
-  },
-})
-export class GridCell {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** Whether the cell is currently active (focused). */
-  readonly active = computed(() => this._pattern.active());
-
-  /** The widgets contained within this cell, if any. */
-  private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
-
-  /** The UI pattern for the widget in this cell. */
-  private readonly _widgetPatterns: Signal<GridCellWidgetPattern[]> = computed(() =>
-    this._widgets().map(w => w._pattern),
-  );
-
-  /** The parent row. */
-  private readonly _row = inject(GridRow);
-
-  /** Text direction. */
-  readonly textDirection = inject(Directionality).valueSignal;
-
-  /** A unique identifier for the cell. */
-  readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-', true));
-
-  /** The ARIA role for the cell. */
-  readonly role = input<'gridcell' | 'columnheader' | 'rowheader'>('gridcell');
-
-  /** The number of rows the cell should span. */
-  readonly rowSpan = input<number>(1);
-
-  /** The number of columns the cell should span. */
-  readonly colSpan = input<number>(1);
-
-  /** The index of this cell's row within the grid. */
-  readonly rowIndex = input<number>();
-
-  /** The index of this cell's column within the grid. */
-  readonly colIndex = input<number>();
-
-  /** Whether the cell is disabled. */
-  readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** Whether the cell is selected. */
-  readonly selected = model<boolean>(false);
-
-  /** Whether the cell is selectable. */
-  readonly selectable = input<boolean>(true);
-
-  /** Orientation of the widgets in the cell. */
-  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
-
-  /** Whether widgets navigation wraps. */
-  readonly wrap = input(true, {transform: booleanAttribute});
-
-  /** The tabindex override. */
-  readonly tabindex = input<number | undefined>();
-
-  /**
-   * The tabindex value set to the element.
-   * If a focus target exists then return -1. Unless an override.
-   */
-  protected readonly _tabIndex: Signal<number> = computed(
-    () => this.tabindex() ?? this._pattern.tabIndex(),
-  );
-
-  /** The UI pattern for the grid cell. */
-  readonly _pattern = new GridCellPattern({
-    ...this,
-    grid: this._row._gridPattern,
-    row: () => this._row._pattern,
-    widgets: this._widgetPatterns,
-    getWidget: e => this._getWidget(e),
-    element: () => this.element,
-  });
-
-  constructor() {}
-
-  /** Gets the cell widget pattern for a given element. */
-  private _getWidget(element: Element | null | undefined): GridCellWidgetPattern | undefined {
-    let target = element;
-
-    while (target) {
-      const pattern = this._widgetPatterns().find(w => w.element() === target);
-      if (pattern) {
-        return pattern;
-      }
-
-      target = target.parentElement?.closest('[ngGridCellWidget]');
-    }
-
-    return undefined;
-  }
-}
-
-/**
- * Represents an interactive element inside a `GridCell`. It allows for pausing grid navigation to
- * interact with the widget.
- *
- * When the user interacts with the widget (e.g., by typing in an input or opening a menu), grid
- * navigation is temporarily suspended to allow the widget to handle keyboard
- * events.
- *
- * ```html
- * <td ngGridCell>
- *   <button ngGridCellWidget>Click Me</button>
- * </td>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: '[ngGridCellWidget]',
-  exportAs: 'ngGridCellWidget',
-  host: {
-    '[attr.data-active]': 'active()',
-    '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
-    '[tabindex]': '_tabIndex()',
-  },
-})
-export class GridCellWidget {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** Whether the widget is currently active (focused). */
-  readonly active = computed(() => this._pattern.active());
-
-  /** The parent cell. */
-  private readonly _cell = inject(GridCell);
-
-  /** A unique identifier for the widget. */
-  readonly id = input(inject(_IdGenerator).getId('ng-grid-cell-widget-', true));
-
-  /** The type of widget, which determines how it is activated. */
-  readonly widgetType = input<'simple' | 'complex' | 'editable'>('simple');
-
-  /** Whether the widget is disabled. */
-  readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** The target that will receive focus instead of the widget. */
-  readonly focusTarget = input<ElementRef | HTMLElement | undefined>();
-
-  /** Emits when the widget is activated. */
-  readonly onActivate = output<KeyboardEvent | FocusEvent | undefined>();
-
-  /** Emits when the widget is deactivated. */
-  readonly onDeactivate = output<KeyboardEvent | FocusEvent | undefined>();
-
-  /** The tabindex override. */
-  readonly tabindex = input<number | undefined>();
-
-  /**
-   * The tabindex value set to the element.
-   * If a focus target exists then return -1. Unless an override.
-   */
-  protected readonly _tabIndex: Signal<number> = computed(
-    () => this.tabindex() ?? (this.focusTarget() ? -1 : this._pattern.tabIndex()),
-  );
-
-  /** The UI pattern for the grid cell widget. */
-  readonly _pattern = new GridCellWidgetPattern({
-    ...this,
-    element: () => this.element,
-    cell: () => this._cell._pattern,
-    focusTarget: computed(() => {
-      if (this.focusTarget() instanceof ElementRef) {
-        return (this.focusTarget() as ElementRef).nativeElement;
-      }
-      return this.focusTarget();
-    }),
-  });
-
-  /** Whether the widget is activated. */
-  get isActivated(): Signal<boolean> {
-    return this._pattern.isActivated.asReadonly();
-  }
-
-  constructor() {
-    afterRenderEffect(() => {
-      const activateEvent = this._pattern.lastActivateEvent();
-      if (activateEvent) {
-        this.onActivate.emit(activateEvent);
-      }
-    });
-
-    afterRenderEffect(() => {
-      const deactivateEvent = this._pattern.lastDeactivateEvent();
-      if (deactivateEvent) {
-        this.onDeactivate.emit(deactivateEvent);
-      }
-    });
-  }
-
-  /** Activates the widget. */
-  activate(): void {
-    this._pattern.activate();
-  }
-
-  /** Deactivates the widget. */
-  deactivate(): void {
-    this._pattern.deactivate();
   }
 }
