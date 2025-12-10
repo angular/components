@@ -1,8 +1,10 @@
 import {Component, DebugElement, Directive, inject, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
+import {Toolbar} from './toolbar';
+import {ToolbarWidgetGroup} from './toolbar-widget-group';
+import {ToolbarWidget} from './toolbar-widget';
 
 describe('Toolbar', () => {
   let fixture: ComponentFixture<ToolbarExample>;
@@ -625,14 +627,46 @@ describe('Toolbar', () => {
       [disabled]="disabled()"
       [wrap]="wrap()"
     >
-      <button ngToolbarWidget #item0="ngToolbarWidget" [aria-pressed]="item0.selected()" [disabled]="widgets[0].disabled()" value="item 0">item 0</button>
-      <button ngToolbarWidget #item1="ngToolbarWidget" [aria-pressed]="item1.selected()" [disabled]="widgets[1].disabled()" value="item 1">item 1</button>
+      <button
+        ngToolbarWidget
+        #item0="ngToolbarWidget"
+        [aria-pressed]="item0.selected()"
+        [disabled]="widgets[0].disabled()"
+        value="item 0">item 0</button>
+
+      <button
+        ngToolbarWidget
+        #item1="ngToolbarWidget"
+        [aria-pressed]="item1.selected()"
+        [disabled]="widgets[1].disabled()"
+        value="item 1">item 1</button>
+
       <div ngToolbarWidgetGroup [disabled]="groups[0].disabled()">
-        <button ngToolbarWidget #item2="ngToolbarWidget" [aria-pressed]="item2.selected()" [disabled]="widgets[2].disabled()" value="item 2">item 2</button>
-        <button ngToolbarWidget #item3="ngToolbarWidget" [aria-pressed]="item3.selected()" [disabled]="widgets[3].disabled()" value="item 3">item 3</button>
-        <button ngToolbarWidget #item4="ngToolbarWidget" [aria-pressed]="item4.selected()" [disabled]="widgets[4].disabled()" value="item 4">item 4</button>
+        <button
+          ngToolbarWidget
+          #item2="ngToolbarWidget"
+          [aria-pressed]="item2.selected()"
+          [disabled]="widgets[2].disabled()"
+          value="item 2">item 2</button>
+        <button
+          ngToolbarWidget
+          #item3="ngToolbarWidget"
+          [aria-pressed]="item3.selected()"
+          [disabled]="widgets[3].disabled()"
+          value="item 3">item 3</button>
+        <button
+          ngToolbarWidget
+          #item4="ngToolbarWidget"
+          [aria-pressed]="item4.selected()"
+          [disabled]="widgets[4].disabled()"
+          value="item 4">item 4</button>
       </div>
-      <button ngToolbarWidget #item5="ngToolbarWidget" [aria-pressed]="item5.selected()" [disabled]="widgets[5].disabled()" value="item 5">item 5</button>
+      <button
+        ngToolbarWidget
+        #item5="ngToolbarWidget"
+        [aria-pressed]="item5.selected()"
+        [disabled]="widgets[5].disabled()"
+        value="item 5">item 5</button>
     </div>
   `,
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
