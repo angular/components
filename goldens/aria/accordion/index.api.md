@@ -30,7 +30,7 @@ export class AccordionGroup {
     readonly multiExpandable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly _pattern: AccordionGroupPattern;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly textDirection: WritableSignal<_angular_cdk_bidi.Direction>;
+    readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionGroup, "[ngAccordionGroup]", ["ngAccordionGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiExpandable": { "alias": "multiExpandable"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, {}, ["_triggers", "_panels"], never, true, never>;
