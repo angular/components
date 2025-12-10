@@ -126,8 +126,8 @@ importers:
         specifier: 'catalog:'
         version: 21.0.3(@angular/compiler-cli@21.0.3(@angular/compiler@21.0.3)(typescript@5.9.2))(@angular/compiler@21.0.3)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a6bcef88323031f5c157227705792019833c5c08
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a6bcef88323031f5c157227705792019833c5c08(@modelcontextprotocol/sdk@1.24.0)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#6e9e02173ce8b5c0f1694de04135931831e15e70
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/6e9e02173ce8b5c0f1694de04135931831e15e70(@modelcontextprotocol/sdk@1.24.0)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 21.0.3(@angular/common@21.0.3(@angular/compiler-cli@21.0.3(@angular/compiler@21.0.3)(typescript@5.9.2))(@angular/core@21.0.3(@angular/compiler@21.0.3)(rxjs@6.6.7)(zone.js@0.15.1))(rxjs@6.6.7))(@angular/compiler-cli@21.0.3(@angular/compiler@21.0.3)(typescript@5.9.2))(@angular/compiler@21.0.3)(@angular/core@21.0.3(@angular/compiler@21.0.3)(rxjs@6.6.7)(zone.js@0.15.1))(@angular/platform-browser@21.0.3(@angular/common@21.0.3(@angular/compiler-cli@21.0.3(@angular/compiler@21.0.3)(typescript@5.9.2))(@angular/core@21.0.3(@angular/compiler@21.0.3)(rxjs@6.6.7)(zone.js@0.15.1))(rxjs@6.6.7))(@angular/compiler-cli@21.0.3(@angular/compiler@21.0.3)(typescript@5.9.2))(@angular/core@21.0.3(@angular/compiler@21.0.3)(rxjs@6.6.7)(zone.js@0.15.1)))(rxjs@6.6.7)
@@ -972,9 +972,9 @@ packages:
       '@angular/compiler': 21.0.3
       '@angular/compiler-cli': 21.0.3
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a6bcef88323031f5c157227705792019833c5c08':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a6bcef88323031f5c157227705792019833c5c08}
-    version: 0.0.0-73051ae248ba64911a8e7e66536d8c99ba07ef2a
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/6e9e02173ce8b5c0f1694de04135931831e15e70':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/6e9e02173ce8b5c0f1694de04135931831e15e70}
+    version: 0.0.0-d4f17986de97f198b59da03bf1b5fc4c78497a40
     hasBin: true
 
   '@angular/platform-browser-dynamic@21.0.3':
@@ -2374,8 +2374,8 @@ packages:
     resolution: {integrity: sha512-IJn+8A3QZJfe7FUtWqHVNo3xJs7KFpurCWGWCiCz3oEh+BkRymKZ1QxfAbU2yGMDzTytLGQ2IV6T2r3cuo75/w==}
     engines: {node: '>=18'}
 
-  '@google/genai@1.30.0':
-    resolution: {integrity: sha512-3MRcgczBFbUat1wIlZoLJ0vCCfXgm7Qxjh59cZi2X08RgWLtm9hKOspzp7TOg1TV2e26/MLxR2GR5yD5GmBV2w==}
+  '@google/genai@1.31.0':
+    resolution: {integrity: sha512-rK0RKXxNkbK35eDl+G651SxtxwHNEOogjyeZJUJe+Ed4yxu3xy5ufCiU0+QLT7xo4M9Spey8OAYfD8LPRlYBKw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.20.1
@@ -10524,11 +10524,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a6bcef88323031f5c157227705792019833c5c08(@modelcontextprotocol/sdk@1.24.0)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/6e9e02173ce8b5c0f1694de04135931831e15e70(@modelcontextprotocol/sdk@1.24.0)':
     dependencies:
       '@actions/core': 1.11.1
       '@google-cloud/spanner': 8.0.0(supports-color@10.2.2)
-      '@google/genai': 1.30.0(@modelcontextprotocol/sdk@1.24.0)(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+      '@google/genai': 1.31.0(@modelcontextprotocol/sdk@1.24.0)(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts': 8.0.2(@types/node@24.10.1)
       '@inquirer/type': 4.0.2(@types/node@24.10.1)
       '@octokit/auth-app': 8.1.2
@@ -12135,7 +12135,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@google/genai@1.30.0(@modelcontextprotocol/sdk@1.24.0)(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.31.0(@modelcontextprotocol/sdk@1.24.0)(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 10.5.0(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -18307,7 +18307,7 @@ snapshots:
 
   openapi3-ts@3.2.0:
     dependencies:
-      yaml: 2.8.1
+      yaml: 2.8.2
 
   opener@1.5.2: {}
 
