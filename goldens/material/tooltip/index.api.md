@@ -76,10 +76,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
         y: number;
     }): void;
     get tooltipClass(): string | string[] | Set<string> | {
-        [key: string]: any;
+        [key: string]: unknown;
     };
     set tooltipClass(value: string | string[] | Set<string> | {
-        [key: string]: any;
+        [key: string]: unknown;
     });
     // (undocumented)
     _tooltipInstance: TooltipComponent | null;
@@ -143,7 +143,7 @@ export class TooltipComponent implements OnDestroy {
     show(delay: number): void;
     _tooltip: ElementRef<HTMLElement>;
     tooltipClass: string | string[] | Set<string> | {
-        [key: string]: any;
+        [key: string]: unknown;
     };
     _triggerElement: HTMLElement;
     // (undocumented)

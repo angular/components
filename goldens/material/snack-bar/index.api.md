@@ -32,10 +32,10 @@ import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
-export const MAT_SNACK_BAR_DATA: InjectionToken<any>;
+export const MAT_SNACK_BAR_DATA: InjectionToken<unknown>;
 
 // @public
-export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<any>>;
+export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<unknown>>;
 
 // @public
 export class MatSnackBar implements OnDestroy {
@@ -45,10 +45,10 @@ export class MatSnackBar implements OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
-    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
-    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
-    openFromComponent<T, D = any>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
-    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
+    get _openedSnackBarRef(): MatSnackBarRef<unknown> | null;
+    set _openedSnackBarRef(value: MatSnackBarRef<unknown> | null);
+    openFromComponent<T, D = unknown>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
+    openFromTemplate<C = unknown>(template: TemplateRef<C>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<C>>;
     simpleSnackBarComponent: typeof SimpleSnackBar;
     snackBarContainerComponent: typeof MatSnackBarContainer;
     // (undocumented)
@@ -74,7 +74,7 @@ export class MatSnackBarActions {
 }
 
 // @public
-export class MatSnackBarConfig<D = any> {
+export class MatSnackBarConfig<D = unknown> {
     announcementMessage?: string;
     data?: D | null;
     direction?: Direction;
@@ -168,7 +168,7 @@ export class SimpleSnackBar implements TextOnlySnackBar {
     constructor(...args: unknown[]);
     action(): void;
     // (undocumented)
-    data: any;
+    data: TextOnlySnackBarData;
     get hasAction(): boolean;
     // (undocumented)
     snackBarRef: MatSnackBarRef<SimpleSnackBar>;
@@ -183,14 +183,19 @@ export interface TextOnlySnackBar {
     // (undocumented)
     action: () => void;
     // (undocumented)
-    data: {
-        message: string;
-        action: string;
-    };
+    data: TextOnlySnackBarData;
     // (undocumented)
     hasAction: boolean;
     // (undocumented)
     snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+}
+
+// @public
+export interface TextOnlySnackBarData {
+    // (undocumented)
+    action: string;
+    // (undocumented)
+    message: string;
 }
 
 // (No @packageDocumentation comment for this package)
