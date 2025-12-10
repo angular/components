@@ -11,7 +11,6 @@ import { ComboboxListboxControls } from '@angular/aria/private';
 import { ComboboxPattern } from '@angular/aria/private';
 import { ComboboxTreeControls } from '@angular/aria/private';
 import * as i1 from '@angular/aria/private';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class Combobox<V> {
@@ -43,7 +42,7 @@ export class ComboboxDialog {
     readonly combobox: Combobox<any>;
     readonly element: HTMLElement;
     // (undocumented)
-    _pattern: ComboboxDialogPattern;
+    _pattern: ComboboxDialogPattern_2;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxDialog, "dialog[ngComboboxDialog]", ["ngComboboxDialog"], {}, {}, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -65,7 +64,7 @@ export class ComboboxInput {
 // @public
 export class ComboboxPopup<V> {
     readonly combobox: Combobox<V> | null;
-    readonly _controls: WritableSignal<ComboboxDialogPattern | ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | undefined>;
+    readonly _controls: _angular_core.WritableSignal<ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | ComboboxDialogPattern | undefined>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup<any>, "[ngComboboxPopup]", ["ngComboboxPopup"], {}, {}, never, never, true, never>;
     // (undocumented)
