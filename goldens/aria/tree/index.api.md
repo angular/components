@@ -17,7 +17,6 @@ import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 import { TreeItemPattern } from '@angular/aria/private';
 import { TreePattern } from '@angular/aria/private';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class Tree<V> {
@@ -37,7 +36,7 @@ export class Tree<V> {
     _register(child: TreeItem<V>): void;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
-    readonly selectionMode: _angular_core.InputSignal<"explicit" | "follow">;
+    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
@@ -86,7 +85,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
 // @public
 export class TreeItemGroup<V> implements OnInit, OnDestroy {
-    readonly _childPatterns: Signal<TreeItemPattern<V>[]>;
+    readonly _childPatterns: _angular_core.Signal<TreeItemPattern<V>[]>;
     readonly element: HTMLElement;
     // (undocumented)
     ngOnDestroy(): void;
