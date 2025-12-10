@@ -6,4 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
+export {Toolbar} from './toolbar';
+export {ToolbarWidget} from './toolbar-widget';
+export {ToolbarWidgetGroup} from './toolbar-widget-group';
