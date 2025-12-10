@@ -19,13 +19,13 @@ import {InsertChange} from '@schematics/angular/utility/change';
 import {ProjectDefinition, readWorkspace, updateWorkspace} from '@schematics/angular/utility';
 import {join} from 'path';
 import {Schema} from '../schema';
-import {createCustomTheme} from './create-custom-theme';
+import {createTheme} from './create-theme';
 
 /** Path segment that can be found in paths that refer to a prebuilt theme. */
 const prebuiltThemePathSegment = '@angular/material/prebuilt-themes';
 
 /** Default file name of the custom theme that can be generated. */
-const defaultCustomThemeFilename = 'custom-theme.scss';
+const defaultThemeFilename = 'material-theme.scss';
 
 /** Add pre-built styles to the main project style file. */
 export function addThemeToAppStyles(options: Schema): Rule {
@@ -40,15 +40,15 @@ export function addThemeToAppStyles(options: Schema): Rule {
       palettes = 'azure-blue';
     }
 
-    return insertCustomTheme(palettes, options.project, host, context.logger);
+    return insertTheme(palettes, options.project, host, context.logger);
   };
 }
 
 /**
- * Insert an Angular Material theme to project style file. If no valid style file could be found, a new
- * Scss file for the custom theme will be created.
+ * Insert an Angular Material theme to project style file. If no valid style file could be found,
+ * a new Sass file for the theme will be created.
  */
-async function insertCustomTheme(
+async function insertTheme(
   palettes: string,
   projectName: string,
   host: Tree,
@@ -57,7 +57,7 @@ async function insertCustomTheme(
   const workspace = await readWorkspace(host);
   const project = getProjectFromWorkspace(workspace, projectName);
   const stylesPath = getProjectStyleFile(project, 'scss');
-  const themeContent = createCustomTheme(palettes);
+  const themeContent = createTheme(palettes);
 
   if (!stylesPath) {
     if (!project.sourceRoot) {
@@ -69,16 +69,16 @@ async function insertCustomTheme(
 
     // Normalize the path through the devkit utilities because we want to avoid having
     // unnecessary path segments and windows backslash delimiters.
-    const customThemePath = normalize(join(project.sourceRoot, defaultCustomThemeFilename));
+    const themePath = normalize(join(project.sourceRoot, defaultThemeFilename));
 
-    if (host.exists(customThemePath)) {
-      logger.warn(`Cannot create a custom Angular Material theme because
-          ${customThemePath} already exists. Skipping theme generation.`);
+    if (host.exists(themePath)) {
+      logger.warn(`Cannot create an Angular Material theme because
+          ${themePath} already exists. Skipping theme generation.`);
       return noop();
     }
 
-    host.create(customThemePath, themeContent);
-    return addThemeStyleToTarget(projectName, 'build', customThemePath, logger);
+    host.create(themePath, themeContent);
+    return addThemeStyleToTarget(projectName, 'build', themePath, logger);
   }
 
   const insertion = new InsertChange(stylesPath, 0, themeContent);
@@ -122,10 +122,10 @@ function addThemeStyleToTarget(
         // theme file. If a custom theme is set up, we are not able to safely replace the custom
         // theme because these files can contain custom styles, while prebuilt themes are
         // always packaged and considered replaceable.
-        if (stylePath.includes(defaultCustomThemeFilename)) {
+        if (stylePath.includes(defaultThemeFilename)) {
           logger.error(
             `Could not add the selected theme to the CLI project ` +
-              `configuration because there is already a custom theme file referenced.`,
+              `configuration because there is already a theme file referenced.`,
           );
           logger.info(`Please manually add the following style file to your configuration:`);
           logger.info(`    ${assetPath}`);
