@@ -28,7 +28,7 @@ $default-border-radius: 4px;
 
     // By default, render the focus indicator when the focus indicator host element takes focus.
     // Defining a pseudo element's content will cause it to render.
-    &:focus::before {
+    &:focus-visible::before {
       content: '';
     }
   }
