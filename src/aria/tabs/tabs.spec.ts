@@ -3,7 +3,11 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tabs, TabList, Tab, TabPanel, TabContent} from './tabs';
+import {Tabs} from './tabs';
+import {TabList} from './tab-list';
+import {Tab} from './tab';
+import {TabPanel} from './tab-panel';
+import {TabContent} from './tab-content';
 
 interface ModifierKeys {
   ctrlKey?: boolean;

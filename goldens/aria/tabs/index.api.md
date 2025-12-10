@@ -61,7 +61,7 @@ export class TabList implements OnInit, OnDestroy {
     readonly selectedTab: _angular_core.ModelSignal<string | undefined>;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly _tabPatterns: _angular_core.Signal<TabPattern[]>;
+    readonly _tabPatterns: _angular_core.Signal<i1.TabPattern[]>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)
     _unregister(child: Tab): void;
@@ -95,8 +95,8 @@ export class Tabs {
     readonly element: HTMLElement;
     // (undocumented)
     _register(child: TabList | TabPanel): void;
-    readonly _tabPatterns: _angular_core.Signal<TabPattern[] | undefined>;
-    readonly _unorderedTabpanelPatterns: _angular_core.Signal<TabPanelPattern[]>;
+    readonly _tabPatterns: _angular_core.Signal<i1.TabPattern[] | undefined>;
+    readonly _unorderedTabpanelPatterns: _angular_core.Signal<i1.TabPanelPattern[]>;
     // (undocumented)
     _unregister(child: TabList | TabPanel): void;
     // (undocumented)
