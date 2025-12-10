@@ -22,7 +22,7 @@ const MAX_TIMEOUT = Math.pow(2, 31) - 1;
 /**
  * Reference to a snack bar dispatched from the snack bar service.
  */
-export class MatSnackBarRef<T> {
+export class MatSnackBarRef<T, D = unknown> {
   /** The instance of the component making up the content of the snack bar. */
   instance: T;
 
@@ -30,7 +30,7 @@ export class MatSnackBarRef<T> {
    * The instance of the component making up the content of the snack bar.
    * @docs-private
    */
-  containerInstance: MatSnackBarContainer;
+  containerInstance: MatSnackBarContainer<D>;
 
   /** Subject for notifying the user that the snack bar has been dismissed. */
   private readonly _afterDismissed = new Subject<MatSnackBarDismiss>();
@@ -51,7 +51,7 @@ export class MatSnackBarRef<T> {
   private _dismissedByAction = false;
 
   constructor(
-    containerInstance: MatSnackBarContainer,
+    containerInstance: MatSnackBarContainer<D>,
     private _overlayRef: OverlayRef,
   ) {
     this.containerInstance = containerInstance;
