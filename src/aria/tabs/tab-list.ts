@@ -135,7 +135,10 @@ export class TabList implements OnInit, OnDestroy {
     afterRenderEffect(() => {
       const value = this.selectedTab();
       if (value) {
-        this._pattern.open(value);
+        this._tabPatterns().forEach(tab => tab.expanded.set(false));
+        const tab = this._tabPatterns().find(t => t.value() === value);
+        this._pattern.selectedTab.set(tab);
+        tab?.expanded.set(true);
       }
     });
   }
