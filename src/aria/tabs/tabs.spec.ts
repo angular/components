@@ -684,6 +684,28 @@ describe('Tabs', () => {
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
     });
+
+    it('should allow programmatic selection even if disabled', () => {
+      updateTabs({disabled: true});
+
+      expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
+      expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
+      expect(tabElements[2].getAttribute('aria-selected')).toBe('false');
+
+      expect(tabPanelElements[0].hasAttribute('inert')).toBe(false);
+      expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
+      expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
+
+      updateTabs({selectedTab: 'tab2'});
+
+      expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
+      expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
+      expect(tabElements[2].getAttribute('aria-selected')).toBe('false');
+
+      expect(tabPanelElements[0].hasAttribute('inert')).toBe(true);
+      expect(tabPanelElements[1].hasAttribute('inert')).toBe(false);
+      expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
+    });
   });
 });
 
