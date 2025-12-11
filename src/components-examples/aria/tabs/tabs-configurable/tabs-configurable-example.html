@@ -33,36 +33,47 @@
       <mat-option value="tab-1">Tab 1</mat-option>
       <mat-option value="tab-2">Tab 2</mat-option>
       <mat-option value="tab-3">Tab 3</mat-option>
+      <mat-option value="tab-4">Tab 4</mat-option>
+      <mat-option value="tab-5">Tab 5</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
 
-<!-- #docregion tabs -->
-<div ngTabs class="example-tabs">
-  <ul
+<div ngTabs>
+  <div
     ngTabList
-    class="example-tablist"
     [wrap]="wrap.value"
     [disabled]="disabled.value"
     [softDisabled]="softDisabled.value"
     [orientation]="orientation"
     [focusMode]="focusMode"
-    [(selectedTab)]="tabSelection"
-    [selectionMode]="selectionMode"
+    selectionMode="explicit"
+    [selectedTab]="tabSelection"
   >
-    <li ngTab value="tab-1" class="example-tab">tab 1</li>
-    <li ngTab value="tab-2" class="example-tab" disabled="true">tab 2</li>
-    <li ngTab value="tab-3" class="example-tab">tab 3</li>
-  </ul>
+    <div ngTab value="tab-1">Tab 1</div>
+    <div ngTab value="tab-2">Tab 2</div>
+    <div ngTab value="tab-3">Tab 3</div>
+    <div ngTab value="tab-4">Tab 4</div>
+    <div ngTab value="tab-5">Tab 5</div>
+  </div>
 
-  <div ngTabPanel value="tab-1" class="example-tabpanel">
-    <ng-template ngTabContent>Tabpanel 1</ng-template>
+  <div ngTabPanel value="tab-1">
+    <ng-template ngTabContent>Panel 1</ng-template>
   </div>
-  <div ngTabPanel value="tab-2" class="example-tabpanel">
-    <ng-template ngTabContent>Tabpanel 2</ng-template>
+
+  <div ngTabPanel value="tab-2">
+    <ng-template ngTabContent>Panel 2</ng-template>
   </div>
-  <div ngTabPanel value="tab-3" class="example-tabpanel">
-    <ng-template ngTabContent>Tabpanel 3</ng-template>
+
+  <div ngTabPanel value="tab-3">
+    <ng-template ngTabContent>Panel 3</ng-template>
+  </div>
+
+  <div ngTabPanel value="tab-4">
+    <ng-template ngTabContent>Panel 4</ng-template>
+  </div>
+
+  <div ngTabPanel value="tab-5">
+    <ng-template ngTabContent>Panel 5</ng-template>
   </div>
 </div>
-<!-- #enddocregion tabs -->
