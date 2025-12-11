@@ -22,7 +22,7 @@ import {
   afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware} from '@angular/aria/private';
+import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware} from '../private';
 import {Tree} from './tree';
 import {TreeItemGroup} from './tree-item-group';
 import {HasElement} from './utils';

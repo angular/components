@@ -6,17 +6,9 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import { ComboboxDialogPattern } from '@angular/aria/private';
-import { ComboboxListboxControls } from '@angular/aria/private';
-import { ComboboxPattern } from '@angular/aria/private';
-import { ComboboxTreeControls } from '@angular/aria/private';
-import { DeferredContentAware } from '@angular/aria/private';
-import * as i1 from '@angular/aria/private';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
-import { TreeItemPattern } from '@angular/aria/private';
-import { TreePattern } from '@angular/aria/private';
 
 // @public
 export class Tree<V> {
@@ -97,7 +89,7 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
     // (undocumented)
     _unregister(child: TreeItem<V>): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TreeItemGroup<any>, "ng-template[ngTreeItemGroup]", ["ngTreeItemGroup"], { "ownedBy": { "alias": "ownedBy"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TreeItemGroup<any>, "ng-template[ngTreeItemGroup]", ["ngTreeItemGroup"], { "ownedBy": { "alias": "ownedBy"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<TreeItemGroup<any>, never>;
 }

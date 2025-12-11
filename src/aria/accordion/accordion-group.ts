@@ -18,7 +18,7 @@ import {
   computed,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern, AccordionTriggerPattern} from '@angular/aria/private';
+import {AccordionGroupPattern, AccordionTriggerPattern} from '../private';
 import {AccordionTrigger} from './accordion-trigger';
 import {AccordionPanel} from './accordion-panel';
 import {ACCORDION_GROUP} from './accordion-tokens';

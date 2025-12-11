@@ -18,7 +18,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabPattern} from '@angular/aria/private';
+import {TabPattern} from '../private';
 import {TabList} from './tab-list';
 import {HasElement, TABS} from './utils';
 

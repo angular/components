@@ -7,11 +7,6 @@
 import * as _angular_aria_private_public_api from '@angular/aria/private/public-api';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import { ComboboxDialogPattern } from '@angular/aria/private';
-import { ComboboxListboxControls } from '@angular/aria/private';
-import { ComboboxPattern } from '@angular/aria/private';
-import { ComboboxTreeControls } from '@angular/aria/private';
-import * as i1 from '@angular/aria/private';
 
 // @public
 export class Listbox<V> {

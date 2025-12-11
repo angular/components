@@ -7,7 +7,7 @@
  */
 
 import {Directive} from '@angular/core';
-import {DeferredContent} from '@angular/aria/private';
+import {DeferredContent} from '../private';
 
 /**
  * A structural directive that marks the `ng-template` to be used as the popup

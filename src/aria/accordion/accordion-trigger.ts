@@ -18,7 +18,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {AccordionPanelPattern, AccordionTriggerPattern} from '@angular/aria/private';
+import {AccordionPanelPattern, AccordionTriggerPattern} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 
 /**
