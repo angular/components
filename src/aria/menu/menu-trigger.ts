@@ -15,7 +15,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import {MenuTriggerPattern} from '@angular/aria/private';
+import {MenuTriggerPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {Menu} from './menu';
 

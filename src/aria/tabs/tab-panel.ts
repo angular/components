@@ -17,7 +17,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '@angular/aria/private';
+import {TabPanelPattern, DeferredContentAware} from '../private';
 import {TABS} from './utils';
 
 /**

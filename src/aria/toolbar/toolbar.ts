@@ -17,7 +17,7 @@ import {
   signal,
   model,
 } from '@angular/core';
-import {ToolbarPattern} from '@angular/aria/private';
+import {ToolbarPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {ToolbarWidget} from './toolbar-widget';
 import {sortDirectives} from './utils';

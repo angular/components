@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '@angular/aria/private';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../private';
 import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
 import {sortDirectives} from './utils';

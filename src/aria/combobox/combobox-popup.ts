@@ -7,11 +7,7 @@
  */
 
 import {Directive, inject, signal} from '@angular/core';
-import {
-  ComboboxListboxControls,
-  ComboboxTreeControls,
-  ComboboxDialogPattern,
-} from '@angular/aria/private';
+import {ComboboxListboxControls, ComboboxTreeControls, ComboboxDialogPattern} from '../private';
 import type {Combobox} from './combobox';
 import {COMBOBOX} from './combobox-tokens';
 

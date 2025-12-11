@@ -20,7 +20,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {MenuPattern, DeferredContentAware} from '@angular/aria/private';
+import {MenuPattern, DeferredContentAware} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuTrigger} from './menu-trigger';

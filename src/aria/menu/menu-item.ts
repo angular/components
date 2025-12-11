@@ -7,7 +7,7 @@
  */
 
 import {computed, Directive, effect, ElementRef, inject, input, model} from '@angular/core';
-import {MenuItemPattern} from '@angular/aria/private';
+import {MenuItemPattern} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {MENU_COMPONENT} from './menu-tokens';
 import type {Menu} from './menu';

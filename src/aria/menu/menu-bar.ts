@@ -19,7 +19,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import {SignalLike, MenuBarPattern} from '@angular/aria/private';
+import {SignalLike, MenuBarPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuItem} from './menu-item';
 import {MENU_COMPONENT} from './menu-tokens';
