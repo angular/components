@@ -62,6 +62,8 @@ export class DevAppLayout {
   navItems = [
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
+    {name: 'Aria Docs Autocomplete', route: '/aria-docs-autocomplete'},
+    {name: 'Aria Docs Examples', route: '/aria-docs-examples'},
     {name: 'Aria Accordion', route: '/aria-accordion'},
     {name: 'Aria Combobox', route: '/aria-combobox'},
     {name: 'Aria Autocomplete', route: '/aria-autocomplete'},
