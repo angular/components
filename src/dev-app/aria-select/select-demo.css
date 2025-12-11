@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rem;
+}
+
+.example-container {
+  width: 250px;
+}
