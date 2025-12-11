@@ -15,7 +15,7 @@ import {
   booleanAttribute,
   contentChildren,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '@angular/aria/private';
+import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
 import {TOOLBAR_WIDGET_GROUP} from './utils';

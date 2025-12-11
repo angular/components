@@ -7,7 +7,7 @@
  */
 
 import {Directive} from '@angular/core';
-import {DeferredContent} from '@angular/aria/private';
+import {DeferredContent} from '../private';
 
 /**
  * Defers the rendering of the menu content.

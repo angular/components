@@ -20,7 +20,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabListPattern} from '@angular/aria/private';
+import {TabListPattern} from '../private';
 import {sortDirectives, TABS} from './utils';
 import type {Tab} from './tab';
 

@@ -17,7 +17,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import {DeferredContentAware, ComboboxPattern} from '@angular/aria/private';
+import {DeferredContentAware, ComboboxPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ComboboxPopup} from './combobox-popup';

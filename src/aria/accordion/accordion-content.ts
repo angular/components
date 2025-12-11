@@ -7,7 +7,7 @@
  */
 
 import {Directive} from '@angular/core';
-import {DeferredContent} from '@angular/aria/private';
+import {DeferredContent} from '../private';
 
 /**
  * A structural directive that provides a mechanism for lazily rendering the content for an

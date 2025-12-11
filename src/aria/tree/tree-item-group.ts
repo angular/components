@@ -16,7 +16,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TreeItemPattern, DeferredContent} from '@angular/aria/private';
+import {TreeItemPattern, DeferredContent} from '../private';
 import type {TreeItem} from './tree-item';
 import {sortDirectives} from './utils';
 

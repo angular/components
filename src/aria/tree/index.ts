@@ -9,3 +9,7 @@
 export {Tree} from './tree';
 export {TreeItem} from './tree-item';
 export {TreeItemGroup} from './tree-item-group';
+
+// This needs to be re-exported, because it's used by the tree components.
+// See: https://github.com/angular/components/issues/30663.
+export {DeferredContent as ɵɵDeferredContent} from '../private';

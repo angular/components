@@ -16,11 +16,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {
-  DeferredContentAware,
-  AccordionPanelPattern,
-  AccordionTriggerPattern,
-} from '@angular/aria/private';
+import {DeferredContentAware, AccordionPanelPattern, AccordionTriggerPattern} from '../private';
 
 /**
  * The content panel of an accordion item that is conditionally visible.

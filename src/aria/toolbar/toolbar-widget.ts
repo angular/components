@@ -16,7 +16,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, SignalLike} from '@angular/aria/private';
+import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, SignalLike} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Toolbar} from './toolbar';
 import {TOOLBAR_WIDGET_GROUP} from './utils';
