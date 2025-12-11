@@ -1,6 +1,13 @@
-import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  inject,
+  Injector,
+  Provider,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
   dispatchFakeEvent,
@@ -20,16 +27,18 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {MatInput} from '../input';
-import {MatFormField, MatLabel, MatSuffix} from '../form-field';
-import {MatTimepickerInput} from './timepicker-input';
-import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
-import {MatTimepickerToggle} from './timepicker-toggle';
-import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {createCloseScrollStrategy} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
+import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
+import {MatFormField, MatLabel, MatSuffix} from '../form-field';
+import {MatInput} from '../input';
+import {MatTimepickerInput} from './timepicker-input';
+import {MatTimepickerOptionTemplate} from './timepicker-option';
+import {MatTimepickerToggle} from './timepicker-toggle';
+import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
+import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
 
 describe('MatTimepicker', () => {
   let adapter: DateAdapter<Date>;
@@ -651,6 +660,24 @@ describe('MatTimepicker', () => {
       fixture.componentInstance.interval.set('not a valid interval');
       fixture.detectChanges();
       expect(fixture.componentInstance.timepicker.interval()).toBe(null);
+    });
+
+    it('should be able to apply custom options template', () => {
+      const fixture = TestBed.createComponent(TimepickerOptionTemplate);
+      fixture.detectChanges();
+
+      getInput(fixture).click();
+      fixture.detectChanges();
+      expect(getOptions().map(o => o.textContent.trim())).toEqual([
+        '12:00 AM (off-hours)',
+        '3:00 AM (off-hours)',
+        '6:00 AM (off-hours)',
+        '9:00 AM (working hours)',
+        '12:00 PM (working hours)',
+        '3:00 PM (working hours)',
+        '6:00 PM (off-hours)',
+        '9:00 PM (off-hours)',
+      ]);
     });
   });
 
@@ -1526,3 +1553,28 @@ class TimepickerWithoutInput {
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 class TimepickerInShadowDom {}
+
+@Component({
+  template: `
+    <input [matTimepicker]="picker" />
+    <mat-timepicker #picker interval="3h">
+      <ng-template matTimepickerOption let-option>
+        {{ option.label }}
+        {{ (dateAdapter.compareTime(option.value, workStartTime) > 0 && dateAdapter.compareTime(option.value, workEndTime) < 0) ? '(working hours)' : '(off-hours)' }}
+      </ng-template>
+    </mat-timepicker>
+  `,
+  imports: [MatTimepicker, MatTimepickerInput, MatTimepickerOptionTemplate],
+})
+class TimepickerOptionTemplate {
+  readonly dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
+  readonly workStartTime: Date;
+  readonly workEndTime: Date;
+
+  constructor() {
+    this.workStartTime = new Date();
+    this.workStartTime.setHours(8, 30, 0);
+    this.workEndTime = new Date();
+    this.workEndTime.setHours(17, 0, 0);
+  }
+}
