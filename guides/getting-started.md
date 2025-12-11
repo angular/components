@@ -14,10 +14,7 @@ Add Angular Material to your application by running the following command:
 ng add @angular/material
 ```
 
-The `ng add` command will install Angular Material, the
-[Component Dev Kit (CDK)](https://material.angular.dev/cdk/categories),
-[Angular Animations](https://angular.dev/guide/animations) and ask you the following questions to
-determine which features to include:
+The `ng add` command will install Angular Material, the [Component Dev Kit (CDK)](https://material.angular.dev/cdk/categories), and will ask you the following questions to determine which features to include:
 
 1. Choose a prebuilt theme name, or "custom" for a custom theme:
 
