@@ -6,10 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, WritableSignal} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  SignalLike,
+  computed,
+  signal,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
 import {ListFocus} from '../behaviors/list-focus/list-focus';
 import {
@@ -144,7 +148,7 @@ export class TabListPattern {
   readonly activeTab: SignalLike<TabPattern | undefined> = () => this.inputs.activeItem();
 
   /** The currently selected tab. */
-  readonly selectedTab: WritableSignal<TabPattern | undefined> = signal(undefined);
+  readonly selectedTab: WritableSignalLike<TabPattern | undefined> = signal(undefined);
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();

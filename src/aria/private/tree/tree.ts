@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, computed, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 import {ExpansionItem, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';

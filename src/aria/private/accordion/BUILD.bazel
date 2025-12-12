@@ -8,7 +8,6 @@ ts_project(
         "accordion.ts",
     ],
     deps = [
-        "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/event-manager",
         "//src/aria/private/behaviors/expansion",
         "//src/aria/private/behaviors/list-focus",
@@ -26,7 +25,6 @@ ng_project(
     ],
     deps = [
         ":accordion",
-        "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/signal-like",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",

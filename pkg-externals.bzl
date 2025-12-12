@@ -20,6 +20,7 @@ PKG_EXTERNALS = [
     "@angular/common/testing",
     "@angular/localize/init",
     "@angular/core",
+    "@angular/core/primitives/signals",
     "@angular/core/rxjs-interop",
     "@angular/core/testing",
     "@angular/forms",

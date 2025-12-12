@@ -6,30 +6,30 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal, signal, WritableSignal} from '@angular/core';
+import {computed, SignalLike, signal, WritableSignalLike} from '../signal-like/signal-like';
 import {GridFocus, GridFocusInputs, GridFocusCell, RowCol} from './grid-focus';
 
 // Helper type for test cells, extending GridFocusCell
 interface TestGridCell extends GridFocusCell {
-  id: WritableSignal<string>;
-  element: WritableSignal<HTMLElement>;
-  disabled: WritableSignal<boolean>;
+  id: WritableSignalLike<string>;
+  element: WritableSignalLike<HTMLElement>;
+  disabled: WritableSignalLike<boolean>;
 }
 
 // Helper type for configuring GridFocus inputs in tests
 type TestSetupInputs = Partial<GridFocusInputs<TestGridCell>> & {
   numRows?: number;
   numCols?: number;
-  gridFocus?: WritableSignal<GridFocus<TestGridCell> | undefined>;
+  gridFocus?: WritableSignalLike<GridFocus<TestGridCell> | undefined>;
 };
 
 export function createTestCell(
-  gridFocus: Signal<GridFocus<TestGridCell> | undefined>,
+  gridFocus: SignalLike<GridFocus<TestGridCell> | undefined>,
   opts: {id: string; rowspan?: number; colspan?: number},
 ): TestGridCell {
   const el = document.createElement('div');
   spyOn(el, 'focus').and.callThrough();
-  let coordinates: Signal<RowCol> = signal({row: -1, col: -1});
+  let coordinates: SignalLike<RowCol> = signal({row: -1, col: -1});
   const cell: TestGridCell = {
     id: signal(opts.id),
     element: signal(el as HTMLElement),
@@ -46,10 +46,10 @@ export function createTestCell(
 }
 
 export function createTestCells(
-  gridFocus: Signal<GridFocus<TestGridCell> | undefined>,
+  gridFocus: SignalLike<GridFocus<TestGridCell> | undefined>,
   numRows: number,
   numCols: number,
-): WritableSignal<TestGridCell[][]> {
+): WritableSignalLike<TestGridCell[][]> {
   return signal(
     Array.from({length: numRows}).map((_, r) =>
       Array.from({length: numCols}).map((_, c) => {

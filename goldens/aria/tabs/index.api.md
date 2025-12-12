@@ -10,7 +10,6 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class Tab implements HasElement, OnInit, OnDestroy {

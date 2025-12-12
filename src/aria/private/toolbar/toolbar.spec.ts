@@ -6,28 +6,32 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, WritableSignal} from '@angular/core';
 import {ToolbarInputs, ToolbarPattern} from './toolbar';
 import {ToolbarWidgetPattern} from './toolbar-widget';
 import {ToolbarWidgetGroupPattern} from './toolbar-widget-group';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  SignalLike,
+  computed,
+  signal,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {ModifierKeys} from '@angular/cdk/testing';
 
 // Test types
 type TestWidget = ToolbarWidgetPattern<string> & {
-  inputs: {disabled: WritableSignal<boolean>};
+  inputs: {disabled: WritableSignalLike<boolean>};
 };
 
 type TestWidgetGroup = ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string> & {
-  disabled: WritableSignal<boolean>;
-  items: WritableSignal<TestWidget[]>;
+  disabled: WritableSignalLike<boolean>;
+  items: WritableSignalLike<TestWidget[]>;
 };
 
 type TestItem = TestWidget;
 
 type TestInputs = {
-  readonly [K in keyof ToolbarInputs<string>]: WritableSignal<
+  readonly [K in keyof ToolbarInputs<string>]: WritableSignalLike<
     ToolbarInputs<string>[K] extends SignalLike<infer T> ? T : never
   >;
 };
@@ -52,9 +56,9 @@ function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
 
 function getToolbarPattern(
   inputs: Partial<{
-    [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+    [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
   }>,
-  items: WritableSignal<TestItem[]>,
+  items: WritableSignalLike<TestItem[]>,
 ) {
   const element = signal(document.createElement('div'));
   const activeItem = signal<TestItem | undefined>(undefined);
@@ -122,7 +126,7 @@ function getWidgetGroupPattern(id: string, toolbar: ToolbarPattern<string>): Tes
 
 function getPatterns(
   inputs: Partial<{
-    [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+    [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
   }> = {},
 ) {
   const items = signal<TestItem[]>([]);
@@ -146,8 +150,8 @@ function getPatterns(
   // [                [        group 0       ]          [       group 1        ]]
   // [item 0, item 1, [item 2, item 3, item 4], item 5, [item 6, item 7, item 8]]
 
-  (group0.inputs.items as WritableSignal<any>).set(items().slice(2, 5) as TestWidget[]);
-  (group1.inputs.items as WritableSignal<any>).set(items().slice(6, 9) as TestWidget[]);
+  (group0.inputs.items as WritableSignalLike<any>).set(items().slice(2, 5) as TestWidget[]);
+  (group1.inputs.items as WritableSignalLike<any>).set(items().slice(6, 9) as TestWidget[]);
 
   toolbar.setDefaultState();
   return {toolbar, items: items(), group0, group1};

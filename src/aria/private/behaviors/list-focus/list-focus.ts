@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
+import {computed, signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 
 /** Represents an item in a collection, such as a listbox option, than may receive focus. */
 export interface ListFocusItem {

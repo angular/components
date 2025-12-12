@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {signal} from '../signal-like/signal-like';
 import {PopupTypes, PopupControl, PopupControlInputs} from './popup';
 
 type TestInputs = Partial<Pick<PopupControlInputs, 'expanded'>>;

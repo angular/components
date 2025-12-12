@@ -7,8 +7,12 @@
  */
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {computed, signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  computed,
+  signal,
+  SignalLike,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */

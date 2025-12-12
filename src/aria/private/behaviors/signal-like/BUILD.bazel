@@ -5,5 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "signal-like",
     srcs = ["signal-like.ts"],
-    deps = [],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
 )
