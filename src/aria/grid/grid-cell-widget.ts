@@ -105,7 +105,7 @@ export class GridCellWidget {
 
   /** Whether the widget is activated. */
   get isActivated(): Signal<boolean> {
-    return this._pattern.isActivated.asReadonly();
+    return computed(() => this._pattern.isActivated());
   }
 
   constructor() {

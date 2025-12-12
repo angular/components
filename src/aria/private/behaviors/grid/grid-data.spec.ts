@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {BaseGridCell, GridData} from './grid-data';
 
 export interface TestBaseGridCell extends BaseGridCell {
-  rowSpan: WritableSignal<number>;
-  colSpan: WritableSignal<number>;
-  id: Signal<string>;
+  rowSpan: WritableSignalLike<number>;
+  colSpan: WritableSignalLike<number>;
+  id: SignalLike<string>;
 }
 
 /**

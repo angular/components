@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ListboxInputs, ListboxPattern} from './listbox';
 import {OptionPattern} from './option';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
@@ -14,7 +14,7 @@ import {ModifierKeys} from '@angular/cdk/testing';
 
 type TestInputs = ListboxInputs<string>;
 type TestOption = OptionPattern<string> & {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 };
 type TestListbox = ListboxPattern<string>;
 
@@ -245,7 +245,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not be able to change selection when in readonly mode', () => {
-        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(space());
         expect(listbox.inputs.values()).toEqual([]);
@@ -362,7 +362,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not be able to change selection when in readonly mode', () => {
-        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(space());
         expect(listbox.inputs.values()).toEqual([]);
@@ -386,7 +386,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not change the selected state of disabled options on Shift + ArrowUp / ArrowDown', () => {
-        (listbox.inputs.softDisabled as WritableSignal<boolean>).set(true);
+        (listbox.inputs.softDisabled as WritableSignalLike<boolean>).set(true);
         options[1].disabled.set(true);
         listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
@@ -541,7 +541,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not be able to change selection when in readonly mode', () => {
-        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(down());
         expect(listbox.inputs.values()).toEqual(['Apple']);
@@ -555,7 +555,7 @@ describe('Listbox Pattern', () => {
 
       it('should not select disabled options', () => {
         options[2].disabled.set(true);
-        (listbox.inputs.softDisabled as WritableSignal<boolean>).set(true);
+        (listbox.inputs.softDisabled as WritableSignalLike<boolean>).set(true);
         expect(listbox.inputs.values()).toEqual(['Apple']);
         listbox.onKeydown(down());
         expect(listbox.inputs.values()).toEqual(['Apricot']);

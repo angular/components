@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
 import {TreeInputs, TreePattern, TreeItemPattern} from './tree';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, SignalLike} from '../behaviors/signal-like/signal-like';
 import {ComboboxPattern, ComboboxTreeControls} from '../combobox/combobox';
 
 export type ComboboxTreeInputs<V> = TreeInputs<V> & {

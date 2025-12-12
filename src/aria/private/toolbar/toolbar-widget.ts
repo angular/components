@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, computed} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 import type {ToolbarPattern} from './toolbar';
 import {ToolbarWidgetGroupPattern} from './toolbar-widget-group';

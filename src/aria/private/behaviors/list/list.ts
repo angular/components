@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
+import {computed, signal} from '../signal-like/signal-like';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 import {
   ListNavigation,

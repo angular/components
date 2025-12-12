@@ -8,8 +8,7 @@
 
 import {OptionPattern} from './option';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
-import {computed, signal} from '@angular/core';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 
 /** Represents the required inputs for a listbox. */

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
@@ -15,7 +14,7 @@ import {
   ListNavigationInputs,
   ListNavigationItem,
 } from '../behaviors/list-navigation/list-navigation';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 
 /** Inputs of the AccordionGroupPattern. */
 export interface AccordionGroupInputs extends Omit<

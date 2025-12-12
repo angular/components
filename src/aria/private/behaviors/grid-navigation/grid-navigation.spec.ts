@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, WritableSignal} from '@angular/core';
+import {computed, signal, WritableSignalLike} from '../../behaviors/signal-like/signal-like';
 import {GridFocus} from '../grid-focus/grid-focus';
 import {GridNavigation, GridNavigationCell, GridNavigationInputs} from './grid-navigation';
 
 type TestGridNav = GridNavigation<TestCell>;
 
 interface TestCell extends GridNavigationCell {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 }
 
 interface TestCellInputs {

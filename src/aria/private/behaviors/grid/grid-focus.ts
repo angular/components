@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, WritableSignal} from '@angular/core';
-import {SignalLike} from '../signal-like/signal-like';
+import {computed, signal, WritableSignalLike, SignalLike} from '../signal-like/signal-like';
 import type {GridData, BaseGridCell, RowCol} from './grid-data';
 
 /** Represents an cell in a grid, such as a grid cell, that may receive focus. */
@@ -43,7 +42,7 @@ interface GridFocusDeps<T extends GridFocusCell> {
 /** Controls focus for a 2D grid of cells. */
 export class GridFocus<T extends GridFocusCell> {
   /** The current active cell. */
-  readonly activeCell: WritableSignal<T | undefined> = signal(undefined);
+  readonly activeCell: WritableSignalLike<T | undefined> = signal(undefined);
 
   /** The current active cell coordinates. */
   readonly activeCoords = signal<RowCol>({row: -1, col: -1});

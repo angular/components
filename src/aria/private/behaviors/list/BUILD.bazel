@@ -26,6 +26,7 @@ ng_project(
     deps = [
         ":list",
         "//:node_modules/@angular/core",
+        "//src/aria/private/behaviors/signal-like",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
     ],
