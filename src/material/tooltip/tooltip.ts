@@ -538,7 +538,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
-      usePopover: true,
     });
 
     this._updatePosition(this._overlayRef);
