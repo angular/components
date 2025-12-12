@@ -37,6 +37,7 @@ import {ACCORDION_GROUP} from './accordion-tokens';
  * ```
  *
  * @developerPreview 21.0
+ * @see [Accordion](guide/aria/accordion)
  */
 @Directive({
   selector: '[ngAccordionTrigger]',

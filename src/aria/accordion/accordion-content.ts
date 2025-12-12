@@ -26,6 +26,7 @@ import {DeferredContent} from '../private';
  * ```
  *
  * @developerPreview 21.0
+ * @see [Accordion](guide/aria/accordion)
  */
 @Directive({
   selector: 'ng-template[ngAccordionContent]',

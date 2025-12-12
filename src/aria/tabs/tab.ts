@@ -35,6 +35,8 @@ import {HasElement, TABS} from './utils';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Tabs](guide/aria/tabs)
  */
 @Directive({
   selector: '[ngTab]',
