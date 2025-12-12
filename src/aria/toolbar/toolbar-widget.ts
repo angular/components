@@ -36,6 +36,8 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
   selector: '[ngToolbarWidget]',

@@ -25,6 +25,8 @@ import {TOOLBAR_WIDGET_GROUP} from './utils';
  * that have their own internal navigation.
  *
  * @developerPreview 21.0
+ *
+ * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
   selector: '[ngToolbarWidgetGroup]',

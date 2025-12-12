@@ -36,6 +36,9 @@ import type {Menu} from './menu';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Menu](guide/aria/menu)
+ * @see [MenuBar](guide/aria/menubar)
  */
 @Directive({
   selector: 'button[ngMenuTrigger]',

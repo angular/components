@@ -36,6 +36,8 @@ import {GRID_CELL} from './grid-tokens';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Grid](guide/aria/grid)
  */
 @Directive({
   selector: '[ngGridCellWidget]',

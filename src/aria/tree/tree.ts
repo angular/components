@@ -58,6 +58,8 @@ import {sortDirectives} from './utils';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Tree](guide/aria/tree)
  */
 @Directive({
   selector: '[ngTree]',

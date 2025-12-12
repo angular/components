@@ -20,6 +20,11 @@ import {COMBOBOX} from './combobox-tokens';
  * exposing the popup's control pattern to the parent combobox.
  *
  * @developerPreview 21.0
+ *
+ * @see [Combobox](guide/aria/combobox)
+ * @see [Select](guide/aria/select)
+ * @see [Multiselect](guide/aria/multiselect)
+ * @see [Autocomplete](guide/aria/autocomplete)
  */
 @Directive({
   selector: '[ngComboboxPopup]',

@@ -37,6 +37,7 @@ import {DeferredContentAware, AccordionPanelPattern, AccordionTriggerPattern} fr
  * ```
  *
  * @developerPreview 21.0
+ * @see [Accordion](guide/aria/accordion)
  */
 @Directive({
   selector: '[ngAccordionPanel]',

@@ -41,6 +41,8 @@ import {sortDirectives} from './utils';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
   selector: '[ngToolbar]',

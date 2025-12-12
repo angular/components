@@ -25,6 +25,11 @@ import {ComboboxPopup} from './combobox-popup';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Combobox](guide/aria/combobox)
+ * @see [Select](guide/aria/select)
+ * @see [Multiselect](guide/aria/multiselect)
+ * @see [Autocomplete](guide/aria/autocomplete)
  */
 @Directive({
   selector: 'dialog[ngComboboxDialog]',
