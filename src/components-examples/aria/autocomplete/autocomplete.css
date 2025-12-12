@@ -22,7 +22,7 @@
   width: 13rem;
   font-size: 0.9rem;
   border-radius: var(--mat-sys-corner-extra-small);
-  padding: 0.7rem 0.7rem 0.7rem 2.5rem;
+  padding: 0.7rem 2.5rem;
   outline-color: var(--mat-sys-primary);
   border: 1px solid var(--mat-sys-outline);
   background-color: var(--mat-sys-surface);
@@ -36,6 +36,22 @@
 
 [ngCombobox]:has([aria-expanded='false']) .example-popup {
   display: none;
+}
+
+.example-clear-button {
+  position: absolute;
+  right: 0.5rem;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  cursor: pointer;
+}
+
+.example-clear-icon {
+  font-size: 1.25rem;
 }
 
 .example-popup {
