@@ -7,6 +7,14 @@
       [(ngModel)]="query"
       ngComboboxInput
     />
+    <button
+      class="example-clear-button"
+      aria-label="Clear"
+      (keydown)="onKeydown($event)"
+      (click)="clear()"
+    >
+      <span aria-hidden="true" class="example-clear-icon material-symbols-outlined">close</span>
+    </button>
   </div>
 
   <ng-template ngComboboxPopupContainer>

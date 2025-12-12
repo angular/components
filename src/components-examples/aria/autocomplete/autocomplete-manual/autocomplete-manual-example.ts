@@ -44,6 +44,9 @@ import {FormsModule} from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteManualExample {
+  /** The selected value of the combobox. */
+  listbox = viewChild<Listbox<string>>(Listbox);
+
   /** The options available in the listbox. */
   options = viewChildren<Option<string>>(Option);
 
@@ -66,5 +69,20 @@ export class AutocompleteManualExample {
         option?.element.scrollIntoView({block: 'nearest'});
       }
     });
+  }
+
+  /** Clears the query and the listbox value. */
+  clear(): void {
+    this.query.set('');
+    this.listbox?.()?.values.set([]);
+  }
+
+  /** Handles keydown events on the clear button. */
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.clear();
+      this.combobox?.()?.close();
+      event.stopPropagation();
+    }
   }
 }
