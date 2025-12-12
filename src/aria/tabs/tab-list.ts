@@ -39,6 +39,8 @@ import type {Tab} from './tab';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Tabs](guide/aria/tabs)
  */
 @Directive({
   selector: '[ngTabList]',

@@ -25,6 +25,9 @@ import {DeferredContent} from '../private';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Menu](guide/aria/menu)
+ * @see [MenuBar](guide/aria/menubar)
  */
 @Directive({
   selector: 'ng-template[ngMenuContent]',

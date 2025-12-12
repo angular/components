@@ -25,6 +25,8 @@ import {DeferredContent} from '../private';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Tabs](guide/aria/tabs)
  */
 @Directive({
   selector: 'ng-template[ngTabContent]',
