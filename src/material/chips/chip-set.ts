@@ -22,11 +22,13 @@ import {
   booleanAttribute,
   numberAttribute,
   inject,
+  DestroyRef,
 } from '@angular/core';
-import {Observable, Subject, merge} from 'rxjs';
-import {startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {Observable, merge} from 'rxjs';
+import {startWith, switchMap} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction, MatChipContent} from './chip-action';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * Basic container component for the MatChip component.
@@ -53,15 +55,13 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   private _dir = inject(Directionality, {optional: true});
+  protected readonly _destroyRef = inject(DestroyRef);
 
   /** Index of the last destroyed chip that had focus. */
   private _lastDestroyedFocusedChipIndex: number | null = null;
 
   /** Used to manage focus within the chip list. */
   protected _keyManager: FocusKeyManager<MatChipAction>;
-
-  /** Subject that emits when the component has been destroyed. */
-  protected _destroyed = new Subject<void>();
 
   /** Role to use if it hasn't been overwritten by the user. */
   protected _defaultRole = 'presentation';
@@ -146,8 +146,6 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this._keyManager?.destroy();
     this._chipActions.destroy();
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 
   /** Checks whether any of the chips is focused. */
@@ -249,7 +247,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
 
     // Keep the manager active index in sync so that navigation picks
     // up from the current chip if the user clicks into the list directly.
-    this.chipFocusChanges.pipe(takeUntil(this._destroyed)).subscribe(({chip}) => {
+    this.chipFocusChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(({chip}) => {
       const action = chip._getSourceAction(document.activeElement as Element);
 
       if (action) {
@@ -258,7 +256,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     });
 
     this._dir?.change
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
   }
 
@@ -273,42 +271,46 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
 
   /** Listens to changes in the chip set and syncs up the state of the individual chips. */
   private _trackChipSetChanges() {
-    this._chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      if (this.disabled) {
-        // Since this happens after the content has been
-        // checked, we need to defer it to the next tick.
-        Promise.resolve().then(() => this._syncChipsState());
-      }
+    this._chips.changes
+      .pipe(startWith(null), takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        if (this.disabled) {
+          // Since this happens after the content has been
+          // checked, we need to defer it to the next tick.
+          Promise.resolve().then(() => this._syncChipsState());
+        }
 
-      this._redirectDestroyedChipFocus();
-    });
+        this._redirectDestroyedChipFocus();
+      });
   }
 
   /** Starts tracking the destroyed chips in order to capture the focused one. */
   private _trackDestroyedFocusedChip() {
-    this.chipDestroyedChanges.pipe(takeUntil(this._destroyed)).subscribe((event: MatChipEvent) => {
-      // If the focused chip is destroyed, save its index so that we can move focus to the next
-      // chip. We only save the index here, rather than move the focus immediately, because we want
-      // to wait until the chip is removed from the chip list before focusing the next one. This
-      // allows us to keep focus on the same index if the chip gets swapped out.
-      const chipArray = this._chips.toArray();
-      const chipIndex = chipArray.indexOf(event.chip);
-      const hasFocus = event.chip._hasFocus();
-      const wasLastFocused =
-        event.chip._hadFocusOnRemove &&
-        this._keyManager.activeItem &&
-        event.chip._getActions().includes(this._keyManager.activeItem);
+    this.chipDestroyedChanges
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((event: MatChipEvent) => {
+        // If the focused chip is destroyed, save its index so that we can move focus to the next
+        // chip. We only save the index here, rather than move the focus immediately, because we want
+        // to wait until the chip is removed from the chip list before focusing the next one. This
+        // allows us to keep focus on the same index if the chip gets swapped out.
+        const chipArray = this._chips.toArray();
+        const chipIndex = chipArray.indexOf(event.chip);
+        const hasFocus = event.chip._hasFocus();
+        const wasLastFocused =
+          event.chip._hadFocusOnRemove &&
+          this._keyManager.activeItem &&
+          event.chip._getActions().includes(this._keyManager.activeItem);
 
-      // Note that depending on the timing, the chip might've already lost focus by the
-      // time we check this. We need the `wasLastFocused` as a fallback to detect such cases.
-      // In `wasLastFocused` we also need to ensure that the chip actually had focus when it was
-      // deleted so that we don't steal away the user's focus after they've moved on from the chip.
-      const shouldMoveFocus = hasFocus || wasLastFocused;
+        // Note that depending on the timing, the chip might've already lost focus by the
+        // time we check this. We need the `wasLastFocused` as a fallback to detect such cases.
+        // In `wasLastFocused` we also need to ensure that the chip actually had focus when it was
+        // deleted so that we don't steal away the user's focus after they've moved on from the chip.
+        const shouldMoveFocus = hasFocus || wasLastFocused;
 
-      if (this._isValidIndex(chipIndex) && shouldMoveFocus) {
-        this._lastDestroyedFocusedChipIndex = chipIndex;
-      }
-    });
+        if (this._isValidIndex(chipIndex) && shouldMoveFocus) {
+          this._lastDestroyedFocusedChipIndex = chipIndex;
+        }
+      });
   }
 
   /**

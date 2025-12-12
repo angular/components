@@ -26,7 +26,7 @@ import {
   inject,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
-import {Subject, Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
 import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -44,6 +44,7 @@ import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {MatTooltip} from '../tooltip';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /**
  * Possible views for the calendar.
@@ -270,8 +271,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** A portal containing the header component type for this calendar. */
   _calendarHeaderPortal: Portal<any>;
 
-  private _intlChanges: Subscription;
-
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
    * We need to schedule it, rather than do it immediately, because we have to wait
@@ -433,10 +432,12 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       }
     }
 
-    this._intlChanges = inject(MatDatepickerIntl).changes.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-      this.stateChanges.next();
-    });
+    inject(MatDatepickerIntl)
+      .changes.pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+        this.stateChanges.next();
+      });
   }
 
   ngAfterContentInit() {
@@ -455,7 +456,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnDestroy() {
-    this._intlChanges.unsubscribe();
     this.stateChanges.complete();
   }
 
