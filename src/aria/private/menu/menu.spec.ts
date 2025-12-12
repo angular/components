@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {MenuPattern, MenuBarPattern, MenuItemPattern, MenuTriggerPattern} from './menu';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
@@ -14,7 +14,7 @@ import {ModifierKeys} from '@angular/cdk/testing';
 // Test types
 type TestMenuItem = MenuItemPattern<string> & {
   inputs: {
-    disabled: WritableSignal<boolean>;
+    disabled: WritableSignalLike<boolean>;
   };
 };
 
@@ -130,10 +130,10 @@ function getMenuPattern(
   );
 
   if (parent instanceof MenuTriggerPattern) {
-    (parent.menu as WritableSignal<MenuPattern<string>>).set(menu);
+    (parent.menu as WritableSignalLike<MenuPattern<string>>).set(menu);
     parent.inputs.element()?.appendChild(menu.inputs.element()!);
   } else if (parent instanceof MenuItemPattern) {
-    (parent.submenu as WritableSignal<MenuPattern<string>>).set(menu);
+    (parent.submenu as WritableSignalLike<MenuPattern<string>>).set(menu);
     parent.inputs.element()?.appendChild(menu.inputs.element()!);
   }
 

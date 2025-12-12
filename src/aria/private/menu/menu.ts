@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal, signal} from '@angular/core';
 import {KeyboardEventManager} from '../behaviors/event-manager';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The inputs for the MenuBarPattern class. */
@@ -135,8 +134,8 @@ export class MenuPattern<V> {
   typeaheadRegexp = /^.$/;
 
   /** The root of the menu. */
-  root: Signal<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined> = computed(
-    () => {
+  root: SignalLike<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined> =
+    computed(() => {
       const parent = this.inputs.parent();
 
       if (!parent) {
@@ -154,8 +153,7 @@ export class MenuPattern<V> {
       }
 
       return grandparent?.root();
-    },
-  );
+    });
 
   /** Handles keyboard events for the menu. */
   keydownManager = computed(() => {

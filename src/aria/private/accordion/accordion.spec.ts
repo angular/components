@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
 import {
   AccordionGroupInputs,
   AccordionGroupPattern,
@@ -15,7 +14,7 @@ import {
   AccordionTriggerInputs,
   AccordionTriggerPattern,
 } from './accordion';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {signal, SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
 

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, linkedSignal, signal} from '@angular/core';
 import {GridData, BaseGridCell, GridDataInputs, RowCol} from './grid-data';
 import {GridFocus, GridFocusCell, GridFocusInputs} from './grid-focus';
 import {
@@ -16,7 +15,7 @@ import {
   GridNavigationInputs,
 } from './grid-navigation';
 import {GridSelectionCell, GridSelectionInputs, GridSelection} from './grid-selection';
-import {SignalLike} from '../signal-like/signal-like';
+import {computed, linkedSignal, signal, SignalLike} from '../signal-like/signal-like';
 
 /** The selection operations that can be performed after a navigation operation. */
 export interface NavOptions {

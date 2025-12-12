@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal, WritableSignal} from '@angular/core';
+import {SignalLike, signal, WritableSignalLike} from '../signal-like/signal-like';
 import {ListTypeaheadItem, ListTypeahead, ListTypeaheadInputs} from './list-typeahead';
 import {getListFocus} from '../list-focus/list-focus.spec';
 import {ListFocus} from '../list-focus/list-focus';
 
 type TestItem = ListTypeaheadItem & {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 };
 type TestInputs = Partial<ListTypeaheadInputs<TestItem>> & {
   numItems?: number;
@@ -31,7 +31,7 @@ function getTypeahead(inputs: TestInputs = {}): ListTypeahead<TestItem> {
   });
 }
 
-function getItems(length: number): Signal<TestItem[]> {
+function getItems(length: number): SignalLike<TestItem[]> {
   return signal(
     Array.from({length}).map((_, i) => {
       return {
@@ -79,14 +79,14 @@ describe('List Typeahead', () => {
 
     it('should skip disabled items', () => {
       items[1].disabled.set(true);
-      (typeahead.inputs.softDisabled as WritableSignal<boolean>).set(false);
+      (typeahead.inputs.softDisabled as WritableSignalLike<boolean>).set(false);
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
     });
 
     it('should not skip disabled items', () => {
       items[1].disabled.set(true);
-      (typeahead.inputs.softDisabled as WritableSignal<boolean>).set(true);
+      (typeahead.inputs.softDisabled as WritableSignalLike<boolean>).set(true);
       typeahead.search('i');
       expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
     });

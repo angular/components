@@ -6,7 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Signal } from '@angular/core';
+import { untracked } from '@angular/core/primitives/signals';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -21,14 +21,14 @@ export class AccordionGroupPattern {
     readonly focusBehavior: ListFocus<AccordionTriggerPattern>;
     // (undocumented)
     readonly inputs: AccordionGroupInputs;
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<AccordionTriggerPattern>;
-    nextKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onFocus(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
-    pointerdown: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    prevKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     toggle(): void;
 }
 
@@ -59,20 +59,20 @@ export interface AccordionTriggerInputs extends Omit<ListNavigationItem & ListFo
 // @public
 export class AccordionTriggerPattern implements ListNavigationItem, ListFocusItem, ExpansionItem {
     constructor(inputs: AccordionTriggerInputs);
-    readonly active: _angular_core.Signal<boolean>;
+    readonly active: SignalLike<boolean>;
     close(): void;
-    readonly controls: _angular_core.Signal<string | undefined>;
-    readonly disabled: _angular_core.Signal<boolean>;
+    readonly controls: SignalLike<string | undefined>;
+    readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
-    readonly hardDisabled: _angular_core.Signal<boolean>;
+    readonly hardDisabled: SignalLike<boolean>;
     readonly id: SignalLike<string>;
-    readonly index: _angular_core.Signal<number>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: AccordionTriggerInputs;
     open(): void;
-    readonly tabIndex: _angular_core.Signal<-1 | 0>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     toggle(): void;
 }
 
@@ -92,7 +92,7 @@ export class ComboboxDialogPattern {
         id: SignalLike<string>;
     };
     // (undocumented)
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     // (undocumented)
     onClick(event: MouseEvent): void;
     // (undocumented)
@@ -147,7 +147,7 @@ export type ComboboxListboxInputs<V> = ListboxInputs<V> & {
 // @public (undocumented)
 export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements ComboboxListboxControls<OptionPattern<V>, V> {
     constructor(inputs: ComboboxListboxInputs<V>);
-    activeId: _angular_core.Signal<string | undefined>;
+    activeId: SignalLike<string | undefined>;
     clearSelection: () => void;
     first: () => void;
     focus: (item: OptionPattern<V>, opts?: {
@@ -156,17 +156,17 @@ export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements Comb
     getActiveItem: () => OptionPattern<V> | undefined;
     getItem: (e: PointerEvent) => OptionPattern<V> | undefined;
     getSelectedItems: () => OptionPattern<V>[];
-    id: _angular_core.Signal<string>;
+    id: SignalLike<string>;
     // (undocumented)
     readonly inputs: ComboboxListboxInputs<V>;
     items: SignalLike<OptionPattern<V>[]>;
     last: () => void;
-    multi: _angular_core.Signal<boolean>;
+    multi: SignalLike<boolean>;
     next: () => void;
     onKeydown(_: KeyboardEvent): void;
     onPointerdown(_: PointerEvent): void;
     prev: () => void;
-    role: _angular_core.Signal<"listbox">;
+    role: SignalLike<"listbox">;
     select: (item?: OptionPattern<V>) => void;
     setDefaultState(): void;
     setValue: (value: V | undefined) => void;
@@ -178,30 +178,30 @@ export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements Comb
 // @public
 export class ComboboxPattern<T extends ListItem<V>, V> {
     constructor(inputs: ComboboxInputs<T, V>);
-    activeDescendant: _angular_core.Signal<string | null>;
-    autocomplete: _angular_core.Signal<"both" | "list">;
-    click: _angular_core.Signal<PointerEventManager<PointerEvent>>;
+    activeDescendant: SignalLike<string | null>;
+    autocomplete: SignalLike<"both" | "list">;
+    click: SignalLike<PointerEventManager<PointerEvent>>;
     close(opts?: {
         reset: boolean;
     }): void;
     collapseItem(): void;
-    collapseKey: _angular_core.Signal<"ArrowLeft" | "ArrowRight">;
+    collapseKey: SignalLike<"ArrowLeft" | "ArrowRight">;
     commit(): void;
     disabled: () => boolean;
-    expanded: _angular_core.WritableSignal<boolean>;
+    expanded: WritableSignalLike<boolean>;
     expandItem(): void;
-    expandKey: _angular_core.Signal<"ArrowLeft" | "ArrowRight">;
+    expandKey: SignalLike<"ArrowLeft" | "ArrowRight">;
     first(): void;
-    firstMatch: _angular_core.Signal<T | undefined>;
-    hasBeenFocused: _angular_core.WritableSignal<boolean>;
-    hasPopup: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | null>;
+    firstMatch: SignalLike<T | undefined>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasPopup: SignalLike<"listbox" | "tree" | "grid" | "dialog" | null>;
     highlight(): void;
-    highlightedItem: _angular_core.WritableSignal<T | undefined>;
+    highlightedItem: WritableSignalLike<T | undefined>;
     // (undocumented)
     readonly inputs: ComboboxInputs<T, V>;
     isDeleting: boolean;
-    isFocused: _angular_core.WritableSignal<boolean>;
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    isFocused: WritableSignalLike<boolean>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     last(): void;
     listControls: () => ComboboxListboxControls<T, V> | null | undefined;
     next(): void;
@@ -216,9 +216,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
         last?: boolean;
         selected?: boolean;
     }): void;
-    popupId: _angular_core.Signal<string | null>;
+    popupId: SignalLike<string | null>;
     prev(): void;
-    readonly: _angular_core.Signal<true | null>;
+    readonly: SignalLike<true | null>;
     select(opts?: {
         item?: T;
         commit?: boolean;
@@ -248,7 +248,7 @@ export type ComboboxTreeInputs<V> = TreeInputs<V> & {
 export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTreeControls<TreeItemPattern<V>, V> {
     constructor(inputs: ComboboxTreeInputs<V>);
     // (undocumented)
-    activeId: _angular_core.Signal<string | undefined>;
+    activeId: SignalLike<string | undefined>;
     clearSelection: () => void;
     collapseAll: () => void;
     collapseItem: () => void;
@@ -264,7 +264,7 @@ export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTr
     isItemCollapsible: () => boolean;
     isItemExpandable(item?: TreeItemPattern<V> | undefined): boolean;
     isItemSelectable: (item?: TreeItemPattern<V> | undefined) => boolean;
-    items: _angular_core.Signal<TreeItemPattern<V>[]>;
+    items: SignalLike<TreeItemPattern<V>[]>;
     last: () => void;
     next: () => void;
     onKeydown(_: KeyboardEvent): void;
@@ -278,6 +278,9 @@ export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTr
     toggle: (item?: TreeItemPattern<V>) => void;
     unfocus: () => void;
 }
+
+// @public (undocumented)
+export function computed<T>(computation: () => T): SignalLike<T>;
 
 // @public
 export function convertGetterSetterToWritableSignalLike<T>(getter: () => T, setter: (v: T) => void): WritableSignalLike<T>;
@@ -369,24 +372,24 @@ export interface GridCellWidgetInputs extends Omit<ListNavigationItem, 'index'> 
 export class GridCellWidgetPattern implements ListNavigationItem {
     constructor(inputs: GridCellWidgetInputs);
     activate(event?: KeyboardEvent | FocusEvent): void;
-    readonly active: Signal<boolean>;
+    readonly active: SignalLike<boolean>;
     deactivate(event?: KeyboardEvent | FocusEvent): void;
-    readonly disabled: Signal<boolean>;
+    readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;
     readonly id: SignalLike<string>;
-    readonly index: Signal<number>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: GridCellWidgetInputs;
-    readonly isActivated: WritableSignal<boolean>;
-    readonly keydown: Signal<KeyboardEventManager<KeyboardEvent>>;
-    readonly lastActivateEvent: WritableSignal<KeyboardEvent | FocusEvent | undefined>;
-    readonly lastDeactivateEvent: WritableSignal<KeyboardEvent | FocusEvent | undefined>;
+    readonly isActivated: WritableSignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    readonly lastActivateEvent: WritableSignalLike<KeyboardEvent | FocusEvent | undefined>;
+    readonly lastDeactivateEvent: WritableSignalLike<KeyboardEvent | FocusEvent | undefined>;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly tabIndex: Signal<-1 | 0>;
-    readonly widgetHost: Signal<HTMLElement>;
+    readonly tabIndex: SignalLike<-1 | 0>;
+    readonly widgetHost: SignalLike<HTMLElement>;
 }
 
 // @public
@@ -404,20 +407,20 @@ export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'>
 // @public
 export class GridPattern {
     constructor(inputs: GridInputs);
-    readonly activeCell: _angular_core.Signal<GridCellPattern | undefined>;
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly activeCell: SignalLike<GridCellPattern | undefined>;
+    readonly activeDescendant: SignalLike<string | undefined>;
     readonly anchorCell: SignalLike<GridCellPattern | undefined>;
-    readonly cells: _angular_core.Signal<GridCellPattern[][]>;
-    readonly disabled: _angular_core.Signal<boolean>;
-    readonly dragging: _angular_core.WritableSignal<boolean>;
+    readonly cells: SignalLike<GridCellPattern[][]>;
+    readonly disabled: SignalLike<boolean>;
+    readonly dragging: WritableSignalLike<boolean>;
     focusEffect(): void;
     readonly gridBehavior: Grid<GridCellPattern>;
-    readonly hasBeenFocused: _angular_core.WritableSignal<boolean>;
+    readonly hasBeenFocused: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: GridInputs;
-    readonly isFocused: _angular_core.WritableSignal<boolean>;
-    readonly keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
-    readonly nextColKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft">;
+    readonly isFocused: WritableSignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    readonly nextColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
@@ -425,14 +428,14 @@ export class GridPattern {
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
     readonly pauseNavigation: SignalLike<boolean>;
-    readonly pointerdown: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    readonly pointerup: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    readonly prevColKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft">;
+    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    readonly pointerup: SignalLike<PointerEventManager<PointerEvent>>;
+    readonly prevColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     resetFocusEffect(): void;
     resetStateEffect(): void;
     restoreFocusEffect(): void;
     setDefaultStateEffect(): void;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly tabIndex: SignalLike<0 | -1>;
 }
 
 // @public
@@ -450,6 +453,9 @@ export class GridRowPattern {
     rowIndex: SignalLike<number | undefined>;
 }
 
+// @public (undocumented)
+export function linkedSignal<T>(sourceFn: () => T): WritableSignalLike<T>;
+
 // @public
 export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
     id: SignalLike<string>;
@@ -459,32 +465,32 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 // @public
 export class ListboxPattern<V> {
     constructor(inputs: ListboxInputs<V>);
-    activeDescendant: _angular_core.Signal<string | undefined>;
-    disabled: _angular_core.Signal<boolean>;
-    dynamicSpaceKey: _angular_core.Signal<"" | " ">;
-    followFocus: _angular_core.Signal<boolean>;
+    activeDescendant: SignalLike<string | undefined>;
+    disabled: SignalLike<boolean>;
+    dynamicSpaceKey: SignalLike<"" | " ">;
+    followFocus: SignalLike<boolean>;
     // (undocumented)
     protected _getItem(e: PointerEvent): OptionPattern<V> | undefined;
     // (undocumented)
     readonly inputs: ListboxInputs<V>;
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     // (undocumented)
     listBehavior: List<OptionPattern<V>, V>;
     multi: SignalLike<boolean>;
-    nextKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     onPointerdown(event: PointerEvent): void;
     orientation: SignalLike<'vertical' | 'horizontal'>;
-    pointerdown: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    prevKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly: SignalLike<boolean>;
     setDefaultState(): void;
-    setsize: _angular_core.Signal<number>;
+    setsize: SignalLike<number>;
     tabIndex: SignalLike<-1 | 0>;
     typeaheadRegexp: RegExp;
     validate(): string[];
-    wrap: _angular_core.WritableSignal<boolean>;
+    wrap: WritableSignalLike<boolean>;
 }
 
 // @public
@@ -499,15 +505,15 @@ export class MenuBarPattern<V> {
     constructor(inputs: MenuBarInputs<V>);
     close(): void;
     disabled: () => boolean;
-    dynamicSpaceKey: Signal<"" | " ">;
+    dynamicSpaceKey: SignalLike<"" | " ">;
     goto(item: MenuItemPattern<V>, opts?: {
         focusElement?: boolean;
     }): void;
-    hasBeenFocused: _angular_core.WritableSignal<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: MenuBarInputs<V>;
-    isFocused: _angular_core.WritableSignal<boolean>;
-    keydownManager: Signal<KeyboardEventManager<KeyboardEvent>>;
+    isFocused: WritableSignalLike<boolean>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     listBehavior: List<MenuItemPattern<V>, V>;
     next(): void;
     onClick(event: MouseEvent): void;
@@ -540,19 +546,19 @@ export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectab
 // @public
 export class MenuItemPattern<V> implements ListItem<V> {
     constructor(inputs: MenuItemInputs<V>);
-    active: Signal<boolean>;
+    active: SignalLike<boolean>;
     close(opts?: {
         refocus?: boolean;
     }): void;
-    controls: _angular_core.WritableSignal<string | undefined>;
+    controls: WritableSignalLike<string | undefined>;
     disabled: () => boolean;
     element: SignalLike<HTMLElement | undefined>;
-    expanded: Signal<boolean | null>;
-    _expanded: _angular_core.WritableSignal<boolean>;
-    hasBeenFocused: _angular_core.WritableSignal<boolean>;
-    hasPopup: Signal<boolean>;
+    expanded: SignalLike<boolean | null>;
+    _expanded: WritableSignalLike<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasPopup: SignalLike<boolean>;
     id: SignalLike<string>;
-    index: Signal<number>;
+    index: SignalLike<number>;
     // (undocumented)
     readonly inputs: MenuItemInputs<V>;
     onFocusIn(): void;
@@ -564,7 +570,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
     searchTerm: SignalLike<string>;
     selectable: SignalLike<boolean>;
     submenu: SignalLike<MenuPattern<V> | undefined>;
-    tabIndex: Signal<0 | -1>;
+    tabIndex: SignalLike<0 | -1>;
     value: SignalLike<V>;
 }
 
@@ -579,16 +585,16 @@ export class MenuPattern<V> {
     _closeTimeout: any;
     collapse(): void;
     disabled: () => boolean;
-    dynamicSpaceKey: Signal<"" | " ">;
+    dynamicSpaceKey: SignalLike<"" | " ">;
     expand(): void;
     first(): void;
-    hasBeenFocused: _angular_core.WritableSignal<boolean>;
-    hasBeenHovered: _angular_core.WritableSignal<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasBeenHovered: WritableSignalLike<boolean>;
     id: SignalLike<string>;
     // (undocumented)
     readonly inputs: MenuInputs<V>;
-    isFocused: _angular_core.WritableSignal<boolean>;
-    keydownManager: Signal<KeyboardEventManager<KeyboardEvent>>;
+    isFocused: WritableSignalLike<boolean>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     last(): void;
     listBehavior: List<MenuItemPattern<V>, V>;
     next(): void;
@@ -601,14 +607,14 @@ export class MenuPattern<V> {
     _openTimeout: any;
     prev(): void;
     role: () => string;
-    root: Signal<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined>;
+    root: SignalLike<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined>;
     setDefaultState(): void;
-    shouldFocus: Signal<boolean>;
+    shouldFocus: SignalLike<boolean>;
     submit(item?: MenuItemPattern<V> | undefined): void;
     tabIndex: () => 0 | -1;
     trigger(): void;
     typeaheadRegexp: RegExp;
-    visible: Signal<boolean>;
+    visible: SignalLike<boolean>;
 }
 
 // @public
@@ -626,12 +632,12 @@ export class MenuTriggerPattern<V> {
         refocus?: boolean;
     }): void;
     disabled: () => boolean;
-    expanded: _angular_core.WritableSignal<boolean>;
-    hasBeenFocused: _angular_core.WritableSignal<boolean>;
+    expanded: WritableSignalLike<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
     hasPopup: () => boolean;
     // (undocumented)
     readonly inputs: MenuTriggerInputs<V>;
-    keydownManager: Signal<KeyboardEventManager<KeyboardEvent>>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     menu: SignalLike<MenuPattern<V> | undefined>;
     onClick(): void;
     onFocusIn(): void;
@@ -642,7 +648,7 @@ export class MenuTriggerPattern<V> {
         last?: boolean;
     }): void;
     role: () => string;
-    tabIndex: Signal<-1 | 0>;
+    tabIndex: SignalLike<-1 | 0>;
 }
 
 // @public
@@ -668,6 +674,9 @@ export class OptionPattern<V> {
 }
 
 // @public (undocumented)
+export function signal<T>(initialValue: T): WritableSignalLike<T>;
+
+// @public (undocumented)
 export type SignalLike<T> = () => T;
 
 // @public
@@ -685,27 +694,27 @@ export interface TabListInputs extends Omit<ListNavigationInputs<TabPattern>, 'm
 // @public
 export class TabListPattern {
     constructor(inputs: TabListInputs);
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeTab: SignalLike<TabPattern | undefined>;
     readonly disabled: SignalLike<boolean>;
     readonly expansionBehavior: ListExpansion;
     readonly focusBehavior: ListFocus<TabPattern>;
-    readonly followFocus: _angular_core.Signal<boolean>;
+    readonly followFocus: SignalLike<boolean>;
     // (undocumented)
     readonly inputs: TabListInputs;
-    readonly keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<TabPattern>;
-    readonly nextKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
     open(value: string): boolean;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly pointerdown: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    readonly prevKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
-    readonly selectedTab: WritableSignal<TabPattern | undefined>;
+    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly selectedTab: WritableSignalLike<TabPattern | undefined>;
     setDefaultState(): void;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly tabIndex: SignalLike<0 | -1>;
 }
 
 // @public
@@ -718,32 +727,32 @@ export interface TabPanelInputs extends LabelControlOptionalInputs {
 // @public
 export class TabPanelPattern {
     constructor(inputs: TabPanelInputs);
-    readonly hidden: _angular_core.Signal<boolean>;
+    readonly hidden: SignalLike<boolean>;
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: TabPanelInputs;
-    readonly labelledBy: _angular_core.Signal<string | undefined>;
+    readonly labelledBy: SignalLike<string | undefined>;
     readonly labelManager: LabelControl;
-    readonly tabIndex: _angular_core.Signal<-1 | 0>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     readonly value: SignalLike<string>;
 }
 
 // @public
 export class TabPattern {
     constructor(inputs: TabInputs);
-    readonly active: _angular_core.Signal<boolean>;
-    readonly controls: _angular_core.Signal<string | undefined>;
+    readonly active: SignalLike<boolean>;
+    readonly controls: SignalLike<string | undefined>;
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
     readonly id: SignalLike<string>;
-    readonly index: _angular_core.Signal<number>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: TabInputs;
     open(): boolean;
-    readonly selected: _angular_core.Signal<boolean>;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly selected: SignalLike<boolean>;
+    readonly tabIndex: SignalLike<0 | -1>;
     readonly value: SignalLike<string>;
 }
 
@@ -755,9 +764,9 @@ export type ToolbarInputs<V> = Omit<ListInputs<ToolbarWidgetPattern<V>, V>, 'mul
 // @public
 export class ToolbarPattern<V> {
     constructor(inputs: ToolbarInputs<V>);
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: () => ToolbarWidgetPattern<V> | undefined;
-    readonly disabled: _angular_core.Signal<boolean>;
+    readonly disabled: SignalLike<boolean>;
     // (undocumented)
     readonly inputs: ToolbarInputs<V>;
     readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
@@ -770,7 +779,7 @@ export class ToolbarPattern<V> {
     select(): void;
     setDefaultState(): void;
     readonly softDisabled: SignalLike<boolean>;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly tabIndex: SignalLike<0 | -1>;
     validate(): string[];
 }
 
@@ -814,13 +823,13 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
     readonly element: () => HTMLElement | undefined;
     readonly group: () => ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined;
     readonly id: () => string;
-    readonly index: _angular_core.Signal<number>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: ToolbarWidgetInputs<V>;
     readonly searchTerm: () => string;
     readonly selectable: () => boolean;
-    readonly selected: _angular_core.Signal<boolean>;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly selected: SignalLike<boolean>;
+    readonly tabIndex: SignalLike<0 | -1>;
     readonly toolbar: () => ToolbarPattern<V>;
     readonly value: () => V;
 }
@@ -844,7 +853,7 @@ export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'>, Omit<Expa
 // @public
 export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
     constructor(inputs: TreeItemInputs<V>);
-    readonly active: _angular_core.Signal<boolean>;
+    readonly active: SignalLike<boolean>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
     readonly current: SignalLike<string | undefined>;
     readonly disabled: SignalLike<boolean>;
@@ -853,17 +862,17 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
     readonly expanded: WritableSignalLike<boolean>;
     readonly expansionBehavior: ListExpansion;
     readonly id: SignalLike<string>;
-    readonly index: _angular_core.Signal<number>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: TreeItemInputs<V>;
     readonly level: SignalLike<number>;
     readonly parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
-    readonly posinset: _angular_core.Signal<number>;
+    readonly posinset: SignalLike<number>;
     readonly searchTerm: SignalLike<string>;
     readonly selectable: SignalLike<boolean>;
     readonly selected: SignalLike<boolean | undefined>;
-    readonly setsize: _angular_core.Signal<number>;
-    readonly tabIndex: _angular_core.Signal<0 | -1>;
+    readonly setsize: SignalLike<number>;
+    readonly tabIndex: SignalLike<0 | -1>;
     readonly tree: SignalLike<TreePattern<V>>;
     readonly value: SignalLike<V>;
     readonly visible: SignalLike<boolean>;
@@ -872,40 +881,40 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
 // @public
 export class TreePattern<V> implements TreeInputs<V> {
     constructor(inputs: TreeInputs<V>);
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
     readonly allItems: SignalLike<TreeItemPattern<V>[]>;
-    readonly children: _angular_core.Signal<TreeItemPattern<V>[]>;
+    readonly children: SignalLike<TreeItemPattern<V>[]>;
     collapse(opts?: SelectOptions): void;
-    readonly collapseKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly collapseKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
     readonly disabled: SignalLike<boolean>;
-    readonly dynamicSpaceKey: _angular_core.Signal<"" | " ">;
+    readonly dynamicSpaceKey: SignalLike<"" | " ">;
     readonly element: SignalLike<HTMLElement>;
     expand(opts?: SelectOptions): void;
     readonly expanded: () => boolean;
-    readonly expandKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly expandKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     expandSiblings(item?: TreeItemPattern<V>): void;
     readonly expansionBehavior: ListExpansion;
     readonly focusMode: SignalLike<'roving' | 'activedescendant'>;
-    readonly followFocus: _angular_core.Signal<boolean>;
+    readonly followFocus: SignalLike<boolean>;
     protected _getItem(event: Event): TreeItemPattern<V> | undefined;
     goto(e: PointerEvent, opts?: SelectOptions): void;
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: TreeInputs<V>;
-    readonly isRtl: _angular_core.Signal<boolean>;
-    readonly keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    readonly isRtl: SignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly level: () => number;
     readonly listBehavior: List<TreeItemPattern<V>, V>;
     readonly multi: SignalLike<boolean>;
     readonly nav: SignalLike<boolean>;
-    readonly nextKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    pointerdown: _angular_core.Signal<PointerEventManager<PointerEvent>>;
-    readonly prevKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly selectionMode: SignalLike<'follow' | 'explicit'>;
     setDefaultState(): void;
     readonly softDisabled: SignalLike<boolean>;
@@ -916,12 +925,16 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly typeaheadRegexp: RegExp;
     readonly values: WritableSignalLike<V[]>;
     readonly visible: () => boolean;
-    readonly visibleItems: _angular_core.Signal<TreeItemPattern<V>[]>;
+    readonly visibleItems: SignalLike<TreeItemPattern<V>[]>;
     readonly wrap: SignalLike<boolean>;
 }
 
+export { untracked }
+
 // @public (undocumented)
 export interface WritableSignalLike<T> extends SignalLike<T> {
+    // (undocumented)
+    asReadonly(): SignalLike<T>;
     // (undocumented)
     set(value: T): void;
     // (undocumented)

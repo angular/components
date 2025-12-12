@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {WritableSignal, signal} from '@angular/core';
+import {WritableSignalLike, signal} from '../signal-like/signal-like';
 import {ListExpansion, ListExpansionInputs, ExpansionItem} from './expansion';
 
 type TestItem = ExpansionItem & {
-  id: WritableSignal<string>;
-  disabled: WritableSignal<boolean>;
-  expanded: WritableSignal<boolean>;
-  expandable: WritableSignal<boolean>;
+  id: WritableSignalLike<string>;
+  disabled: WritableSignalLike<boolean>;
+  expanded: WritableSignalLike<boolean>;
+  expandable: WritableSignalLike<boolean>;
 };
 
 type TestInputs = Partial<Omit<ListExpansionInputs, 'items'>> & {
@@ -22,7 +22,7 @@ type TestInputs = Partial<Omit<ListExpansionInputs, 'items'>> & {
   expansionDisabled?: boolean;
 };
 
-function createItems(length: number): WritableSignal<TestItem[]> {
+function createItems(length: number): WritableSignalLike<TestItem[]> {
   return signal(
     Array.from({length}).map((_, i) => {
       const itemId = `item-${i}`;

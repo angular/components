@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
 import {ListboxInputs, ListboxPattern} from './listbox';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, computed} from '../behaviors/signal-like/signal-like';
 import {OptionPattern} from './option';
 import {ComboboxPattern, ComboboxListboxControls} from '../combobox/combobox';
 

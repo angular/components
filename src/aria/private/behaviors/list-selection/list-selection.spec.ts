@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal, WritableSignal} from '@angular/core';
+import {SignalLike, signal, WritableSignalLike} from '../signal-like/signal-like';
 import {ListSelectionItem, ListSelection, ListSelectionInputs} from './list-selection';
 import {getListFocus} from '../list-focus/list-focus.spec';
 import {ListFocus} from '../list-focus/list-focus';
 
 type TestItem = ListSelectionItem<number> & {
-  disabled: WritableSignal<boolean>;
-  selectable: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
+  selectable: WritableSignalLike<boolean>;
 };
 type TestInputs = Partial<ListSelectionInputs<TestItem, number>> & {
   numItems?: number;
@@ -34,7 +34,7 @@ function getSelection(inputs: TestInputs = {}): ListSelection<ListSelectionItem<
   });
 }
 
-function getItems(length: number): Signal<TestItem[]> {
+function getItems(length: number): SignalLike<TestItem[]> {
   return signal(
     Array.from({length}).map((_, i) => {
       return {
