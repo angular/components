@@ -19,9 +19,8 @@ import {
 } from '@angular/core';
 import {DeferredContentAware, ComboboxPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {ComboboxPopup} from './combobox-popup';
 import {COMBOBOX} from './combobox-tokens';
+import {ComboboxPopup} from './combobox-popup';
 
 /**
  * The container element that wraps a combobox input and popup, and orchestrates its behavior.
@@ -78,13 +77,8 @@ import {COMBOBOX} from './combobox-tokens';
   providers: [{provide: COMBOBOX, useExisting: Combobox}],
 })
 export class Combobox<V> {
-  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
   /** A signal wrapper for directionality. */
-  protected textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  protected textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The element that the combobox is attached to. */
   private readonly _elementRef = inject(ElementRef);
