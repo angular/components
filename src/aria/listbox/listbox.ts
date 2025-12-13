@@ -20,7 +20,6 @@ import {
   untracked,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {ComboboxListboxPattern, ListboxPattern} from '../private';
 import {ComboboxPopup} from '../combobox';
@@ -85,16 +84,11 @@ export class Listbox<V> {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
   /** The Options nested inside of the Listbox. */
   private readonly _options = contentChildren(Option, {descendants: true});
 
   /** A signal wrapper for directionality. */
-  protected textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  protected textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The Option UIPatterns of the child Options. */
   protected items = computed(() => this._options().map(option => option._pattern));
