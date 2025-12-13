@@ -97,7 +97,7 @@
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
     "@types/semver": "^7.3.9",
-    "@types/shelljs": "^0.8.11",
+    "@types/shelljs": "^0.10.0",
     "@types/yargs": "^17.0.8",
     "autoprefixer": "^10.4.2",
     "axe-core": "^4.10.3",
