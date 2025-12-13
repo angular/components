@@ -1,15 +1,24 @@
-import {createKeyboardEvent, dispatchEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {createKeyboardEvent, dispatchEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {
+  Component,
+  DebugElement,
+  QueryList,
+  signal,
+  viewChild,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
   flush,
+  TestBed,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {Control, disabled, form} from '@angular/forms/signals';
 import {By} from '@angular/platform-browser';
 import {
   MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
@@ -316,6 +325,43 @@ describe('MatButtonToggle with forms', () => {
 
     expect(indexes).toEqual(['0', '-1', '-1']);
   }));
+});
+
+describe('MatButtonToggle with signal forms', () => {
+  it('should sync single-select value', () => {
+    const fixture = TestBed.createComponent(SignalFormsButtonToggle);
+    TestBed.tick();
+    expect(fixture.componentInstance.group().value).toBe('two');
+    fixture.nativeElement.querySelector('.mat-button-toggle-button').click();
+    TestBed.tick();
+    expect(fixture.componentInstance.group().value).toBe('one');
+  });
+
+  it('should sync multi-select value', () => {
+    const fixture = TestBed.createComponent(SignalFormsMultiButtonToggle);
+    TestBed.tick();
+    expect(fixture.componentInstance.group().value).toEqual(['two']);
+    fixture.nativeElement.querySelector('.mat-button-toggle-button').click();
+    TestBed.tick();
+    expect(fixture.componentInstance.group().value).toEqual(['two', 'one']);
+  });
+
+  it('should sync disabled state', () => {
+    const fixture = TestBed.createComponent(SignalFormsButtonToggle);
+    TestBed.tick();
+    expect(fixture.componentInstance.group().disabled).toBe(false);
+    fixture.componentInstance.isDisabled.set(true);
+    TestBed.tick();
+    expect(fixture.componentInstance.group().disabled).toBe(true);
+  });
+
+  it('should sync name', () => {
+    const fixture = TestBed.createComponent(SignalFormsButtonToggle);
+    TestBed.tick();
+    expect(fixture.componentInstance.group().name).toMatch(
+      fixture.componentInstance.field().name(),
+    );
+  });
 });
 
 describe('MatButtonToggle without forms', () => {
@@ -1150,6 +1196,41 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.group.value).toBe('2');
   });
 });
+
+@Component({
+  template: `
+  <mat-button-toggle-group [control]="field">
+    @for (opt of options; track $index) {
+      <mat-button-toggle [value]="opt">{{opt}}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+  `,
+  imports: [MatButtonToggle, MatButtonToggleGroup, Control],
+})
+class SignalFormsButtonToggle {
+  options = ['one', 'two', 'three'];
+  isDisabled = signal(false);
+  field = form(signal('two'), p => {
+    disabled(p, this.isDisabled);
+  });
+  group = viewChild.required(MatButtonToggleGroup);
+}
+
+@Component({
+  template: `
+  <mat-button-toggle-group multiple [control]="field">
+    @for (opt of options; track $index) {
+      <mat-button-toggle [value]="opt">{{opt}}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+  `,
+  imports: [MatButtonToggle, MatButtonToggleGroup, Control],
+})
+class SignalFormsMultiButtonToggle {
+  options = ['one', 'two', 'three'];
+  field = form(signal(['two']));
+  group = viewChild.required(MatButtonToggleGroup);
+}
 
 @Component({
   template: `
