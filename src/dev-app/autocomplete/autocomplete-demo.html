@@ -20,7 +20,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       [displayWith]="displayFn"
       [hideSingleSelectionIndicator]="reactiveHideSingleSelectionIndicator"
       [autoActiveFirstOption]="reactiveAutoActiveFirstOption"
-      [requireSelection]="reactiveRequireSelection">
+      [requireSelection]="reactiveRequireSelection"
+      [revertToValue]="reactiveRevertToValue">
       @for (state of reactiveStates; track state; let index = $index) {
         <mat-option [value]="state" [disabled]="reactiveIsStateDisabled(state.index)">
           <span>{{ state.name }}</span>
@@ -59,6 +60,20 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         Require Selection
       </mat-checkbox>
     </p>
+    <p>
+      <mat-form-field>
+        <mat-label>Revert value to</mat-label>
+        <mat-select [(ngModel)]="reactiveRevertToValue" [disabled]="!reactiveRequireSelection">
+          <mat-option [value]="null">None</mat-option>
+            @for (state of states; track state) {
+            <mat-option [value]="state">
+              <span>{{ state.name }}</span>
+              <span class="demo-secondary-text"> ({{ state.code }}) </span>
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </p>
 
   </mat-card>
 
@@ -76,7 +91,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-autocomplete #tdAuto="matAutocomplete"
           [hideSingleSelectionIndicator]="templateHideSingleSelectionIndicator"
           [autoActiveFirstOption]="templateAutoActiveFirstOption"
-          [requireSelection]="templateRequireSelection">
+          [requireSelection]="templateRequireSelection"
+          [revertToValue]="templateRevertToValue">
           @for (state of tdStates; track state) {
             <mat-option [value]="state.name"
               [disabled]="templateIsStateDisabled(state.index)">
@@ -112,6 +128,19 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <mat-checkbox [(ngModel)]="templateRequireSelection">
         Require Selection
       </mat-checkbox>
+    </p>
+    <p>
+      <mat-form-field>
+        <mat-label>Revert value to</mat-label>
+        <mat-select [(ngModel)]="templateRevertToValue" [disabled]="!templateRequireSelection">
+          <mat-option [value]="null">None</mat-option>
+            @for (state of states; track state) {
+            <mat-option [value]="state.name">
+              <span>{{ state.name }}</span>
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </p>
     <p>
       <label for="template-disable-state-options">Disable States</label>
