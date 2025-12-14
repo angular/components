@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Version} from '@angular/core';
-
-/** Current version of the Aria package. */
-export const VERSION = new Version('0.0.0-PLACEHOLDER');
+export {Toolbar} from './toolbar';
+export {ToolbarWidget} from './toolbar-widget';
+export {ToolbarWidgetGroup} from './toolbar-widget-group';
