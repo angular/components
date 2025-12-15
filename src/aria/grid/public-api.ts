@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Version} from '@angular/core';
-
-/** Current version of the Aria package. */
-export const VERSION = new Version('0.0.0-PLACEHOLDER');
+export {Grid} from './grid';
+export {GridCell} from './grid-cell';
+export {GridRow} from './grid-row';
+export {GridCellWidget} from './grid-cell-widget';
