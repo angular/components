@@ -78,7 +78,8 @@ $fallbacks: m3-button.get-tokens();
   text-transform: token-utils.slot(button-text-label-text-transform, $fallbacks);
   font-weight: token-utils.slot(button-text-label-text-weight, $fallbacks);
 
-  &, .mdc-button__ripple {
+  &,
+  .mdc-button__ripple {
     border-radius: token-utils.slot(button-text-container-shape, $fallbacks);
   }
 
@@ -93,15 +94,26 @@ $fallbacks: m3-button.get-tokens();
   }
 
   @include button-base.mat-private-button-horizontal-layout(
-      button-text-icon-spacing, button-text-icon-offset,
-      button-text-with-icon-horizontal-padding, $fallbacks);
+    button-text-icon-spacing,
+    button-text-icon-offset,
+    button-text-with-icon-horizontal-padding,
+    $fallbacks
+  );
   @include button-base.mat-private-button-ripple(
-      button-text-ripple-color, button-text-state-layer-color,
-      button-text-disabled-state-layer-color,
-      button-text-hover-state-layer-opacity, button-text-focus-state-layer-opacity,
-      button-text-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(false,
-    button-text-touch-target-size, button-text-touch-target-display, $fallbacks);
+    button-text-ripple-color,
+    button-text-state-layer-color,
+    button-text-disabled-state-layer-color,
+    button-text-hover-state-layer-opacity,
+    button-text-focus-state-layer-opacity,
+    button-text-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    false,
+    button-text-touch-target-size,
+    button-text-touch-target-display,
+    $fallbacks
+  );
 }
 
 .mat-mdc-unelevated-button {
@@ -115,21 +127,34 @@ $fallbacks: m3-button.get-tokens();
   padding: 0 #{token-utils.slot(button-filled-horizontal-padding, $fallbacks, true)};
 
   @include button-base.mat-private-button-horizontal-layout(
-      button-filled-icon-spacing, button-filled-icon-offset, null, $fallbacks);
+    button-filled-icon-spacing,
+    button-filled-icon-offset,
+    null,
+    $fallbacks
+  );
   @include button-base.mat-private-button-ripple(
-      button-filled-ripple-color, button-filled-state-layer-color,
-      button-filled-disabled-state-layer-color,
-      button-filled-hover-state-layer-opacity, button-filled-focus-state-layer-opacity,
-      button-filled-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(false,
-    button-filled-touch-target-size, button-filled-touch-target-display, $fallbacks);
+    button-filled-ripple-color,
+    button-filled-state-layer-color,
+    button-filled-disabled-state-layer-color,
+    button-filled-hover-state-layer-opacity,
+    button-filled-focus-state-layer-opacity,
+    button-filled-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    false,
+    button-filled-touch-target-size,
+    button-filled-touch-target-display,
+    $fallbacks
+  );
 
   &:not(:disabled) {
     color: token-utils.slot(button-filled-label-text-color, $fallbacks);
     background-color: token-utils.slot(button-filled-container-color, $fallbacks);
   }
 
-  &, .mdc-button__ripple {
+  &,
+  .mdc-button__ripple {
     border-radius: token-utils.slot(button-filled-container-shape, $fallbacks);
   }
 
@@ -153,21 +178,34 @@ $fallbacks: m3-button.get-tokens();
   padding: 0 #{token-utils.slot(button-protected-horizontal-padding, $fallbacks, true)};
 
   @include button-base.mat-private-button-horizontal-layout(
-      button-protected-icon-spacing, button-protected-icon-offset, null, $fallbacks);
+    button-protected-icon-spacing,
+    button-protected-icon-offset,
+    null,
+    $fallbacks
+  );
   @include button-base.mat-private-button-ripple(
-      button-protected-ripple-color, button-protected-state-layer-color,
-      button-protected-disabled-state-layer-color,
-      button-protected-hover-state-layer-opacity, button-protected-focus-state-layer-opacity,
-      button-protected-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(false,
-      button-protected-touch-target-size, button-protected-touch-target-display, $fallbacks);
+    button-protected-ripple-color,
+    button-protected-state-layer-color,
+    button-protected-disabled-state-layer-color,
+    button-protected-hover-state-layer-opacity,
+    button-protected-focus-state-layer-opacity,
+    button-protected-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    false,
+    button-protected-touch-target-size,
+    button-protected-touch-target-display,
+    $fallbacks
+  );
 
   &:not(:disabled) {
     color: token-utils.slot(button-protected-label-text-color, $fallbacks);
     background-color: token-utils.slot(button-protected-container-color, $fallbacks);
   }
 
-  &, .mdc-button__ripple {
+  &,
+  .mdc-button__ripple {
     border-radius: token-utils.slot(button-protected-container-shape, $fallbacks);
   }
 
@@ -181,7 +219,8 @@ $fallbacks: m3-button.get-tokens();
     box-shadow: token-utils.slot(button-protected-focus-container-elevation-shadow, $fallbacks);
   }
 
-  &:active, &:focus:active {
+  &:active,
+  &:focus:active {
     box-shadow: token-utils.slot(button-protected-pressed-container-elevation-shadow, $fallbacks);
   }
 
@@ -193,8 +232,14 @@ $fallbacks: m3-button.get-tokens();
 
     &.mat-mdc-button-disabled {
       box-shadow: token-utils.slot(
-          button-protected-disabled-container-elevation-shadow, $fallbacks);
+        button-protected-disabled-container-elevation-shadow,
+        $fallbacks
+      );
     }
+  }
+
+  .mat-mdc-button-progress-indicator-container {
+    // Open question: how do we handle the progress indicator color for raised buttons?
   }
 }
 
@@ -212,14 +257,26 @@ $fallbacks: m3-button.get-tokens();
   padding: 0 #{token-utils.slot(button-outlined-horizontal-padding, $fallbacks, true)};
 
   @include button-base.mat-private-button-horizontal-layout(
-      button-outlined-icon-spacing, button-outlined-icon-offset, null, $fallbacks);
+    button-outlined-icon-spacing,
+    button-outlined-icon-offset,
+    null,
+    $fallbacks
+  );
   @include button-base.mat-private-button-ripple(
-      button-outlined-ripple-color, button-outlined-state-layer-color,
-      button-outlined-disabled-state-layer-color,
-      button-outlined-hover-state-layer-opacity, button-outlined-focus-state-layer-opacity,
-      button-outlined-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(false,
-      button-outlined-touch-target-size, button-outlined-touch-target-display, $fallbacks);
+    button-outlined-ripple-color,
+    button-outlined-state-layer-color,
+    button-outlined-disabled-state-layer-color,
+    button-outlined-hover-state-layer-opacity,
+    button-outlined-focus-state-layer-opacity,
+    button-outlined-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    false,
+    button-outlined-touch-target-size,
+    button-outlined-touch-target-display,
+    $fallbacks
+  );
 
   &:not(:disabled) {
     color: token-utils.slot(button-outlined-label-text-color, $fallbacks);
@@ -249,7 +306,8 @@ $fallbacks: m3-button.get-tokens();
     background-color: token-utils.slot(button-tonal-container-color, $fallbacks);
   }
 
-  &, .mdc-button__ripple {
+  &,
+  .mdc-button__ripple {
     border-radius: token-utils.slot(button-tonal-container-shape, $fallbacks);
   }
 
@@ -261,14 +319,26 @@ $fallbacks: m3-button.get-tokens();
   }
 
   @include button-base.mat-private-button-horizontal-layout(
-      button-tonal-icon-spacing, button-tonal-icon-offset, null, $fallbacks);
+    button-tonal-icon-spacing,
+    button-tonal-icon-offset,
+    null,
+    $fallbacks
+  );
   @include button-base.mat-private-button-ripple(
-      button-tonal-ripple-color, button-tonal-state-layer-color,
-      button-tonal-disabled-state-layer-color,
-      button-tonal-hover-state-layer-opacity, button-tonal-focus-state-layer-opacity,
-      button-tonal-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(false,
-      button-tonal-touch-target-size, button-tonal-touch-target-display, $fallbacks);
+    button-tonal-ripple-color,
+    button-tonal-state-layer-color,
+    button-tonal-disabled-state-layer-color,
+    button-tonal-hover-state-layer-opacity,
+    button-tonal-focus-state-layer-opacity,
+    button-tonal-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    false,
+    button-tonal-touch-target-size,
+    button-tonal-touch-target-display,
+    $fallbacks
+  );
 }
 
 .mat-mdc-button,
@@ -326,4 +396,25 @@ $fallbacks: m3-button.get-tokens();
   $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
   $offset: calc(#{$border-width} + 3px);
   margin: calc(#{$offset} * -1);
+}
+
+.mat-mdc-button-progress-indicator-container {
+  position: absolute;
+  inset-inline-start: 0;
+  margin-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mat-mdc-button-progress-indicator-shown {
+  .material-icons,
+  mat-icon,
+  [matButtonIcon],
+  .mdc-button__label {
+    visibility: hidden;
+  }
 }

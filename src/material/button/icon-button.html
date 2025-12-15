@@ -2,6 +2,15 @@
 
 <ng-content></ng-content>
 
+@if (showProgress()) {
+  <div class="mat-mdc-button-progress-indicator-container">
+    <ng-content select="[progressIndicator]">
+      <!-- Open question: should there be a default content and if so, what content?-->
+      ...
+    </ng-content>
+  </div>
+}
+
 <!--
   The indicator can't be directly on the button, because MDC uses ::before for high contrast
   indication and it can't be on the ripple, because it has a border radius and overflow: hidden.

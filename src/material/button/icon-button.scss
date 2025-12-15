@@ -48,19 +48,25 @@ $fallbacks: m3-icon-button.get-tokens();
 
   @include button-base.mat-private-button-interactive();
   @include button-base.mat-private-button-ripple(
-      icon-button-ripple-color, icon-button-state-layer-color,
-      icon-button-disabled-state-layer-color,
-      icon-button-hover-state-layer-opacity, icon-button-focus-state-layer-opacity,
-      icon-button-pressed-state-layer-opacity, $fallbacks);
-  @include button-base.mat-private-button-touch-target(true,
-      icon-button-touch-target-size, icon-button-touch-target-display, $fallbacks);
+    icon-button-ripple-color,
+    icon-button-state-layer-color,
+    icon-button-disabled-state-layer-color,
+    icon-button-hover-state-layer-opacity,
+    icon-button-focus-state-layer-opacity,
+    icon-button-pressed-state-layer-opacity,
+    $fallbacks
+  );
+  @include button-base.mat-private-button-touch-target(
+    true,
+    icon-button-touch-target-size,
+    icon-button-touch-target-display,
+    $fallbacks
+  );
   @include private.private-animation-noop();
 
   @include button-base.mat-private-button-disabled {
     color: token-utils.slot(icon-button-disabled-icon-color, $fallbacks);
   }
-;
-
   img,
   svg {
     width: token-utils.slot(icon-button-icon-size, $fallbacks);
@@ -90,3 +96,22 @@ $fallbacks: m3-icon-button.get-tokens();
   }
 }
 
+.mat-mdc-button-progress-indicator-container {
+  position: absolute;
+  inset-inline-start: 0;
+  margin-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mat-mdc-button-progress-indicator-shown {
+  // Open question: is this sufficient for icon button?
+  .material-icons,
+  mat-icon {
+    visibility: hidden;
+  }
+}
