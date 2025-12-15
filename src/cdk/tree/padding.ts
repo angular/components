@@ -29,7 +29,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   private _dir = inject(Directionality, {optional: true});
 
   /** Current padding value applied to the element. Used to avoid unnecessarily hitting the DOM. */
-  private _currentPadding: string | null;
+  private _currentPadding: string | null = null;
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -45,7 +45,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   set level(value: number) {
     this._setLevelInput(value);
   }
-  _level: number;
+  _level!: number;
 
   /**
    * The indent for each level. Can be a number or a CSS string.

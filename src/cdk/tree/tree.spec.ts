@@ -1698,8 +1698,8 @@ class SimpleCdkTreeApp {
   dataSource = new FakeDataSource();
   indent: number | string = 28;
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
-  @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
+  @ViewChildren(CdkTreeNodePadding) paddingNodes!: QueryList<CdkTreeNodePadding<TestData>>;
 }
 
 @Component({
@@ -1738,7 +1738,7 @@ class NestedCdkTreeApp {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1762,7 +1762,7 @@ class StaticNestedCdkTreeApp {
 
   dataSource: FakeDataSource;
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 
   constructor() {
     const dataSource = new FakeDataSource();
@@ -1798,7 +1798,7 @@ class WhenNodeNestedCdkTreeApp {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1823,7 +1823,7 @@ class CdkTreeAppWithToggle {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1854,7 +1854,7 @@ class NestedCdkTreeAppWithToggle {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1884,7 +1884,7 @@ class WhenNodeCdkTreeApp {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1911,7 +1911,7 @@ class ArrayDataSourceCdkTreeApp {
     return this.dataSource.data;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 
   cdr = inject(ChangeDetectorRef);
 
@@ -1946,7 +1946,7 @@ class ObservableDataSourceCdkTreeApp {
     return this.dataSource._dataChange;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1970,7 +1970,7 @@ class ArrayDataSourceNestedCdkTreeApp {
     return this.dataSource.data;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -1994,7 +1994,7 @@ class ObservableDataSourceNestedCdkTreeApp {
     return this.dataSource._dataChange;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -2019,7 +2019,7 @@ class DepthNestedCdkTreeApp {
     return this.dataSource.data;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -2052,7 +2052,7 @@ class CdkTreeAppWithTrackBy {
 
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 @Component({
@@ -2089,7 +2089,7 @@ class NestedCdkTreeAppWithTrackBy {
     return this.dataSource.data;
   }
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
 }
 
 class MinimalTestData {
@@ -2121,8 +2121,8 @@ class TypeaheadLabelFlatTreeWithThreeNodes {
     new MinimalTestData('cherry', 'typeahead'),
   ]);
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
-  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('tree', {read: ElementRef}) tree!: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes!: QueryList<ElementRef<HTMLElement>>;
 }
 
 @Component({
@@ -2145,8 +2145,8 @@ class FlatTreeWithThreeNodes {
     new MinimalTestData('cherry'),
   ]);
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
-  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('tree', {read: ElementRef}) tree!: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes!: QueryList<ElementRef<HTMLElement>>;
 }
 
 @Component({
@@ -2165,7 +2165,7 @@ class FlatTreeWithThreeNodes {
 class IsExpandableOrderingTest {
   getChildren = (node: MinimalTestData) => node.children;
 
-  @ViewChild(CdkTree) tree: CdkTree<MinimalTestData>;
+  @ViewChild(CdkTree) tree!: CdkTree<MinimalTestData>;
 
   dataSource: MinimalTestData[];
 
