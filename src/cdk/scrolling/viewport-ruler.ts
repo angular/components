@@ -30,7 +30,7 @@ export class ViewportRuler implements OnDestroy {
   private _listeners: (() => void)[] | undefined;
 
   /** Cached viewport dimensions. */
-  private _viewportSize: {width: number; height: number} | null;
+  private _viewportSize: {width: number; height: number} | null = null;
 
   /** Stream of viewport change events. */
   private readonly _change = new Subject<Event>();
