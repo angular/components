@@ -189,8 +189,8 @@ importers:
         specifier: ^7.3.9
         version: 7.7.1
       '@types/shelljs':
-        specifier: ^0.8.11
-        version: 0.8.17
+        specifier: ^0.10.0
+        version: 0.10.0
       '@types/yargs':
         specifier: ^17.0.8
         version: 17.0.35
@@ -442,8 +442,8 @@ importers:
         specifier: ^22.14.1
         version: 22.19.2
       '@types/shelljs':
-        specifier: 0.8.17
-        version: 0.8.17
+        specifier: 0.10.0
+        version: 0.10.0
       firebase-tools:
         specifier: 14.27.0
         version: 14.27.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
@@ -490,8 +490,8 @@ importers:
         specifier: ^24.6.1
         version: 24.32.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.94.2
-        version: 1.94.2
+        specifier: 1.96.0
+        version: 1.96.0
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -3999,8 +3999,8 @@ packages:
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
 
-  '@types/shelljs@0.8.17':
-    resolution: {integrity: sha512-IDksKYmQA2W9MkQjiyptbMmcQx+8+Ol6b7h6dPU5S05JyiQDSb/nZKnrMrZqGwgV6VkVdl6/SPCKPDlMRvqECg==}
+  '@types/shelljs@0.10.0':
+    resolution: {integrity: sha512-OEfyhE5Ox+FeoHbhrEDwm0kXxntO6nsyMRCFvNsIBHPZu5rV1w2OjPcLclaC/IZ1TlzZPgbeMfwAZEi5N238yQ==}
 
   '@types/shimmer@1.2.0':
     resolution: {integrity: sha512-UE7oxhQLLd9gub6JKIAhDq06T0F6FnztwMNRvYgjeQSBeMc1ZG/tA47EwfduvkuQS8apbkM/lpLpWsaCeYsXVg==}
@@ -8654,6 +8654,11 @@ packages:
 
   sass@1.94.2:
     resolution: {integrity: sha512-N+7WK20/wOr7CzA2snJcUSSNTCzeCGUTFY3OgeQP3mZ1aj9NMQ0mSTXwlrnd89j33zzQJGqIN52GIOmYrfq46A==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  sass@1.96.0:
+    resolution: {integrity: sha512-8u4xqqUeugGNCYwr9ARNtQKTOj4KmYiJAVKXf2CTIivTCR51j96htbMKWDru8H5SaQWpyVgTfOF8Ylyf5pun1Q==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -13687,10 +13692,10 @@ snapshots:
       '@types/node': 22.19.2
       '@types/send': 0.17.6
 
-  '@types/shelljs@0.8.17':
+  '@types/shelljs@0.10.0':
     dependencies:
       '@types/node': 22.19.2
-      glob: 11.1.0
+      fast-glob: 3.3.3
 
   '@types/shimmer@1.2.0': {}
 
@@ -19151,6 +19156,14 @@ snapshots:
       webpack: 5.103.0(esbuild@0.27.0)
 
   sass@1.94.2:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.4
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.1
+
+  sass@1.96.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
