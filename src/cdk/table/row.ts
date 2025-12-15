@@ -43,10 +43,10 @@ export abstract class BaseRowDef implements OnChanges {
   protected _differs = inject(IterableDiffers);
 
   /** The columns to be displayed on this row. */
-  columns: Iterable<string>;
+  columns!: Iterable<string>;
 
   /** Differ used to check if any changes were made to the columns. */
-  protected _columnsDiffer: IterableDiffer<any>;
+  protected _columnsDiffer!: IterableDiffer<any>;
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -205,7 +205,7 @@ export class CdkRowDef<T> extends BaseRowDef {
    * when no other when functions return true for the data.
    * For every row, there must be at least one when function that passes or an undefined to default.
    */
-  when: (index: number, rowData: T) => boolean;
+  when!: (index: number, rowData: T) => boolean;
 
   constructor(...args: unknown[]);
 
@@ -282,7 +282,7 @@ export class CdkCellOutlet implements OnDestroy {
   _viewContainer = inject(ViewContainerRef);
 
   /** The ordered list of cells to render within this outlet's view container */
-  cells: CdkCellDef[];
+  cells!: CdkCellDef[];
 
   /** The data context to be provided to each cell */
   context: any;
