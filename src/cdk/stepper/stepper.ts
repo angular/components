@@ -60,16 +60,16 @@ export type StepperOrientation = 'horizontal' | 'vertical';
 /** Change event emitted on selection changes. */
 export class StepperSelectionEvent {
   /** Index of the step now selected. */
-  selectedIndex: number;
+  selectedIndex!: number;
 
   /** Index of the step previously selected. */
-  previouslySelectedIndex: number;
+  previouslySelectedIndex!: number;
 
   /** The step instance now selected. */
-  selectedStep: CdkStep;
+  selectedStep!: CdkStep;
 
   /** The step instance previously selected. */
-  previouslySelectedStep: CdkStep;
+  previouslySelectedStep!: CdkStep;
 }
 
 /** The state of each step. */
@@ -115,7 +115,7 @@ export class CdkStep implements OnChanges {
   _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
-  @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+  @ContentChild(CdkStepLabel) stepLabel!: CdkStepLabel;
 
   /** Forms that have been projected into the step. */
   @ContentChildren(
@@ -131,10 +131,10 @@ export class CdkStep implements OnChanges {
   protected _childForms: QueryList<Partial<NgForm | FormGroupDirective>> | undefined;
 
   /** Template for step content. */
-  @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: true}) content!: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: AbstractControl;
+  @Input() stepControl!: AbstractControl;
 
   /** Whether user has attempted to move away from the step. */
   get interacted(): boolean {
@@ -150,19 +150,19 @@ export class CdkStep implements OnChanges {
   readonly interactedStream: EventEmitter<CdkStep> = new EventEmitter<CdkStep>();
 
   /** Plain text label of the step. */
-  @Input() label: string;
+  @Input() label!: string;
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  @Input() errorMessage!: string;
 
   /** Aria label for the tab. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /**
    * Reference to the element that the tab is labelled by.
    * Will be cleared if `aria-label` is set at the same time.
    */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** State of the step. */
   @Input()
@@ -329,13 +329,13 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _keyManager: FocusKeyManager<FocusableOption> | undefined;
 
   /** Full list of steps inside the stepper, including inside nested steppers. */
-  @ContentChildren(CdkStep, {descendants: true}) _steps: QueryList<CdkStep>;
+  @ContentChildren(CdkStep, {descendants: true}) _steps!: QueryList<CdkStep>;
 
   /** Steps that belong to the current stepper, excluding ones from nested steppers. */
   readonly steps: QueryList<CdkStep> = new QueryList<CdkStep>();
 
   /** The list of step headers of the steps in the stepper. */
-  @ContentChildren(CdkStepHeader, {descendants: true}) _stepHeader: QueryList<CdkStepHeader>;
+  @ContentChildren(CdkStepHeader, {descendants: true}) _stepHeader!: QueryList<CdkStepHeader>;
 
   /** List of step headers sorted based on their DOM order. */
   private _sortedHeaders = new QueryList<CdkStepHeader>();
