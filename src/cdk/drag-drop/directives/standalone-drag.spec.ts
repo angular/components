@@ -1876,19 +1876,21 @@ describe('Standalone CdkDrag', () => {
   imports: [CdkDrag],
 })
 class StandaloneDraggable {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
-  boundary: string | HTMLElement;
-  dragStartDelay: number | string | {touch: number; mouse: number};
-  constrainPosition: (
-    userPointerPosition: Point,
-    dragRef: DragRef,
-    dimensions: DOMRect,
-    pickupPositionInElement: Point,
-  ) => Point;
+  boundary: string | HTMLElement | undefined;
+  dragStartDelay: number | string | {touch: number; mouse: number} | undefined;
+  constrainPosition:
+    | ((
+        userPointerPosition: Point,
+        dragRef: DragRef,
+        dimensions: DOMRect,
+        pickupPositionInElement: Point,
+      ) => Point)
+    | undefined;
   freeDragPosition?: {x: number; y: number};
   dragDisabled = signal(false);
   dragLockAxis = signal<DragAxis | undefined>(undefined);
@@ -1903,8 +1905,8 @@ class StandaloneDraggable {
   imports: [CdkDrag],
 })
 class StandaloneDraggableWithOnPush {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 }
 
 @Component({
@@ -1917,10 +1919,10 @@ class StandaloneDraggableWithOnPush {
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
-  @ViewChild(CdkDragHandle) handleInstance: CdkDragHandle;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
+  @ViewChild(CdkDragHandle) handleInstance!: CdkDragHandle;
   draggingDisabled = false;
 }
 
@@ -1938,9 +1940,9 @@ class StandaloneDraggableWithHandle {
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithPreDisabledHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
   disableHandle = true;
 }
 
@@ -1958,8 +1960,8 @@ class StandaloneDraggableWithPreDisabledHandle {
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithDelayedHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
   showHandle = false;
 }
 
@@ -1989,8 +1991,8 @@ class PassthroughComponent {}
   imports: [CdkDrag, CdkDragHandle, PassthroughComponent],
 })
 class StandaloneDraggableWithIndirectHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -2013,8 +2015,8 @@ class ShadowWrapper {}
   imports: [CdkDrag, CdkDragHandle, ShadowWrapper],
 })
 class StandaloneDraggableWithShadowInsideHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleChild') handleChild: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleChild') handleChild!: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -2038,8 +2040,8 @@ class StandaloneDraggableWithShadowInsideHandle {
   imports: [CdkDrag, CdkDragHandle],
 })
 class StandaloneDraggableWithMultipleHandles {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChildren(CdkDragHandle) handles: QueryList<CdkDragHandle>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChildren(CdkDragHandle) handles!: QueryList<CdkDragHandle>;
 }
 
 @Component({
@@ -2055,10 +2057,10 @@ class StandaloneDraggableWithMultipleHandles {
   imports: [CdkDrag],
 })
 class DraggableWithAlternateRoot {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
-  rootElementSelector: string;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
+  rootElementSelector: string | undefined;
 }
 
 @Component({
@@ -2093,9 +2095,9 @@ class DragHandleOnNgContainer {}
   imports: [CdkDrag, CdkDragHandle],
 })
 class DraggableWithAlternateRootAndSelfHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 }
 
 @Component({
@@ -2109,8 +2111,8 @@ class DraggableWithAlternateRootAndSelfHandle {
   imports: [CdkDrag],
 })
 class DraggableNgContainerWithAlternateRoot {
-  @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 }
 
 @Component({
@@ -2118,7 +2120,7 @@ class DraggableNgContainerWithAlternateRoot {
   imports: [CdkDrag],
 })
 class PlainStandaloneDraggable {
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 }
 
 @Component({
@@ -2135,7 +2137,7 @@ class PlainStandaloneDraggable {
   imports: [CdkDrag, CdkDragHandle, NgTemplateOutlet],
 })
 class StandaloneDraggableWithExternalTemplateHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -2149,10 +2151,10 @@ class StandaloneDraggableWithExternalTemplateHandle {
   imports: [CdkDrag],
 })
 class DragWithResizeableBoundary {
-  @ViewChild('boundaryElement') boundaryElement: ElementRef<HTMLElement>;
+  @ViewChild('boundaryElement') boundaryElement!: ElementRef<HTMLElement>;
 
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 
   setBoundary(height: string, width: string) {
     this.boundaryElement.nativeElement.style.height = height;

@@ -5030,15 +5030,15 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
   class DraggableInHorizontalDropZone implements AfterViewInit {
     readonly _elementRef = inject(ElementRef);
 
-    @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-    @ViewChild(CdkDropList) dropInstance: CdkDropList;
+    @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+    @ViewChild(CdkDropList) dropInstance!: CdkDropList;
     items = [
       {value: 'Zero', width: ITEM_WIDTH, margin: 0},
       {value: 'One', width: ITEM_WIDTH, margin: 0},
       {value: 'Two', width: ITEM_WIDTH, margin: 0},
       {value: 'Three', width: ITEM_WIDTH, margin: 0},
     ];
-    boundarySelector: string;
+    boundarySelector!: string;
     droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
       moveItemInArray(this.items, event.previousIndex, event.currentIndex);
     });
@@ -5113,7 +5113,7 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     imports: [CdkDropList, CdkDrag, CdkDragPreview],
   })
   class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
-    @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+    @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
     items = ['Zero', 'One', 'Two'];
   }
 
@@ -5160,9 +5160,9 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
 export class DraggableInDropZone implements AfterViewInit {
   protected _elementRef = inject(ElementRef);
 
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
-  @ViewChild('alternatePreviewContainer') alternatePreviewContainer: ElementRef<HTMLElement>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
+  @ViewChild('alternatePreviewContainer') alternatePreviewContainer!: ElementRef<HTMLElement>;
   items = [
     {value: 'Zero', height: ITEM_HEIGHT, margin: 0},
     {value: 'One', height: ITEM_HEIGHT, margin: 0},
@@ -5170,8 +5170,8 @@ export class DraggableInDropZone implements AfterViewInit {
     {value: 'Three', height: ITEM_HEIGHT, margin: 0},
   ];
   dropZoneId = 'items';
-  boundarySelector: string;
-  previewClass: string | string[];
+  boundarySelector!: string;
+  previewClass: string | string[] = [];
   sortedSpy = jasmine.createSpy('sorted spy');
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
     moveItemInArray(this.items, event.previousIndex, event.currentIndex);
@@ -5252,7 +5252,7 @@ export class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
   imports: [CdkDropList, CdkDrag, NgFor, CdkScrollable],
 })
 class DraggableInScrollableParentContainer extends DraggableInDropZone implements AfterViewInit {
-  @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLElement>;
 
   constructor() {
     super();
@@ -5329,19 +5329,19 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
   imports: [CdkDropList, CdkDrag, CdkDragPreview, NgIf],
 })
 class DraggableInDropZoneWithCustomPreview {
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items: {label: string; lockAxis?: DragAxis}[] = [
     {label: 'Zero'},
     {label: 'One'},
     {label: 'Two'},
     {label: 'Three'},
   ];
-  boundarySelector: string;
+  boundarySelector!: string;
   renderCustomPreview = true;
   matchPreviewSize = false;
-  previewClass: string | string[];
-  constrainPosition: (point: Point) => Point;
+  previewClass: string | string[] = [];
+  constrainPosition: ((point: Point) => Point) | undefined;
   dropLockAxis = signal<DragAxis | undefined>(undefined);
 }
 
@@ -5363,8 +5363,8 @@ class DraggableInDropZoneWithCustomPreview {
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })
 class DraggableInDropZoneWithCustomTextOnlyPreview {
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -5385,8 +5385,8 @@ class DraggableInDropZoneWithCustomTextOnlyPreview {
   imports: [CdkDropList, CdkDrag, CdkDragPreview],
 })
 class DraggableInDropZoneWithCustomMultiNodePreview {
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -5417,7 +5417,7 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, NgClass],
 })
 class DraggableInDropZoneWithCustomPlaceholder {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
   renderPlaceholder = true;
   extraPlaceholderClass = '';
@@ -5438,7 +5438,7 @@ class DraggableInDropZoneWithCustomPlaceholder {
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -5459,7 +5459,7 @@ class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 class DraggableInDropZoneWithCustomMultiNodePlaceholder {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -5537,8 +5537,8 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
   imports: [CdkDropList, CdkDrag],
 })
 export class ConnectedDropZones implements AfterViewInit {
-  @ViewChildren(CdkDrag) rawDragItems: QueryList<CdkDrag>;
-  @ViewChildren(CdkDropList) dropInstances: QueryList<CdkDropList>;
+  @ViewChildren(CdkDrag) rawDragItems!: QueryList<CdkDrag>;
+  @ViewChildren(CdkDropList) dropInstances!: QueryList<CdkDropList>;
   changeDetectorRef = inject(ChangeDetectorRef);
 
   groupedDragItems: CdkDrag[][] = [];
@@ -5652,8 +5652,8 @@ class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {
   imports: [CdkDropList, CdkDrag],
 })
 class ConnectedDropZonesWithSingleItems {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChildren(CdkDropList) dropInstances: QueryList<CdkDropList>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChildren(CdkDropList) dropInstances!: QueryList<CdkDropList>;
 
   droppedSpy = jasmine.createSpy('dropped spy');
 }
@@ -5672,9 +5672,9 @@ class ConnectedDropZonesWithSingleItems {
   imports: [CdkDropList, CdkDropListGroup],
 })
 class NestedDropListGroups {
-  @ViewChild('group') group: CdkDropListGroup<CdkDropList>;
-  @ViewChild('listOne') listOne: CdkDropList;
-  @ViewChild('listTwo') listTwo: CdkDropList;
+  @ViewChild('group') group!: CdkDropListGroup<CdkDropList>;
+  @ViewChild('listOne') listOne!: CdkDropList;
+  @ViewChild('listTwo') listTwo!: CdkDropList;
 }
 
 @Component({
@@ -5700,8 +5700,8 @@ class DropListOnNgContainer {}
   `,
 })
 class DraggableInDropZoneWithoutEvents {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
   items = [
     {value: 'Zero', height: ITEM_HEIGHT},
     {value: 'One', height: ITEM_HEIGHT},
@@ -5724,7 +5724,7 @@ class DraggableInDropZoneWithoutEvents {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class WrappedDropContainerComponent {
-  @Input() items: string[];
+  @Input() items: string[] | undefined;
 }
 
 @Component({
@@ -5862,8 +5862,8 @@ class DraggableWithInvalidCanvasInDropZone extends DraggableInDropZone {}
   imports: [CdkDrag],
 })
 class NestedDragsComponent {
-  @ViewChild('container') container: ElementRef;
-  @ViewChild('item') item: ElementRef;
+  @ViewChild('container') container!: ElementRef;
+  @ViewChild('item') item!: ElementRef;
 
   containerDragStartedSpy = jasmine.createSpy('container drag started spy');
   containerDragMovedSpy = jasmine.createSpy('container drag moved spy');
@@ -5916,8 +5916,8 @@ class NestedDragsComponent {
   imports: [CdkDrag, NgTemplateOutlet],
 })
 class NestedDragsThroughTemplate {
-  @ViewChild('container') container: ElementRef;
-  @ViewChild('item') item: ElementRef;
+  @ViewChild('container') container!: ElementRef;
+  @ViewChild('item') item!: ElementRef;
 }
 
 @Component({
@@ -5941,9 +5941,9 @@ class NestedDragsThroughTemplate {
   imports: [CdkDropList, CdkDrag],
 })
 class NestedDropZones {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild('outerList') outerList: ElementRef<HTMLElement>;
-  @ViewChild('innerList') innerList: ElementRef<HTMLElement>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild('outerList') outerList!: ElementRef<HTMLElement>;
+  @ViewChild('innerList') innerList!: ElementRef<HTMLElement>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -5952,7 +5952,7 @@ class NestedDropZones {
   imports: [CdkDropList],
 })
 class PlainStandaloneDropList {
-  @ViewChild(CdkDropList) dropList: CdkDropList;
+  @ViewChild(CdkDropList) dropList!: CdkDropList;
 }
 @Component({
   styles: CONNECTED_DROP_ZONES_STYLES,
@@ -6048,7 +6048,7 @@ class DraggableWithInputsInDropZone extends DraggableInDropZone {
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithRadioInputsInDropZone {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = [
     {id: 1, checked: false},
     {id: 2, checked: false},
@@ -6121,8 +6121,8 @@ class ConnectedDropZonesWithAlternateContainer extends ConnectedDropZones {
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithInvalidAlternateContainer {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -6143,7 +6143,7 @@ class DraggableWithInvalidAlternateContainer {
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableWithMissingAlternateContainer {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
   items = ['Zero', 'One', 'Two', 'Three'];
 }

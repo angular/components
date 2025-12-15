@@ -38,7 +38,7 @@ export class CdkDragPreview<T = any> implements OnDestroy {
   private _drag = inject(CDK_DRAG_PARENT, {optional: true});
 
   /** Context data to be added to the preview template instance. */
-  @Input() data: T;
+  @Input() data!: T;
 
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
