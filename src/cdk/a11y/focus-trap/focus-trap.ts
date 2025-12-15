@@ -36,8 +36,8 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
  * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause the two to be misaligned.
  */
 export class FocusTrap {
-  private _startAnchor: HTMLElement | null;
-  private _endAnchor: HTMLElement | null;
+  private _startAnchor: HTMLElement | null = null;
+  private _endAnchor: HTMLElement | null = null;
   private _hasAttached = false;
 
   // Event listeners for the anchors. Need to be regular functions so that we can unbind them later.
@@ -413,7 +413,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   private _focusTrapFactory = inject(FocusTrapFactory);
 
   /** Underlying FocusTrap instance. */
-  focusTrap: FocusTrap;
+  focusTrap: FocusTrap = undefined!;
 
   /** Previously focused element to restore focus to upon destroy when using autoCapture. */
   private _previouslyFocusedElement: HTMLElement | null = null;
@@ -433,7 +433,8 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
    * Whether the directive should automatically move focus into the trapped region upon
    * initialization and return focus to the previous activeElement upon destruction.
    */
-  @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute}) autoCapture: boolean;
+  @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute})
+  autoCapture: boolean = false;
 
   constructor(...args: unknown[]);
 

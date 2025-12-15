@@ -47,7 +47,7 @@ export class HighContrastModeDetector implements OnDestroy {
    * Figuring out the high contrast mode and adding the body classes can cause
    * some expensive layouts. This flag is used to ensure that we only do it once.
    */
-  private _hasCheckedHighContrastMode: boolean;
+  private _hasCheckedHighContrastMode = false;
   private _document = inject(DOCUMENT);
   private _breakpointSubscription: Subscription;
 
