@@ -20,7 +20,7 @@ export abstract class BaseOverlayDispatcher implements OnDestroy {
   _attachedOverlays: OverlayRef[] = [];
 
   protected _document = inject(DOCUMENT);
-  protected _isAttached: boolean;
+  protected _isAttached = false;
 
   constructor(...args: unknown[]);
 

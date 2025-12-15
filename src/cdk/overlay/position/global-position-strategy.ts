@@ -29,7 +29,7 @@ export function createGlobalPositionStrategy(_injector: Injector): GlobalPositio
  */
 export class GlobalPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayRef;
+  private _overlayRef!: OverlayRef;
   private _cssPosition = 'static';
   private _topOffset = '';
   private _bottomOffset = '';

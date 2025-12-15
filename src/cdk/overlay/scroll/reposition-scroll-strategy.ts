@@ -46,7 +46,7 @@ export function createRepositionScrollStrategy(
  */
 export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription | null = null;
-  private _overlayRef: OverlayRef;
+  private _overlayRef!: OverlayRef;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,
