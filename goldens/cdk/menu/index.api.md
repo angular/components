@@ -235,7 +235,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     abstract close(): void;
     readonly closed: EventEmitter<void>;
     protected readonly destroyed: Subject<void>;
-    protected getMenuContentPortal(): TemplatePortal<any>;
+    protected getMenuContentPortal(): TemplatePortal<any> | undefined;
     readonly injector: Injector;
     protected isElementInsideMenuStack(element: Element): boolean;
     isOpen(): boolean;

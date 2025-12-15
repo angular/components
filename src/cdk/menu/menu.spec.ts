@@ -530,7 +530,7 @@ describe('Menu', () => {
   imports: [CdkMenuModule],
 })
 class MenuCheckboxGroup {
-  @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
+  @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
 }
 
 @Component({
@@ -596,11 +596,11 @@ class InlineMenu {}
   imports: [CdkMenuModule],
 })
 class WithComplexNestedMenus {
-  @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;
-  @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger?: ElementRef<HTMLElement>;
-  @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
+  @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger!: ElementRef<HTMLElement>;
 
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -656,11 +656,11 @@ class WithComplexNestedMenus {
   imports: [CdkMenuModule],
 })
 class WithComplexNestedMenusOnBottom {
-  @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger: ElementRef<HTMLElement>;
-  @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger?: ElementRef<HTMLElement>;
-  @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
+  @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('edit_trigger', {read: ElementRef}) nativeEditTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger!: ElementRef<HTMLElement>;
 
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -675,7 +675,7 @@ class WithComplexNestedMenusOnBottom {
   imports: [CdkMenuModule],
 })
 class MenuWithActiveItem {
-  @ViewChild(CdkMenu) menu: CdkMenu;
+  @ViewChild(CdkMenu) menu!: CdkMenu;
 }
 
 @Component({
@@ -694,6 +694,6 @@ class MenuWithActiveItem {
   imports: [CdkMenuModule],
 })
 class NestedMenuDefinition {
-  @ViewChild('root', {read: CdkMenu}) root: CdkMenu;
-  @ViewChild('inner', {read: CdkMenu}) inner: CdkMenu;
+  @ViewChild('root', {read: CdkMenu}) root!: CdkMenu;
+  @ViewChild('inner', {read: CdkMenu}) inner!: CdkMenu;
 }

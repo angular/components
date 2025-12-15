@@ -97,8 +97,8 @@ describe('MenuStack', () => {
   imports: [CdkMenuModule],
 })
 class MultiMenuWithSubmenu {
-  @ViewChild(CdkMenuBar) menuBar: CdkMenuBar;
+  @ViewChild(CdkMenuBar) menuBar!: CdkMenuBar;
 
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }

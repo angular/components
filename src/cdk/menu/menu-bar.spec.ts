@@ -1115,11 +1115,11 @@ class MenuBarRadioGroup {}
 })
 class MultiMenuWithSubmenu {
   clickEmitter = new EventEmitter<void>();
-  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
+  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
 
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems: QueryList<ElementRef>;
+  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems!: QueryList<ElementRef>;
 }
 
 @Component({
@@ -1140,13 +1140,13 @@ class MultiMenuWithSubmenu {
   imports: [CdkMenuModule],
 })
 class MenuWithCheckboxes {
-  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
+  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
 
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems: QueryList<ElementRef>;
+  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItemCheckbox) checkboxItems: QueryList<CdkMenuItemCheckbox>;
+  @ViewChildren(CdkMenuItemCheckbox) checkboxItems!: QueryList<CdkMenuItemCheckbox>;
 }
 
 @Component({
@@ -1167,13 +1167,13 @@ class MenuWithCheckboxes {
   imports: [CdkMenuModule],
 })
 class MenuWithRadioButtons {
-  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
+  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
 
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems: QueryList<ElementRef>;
+  @ViewChildren(CdkMenuItem, {read: ElementRef}) nativeItems!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItemRadio) radioItems: QueryList<CdkMenuItemRadio>;
+  @ViewChildren(CdkMenuItemRadio) radioItems!: QueryList<CdkMenuItemRadio>;
 }
 
 @Component({
@@ -1200,9 +1200,9 @@ class MenuWithRadioButtons {
   imports: [CdkMenuModule],
 })
 class MenuBarWithMenusAndInlineMenu {
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
 
-  @ViewChild('inline_menu_item') nativeInlineMenuItem: ElementRef;
+  @ViewChild('inline_menu_item') nativeInlineMenuItem!: ElementRef;
 }

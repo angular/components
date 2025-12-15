@@ -125,10 +125,10 @@ class MultiElementWithConditionalComponent implements AfterViewInit {
   showThird = false;
 
   /** All mock elements. */
-  @ViewChildren(MockWrapper) readonly _allItems: QueryList<MockWrapper>;
+  @ViewChildren(MockWrapper) readonly _allItems!: QueryList<MockWrapper>;
 
   /** Manages elements under mouse focus. */
-  focusTracker: PointerFocusTracker<MockWrapper>;
+  focusTracker!: PointerFocusTracker<MockWrapper>;
 
   ngAfterViewInit() {
     this.focusTracker = new PointerFocusTracker(this._renderer, this._allItems);
