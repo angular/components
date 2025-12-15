@@ -203,13 +203,13 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   /** Debounce interval for emitting the changes. */
   @Input()
   get debounce(): number {
-    return this._debounce;
+    return this._debounce!;
   }
   set debounce(value: NumberInput) {
     this._debounce = coerceNumberProperty(value);
     this._subscribe();
   }
-  private _debounce: number;
+  private _debounce: number | undefined;
 
   private _currentSubscription: Subscription | null = null;
 
