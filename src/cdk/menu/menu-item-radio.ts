@@ -41,7 +41,9 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
 
   constructor() {
     super();
-    this._registerDispatcherListener();
+    this._removeDispatcherListener = this._selectionDispatcher.listen((id: string) => {
+      this.checked = this._id === id;
+    });
   }
 
   override ngOnDestroy() {
@@ -61,12 +63,5 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
     if (!this.disabled) {
       this._selectionDispatcher.notify(this._id, '');
     }
-  }
-
-  /** Configure the unique selection dispatcher listener in order to toggle the checked state  */
-  private _registerDispatcherListener() {
-    this._removeDispatcherListener = this._selectionDispatcher.listen((id: string) => {
-      this.checked = this._id === id;
-    });
   }
 }
