@@ -21,6 +21,20 @@
   min-width: 24rem;
 }
 
+.example-tree[aria-disabled='true'] {
+  background-color: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  cursor: default;
+}
+
+.example-tree[aria-disabled='true']:focus-within {
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+.example-tree[aria-disabled='true'] .example-tree-item {
+  pointer-events: none;
+}
+
 .example-tree-item {
   cursor: pointer;
   list-style: none;
