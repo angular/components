@@ -22,9 +22,9 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   private _ngZone = inject(NgZone);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
 
-  private _cursorOriginalValue: string;
+  private _cursorOriginalValue!: string;
   private _cursorStyleIsSet = false;
-  private _pointerDownEventTarget: HTMLElement | null;
+  private _pointerDownEventTarget: HTMLElement | null = null;
   private _cleanups: (() => void)[] | undefined;
 
   /** Add a new overlay to the list of attached overlay refs. */

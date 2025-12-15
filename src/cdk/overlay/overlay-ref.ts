@@ -51,13 +51,13 @@ export class OverlayRef implements PortalOutlet {
   private _backdropRef: BackdropRef | null = null;
   private _detachContentMutationObserver: MutationObserver | undefined;
   private _detachContentAfterRenderRef: AfterRenderRef | undefined;
-  private _disposed: boolean;
+  private _disposed = false;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
    * the `_host` to its original position in the DOM when it gets re-attached.
    */
-  private _previousHostParent: HTMLElement;
+  private _previousHostParent!: HTMLElement;
 
   /** Stream of keydown events dispatched to this overlay. */
   readonly _keydownEvents = new Subject<KeyboardEvent>();
