@@ -106,7 +106,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   ) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
-    if (typeof Zone !== 'undefined') {
+    if (TaskStateZoneInterceptor.isInProxyZone()) {
       this._taskState = TaskStateZoneInterceptor.setup();
     }
     this._stabilizeCallback = () => this.forceStabilize();
@@ -178,6 +178,9 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /**
    * Waits for all scheduled or running async tasks to complete. This allows harness
    * authors to wait for async tasks outside of the Angular zone.
+   *
+   * This only works when Zone.js is present _and_ patches are applied to the test framework
+   * by `zone.js/testing` (Jasmine and Jest only) or another script.
    */
   async waitForTasksOutsideAngular(): Promise<void> {
     // If we run in the fake async zone, we run "flush" to run any scheduled tasks. This
