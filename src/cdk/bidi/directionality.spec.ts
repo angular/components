@@ -170,7 +170,7 @@ class InjectsDirectionality {
   imports: [Dir, InjectsDirectionality],
 })
 class ElementWithDir {
-  @ViewChild(Dir) dir: Dir;
+  @ViewChild(Dir) dir!: Dir;
   direction = signal<Direction>('rtl');
   changeCount = 0;
 }
@@ -180,7 +180,7 @@ class ElementWithDir {
   imports: [Dir],
 })
 class ElementWithPredefinedAutoDir {
-  @ViewChild(Dir) dir: Dir;
+  @ViewChild(Dir) dir!: Dir;
 }
 
 @Component({
@@ -188,7 +188,7 @@ class ElementWithPredefinedAutoDir {
   imports: [Dir],
 })
 class ElementWithPredefinedUppercaseDir {
-  @ViewChild(Dir) dir: Dir;
+  @ViewChild(Dir) dir!: Dir;
 }
 
 interface FakeDocument {
