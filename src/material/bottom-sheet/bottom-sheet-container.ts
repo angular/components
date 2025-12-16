@@ -66,7 +66,7 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
   }>();
 
   /** Whether the component has been destroyed. */
-  private _destroyed: boolean;
+  private _destroyed = false;
 
   constructor(...args: unknown[]);
 
