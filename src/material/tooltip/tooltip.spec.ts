@@ -1575,8 +1575,8 @@ class BasicTooltipDemo {
   showTooltipClass = false;
   tooltipDisabled = false;
   touchGestures: TooltipTouchGestures = 'auto';
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1596,7 +1596,7 @@ class ScrollableTooltipDemo {
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 
-  @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
+  @ViewChild(CdkScrollable) scrollingContainer!: CdkScrollable;
 
   scrollDown() {
     const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
@@ -1658,8 +1658,8 @@ class DataBoundAriaLabelTooltip {
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea') textarea!: ElementRef<HTMLTextAreaElement>;
   touchGestures: TooltipTouchGestures = 'auto';
 }
 
@@ -1674,7 +1674,7 @@ class TooltipOnTextFields {
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnDraggableElement {
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button') button!: ElementRef;
   touchGestures: TooltipTouchGestures = 'auto';
 }
 
@@ -1684,8 +1684,8 @@ class TooltipOnDraggableElement {
 })
 class TooltipDemoWithoutPositionBinding {
   message: string = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1694,8 +1694,8 @@ class TooltipDemoWithoutPositionBinding {
 })
 class TooltipDemoWithoutTooltipClassBinding {
   message = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1706,8 +1706,8 @@ class TooltipDemoWithoutTooltipClassBinding {
 })
 class TooltipDemoWithTooltipClassBinding {
   message: string = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1717,8 +1717,8 @@ class TooltipDemoWithTooltipClassBinding {
 })
 class WideTooltipDemo {
   message = 'Test';
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
