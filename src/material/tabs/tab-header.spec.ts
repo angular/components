@@ -743,13 +743,13 @@ interface Tab {
 class SimpleTabHeaderApp {
   disableRipple: boolean = false;
   selectedIndex: number = 0;
-  focusedIndex: number;
+  focusedIndex!: number;
   disabledTabIndex = 1;
   tabs: Tab[] = [{label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}];
   dir: Direction = 'ltr';
-  disablePagination: boolean;
+  disablePagination: boolean = false;
 
-  @ViewChild(MatTabHeader, {static: true}) tabHeader: MatTabHeader;
+  @ViewChild(MatTabHeader, {static: true}) tabHeader!: MatTabHeader;
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 

@@ -75,8 +75,8 @@ export class MatInkBar {
 @Directive()
 export abstract class InkBarItem implements OnInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _inkBarElement: HTMLElement | null;
-  private _inkBarContentElement: HTMLElement | null;
+  private _inkBarElement: HTMLElement | null = null;
+  private _inkBarContentElement: HTMLElement | null = null;
   private _fitToContent = false;
 
   /** Whether the ink bar should fit to the entire tab or just its content. */

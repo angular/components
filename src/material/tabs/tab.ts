@@ -72,7 +72,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   set templateLabel(value: MatTabLabel) {
     this._setTemplateLabelInput(value);
   }
-  private _templateLabel: MatTabLabel;
+  private _templateLabel!: MatTabLabel;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
@@ -82,25 +82,25 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   private _explicitContent: TemplateRef<any> = undefined!;
 
   /** Template inside the MatTab view that contains an `<ng-content>`. */
-  @ViewChild(TemplateRef, {static: true}) _implicitContent: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: true}) _implicitContent!: TemplateRef<any>;
 
   /** Plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
   /** Aria label for the tab. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /**
    * Reference to the element that the tab is labelled by.
    * Will be cleared if `aria-label` is set at the same time.
    */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Classes to be passed to the tab label inside the mat-tab-header container. */
-  @Input() labelClass: string | string[];
+  @Input() labelClass!: string | string[];
 
   /** Classes to be passed to the tab mat-tab-body container. */
-  @Input() bodyClass: string | string[];
+  @Input() bodyClass!: string | string[];
 
   /**
    * Custom ID for the tab, overriding the auto-generated one by Material.
