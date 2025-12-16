@@ -127,7 +127,7 @@ describe('MatDialogHarness', () => {
 class DialogHarnessTest {
   readonly dialog = inject(MatDialog);
 
-  @ViewChild(TemplateRef) dialogTmpl: TemplateRef<any>;
+  @ViewChild(TemplateRef) dialogTmpl!: TemplateRef<any>;
 
   open(config?: MatDialogConfig) {
     return this.dialog.open(this.dialogTmpl, config);
