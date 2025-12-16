@@ -997,12 +997,12 @@ class BasicChipListbox {
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl<string | null>(null);
-  isRequired: boolean;
-  tabIndexOverride: number;
-  selectable: boolean;
+  isRequired = false;
+  tabIndexOverride!: number;
+  selectable = false;
 
-  @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChild(MatChipListbox) chipListbox!: MatChipListbox;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 }
 
 @Component({
@@ -1031,12 +1031,12 @@ class MultiSelectionChipListbox {
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl<string[] | null>(null);
-  isRequired: boolean;
-  tabIndexOverride: number;
-  selectable: boolean;
+  isRequired = false;
+  tabIndexOverride!: number;
+  selectable = false;
 
-  @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChild(MatChipListbox) chipListbox!: MatChipListbox;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 }
 
 @Component({
@@ -1053,8 +1053,8 @@ class AsyncMultiSelectionChipListbox {
   private _chipsSubject = new BehaviorSubject(['tutorial-1', 'tutorial-2', 'tutorial-3']);
   chips$: Observable<string[]> = this._chipsSubject.pipe(observeOn(asyncScheduler, 500));
   control = new FormControl<string[] | null>(null);
-  @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChild(MatChipListbox) chipListbox!: MatChipListbox;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 
   updateChips(chips: string[]): void {
     this._chipsSubject.next(chips);
@@ -1077,7 +1077,7 @@ class FalsyValueChipListbox {
     {value: 1, viewValue: 'Pizza'},
   ];
   control = new FormControl([] as number[]);
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 }
 
 @Component({
@@ -1098,7 +1098,7 @@ class SelectedChipListbox {
     {value: 1, viewValue: 'Pizza', selected: false},
     {value: 2, viewValue: 'Pasta', selected: true},
   ];
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 }
 
 @Component({
@@ -1126,12 +1126,12 @@ class FalsyBasicChipListbox {
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl<string | null>(null);
-  isRequired: boolean;
-  tabIndexOverride: number;
-  selectable: boolean = false;
+  isRequired = false;
+  tabIndexOverride!: number;
+  selectable = false;
 
-  @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
-  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+  @ViewChild(MatChipListbox) chipListbox!: MatChipListbox;
+  @ViewChildren(MatChipOption) chips!: QueryList<MatChipOption>;
 }
 
 // Based on #29783.
@@ -1146,5 +1146,5 @@ class FalsyBasicChipListbox {
   imports: [MatChipListbox, MatChipOption, FormsModule],
 })
 class IndividuallyDisabledChipInsideForm {
-  @ViewChild(MatChipOption) chip: MatChipOption;
+  @ViewChild(MatChipOption) chip!: MatChipOption;
 }

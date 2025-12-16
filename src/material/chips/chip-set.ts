@@ -58,7 +58,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   private _lastDestroyedFocusedChipIndex: number | null = null;
 
   /** Used to manage focus within the chip list. */
-  protected _keyManager: FocusKeyManager<MatChipAction>;
+  protected _keyManager!: FocusKeyManager<MatChipAction>;
 
   /** Subject that emits when the component has been destroyed. */
   protected _destroyed = new Subject<void>();
@@ -129,7 +129,7 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  _chips: QueryList<MatChip>;
+  _chips!: QueryList<MatChip>;
 
   /** Flat list of all the actions contained within the chips. */
   _chipActions = new QueryList<MatChipAction>();

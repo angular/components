@@ -1223,8 +1223,8 @@ class InputChipGrid {
     }
   }
 
-  @ViewChild(MatChipGrid) chipGrid: MatChipGrid;
-  @ViewChildren(MatChipRow) chips: QueryList<MatChipRow>;
+  @ViewChild(MatChipGrid) chipGrid!: MatChipGrid;
+  @ViewChildren(MatChipRow) chips!: QueryList<MatChipRow>;
 }
 
 @Component({
@@ -1259,9 +1259,9 @@ class ChipGridWithFormErrorMessages {
     {value: 1, viewValue: 'Pizza'},
     {value: 2, viewValue: 'Pasta'},
   ];
-  @ViewChildren(MatChipRow) chips: QueryList<MatChipRow>;
+  @ViewChildren(MatChipRow) chips!: QueryList<MatChipRow>;
 
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form') form!: NgForm;
   formControl = new FormControl('', Validators.required);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
@@ -1313,5 +1313,5 @@ class ChipGridWithRemove {
 })
 class ChipGridWithoutInput {
   chips = ['Pizza', 'Pasta', 'Tacos'];
-  placeholder: string;
+  placeholder = '';
 }

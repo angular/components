@@ -532,8 +532,8 @@ describe('Row Chips', () => {
   imports: [MatChipsModule],
 })
 class SingleChip {
-  @ViewChild(MatChipGrid) chipList: MatChipGrid;
-  @ViewChild('chipInput') chipInput: ElementRef;
+  @ViewChild(MatChipGrid) chipList!: MatChipGrid;
+  @ViewChild('chipInput') chipInput!: ElementRef;
   disabled: boolean = false;
   name: string = 'Test';
   color: string = 'primary';
