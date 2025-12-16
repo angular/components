@@ -280,7 +280,7 @@ describe('MatBadge', () => {
   imports: [MatBadgeModule],
 })
 class BadgeOnInteractiveElement {
-  @ViewChild(MatBadge) badgeInstance: MatBadge;
+  @ViewChild(MatBadge) badgeInstance!: MatBadge;
   badgeColor = signal<ThemePalette>(undefined);
   badgeContent = signal<string | number | undefined | null>('1');
   badgeDirection = signal<MatBadgePosition>('above after');
