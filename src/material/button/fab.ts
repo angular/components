@@ -71,7 +71,7 @@ export class MatFabButton extends MatButtonBase {
 
   override _isFab = true;
 
-  @Input({transform: booleanAttribute}) extended: boolean;
+  @Input({transform: booleanAttribute}) extended: boolean = false;
 
   constructor(...args: unknown[]);
 
