@@ -389,7 +389,7 @@ class BasicProgressSpinner {}
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerCustomStrokeWidth {
-  strokeWidth: number;
+  strokeWidth!: number;
 }
 
 @Component({
@@ -397,7 +397,7 @@ class ProgressSpinnerCustomStrokeWidth {
   imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerCustomDiameter {
-  diameter: number;
+  diameter!: number;
 }
 
 @Component({
