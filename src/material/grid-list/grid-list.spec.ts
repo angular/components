@@ -554,7 +554,7 @@ class GridListWithTooWideColspan {}
   imports: [MatGridListModule],
 })
 class GridListWithDynamicCols {
-  @ViewChild(MatGridList) gridList: MatGridList;
+  @ViewChild(MatGridList) gridList!: MatGridList;
   cols = 2;
 }
 
@@ -579,7 +579,7 @@ class GridListWithUnspecifiedRowHeight {}
   imports: [MatGridListModule],
 })
 class GirdListWithRowHeightRatio {
-  rowHeight: string;
+  rowHeight!: string;
 }
 
 @Component({
@@ -591,7 +591,7 @@ class GirdListWithRowHeightRatio {
   imports: [MatGridListModule],
 })
 class GridListWithFitRowHeightMode {
-  totalHeight: string;
+  totalHeight!: string;
 }
 
 @Component({
@@ -602,7 +602,7 @@ class GridListWithFitRowHeightMode {
   imports: [MatGridListModule],
 })
 class GridListWithFixedRowHeightMode {
-  rowHeight: string;
+  rowHeight!: string;
 }
 
 @Component({
@@ -613,7 +613,7 @@ class GridListWithFixedRowHeightMode {
   imports: [MatGridListModule],
 })
 class GridListWithUnitlessFixedRowHeight {
-  rowHeight: string;
+  rowHeight!: string;
 }
 
 @Component({
@@ -687,7 +687,7 @@ class GridListWithFixRowHeightAndMultipleRows {}
   imports: [MatGridListModule],
 })
 class GridListWithColspanBinding {
-  colspan: number;
+  colspan!: number;
 }
 
 @Component({
@@ -698,7 +698,7 @@ class GridListWithColspanBinding {
   imports: [MatGridListModule],
 })
 class GridListWithRowspanBinding {
-  rowspan: number;
+  rowspan!: number;
 }
 
 @Component({
@@ -716,7 +716,7 @@ class GridListWithRowspanBinding {
   imports: [MatGridListModule],
 })
 class GridListWithComplexLayout {
-  tiles: any[];
+  tiles!: any[];
 }
 
 @Component({
