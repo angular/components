@@ -28,13 +28,13 @@ export enum MatDialogState {
  */
 export class MatDialogRef<T, R = any> {
   /** The instance of component opened into the dialog. */
-  componentInstance: T;
+  componentInstance!: T;
 
   /**
    * `ComponentRef` of the component opened into the dialog. Will be
    * null when the dialog is opened using a `TemplateRef`.
    */
-  readonly componentRef: ComponentRef<T> | null;
+  readonly componentRef: ComponentRef<T> | null = null;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined;
@@ -52,7 +52,7 @@ export class MatDialogRef<T, R = any> {
   private _result: R | undefined;
 
   /** Handle to the timeout that's running as a fallback in case the exit animation doesn't fire. */
-  private _closeFallbackTimeout: ReturnType<typeof setTimeout>;
+  private _closeFallbackTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** Current state of the dialog. */
   private _state = MatDialogState.OPEN;
