@@ -9,7 +9,6 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Signal } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class Grid {
