@@ -1486,7 +1486,7 @@ class SvgIconWithUserContent {
   imports: [MatIconModule],
 })
 class IconWithLigatureAndSvgBinding {
-  iconName: string;
+  iconName!: string;
 }
 
 @Component({
@@ -1494,5 +1494,5 @@ class IconWithLigatureAndSvgBinding {
   imports: [MatIconModule],
 })
 class BlankIcon {
-  @ViewChild(MatIcon) icon: MatIcon;
+  @ViewChild(MatIcon) icon!: MatIcon;
 }
