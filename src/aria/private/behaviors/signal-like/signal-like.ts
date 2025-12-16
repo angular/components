@@ -43,17 +43,20 @@ export function computed<T>(computation: () => T): SignalLike<T> {
   const computed = createComputed(computation);
   // TODO: Remove the `toString` after https://github.com/angular/angular/pull/65948 is merged.
   computed.toString = () => `[Computed: ${computed()}]`;
+  computed[SIGNAL].debugName = '';
   return computed;
 }
 
 export function signal<T>(initialValue: T): WritableSignalLike<T> {
   const [get, set, update] = createSignal(initialValue);
+  get[SIGNAL].debugName = '';
   // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the getter function.
   return Object.assign(get, {set, update, asReadonly: () => get});
 }
 
 export function linkedSignal<T>(sourceFn: () => T): WritableSignalLike<T> {
   const getter = createLinkedSignal(sourceFn, s => s);
+  getter[SIGNAL].debugName = '';
   // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the getter function.
   return Object.assign(getter, {
     set: (v: T) => linkedSignalSetFn(getter[SIGNAL], v),

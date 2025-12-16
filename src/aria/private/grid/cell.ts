@@ -6,11 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, linkedSignal, WritableSignal} from '@angular/core';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {ListFocus} from '../behaviors/list-focus/list-focus';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  computed,
+  signal,
+  linkedSignal,
+  SignalLike,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {GridCell} from '../behaviors/grid';
 import type {GridPattern} from './grid';
 import type {GridRowPattern} from './row';
@@ -18,8 +23,7 @@ import {GridCellWidgetPattern} from './widget';
 
 /** The inputs for the `GridCellPattern`. */
 export interface GridCellInputs
-  extends
-    GridCell,
+  extends GridCell,
     Omit<
       ListNavigationInputs<GridCellWidgetPattern>,
       'focusMode' | 'items' | 'activeItem' | 'softDisabled' | 'element'
@@ -52,7 +56,7 @@ export class GridCellPattern implements GridCell {
   readonly element: SignalLike<HTMLElement> = () => this.inputs.element();
 
   /** Whether the cell has focus. */
-  readonly isFocused: WritableSignal<boolean> = signal(false);
+  readonly isFocused: WritableSignalLike<boolean> = signal(false);
 
   /** Whether the cell is selected. */
   readonly selected: WritableSignalLike<boolean>;

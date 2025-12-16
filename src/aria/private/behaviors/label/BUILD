@@ -8,7 +8,6 @@ ts_project(
         "label.ts",
     ],
     deps = [
-        "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/signal-like",
     ],
 )
@@ -21,7 +20,6 @@ ng_project(
     ],
     deps = [
         ":label",
-        "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/signal-like",
     ],
 )
