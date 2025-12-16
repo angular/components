@@ -1182,12 +1182,12 @@ describe('MatDateRangeInput', () => {
   ],
 })
 class StandardRangePicker {
-  @ViewChild('start') start: ElementRef<HTMLInputElement>;
-  @ViewChild('end') end: ElementRef<HTMLInputElement>;
-  @ViewChild(MatStartDate) startInput: MatStartDate<Date>;
-  @ViewChild(MatEndDate) endInput: MatEndDate<Date>;
-  @ViewChild(MatDateRangeInput) rangeInput: MatDateRangeInput<Date>;
-  @ViewChild(MatDateRangePicker) rangePicker: MatDateRangePicker<Date>;
+  @ViewChild('start') start!: ElementRef<HTMLInputElement>;
+  @ViewChild('end') end!: ElementRef<HTMLInputElement>;
+  @ViewChild(MatStartDate) startInput!: MatStartDate<Date>;
+  @ViewChild(MatEndDate) endInput!: MatEndDate<Date>;
+  @ViewChild(MatDateRangeInput) rangeInput!: MatDateRangeInput<Date>;
+  @ViewChild(MatDateRangePicker) rangePicker!: MatDateRangePicker<Date>;
   separator = '–';
   rangeDisabled = false;
   minDate: Date | null = null;
@@ -1252,11 +1252,11 @@ class RangePickerNoEnd {}
   ],
 })
 class RangePickerNgModel {
-  @ViewChild(MatStartDate, {read: NgModel}) startModel: NgModel;
-  @ViewChild(MatEndDate, {read: NgModel}) endModel: NgModel;
-  @ViewChild(MatStartDate, {read: ElementRef}) startInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatEndDate, {read: ElementRef}) endInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatDateRangePicker) rangePicker: MatDateRangePicker<Date>;
+  @ViewChild(MatStartDate, {read: NgModel}) startModel!: NgModel;
+  @ViewChild(MatEndDate, {read: NgModel}) endModel!: NgModel;
+  @ViewChild(MatStartDate, {read: ElementRef}) startInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(MatEndDate, {read: ElementRef}) endInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(MatDateRangePicker) rangePicker!: MatDateRangePicker<Date>;
   private _start: Date | null = null;
   get start(): Date | null {
     return this._start;
@@ -1291,8 +1291,8 @@ class RangePickerNgModel {
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerNoLabel {
-  @ViewChild('start') start: ElementRef<HTMLInputElement>;
-  @ViewChild('end') end: ElementRef<HTMLInputElement>;
+  @ViewChild('start') start!: ElementRef<HTMLInputElement>;
+  @ViewChild('end') end!: ElementRef<HTMLInputElement>;
 }
 
 @Directive({
@@ -1331,11 +1331,11 @@ class CustomValidator implements Validator {
   ],
 })
 class RangePickerWithCustomValidator {
-  @ViewChild(CustomValidator) validator: CustomValidator;
+  @ViewChild(CustomValidator) validator!: CustomValidator;
   start: Date | null = null;
   end: Date | null = null;
-  min: Date;
-  max: Date;
+  min!: Date;
+  max!: Date;
 }
 
 @Component({
@@ -1352,7 +1352,7 @@ class RangePickerWithCustomValidator {
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
 })
 class RangePickerErrorStateMatcher {
-  @ViewChild(MatStartDate) startInput: MatStartDate<Date>;
-  @ViewChild(MatEndDate) endInput: MatEndDate<Date>;
+  @ViewChild(MatStartDate) startInput!: MatStartDate<Date>;
+  @ViewChild(MatEndDate) endInput!: MatEndDate<Date>;
   matcher: ErrorStateMatcher = {isErrorState: () => false};
 }

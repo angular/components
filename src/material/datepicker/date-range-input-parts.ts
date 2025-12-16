@@ -56,7 +56,7 @@ abstract class MatDateRangeInputPartBase<D>
    * Form control bound to this input part.
    * @docs-private
    */
-  ngControl: NgControl;
+  ngControl!: NgControl;
 
   protected abstract override _validator: ValidatorFn | null;
   protected abstract override _assignValueToModel(value: D | null): void;

@@ -72,8 +72,8 @@ export class MatDateRangeInput<D>
   private _closedSubscription = Subscription.EMPTY;
   private _openedSubscription = Subscription.EMPTY;
 
-  _startInput: MatStartDate<D>;
-  _endInput: MatEndDate<D>;
+  _startInput!: MatStartDate<D>;
+  _endInput!: MatEndDate<D>;
 
   /** Current value of the range input. */
   get value() {
@@ -128,7 +128,7 @@ export class MatDateRangeInput<D>
       this._registerModel(this._model!);
     }
   }
-  private _rangePicker: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
+  private _rangePicker!: MatDatepickerPanel<MatDatepickerControl<D>, DateRange<D>, D>;
 
   /** The id of the panel owned by this input. */
   _ariaOwns = signal<string | null>(null);
@@ -184,7 +184,7 @@ export class MatDateRangeInput<D>
       this._revalidate();
     }
   }
-  private _min: D | null;
+  private _min: D | null = null;
 
   /** The maximum valid date. */
   @Input()
@@ -199,7 +199,7 @@ export class MatDateRangeInput<D>
       this._revalidate();
     }
   }
-  private _max: D | null;
+  private _max: D | null = null;
 
   /** Whether the input is disabled. */
   @Input({transform: booleanAttribute})

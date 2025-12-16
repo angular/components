@@ -300,8 +300,8 @@ describe('MatDatepickerActions', () => {
   imports: [MatDatepickerModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
 })
 class DatepickerWithActions {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
-  @ViewChild('input', {read: ElementRef}) input: ElementRef<HTMLInputElement>;
+  @ViewChild(MatDatepicker) datepicker!: MatDatepicker<Date>;
+  @ViewChild('input', {read: ElementRef}) input!: ElementRef<HTMLInputElement>;
   control = new FormControl<Date | null>(null);
   onDateChange = jasmine.createSpy('dateChange spy');
   touchUi = false;

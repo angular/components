@@ -17,7 +17,7 @@ export class DateRange<D> {
    * expects a `DateRange`
    */
   // tslint:disable-next-line:no-unused-variable
-  private _disableStructuralEquivalency: never;
+  private _disableStructuralEquivalency!: never;
 
   constructor(
     /** The start date of the range. */
