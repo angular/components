@@ -62,13 +62,13 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _stateChanges = Subscription.EMPTY;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('for') datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
+  @Input('for') datepicker!: MatDatepickerPanel<MatDatepickerControl<any>, D>;
 
   /** Tabindex for the toggle. */
-  @Input() tabIndex: number | null;
+  @Input() tabIndex: number | null = null;
 
   /** Screen-reader label for the button. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Whether the toggle button is disabled. */
   @Input({transform: booleanAttribute})
@@ -82,16 +82,16 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   set disabled(value: boolean) {
     this._disabled = value;
   }
-  private _disabled: boolean;
+  private _disabled: boolean | undefined;
 
   /** Whether ripples on the toggle should be disabled. */
-  @Input() disableRipple: boolean;
+  @Input() disableRipple: boolean = false;
 
   /** Custom icon set by the consumer. */
-  @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
+  @ContentChild(MatDatepickerToggleIcon) _customIcon!: MatDatepickerToggleIcon;
 
   /** Underlying button element. */
-  @ViewChild('button') _button: MatButton;
+  @ViewChild('button') _button!: MatButton;
 
   constructor(...args: unknown[]);
 

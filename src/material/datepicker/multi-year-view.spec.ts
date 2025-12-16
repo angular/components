@@ -402,9 +402,9 @@ describe('MatMultiYearView', () => {
 class StandardMultiYearView {
   date = new Date(2017, JAN, 1);
   selected = new Date(2020, JAN, 1);
-  selectedYear: Date;
+  selectedYear!: Date;
 
-  @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<Date>;
+  @ViewChild(MatMultiYearView) multiYearView!: MatMultiYearView<Date>;
 }
 
 @Component({
@@ -435,8 +435,8 @@ class MultiYearViewWithDateFilter {
 })
 class MultiYearViewWithMinMaxDate {
   activeDate = new Date(2019, JAN, 1);
-  minDate: Date | null;
-  maxDate: Date | null;
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
 }
 
 @Component({

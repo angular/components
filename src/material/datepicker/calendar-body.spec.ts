@@ -756,12 +756,12 @@ class StandardCalendarBody {
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);
-  startValue: number;
-  endValue: number;
-  comparisonStart: number | null;
-  comparisonEnd: number | null;
-  previewStart: number | null;
-  previewEnd: number | null;
+  startValue!: number;
+  endValue!: number;
+  comparisonStart: number | null = null;
+  comparisonEnd: number | null = null;
+  previewStart: number | null = null;
+  previewEnd: number | null = null;
   drag: MatCalendarUserEvent<unknown> | null = null;
 
   onSelect(event: MatCalendarUserEvent<number>) {
