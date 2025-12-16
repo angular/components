@@ -27,5 +27,5 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 })
 export class _MatInternalFormField {
   /** Position of the label relative to the content. */
-  @Input({required: true}) labelPosition: 'before' | 'after';
+  @Input({required: true}) labelPosition: 'before' | 'after' = 'after';
 }

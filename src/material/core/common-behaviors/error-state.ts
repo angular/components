@@ -22,7 +22,7 @@ export class _ErrorStateTracker {
   errorState = false;
 
   /** User-defined matcher for the error state. */
-  matcher: ErrorStateMatcher;
+  matcher!: ErrorStateMatcher;
 
   constructor(
     private _defaultMatcher: ErrorStateMatcher | null,
