@@ -225,7 +225,7 @@ describe('MatNativeSelectHarness', () => {
   imports: [MatInputModule, FormsModule],
 })
 class SelectHarnessTest {
-  favoriteFood: string;
+  favoriteFood!: string;
   favoriteDrink: string[] = [];
   favoriteFoodRequired = signal(false);
   favoriteDrinkDisabled = signal(false);
