@@ -49,31 +49,31 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
-  @Input() state: StepState;
+  @Input() state!: StepState;
 
   /** Label of the given step. */
-  @Input() label: MatStepLabel | string;
+  @Input() label!: MatStepLabel | string;
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  @Input() errorMessage!: string;
 
   /** Overrides for the header icons, passed in via the stepper. */
-  @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>};
+  @Input() iconOverrides!: {[key: string]: TemplateRef<MatStepperIconContext>};
 
   /** Index of the given step. */
-  @Input() index: number;
+  @Input() index!: number;
 
   /** Whether the given step is selected. */
-  @Input() selected: boolean;
+  @Input() selected: boolean = false;
 
   /** Whether the given step label is active. */
-  @Input() active: boolean;
+  @Input() active: boolean = false;
 
   /** Whether the given step is optional. */
-  @Input() optional: boolean;
+  @Input() optional: boolean = false;
 
   /** Whether the ripple should be disabled. */
-  @Input() disableRipple: boolean;
+  @Input() disableRipple: boolean = false;
 
   /**
    * Theme color of the step header. This API is supported in M2 themes only, it
@@ -82,7 +82,7 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
    * For information on applying color variants in M3, see
    * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
-  @Input() color: ThemePalette;
+  @Input() color!: ThemePalette;
 
   constructor(...args: unknown[]);
 
