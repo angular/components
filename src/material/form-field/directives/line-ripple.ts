@@ -30,7 +30,7 @@ const DEACTIVATING_CLASS = 'mdc-line-ripple--deactivating';
 })
 export class MatFormFieldLineRipple implements OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _cleanupTransitionEnd: () => void;
+  private _cleanupTransitionEnd!: () => void;
 
   constructor(...args: unknown[]);
 
