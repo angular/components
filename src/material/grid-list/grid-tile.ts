@@ -83,7 +83,7 @@ export class MatGridTile {
 export class MatGridTileText implements AfterContentInit {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
+  @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
 
   constructor(...args: unknown[]);
   constructor() {}
