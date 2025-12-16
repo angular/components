@@ -1171,7 +1171,7 @@ class ButtonTogglesInsideButtonToggleGroup {
   isGroupDisabled: boolean = false;
   disabledIntearctive = false;
   isVertical: boolean = false;
-  groupValue: string;
+  groupValue!: string;
   renderFirstToggle = true;
 }
 
@@ -1193,13 +1193,13 @@ class ButtonTogglesInsideButtonToggleGroup {
 })
 class ButtonToggleGroupWithNgModel {
   groupName = 'group-name';
-  modelValue: string;
+  modelValue!: string;
   options = [
     {label: 'Red', value: 'red', name: ''},
     {label: 'Green', value: 'green', name: ''},
     {label: 'Blue', value: 'blue', name: ''},
   ];
-  lastEvent: MatButtonToggleChange;
+  lastEvent!: MatButtonToggleChange;
   disableRipple = false;
 }
 
@@ -1231,7 +1231,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   value: ('' | number | null | undefined | boolean)[] = [0];
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
 }
 
 @Component({
@@ -1252,7 +1252,7 @@ class StandaloneButtonToggle {}
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleGroupWithInitialValue {
-  lastEvent: MatButtonToggleChange;
+  lastEvent!: MatButtonToggleChange;
 }
 
 @Component({
@@ -1311,8 +1311,8 @@ class ButtonToggleWithAriaLabelledby {}
   imports: [MatButtonToggleModule],
 })
 class RepeatedButtonTogglesWithPreselectedValue {
-  @ViewChild(MatButtonToggleGroup) toggleGroup: MatButtonToggleGroup;
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChild(MatButtonToggleGroup) toggleGroup!: MatButtonToggleGroup;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
 
   possibleValues: (string | null)[] = ['One', 'Two', 'Three'];
   value: string | null = 'Two';
@@ -1340,8 +1340,8 @@ class ButtonToggleWithStaticName {}
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithStaticChecked {
-  @ViewChild(MatButtonToggleGroup) group: MatButtonToggleGroup;
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChild(MatButtonToggleGroup) group!: MatButtonToggleGroup;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
 }
 
 @Component({
@@ -1363,7 +1363,7 @@ class ButtonToggleWithStaticAriaAttributes {}
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
 class ButtonToggleGroupWithFormControlAndDynamicButtons {
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
   control = new FormControl('');
   values = ['a', 'b', 'c'];
 }
