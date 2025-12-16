@@ -81,13 +81,13 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private readonly _announceDelay: number = 150;
 
   /** The timeout for announcing the snack bar's content. */
-  private _announceTimeoutId: ReturnType<typeof setTimeout>;
+  private _announceTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
-  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet!: CdkPortalOutlet;
 
   /** Subject for notifying that the snack bar has announced to screen readers. */
   readonly _onAnnounce: Subject<void> = new Subject();
@@ -109,7 +109,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
    * or template does not have it. This ensures that the appropriate structure, typography, and
    * color is applied to the attached view.
    */
-  @ViewChild('label', {static: true}) _label: ElementRef;
+  @ViewChild('label', {static: true}) _label!: ElementRef;
 
   /**
    * Role of the live region. This is only for Firefox as there is a known issue where Firefox +

@@ -979,7 +979,7 @@ class DirectiveWithViewContainer {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
-  @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
+  @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
 
   childComponentExists = signal(true);
 
@@ -997,8 +997,8 @@ class ComponentWithChildViewContainer {
   `,
 })
 class ComponentWithTemplateRef {
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  localValue: string;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
+  localValue!: string;
 }
 
 /** Simple component for testing ComponentPortal. */
