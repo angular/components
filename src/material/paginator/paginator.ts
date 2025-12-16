@@ -48,7 +48,7 @@ export interface MatPaginatorSelectConfig {
  */
 export class PageEvent {
   /** The current page index. */
-  pageIndex: number;
+  pageIndex!: number;
 
   /**
    * Index of the page that was selected previously.
@@ -57,10 +57,10 @@ export class PageEvent {
   previousPageIndex?: number;
 
   /** The current page size. */
-  pageSize: number;
+  pageSize!: number;
 
   /** The current total number of items being paged. */
-  length: number;
+  length!: number;
 }
 
 // Note that while `MatPaginatorDefaultOptions` and `MAT_PAGINATOR_DEFAULT_OPTIONS` are identical
@@ -162,7 +162,7 @@ export class MatPaginator implements OnInit, OnDestroy {
     this._pageSize = Math.max(value || 0, 0);
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number;
+  private _pageSize!: number;
 
   /** The set of provided page size options to display to the user. */
   @Input()
@@ -194,7 +194,7 @@ export class MatPaginator implements OnInit, OnDestroy {
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
-  _displayedPageSizeOptions: number[];
+  _displayedPageSizeOptions!: number[];
 
   /** Emits when the paginator is initialized. */
   initialized: Observable<void> = this._initializedStream;
