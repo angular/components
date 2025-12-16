@@ -37,15 +37,15 @@ export class TestMainComponent implements OnDestroy {
   username: string;
   counter: number;
   asyncCounter: number;
-  input: string;
+  input!: string;
   memo: string;
   testTools: string[];
   testMethods: string[];
   isHovering = false;
   isPointerOver = false;
   specialKey = '';
-  modifiers: string;
-  singleSelect: string;
+  modifiers!: string;
+  singleSelect!: string;
   singleSelectChangeEventCount = 0;
   multiSelect: string[] = [];
   multiSelectChangeEventCount = 0;
@@ -56,8 +56,8 @@ export class TestMainComponent implements OnDestroy {
   rightClickResult = {x: -1, y: -1, button: -1};
   numberControl = new FormControl<number | null>(null);
 
-  @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
-  @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
+  @ViewChild('clickTestElement') clickTestElement!: ElementRef<HTMLElement>;
+  @ViewChild('taskStateResult') taskStateResultElement!: ElementRef<HTMLElement>;
 
   private _fakeOverlayElement: HTMLElement;
 

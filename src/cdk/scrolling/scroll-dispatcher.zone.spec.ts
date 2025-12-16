@@ -38,6 +38,6 @@ describe('ScrollDispatcher Zone.js integration', () => {
   imports: [ScrollingModule],
 })
 class ScrollingComponent {
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollingElement') scrollingElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+  @ViewChild('scrollingElement') scrollingElement!: ElementRef<HTMLElement>;
 }
