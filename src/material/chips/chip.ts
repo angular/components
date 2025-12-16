@@ -114,7 +114,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   readonly _onBlur = new Subject<MatChipEvent>();
 
   /** Whether this chip is a basic (unstyled) chip. */
-  _isBasicChip: boolean;
+  _isBasicChip = false;
 
   /** Role for the root of the chip. */
   @Input() role: string | null = null;
@@ -123,7 +123,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   private _hasFocusInternal = false;
 
   /** Whether moving focus into the chip is pending. */
-  private _pendingFocus: boolean;
+  private _pendingFocus: boolean = false;
 
   /** Subscription to changes in the chip's actions. */
   private _actionChanges: Subscription | undefined;
@@ -133,19 +133,19 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** All avatars present in the chip. */
   @ContentChildren(MAT_CHIP_AVATAR, {descendants: true})
-  protected _allLeadingIcons: QueryList<MatChipAvatar>;
+  protected _allLeadingIcons!: QueryList<MatChipAvatar>;
 
   /** All trailing icons present in the chip. */
   @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
-  protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
+  protected _allTrailingIcons!: QueryList<MatChipTrailingIcon>;
 
   /** All edit icons present in the chip. */
   @ContentChildren(MAT_CHIP_EDIT, {descendants: true})
-  protected _allEditIcons: QueryList<MatChipEdit>;
+  protected _allEditIcons!: QueryList<MatChipEdit>;
 
   /** All remove icons present in the chip. */
   @ContentChildren(MAT_CHIP_REMOVE, {descendants: true})
-  protected _allRemoveIcons: QueryList<MatChipRemove>;
+  protected _allRemoveIcons!: QueryList<MatChipRemove>;
 
   _hasFocus() {
     return this._hasFocusInternal;
@@ -233,19 +233,19 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   protected basicChipAttrName = 'mat-basic-chip';
 
   /** The chip's leading icon. */
-  @ContentChild(MAT_CHIP_AVATAR) leadingIcon: MatChipAvatar;
+  @ContentChild(MAT_CHIP_AVATAR) leadingIcon!: MatChipAvatar;
 
   /** The chip's leading edit icon. */
-  @ContentChild(MAT_CHIP_EDIT) editIcon: MatChipEdit;
+  @ContentChild(MAT_CHIP_EDIT) editIcon!: MatChipEdit;
 
   /** The chip's trailing icon. */
-  @ContentChild(MAT_CHIP_TRAILING_ICON) trailingIcon: MatChipTrailingIcon;
+  @ContentChild(MAT_CHIP_TRAILING_ICON) trailingIcon!: MatChipTrailingIcon;
 
   /** The chip's trailing remove icon. */
-  @ContentChild(MAT_CHIP_REMOVE) removeIcon: MatChipRemove;
+  @ContentChild(MAT_CHIP_REMOVE) removeIcon!: MatChipRemove;
 
   /** Action receiving the primary set of user interactions. */
-  @ViewChild(MatChipAction) primaryAction: MatChipAction;
+  @ViewChild(MatChipAction) primaryAction!: MatChipAction;
 
   /**
    * Handles the lazy creation of the MatChip ripple.

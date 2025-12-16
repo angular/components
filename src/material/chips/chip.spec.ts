@@ -160,7 +160,7 @@ describe('MatChip', () => {
   imports: [MatChipsModule],
 })
 class SingleChip {
-  @ViewChild(MatChipSet) chipList: MatChipSet;
+  @ViewChild(MatChipSet) chipList!: MatChipSet;
   disabled: boolean = false;
   name: string = 'Test';
   color: string = 'primary';

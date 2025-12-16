@@ -357,12 +357,12 @@ describe('MatChipInput', () => {
   imports: [MatFormField, MatChipGrid, MatChipRow, MatChipInput],
 })
 class TestChipInput {
-  @ViewChild(MatChipGrid) chipGridInstance: MatChipGrid;
+  @ViewChild(MatChipGrid) chipGridInstance!: MatChipGrid;
   addOnBlur: boolean = false;
   placeholder = '';
   required = false;
   disabledInteractive = false;
-  hint: string;
+  hint = '';
 
   add(_: MatChipInputEvent) {}
 }
