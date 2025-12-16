@@ -140,31 +140,31 @@ export class MatAutocompleteTrigger
     {optional: true},
   );
 
-  private _overlayRef: OverlayRef | null;
-  private _portal: TemplatePortal;
+  private _overlayRef: OverlayRef | null = null;
+  private _portal!: TemplatePortal;
   private _componentDestroyed = false;
   private _initialized = new Subject();
-  private _keydownSubscription: Subscription | null;
-  private _outsideClickSubscription: Subscription | null;
+  private _keydownSubscription: Subscription | undefined;
+  private _outsideClickSubscription: Subscription | undefined;
   private _cleanupWindowBlur: (() => void) | undefined;
 
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
-  private _previousValue: string | number | null;
+  private _previousValue: string | number | null = null;
 
   /** Value of the input element when the panel was attached (even if there are no options). */
-  private _valueOnAttach: string | number | null;
+  private _valueOnAttach: string | number | null = null;
 
   /** Value on the previous keydown event. */
-  private _valueOnLastKeydown: string | null;
+  private _valueOnLastKeydown: string | null = null;
 
   /** Strategy that is used to position the panel. */
-  private _positionStrategy: FlexibleConnectedPositionStrategy;
+  private _positionStrategy!: FlexibleConnectedPositionStrategy;
 
   /** Whether or not the label state is being overridden. */
   private _manuallyFloatingLabel = false;
 
   /** The subscription for closing actions (some are bound to document). */
-  private _closingActionsSubscription: Subscription;
+  private _closingActionsSubscription!: Subscription;
 
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
@@ -187,7 +187,7 @@ export class MatAutocompleteTrigger
    * Current option that we have auto-selected as the user is navigating,
    * but which hasn't been propagated to the model value yet.
    */
-  private _pendingAutoselectedOption: MatOption | null;
+  private _pendingAutoselectedOption: MatOption | null = null;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -213,7 +213,7 @@ export class MatAutocompleteTrigger
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: MatAutocomplete;
+  @Input('matAutocomplete') autocomplete!: MatAutocomplete;
 
   /**
    * Position of the autocomplete panel relative to the trigger element. A position of `auto`
@@ -228,7 +228,7 @@ export class MatAutocompleteTrigger
    * Reference relative to which to position the autocomplete panel.
    * Defaults to the autocomplete trigger element.
    */
-  @Input('matAutocompleteConnectedTo') connectedTo: MatAutocompleteOrigin;
+  @Input('matAutocompleteConnectedTo') connectedTo!: MatAutocompleteOrigin;
 
   /**
    * `autocomplete` attribute to be set on the input element.
@@ -241,7 +241,7 @@ export class MatAutocompleteTrigger
    * act as a regular input and the user won't be able to open the panel.
    */
   @Input({alias: 'matAutocompleteDisabled', transform: booleanAttribute})
-  autocompleteDisabled: boolean;
+  autocompleteDisabled: boolean = false;
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -887,7 +887,7 @@ export class MatAutocompleteTrigger
     } else {
       this._keydownSubscription?.unsubscribe();
       this._outsideClickSubscription?.unsubscribe();
-      this._keydownSubscription = this._outsideClickSubscription = null;
+      this._keydownSubscription = this._outsideClickSubscription = undefined;
     }
   }
 

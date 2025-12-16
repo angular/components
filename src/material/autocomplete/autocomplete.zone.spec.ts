@@ -119,26 +119,26 @@ describe('MatAutocomplete Zone.js integration', () => {
 })
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
-  filteredStates: any[];
-  valueSub: Subscription;
+  filteredStates!: any[];
+  valueSub!: Subscription;
   floatLabel: FloatLabelType = 'auto';
   position: 'auto' | 'above' | 'below' = 'auto';
-  width: number;
+  width!: number;
   disableRipple = false;
   autocompleteDisabled = false;
   hasLabel = true;
   requireSelection = false;
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel!: string;
+  ariaLabelledby!: string;
   panelClass = 'class-one class-two';
-  theme: ThemePalette;
+  theme!: ThemePalette;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 
-  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
-  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
-  @ViewChild(MatFormField) formField: MatFormField;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger!: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) panel!: MatAutocomplete;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 
   states: {code: string; name: string; height?: number; disabled?: boolean}[] = [
     {code: 'AL', name: 'Alabama'},
