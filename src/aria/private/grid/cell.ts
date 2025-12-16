@@ -23,7 +23,8 @@ import {GridCellWidgetPattern} from './widget';
 
 /** The inputs for the `GridCellPattern`. */
 export interface GridCellInputs
-  extends GridCell,
+  extends
+    GridCell,
     Omit<
       ListNavigationInputs<GridCellWidgetPattern>,
       'focusMode' | 'items' | 'activeItem' | 'softDisabled' | 'element'
