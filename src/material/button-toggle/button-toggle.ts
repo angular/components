@@ -145,7 +145,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   private _multiple = false;
   private _disabled = false;
   private _disabledInteractive = false;
-  private _selectionModel: SelectionModel<MatButtonToggle>;
+  private _selectionModel!: SelectionModel<MatButtonToggle>;
 
   /**
    * Reference to the raw value that the consumer tried to assign. The real
@@ -170,7 +170,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     // from nested groups, but that's not a case that we support.
     descendants: true,
   })
-  _buttonToggles: QueryList<MatButtonToggle>;
+  _buttonToggles!: QueryList<MatButtonToggle>;
 
   /** The appearance for all the buttons in the group. */
   @Input() appearance: MatButtonToggleAppearance;
@@ -187,7 +187,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   private _name = inject(_IdGenerator).getId('mat-button-toggle-group-');
 
   /** Whether the toggle group is vertical. */
-  @Input({transform: booleanAttribute}) vertical: boolean;
+  @Input({transform: booleanAttribute}) vertical: boolean = false;
 
   /** Value of the toggle group. */
   @Input()
@@ -289,8 +289,8 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
-    this.hideSingleSelectionIndicator = defaultOptions?.hideSingleSelectionIndicator ?? false;
-    this.hideMultipleSelectionIndicator = defaultOptions?.hideMultipleSelectionIndicator ?? false;
+    this._hideSingleSelectionIndicator = defaultOptions?.hideSingleSelectionIndicator ?? false;
+    this._hideMultipleSelectionIndicator = defaultOptions?.hideMultipleSelectionIndicator ?? false;
   }
 
   ngOnInit() {
@@ -583,7 +583,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
    * Attached to the aria-label attribute of the host element. In most cases, aria-labelledby will
    * take precedence so this may be omitted.
    */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /**
    * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
@@ -591,7 +591,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** Underlying native `button` element. */
-  @ViewChild('button') _buttonElement: ElementRef<HTMLButtonElement>;
+  @ViewChild('button') _buttonElement!: ElementRef<HTMLButtonElement>;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MatButtonToggleGroup;
@@ -602,10 +602,10 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /** The unique ID for this button toggle. */
-  @Input() id: string;
+  @Input() id!: string;
 
   /** HTML's 'name' attribute used to group radios for unique selection. */
-  @Input() name: string;
+  @Input() name!: string;
 
   /** MatButtonToggleGroup reads this to assign its own value. */
   @Input() value: any;
@@ -621,7 +621,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _tabIndex: WritableSignal<number | null>;
 
   /** Whether ripples are disabled on the button toggle. */
-  @Input({transform: booleanAttribute}) disableRipple: boolean;
+  @Input({transform: booleanAttribute}) disableRipple: boolean = false;
 
   /** The appearance style of the button. */
   @Input()
@@ -690,9 +690,9 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
     this._tabIndex = signal<number | null>(parseInt(defaultTabIndex) || 0);
     this.buttonToggleGroup = toggleGroup;
-    this.appearance =
+    this._appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
-    this.disabledInteractive = defaultOptions?.disabledInteractive ?? false;
+    this._disabledInteractive = defaultOptions?.disabledInteractive ?? false;
   }
 
   ngOnInit() {
