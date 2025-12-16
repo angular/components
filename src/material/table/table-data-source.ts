@@ -69,7 +69,7 @@ export class MatTableDataSource<
    * For example, a 'selectAll()' function would likely want to select the set of filtered data
    * shown to the user rather than all the data.
    */
-  filteredData: T[];
+  filteredData!: T[];
 
   /** Array of data that should be rendered by the table, where each object represents one row. */
   get data() {
