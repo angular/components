@@ -568,7 +568,7 @@ class ListHarnessTest {
   imports: [MatListModule],
 })
 class ActionListHarnessTest {
-  lastClicked: string;
+  lastClicked!: string;
   disableThirdItem = signal(false);
 }
 
@@ -610,7 +610,7 @@ class ActionListHarnessTest {
   imports: [MatListModule],
 })
 class NavListHarnessTest {
-  lastClicked: string;
+  lastClicked!: string;
   disableThirdItem = signal(false);
 
   onClick(event: Event, value: string) {
