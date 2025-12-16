@@ -78,7 +78,7 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _animationsDisabled = _animationsDisabled();
 
-  private _portal: TemplatePortal;
+  private _portal!: TemplatePortal;
   protected _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closingActionsSubscription = Subscription.EMPTY;
@@ -137,7 +137,7 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
 
     this._menuItemInstance?._setTriggersSubmenu(this._triggersSubmenu());
   }
-  private _menuInternal: MatMenuPanel | null;
+  private _menuInternal: MatMenuPanel | null = null;
 
   /** Event emitted when the associated menu is opened. */
   abstract menuOpened: EventEmitter<void>;
