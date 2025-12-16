@@ -828,7 +828,7 @@ describe('MatRipple', () => {
   imports: [MatRippleModule],
 })
 class BasicRippleContainer {
-  @ViewChild('ripple') ripple: MatRipple;
+  @ViewChild('ripple') ripple!: MatRipple;
 }
 
 @Component({
@@ -847,13 +847,13 @@ class BasicRippleContainer {
   imports: [MatRippleModule],
 })
 class RippleContainerWithInputBindings {
-  animationConfig: RippleAnimationConfig;
-  trigger: HTMLElement;
+  animationConfig!: RippleAnimationConfig;
+  trigger!: HTMLElement;
   centered = false;
   disabled = false;
   radius = 0;
   color = '';
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple) ripple!: MatRipple;
 }
 
 @Component({
@@ -867,7 +867,7 @@ class RippleContainerWithoutBindings {}
   imports: [MatRippleModule],
 })
 class RippleContainerWithNgIf {
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple) ripple!: MatRipple;
   isDestroyed = false;
 }
 

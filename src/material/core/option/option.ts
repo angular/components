@@ -101,7 +101,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   }
 
   /** The form value of the option. */
-  @Input() value: T;
+  @Input() value!: T;
 
   /** The unique ID of the option. */
   @Input() id: string = inject(_IdGenerator).getId('mat-option-');
