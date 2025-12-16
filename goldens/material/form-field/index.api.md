@@ -16,8 +16,10 @@ import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export type FloatLabelType = 'always' | 'auto';

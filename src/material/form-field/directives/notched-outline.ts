@@ -13,6 +13,8 @@ import {
   ElementRef,
   Input,
   NgZone,
+  OnChanges,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
   inject,
@@ -36,21 +38,27 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatFormFieldNotchedOutline implements AfterViewInit {
+export class MatFormFieldNotchedOutline implements AfterViewInit, OnChanges {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
 
   /** Whether the notch should be opened. */
   @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
 
+  /** Whether the floating label is present. */
+  @Input('matFormFieldHasFloatingLabel') hasFloatingLabel: boolean = false;
+
   @ViewChild('notch') _notch: ElementRef<HTMLElement>;
 
-  ngAfterViewInit(): void {
-    const element = this._elementRef.nativeElement;
-    const label = element.querySelector<HTMLElement>('.mdc-floating-label');
+  /** Gets the HTML element for the floating label. */
+  get element(): HTMLElement {
+    return this._elementRef.nativeElement;
+  }
 
+  ngAfterViewInit(): void {
+    const label = this.element.querySelector<HTMLElement>('.mdc-floating-label');
     if (label) {
-      element.classList.add('mdc-notched-outline--upgraded');
+      this.element.classList.add('mdc-notched-outline--upgraded');
 
       if (typeof requestAnimationFrame === 'function') {
         label.style.transitionDuration = '0s';
@@ -59,7 +67,18 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
         });
       }
     } else {
-      element.classList.add('mdc-notched-outline--no-label');
+      this.element.classList.add('mdc-notched-outline--no-label');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes['hasFloatingLabel'] &&
+      this.hasFloatingLabel &&
+      this.element.classList.contains('mdc-notched-outline--no-label')
+    ) {
+      this.element.classList.add('mdc-notched-outline--upgraded');
+      this.element.classList.remove('mdc-notched-outline--no-label');
     }
   }
 
