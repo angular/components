@@ -142,5 +142,5 @@ class CheckboxMenu {
   imports: [CdkMenuModule],
 })
 class MenuWithMultipleRadioGroups {
-  @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
+  @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
 }
