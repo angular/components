@@ -152,7 +152,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   private _iconRegistry = inject(MatIconRegistry);
   private _location = inject<MatIconLocation>(MAT_ICON_LOCATION);
   private readonly _errorHandler = inject(ErrorHandler);
-  private _defaultColor: ThemePalette;
+  private _defaultColor!: ThemePalette;
 
   /**
    * Theme color of the icon. This API is supported in M2 themes only, it
@@ -192,7 +192,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
       this._svgIcon = value;
     }
   }
-  private _svgIcon: string;
+  private _svgIcon!: string;
 
   /** Font set that the icon is a part of. */
   @Input()
@@ -207,7 +207,7 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
       this._updateFontIconClasses();
     }
   }
-  private _fontSet: string;
+  private _fontSet!: string;
 
   /** Name of an icon within a font set. */
   @Input()
@@ -222,13 +222,13 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
       this._updateFontIconClasses();
     }
   }
-  private _fontIcon: string;
+  private _fontIcon!: string;
 
   private _previousFontSetClass: string[] = [];
-  private _previousFontIconClass: string;
+  private _previousFontIconClass!: string;
 
-  _svgName: string | null;
-  _svgNamespace: string | null;
+  _svgName: string | null = null;
+  _svgNamespace: string | null = null;
 
   /** Keeps track of the current page path. */
   private _previousPath?: string;
