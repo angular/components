@@ -197,13 +197,13 @@ export class MatFormField
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
-  private _currentDirection: Direction;
+  private _currentDirection!: Direction;
 
-  @ViewChild('textField') _textField: ElementRef<HTMLElement>;
-  @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
-  @ViewChild('textPrefixContainer') _textPrefixContainer: ElementRef<HTMLElement>;
-  @ViewChild('iconSuffixContainer') _iconSuffixContainer: ElementRef<HTMLElement>;
-  @ViewChild('textSuffixContainer') _textSuffixContainer: ElementRef<HTMLElement>;
+  @ViewChild('textField') _textField!: ElementRef<HTMLElement>;
+  @ViewChild('iconPrefixContainer') _iconPrefixContainer!: ElementRef<HTMLElement>;
+  @ViewChild('textPrefixContainer') _textPrefixContainer!: ElementRef<HTMLElement>;
+  @ViewChild('iconSuffixContainer') _iconSuffixContainer!: ElementRef<HTMLElement>;
+  @ViewChild('textSuffixContainer') _textSuffixContainer!: ElementRef<HTMLElement>;
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel | undefined;
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline | undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple | undefined;
@@ -223,11 +223,11 @@ export class MatFormField
       .filter(e => e !== undefined);
   });
 
-  @ContentChild(_MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
-  @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
-  @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
-  @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren: QueryList<MatError>;
-  @ContentChildren(MatHint, {descendants: true}) _hintChildren: QueryList<MatHint>;
+  @ContentChild(_MatFormFieldControl) _formFieldControl!: MatFormFieldControl<any>;
+  @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren!: QueryList<MatPrefix>;
+  @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren!: QueryList<MatSuffix>;
+  @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren!: QueryList<MatError>;
+  @ContentChildren(MatHint, {descendants: true}) _hintChildren!: QueryList<MatHint>;
 
   private readonly _labelChild = contentChild(MatLabel);
 
@@ -265,7 +265,7 @@ export class MatFormField
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _floatLabel: FloatLabelType;
+  private _floatLabel!: FloatLabelType;
 
   /** The form field appearance style. */
   @Input()
@@ -334,7 +334,7 @@ export class MatFormField
 
   private _destroyed = new Subject<void>();
   private _isFocused: boolean | null = null;
-  private _explicitFormFieldControl: MatFormFieldControl<any>;
+  private _explicitFormFieldControl!: MatFormFieldControl<any>;
   private _previousControl: MatFormFieldControl<unknown> | null = null;
   private _previousControlValidatorFn: ValidatorFn | null = null;
   private _stateChanges: Subscription | undefined;
