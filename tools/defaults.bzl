@@ -5,6 +5,7 @@ load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
 load("@devinfra//bazel/spec-bundling:index.bzl", _spec_bundle = "spec_bundle")
 load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
+load("@rules_angular//src/ng_examples_db:index.bzl", _ng_examples_db = "ng_examples_db")
 load("@rules_angular//src/ng_package:index.bzl", _ng_package = "ng_package")
 load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
@@ -26,6 +27,7 @@ extract_tokens = _extract_tokens
 ng_web_test_suite = _ng_web_test_suite
 spec_bundle = _spec_bundle
 http_server = _http_server
+ng_examples_db = _ng_examples_db
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(

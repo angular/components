@@ -21,6 +21,12 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "angular": {
+    "examples": {
+      "format": "sqlite",
+      "path": "./resources/code-examples.db"
+    }
+  },
   "ng-update": {
     "packageGroup": "NG_UPDATE_PACKAGE_GROUP"
   },
