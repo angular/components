@@ -88,5 +88,5 @@ describe('MatTableDataSource', () => {
   imports: [MatSortModule],
 })
 class MatSortApp {
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, {static: true}) sort!: MatSort;
 }
