@@ -36,6 +36,7 @@ import {
   numberAttribute,
   HostAttributeToken,
   Renderer2,
+  DestroyRef,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -45,8 +46,8 @@ import {
   _StructuralStylesLoader,
   _animationsDisabled,
 } from '../core';
-import {Subscription} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 /** Change event object emitted by radio button and radio group. */
 export class MatRadioChange<T = any> {
@@ -116,8 +117,9 @@ export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptio
     'class': 'mat-mdc-radio-group',
   },
 })
-export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
+export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   private _changeDetector = inject(ChangeDetectorRef);
+  private readonly _destroyRef = inject(DestroyRef);
 
   /** Selected value for the radio group. */
   private _value: any = null;
@@ -139,9 +141,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
 
   /** Whether the radio group is required. */
   private _required: boolean = false;
-
-  /** Subscription to changes in amount of radio buttons. */
-  private _buttonChanges: Subscription;
 
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
@@ -281,15 +280,11 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     // buttons depends on it. Note that we don't clear the `value`, because the radio button
     // may be swapped out with a similar one and there are some internal apps that depend on
     // that behavior.
-    this._buttonChanges = this._radios.changes.subscribe(() => {
+    this._radios.changes.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       if (this.selected && !this._radios.find(radio => radio === this.selected)) {
         this._selected = null;
       }
     });
-  }
-
-  ngOnDestroy() {
-    this._buttonChanges?.unsubscribe();
   }
 
   /**

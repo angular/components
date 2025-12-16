@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {takeUntil} from 'rxjs/operators';
+
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -31,6 +31,7 @@ import {
   afterNextRender,
   Injector,
   DOCUMENT,
+  DestroyRef,
 } from '@angular/core';
 import {NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
@@ -54,6 +55,7 @@ import {
 import {ComponentPortal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 declare global {
   interface CSSStyleDeclaration {
@@ -182,6 +184,7 @@ const MAX_WIDTH = 200;
   },
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
+  private readonly _destroyRef = inject(DestroyRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
@@ -359,9 +362,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: null | ReturnType<typeof setTimeout> = null;
 
-  /** Emits when the component is destroyed. */
-  private readonly _destroyed = new Subject<void>();
-
   /** Whether ngOnDestroyed has been called. */
   private _isDestroyed = false;
 
@@ -401,7 +401,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     this._focusMonitor
       .monitor(this._elementRef)
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(origin => {
         // Note that the focus monitor runs outside the Angular zone.
         if (!origin) {
@@ -434,9 +434,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     });
     this._passiveListeners.length = 0;
 
-    this._destroyed.next();
-    this._destroyed.complete();
-
     this._isDestroyed = true;
 
     this._ariaDescriber.removeDescription(nativeElement, this.message, 'tooltip');
@@ -459,7 +456,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     instance._mouseLeaveHideDelay = this._hideDelay;
     instance
       .afterHidden()
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
@@ -520,7 +517,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .withScrollableContainers(scrollableAncestors)
       .withPopoverLocation('global');
 
-    strategy.positionChanges.pipe(takeUntil(this._destroyed)).subscribe(change => {
+    strategy.positionChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(change => {
       this._updateCurrentPositionClass(change.connectionPair);
 
       if (this._tooltipInstance) {
@@ -544,17 +541,17 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     this._overlayRef
       .detachments()
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => this._detach());
 
     this._overlayRef
       .outsidePointerEvents()
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(() => this._tooltipInstance?._handleBodyInteraction());
 
     this._overlayRef
       .keydownEvents()
-      .pipe(takeUntil(this._destroyed))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(event => {
         if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
           event.preventDefault();
@@ -569,7 +566,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     if (!this._dirSubscribed) {
       this._dirSubscribed = true;
-      this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+      this._dir.change.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
         if (this._overlayRef) {
           this._updatePosition(this._overlayRef);
         }
