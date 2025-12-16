@@ -113,19 +113,19 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
    * The element with role="button" inside this component's view. We need this
    * in order to apply a description with AriaDescriber.
    */
-  private _sortButton: HTMLElement;
+  private _sortButton!: HTMLElement;
 
   /**
    * ID of this sort header. If used within the context of a CdkColumnDef, this will default to
    * the column's name.
    */
-  @Input('mat-sort-header') id: string;
+  @Input('mat-sort-header') id!: string;
 
   /** Sets the position of the arrow that displays when sorted. */
   @Input() arrowPosition: SortHeaderArrowPosition = 'after';
 
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
-  @Input() start: SortDirection;
+  @Input() start!: SortDirection;
 
   /** whether the sort header is disabled. */
   @Input({transform: booleanAttribute})
@@ -149,7 +149,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input({transform: booleanAttribute})
-  disableClear: boolean;
+  disableClear!: boolean;
 
   constructor(...args: unknown[]);
 
