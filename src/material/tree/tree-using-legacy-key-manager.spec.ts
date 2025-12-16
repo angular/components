@@ -110,6 +110,6 @@ class SimpleMatTreeApp {
   /** Value passed to tabindex attribute binding of each tree node. Null by default. */
   tabindexAttributeBinding: string | null = null;
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
-  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('tree', {read: ElementRef}) tree!: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes!: QueryList<ElementRef<HTMLElement>>;
 }

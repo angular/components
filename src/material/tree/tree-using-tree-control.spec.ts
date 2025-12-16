@@ -661,13 +661,13 @@ describe('MatTree', () => {
 });
 
 export class TestData {
-  pizzaTopping: string;
-  pizzaCheese: string;
-  pizzaBase: string;
-  level: number;
-  children: TestData[];
-  observableChildren: BehaviorSubject<TestData[]>;
-  isSpecial: boolean;
+  pizzaTopping!: string;
+  pizzaCheese!: string;
+  pizzaBase!: string;
+  level!: number;
+  children!: TestData[];
+  observableChildren!: BehaviorSubject<TestData[]>;
+  isSpecial = false;
   isDisabled?: boolean;
 
   constructor(
@@ -879,7 +879,7 @@ class SimpleMatTreeApp {
 
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -973,8 +973,8 @@ class MatTreeWithNullOrUndefinedChild {
   imports: [MatTreeModule],
 })
 class MatNestedTreeWithNullOrUndefinedChild {
-  treeControl: NestedTreeControl<FoodNode>;
-  dataSource: MatTreeNestedDataSource<FoodNode>;
+  treeControl!: NestedTreeControl<FoodNode>;
+  dataSource!: MatTreeNestedDataSource<FoodNode>;
 
   constructor() {
     this.treeControl = new NestedTreeControl<FoodNode>(this._getChildren);
@@ -1008,7 +1008,7 @@ class NestedMatTreeApp {
   dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1045,7 +1045,7 @@ class WhenNodeNestedMatTreeApp {
   dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1091,7 +1091,7 @@ class MatTreeAppWithToggle {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1128,7 +1128,7 @@ class NestedMatTreeAppWithToggle {
   dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1177,7 +1177,7 @@ class WhenNodeMatTreeApp {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
