@@ -105,10 +105,10 @@ export class MatTabGroup
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
    */
-  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
+  @ContentChildren(MatTab, {descendants: true}) _allTabs!: QueryList<MatTab>;
   @ViewChildren(MatTabBody) _tabBodies: QueryList<MatTabBody> | undefined;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper!: ElementRef;
+  @ViewChild('tabHeader') _tabHeader!: MatTabHeader;
 
   /** All of the tabs that belong to the group. */
   _tabs: QueryList<MatTab> = new QueryList<MatTab>();
@@ -177,7 +177,7 @@ export class MatTabGroup
     const stringValue = value + '';
     this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
   }
-  private _animationDuration: string;
+  private _animationDuration!: string;
 
   /**
    * `tabindex` to be set on the inner element that wraps the tab content. Can be used for improved
@@ -194,7 +194,7 @@ export class MatTabGroup
     this._contentTabIndex = isNaN(value) ? null : value;
   }
 
-  private _contentTabIndex: number | null;
+  private _contentTabIndex: number | null = null;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary
@@ -246,13 +246,13 @@ export class MatTabGroup
     this._backgroundColor = value;
   }
 
-  private _backgroundColor: ThemePalette;
+  private _backgroundColor!: ThemePalette;
 
   /** Aria label of the inner `tablist` of the group. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Sets the `aria-labelledby` of the inner `tablist` of the group. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
@@ -589,7 +589,7 @@ export class MatTabGroup
 /** A simple change event emitted on focus or selection changes. */
 export class MatTabChangeEvent {
   /** Index of the currently-selected tab. */
-  index: number;
+  index!: number;
   /** Reference to the currently-selected tab. */
-  tab: MatTab;
+  tab!: MatTab;
 }

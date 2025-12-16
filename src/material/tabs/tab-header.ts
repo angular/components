@@ -52,19 +52,19 @@ export class MatTabHeader
   extends MatPaginatedTabHeader
   implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
 {
-  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items: QueryList<MatTabLabelWrapper>;
-  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
-  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
-  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
-  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
-  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
-  _inkBar: MatInkBar;
+  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items!: QueryList<MatTabLabelWrapper>;
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer!: ElementRef;
+  @ViewChild('tabList', {static: true}) _tabList!: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner!: ElementRef;
+  @ViewChild('nextPaginator') _nextPaginator!: ElementRef<HTMLElement>;
+  @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
+  _inkBar!: MatInkBar;
 
   /** Aria label of the header. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Sets the `aria-labelledby` of the header. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Whether the ripple effect is disabled or not. */
   @Input({transform: booleanAttribute})
