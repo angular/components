@@ -309,9 +309,9 @@ describe('MatAccordion', () => {
   imports: [MatExpansionModule],
 })
 class SetOfItems {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
-  @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
-  @ViewChildren(MatExpansionPanelHeader) headers: QueryList<MatExpansionPanelHeader>;
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
+  @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
+  @ViewChildren(MatExpansionPanelHeader) headers!: QueryList<MatExpansionPanelHeader>;
 
   multi: boolean = false;
 }
@@ -337,9 +337,9 @@ class SetOfItems {
   imports: [MatExpansionModule],
 })
 class NestedAccordions {
-  @ViewChildren(MatExpansionPanelHeader) headers: QueryList<MatExpansionPanelHeader>;
-  @ViewChild('secondOuterHeader') secondOuterHeader: MatExpansionPanelHeader;
-  @ViewChild('firstInnerHeader') firstInnerHeader: MatExpansionPanelHeader;
+  @ViewChildren(MatExpansionPanelHeader) headers!: QueryList<MatExpansionPanelHeader>;
+  @ViewChild('secondOuterHeader') secondOuterHeader!: MatExpansionPanelHeader;
+  @ViewChild('firstInnerHeader') firstInnerHeader!: MatExpansionPanelHeader;
 }
 
 @Component({
@@ -356,8 +356,8 @@ class NestedAccordions {
   imports: [MatExpansionModule],
 })
 class NestedPanel {
-  @ViewChild('outerPanel') outerPanel: MatExpansionPanel;
-  @ViewChild('innerPanel') innerPanel: MatExpansionPanel;
+  @ViewChild('outerPanel') outerPanel!: MatExpansionPanel;
+  @ViewChild('innerPanel') innerPanel!: MatExpansionPanel;
 }
 
 @Component({
