@@ -1,3 +1,28 @@
+<a name="21.0.4"></a>
+# 21.0.4 "lego lion" (2025-12-17)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fb2726c7e0](https://github.com/angular/components/commit/fb2726c7e0fe5d4a4a98713b4bcdb30e6fe8d45e) | fix | **tabs:** disabled tab selection |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4d2a7169ee](https://github.com/angular/components/commit/4d2a7169ee8b0df0cf7dead1a2034737d4d71748) | fix | **testing:** Skip task tracking if zone patches aren't present ([#32544](https://github.com/angular/components/pull/32544)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [57e831975e](https://github.com/angular/components/commit/57e831975e3d0eaf19b02988be155baeafbf6152) | fix | **form-field:** outline being thrown off by Tailwind ([#32513](https://github.com/angular/components/pull/32513)) |
+| [454bf96089](https://github.com/angular/components/commit/454bf9608919e0c7807afd4010551d05e1776637) | fix | **schematics:** combine style resets ([#32496](https://github.com/angular/components/pull/32496)) |
+| [d3139205c0](https://github.com/angular/components/commit/d3139205c096504533c361f1649156d3b9337bad) | fix | **slide-toggle:** Fix a11y issues by hiding label when it has no content. ([#32480](https://github.com/angular/components/pull/32480)) |
+| [a3dfa754c9](https://github.com/angular/components/commit/a3dfa754c9080f023c3f4b0bd727c2d391f6c6c1) | fix | **tooltip:** remove explicit usePopover ([#32528](https://github.com/angular/components/pull/32528)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ecfe310e8a](https://github.com/angular/components/commit/ecfe310e8ab09ef12b4e3980da5ac090fd111009) | fix | type issues when importing Aria directives ([#32561](https://github.com/angular/components/pull/32561)) |
+| [1620cabb51](https://github.com/angular/components/commit/1620cabb518aa897cff598487cc7007ebc22a5d4) | fix | use focus-visible for focus indicator ([#32514](https://github.com/angular/components/pull/32514)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.3"></a>
 # 21.0.3 "plastic-moose" (2025-12-10)
 ### cdk
