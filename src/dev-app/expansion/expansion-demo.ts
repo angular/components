@@ -40,7 +40,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpansionDemo {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   displayMode: MatAccordionDisplayMode = 'default';
   multi = false;
@@ -48,8 +48,8 @@ export class ExpansionDemo {
   disabled = false;
   showPanel3 = true;
   togglePosition: MatAccordionTogglePosition = 'after';
-  expandedHeight: string;
-  collapsedHeight: string;
+  expandedHeight!: string;
+  collapsedHeight!: string;
   events: string[] = [];
 
   addEvent(eventName: string) {

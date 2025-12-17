@@ -40,7 +40,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
   ],
 })
 export class DragAndDropDemo {
-  axisLock: 'x' | 'y';
+  axisLock!: 'x' | 'y';
   dragStartDelay = 0;
   todo = ['Go out for Lunch', 'Make a cool app', 'Watch TV', 'Eat a healthy dinner', 'Go to sleep'];
   done = ['Get up', 'Have breakfast', 'Brush teeth', 'Check reddit'];

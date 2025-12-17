@@ -118,11 +118,11 @@ export class CheckboxDemo {
   demoChecked = false;
   demoDisabled = false;
   demoIndeterminate = false;
-  demoLabel: string;
-  demoLabelledBy: string;
-  demoId: string;
-  demoName: string;
-  demoValue: string;
+  demoLabel = '';
+  demoLabelledBy = '';
+  demoId = '';
+  demoName = '';
+  demoValue = '';
   demoColor: ThemePalette = 'primary';
   demoDisableRipple = false;
   demoHideLabel = false;

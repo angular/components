@@ -86,7 +86,7 @@ const VIDEOS: Video[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
-  @ViewChild('demoYouTubePlayer') demoYouTubePlayer: ElementRef<HTMLDivElement>;
+  @ViewChild('demoYouTubePlayer') demoYouTubePlayer!: ElementRef<HTMLDivElement>;
   private _selectedVideo?: Video;
   private _playerVars?: YT.PlayerVars;
   private _selectedVideoId?: string;
@@ -98,7 +98,7 @@ export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   disableCookies = false;
   disablePlaceholder = false;
   startAt30s = false;
-  placeholderQuality: PlaceholderImageQuality;
+  placeholderQuality!: PlaceholderImageQuality;
 
   constructor() {
     this.selectedVideo = VIDEOS[0];

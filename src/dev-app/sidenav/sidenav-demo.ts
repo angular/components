@@ -28,7 +28,7 @@ export class SidenavDemo {
   showHeader = false;
   showFooter = false;
   modeIndex = 0;
-  hasBackdrop: boolean;
+  hasBackdrop = false;
   get mode(): MatDrawerMode {
     return (['side', 'over', 'push'] as MatDrawerMode[])[this.modeIndex];
   }

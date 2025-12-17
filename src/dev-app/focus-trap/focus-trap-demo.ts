@@ -51,10 +51,10 @@ export class FocusTrapDemo implements AfterViewInit {
   dialog = inject(MatDialog);
 
   @ViewChild('newElements')
-  private _newElements: ElementRef<HTMLElement>;
+  private _newElements!: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkTrapFocus)
-  private _focusTraps: QueryList<CdkTrapFocus>;
+  private _focusTraps!: QueryList<CdkTrapFocus>;
 
   _supportsShadowDom = _supportsShadowDom();
 

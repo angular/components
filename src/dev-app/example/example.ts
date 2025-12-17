@@ -64,7 +64,7 @@ export class Example implements OnInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
   /** ID of the material example to display. */
-  @Input() id: string;
+  @Input() id!: string;
 
   @Input()
   get showLabel(): boolean {
@@ -73,9 +73,9 @@ export class Example implements OnInit {
   set showLabel(v: BooleanInput) {
     this._showLabel = coerceBooleanProperty(v);
   }
-  _showLabel: boolean;
+  _showLabel = false;
 
-  title: string;
+  title!: string;
 
   async ngOnInit() {
     this.title = EXAMPLE_COMPONENTS[this.id].title;

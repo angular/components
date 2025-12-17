@@ -39,7 +39,7 @@ export class SnackBarDemo {
   snackBar = inject(MatSnackBar);
   private _dir = inject(Directionality);
 
-  @ViewChild('template') template: TemplateRef<any>;
+  @ViewChild('template') template!: TemplateRef<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
   action = false;

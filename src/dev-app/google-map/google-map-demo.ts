@@ -90,10 +90,10 @@ let apiLoadingPromise: Promise<unknown> | null = null;
 export class GoogleMapDemo {
   private readonly _mapDirectionsService = inject(MapDirectionsService);
 
-  @ViewChild(MapPolyline) polyline: MapPolyline;
-  @ViewChild(MapPolygon) polygon: MapPolygon;
-  @ViewChild(MapRectangle) rectangle: MapRectangle;
-  @ViewChild(MapCircle) circle: MapCircle;
+  @ViewChild(MapPolyline) polyline!: MapPolyline;
+  @ViewChild(MapPolygon) polygon!: MapPolygon;
+  @ViewChild(MapRectangle) rectangle!: MapRectangle;
+  @ViewChild(MapCircle) circle!: MapCircle;
   readonly cdr = inject(ChangeDetectorRef);
 
   center = {lat: 24, lng: 12};
@@ -156,7 +156,7 @@ export class GoogleMapDemo {
   // This is necessary for testing advanced markers. It seems like any value works locally.
   mapId = '123';
 
-  mapTypeId: google.maps.MapTypeId;
+  mapTypeId!: google.maps.MapTypeId;
   mapTypeIds = ['hybrid', 'roadmap', 'satellite', 'terrain'] as google.maps.MapTypeId[];
 
   directionsResult?: google.maps.DirectionsResult;

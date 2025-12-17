@@ -23,8 +23,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 export class ProgressBarDemo {
   color: ThemePalette = 'primary';
   determinateProgressValue: number = 30;
-  determinateAnimationEndValue: number;
-  bufferAnimationEndValue: number;
+  determinateAnimationEndValue!: number;
+  bufferAnimationEndValue!: number;
   bufferProgressValue: number = 30;
   bufferBufferValue: number = 40;
 
