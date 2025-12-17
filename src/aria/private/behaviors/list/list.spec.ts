@@ -46,6 +46,7 @@ describe('List Behavior', () => {
       disabled: signal(false),
       selectable: signal(true),
       searchTerm: signal(String(value)),
+      focusable: signal(true),
       index: signal(index),
     }));
   }
