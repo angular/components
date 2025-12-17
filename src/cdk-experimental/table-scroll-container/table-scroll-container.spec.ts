@@ -299,7 +299,7 @@ class StickyNativeLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columns = ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
