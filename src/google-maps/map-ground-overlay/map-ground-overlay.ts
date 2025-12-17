@@ -41,7 +41,7 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
     google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral | undefined
   >(undefined);
   private readonly _destroyed = new Subject<void>();
-  private _hasWatchers: boolean;
+  private _hasWatchers = false;
 
   /**
    * The underlying google.maps.GroundOverlay object.

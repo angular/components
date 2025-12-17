@@ -154,9 +154,9 @@ describe('MapRectangle', () => {
   imports: [GoogleMap, MapRectangle],
 })
 class TestApp {
-  @ViewChild(MapRectangle) rectangle: MapRectangle;
-  options: google.maps.RectangleOptions;
-  bounds: google.maps.LatLngBoundsLiteral;
+  @ViewChild(MapRectangle) rectangle!: MapRectangle;
+  options!: google.maps.RectangleOptions;
+  bounds!: google.maps.LatLngBoundsLiteral;
 
   handleBoundsChange() {}
 

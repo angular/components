@@ -62,7 +62,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set title(title: string) {
     this._title = title;
   }
-  private _title: string;
+  private _title!: string;
 
   /**
    * Position of the marker. See:
@@ -72,7 +72,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set position(position: google.maps.LatLngLiteral | google.maps.LatLng) {
     this._position = position;
   }
-  private _position: google.maps.LatLngLiteral | google.maps.LatLng;
+  private _position!: google.maps.LatLngLiteral | google.maps.LatLng;
 
   /**
    * Label for the marker.
@@ -82,7 +82,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set label(label: string | google.maps.MarkerLabel) {
     this._label = label;
   }
-  private _label: string | google.maps.MarkerLabel;
+  private _label!: string | google.maps.MarkerLabel;
 
   /**
    * Whether the marker is clickable. See:
@@ -92,7 +92,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set clickable(clickable: boolean) {
     this._clickable = clickable;
   }
-  private _clickable: boolean;
+  private _clickable: boolean | undefined;
 
   /**
    * Options used to configure the marker.
@@ -102,7 +102,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set options(options: google.maps.MarkerOptions) {
     this._options = options;
   }
-  private _options: google.maps.MarkerOptions;
+  private _options!: google.maps.MarkerOptions;
 
   /**
    * Icon to be used for the marker.
@@ -112,7 +112,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set icon(icon: string | google.maps.Icon | google.maps.Symbol) {
     this._icon = icon;
   }
-  private _icon: string | google.maps.Icon | google.maps.Symbol;
+  private _icon!: string | google.maps.Icon | google.maps.Symbol;
 
   /**
    * Whether the marker is visible.
@@ -122,7 +122,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
   set visible(value: boolean) {
     this._visible = value;
   }
-  private _visible: boolean;
+  private _visible: boolean | undefined;
 
   /**
    * See
