@@ -27,13 +27,13 @@ import {
 export class CdkPortalOverviewExample implements AfterViewInit {
   private _viewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
-  @ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
+  @ViewChild('templatePortalContent') templatePortalContent!: TemplateRef<unknown>;
+  @ViewChild('domPortalContent') domPortalContent!: ElementRef<HTMLElement>;
 
-  selectedPortal: Portal<any>;
-  componentPortal: ComponentPortal<ComponentPortalExample>;
-  templatePortal: TemplatePortal<any>;
-  domPortal: DomPortal<any>;
+  selectedPortal!: Portal<any>;
+  componentPortal!: ComponentPortal<ComponentPortalExample>;
+  templatePortal!: TemplatePortal<any>;
+  domPortal!: DomPortal<any>;
 
   ngAfterViewInit() {
     this.componentPortal = new ComponentPortal(ComponentPortalExample);

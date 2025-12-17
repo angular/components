@@ -27,11 +27,7 @@ export class SortOverviewExample {
     {name: 'Gingerbread', calories: 356, fat: 16, carbs: 49, protein: 4},
   ];
 
-  sortedData: Dessert[];
-
-  constructor() {
-    this.sortedData = this.desserts.slice();
-  }
+  sortedData = this.desserts.slice();
 
   sortData(sort: Sort) {
     const data = this.desserts.slice();

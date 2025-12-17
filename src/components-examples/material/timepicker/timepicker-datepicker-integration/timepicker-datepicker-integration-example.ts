@@ -22,5 +22,5 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerDatepickerIntegrationExample {
-  value: Date;
+  value!: Date;
 }

@@ -21,8 +21,8 @@ export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
   private _cdr = inject(ChangeDetectorRef);
   private _ngZone = inject(NgZone);
 
-  @ViewChild('element') element: ElementRef<HTMLElement>;
-  @ViewChild('subtree') subtree: ElementRef<HTMLElement>;
+  @ViewChild('element') element!: ElementRef<HTMLElement>;
+  @ViewChild('subtree') subtree!: ElementRef<HTMLElement>;
 
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);

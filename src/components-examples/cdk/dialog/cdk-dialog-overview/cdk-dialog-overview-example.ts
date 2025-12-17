@@ -19,7 +19,7 @@ export class CdkDialogOverviewExample {
   dialog = inject(Dialog);
 
   animal: string | undefined;
-  name: string;
+  name!: string;
 
   openDialog(): void {
     const dialogRef = this.dialog.open<string>(CdkDialogOverviewExampleDialog, {
