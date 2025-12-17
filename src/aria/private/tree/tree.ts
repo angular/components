@@ -61,7 +61,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>>, Expa
   readonly children: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.children();
 
   /** The position of this item among its siblings. */
-  readonly index = computed(() => this.tree().visibleItems().indexOf(this));
+  readonly index = computed(() => this.tree().inputs.items().indexOf(this));
 
   /** Controls expansion for child items. */
   readonly expansionBehavior: ListExpansion;
@@ -71,6 +71,9 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>>, Expa
 
   /** Whether the item is selectable. */
   readonly selectable: SignalLike<boolean> = () => this.inputs.selectable();
+
+  /** Whether the item is focusable. */
+  readonly focusable = computed(() => this.visible() && (this.inputs.focusable?.() ?? true));
 
   /** Whether the item is expanded. */
   readonly expanded: WritableSignalLike<boolean>;
@@ -142,7 +145,7 @@ export interface TreeInputs<V> extends Omit<TreeBehaviorInputs<TreeItemPattern<V
   id: SignalLike<string>;
 
   /** All items in the tree, in document order (DFS-like, a flattened list). */
-  allItems: SignalLike<TreeItemPattern<V>[]>;
+  items: SignalLike<TreeItemPattern<V>[]>;
 
   /** Whether the tree is in navigation mode. */
   nav: SignalLike<boolean>;
@@ -176,11 +179,8 @@ export class TreePattern<V> implements TreeInputs<V> {
 
   /** The direct children of the root (top-level tree items). */
   readonly children = computed(() =>
-    this.inputs.allItems().filter(item => item.level() === this.level() + 1),
+    this.inputs.items().filter(item => item.level() === this.level() + 1),
   );
-
-  /** All currently visible tree items. An item is visible if their parent is expanded. */
-  readonly visibleItems = computed(() => this.inputs.allItems().filter(item => item.visible()));
 
   /** Whether the tree selection follows focus. */
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
@@ -331,7 +331,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   > = () => this.inputs.currentType();
 
   /** All items in the tree, in document order (DFS-like, a flattened list). */
-  readonly allItems: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.allItems();
+  readonly items: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.items();
 
   /** The focus strategy used by the tree. */
   readonly focusMode: SignalLike<'roving' | 'activedescendant'> = () => this.inputs.focusMode();
@@ -372,7 +372,7 @@ export class TreePattern<V> implements TreeInputs<V> {
 
     this.treeBehavior = new Tree({
       ...inputs,
-      items: this.visibleItems,
+      items: this.inputs.items,
       multi: this.multi,
     });
 
@@ -392,7 +392,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   setDefaultState() {
     let firstItem: TreeItemPattern<V> | undefined;
 
-    for (const item of this.allItems()) {
+    for (const item of this.inputs.items()) {
       if (!item.visible()) continue;
       if (!this.treeBehavior.isFocusable(item)) continue;
 
@@ -487,6 +487,6 @@ export class TreePattern<V> implements TreeInputs<V> {
       return;
     }
     const element = event.target.closest('[role="treeitem"]');
-    return this.inputs.allItems().find(i => i.element() === element);
+    return this.inputs.items().find(i => i.element() === element);
   }
 }
