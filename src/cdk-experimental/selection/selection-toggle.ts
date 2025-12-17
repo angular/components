@@ -33,7 +33,7 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   private _controlValueAccessors = inject(NG_VALUE_ACCESSOR, {optional: true, self: true});
 
   /** The value that is associated with the toggle */
-  @Input('cdkSelectionToggleValue') value: T;
+  @Input('cdkSelectionToggleValue') value!: T;
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('cdkSelectionToggleIndex')
