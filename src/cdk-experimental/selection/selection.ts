@@ -34,7 +34,7 @@ import {SelectableWithIndex, SelectionChange, SelectionSet} from './selection-se
   exportAs: 'cdkSelection',
 })
 export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionViewer, OnDestroy {
-  viewChange: Observable<ListRange>;
+  viewChange!: Observable<ListRange>;
 
   @Input()
   get dataSource(): TableDataSource<T> {
@@ -45,9 +45,9 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: TableDataSource<T>;
+  private _dataSource!: TableDataSource<T>;
 
-  @Input('trackBy') trackByFn: TrackByFunction<T>;
+  @Input('trackBy') trackByFn!: TrackByFunction<T>;
 
   /** Whether to support multiple selection */
   @Input('cdkSelectionMultiple')
@@ -57,20 +57,20 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   set multiple(multiple: BooleanInput) {
     this._multiple = coerceBooleanProperty(multiple);
   }
-  protected _multiple: boolean;
+  protected _multiple: boolean = false;
 
   /** Emits when selection changes. */
   @Output('cdkSelectionChange') readonly change = new EventEmitter<SelectionChange<T>>();
 
   /** Latest data provided by the data source. */
-  private _data: T[] | readonly T[];
+  private _data!: T[] | readonly T[];
 
   /** Subscription that listens for the data provided by the data source.  */
-  private _renderChangeSubscription: Subscription | null;
+  private _renderChangeSubscription: Subscription | null = null;
 
   private _destroyed = new Subject<void>();
 
-  private _selection: SelectionSet<T>;
+  private _selection!: SelectionSet<T>;
 
   private _switchDataSource(dataSource: TableDataSource<T>) {
     this._data = [];

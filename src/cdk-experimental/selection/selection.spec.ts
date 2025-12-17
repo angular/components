@@ -434,7 +434,7 @@ class ListWithMultiSelection {
   private readonly _elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
+  @ViewChild(CdkSelection) cdkSelection!: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
 
@@ -498,7 +498,7 @@ class ListWithSingleSelection {
   private readonly _elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
+  @ViewChild(CdkSelection) cdkSelection!: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
   selectionChange?: SelectionChange<string>;
@@ -539,7 +539,7 @@ class MultiSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
+  @ViewChild(CdkSelection) cdkSelection!: CdkSelection<string>;
 
   columns = ['select', 'name'];
   data = ['apple', 'banana', 'cherry', 'durian'];
@@ -606,7 +606,7 @@ class SingleSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
+  @ViewChild(CdkSelection) cdkSelection!: CdkSelection<string>;
 
   columns = ['select', 'name'];
   data = ['apple', 'banana', 'cherry', 'durian'];
