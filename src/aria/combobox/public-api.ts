@@ -14,4 +14,7 @@ export {ComboboxPopupContainer} from './combobox-popup-container';
 
 // This needs to be re-exported, because it's used by the combobox components.
 // See: https://github.com/angular/components/issues/30663.
-export {DeferredContent as ɵɵDeferredContent} from '../private';
+export {
+  DeferredContent as ɵɵDeferredContent,
+  DeferredContentAware as ɵɵDeferredContentAware,
+} from '../private';
