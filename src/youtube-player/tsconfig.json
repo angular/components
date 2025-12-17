@@ -5,7 +5,8 @@
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {},
-    "types": ["jasmine"]
+    "types": ["jasmine"],
+    "strictPropertyInitialization": true
   },
   "include": ["*.ts", "../dev-mode-types.d.ts"]
 }
