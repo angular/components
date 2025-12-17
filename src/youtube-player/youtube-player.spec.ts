@@ -803,7 +803,7 @@ class TestApp {
   onPlaybackRateChange = jasmine.createSpy('onPlaybackRateChange');
   onError = jasmine.createSpy('onError');
   onApiChange = jasmine.createSpy('onApiChange');
-  @ViewChild('player') youtubePlayer: YouTubePlayer;
+  @ViewChild('player') youtubePlayer!: YouTubePlayer;
 }
 
 @Component({
@@ -821,6 +821,6 @@ class StaticStartEndSecondsApp {
   template: `<youtube-player [videoId]="videoId"/>`,
 })
 class NoEventsApp {
-  @ViewChild(YouTubePlayer) player: YouTubePlayer;
+  @ViewChild(YouTubePlayer) player!: YouTubePlayer;
   videoId = VIDEO_ID;
 }
