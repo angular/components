@@ -64,7 +64,7 @@ interface PeriodicElement {
 
 @Directive()
 abstract class BaseTestComponent {
-  @ViewChild('table') table: ElementRef;
+  @ViewChild('table') table!: ElementRef;
 
   preservedValues = new FormValueContainer<PeriodicElement, {'name': string}>();
 
