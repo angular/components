@@ -28,11 +28,9 @@ export class FocusDispatcher {
   protected readonly directionality = inject(Directionality);
 
   /** Observes keydown events triggered from the table. */
-  readonly keyObserver: PartialObserver<KeyboardEvent>;
-
-  constructor() {
-    this.keyObserver = {next: event => this.handleKeyboardEvent(event)};
-  }
+  readonly keyObserver: PartialObserver<KeyboardEvent> = {
+    next: event => this.handleKeyboardEvent(event),
+  };
 
   /**
    * Moves focus to earlier or later cells (in dom order) by offset cells relative to
