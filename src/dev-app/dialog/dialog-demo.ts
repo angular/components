@@ -59,10 +59,10 @@ import {MatSelectModule} from '@angular/material/select';
 export class DialogDemo {
   dialog = inject(MatDialog);
 
-  dialogRef: MatDialogRef<JazzDialog> | null;
-  lastAfterClosedResult: string;
-  lastBeforeCloseResult: string;
-  actionsAlignment: 'start' | 'center' | 'end';
+  dialogRef: MatDialogRef<JazzDialog> | null = null;
+  lastAfterClosedResult = '';
+  lastBeforeCloseResult = '';
+  actionsAlignment!: 'start' | 'center' | 'end';
   config = {
     disableClose: false,
     panelClass: 'custom-overlay-pane-class',
@@ -88,7 +88,7 @@ export class DialogDemo {
   enableLegacyPadding = false;
   isScrollable = false;
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   readonly cdr = inject(ChangeDetectorRef);
 
@@ -259,7 +259,7 @@ export class ContentElementDialog {
   dialog = inject(MatDialog);
 
   actionsAlignment?: 'start' | 'center' | 'end';
-  isScrollable: boolean;
+  isScrollable = false;
 
   showInStackedDialog() {
     this.dialog.open(IFrameDialog, {maxWidth: '80vw'});

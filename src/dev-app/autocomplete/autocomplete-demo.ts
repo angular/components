@@ -77,7 +77,7 @@ export class AutocompleteDemo {
   reactiveDisableStateOption: DisableStateOption = 'none';
   templateDisableStateOption: DisableStateOption = 'none';
 
-  @ViewChild(NgModel) modelDir: NgModel;
+  @ViewChild(NgModel) modelDir!: NgModel;
 
   groupedStates: StateGroup[];
   filteredGroupedStates: StateGroup[];
@@ -207,7 +207,7 @@ export class AutocompleteDemo {
   }
 
   dialog = inject(MatDialog);
-  dialogRef: MatDialogRef<AutocompleteDemoExampleDialog> | null;
+  dialogRef: MatDialogRef<AutocompleteDemoExampleDialog> | null = null;
 
   openDialog() {
     this.dialogRef = this.dialog.open(AutocompleteDemoExampleDialog, {width: '400px'});

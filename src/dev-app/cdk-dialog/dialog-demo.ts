@@ -31,9 +31,9 @@ const defaultDialogConfig = new DialogConfig();
 export class DialogDemo {
   dialog = inject(Dialog);
 
-  dialogRef: DialogRef<string> | null;
-  result: string;
-  actionsAlignment: 'start' | 'center' | 'end';
+  dialogRef: DialogRef<string> | null = null;
+  result = '';
+  actionsAlignment!: 'start' | 'center' | 'end';
   config = {
     disableClose: defaultDialogConfig.disableClose,
     panelClass: 'demo-cdk-dialog',
@@ -51,7 +51,7 @@ export class DialogDemo {
   };
   numTemplateOpens = 0;
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   readonly cdr = inject(ChangeDetectorRef);
 

@@ -30,13 +30,13 @@ import {MatInputModule} from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RippleDemo {
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
   centered = false;
   disabled = false;
   unbounded = false;
   rounded = false;
-  radius: number;
+  radius!: number;
   rippleSpeed = 1;
   rippleColor = '';
 

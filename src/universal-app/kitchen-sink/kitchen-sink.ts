@@ -231,7 +231,7 @@ export class KitchenSink {
   virtualScrollData = Array(10000).fill(50);
 
   /** Whether the kitchen sink is running as a part of an automated test or for local debugging. */
-  isAutomated: boolean;
+  isAutomated = false;
 
   constructor() {
     const viewportRuler = inject(ViewportRuler);
