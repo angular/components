@@ -21,15 +21,15 @@ export class TableHttpExample implements AfterViewInit {
   private _httpClient = inject(HttpClient);
 
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  exampleDatabase: ExampleHttpDatabase | null;
+  exampleDatabase: ExampleHttpDatabase | null = null;
   data: GithubIssue[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit() {
     this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);

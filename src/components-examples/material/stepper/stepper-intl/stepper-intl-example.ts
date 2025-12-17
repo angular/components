@@ -34,7 +34,7 @@ export class StepperIntlExample {
   private _formBuilder = inject(FormBuilder);
   private _matStepperIntl = inject(MatStepperIntl);
 
-  optionalLabelText: string;
+  optionalLabelText = '';
   optionalLabelTextChoices: string[] = ['Option 1', 'Option 2', 'Option 3'];
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],

@@ -35,7 +35,7 @@ function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeNestedChildrenAccessorExample {
-  @ViewChild(CdkTree) tree: CdkTree<NestedFoodNode>;
+  @ViewChild(CdkTree) tree!: CdkTree<NestedFoodNode>;
 
   childrenAccessor = (dataNode: NestedFoodNode) => dataNode.children ?? [];
 

@@ -14,7 +14,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 export class TextFieldAutosizeTextareaExample {
   private _injector = inject(Injector);
 
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   triggerResize() {
     // Wait for content to render, then trigger textarea resize.

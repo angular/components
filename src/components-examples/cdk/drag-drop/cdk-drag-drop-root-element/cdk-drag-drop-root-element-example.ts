@@ -25,9 +25,9 @@ export class CdkDragDropRootElementExample implements AfterViewInit, OnDestroy {
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild(TemplateRef) _dialogTemplate: TemplateRef<any>;
-  private _overlayRef: OverlayRef;
-  private _portal: TemplatePortal;
+  @ViewChild(TemplateRef) _dialogTemplate!: TemplateRef<any>;
+  private _overlayRef!: OverlayRef;
+  private _portal!: TemplatePortal;
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._dialogTemplate, this._viewContainerRef);
