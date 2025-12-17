@@ -20,13 +20,13 @@ export class ComboboxTreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
   /** Whether the currently focused item is collapsible. */
-  isItemCollapsible = () => this.inputs.activeItem()?.parent() instanceof TreeItemPattern;
+  isItemCollapsible = () => this.inputs.activeItem()?.parent instanceof TreeItemPattern;
 
   /** The ARIA role for the tree. */
   role = () => 'tree' as const;
 
   /* The id of the active (focused) item in the tree. */
-  activeId = computed(() => this.listBehavior.activeDescendant());
+  activeId = computed(() => this.treeBehavior.activeDescendant());
 
   /** Returns the currently active (focused) item in the tree. */
   getActiveItem = () => this.inputs.activeItem();
@@ -57,32 +57,32 @@ export class ComboboxTreePattern<V>
   override setDefaultState(): void {}
 
   /** Navigates to the specified item in the tree. */
-  focus = (item: TreeItemPattern<V>) => this.listBehavior.goto(item);
+  focus = (item: TreeItemPattern<V>) => this.treeBehavior.goto(item);
 
   /** Navigates to the next focusable item in the tree. */
-  next = () => this.listBehavior.next();
+  next = () => this.treeBehavior.next();
 
   /** Navigates to the previous focusable item in the tree. */
-  prev = () => this.listBehavior.prev();
+  prev = () => this.treeBehavior.prev();
 
   /** Navigates to the last focusable item in the tree. */
-  last = () => this.listBehavior.last();
+  last = () => this.treeBehavior.last();
 
   /** Navigates to the first focusable item in the tree. */
-  first = () => this.listBehavior.first();
+  first = () => this.treeBehavior.first();
 
   /** Unfocuses the currently focused item in the tree. */
-  unfocus = () => this.listBehavior.unfocus();
+  unfocus = () => this.treeBehavior.unfocus();
 
   // TODO: handle non-selectable parent nodes.
   /** Selects the specified item in the tree or the current active item if not provided. */
-  select = (item?: TreeItemPattern<V>) => this.listBehavior.select(item);
+  select = (item?: TreeItemPattern<V>) => this.treeBehavior.select(item);
 
   /** Toggles the selection state of the given item in the tree or the current active item if not provided. */
-  toggle = (item?: TreeItemPattern<V>) => this.listBehavior.toggle(item);
+  toggle = (item?: TreeItemPattern<V>) => this.treeBehavior.toggle(item);
 
   /** Clears the selection in the tree. */
-  clearSelection = () => this.listBehavior.deselectAll();
+  clearSelection = () => this.treeBehavior.deselectAll();
 
   /** Retrieves the TreeItemPattern associated with a pointer event. */
   getItem = (e: PointerEvent) => this._getItem(e);

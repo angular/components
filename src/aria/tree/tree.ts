@@ -185,7 +185,7 @@ export class Tree<V> {
       const activeItem = untracked(() => inputs.activeItem());
 
       if (!items.some(i => i === activeItem) && activeItem) {
-        this._pattern.listBehavior.unfocus();
+        this._pattern.treeBehavior.unfocus();
       }
     });
 
