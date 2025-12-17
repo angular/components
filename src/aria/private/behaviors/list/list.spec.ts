@@ -245,6 +245,39 @@ describe('List Behavior', () => {
       list.prev();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
+
+    describe('with items subset', () => {
+      it('should navigate next/prev within subset', () => {
+        const {list, items} = getDefaultPatterns();
+        const subset = [items[0], items[2], items[4]];
+
+        // Start at 0
+        expect(list.inputs.activeItem()).toBe(items[0]);
+
+        // next(subset) -> 2 (skip 1)
+        list.next({items: subset});
+        expect(list.inputs.activeItem()).toBe(items[2]);
+
+        // next(subset) -> 4 (skip 3)
+        list.next({items: subset});
+        expect(list.inputs.activeItem()).toBe(items[4]);
+
+        // prev(subset) -> 2 (skip 3)
+        list.prev({items: subset});
+        expect(list.inputs.activeItem()).toBe(items[2]);
+      });
+
+      it('should verify first/last within subset', () => {
+        const {list, items} = getDefaultPatterns();
+        const subset = [items[1], items[2], items[3]];
+
+        list.first({items: subset});
+        expect(list.inputs.activeItem()).toBe(items[1]);
+
+        list.last({items: subset});
+        expect(list.inputs.activeItem()).toBe(items[3]);
+      });
+    });
   });
 
   describe('Selection', () => {
