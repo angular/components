@@ -18,7 +18,7 @@ type WritableSignalOverrides<O> = {
     : never;
 };
 
-type TestTreeInputs<V> = Omit<TreeInputs<V> & WritableSignalOverrides<TreeInputs<V>>, 'allItems'>;
+type TestTreeInputs<V> = Omit<TreeInputs<V> & WritableSignalOverrides<TreeInputs<V>>, 'items'>;
 type TestTreeItemInputs<V> = TreeItemInputs<V> & WritableSignalOverrides<TreeItemInputs<V>>;
 
 const a = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 65, 'A', mods);
@@ -62,11 +62,11 @@ interface TestTreeItem<V> {
 
 describe('Tree Pattern', () => {
   function createTree<V>(treeData: TestTreeItem<V>[], treeInputs: TestTreeInputs<V>) {
-    const allItems = signal<TreeItemPattern<V>[]>([]);
+    const items = signal<TreeItemPattern<V>[]>([]);
     const itemPatternInputsMap = new Map<string, TestTreeItemInputs<V>>();
     const tree = new TreePattern<V>({
       ...treeInputs,
-      allItems,
+      items,
     });
 
     let nextId = 0;
@@ -75,7 +75,7 @@ describe('Tree Pattern', () => {
       treeData: TestTreeItem<V>[],
       parent: TreeItemPattern<V> | TreePattern<V>,
     ): TreeItemPattern<V>[] {
-      const items: TreeItemPattern<V>[] = [];
+      const levelItems: TreeItemPattern<V>[] = [];
 
       for (const node of treeData) {
         const itemId = `treeitem-${nextId++}`;
@@ -97,24 +97,24 @@ describe('Tree Pattern', () => {
         const item = new TreeItemPattern(itemPatternInputs);
         itemPatternInputsMap.set(itemId, itemPatternInputs);
 
-        allItems.set([...allItems(), item]);
-        items.push(item);
+        items.set([...items(), item]);
+        levelItems.push(item);
 
         const childItems = buildItems(node.children ?? [], item);
         itemPatternInputs.children.set(childItems);
       }
-      return items;
+      return levelItems;
     }
 
     // Build tree items recursively.
     buildItems(treeData, tree as TreePattern<V>);
-    tree.activeItem.set(allItems()[0]);
+    tree.activeItem.set(items()[0]);
 
-    return {tree, allItems, itemPatternInputsMap};
+    return {tree, items, itemPatternInputsMap};
   }
 
-  function getItemByValue<V>(allItems: TreeItemPattern<V>[], value: V) {
-    return allItems.find(i => i.value() === value)!;
+  function getItemByValue<V>(items: TreeItemPattern<V>[], value: V) {
+    return items.find(i => i.value() === value)!;
   }
 
   const treeExample: TestTreeItem<string>[] = [
@@ -162,29 +162,29 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute level', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+      const {items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
 
       expect(item0.level()).toBe(1);
       expect(item0_0.level()).toBe(2);
     });
 
     it('should correctly compute setsize', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+      const {items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
 
       expect(item0.setsize()).toBe(3);
       expect(item0_0.setsize()).toBe(2);
     });
 
     it('should correctly compute posinset', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
-      const item0_1 = getItemByValue(allItems(), 'Item 0-1');
+      const {items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
+      const item0_1 = getItemByValue(items(), 'Item 0-1');
 
       expect(item0.posinset()).toBe(1);
       expect(item1.posinset()).toBe(2);
@@ -216,16 +216,16 @@ describe('Tree Pattern', () => {
       });
 
       it('should have undefined selected state', () => {
-        const {allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         treeInputs.values.set(['Item 0']);
         expect(item0.selected()).toBeUndefined();
       });
 
       it('should correctly compute current state', () => {
-        const {allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         treeInputs.values.set(['Item 0']);
         expect(item0.current()).toBe('page');
@@ -238,8 +238,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should have undefined current state when non-selectable', () => {
-        const {allItems, itemPatternInputsMap} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {items, itemPatternInputsMap} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         treeInputs.values.set(['Item 0']);
         expect(item0.current()).toBe('page');
         itemPatternInputsMap.get(item0.id())!.selectable.set(false);
@@ -272,9 +272,9 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute active state', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
 
       treeInputs.activeItem.set(item0);
       expect(item0.active()).toBe(true);
@@ -286,16 +286,16 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute tab index state', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       expect(item0.tabIndex()).toBe(tree.treeBehavior.getItemTabindex(item0));
     });
 
     it('should navigate next on ArrowDown (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item0);
 
       expect(tree.activeItem()).toBe(item0);
@@ -305,9 +305,9 @@ describe('Tree Pattern', () => {
 
     it('should navigate prev on ArrowUp (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item1);
 
       expect(tree.activeItem()).toBe(item1);
@@ -317,9 +317,9 @@ describe('Tree Pattern', () => {
 
     it('should navigate next on ArrowRight (horizontal)', () => {
       treeInputs.orientation.set('horizontal');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item0);
 
       expect(tree.activeItem()).toBe(item0);
@@ -329,9 +329,9 @@ describe('Tree Pattern', () => {
 
     it('should navigate prev on ArrowLeft (horizontal)', () => {
       treeInputs.orientation.set('horizontal');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item1);
 
       expect(tree.activeItem()).toBe(item1);
@@ -342,9 +342,9 @@ describe('Tree Pattern', () => {
     it('should navigate next on ArrowLeft (horizontal & rtl)', () => {
       treeInputs.orientation.set('horizontal');
       treeInputs.textDirection.set('rtl');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       treeInputs.activeItem.set(item0);
 
       expect(tree.activeItem()).toBe(item0);
@@ -355,9 +355,9 @@ describe('Tree Pattern', () => {
     it('should navigate prev on ArrowRight (horizontal & rtl)', () => {
       treeInputs.orientation.set('horizontal');
       treeInputs.textDirection.set('rtl');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item1);
 
       expect(tree.activeItem()).toBe(item1);
@@ -366,9 +366,9 @@ describe('Tree Pattern', () => {
     });
 
     it('should navigate to the first visible item on Home', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item2 = getItemByValue(allItems(), 'Item 2');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item2 = getItemByValue(items(), 'Item 2');
       tree.treeBehavior.goto(item2);
 
       expect(tree.activeItem()).toBe(item2);
@@ -377,9 +377,9 @@ describe('Tree Pattern', () => {
     });
 
     it('should navigate to the last visible item on End', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item2 = getItemByValue(allItems(), 'Item 2');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item2 = getItemByValue(items(), 'Item 2');
       tree.treeBehavior.goto(item0);
 
       expect(tree.activeItem()).toBe(item0);
@@ -394,9 +394,9 @@ describe('Tree Pattern', () => {
         {value: 'Item B', disabled: true, selectable: true, expanded: false},
         {value: 'Item C', disabled: false, selectable: true, expanded: false},
       ];
-      const {tree, allItems} = createTree(localTreeExample, treeInputs);
-      const itemA = getItemByValue(allItems(), 'Item A');
-      const itemC = getItemByValue(allItems(), 'Item C');
+      const {tree, items} = createTree(localTreeExample, treeInputs);
+      const itemA = getItemByValue(items(), 'Item A');
+      const itemC = getItemByValue(items(), 'Item C');
       tree.treeBehavior.goto(itemA);
 
       expect(tree.activeItem()).toBe(itemA);
@@ -411,9 +411,9 @@ describe('Tree Pattern', () => {
         {value: 'Item B', disabled: true, selectable: true, expanded: false},
         {value: 'Item C', disabled: false, selectable: true, expanded: false},
       ];
-      const {tree, allItems} = createTree(localTreeExample, treeInputs);
-      const itemA = getItemByValue(allItems(), 'Item A');
-      const itemB = getItemByValue(allItems(), 'Item B');
+      const {tree, items} = createTree(localTreeExample, treeInputs);
+      const itemA = getItemByValue(items(), 'Item A');
+      const itemB = getItemByValue(items(), 'Item B');
       tree.treeBehavior.goto(itemA);
 
       expect(tree.activeItem()).toBe(itemA);
@@ -423,8 +423,8 @@ describe('Tree Pattern', () => {
 
     it('should not navigate when the tree is disabled', () => {
       treeInputs.disabled.set(true);
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       tree.treeBehavior.goto(item0);
 
       expect(tree.activeItem()).toBe(item0);
@@ -458,9 +458,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should correctly compute selected state', () => {
-        const {allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         treeInputs.values.set(['Item 0']);
         expect(item0.selected()).toBe(true);
@@ -472,17 +472,17 @@ describe('Tree Pattern', () => {
       });
 
       it('should have undefined selected state when non-selectable', () => {
-        const {allItems, itemPatternInputsMap} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {items, itemPatternInputsMap} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         treeInputs.values.set(['Item 0']);
         itemPatternInputsMap.get(item0.id())!.selectable.set(false);
         expect(item0.selected()).toBeUndefined();
       });
 
       it('should select an item on navigation', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onKeydown(down());
         expect(tree.activeItem()).toBe(item1);
@@ -629,8 +629,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
@@ -645,8 +645,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should not allow wrapping while Shift is held down', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
 
         tree.onKeydown(shift());
         tree.onKeydown(up({shift: true}));
@@ -655,8 +655,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should select a range of visible items on Shift + Space (or Enter)', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(down());
@@ -671,9 +671,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item1);
 
@@ -683,9 +683,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
 
@@ -712,8 +712,8 @@ describe('Tree Pattern', () => {
           {value: 'C', disabled: false, selectable: true, expanded: false},
         ];
         treeInputs.softDisabled.set(true);
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
-        const itemA = getItemByValue(allItems(), 'A');
+        const {tree, items} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(items(), 'A');
 
         tree.treeBehavior.goto(itemA);
         tree.onKeydown(shift());
@@ -728,8 +728,8 @@ describe('Tree Pattern', () => {
           {value: 'B', disabled: false, selectable: false, expanded: false},
           {value: 'C', disabled: false, selectable: true, expanded: false},
         ];
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
-        const itemA = getItemByValue(allItems(), 'A');
+        const {tree, items} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(items(), 'A');
 
         tree.treeBehavior.goto(itemA);
         tree.onKeydown(shift());
@@ -739,8 +739,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should select all visible items on Ctrl + A', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(a({control: true}));
@@ -754,8 +754,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should deselect all visible items on Ctrl + A if all are selected', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(a({control: true}));
@@ -796,8 +796,8 @@ describe('Tree Pattern', () => {
 
       it('should navigate without selecting if the Ctrl key is pressed', () => {
         treeInputs.values.set(['Item 0']);
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onKeydown(down({control: true}));
         expect(tree.inputs.values()).toEqual(['Item 0']);
@@ -818,8 +818,8 @@ describe('Tree Pattern', () => {
 
       it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
         treeInputs.values.set(['Item 0']);
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
@@ -830,8 +830,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should not allow wrapping while Shift is held down', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         tree.treeBehavior.goto(item0);
 
         tree.onKeydown(shift());
@@ -841,8 +841,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should select a range of visible items on Shift + Space (or Enter)', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0);
 
@@ -854,9 +854,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item1);
 
@@ -866,9 +866,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
 
@@ -892,9 +892,9 @@ describe('Tree Pattern', () => {
           {value: 'C', disabled: false, selectable: true, expanded: false},
         ];
         treeInputs.softDisabled.set(false);
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
+        const {tree, items} = createTree(localTreeData, treeInputs);
         treeInputs.values.set(['A']);
-        tree.treeBehavior.goto(getItemByValue(allItems(), 'A'));
+        tree.treeBehavior.goto(getItemByValue(items(), 'A'));
 
         tree.onKeydown(down());
         expect(tree.inputs.values()).toEqual(['C']);
@@ -906,9 +906,9 @@ describe('Tree Pattern', () => {
           {value: 'B', disabled: false, selectable: false, expanded: false},
           {value: 'C', disabled: false, selectable: true, expanded: false},
         ];
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
+        const {tree, items} = createTree(localTreeData, treeInputs);
         treeInputs.values.set(['A']);
-        tree.treeBehavior.goto(getItemByValue(allItems(), 'A'));
+        tree.treeBehavior.goto(getItemByValue(items(), 'A'));
 
         tree.onKeydown(down());
         tree.onKeydown(down());
@@ -916,9 +916,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should deselect all except the focused item on Ctrl + A if all are selected', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
 
@@ -961,8 +961,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and select a single item on click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
@@ -971,8 +971,8 @@ describe('Tree Pattern', () => {
 
       it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.values()).toEqual([]);
@@ -1003,8 +1003,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and toggle selection on click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
@@ -1012,8 +1012,8 @@ describe('Tree Pattern', () => {
       });
 
       it('should not deselect item on click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
@@ -1026,8 +1026,8 @@ describe('Tree Pattern', () => {
 
       it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.inputs.values()).toEqual([]);
@@ -1058,9 +1058,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and toggle selection on click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item0.element()!));
         expect(tree.inputs.values()).toEqual(['Item 0']);
@@ -1073,9 +1073,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and select range from anchor on shift + click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
@@ -1108,9 +1108,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and select a single item on click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item0.element()!));
         expect(tree.inputs.values()).toEqual(['Item 0']);
@@ -1119,9 +1119,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and toggle selection on ctrl + click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
         tree.onPointerdown(createClickEvent(item1.element()!, {control: true}));
@@ -1131,9 +1131,9 @@ describe('Tree Pattern', () => {
       });
 
       it('should navigate and select range from anchor on shift + click', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item2 = getItemByValue(allItems(), 'Item 2');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item2 = getItemByValue(items(), 'Item 2');
 
         tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
         tree.onKeydown(shift());
@@ -1148,10 +1148,10 @@ describe('Tree Pattern', () => {
       });
 
       it('should select a new range on subsequent shift + clicks, deselecting previous range', () => {
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item1 = getItemByValue(allItems(), 'Item 1');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item1 = getItemByValue(items(), 'Item 1');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
@@ -1166,8 +1166,8 @@ describe('Tree Pattern', () => {
         const localTreeData: TestTreeItem<string>[] = [
           {value: 'A', disabled: true, selectable: true, expanded: false},
         ];
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
-        const itemA = getItemByValue(allItems(), 'A');
+        const {tree, items} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(items(), 'A');
 
         tree.onPointerdown(createClickEvent(itemA.element()!));
         expect(tree.inputs.values()).toEqual([]);
@@ -1178,8 +1178,8 @@ describe('Tree Pattern', () => {
         const localTreeData: TestTreeItem<string>[] = [
           {value: 'A', disabled: false, selectable: false, expanded: false},
         ];
-        const {tree, allItems} = createTree(localTreeData, treeInputs);
-        const itemA = getItemByValue(allItems(), 'A');
+        const {tree, items} = createTree(localTreeData, treeInputs);
+        const itemA = getItemByValue(items(), 'A');
         tree.onPointerdown(createClickEvent(itemA.element()!));
         expect(tree.inputs.values()).toEqual([]);
       });
@@ -1210,7 +1210,7 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute visible state', () => {
-      const {allItems} = createTree(
+      const {items} = createTree(
         [
           {
             value: 'Item 0',
@@ -1238,9 +1238,9 @@ describe('Tree Pattern', () => {
         ],
         treeInputs,
       );
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
-      const item0_0_0 = getItemByValue(allItems(), 'Item 0-0-0');
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
+      const item0_0_0 = getItemByValue(items(), 'Item 0-0-0');
 
       expect(item0_0.visible()).toBe(false);
       expect(item0_0_0.visible()).toBe(false);
@@ -1256,8 +1256,8 @@ describe('Tree Pattern', () => {
     });
 
     it('should correctly compute expanded state', () => {
-      const {allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
 
       expect(item0.expanded()).toBe(false);
       item0.expanded.set(true);
@@ -1266,8 +1266,8 @@ describe('Tree Pattern', () => {
 
     it('should expand an item on expandKey if collapsed (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       tree.treeBehavior.goto(item0);
 
       expect(item0.expanded()).toBe(false);
@@ -1277,9 +1277,9 @@ describe('Tree Pattern', () => {
 
     it('should move focus to the first child on expandKey if expanded and has children (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
       tree.treeBehavior.goto(item0);
       item0.expanded.set(true);
 
@@ -1289,8 +1289,8 @@ describe('Tree Pattern', () => {
 
     it('should do nothing on expandKey if expanded and has no children (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item1 = getItemByValue(items(), 'Item 1');
       tree.treeBehavior.goto(item1);
 
       tree.onKeydown(right());
@@ -1299,8 +1299,8 @@ describe('Tree Pattern', () => {
 
     it('should collapse an item on collapseKey if expanded (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       tree.treeBehavior.goto(item0);
       item0.expanded.set(true);
 
@@ -1311,9 +1311,9 @@ describe('Tree Pattern', () => {
 
     it('should move focus to the parent on collapseKey if collapsed (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item0_0 = getItemByValue(items(), 'Item 0-0');
       item0.expanded.set(true);
       tree.treeBehavior.goto(item0_0);
 
@@ -1323,8 +1323,8 @@ describe('Tree Pattern', () => {
 
     it('should do nothing on collapseKey if collapsed and is a root item (vertical)', () => {
       treeInputs.orientation.set('vertical');
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       tree.treeBehavior.goto(item0);
 
       tree.onKeydown(left());
@@ -1333,10 +1333,10 @@ describe('Tree Pattern', () => {
     });
 
     it('should expand all sibling items on Shift + Asterisk (*)', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
-      const item1 = getItemByValue(allItems(), 'Item 1');
-      const item2 = getItemByValue(allItems(), 'Item 2');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
+      const item1 = getItemByValue(items(), 'Item 1');
+      const item2 = getItemByValue(items(), 'Item 2');
       tree.treeBehavior.goto(item0);
 
       tree.onKeydown(asterisk({shift: true}));
@@ -1346,8 +1346,8 @@ describe('Tree Pattern', () => {
     });
 
     it('should toggle expansion on pointerdown (click)', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
 
       expect(item0.expanded()).toBe(false);
       tree.onPointerdown(createClickEvent(item0.element()!));
@@ -1357,8 +1357,8 @@ describe('Tree Pattern', () => {
     });
 
     it('should not toggle expansion on pointerdown if the item is not expandable', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item1 = getItemByValue(allItems(), 'Item 1');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item1 = getItemByValue(items(), 'Item 1');
 
       expect(item1.expanded()).toBe(false);
       tree.onPointerdown(createClickEvent(item1.element()!));
@@ -1366,8 +1366,8 @@ describe('Tree Pattern', () => {
     });
 
     it('should not toggle expansion on pointerdown if the item is disabled', () => {
-      const {tree, allItems, itemPatternInputsMap} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items, itemPatternInputsMap} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       itemPatternInputsMap.get(item0.id())!.disabled.set(true);
 
       tree.onPointerdown(createClickEvent(item0.element()!));
@@ -1376,8 +1376,8 @@ describe('Tree Pattern', () => {
 
     it('should not toggle expansion on pointerdown if the tree is disabled', () => {
       treeInputs.disabled.set(true);
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
 
       tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
@@ -1391,9 +1391,9 @@ describe('Tree Pattern', () => {
 
       it('should navigate and select the first child on expandKey if expanded and has children (vertical)', () => {
         treeInputs.orientation.set('vertical');
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         tree.treeBehavior.goto(item0);
         item0.expanded.set(true);
 
@@ -1404,9 +1404,9 @@ describe('Tree Pattern', () => {
 
       it('should navigate and select the parent on collapseKey if collapsed (vertical)', () => {
         treeInputs.orientation.set('vertical');
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
 
@@ -1424,9 +1424,9 @@ describe('Tree Pattern', () => {
 
       it('should navigate without select the first child on Ctrl + expandKey if expanded and has children (vertical)', () => {
         treeInputs.orientation.set('vertical');
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         tree.treeBehavior.goto(item0);
         item0.expanded.set(true);
         tree.inputs.values.set(['Item 1']); // pre-select something else
@@ -1438,9 +1438,9 @@ describe('Tree Pattern', () => {
 
       it('should navigate without select the parent on Ctrl + collapseKey if collapsed (vertical)', () => {
         treeInputs.orientation.set('vertical');
-        const {tree, allItems} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(allItems(), 'Item 0');
-        const item0_0 = getItemByValue(allItems(), 'Item 0-0');
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
         tree.inputs.values.set(['Item 1']); // pre-select something else
@@ -1480,10 +1480,10 @@ describe('Tree Pattern', () => {
         {value: 'A', disabled: false, selectable: true, expanded: false},
         {value: 'B', disabled: false, selectable: true, expanded: false},
       ];
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[0]);
+      expect(treeInputs.activeItem()).toBe(items()[0]);
     });
 
     it('should set activeIndex to the first visible focusable disabled item if softDisabled is true and no selection', () => {
@@ -1492,10 +1492,10 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: false, selectable: true, expanded: false},
       ];
       treeInputs.softDisabled.set(true);
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[0]);
+      expect(treeInputs.activeItem()).toBe(items()[0]);
     });
 
     it('should set activeIndex to the first selected visible focusable item', () => {
@@ -1505,10 +1505,10 @@ describe('Tree Pattern', () => {
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
       treeInputs.values.set(['B']);
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[1]);
+      expect(treeInputs.activeItem()).toBe(items()[1]);
     });
 
     it('should prioritize the first selected item in visible order', () => {
@@ -1518,10 +1518,10 @@ describe('Tree Pattern', () => {
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
       treeInputs.values.set(['C', 'A']);
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[0]);
+      expect(treeInputs.activeItem()).toBe(items()[0]);
     });
 
     it('should skip a selected disabled item if softDisabled is false', () => {
@@ -1532,10 +1532,10 @@ describe('Tree Pattern', () => {
       ];
       treeInputs.values.set(['B']);
       treeInputs.softDisabled.set(false);
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[0]);
+      expect(treeInputs.activeItem()).toBe(items()[0]);
     });
 
     it('should select a selected disabled item if softDisabled is true', () => {
@@ -1546,19 +1546,19 @@ describe('Tree Pattern', () => {
       ];
       treeInputs.values.set(['B']);
       treeInputs.softDisabled.set(true);
-      const {tree, allItems} = createTree(localTreeData, treeInputs);
+      const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeItem()).toBe(allItems()[1]);
+      expect(treeInputs.activeItem()).toBe(items()[1]);
     });
 
     it('should set activeIndex to first visible focusable item if selected item is not visible', () => {
-      const {tree, allItems} = createTree(treeExample, treeInputs);
-      const item0 = getItemByValue(allItems(), 'Item 0');
+      const {tree, items} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(items(), 'Item 0');
       treeInputs.values.set(['Item 0-0']);
 
       expect(item0.expanded()).toBe(false);
-      expect(getItemByValue(allItems(), 'Item 0-0').visible()).toBe(false);
+      expect(getItemByValue(items(), 'Item 0-0').visible()).toBe(false);
       tree.setDefaultState();
       expect(treeInputs.activeItem()).toBe(item0);
     });

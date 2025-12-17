@@ -32,7 +32,7 @@ export class ComboboxTreePattern<V>
   getActiveItem = () => this.inputs.activeItem();
 
   /** The list of items in the tree. */
-  items = computed(() => this.inputs.allItems());
+  override items = computed(() => this.inputs.items());
 
   /** The tab index for the tree. Always -1 because the combobox handles focus. */
   override tabIndex: SignalLike<-1 | 0> = () => -1;
@@ -88,7 +88,7 @@ export class ComboboxTreePattern<V>
   getItem = (e: PointerEvent) => this._getItem(e);
 
   /** Retrieves the currently selected items in the tree */
-  getSelectedItems = () => this.inputs.allItems().filter(item => item.selected());
+  getSelectedItems = () => this.inputs.items().filter(item => item.selected());
 
   /** Sets the value of the combobox tree. */
   setValue = (value: V | undefined) => this.inputs.values.set(value ? [value] : []);
