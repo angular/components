@@ -67,14 +67,14 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
    * See https://googlemaps.github.io/js-markerclusterer/interfaces/Renderer.html.
    */
   @Input()
-  renderer: Renderer;
+  renderer!: Renderer;
 
   /**
    * Algorithm used to cluster the markers.
    * See https://googlemaps.github.io/js-markerclusterer/interfaces/Algorithm.html.
    */
   @Input()
-  algorithm: Algorithm;
+  algorithm!: Algorithm;
 
   /** Emits when clustering has started. */
   @Output() readonly clusteringbegin: Observable<void> =
@@ -92,7 +92,7 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
   @Output() readonly markerClustererInitialized: EventEmitter<MarkerClusterer> =
     new EventEmitter<MarkerClusterer>();
 
-  @ContentChildren(MAP_MARKER, {descendants: true}) _markers: QueryList<MarkerDirective>;
+  @ContentChildren(MAP_MARKER, {descendants: true}) _markers!: QueryList<MarkerDirective>;
 
   /** Underlying MarkerClusterer object used to interact with Google Maps. */
   markerClusterer?: MarkerClusterer;

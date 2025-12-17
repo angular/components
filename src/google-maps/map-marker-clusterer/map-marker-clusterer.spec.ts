@@ -199,9 +199,9 @@ describe('MapMarkerClusterer', () => {
   `,
 })
 class TestApp {
-  @ViewChild(MapMarkerClusterer) markerClusterer: MapMarkerClusterer;
-  renderer: Renderer;
-  algorithm: Algorithm;
+  @ViewChild(MapMarkerClusterer) markerClusterer!: MapMarkerClusterer;
+  renderer!: Renderer;
+  algorithm!: Algorithm;
   state = 'state1';
   onClusteringBegin = jasmine.createSpy('onclusteringbegin spy');
   onClusterClick = jasmine.createSpy('clusterClick spy');

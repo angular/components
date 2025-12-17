@@ -49,7 +49,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   set data(data: HeatmapData) {
     this._data = data;
   }
-  private _data: HeatmapData;
+  private _data!: HeatmapData;
 
   /**
    * Options used to configure the heatmap. See:
@@ -59,7 +59,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   set options(options: Partial<google.maps.visualization.HeatmapLayerOptions>) {
     this._options = options;
   }
-  private _options: Partial<google.maps.visualization.HeatmapLayerOptions>;
+  private _options!: Partial<google.maps.visualization.HeatmapLayerOptions>;
 
   /**
    * The underlying google.maps.visualization.HeatmapLayer object.

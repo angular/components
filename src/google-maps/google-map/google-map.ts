@@ -61,8 +61,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
   private _ngZone = inject(NgZone);
   private _eventManager = new MapEventManager(inject(NgZone));
-  private _mapEl: HTMLElement;
-  private _existingAuthFailureCallback: GoogleMapsWindow['gm_authFailure'];
+  private _mapEl!: HTMLElement;
+  private _existingAuthFailureCallback!: GoogleMapsWindow['gm_authFailure'];
 
   /**
    * The underlying google.maps.Map object
@@ -96,13 +96,13 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   set center(center: google.maps.LatLngLiteral | google.maps.LatLng) {
     this._center = center;
   }
-  private _center: google.maps.LatLngLiteral | google.maps.LatLng;
+  private _center!: google.maps.LatLngLiteral | google.maps.LatLng;
 
   @Input()
   set zoom(zoom: number) {
     this._zoom = zoom;
   }
-  private _zoom: number;
+  private _zoom!: number;
 
   @Input()
   set options(options: google.maps.MapOptions) {
