@@ -54,7 +54,7 @@ export class BottomSheetDemo {
     ariaLabel: 'Example bottom sheet',
   };
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   openComponent() {
     this._bottomSheet.open(ExampleBottomSheet, this.config);

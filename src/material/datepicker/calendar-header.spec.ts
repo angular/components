@@ -381,9 +381,9 @@ describe('MatCalendarHeader', () => {
   imports: [MatDatepickerModule],
 })
 class StandardCalendar {
-  selected: Date;
-  selectedYear: Date;
-  selectedMonth: Date;
+  selected!: Date;
+  selectedYear!: Date;
+  selectedMonth!: Date;
   startDate = new Date(2017, JAN, 31);
 }
 
@@ -399,6 +399,6 @@ class StandardCalendar {
 })
 class CalendarWithMinMaxDate {
   startAt = new Date(2018, JAN, 1);
-  minDate: Date | null;
-  maxDate: Date | null;
+  minDate: Date | null = null;
+  maxDate: Date | null = null;
 }

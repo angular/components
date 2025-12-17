@@ -262,7 +262,7 @@ export class CdkNoDataRow {
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkNoDataRow, never>;
 }
 
-// @public
+// @public @deprecated
 export class CdkRecycleRows {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkRecycleRows, "cdk-table[recycleRows], table[cdk-table][recycleRows]", never, {}, {}, never, never, true, never>;
@@ -291,7 +291,7 @@ export class CdkRowDef<T> extends BaseRowDef {
 }
 
 // @public
-export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTable<T> implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit, StickyPositioningListener {
     constructor(...args: unknown[]);
     addColumnDef(columnDef: CdkColumnDef): void;
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
@@ -307,6 +307,8 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     protected _data: readonly T[] | undefined;
     get dataSource(): CdkTableDataSourceInput<T>;
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
+    readonly _dataSourceChanges: Subject<CdkTableDataSourceInput<T>>;
+    readonly _dataStream: Subject<readonly T[]>;
     // (undocumented)
     protected readonly _differs: IterableDiffers;
     // (undocumented)
@@ -334,6 +336,8 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     // (undocumented)
     static ngAcceptInputType_multiTemplateDataRows: unknown;
     // (undocumented)
+    static ngAcceptInputType_recycleRows: unknown;
+    // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -345,30 +349,31 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;
     _outletAssigned(): void;
+    recycleRows: boolean;
     removeColumnDef(columnDef: CdkColumnDef): void;
     removeFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
     removeRowDef(rowDef: CdkRowDef<T>): void;
+    protected _renderedRange?: ListRange;
     renderRows(): void;
     // (undocumented)
     _rowOutlet: DataRowOutlet;
     setNoDataRow(noDataRow: CdkNoDataRow | null): void;
+    stickyColumnsUpdated(update: StickyUpdate): void;
     protected stickyCssClass: string;
-    // (undocumented)
-    protected readonly _stickyPositioningListener: StickyPositioningListener;
+    stickyEndColumnsUpdated(update: StickyUpdate): void;
+    stickyFooterRowsUpdated(update: StickyUpdate): void;
+    stickyHeaderRowsUpdated(update: StickyUpdate): void;
     get trackBy(): TrackByFunction<T>;
     set trackBy(fn: TrackByFunction<T>);
     updateStickyColumnStyles(): void;
     updateStickyFooterRowStyles(): void;
     updateStickyHeaderRowStyles(): void;
-    readonly viewChange: BehaviorSubject<{
-        start: number;
-        end: number;
-    }>;
+    readonly viewChange: BehaviorSubject<ListRange>;
     // (undocumented)
-    protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
+    protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": { "alias": "trackBy"; "required": false; }; "dataSource": { "alias": "dataSource"; "required": false; }; "multiTemplateDataRows": { "alias": "multiTemplateDataRows"; "required": false; }; "fixedLayout": { "alias": "fixedLayout"; "required": false; }; "recycleRows": { "alias": "recycleRows"; "required": false; }; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, never>;
 }

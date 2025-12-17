@@ -19,7 +19,7 @@ top of the CDK data-table.
 The first step to writing the data-table template is to define the columns.
 A column definition is specified via an `<ng-container>` with the `cdkColumnDef` directive, giving
 the column a name. Each column definition can contain a header-cell template
-(`cdkHeaderCellDef`), data-cell template (`cdkCellDef`), and footer-cell 
+(`cdkHeaderCellDef`), data-cell template (`cdkCellDef`), and footer-cell
 template (`cdkFooterCellDef`).
 
 ```html
@@ -120,9 +120,9 @@ cells that are displayed in the column `name` will be given the class `cdk-colum
 columns to be given styles that will match across the header and rows.
 
 Since columns can be given any string for its name, its possible that it cannot be directly applied
-to the CSS class (e.g. `*nameColumn!`). In these cases, the special characters will be replaced by 
+to the CSS class (e.g. `*nameColumn!`). In these cases, the special characters will be replaced by
 the `-` character. For example, cells container in a column named `*nameColumn!` will be given
-the class `cdk-column--nameColumn-`.    
+the class `cdk-column--nameColumn-`.
 
 #### Connecting the table to a data source
 
@@ -158,14 +158,22 @@ table how to uniquely identify rows to track how the data changes with each upda
 ```
 
 ##### `recycleRows`
-By default, `CdkTable` creates and destroys an internal Angular view for each row. This allows rows 
-to participate in animations and to toggle between different row templates with `cdkRowDefWhen`. If 
-you don't need these features, you can instruct the table to cache and recycle rows by specifying 
+By default, `CdkTable` creates and destroys an internal Angular view for each row. This allows rows
+to participate in animations and to toggle between different row templates with `cdkRowDefWhen`. If
+you don't need these features, you can instruct the table to cache and recycle rows by specifying
 `recycleRows`.
 
 ```html
 <table cdk-table [dataSource]="dataSource" recycleRows>
 ```
+
+### Virtual scrolling
+
+If you're showing a large amount of data in your table, you can use virtual scrolling to ensure a
+smooth experience for the user. To enable virtual scrolling, you have to wrap the CDK table in a
+`cdk-virtual-scroll-viewport` element and add some CSS to make it scrollable.
+
+<!-- example(cdk-table-virtual-scroll) -->
 
 ### Alternate HTML to using native table
 
@@ -174,7 +182,7 @@ over the style of the table, it may be easier to follow an alternative template 
 not use the native table element tags.
 
 This alternative approach replaces the native table element tags with the CDK table directive
-selectors. For example, `<table cdk-table>` becomes `<cdk-table>`; `<tr cdk-row`> becomes 
+selectors. For example, `<table cdk-table>` becomes `<cdk-table>`; `<tr cdk-row`> becomes
 `<cdk-row>`. The following shows a previous example using this alternative template:
 
 ```html

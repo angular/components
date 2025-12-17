@@ -29,7 +29,7 @@ export class MatStepperIcon {
   templateRef = inject<TemplateRef<MatStepperIconContext>>(TemplateRef);
 
   /** Name of the icon to be overridden. */
-  @Input('matStepperIcon') name: StepState;
+  @Input('matStepperIcon') name!: StepState;
 
   constructor(...args: unknown[]);
   constructor() {}

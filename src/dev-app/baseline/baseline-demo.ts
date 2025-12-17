@@ -31,5 +31,5 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaselineDemo {
-  name: string;
+  name = '';
 }

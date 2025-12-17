@@ -236,14 +236,14 @@ describe('MapMarker', () => {
   imports: [GoogleMap, MapMarker],
 })
 class TestApp {
-  @ViewChild(MapMarker) marker: MapMarker;
-  title: string;
-  position: google.maps.LatLng | google.maps.LatLngLiteral;
-  label: string | google.maps.MarkerLabel;
-  clickable: boolean;
-  options: google.maps.MarkerOptions;
-  icon: string;
-  visible: boolean;
+  @ViewChild(MapMarker) marker!: MapMarker;
+  title!: string;
+  position!: google.maps.LatLng | google.maps.LatLngLiteral;
+  label!: string | google.maps.MarkerLabel;
+  clickable!: boolean;
+  options!: google.maps.MarkerOptions;
+  icon!: string;
+  visible!: boolean;
 
   handleClick() {}
 

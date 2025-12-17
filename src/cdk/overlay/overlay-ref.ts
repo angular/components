@@ -51,12 +51,13 @@ export class OverlayRef implements PortalOutlet {
   private _backdropRef: BackdropRef | null = null;
   private _detachContentMutationObserver: MutationObserver | undefined;
   private _detachContentAfterRenderRef: AfterRenderRef | undefined;
+  private _disposed = false;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
    * the `_host` to its original position in the DOM when it gets re-attached.
    */
-  private _previousHostParent: HTMLElement;
+  private _previousHostParent!: HTMLElement;
 
   /** Stream of keydown events dispatched to this overlay. */
   readonly _keydownEvents = new Subject<KeyboardEvent>();
@@ -120,6 +121,10 @@ export class OverlayRef implements PortalOutlet {
    * @returns The portal attachment result.
    */
   attach(portal: Portal<any>): any {
+    if (this._disposed) {
+      return null;
+    }
+
     // Insert the host into the DOM before attaching the portal, otherwise
     // the animations module will skip animations on repeat attachments.
     this._attachHost();
@@ -240,6 +245,10 @@ export class OverlayRef implements PortalOutlet {
 
   /** Cleans up the overlay from the DOM. */
   dispose(): void {
+    if (this._disposed) {
+      return;
+    }
+
     const isAttached = this.hasAttached();
 
     if (this._positionStrategy) {
@@ -266,6 +275,7 @@ export class OverlayRef implements PortalOutlet {
 
     this._detachments.complete();
     this._completeDetachContent();
+    this._disposed = true;
   }
 
   /** Whether the overlay has attached content. */

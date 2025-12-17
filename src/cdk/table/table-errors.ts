@@ -30,7 +30,7 @@ export function getTableDuplicateColumnNameError(name: string) {
 export function getTableMultipleDefaultRowDefsError() {
   return Error(
     `There can only be one default row without a when predicate function. ` +
-      'Or set `multiTemplateDataRows`.'
+      'Or set `multiTemplateDataRows`.',
   );
 }
 

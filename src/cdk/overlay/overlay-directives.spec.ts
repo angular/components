@@ -791,38 +791,38 @@ describe('Overlay directives', () => {
   imports: [OverlayModule],
 })
 class ConnectedOverlayDirectiveTest {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
-  @ViewChild('otherTrigger') otherTrigger: CdkOverlayOrigin;
-  @ViewChild('nonDirectiveTrigger') nonDirectiveTrigger: ElementRef<HTMLElement>;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger!: CdkOverlayOrigin;
+  @ViewChild('otherTrigger') otherTrigger!: CdkOverlayOrigin;
+  @ViewChild('nonDirectiveTrigger') nonDirectiveTrigger!: ElementRef<HTMLElement>;
 
   isOpen = false;
-  width: number | string;
-  height: number | string;
-  minWidth: number | string;
-  positionStrategy: FlexibleConnectedPositionStrategy;
-  minHeight: number | string;
-  offsetX: number;
-  offsetY: number;
-  triggerOverride: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
-  hasBackdrop: boolean;
-  disableClose: boolean;
-  viewportMargin: number;
-  flexibleDimensions: boolean;
-  growAfterOpen: boolean;
-  push: boolean;
-  scrollStrategy: ScrollStrategy;
+  width!: number | string;
+  height!: number | string;
+  minWidth!: number | string;
+  positionStrategy!: FlexibleConnectedPositionStrategy;
+  minHeight!: number | string;
+  offsetX!: number;
+  offsetY!: number;
+  triggerOverride!: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
+  hasBackdrop!: boolean;
+  disableClose!: boolean;
+  viewportMargin!: number;
+  flexibleDimensions!: boolean;
+  growAfterOpen!: boolean;
+  push!: boolean;
+  scrollStrategy!: ScrollStrategy;
   backdropClickHandler = jasmine.createSpy('backdropClick handler');
   positionChangeHandler = jasmine.createSpy('positionChange handler');
   keydownHandler = jasmine.createSpy('keydown handler');
-  positionOverrides: ConnectionPositionPair[];
+  positionOverrides!: ConnectionPositionPair[];
   attachHandler = jasmine.createSpy('attachHandler').and.callFake(() => {
     const overlayElement = this.connectedOverlayDirective.overlayRef.overlayElement;
     this.attachResult = overlayElement.querySelector('p') as HTMLElement;
   });
   detachHandler = jasmine.createSpy('detachHandler');
-  attachResult: HTMLElement;
-  transformOriginSelector: string;
+  attachResult!: HTMLElement;
+  transformOriginSelector!: string;
   matchWidth = false;
 }
 
@@ -834,6 +834,6 @@ class ConnectedOverlayDirectiveTest {
   imports: [OverlayModule],
 })
 class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger!: CdkOverlayOrigin;
 }

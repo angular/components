@@ -1386,7 +1386,7 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
 
       const styles = fixture.nativeElement.querySelector('button').style;
-      expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
+      expect(styles.touchAction || styles.webkitUserDrag).toBe('none');
     });
 
     it('should allow native touch interactions if touch gestures are turned off', () => {
@@ -1395,7 +1395,7 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
 
       const styles = fixture.nativeElement.querySelector('button').style;
-      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+      expect(styles.touchAction || styles.webkitUserDrag).toBeFalsy();
     });
 
     it('should allow text selection on inputs when gestures are set to auto', () => {
@@ -1407,13 +1407,13 @@ describe('MatTooltip', () => {
 
       expect(inputStyle.userSelect).toBeFalsy();
       expect(inputStyle.webkitUserSelect).toBeFalsy();
-      expect((inputStyle as any).msUserSelect).toBeFalsy();
-      expect((inputStyle as any).MozUserSelect).toBeFalsy();
+      expect(inputStyle.msUserSelect).toBeFalsy();
+      expect(inputStyle.MozUserSelect).toBeFalsy();
 
       expect(textareaStyle.userSelect).toBeFalsy();
       expect(textareaStyle.webkitUserSelect).toBeFalsy();
-      expect((textareaStyle as any).msUserSelect).toBeFalsy();
-      expect((textareaStyle as any).MozUserSelect).toBeFalsy();
+      expect(textareaStyle.msUserSelect).toBeFalsy();
+      expect(textareaStyle.MozUserSelect).toBeFalsy();
     });
 
     it('should disable text selection on inputs when gestures are set to on', () => {
@@ -1425,14 +1425,14 @@ describe('MatTooltip', () => {
       const inputUserSelect =
         inputStyle.userSelect ||
         inputStyle.webkitUserSelect ||
-        (inputStyle as any).msUserSelect ||
-        (inputStyle as any).MozUserSelect;
+        inputStyle.msUserSelect ||
+        inputStyle.MozUserSelect;
       const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
       const textareaUserSelect =
         textareaStyle.userSelect ||
         textareaStyle.webkitUserSelect ||
-        (textareaStyle as any).msUserSelect ||
-        (textareaStyle as any).MozUserSelect;
+        textareaStyle.msUserSelect ||
+        textareaStyle.MozUserSelect;
 
       expect(inputUserSelect).toBe('none');
       expect(textareaUserSelect).toBe('none');
@@ -1570,13 +1570,13 @@ describe('MatTooltip', () => {
 })
 class BasicTooltipDemo {
   position: TooltipPosition = 'below';
-  message: any = initialTooltipMessage;
+  message: string | number = initialTooltipMessage;
   showButton = true;
   showTooltipClass = false;
   tooltipDisabled = false;
   touchGestures: TooltipTouchGestures = 'auto';
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1596,7 +1596,7 @@ class ScrollableTooltipDemo {
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 
-  @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
+  @ViewChild(CdkScrollable) scrollingContainer!: CdkScrollable;
 
   scrollDown() {
     const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
@@ -1658,8 +1658,8 @@ class DataBoundAriaLabelTooltip {
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea') textarea!: ElementRef<HTMLTextAreaElement>;
   touchGestures: TooltipTouchGestures = 'auto';
 }
 
@@ -1674,7 +1674,7 @@ class TooltipOnTextFields {
   imports: [MatTooltipModule, OverlayModule],
 })
 class TooltipOnDraggableElement {
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button') button!: ElementRef;
   touchGestures: TooltipTouchGestures = 'auto';
 }
 
@@ -1683,9 +1683,9 @@ class TooltipOnDraggableElement {
   imports: [MatTooltip],
 })
 class TooltipDemoWithoutPositionBinding {
-  message: any = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  message: string = initialTooltipMessage;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1694,8 +1694,8 @@ class TooltipDemoWithoutPositionBinding {
 })
 class TooltipDemoWithoutTooltipClassBinding {
   message = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1705,9 +1705,9 @@ class TooltipDemoWithoutTooltipClassBinding {
   imports: [MatTooltip],
 })
 class TooltipDemoWithTooltipClassBinding {
-  message: any = initialTooltipMessage;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  message: string = initialTooltipMessage;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -1717,8 +1717,8 @@ class TooltipDemoWithTooltipClassBinding {
 })
 class WideTooltipDemo {
   message = 'Test';
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 /** Asserts whether a tooltip directive has a tooltip instance. */

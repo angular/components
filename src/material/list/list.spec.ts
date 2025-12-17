@@ -415,7 +415,7 @@ class BaseTestList {
 class ListWithOneAnchorItem extends BaseTestList {
   // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
   // it doesn't get populated.
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
 }
 
 @Component({
@@ -428,7 +428,7 @@ class ListWithOneAnchorItem extends BaseTestList {
   imports: [MatListModule],
 })
 class NavListWithOneAnchorItem extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
 }
@@ -446,7 +446,7 @@ class NavListWithOneAnchorItem extends BaseTestList {
   imports: [MatListModule],
 })
 class NavListWithActivatedItem extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
 
@@ -464,7 +464,7 @@ class NavListWithActivatedItem extends BaseTestList {
   imports: [MatListModule],
 })
 class ActionListWithoutType extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
   disableListRipple = false;
   disableItemRipple = false;
 }
@@ -479,7 +479,7 @@ class ActionListWithoutType extends BaseTestList {
   imports: [MatListModule],
 })
 class ActionListWithType extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
 }
 
 @Component({
@@ -505,7 +505,7 @@ class ActionListWithDisabledList extends BaseTestList {
   imports: [MatListModule],
 })
 class ActionListWithDisabledItem extends BaseTestList {
-  @ViewChild(MatListItem) buttonItem: MatListItem;
+  @ViewChild(MatListItem) buttonItem!: MatListItem;
   disableItem = true;
 }
 

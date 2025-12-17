@@ -72,7 +72,7 @@ class DirectiveWithViewContainer {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
-  @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
+  @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
 
   childComponentExists = signal(true);
 

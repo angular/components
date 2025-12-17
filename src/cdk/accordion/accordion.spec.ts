@@ -111,8 +111,8 @@ describe('CdkAccordion', () => {
   imports: [CdkAccordionModule],
 })
 class SetOfItems {
-  @ViewChild(CdkAccordion) accordion: CdkAccordion;
-  @ViewChildren(CdkAccordionItem) items: QueryList<CdkAccordionItem>;
+  @ViewChild(CdkAccordion) accordion!: CdkAccordion;
+  @ViewChildren(CdkAccordionItem) items!: QueryList<CdkAccordionItem>;
   multi: boolean = false;
 }
 
@@ -126,6 +126,6 @@ class SetOfItems {
   imports: [CdkAccordionModule],
 })
 class NestedItems {
-  @ViewChild('outerItem') outerItem: CdkAccordionItem;
-  @ViewChild('innerItem') innerItem: CdkAccordionItem;
+  @ViewChild('outerItem') outerItem!: CdkAccordionItem;
+  @ViewChild('innerItem') innerItem!: CdkAccordionItem;
 }

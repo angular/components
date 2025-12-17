@@ -3,7 +3,10 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent} from './accordion';
+import {AccordionPanel} from './accordion-panel';
+import {AccordionTrigger} from './accordion-trigger';
+import {AccordionContent} from './accordion-content';
+import {AccordionGroup} from './accordion-group';
 
 describe('AccordionGroup', () => {
   let fixture: ComponentFixture<AccordionGroupExample>;

@@ -53,7 +53,7 @@ export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
   protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
   protected readonly document = inject(DOCUMENT);
 
-  @ViewChild('top', {static: true}) topElement: ElementRef<HTMLElement>;
+  @ViewChild('top', {static: true}) topElement!: ElementRef<HTMLElement>;
 
   protected override updateResizeActive(active: boolean): void {
     super.updateResizeActive(active);

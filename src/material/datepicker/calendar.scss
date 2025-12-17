@@ -132,7 +132,7 @@ $fallbacks: m3-datepicker.get-tokens();
 
 // For calendar cells, render the focus indicator when the parent cell is
 // focused.
-.mat-calendar-body-cell:focus .mat-focus-indicator::before {
+.mat-calendar-body-cell:focus-visible .mat-focus-indicator::before {
   content: '';
 }
 

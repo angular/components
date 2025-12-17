@@ -28,10 +28,13 @@ class Walker extends Lint.RuleWalker {
 
     const args = options.ruleArguments[0] || {};
 
-    this._config = Object.keys(args).reduce((config, key) => {
-      config[key] = new RegExp(args[key]);
-      return config;
-    }, {} as {[key: string]: RegExp});
+    this._config = Object.keys(args).reduce(
+      (config, key) => {
+        config[key] = new RegExp(args[key]);
+        return config;
+      },
+      {} as {[key: string]: RegExp},
+    );
   }
 
   override visitClassDeclaration(node: ts.ClassDeclaration) {

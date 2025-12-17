@@ -6,11 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
   CdkTableBasicExample,
   CdkTableFixedLayoutExample,
   CdkTableFlexBasicExample,
   CdkTableRecycleRowsExample,
+  CdkTableVirtualScrollExample,
 } from '@angular/components-examples/cdk/table';
 import {
   TableBasicExample,
@@ -37,9 +39,9 @@ import {
   TableStickyHeaderExample,
   TableTextColumnAdvancedExample,
   TableTextColumnExample,
+  TableVirtualScrollExample,
   TableWrappedExample,
 } from '@angular/components-examples/material/table';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: './table-demo.html',
@@ -48,6 +50,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     CdkTableBasicExample,
     CdkTableFixedLayoutExample,
     CdkTableRecycleRowsExample,
+    CdkTableVirtualScrollExample,
     TableFlexBasicExample,
     TableBasicExample,
     TableDynamicColumnsExample,
@@ -59,6 +62,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TableMultipleRowTemplateExample,
     TableOverviewExample,
     TablePaginationExample,
+    TableVirtualScrollExample,
     TableRowContextExample,
     TableSelectionExample,
     TableSortingExample,

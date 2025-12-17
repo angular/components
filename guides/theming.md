@@ -58,7 +58,7 @@ body {
 }
 ```
 
-You can also define a convenient set of CSS utility classes that let you apply 
+You can also define a convenient set of CSS utility classes that let you apply
 theme styles from your component templates.
 
 ```scss
@@ -103,10 +103,10 @@ distinct accent color to some components.
 
 You can also set the `theme-type` to determine the color values are defined:
 
-*   `color-scheme` \- include both light and dark colors using the `light-dark`
-    CSS color function
-*   `light` \- only define the light color values
-*   `dark` \- only define the dark color values
+- `color-scheme` \- include both light and dark colors using the `light-dark`
+  CSS color function
+- `light` \- only define the light color values
+- `dark` \- only define the dark color values
 
 The `light-dark` CSS color function is
 [widely available](https://caniuse.com/?search=light-dark) for all major
@@ -227,18 +227,18 @@ scheme to communicate an application’s hierarchy, state, and brand.
 Angular Material provides twelve prebuilt color palettes that can be used for
 your application’s theme:
 
-* `$red-palette`
-* `$green-palette`
-* `$blue-palette`
-* `$yellow-palette`
-* `$cyan-palette`
-* `$magenta-palette`
-* `$orange-palette`
-* `$chartreuse-palette`
-* `$spring-green-palette`
-* `$azure-palette`
-* `$violet-palette`
-* `$rose-palette`
+- `$red-palette`
+- `$green-palette`
+- `$blue-palette`
+- `$yellow-palette`
+- `$cyan-palette`
+- `$magenta-palette`
+- `$orange-palette`
+- `$chartreuse-palette`
+- `$spring-green-palette`
+- `$azure-palette`
+- `$violet-palette`
+- `$rose-palette`
 
 ### Custom Color Palettes
 
@@ -485,46 +485,32 @@ by the Material Design specification. This behavior, however, can fall short of 
 requirements, such as [WCAG 4.5:1][], which require a stronger indication of browser focus.
 
 Angular Material supports rendering highly visible outlines on focused elements. Applications can
-enable these strong focus indicators via two Sass mixins:
-`strong-focus-indicators` and `strong-focus-indicators-theme`.
-
-The `strong-focus-indicators` mixin emits structural indicator styles for all components. This mixin
-should be included exactly once in an application, similar to the `core` mixin described above.
-
-The `strong-focus-indicators-theme` mixin emits only the indicator's color styles. This mixin should
-be included once per theme, similar to the theme mixins described above. Additionally, you can use
-this mixin to change the color of the focus indicators in situations in which the default color
-would not contrast sufficiently with the background color.
-
-The following example includes strong focus indicator styles in an application alongside the rest of
-the custom theme API.
+enable these strong focus indicators by calling `mat.strong-focus-indicators()`.
 
 ```scss
 @use '@angular/material' as mat;
 
-$my-theme: (
-  color: mat.$violet-palette,
-  typography: Roboto,
-  density: 0
-);
-
-@include mat.strong-focus-indicators();
-
 html {
   color-scheme: light dark;
-  @include mat.theme($my-theme);
-  @include mat.strong-focus-indicators-theme($my-theme);
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
+  @include mat.strong-focus-indicators();
 }
 ```
+
+By default, the focus indicator uses the theme's secondary color, but you can customize this color
+by calling the `strong-focus-indicators-theme($color)` mixin. Additionally, you can use
+this mixin to change the color of the focus indicators in situations in which the default color
+would not contrast sufficiently with the background color.
 
 ### Customizing strong focus indicators
 
 You can pass a configuration map to `strong-focus-indicators` to customize the appearance of the
-indicators. This configuration includes `border-style`, `border-width`, and `border-radius`.
-
-You also can customize the color of indicators with `strong-focus-indicators-theme`. This mixin
-accepts either a theme, as described earlier in this guide, or a CSS color value. When providing a
-theme, the indicators will use the default hue of the primary palette.
+indicators. This configuration includes `border-color`, `border-style`, `border-width`, and
+`border-radius`.
 
 The following example includes strong focus indicator styles with custom settings alongside the rest
 of the custom theme API.
@@ -533,22 +519,11 @@ of the custom theme API.
 @use '@angular/material' as mat;
 
 @include mat.strong-focus-indicators((
+  border-color: red,
   border-style: dotted,
   border-width: 4px,
   border-radius: 2px,
 ));
-
-html {
-  color-scheme: light dark;
-
-  @include mat.theme((
-    color: mat.$rose-palette,
-    typography: Roboto,
-    density: 0
-  ));
-
-  @include mat.strong-focus-indicators-theme(orange);
-}
 ```
 
 [WCAG]: https://www.w3.org/WAI/standards-guidelines/wcag/glance/

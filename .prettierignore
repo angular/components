@@ -13,3 +13,7 @@ src/material/schematics/ng-update/test-cases/**/*_input.ts
 src/material/schematics/ng-update/test-cases/**/*_expected_output.ts
 
 pnpm-lock.yaml
+
+
+# TODO: Enable formatting on markdown files
+**/*.md

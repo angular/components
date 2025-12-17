@@ -36,10 +36,10 @@ interface CachedItemPosition<T> {
  */
 export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Root element container of the drop list. */
-  private _element: HTMLElement;
+  private _element!: HTMLElement;
 
   /** Function used to determine if an item can be sorted into a specific index. */
-  private _sortPredicate: SortPredicate<DragRef>;
+  private _sortPredicate!: SortPredicate<DragRef>;
 
   /** Cache of the dimensions of all the items inside the container. */
   private _itemPositions: CachedItemPosition<DragRef>[] = [];
@@ -49,13 +49,13 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
    * that were there at the start of the sequence, as well as any items that have been dragged
    * in, but haven't been dropped yet.
    */
-  private _activeDraggables: DragRef[];
+  private _activeDraggables!: DragRef[];
 
   /** Direction in which the list is oriented. */
   orientation: 'vertical' | 'horizontal' = 'vertical';
 
   /** Layout direction of the drop list. */
-  direction: Direction;
+  direction: Direction = 'ltr';
 
   constructor(private _dragDropRegistry: DragDropRegistry) {}
 

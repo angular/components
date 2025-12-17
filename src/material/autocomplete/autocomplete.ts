@@ -119,7 +119,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Manages active item in option list based on key events. */
-  _keyManager: ActiveDescendantKeyManager<MatOption>;
+  _keyManager!: ActiveDescendantKeyManager<MatOption>;
 
   /** Whether the autocomplete panel should be visible, depending on option length. */
   showPanel: boolean = false;
@@ -131,7 +131,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   _isOpen: boolean = false;
 
   /** Latest trigger that opened the autocomplete. */
-  _latestOpeningTrigger: unknown;
+  _latestOpeningTrigger!: unknown;
 
   /** @docs-private Sets the theme color of the panel. */
   _setColor(value: ThemePalette) {
@@ -139,29 +139,29 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
   /** @docs-private theme color of the panel */
-  protected _color: ThemePalette;
+  protected _color!: ThemePalette;
 
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
 
   /** @docs-private */
-  @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: true}) template!: TemplateRef<any>;
 
   /** Element for the panel containing the autocomplete options. */
-  @ViewChild('panel') panel: ElementRef;
+  @ViewChild('panel') panel!: ElementRef;
 
   /** Reference to all options within the autocomplete. */
-  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
+  @ContentChildren(MatOption, {descendants: true}) options!: QueryList<MatOption>;
 
   /** Reference to all option groups within the autocomplete. */
-  @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
+  @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups!: QueryList<MatOptgroup>;
 
   /** Aria label of the autocomplete. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Function that maps an option's control value to its display value in the trigger. */
   @Input() displayWith: ((value: any) => string) | null = null;
@@ -187,10 +187,10 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
    * match the width of its host.
    */
-  @Input() panelWidth: string | number;
+  @Input() panelWidth!: string | number;
 
   /** Whether ripples are disabled within the autocomplete panel. */
-  @Input({transform: booleanAttribute}) disableRipple: boolean;
+  @Input({transform: booleanAttribute}) disableRipple: boolean = false;
 
   /** Event that is emitted whenever an option from the list is selected. */
   @Output() readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =
@@ -215,7 +215,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     this._classList = value;
     this._elementRef.nativeElement.className = '';
   }
-  _classList: string | string[];
+  _classList!: string | string[];
 
   /** Whether checkmark indicator for single-selection options is hidden. */
   @Input({transform: booleanAttribute})

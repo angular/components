@@ -6,23 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
 import {ComboboxInputs, ComboboxPattern} from './combobox';
 import {OptionPattern} from '../listbox/option';
 import {ComboboxListboxPattern} from '../listbox/combobox-listbox';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ModifierKeys} from '@angular/cdk/testing';
 import {TreeItemPattern} from '../tree/tree';
 import {ComboboxTreePattern} from '../tree/combobox-tree';
 
 // Test types
 type TestOption = OptionPattern<string> & {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 };
 
 type TestInputs = {
-  readonly [K in keyof ComboboxInputs<TestOption, string>]: WritableSignal<
+  readonly [K in keyof ComboboxInputs<TestOption, string>]: WritableSignalLike<
     ComboboxInputs<TestOption, string>[K] extends SignalLike<infer T> ? T : never
   >;
 };
@@ -65,7 +64,7 @@ function _type(
   combobox: ComboboxPattern<any, string>,
   allOptions: TestOption[] | TreeItemPattern<string>[],
   popup: ComboboxListboxPattern<string> | ComboboxTreePattern<string>,
-  firstMatch: WritableSignal<string | undefined>,
+  firstMatch: WritableSignalLike<string | undefined>,
   backspace = false,
 ) {
   combobox.onFocusIn();
@@ -77,9 +76,9 @@ function _type(
   );
   const options = allOptions.filter(o => o.searchTerm().startsWith(text));
   if (popup instanceof ComboboxListboxPattern) {
-    (popup.inputs.items as WritableSignal<any[]>).set(options);
+    (popup.inputs.items as WritableSignalLike<any[]>).set(options);
   } else if (popup instanceof ComboboxTreePattern) {
-    (popup.inputs.allItems as WritableSignal<any[]>).set(options);
+    (popup.inputs.allItems as WritableSignalLike<any[]>).set(options);
   }
   firstMatch.set(options[0]?.value());
   combobox.onFilter();
@@ -87,7 +86,7 @@ function _type(
 
 function getComboboxPattern(
   inputs: Partial<{
-    [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+    [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
   }> = {},
 ) {
   const containerEl = signal(document.createElement('div'));
@@ -205,13 +204,13 @@ function getTreePattern(
         children: signal([]),
       });
 
-      (tree.inputs.allItems as WritableSignal<TreeItemPattern<string>[]>).update(items =>
+      (tree.inputs.allItems as WritableSignalLike<TreeItemPattern<string>[]>).update(items =>
         items.concat(treeItem),
       );
 
       if (node.children) {
         const children = createTreeItems(node.children, treeItem);
-        (treeItem.inputs.children as WritableSignal<TreeItemPattern<string>[]>).set(children);
+        (treeItem.inputs.children as WritableSignalLike<TreeItemPattern<string>[]>).set(children);
       }
 
       return treeItem;
@@ -225,7 +224,7 @@ function getTreePattern(
 describe('Combobox with Listbox Pattern', () => {
   function getPatterns(
     inputs: Partial<{
-      [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+      [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
     }> = {},
   ) {
     const {combobox, inputEl, containerEl, firstMatch, inputValue} = getComboboxPattern(inputs);
@@ -241,7 +240,7 @@ describe('Combobox with Listbox Pattern', () => {
       'Cranberry',
     ]);
 
-    (combobox.inputs.popupControls as WritableSignal<any>).set(listbox);
+    (combobox.inputs.popupControls as WritableSignalLike<any>).set(listbox);
 
     return {
       combobox,
@@ -327,6 +326,15 @@ describe('Combobox with Listbox Pattern', () => {
       expect(combobox.expanded()).toBe(false);
     });
 
+    it('should not close on Enter if the option is disabled', () => {
+      const {combobox, options} = getPatterns();
+      options()[0].disabled.set(true);
+      combobox.onKeydown(down());
+      expect(combobox.expanded()).toBe(true);
+      combobox.onKeydown(enter());
+      expect(combobox.expanded()).toBe(true);
+    });
+
     it('should close on focusout', () => {
       const {combobox} = getPatterns();
       combobox.onKeydown(down());
@@ -362,7 +370,7 @@ describe('Combobox with Listbox Pattern', () => {
     let listbox: ComboboxListboxPattern<string>;
     let inputEl: HTMLInputElement;
     let options: () => TestOption[];
-    let firstMatch: WritableSignal<string | undefined>;
+    let firstMatch: WritableSignalLike<string | undefined>;
 
     function type(text: string, opts: {backspace?: boolean} = {}) {
       _type(text, inputEl, combobox, options(), listbox, firstMatch, opts.backspace);
@@ -488,6 +496,13 @@ describe('Combobox with Listbox Pattern', () => {
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');
       });
+
+      it('should not commit an option on focusout if the popup is closed', () => {
+        type('A');
+        combobox.onKeydown(escape());
+        combobox.onFocusOut(new FocusEvent('focusout'));
+        expect(inputEl.value).toBe('A');
+      });
     });
 
     describe('when filterMode is "highlight"', () => {
@@ -604,7 +619,7 @@ describe('Combobox with Listbox Pattern', () => {
     describe('with multi-select', () => {
       it('should allow users to select multiple options', () => {
         const {combobox, listbox, inputEl} = getPatterns({readonly: true});
-        (listbox.inputs.multi as WritableSignal<boolean>).set(true);
+        (listbox.inputs.multi as WritableSignalLike<boolean>).set(true);
 
         combobox.onClick(clickOption(listbox.inputs.items(), 1));
         combobox.onClick(clickOption(listbox.inputs.items(), 2));
@@ -619,7 +634,7 @@ describe('Combobox with Listbox Pattern', () => {
 describe('Combobox with Tree Pattern', () => {
   function getPatterns(
     inputs: Partial<{
-      [K in keyof TestInputs]: TestInputs[K] extends WritableSignal<infer T> ? T : never;
+      [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
     }> = {},
   ) {
     const {combobox, inputEl, containerEl, firstMatch, inputValue} = getComboboxPattern(inputs);
@@ -629,7 +644,7 @@ describe('Combobox with Tree Pattern', () => {
       {value: 'Grains', children: [{value: 'Rice'}, {value: 'Wheat'}]},
     ]);
 
-    (combobox.inputs.popupControls as WritableSignal<any>).set(tree);
+    (combobox.inputs.popupControls as WritableSignalLike<any>).set(tree);
 
     return {
       combobox,
@@ -727,7 +742,7 @@ describe('Combobox with Tree Pattern', () => {
     let tree: ComboboxTreePattern<string>;
     let inputEl: HTMLInputElement;
     let items: () => TreeItemPattern<string>[];
-    let firstMatch: WritableSignal<string | undefined>;
+    let firstMatch: WritableSignalLike<string | undefined>;
 
     function type(text: string, opts: {backspace?: boolean} = {}) {
       _type(text, inputEl, combobox, items(), tree, firstMatch, opts.backspace);

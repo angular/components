@@ -479,20 +479,20 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
 })
 class SimpleMatSortApp {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  latestSortEvent: Sort;
-  active: string;
+  latestSortEvent!: Sort;
+  active!: string;
   start: SortDirection = 'asc';
   direction: SortDirection = '';
-  disableClear: boolean;
+  disableClear: boolean = false;
   disabledColumnSort = false;
   disableAllSort = false;
   secondColumnDescription = 'Sort second column';
 
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild('defaultA') defaultA: MatSortHeader;
-  @ViewChild('defaultB') defaultB: MatSortHeader;
-  @ViewChild('overrideStart') overrideStart: MatSortHeader;
-  @ViewChild('overrideDisableClear') overrideDisableClear: MatSortHeader;
+  @ViewChild(MatSort) matSort!: MatSort;
+  @ViewChild('defaultA') defaultA!: MatSortHeader;
+  @ViewChild('defaultB') defaultB!: MatSortHeader;
+  @ViewChild('overrideStart') overrideStart!: MatSortHeader;
+  @ViewChild('overrideDisableClear') overrideDisableClear!: MatSortHeader;
 
   sort(id: SimpleMatSortAppColumnIds) {
     this.dispatchMouseEvent(id, 'click');
@@ -504,8 +504,8 @@ class SimpleMatSortApp {
   }
 }
 
-class FakeDataSource extends DataSource<any> {
-  connect(collectionViewer: CollectionViewer): Observable<any[]> {
+class FakeDataSource extends DataSource<never> {
+  connect(collectionViewer: CollectionViewer): Observable<never[]> {
     return collectionViewer.viewChange.pipe(map(() => []));
   }
   disconnect() {}
@@ -536,7 +536,7 @@ class FakeDataSource extends DataSource<any> {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class CdkTableMatSortApp {
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort) matSort!: MatSort;
 
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
@@ -567,7 +567,7 @@ class CdkTableMatSortApp {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatTableMatSortApp {
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort) matSort!: MatSort;
 
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
@@ -625,12 +625,12 @@ class MatSortableInvalidDirection {}
 })
 class MatSortWithoutExplicitInputs {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  latestSortEvent: Sort;
-  active: string;
+  latestSortEvent!: Sort;
+  active!: string;
   start: SortDirection = 'asc';
 
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild('defaultA') defaultA: MatSortHeader;
+  @ViewChild(MatSort) matSort!: MatSort;
+  @ViewChild('defaultA') defaultA!: MatSortHeader;
 
   sort(id: SimpleMatSortAppColumnIds) {
     this.dispatchMouseEvent(id, 'click');
@@ -656,10 +656,10 @@ class MatSortWithoutExplicitInputs {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithArrowPosition {
-  arrowPosition: 'before' | 'after';
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild('defaultA') defaultA: MatSortHeader;
-  @ViewChild('defaultB') defaultB: MatSortHeader;
+  arrowPosition!: 'before' | 'after';
+  @ViewChild(MatSort) matSort!: MatSort;
+  @ViewChild('defaultA') defaultA!: MatSortHeader;
+  @ViewChild('defaultB') defaultB!: MatSortHeader;
 }
 
 @Component({
@@ -676,7 +676,7 @@ class MatSortWithArrowPosition {
   imports: [MatSortModule, MatTableModule, CdkTableModule],
 })
 class MatSortWithoutInputs {
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild('defaultA') defaultA: MatSortHeader;
-  @ViewChild('defaultB') defaultB: MatSortHeader;
+  @ViewChild(MatSort) matSort!: MatSort;
+  @ViewChild('defaultA') defaultA!: MatSortHeader;
+  @ViewChild('defaultB') defaultB!: MatSortHeader;
 }

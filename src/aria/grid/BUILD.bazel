@@ -1,14 +1,13 @@
-load("//tools:defaults.bzl", "ng_project")
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+load("//tools:defaults.bzl", "extract_api_to_json", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_project(
     name = "grid",
-    srcs = [
-        "grid.ts",
-        "index.ts",
-    ],
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/private",

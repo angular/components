@@ -88,7 +88,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
    * A list of preferred menu positions to be used when constructing the
    * `FlexibleConnectedPositionStrategy` for this trigger's menu.
    */
-  menuPosition: ConnectedPosition[];
+  menuPosition!: ConnectedPosition[];
 
   /** Emits when the attached menu is requested to open */
   readonly opened: EventEmitter<void> = new EventEmitter();
@@ -97,10 +97,16 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
   readonly closed: EventEmitter<void> = new EventEmitter();
 
   /** Template reference variable to the menu this trigger opens */
-  menuTemplateRef: TemplateRef<unknown> | null;
+  menuTemplateRef: TemplateRef<unknown> | null = null;
 
   /** Context data to be passed along to the menu template */
   menuData: unknown;
+
+  /**
+   * Selector for the element on which to set the transform origin once the menu is open.
+   * This makes it easier to implement animations that start from the attachment point of the menu.
+   */
+  transformOriginSelector: string | null = null;
 
   /** Close the opened menu. */
   abstract close(): void;
@@ -118,7 +124,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
   protected childMenu?: Menu;
 
   /** The content of the menu panel opened by this trigger. */
-  private _menuPortal: TemplatePortal;
+  private _menuPortal: TemplatePortal | undefined;
 
   /** The injector to use for the child menu opened by this trigger. */
   private _childMenuInjector?: Injector;

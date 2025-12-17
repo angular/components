@@ -21,6 +21,7 @@ ng_project(
     deps = [
         ":popup",
         "//:node_modules/@angular/core",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 

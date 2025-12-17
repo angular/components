@@ -42,8 +42,8 @@ export function createCloseScrollStrategy(
  */
 export class CloseScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription | null = null;
-  private _overlayRef: OverlayRef;
-  private _initialScrollPosition: number;
+  private _overlayRef!: OverlayRef;
+  private _initialScrollPosition!: number;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,

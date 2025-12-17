@@ -251,7 +251,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
   /** The element that will be replaced by the iframe. */
   @ViewChild('youtubeContainer', {static: true})
-  youtubeContainer: ElementRef<HTMLElement>;
+  youtubeContainer!: ElementRef<HTMLElement>;
 
   constructor(...args: unknown[]);
 

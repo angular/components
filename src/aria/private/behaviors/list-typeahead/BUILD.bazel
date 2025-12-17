@@ -24,6 +24,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/list-focus",
         "//src/aria/private/behaviors/list-focus:unit_test_sources",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 

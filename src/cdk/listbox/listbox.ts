@@ -108,17 +108,17 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   set id(value) {
     this._id = value;
   }
-  private _id: string;
+  private _id: string | undefined;
   private _generatedId = inject(_IdGenerator).getId('cdk-option-');
 
   /** The value of this option. */
-  @Input('cdkOption') value: T;
+  @Input('cdkOption') value!: T;
 
   /**
    * The text used to locate this item during listbox typeahead. If not specified,
    * the `textContent` of the item will be used.
    */
-  @Input('cdkOptionTypeaheadLabel') typeaheadLabel: string | null;
+  @Input('cdkOptionTypeaheadLabel') typeaheadLabel: string | null = null;
 
   /** Whether this option is disabled. */
   @Input({alias: 'cdkOptionDisabled', transform: booleanAttribute})
@@ -271,7 +271,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   set id(value) {
     this._id = value;
   }
-  private _id: string;
+  private _id: string | undefined;
   private _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
 
   /** The tabindex to use when the listbox is enabled. */
@@ -384,13 +384,13 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   @Output('cdkListboxValueChange') readonly valueChange = new Subject<ListboxValueChangeEvent<T>>();
 
   /** The child options in this listbox. */
-  @ContentChildren(CdkOption, {descendants: true}) protected options: QueryList<CdkOption<T>>;
+  @ContentChildren(CdkOption, {descendants: true}) protected options!: QueryList<CdkOption<T>>;
 
   /** The selection model used by the listbox. */
   protected selectionModel = new ListboxSelectionModel<T>();
 
   /** The key manager that manages keyboard navigation for this listbox. */
-  protected listKeyManager: ActiveDescendantKeyManager<CdkOption<T>>;
+  protected listKeyManager!: ActiveDescendantKeyManager<CdkOption<T>>;
 
   /** Emits when the listbox is destroyed. */
   protected readonly destroyed = new Subject<void>();

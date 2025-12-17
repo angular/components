@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {signal, WritableSignalLike} from '../signal-like/signal-like';
 import {List, ListItem, ListInputs} from './list';
 
 type TestItem<V> = ListItem<V> & {
-  disabled: WritableSignal<boolean>;
-  selectable: WritableSignal<boolean>;
-  searchTerm: WritableSignal<string>;
-  value: WritableSignal<V>;
+  disabled: WritableSignalLike<boolean>;
+  selectable: WritableSignalLike<boolean>;
+  searchTerm: WritableSignalLike<string>;
+  value: WritableSignalLike<V>;
 };
 
 type TestInputs<V> = ListInputs<TestItem<V>, V>;

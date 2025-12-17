@@ -4,7 +4,6 @@ import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
   getProjectFromWorkspace,
   getProjectIndexFiles,
-  getProjectStyleFile,
   getProjectTargetOptions,
 } from '@angular/cdk/schematics';
 import {createTestApp, createTestLibrary, getFileContent} from '../../../cdk/schematics/testing';
@@ -87,7 +86,7 @@ describe('ng-add schematic', () => {
     const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-    expectProjectStyleFile(project, 'projects/material/src/custom-theme.scss');
+    expectProjectStyleFile(project, 'projects/material/src/material-theme.scss');
   });
 
   it('should support adding a custom theme', async () => {
@@ -121,12 +120,12 @@ describe('ng-add schematic', () => {
     );
     const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
-    const expectedStylesPath = normalize(`/${project.root}/src/custom-theme.scss`);
+    const expectedStylesPath = normalize(`/${project.root}/src/material-theme.scss`);
 
     expect(tree.files)
       .withContext('Expected a custom theme file to be created')
       .toContain(expectedStylesPath);
-    expectProjectStyleFile(project, 'projects/material/src/custom-theme.scss');
+    expectProjectStyleFile(project, 'projects/material/src/material-theme.scss');
   });
 
   it('should add font links', async () => {
@@ -158,20 +157,6 @@ describe('ng-add schematic', () => {
           '300;400;500&display=swap"',
       );
     });
-  });
-
-  it('should add material app styles', async () => {
-    const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-    const workspace = await readWorkspace(tree);
-    const project = getProjectFromWorkspace(workspace, baseOptions.project);
-
-    const defaultStylesPath = getProjectStyleFile(project)!;
-    const htmlContent = tree.read(defaultStylesPath)!.toString();
-
-    expect(htmlContent).toContain('html, body { height: 100%; }');
-    expect(htmlContent).toContain(
-      'body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }',
-    );
   });
 
   describe('custom project builders', () => {
@@ -223,15 +208,15 @@ describe('ng-add schematic', () => {
 
   describe('theme files', () => {
     it('should not overwrite existing custom theme files', async () => {
-      appTree.create('/projects/material/custom-theme.scss', 'custom-theme');
+      appTree.create('/projects/material/material-theme.scss', 'material-theme');
       const tree = await runner.runSchematic(
         'ng-add-setup-project',
         {...baseOptions, theme: 'azure-blue'},
         appTree,
       );
-      expect(tree.readContent('/projects/material/custom-theme.scss'))
+      expect(tree.readContent('/projects/material/material-theme.scss'))
         .withContext('Expected the old custom theme content to be unchanged.')
-        .toBe('custom-theme');
+        .toBe('material-theme');
     });
   });
 
@@ -277,7 +262,7 @@ describe('ng-add schematic', () => {
       const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-      expectProjectStyleFile(project, 'projects/material/src/custom-theme.scss');
+      expectProjectStyleFile(project, 'projects/material/src/material-theme.scss');
     });
   });
 
@@ -323,7 +308,7 @@ describe('ng-add schematic', () => {
       const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-      expectProjectStyleFile(project, 'projects/material/src/custom-theme.scss');
+      expectProjectStyleFile(project, 'projects/material/src/material-theme.scss');
     });
   });
 
@@ -360,7 +345,7 @@ describe('ng-add schematic', () => {
       const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
-      expectProjectStyleFile(project, 'projects/material/src/custom-theme.scss');
+      expectProjectStyleFile(project, 'projects/material/src/material-theme.scss');
     });
   });
 });

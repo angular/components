@@ -345,27 +345,27 @@ describe('DeprecatedMapMarkerClusterer', () => {
   imports: [GoogleMap, MapMarker, DeprecatedMapMarkerClusterer],
 })
 class TestApp {
-  @ViewChild(DeprecatedMapMarkerClusterer) markerClusterer: DeprecatedMapMarkerClusterer;
+  @ViewChild(DeprecatedMapMarkerClusterer) markerClusterer!: DeprecatedMapMarkerClusterer;
 
-  ariaLabelFn: AriaLabelFn;
-  averageCenter: boolean;
-  batchSize: number;
-  batchSizeIE: number;
-  calculator: Calculator;
-  clusterClass: string;
-  enableRetinaIcons: boolean;
-  gridSize: number;
-  ignoreHidden: boolean;
-  imageExtension: string;
-  imagePath: string;
-  imageSizes: number[];
-  maxZoom: number;
-  minimumClusterSize: number;
-  styles: ClusterIconStyle[];
-  title: string;
-  zIndex: number;
-  zoomOnClick: boolean;
-  options: MarkerClustererOptions;
+  ariaLabelFn!: AriaLabelFn;
+  averageCenter!: boolean;
+  batchSize!: number;
+  batchSizeIE!: number;
+  calculator!: Calculator;
+  clusterClass!: string;
+  enableRetinaIcons!: boolean;
+  gridSize!: number;
+  ignoreHidden!: boolean;
+  imageExtension!: string;
+  imagePath!: string;
+  imageSizes!: number[];
+  maxZoom!: number;
+  minimumClusterSize!: number;
+  styles!: ClusterIconStyle[];
+  title!: string;
+  zIndex!: number;
+  zoomOnClick!: boolean;
+  options!: MarkerClustererOptions;
 
   state = 'state1';
 

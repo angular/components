@@ -86,12 +86,12 @@ export class MatSelectionColumn<T> implements OnInit, OnDestroy {
 
     this._syncColumnDefName();
   }
-  private _name: string;
+  private _name!: string;
 
-  @ViewChild(MatColumnDef, {static: true}) private readonly _columnDef: MatColumnDef;
-  @ViewChild(MatCellDef, {static: true}) private readonly _cell: MatCellDef;
+  @ViewChild(MatColumnDef, {static: true}) private readonly _columnDef!: MatColumnDef;
+  @ViewChild(MatCellDef, {static: true}) private readonly _cell!: MatCellDef;
   @ViewChild(MatHeaderCellDef, {static: true})
-  private readonly _headerCell: MatHeaderCellDef;
+  private readonly _headerCell!: MatHeaderCellDef;
 
   ngOnInit() {
     if (!this.selection && (typeof ngDevMode === 'undefined' || ngDevMode)) {

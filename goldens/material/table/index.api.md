@@ -139,7 +139,7 @@ export class MatNoDataRow extends CdkNoDataRow {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatNoDataRow, never>;
 }
 
-// @public
+// @public @deprecated
 export class MatRecycleRows {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatRecycleRows, "mat-table[recycleRows], table[mat-table][recycleRows]", never, {}, {}, never, never, true, never>;
@@ -174,7 +174,7 @@ export class MatTable<T> extends CdkTable<T> {
 }
 
 // @public
-export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
+export class MatTableDataSource<T extends object | any, P extends MatPaginator = MatPaginator> extends DataSource<T> {
     constructor(initialData?: T[]);
     connect(): BehaviorSubject<T[]>;
     get data(): T[];

@@ -16,7 +16,7 @@ $fallbacks: m3-stepper.get-tokens();
 
   // Stepper headers have the focus indicator as a descendant,
   // because `::before` is used for other styling.
-  &:focus .mat-focus-indicator::before {
+  &:focus-visible .mat-focus-indicator::before {
     content: '';
   }
 

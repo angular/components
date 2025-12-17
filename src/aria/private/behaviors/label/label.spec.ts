@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {signal, WritableSignalLike} from '../signal-like/signal-like';
 import {LabelControl, LabelControlInputs, LabelControlOptionalInputs} from './label';
 
 // This is a helper type for the initial values passed to the setup function.
@@ -20,7 +20,7 @@ type TestLabelControlInputs = LabelControlInputs & Required<LabelControlOptional
 
 // This is a helper type to make all properties of LabelControlInputs writable signals.
 type WritableLabelControlInputs = {
-  [K in keyof TestLabelControlInputs]: WritableSignal<
+  [K in keyof TestLabelControlInputs]: WritableSignalLike<
     TestLabelControlInputs[K] extends {(): infer T} ? T : never
   >;
 };

@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {GridFocus, GridFocusCell, GridFocusInputs} from './grid-focus';
 import {GridData, RowCol} from './grid-data';
-import {signal} from '@angular/core';
+import {SignalLike, WritableSignalLike, signal} from '../signal-like/signal-like';
 
 /** Represents a cell in a grid that can be selected. */
 export interface GridSelectionCell extends GridFocusCell {

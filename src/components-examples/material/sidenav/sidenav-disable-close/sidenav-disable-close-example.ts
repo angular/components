@@ -10,7 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatSidenavModule, MatButtonModule],
 })
 export class SidenavDisableCloseExample {
-  @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   reason = '';
 

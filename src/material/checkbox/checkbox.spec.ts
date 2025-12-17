@@ -718,7 +718,7 @@ describe('MatCheckbox', () => {
       // We're checking the arguments type / emitted value to be a boolean, because sometimes the
       // emitted value can be a DOM Event, which is not valid.
       // See angular/angular#4059
-      expect(testComponent.lastEvent.checked).toBe(true);
+      expect(testComponent.lastEvent?.checked).toBe(true);
     }));
   });
 
@@ -1346,7 +1346,7 @@ class CheckboxWithNameAttribute {}
   imports: [MatCheckbox],
 })
 class CheckboxWithChangeEvent {
-  lastEvent: MatCheckboxChange;
+  lastEvent: MatCheckboxChange | undefined;
 }
 
 /** Test component with reactive forms */
@@ -1364,7 +1364,7 @@ class CheckboxWithFormControl {
   imports: [MatCheckbox],
 })
 class CheckboxWithoutLabel {
-  label: string;
+  label = '';
 }
 
 /** Test component with the native tabindex attribute. */

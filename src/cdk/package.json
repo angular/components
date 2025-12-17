@@ -47,6 +47,7 @@
   "peerDependencies": {
     "@angular/core": "0.0.0-NG",
     "@angular/common": "0.0.0-NG",
+    "@angular/platform-browser": "0.0.0-NG",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {

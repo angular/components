@@ -369,6 +369,8 @@ $fallbacks: m3-form-field.get-tokens();
     box-sizing: border-box;
     height: 100%;
     pointer-events: none;
+    // Reset border coming from something like Tailwind (see #32511).
+    border: none;
     border-top: 1px solid;
     border-bottom: 1px solid;
 

@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, untracked} from '@angular/core';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, computed, signal, untracked} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';

@@ -40,7 +40,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   private _dialog = inject(MatDialog);
 
   /** Screen-reader label for the button. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Default to "button" to prevents accidental form submits. */
   @Input() type: 'submit' | 'button' | 'reset' = 'button';

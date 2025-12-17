@@ -1781,7 +1781,7 @@ describe('MatDialog', () => {
         changeDetection: ChangeDetectionStrategy.OnPush,
       })
       class OnPushHost {
-        @ViewChild(Child, {static: true}) child: Child;
+        @ViewChild(Child, {static: true}) child!: Child;
       }
 
       const hostFixture = TestBed.createComponent(OnPushHost);
@@ -2287,7 +2287,7 @@ class ComponentWithOnPushViewContainer {
 class ComponentWithChildViewContainer {
   showChildView = true;
 
-  @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
+  @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
 
   get childViewContainer() {
     return this.childWithViewContainer.viewContainerRef;
@@ -2300,10 +2300,10 @@ class ComponentWithChildViewContainer {
     Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
 })
 class ComponentWithTemplateRef {
-  localValue: string;
-  dialogRef: MatDialogRef<any>;
+  localValue!: string;
+  dialogRef!: MatDialogRef<any>;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   setDialogRef(dialogRef: MatDialogRef<any>): string {
     this.dialogRef = dialogRef;
@@ -2382,7 +2382,7 @@ class ContentElementDialog {
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
 })
 class ComponentWithContentElementTemplateRef {
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   shownTitle: 'first' | 'second' | 'third' | 'all' = 'first';
 

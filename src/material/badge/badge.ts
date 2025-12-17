@@ -101,7 +101,7 @@ export class MatBadge implements OnInit, OnDestroy {
   @Input({alias: 'matBadgeOverlap', transform: booleanAttribute}) overlap: boolean = true;
 
   /** Whether the badge is disabled. */
-  @Input({alias: 'matBadgeDisabled', transform: booleanAttribute}) disabled: boolean;
+  @Input({alias: 'matBadgeDisabled', transform: booleanAttribute}) disabled: boolean = false;
 
   /**
    * Position the badge should reside.
@@ -127,13 +127,13 @@ export class MatBadge implements OnInit, OnDestroy {
   set description(newDescription: string) {
     this._updateDescription(newDescription);
   }
-  private _description: string;
+  private _description!: string;
 
   /** Size of the badge. Can be 'small', 'medium', or 'large'. */
   @Input('matBadgeSize') size: MatBadgeSize = 'medium';
 
   /** Whether the badge is hidden. */
-  @Input({alias: 'matBadgeHidden', transform: booleanAttribute}) hidden: boolean;
+  @Input({alias: 'matBadgeHidden', transform: booleanAttribute}) hidden: boolean = false;
 
   /** Visible badge element. */
   private _badgeElement: HTMLElement | undefined;

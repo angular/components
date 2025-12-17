@@ -34,8 +34,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TableTextColumnAdvancedExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
-  headerText: string;
+  headerText = '';
 
   decimalPipe = new DecimalPipe('en-US');
 

@@ -123,7 +123,7 @@ describe('CdkOption and CdkListbox', () => {
         expect(options[i].isSelected()).toBeFalse();
         expect(optionEls[i].getAttribute('aria-selected')).toBe('false');
       }
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should update when selection is changed programmatically', () => {
@@ -134,7 +134,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(listbox.value).toEqual(['orange']);
       expect(options[1].isSelected()).toBeTrue();
       expect(optionEls[1].getAttribute('aria-selected')).toBe('true');
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should update on option clicked', () => {
@@ -403,7 +403,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should not change selection on click in a disabled listbox', () => {
@@ -415,7 +415,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should not change selection on keyboard activation in a disabled listbox', () => {
@@ -430,7 +430,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should not change selection on click of a disabled option', () => {
@@ -446,7 +446,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       expect(listbox.value).toEqual([]);
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
+      expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
     it('should not handle type ahead on a disabled listbox', async (...args: unknown[]) => {
@@ -985,7 +985,7 @@ describe('CdkOption and CdkListbox', () => {
   imports: [CdkListbox, CdkOption],
 })
 class ListboxWithOptions {
-  changedOption: CdkOption<string> | null;
+  changedOption: CdkOption<string> | null = null;
   isListboxDisabled = signal(false);
   isAppleDisabled = false;
   isOrangeDisabled = false;
@@ -994,12 +994,12 @@ class ListboxWithOptions {
   navigationWraps = true;
   navigationSkipsDisabled = true;
   appleRendered = true;
-  listboxId: string;
-  listboxTabindex: number;
-  appleId: string;
-  appleTabindex: number;
+  listboxId!: string;
+  listboxTabindex: number | undefined;
+  appleId!: string;
+  appleTabindex: number | undefined;
   orientation: 'horizontal' | 'vertical' = 'vertical';
-  selectedValue: string[];
+  selectedValue: string[] = [];
 
   onSelectionChange(event: ListboxValueChangeEvent<string>) {
     this.changedOption = event.option;

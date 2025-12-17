@@ -119,7 +119,7 @@ export class MatSlideToggle
   }
 
   /** Reference to the MDC switch element. */
-  @ViewChild('switch') _switchElement: ElementRef<HTMLElement>;
+  @ViewChild('switch') _switchElement!: ElementRef<HTMLElement>;
 
   /** Focuses the slide-toggle. */
   focus(): void {
@@ -129,7 +129,7 @@ export class MatSlideToggle
   _noopAnimations = _animationsDisabled();
 
   /** Whether the slide toggle is currently focused. */
-  _focused: boolean;
+  _focused = false;
 
   /** Name value will be applied to the input element if present. */
   @Input() name: string | null = null;
@@ -147,10 +147,10 @@ export class MatSlideToggle
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** Used to set the aria-describedby attribute on the underlying input element. */
-  @Input('aria-describedby') ariaDescribedby: string;
+  @Input('aria-describedby') ariaDescribedby!: string;
 
   /** Whether the slide-toggle is required. */
-  @Input({transform: booleanAttribute}) required: boolean;
+  @Input({transform: booleanAttribute}) required: boolean = false;
 
   // TODO(crisbeto): this should be a ThemePalette, but some internal apps were abusing
   // the lack of type checking previously and assigning random strings.

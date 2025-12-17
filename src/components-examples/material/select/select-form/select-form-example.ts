@@ -23,8 +23,8 @@ interface Car {
   imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
 export class SelectFormExample {
-  selectedValue: string;
-  selectedCar: string;
+  selectedValue!: string;
+  selectedCar = '';
 
   foods: Food[] = [
     {value: 'steak-0', viewValue: 'Steak'},

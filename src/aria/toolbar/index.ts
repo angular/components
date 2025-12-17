@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from './toolbar';
+export * from './public-api';

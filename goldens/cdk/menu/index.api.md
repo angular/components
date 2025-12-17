@@ -46,7 +46,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "transformOriginSelector": { "alias": "cdkContextMenuTriggerTransformOriginOn"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkContextMenuTrigger, never>;
 }
@@ -224,7 +224,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     toggle(): void;
     _toggleOnKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; "transformOriginSelector": { "alias": "cdkMenuTriggerTransformOriginOn"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuTrigger, never>;
 }
@@ -235,7 +235,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     abstract close(): void;
     readonly closed: EventEmitter<void>;
     protected readonly destroyed: Subject<void>;
-    protected getMenuContentPortal(): TemplatePortal<any>;
+    protected getMenuContentPortal(): TemplatePortal<any> | undefined;
     readonly injector: Injector;
     protected isElementInsideMenuStack(element: Element): boolean;
     isOpen(): boolean;
@@ -250,6 +250,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected overlayRef: OverlayRef | null;
     registerChildMenu(child: Menu): void;
     protected readonly stopOutsideClicksListener: rxjs.Observable<void>;
+    transformOriginSelector: string | null;
     protected readonly viewContainerRef: ViewContainerRef;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTriggerBase, never, never, {}, {}, never, never, true, never>;

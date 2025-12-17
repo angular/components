@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {GridData} from './grid-data';
 import {createGridA, createGridB, createGridD, TestBaseGridCell} from './grid-data.spec';
 import {GridFocus, GridFocusInputs} from './grid-focus';
 import {GridSelection, GridSelectionInputs} from './grid-selection';
 
 export interface TestGridSelectionCell extends TestBaseGridCell {
-  element: WritableSignal<HTMLElement>;
-  disabled: WritableSignal<boolean>;
-  selected: WritableSignal<boolean>;
-  selectable: WritableSignal<boolean>;
+  element: WritableSignalLike<HTMLElement>;
+  disabled: WritableSignalLike<boolean>;
+  selected: WritableSignalLike<boolean>;
+  selectable: WritableSignalLike<boolean>;
 }
 
 function createTestCell(): Omit<TestGridSelectionCell, keyof TestBaseGridCell> {
@@ -37,7 +37,7 @@ function createTestGrid(createGridFn: () => TestBaseGridCell[][]): TestGridSelec
 }
 
 function setupGridSelection(
-  cells: Signal<TestGridSelectionCell[][]>,
+  cells: SignalLike<TestGridSelectionCell[][]>,
   inputs: Partial<GridSelectionInputs & GridFocusInputs> = {},
 ): {
   gridSelection: GridSelection<TestGridSelectionCell>;

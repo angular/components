@@ -21,6 +21,7 @@ ng_project(
     deps = [
         ":list-focus",
         "//:node_modules/@angular/core",
+        "//src/aria/private/behaviors/signal-like",
     ],
 )
 

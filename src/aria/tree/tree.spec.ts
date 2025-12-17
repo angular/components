@@ -4,7 +4,9 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tree, TreeItem, TreeItemGroup} from './tree';
+import {Tree} from './tree';
+import {TreeItem} from './tree-item';
+import {TreeItemGroup} from './tree-item-group';
 
 interface ModifierKeys {
   ctrlKey?: boolean;

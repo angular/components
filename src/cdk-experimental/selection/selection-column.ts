@@ -79,11 +79,11 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
 
     this._syncColumnDefName();
   }
-  private _name: string;
+  private _name!: string;
 
-  @ViewChild(CdkColumnDef, {static: true}) private readonly _columnDef: CdkColumnDef;
-  @ViewChild(CdkCellDef, {static: true}) private readonly _cell: CdkCellDef;
-  @ViewChild(CdkHeaderCellDef, {static: true}) private readonly _headerCell: CdkHeaderCellDef;
+  @ViewChild(CdkColumnDef, {static: true}) private readonly _columnDef!: CdkColumnDef;
+  @ViewChild(CdkCellDef, {static: true}) private readonly _cell!: CdkCellDef;
+  @ViewChild(CdkHeaderCellDef, {static: true}) private readonly _headerCell!: CdkHeaderCellDef;
 
   ngOnInit() {
     if (!this.selection && (typeof ngDevMode === 'undefined' || ngDevMode)) {

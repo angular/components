@@ -447,14 +447,14 @@ describe('GoogleMap', () => {
   imports: [GoogleMap],
 })
 class TestApp {
-  @ViewChild(GoogleMap) map: GoogleMap;
-  height: string | number | null;
-  width: string | number | null;
-  center: google.maps.LatLngLiteral;
-  zoom: number;
-  options: google.maps.MapOptions;
-  mapTypeId: google.maps.MapTypeId;
-  mapId: string;
+  @ViewChild(GoogleMap) map!: GoogleMap;
+  height!: string | number | null;
+  width!: string | number | null;
+  center!: google.maps.LatLngLiteral;
+  zoom!: number;
+  options!: google.maps.MapOptions;
+  mapTypeId!: google.maps.MapTypeId;
+  mapId!: string;
 
   handleClick(event: google.maps.MapMouseEvent) {}
   handleCenterChanged() {}

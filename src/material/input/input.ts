@@ -106,25 +106,25 @@ export class MatInput
 
   protected _uid = inject(_IdGenerator).getId('mat-input-');
   protected _previousNativeValue: any;
-  private _inputValueAccessor: {value: any};
+  private _inputValueAccessor!: {value: any};
   private _signalBasedValueAccessor?: {value: WritableSignal<any>};
-  private _previousPlaceholder: string | null;
+  private _previousPlaceholder: string | null = null;
   private _errorStateTracker: _ErrorStateTracker;
   private _config = inject(MAT_INPUT_CONFIG, {optional: true});
   private _cleanupIosKeyup: (() => void) | undefined;
   private _cleanupWebkitWheel: (() => void) | undefined;
 
   /** Whether the component is being rendered on the server. */
-  readonly _isServer: boolean;
+  readonly _isServer: boolean = false;
 
   /** Whether the component is a native html select. */
-  readonly _isNativeSelect: boolean;
+  readonly _isNativeSelect: boolean = false;
 
   /** Whether the component is a textarea. */
-  readonly _isTextarea: boolean;
+  readonly _isTextarea: boolean = false;
 
   /** Whether the input is inside of a form field. */
-  readonly _isInFormField: boolean;
+  readonly _isInFormField: boolean = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -181,19 +181,19 @@ export class MatInput
   set id(value: string) {
     this._id = value || this._uid;
   }
-  protected _id: string;
+  protected _id!: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input() placeholder: string;
+  @Input() placeholder!: string;
 
   /**
    * Name of the input.
    * @docs-private
    */
-  @Input() name: string;
+  @Input() name!: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -239,7 +239,7 @@ export class MatInput
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input('aria-describedby') userAriaDescribedBy: string;
+  @Input('aria-describedby') userAriaDescribedBy!: string;
 
   /**
    * Implemented as part of MatFormFieldControl.

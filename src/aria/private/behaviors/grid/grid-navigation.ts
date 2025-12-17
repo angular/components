@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
-import {SignalLike} from '../signal-like/signal-like';
+import {SignalLike, computed} from '../signal-like/signal-like';
 import {GridFocus, GridFocusCell, GridFocusInputs} from './grid-focus';
 import {GridData, RowCol} from './grid-data';
 

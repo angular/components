@@ -54,13 +54,13 @@ describe('Standalone CdkDrag Zone.js integration', () => {
   imports: [CdkDrag],
 })
 class StandaloneDraggable {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
-  boundary: string | HTMLElement;
-  dragStartDelay: number | string | {touch: number; mouse: number};
-  constrainPosition: (point: Point) => Point;
-  freeDragPosition?: {x: number; y: number};
+  boundary: string | HTMLElement | undefined;
+  dragStartDelay: number | string | {touch: number; mouse: number} | undefined;
+  constrainPosition: ((point: Point) => Point) | undefined;
+  freeDragPosition: {x: number; y: number} | undefined;
 }

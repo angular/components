@@ -1246,16 +1246,16 @@ describe('MatTabGroup labels aligned with a config', () => {
   imports: [MatTabsModule],
 })
 class SimpleTabsTestApp {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
   disableRipple: boolean = false;
   contentTabIndex: number | null = null;
   headerPosition: MatTabHeaderPosition = 'above';
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel!: string;
+  ariaLabelledby!: string;
   secondTabId: string | null = null;
   handleFocus(event: any) {
     this.focusEvent = event;
@@ -1347,7 +1347,7 @@ class BindedTabsTestApp {
   imports: [MatTabsModule],
 })
 class DisabledTabsTestApp {
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   isDisabled = false;
 }
 
@@ -1370,7 +1370,7 @@ class AsyncTabsTestApp implements OnInit {
     {label: 'two', content: 'two'},
   ];
 
-  tabs: Observable<any>;
+  tabs!: Observable<any>;
 
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
@@ -1414,7 +1414,7 @@ class TabGroupWithSimpleApi {
   imports: [MatTabsModule],
 })
 class NestedTabs {
-  @ViewChildren(MatTabGroup) groups: QueryList<MatTabGroup>;
+  @ViewChildren(MatTabGroup) groups!: QueryList<MatTabGroup>;
 }
 
 @Component({
@@ -1443,8 +1443,8 @@ class TemplateTabs {}
   imports: [MatTabsModule],
 })
 class TabGroupWithAriaInputs {
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel!: string;
+  ariaLabelledby!: string;
 }
 
 @Component({
@@ -1485,7 +1485,7 @@ class TabsWithCustomAnimationDuration {}
   imports: [MatTabsModule],
 })
 class TabGroupWithIndirectDescendantTabs {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 }
 
 @Component({
@@ -1520,7 +1520,7 @@ class TabGroupWithInkBarFitToContent {
   imports: [MatTabsModule],
 })
 class TabGroupWithSpaceAbove {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 }
 
 @Component({
@@ -1559,8 +1559,8 @@ class NestedTabGroupWithLabel {}
   imports: [MatTabsModule],
 })
 class TabsWithClassesTestApp {
-  labelClassList: string | string[];
-  bodyClassList: string | string[];
+  labelClassList!: string | string[];
+  bodyClassList!: string | string[];
 }
 
 @Component({

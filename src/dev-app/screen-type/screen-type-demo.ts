@@ -21,11 +21,11 @@ import {Observable} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreenTypeDemo {
-  isHandset: Observable<BreakpointState>;
-  isTablet: Observable<BreakpointState>;
-  isWeb: Observable<BreakpointState>;
-  isPortrait: Observable<BreakpointState>;
-  isLandscape: Observable<BreakpointState>;
+  isHandset!: Observable<BreakpointState>;
+  isTablet!: Observable<BreakpointState>;
+  isWeb!: Observable<BreakpointState>;
+  isPortrait!: Observable<BreakpointState>;
+  isLandscape!: Observable<BreakpointState>;
 
   constructor() {
     const breakpointObserver = inject(BreakpointObserver);

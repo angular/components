@@ -111,7 +111,7 @@ describe('MatOptionHarness', () => {
   imports: [MatOptionModule],
 })
 class OptionHarnessTest implements MatOptionParentComponent {
-  @ViewChildren(MatOption) options: QueryList<{setActiveStyles(): void}>;
+  @ViewChildren(MatOption) options!: QueryList<{setActiveStyles(): void}>;
   private readonly _multiple = signal(false);
   get multiple() {
     return this._multiple();

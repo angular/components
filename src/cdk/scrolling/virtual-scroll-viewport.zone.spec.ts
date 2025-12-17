@@ -101,7 +101,7 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
   imports: [ScrollingModule],
 })
 class FixedSizeVirtualScroll {
-  @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
   // Casting virtualForOf as any so we can spy on private methods
   @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
 
@@ -114,7 +114,7 @@ class FixedSizeVirtualScroll {
   items = Array(10)
     .fill(0)
     .map((_, i) => i);
-  trackBy: TrackByFunction<number>;
+  trackBy!: TrackByFunction<number>;
   templateCacheSize = 20;
 
   scrolledToIndex = 0;

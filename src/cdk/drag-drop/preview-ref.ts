@@ -34,10 +34,10 @@ const importantProperties = new Set([
 
 export class PreviewRef {
   /** Reference to the view of the preview element. */
-  private _previewEmbeddedView: EmbeddedViewRef<any> | null;
+  private _previewEmbeddedView: EmbeddedViewRef<any> | null = null;
 
   /** Reference to the preview element. */
-  private _preview: HTMLElement;
+  private _preview!: HTMLElement;
 
   get element(): HTMLElement {
     return this._preview;

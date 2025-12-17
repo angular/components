@@ -1707,8 +1707,8 @@ class SelectionListWithListOptions {
   showLastOption = true;
   listRippleDisabled = false;
   multiple = true;
-  selectionListColor: ThemePalette;
-  firstOptionColor: ThemePalette;
+  selectionListColor!: ThemePalette;
+  firstOptionColor!: ThemePalette;
 
   onSelectionChange(_change: MatSelectionListChange) {}
 }
@@ -1849,7 +1849,7 @@ class SelectionListWithFormControl {
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOption {
-  selectedOptions: string[];
+  selectedOptions!: string[];
 }
 
 @Component({
@@ -1890,9 +1890,9 @@ class SelectionListWithPreselectedFormControlOnPush {
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithCustomComparator {
-  @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
+  @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
   selectedOptions: {id: number; label: string}[] = [];
-  compareWith: (o1: any, o2: any) => boolean;
+  compareWith!: (o1: any, o2: any) => boolean;
   options = [
     {id: 1, label: 'One'},
     {id: 2, label: 'Two'},
@@ -1912,7 +1912,7 @@ class SelectionListWithCustomComparator {
   imports: [MatListModule],
 })
 class SelectionListWithAvatar {
-  togglePosition: MatListOptionTogglePosition;
+  togglePosition!: MatListOptionTogglePosition;
 }
 
 @Component({
@@ -1927,7 +1927,7 @@ class SelectionListWithAvatar {
   imports: [MatListModule],
 })
 class SelectionListWithIcon {
-  togglePosition: MatListOptionTogglePosition;
+  togglePosition!: MatListOptionTogglePosition;
 }
 
 @Component({
@@ -1942,7 +1942,7 @@ class SelectionListWithIcon {
   imports: [MatListModule],
 })
 class SelectionListWithIndirectChildOptions {
-  @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
+  @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
 }
 
 @Component({

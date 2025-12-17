@@ -31,8 +31,8 @@ All .ts files should begin with an @license comment.
 ### Imports
 
 - Imports should be at the top of the file and kept in alphabetical order.
-- The only allowed external APIs are `signal`, and `computed` from `@angular/core`.
 - All other dependencies must come from inside of the ui-patterns folder.
+- Signal primitives, like `signal` and `computed`,  must be imported from `signal-like.ts`
 
 ### Type Definition
 

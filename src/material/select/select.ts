@@ -214,15 +214,15 @@ export class MatSelect
   private _cleanupDetach: (() => void) | undefined;
 
   /** All of the defined select options. */
-  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
+  @ContentChildren(MatOption, {descendants: true}) options!: QueryList<MatOption>;
 
   // TODO(crisbeto): this is only necessary for the non-MDC select, but it's technically a
   // public API so we have to keep it. It should be deprecated and removed eventually.
   /** All of the defined groups of options. */
-  @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
+  @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups!: QueryList<MatOptgroup>;
 
   /** User-supplied override of the trigger element. */
-  @ContentChild(MAT_SELECT_TRIGGER) customTrigger: MatSelectTrigger;
+  @ContentChild(MAT_SELECT_TRIGGER) customTrigger!: MatSelectTrigger;
 
   /**
    * This position config ensures that the top "start" corner of the overlay
@@ -338,19 +338,19 @@ export class MatSelect
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input('aria-describedby') userAriaDescribedBy: string;
+  @Input('aria-describedby') userAriaDescribedBy!: string;
 
   /** Deals with the selection logic. */
-  _selectionModel: SelectionModel<MatOption>;
+  _selectionModel!: SelectionModel<MatOption>;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: ActiveDescendantKeyManager<MatOption>;
+  _keyManager!: ActiveDescendantKeyManager<MatOption>;
 
   /** Ideal origin for the overlay panel. */
   _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
 
   /** Width of the overlay panel. */
-  _overlayWidth: string | number;
+  _overlayWidth!: string | number;
 
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
@@ -376,17 +376,17 @@ export class MatSelect
   controlType = 'mat-select';
 
   /** Trigger that opens the select. */
-  @ViewChild('trigger') trigger: ElementRef;
+  @ViewChild('trigger') trigger!: ElementRef;
 
   /** Panel containing the select options. */
-  @ViewChild('panel') panel: ElementRef;
+  @ViewChild('panel') panel!: ElementRef;
 
   /** Overlay pane containing the options. */
   @ViewChild(CdkConnectedOverlay)
-  protected _overlayDir: CdkConnectedOverlay;
+  protected _overlayDir!: CdkConnectedOverlay;
 
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string | string[] | Set<string> | {[key: string]: any};
+  @Input() panelClass!: string | string[] | Set<string> | {[key: string]: any};
 
   /** Whether the select is disabled. */
   @Input({transform: booleanAttribute})
@@ -429,7 +429,7 @@ export class MatSelect
     this._placeholder = value;
     this.stateChanges.next();
   }
-  private _placeholder: string;
+  private _placeholder!: string;
 
   /** Whether the component is required. */
   @Input({transform: booleanAttribute})
@@ -498,7 +498,7 @@ export class MatSelect
   @Input('aria-label') ariaLabel: string = '';
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Object used to control when error messages are shown. */
   @Input()
@@ -511,13 +511,13 @@ export class MatSelect
 
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   @Input({transform: numberAttribute})
-  typeaheadDebounceInterval: number;
+  typeaheadDebounceInterval!: number;
 
   /**
    * Function used to sort the values in a select in multiple mode.
    * Follows the same logic as `Array.prototype.sort`.
    */
-  @Input() sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+  @Input() sortComparator!: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 
   /** Unique id of the element. */
   @Input()
@@ -528,7 +528,7 @@ export class MatSelect
     this._id = value || this._uid;
     this.stateChanges.next();
   }
-  private _id: string;
+  private _id!: string;
 
   /** Whether the select is in an error state. */
   get errorState() {

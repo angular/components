@@ -6,13 +6,8 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import * as i1 from '@angular/aria/private';
-import { MenuBarPattern } from '@angular/aria/private';
-import { MenuItemPattern } from '@angular/aria/private';
-import { MenuPattern } from '@angular/aria/private';
-import { MenuTriggerPattern } from '@angular/aria/private';
+import { OnDestroy } from '@angular/core';
 import { Signal } from '@angular/core';
-import { SignalLike } from '@angular/aria/private';
 
 // @public
 export class Menu<V> {
@@ -33,7 +28,7 @@ export class Menu<V> {
     readonly visible: Signal<boolean>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "onSelect": "onSelect"; }, ["_allItems"], never, true, [{ directive: typeof i1.DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "onSelect": "onSelect"; }, ["_allItems"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Menu<any>, never>;
 }
@@ -41,7 +36,7 @@ export class Menu<V> {
 // @public
 export class MenuBar<V> {
     constructor();
-    readonly _allItems: Signal<readonly MenuItem<V>[]>;
+    readonly _allItems: _angular_core.Signal<readonly MenuItem<V>[]>;
     close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
@@ -63,7 +58,7 @@ export class MenuBar<V> {
 // @public
 export class MenuContent {
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuContent, "ng-template[ngMenuContent]", ["ngMenuContent"], {}, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuContent, "ng-template[ngMenuContent]", ["ngMenuContent"], {}, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuContent, never>;
 }
@@ -71,12 +66,12 @@ export class MenuContent {
 // @public
 export class MenuItem<V> {
     constructor();
-    readonly active: Signal<boolean>;
+    readonly active: _angular_core.Signal<boolean>;
     close(): void;
     readonly disabled: _angular_core.InputSignal<boolean>;
     readonly element: HTMLElement;
-    readonly expanded: Signal<boolean | null>;
-    readonly hasPopup: Signal<boolean>;
+    readonly expanded: _angular_core.Signal<boolean | null>;
+    readonly hasPopup: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
@@ -96,8 +91,8 @@ export class MenuTrigger<V> {
     close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly expanded: Signal<boolean>;
-    readonly hasPopup: Signal<boolean>;
+    readonly expanded: _angular_core.Signal<boolean>;
+    readonly hasPopup: _angular_core.Signal<boolean>;
     menu: _angular_core.InputSignal<Menu<V> | undefined>;
     open(): void;
     _pattern: MenuTriggerPattern<V>;

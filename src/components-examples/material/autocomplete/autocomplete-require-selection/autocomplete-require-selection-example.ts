@@ -20,14 +20,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   ],
 })
 export class AutocompleteRequireSelectionExample {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
   myControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
-  filteredOptions: string[];
-
-  constructor() {
-    this.filteredOptions = this.options.slice();
-  }
+  filteredOptions: string[] = this.options.slice();
 
   filter(): void {
     const filterValue = this.input.nativeElement.value.toLowerCase();

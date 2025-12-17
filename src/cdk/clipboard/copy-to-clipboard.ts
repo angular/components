@@ -63,7 +63,7 @@ export class CdkCopyToClipboard implements OnDestroy {
   private _pending = new Set<PendingCopy>();
 
   /** Whether the directive has been destroyed. */
-  private _destroyed: boolean;
+  private _destroyed = false;
 
   /** Timeout for the current copy attempt. */
   private _currentTimeout: any;

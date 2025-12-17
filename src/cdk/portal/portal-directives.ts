@@ -69,7 +69,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   private _isInitialized = false;
 
   /** Reference to the currently-attached component/view ref. */
-  private _attachedRef: CdkPortalOutletAttachedRef;
+  private _attachedRef: CdkPortalOutletAttachedRef = null;
 
   constructor(...args: unknown[]);
 

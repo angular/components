@@ -62,6 +62,7 @@ export type ContextMenuCoordinates = {x: number; y: number};
     {name: 'menuTemplateRef', alias: 'cdkContextMenuTriggerFor'},
     {name: 'menuPosition', alias: 'cdkContextMenuPosition'},
     {name: 'menuData', alias: 'cdkContextMenuTriggerData'},
+    {name: 'transformOriginSelector', alias: 'cdkContextMenuTriggerTransformOriginOn'},
   ],
   outputs: ['opened: cdkContextMenuOpened', 'closed: cdkContextMenuClosed'],
   providers: [
@@ -148,11 +149,17 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private _getOverlayPositionStrategy(
     coordinates: ContextMenuCoordinates,
   ): FlexibleConnectedPositionStrategy {
-    return createFlexibleConnectedPositionStrategy(this._injector, coordinates)
+    const strategy = createFlexibleConnectedPositionStrategy(this._injector, coordinates)
       .withLockedPosition()
       .withGrowAfterOpen()
       .withPopoverLocation('inline')
       .withPositions(this.menuPosition ?? CONTEXT_MENU_POSITIONS);
+
+    if (this.transformOriginSelector) {
+      strategy.withTransformOriginOn(this.transformOriginSelector);
+    }
+
+    return strategy;
   }
 
   /** Subscribe to the menu stack close events and close this menu when requested. */

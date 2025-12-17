@@ -69,6 +69,7 @@ import {eventDispatchesNativeClick} from './event-detection';
     {name: 'menuTemplateRef', alias: 'cdkMenuTriggerFor'},
     {name: 'menuPosition', alias: 'cdkMenuPosition'},
     {name: 'menuData', alias: 'cdkMenuTriggerData'},
+    {name: 'transformOriginSelector', alias: 'cdkMenuTriggerTransformOriginOn'},
   ],
   outputs: ['opened: cdkMenuOpened', 'closed: cdkMenuClosed'],
   providers: [
@@ -84,7 +85,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
   private readonly _directionality = inject(Directionality, {optional: true});
   private readonly _renderer = inject(Renderer2);
   private readonly _injector = inject(Injector);
-  private _cleanupMouseenter: () => void;
+  private _cleanupMouseenter!: () => void;
 
   /** The app's menu tracking registry */
   private readonly _menuTracker = inject(MenuTracker);
@@ -282,11 +283,17 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
 
   /** Build the position strategy for the overlay which specifies where to place the menu. */
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
-    return createFlexibleConnectedPositionStrategy(this._injector, this._elementRef)
+    const strategy = createFlexibleConnectedPositionStrategy(this._injector, this._elementRef)
       .withLockedPosition()
       .withFlexibleDimensions(false)
       .withPopoverLocation('inline')
       .withPositions(this._getOverlayPositions());
+
+    if (this.transformOriginSelector) {
+      strategy.withTransformOriginOn(this.transformOriginSelector);
+    }
+
+    return strategy;
   }
 
   /** Get the preferred positions for the opened menu relative to the menu item. */

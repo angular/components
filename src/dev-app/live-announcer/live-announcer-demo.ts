@@ -25,7 +25,8 @@ export class LiveAnnouncerDemo {
     this._liveAnnouncer.announce(message);
   }
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
+
   openDialog() {
     this.dialog.open(this.template);
   }

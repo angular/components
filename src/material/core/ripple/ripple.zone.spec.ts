@@ -49,5 +49,5 @@ describe('MatRipple Zone.js integration', () => {
   imports: [MatRippleModule],
 })
 class BasicRippleContainer {
-  @ViewChild('ripple') ripple: MatRipple;
+  @ViewChild('ripple') ripple!: MatRipple;
 }

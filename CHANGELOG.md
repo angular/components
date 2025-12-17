@@ -1,3 +1,37 @@
+<a name="21.1.0-next.2"></a>
+# 21.1.0-next.2 "plastic-monkey" (2025-12-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [439d1f92a8](https://github.com/angular/components/commit/439d1f92a81246dc77be1e19c0296a1740511fc6) | feat | **table:** add virtual scrolling support |
+| [67f213a351](https://github.com/angular/components/commit/67f213a3510b09e0a3fec3054052f49d0c02be00) | fix | **a11y:** add `@angular/platform-browser` to peer dependencies ([#32471](https://github.com/angular/components/pull/32471)) |
+| [789274f423](https://github.com/angular/components/commit/789274f423581235e97948c708d0bb2d42e60b11) | fix | **menu:** allow user to pass selector for transform origin ([#32462](https://github.com/angular/components/pull/32462)) |
+| [52720a3688](https://github.com/angular/components/commit/52720a368855b1fd2baaab8263341060a77a7173) | fix | **overlay:** error when attempting to attach disposed overlay ([#32489](https://github.com/angular/components/pull/32489)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ed7e1dab2f](https://github.com/angular/components/commit/ed7e1dab2f3bc4acc849169bd65d5c44c219242f) | fix | **core:** default secondary color for focus indicator ([#32491](https://github.com/angular/components/pull/32491)) |
+| [29a8a2fddc](https://github.com/angular/components/commit/29a8a2fddcc67ac82fbc9c6d744959945f5ae139) | fix | **datepicker:** value reset when invalid value is entered using signal forms ([#32485](https://github.com/angular/components/pull/32485)) |
+| [1fab386620](https://github.com/angular/components/commit/1fab386620dd0541d928c3272c403d52f1192d41) | fix | **table:** fixed layout not working ([#32494](https://github.com/angular/components/pull/32494)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.0.3"></a>
+# 21.0.3 "plastic-moose" (2025-12-10)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fd2213c5e7](https://github.com/angular/components/commit/fd2213c5e742697da4d7f68d8e4040f6eaeadfff) | fix | **menu:** allow user to pass selector for transform origin ([#32462](https://github.com/angular/components/pull/32462)) |
+| [09ec44973f](https://github.com/angular/components/commit/09ec44973f8993b2a131aff30a0d68a45067f1ea) | fix | **overlay:** error when attempting to attach disposed overlay ([#32489](https://github.com/angular/components/pull/32489)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [151322f3b3](https://github.com/angular/components/commit/151322f3b3dd96e66f923dc4b0b4f81226ee44e6) | fix | **core:** default secondary color for focus indicator ([#32491](https://github.com/angular/components/pull/32491)) |
+| [b1287cf9a6](https://github.com/angular/components/commit/b1287cf9a64a0663ac6a5ce3222a695cd502b8bc) | fix | **datepicker:** value reset when invalid value is entered using signal forms ([#32485](https://github.com/angular/components/pull/32485)) |
+| [f4af3981b6](https://github.com/angular/components/commit/f4af3981b64bfca7cfe4ea1413c40446731ff3fe) | fix | **table:** fixed layout not working ([#32494](https://github.com/angular/components/pull/32494)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0-next.1"></a>
 # 21.1.0-next.1 "babingtonite-blinds" (2025-12-03)
 ### aria

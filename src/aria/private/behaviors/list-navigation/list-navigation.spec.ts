@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignal} from '@angular/core';
+import {signal, WritableSignalLike} from '../signal-like/signal-like';
 import {ListNavigation, ListNavigationInputs, ListNavigationItem} from './list-navigation';
 import {getListFocus} from '../list-focus/list-focus.spec';
 
 type TestItem = ListNavigationItem & {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 };
 type TestInputs = Partial<ListNavigationInputs<ListNavigationItem>> & {
   numItems?: number;

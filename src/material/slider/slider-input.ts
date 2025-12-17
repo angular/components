@@ -89,7 +89,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   readonly _cdr = inject(ChangeDetectorRef);
   protected _slider = inject<_MatSlider>(MAT_SLIDER);
   private _platform = inject(Platform);
-  private _listenerCleanups: (() => void)[];
+  private _listenerCleanups!: (() => void)[];
 
   @Input({transform: numberAttribute})
   get value(): number {
@@ -656,10 +656,10 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   }
 
   /** Whether this slider corresponds to the input on the left hand side. */
-  _isLeftThumb: boolean;
+  _isLeftThumb = false;
 
   /** Whether this slider corresponds to the input with greater value. */
-  _isEndThumb: boolean;
+  _isEndThumb = false;
 
   constructor(...args: unknown[]);
 

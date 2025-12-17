@@ -27,6 +27,9 @@ export type _Bottom = {
 };
 
 // @public
+export const CDK_VIRTUAL_SCROLL_VIEWPORT: InjectionToken<CdkVirtualScrollViewport>;
+
+// @public
 export class CdkFixedSizeVirtualScroll implements OnChanges {
     get itemSize(): number;
     set itemSize(value: NumberInput);
@@ -196,6 +199,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     ngOnInit(): void;
     get orientation(): "horizontal" | "vertical";
     set orientation(orientation: 'horizontal' | 'vertical');
+    readonly renderedContentOffset: Observable<number>;
     readonly renderedRangeStream: Observable<ListRange>;
     // (undocumented)
     scrollable: CdkVirtualScrollable;

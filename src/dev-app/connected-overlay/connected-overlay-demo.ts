@@ -54,8 +54,8 @@ export class ConnectedOverlayDemo {
   viewContainerRef = inject(ViewContainerRef);
   dir = inject(Directionality);
 
-  @ViewChild(CdkOverlayOrigin) _overlayOrigin: CdkOverlayOrigin;
-  @ViewChild('overlay') overlayTemplate: TemplateRef<any>;
+  @ViewChild(CdkOverlayOrigin) _overlayOrigin!: CdkOverlayOrigin;
+  @ViewChild('overlay') overlayTemplate!: TemplateRef<any>;
 
   originX: HorizontalConnectionPos = 'start';
   originY: VerticalConnectionPos = 'bottom';
@@ -69,7 +69,7 @@ export class ConnectedOverlayDemo {
   itemCount = 25;
   itemArray: any[] = [];
   itemText = 'Item with a long name';
-  overlayRef: OverlayRef | null;
+  overlayRef: OverlayRef | null = null;
 
   openWithConfig() {
     const positionStrategy = createFlexibleConnectedPositionStrategy(

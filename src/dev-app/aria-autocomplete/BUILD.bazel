@@ -1,0 +1,17 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-autocomplete",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "autocomplete-demo.css",
+        "autocomplete-demo.html",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/components-examples/aria/autocomplete",
+    ],
+)

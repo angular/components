@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {GridData} from './grid-data';
 import {createGridA, createGridB, createGridD, TestBaseGridCell} from './grid-data.spec';
 import {GridFocus, GridFocusInputs} from './grid-focus';
 
 export interface TestGridFocusCell extends TestBaseGridCell {
-  element: WritableSignal<HTMLElement>;
-  disabled: WritableSignal<boolean>;
+  element: WritableSignalLike<HTMLElement>;
+  disabled: WritableSignalLike<boolean>;
 }
 
 function createTestCell(): Omit<TestGridFocusCell, keyof TestBaseGridCell> {
@@ -32,7 +32,7 @@ function createTestGrid(createGridFn: () => TestBaseGridCell[][]): TestGridFocus
 }
 
 function setupGridFocus(
-  cells: Signal<TestGridFocusCell[][]>,
+  cells: SignalLike<TestGridFocusCell[][]>,
   gridFocusInputs: Partial<GridFocusInputs> = {},
 ): GridFocus<TestGridFocusCell> {
   const gridData = new GridData({cells});

@@ -331,7 +331,7 @@ class ExpansionHarnessTestComponent {
   panel1Description = 'Description of Panel#1';
   panel1Content = 'Content of Panel#1';
   hideToggleIndicators = false;
-  toggleIndicatorsPosition: MatAccordionTogglePosition;
+  toggleIndicatorsPosition!: MatAccordionTogglePosition;
   isDisabled = true;
   multiMode = false;
 }

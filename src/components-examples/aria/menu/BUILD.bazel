@@ -13,6 +13,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/aria/menu",
         "//src/cdk/a11y",
+        "//src/cdk/overlay",
     ],
 )
 

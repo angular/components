@@ -43,7 +43,7 @@ export class MatFormFieldNotchedOutline implements AfterViewInit {
   /** Whether the notch should be opened. */
   @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
 
-  @ViewChild('notch') _notch: ElementRef<HTMLElement>;
+  @ViewChild('notch') _notch!: ElementRef<HTMLElement>;
 
   ngAfterViewInit(): void {
     const element = this._elementRef.nativeElement;

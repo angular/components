@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -14,12 +14,12 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
   styleUrl: 'autocomplete-plain-input-example.css',
   imports: [FormsModule, MatAutocompleteModule, ReactiveFormsModule, AsyncPipe],
 })
-export class AutocompletePlainInputExample implements OnInit {
+export class AutocompletePlainInputExample {
   control = new FormControl('');
   streets: string[] = ['Champs-Élysées', 'Lombard Street', 'Abbey Road', 'Fifth Avenue'];
   filteredStreets: Observable<string[]>;
 
-  ngOnInit() {
+  constructor() {
     this.filteredStreets = this.control.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),

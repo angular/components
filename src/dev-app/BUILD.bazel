@@ -26,10 +26,13 @@ ng_project(
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/dev-app/aria-accordion",
+        "//src/dev-app/aria-autocomplete",
         "//src/dev-app/aria-combobox",
         "//src/dev-app/aria-grid",
         "//src/dev-app/aria-listbox",
         "//src/dev-app/aria-menu",
+        "//src/dev-app/aria-menubar",
+        "//src/dev-app/aria-select",
         "//src/dev-app/aria-tabs",
         "//src/dev-app/aria-toolbar",
         "//src/dev-app/aria-tree",
@@ -143,14 +146,6 @@ sass_binary(
     ],
 )
 
-# Variables that are going to be inlined into the dev app index.html.
-filegroup(
-    name = "variables",
-    # Note that we need the * in the pattern, because there's a lint rule which
-    # doesn't allow single files in a `glob`. We have to use a glob, because the file is optional.
-    srcs = glob(["*variables.json"]),
-)
-
 # File group for all static files which are needed to serve the dev-app. These files are
 # used in the devserver as runfiles and will be copied into the static web package that can
 # be deployed on static hosting services (like firebase).
@@ -162,7 +157,6 @@ filegroup(
         "index.html",
         ":theme",
         ":theme_m3",
-        ":variables",
         "//:node_modules/moment",
         "//:node_modules/zone.js",
         "//src/dev-app/icon:icon_demo_assets",

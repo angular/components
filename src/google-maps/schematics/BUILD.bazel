@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "npm_package", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "npm_package", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 

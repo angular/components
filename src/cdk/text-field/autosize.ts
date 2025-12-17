@@ -52,8 +52,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private readonly _destroyed = new Subject<void>();
   private _listenerCleanups: (() => void)[] | undefined;
 
-  private _minRows: number;
-  private _maxRows: number;
+  private _minRows!: number;
+  private _maxRows!: number;
   private _enabled: boolean = true;
 
   /**
@@ -122,7 +122,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Used to reference correct document/window */
   protected _document = inject(DOCUMENT);
 
-  private _hasFocus: boolean;
+  private _hasFocus = false;
 
   private _isViewInited = false;
 

@@ -5,8 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {computed} from '@angular/core';
-import {SignalLike} from '../signal-like/signal-like';
+import {computed, SignalLike} from '../signal-like/signal-like';
 
 /** Represents the required inputs for the label control. */
 export interface LabelControlInputs {

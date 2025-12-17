@@ -13,14 +13,18 @@ import {
   _DisposeViewRepeaterStrategy,
   _RecycleViewRepeaterStrategy,
   isDataSource,
-  _VIEW_REPEATER_STRATEGY,
   _ViewRepeater,
   _ViewRepeaterItemChange,
   _ViewRepeaterItemInsertArgs,
   _ViewRepeaterOperation,
+  ListRange,
 } from '../collections';
 import {Platform} from '../platform';
-import {ViewportRuler} from '../scrolling';
+import {
+  CDK_VIRTUAL_SCROLL_VIEWPORT,
+  type CdkVirtualScrollViewport,
+  ViewportRuler,
+} from '../scrolling';
 
 import {
   AfterContentChecked,
@@ -53,14 +57,17 @@ import {
   DOCUMENT,
 } from '@angular/core';
 import {
+  animationFrameScheduler,
+  asapScheduler,
   BehaviorSubject,
+  combineLatest,
   isObservable,
   Observable,
   of as observableOf,
   Subject,
   Subscription,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {auditTime, takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {
   BaseRowDef,
@@ -81,17 +88,21 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError,
 } from './table-errors';
-import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
+import {
+  STICKY_POSITIONING_LISTENER,
+  StickyPositioningListener,
+  StickyUpdate,
+} from './sticky-position-listener';
 import {CDK_TABLE} from './tokens';
 
 /**
  * Enables the recycle view repeater strategy, which reduces rendering latency. Not compatible with
  * tables that animate rows.
+ *
+ * @deprecated This directive is a no-op and will be removed.
+ * @breaking-change 23.0.0
  */
-@Directive({
-  selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]',
-  providers: [{provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy}],
-})
+@Directive({selector: 'cdk-table[recycleRows], table[cdk-table][recycleRows]'})
 export class CdkRecycleRows {}
 
 /** Interface used to provide an outlet for rows to be inserted into. */
@@ -188,8 +199,7 @@ export class NoDataRowOutlet implements RowOutlet {
  * @docs-private
  */
 export interface RowContext<T>
-  extends CdkCellOutletMultiRowContext<T>,
-    CdkCellOutletRowContext<T> {}
+  extends CdkCellOutletMultiRowContext<T>, CdkCellOutletRowContext<T> {}
 
 /**
  * Class used to conveniently type the embedded view ref for rows with a context.
@@ -268,41 +278,54 @@ export interface RenderRow<T> {
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
   imports: [HeaderRowOutlet, DataRowOutlet, NoDataRowOutlet, FooterRowOutlet],
 })
 export class CdkTable<T>
-  implements AfterContentInit, AfterContentChecked, CollectionViewer, OnDestroy, OnInit
+  implements
+    AfterContentInit,
+    AfterContentChecked,
+    CollectionViewer,
+    OnDestroy,
+    OnInit,
+    StickyPositioningListener
 {
   protected readonly _differs = inject(IterableDiffers);
   protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
   protected readonly _elementRef = inject(ElementRef);
   protected readonly _dir = inject(Directionality, {optional: true});
   private _platform = inject(Platform);
-  protected readonly _viewRepeater =
-    inject<_ViewRepeater<T, RenderRow<T>, RowContext<T>>>(_VIEW_REPEATER_STRATEGY);
+  protected _viewRepeater!: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
-  protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
-    STICKY_POSITIONING_LISTENER,
-    {optional: true, skipSelf: true},
-  )!;
+  private _injector = inject(Injector);
+  private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {
+    optional: true,
+    // Virtual scrolling can only be enabled by a viewport in
+    // the same host, don't try to resolve in parent components.
+    host: true,
+  });
+  private _positionListener =
+    inject(STICKY_POSITIONING_LISTENER, {optional: true}) ||
+    inject(STICKY_POSITIONING_LISTENER, {optional: true, skipSelf: true});
 
   private _document = inject(DOCUMENT);
 
   /** Latest data provided by the data source. */
   protected _data: readonly T[] | undefined;
 
+  /** Latest range of data rendered. */
+  protected _renderedRange?: ListRange;
+
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-  private _renderRows: RenderRow<T>[];
+  private _renderRows!: RenderRow<T>[];
 
   /** Subscription that listens for the data provided by the data source. */
-  private _renderChangeSubscription: Subscription | null;
+  private _renderChangeSubscription: Subscription | null = null;
 
   /**
    * Map of all the user's defined columns (header, data, and footer cell template) identified by
@@ -315,27 +338,27 @@ export class CdkTable<T>
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
-  private _rowDefs: CdkRowDef<T>[];
+  private _rowDefs!: CdkRowDef<T>[];
 
   /**
    * Set of all header row definitions that can be used by this table. Populated by the rows
    * gathered by using `ContentChildren` as well as any custom row definitions added to
    * `_customHeaderRowDefs`.
    */
-  private _headerRowDefs: CdkHeaderRowDef[];
+  private _headerRowDefs!: CdkHeaderRowDef[];
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to
    * `_customFooterRowDefs`.
    */
-  private _footerRowDefs: CdkFooterRowDef[];
+  private _footerRowDefs!: CdkFooterRowDef[];
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<RenderRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
-  private _defaultRowDef: CdkRowDef<T> | null;
+  private _defaultRowDef: CdkRowDef<T> | null = null;
 
   /**
    * Column definitions that were defined outside of the direct content children of the table.
@@ -366,7 +389,7 @@ export class CdkTable<T>
   private _customFooterRowDefs = new Set<CdkFooterRowDef>();
 
   /** No data row that was defined outside of the direct content children of the table. */
-  private _customNoDataRow: CdkNoDataRow | null;
+  private _customNoDataRow: CdkNoDataRow | null = null;
 
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
@@ -415,7 +438,7 @@ export class CdkTable<T>
    * Utility class that is responsible for applying the appropriate sticky positioning styles to
    * the table's rows and cells.
    */
-  private _stickyStyler: StickyStyler;
+  private _stickyStyler!: StickyStyler;
 
   /**
    * CSS class added to any row or cell that has sticky positioning applied. May be overridden by
@@ -441,6 +464,20 @@ export class CdkTable<T>
 
   /** Whether the table is done initializing. */
   private _hasInitialized = false;
+
+  /** Emits when the header rows sticky state changes. */
+  private readonly _headerRowStickyUpdates = new Subject<StickyUpdate>();
+
+  /** Emits when the footer rows sticky state changes. */
+  private readonly _footerRowStickyUpdates = new Subject<StickyUpdate>();
+
+  /**
+   * Whether to explicitly disable virtual scrolling even if there is a virtual scroll viewport
+   * parent. This can't be changed externally, whereas internally it is turned into an input that
+   * we use to opt out existing apps that were implementing virtual scroll before we added support
+   * for it.
+   */
+  private readonly _disableVirtualScrolling = false;
 
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
@@ -472,7 +509,7 @@ export class CdkTable<T>
     }
     this._trackByFn = fn;
   }
-  private _trackByFn: TrackByFunction<T>;
+  private _trackByFn!: TrackByFunction<T>;
 
   /**
    * The table's source of data, which can be provided in three ways (in order of complexity):
@@ -501,9 +538,14 @@ export class CdkTable<T>
   set dataSource(dataSource: CdkTableDataSourceInput<T>) {
     if (this._dataSource !== dataSource) {
       this._switchDataSource(dataSource);
+      this._changeDetectorRef.markForCheck();
     }
   }
-  private _dataSource: CdkTableDataSourceInput<T>;
+  private _dataSource!: CdkTableDataSourceInput<T>;
+  /** Emits when the data source changes. */
+  readonly _dataSourceChanges = new Subject<CdkTableDataSourceInput<T>>();
+  /** Observable that emits the data source's complete data set. */
+  readonly _dataStream = new Subject<readonly T[]>();
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
@@ -533,7 +575,9 @@ export class CdkTable<T>
    */
   @Input({transform: booleanAttribute})
   get fixedLayout(): boolean {
-    return this._fixedLayout;
+    // Require a fixed layout when virtual scrolling is enabled, otherwise
+    // the element the header can jump around as the user is scrolling.
+    return this._virtualScrollEnabled() ? true : this._fixedLayout;
   }
   set fixedLayout(value: boolean) {
     this._fixedLayout = value;
@@ -545,56 +589,58 @@ export class CdkTable<T>
   private _fixedLayout: boolean = false;
 
   /**
+   * Whether rows should be recycled which reduces latency, but is not compatible with tables
+   * that animate rows. Note that this input cannot change after the table is initialized.
+   */
+  @Input({transform: booleanAttribute}) recycleRows = false;
+
+  /**
    * Emits when the table completes rendering a set of data rows based on the latest data from the
    * data source, even if the set of rows is empty.
    */
   @Output()
   readonly contentChanged = new EventEmitter<void>();
 
-  // TODO(andrewseguin): Remove max value as the end index
-  //   and instead calculate the view on init and scroll.
   /**
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    *
    * @docs-private
    */
-  readonly viewChange = new BehaviorSubject<{start: number; end: number}>({
+  readonly viewChange: BehaviorSubject<ListRange> = new BehaviorSubject({
     start: 0,
     end: Number.MAX_VALUE,
   });
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
-  _rowOutlet: DataRowOutlet;
-  _headerRowOutlet: HeaderRowOutlet;
-  _footerRowOutlet: FooterRowOutlet;
-  _noDataRowOutlet: NoDataRowOutlet;
+  _rowOutlet!: DataRowOutlet;
+  _headerRowOutlet!: HeaderRowOutlet;
+  _footerRowOutlet!: FooterRowOutlet;
+  _noDataRowOutlet!: NoDataRowOutlet;
 
   /**
    * The column definitions provided by the user that contain what the header, data, and footer
    * cells should render for each column.
    */
-  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs: QueryList<CdkColumnDef>;
+  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs!: QueryList<CdkColumnDef>;
 
   /** Set of data row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs: QueryList<CdkRowDef<T>>;
+  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs!: QueryList<CdkRowDef<T>>;
 
   /** Set of header row definitions that were provided to the table as content children. */
   @ContentChildren(CdkHeaderRowDef, {
     descendants: true,
   })
-  _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
+  _contentHeaderRowDefs!: QueryList<CdkHeaderRowDef>;
 
   /** Set of footer row definitions that were provided to the table as content children. */
   @ContentChildren(CdkFooterRowDef, {
     descendants: true,
   })
-  _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
+  _contentFooterRowDefs!: QueryList<CdkFooterRowDef>;
 
   /** Row definition that will only be rendered if there's no data in the table. */
-  @ContentChild(CdkNoDataRow) _noDataRow: CdkNoDataRow;
-
-  private _injector = inject(Injector);
+  @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
 
   constructor(...args: unknown[]);
 
@@ -628,6 +674,15 @@ export class CdkTable<T>
   }
 
   ngAfterContentInit() {
+    this._viewRepeater =
+      this.recycleRows || this._virtualScrollEnabled()
+        ? new _RecycleViewRepeaterStrategy()
+        : new _DisposeViewRepeaterStrategy();
+
+    if (this._virtualScrollEnabled()) {
+      this._setupVirtualScrolling(this._virtualScrollViewport!);
+    }
+
     this._hasInitialized = true;
   }
 
@@ -658,6 +713,8 @@ export class CdkTable<T>
     this._headerRowDefs = [];
     this._footerRowDefs = [];
     this._defaultRowDef = null;
+    this._headerRowStickyUpdates.complete();
+    this._footerRowStickyUpdates.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
 
@@ -840,7 +897,7 @@ export class CdkTable<T>
     // In a table using a fixed layout, row content won't affect column width, so sticky styles
     // don't need to be cleared unless either the sticky column config changes or one of the row
     // defs change.
-    if ((this._isNativeHtmlTable && !this._fixedLayout) || this._stickyColumnStylesNeedReset) {
+    if ((this._isNativeHtmlTable && !this.fixedLayout) || this._stickyColumnStylesNeedReset) {
       // Clear the left and right positioning from all columns in the table across all rows since
       // sticky columns span across all table sections (header, data, footer)
       this._stickyStyler.clearStickyPositioning(
@@ -875,6 +932,40 @@ export class CdkTable<T>
 
     // Reset the dirty state of the sticky input change since it has been used.
     Array.from(this._columnDefsByName.values()).forEach(def => def.resetStickyChanged());
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyColumnsUpdated(update: StickyUpdate): void {
+    this._positionListener?.stickyColumnsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyEndColumnsUpdated(update: StickyUpdate): void {
+    this._positionListener?.stickyEndColumnsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyHeaderRowsUpdated(update: StickyUpdate): void {
+    this._headerRowStickyUpdates.next(update);
+    this._positionListener?.stickyHeaderRowsUpdated(update);
+  }
+
+  /**
+   * Implemented as a part of `StickyPositioningListener`.
+   * @docs-private
+   */
+  stickyFooterRowsUpdated(update: StickyUpdate): void {
+    this._footerRowStickyUpdates.next(update);
+    this._positionListener?.stickyFooterRowsUpdated(update);
   }
 
   /** Invoked whenever an outlet is created and has been assigned to the table. */
@@ -960,21 +1051,23 @@ export class CdkTable<T>
    * so that the differ equates their references.
    */
   private _getAllRenderRows(): RenderRow<T>[] {
+    // Note: the `_data` is typed as an array, but some internal apps end up passing diffrent types.
+    if (!Array.isArray(this._data) || !this._renderedRange) {
+      return [];
+    }
+
     const renderRows: RenderRow<T>[] = [];
+    const end = Math.min(this._data.length, this._renderedRange.end);
 
     // Store the cache and create a new one. Any re-used RenderRow objects will be moved into the
     // new cache while unused ones can be picked up by garbage collection.
     const prevCachedRenderRows = this._cachedRenderRowsMap;
     this._cachedRenderRowsMap = new Map();
 
-    if (!this._data) {
-      return renderRows;
-    }
-
     // For each data object, get the list of rows that should be rendered, represented by the
     // respective `RenderRow` object which is the pair of `data` and `CdkRowDef`.
-    for (let i = 0; i < this._data.length; i++) {
-      let data = this._data[i];
+    for (let i = this._renderedRange.start; i < end; i++) {
+      const data = this._data[i];
       const renderRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
 
       if (!this._cachedRenderRowsMap.has(data)) {
@@ -1148,10 +1241,12 @@ export class CdkTable<T>
       throw getTableUnknownDataSourceError();
     }
 
-    this._renderChangeSubscription = dataStream!
+    this._renderChangeSubscription = combineLatest([dataStream!, this.viewChange])
       .pipe(takeUntil(this._onDestroy))
-      .subscribe(data => {
+      .subscribe(([data, range]) => {
         this._data = data || [];
+        this._renderedRange = range;
+        this._dataStream.next(data);
         this.renderRows();
       });
   }
@@ -1199,7 +1294,7 @@ export class CdkTable<T>
       rows,
       stickyStartStates,
       stickyEndStates,
-      !this._fixedLayout || this._forceRecalculateCellWidths,
+      !this.fixedLayout || this._forceRecalculateCellWidths,
     );
   }
 
@@ -1373,20 +1468,88 @@ export class CdkTable<T>
    */
   private _setupStickyStyler() {
     const direction: Direction = this._dir ? this._dir.value : 'ltr';
+    const injector = this._injector;
+
     this._stickyStyler = new StickyStyler(
       this._isNativeHtmlTable,
       this.stickyCssClass,
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       direction,
-      this._stickyPositioningListener,
-      this._injector,
+      this,
+      injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())
       .pipe(takeUntil(this._onDestroy))
       .subscribe(value => {
         this._stickyStyler.direction = value;
         this.updateStickyColumnStyles();
+      });
+  }
+
+  private _setupVirtualScrolling(viewport: CdkVirtualScrollViewport) {
+    const virtualScrollScheduler =
+      typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
+
+    // Render nothing since the virtual scroll viewport will take over.
+    this.viewChange.next({start: 0, end: 0});
+
+    // Forward the rendered range computed by the virtual scroll viewport to the table.
+    viewport.renderedRangeStream
+      // We need the scheduler here, because the virtual scrolling module uses an identical
+      // one for scroll listeners. Without it the two go out of sync and the list starts
+      // jumping back to the beginning whenever it needs to re-render.
+      .pipe(auditTime(0, virtualScrollScheduler), takeUntil(this._onDestroy))
+      .subscribe(this.viewChange);
+
+    viewport.attach({
+      dataStream: this._dataStream,
+      measureRangeSize: (range, orientation) => this._measureRangeSize(range, orientation),
+    });
+
+    // The `StyickyStyler` sticks elements by applying a `top` or `bottom` position offset to
+    // them. However, the virtual scroll viewport applies a `translateY` offset to a container
+    // div that encapsulates the table. The translation causes the rows to also be offset by the
+    // distance from the top of the scroll viewport in addition to their `top` offset. This logic
+    // negates the translation to move the rows to their correct positions.
+    combineLatest([viewport.renderedContentOffset, this._headerRowStickyUpdates])
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(([offsetFromTop, update]) => {
+        if (!update.sizes || !update.offsets || !update.elements) {
+          return;
+        }
+
+        for (let i = 0; i < update.elements.length; i++) {
+          const cells = update.elements[i];
+
+          if (cells) {
+            const current = update.offsets[i]!;
+            const offset =
+              offsetFromTop !== 0 ? Math.max(offsetFromTop - current, current) : -current;
+
+            for (const cell of cells) {
+              cell.style.top = `${-offset}px`;
+            }
+          }
+        }
+      });
+
+    combineLatest([viewport.renderedContentOffset, this._footerRowStickyUpdates])
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(([offsetFromTop, update]) => {
+        if (!update.sizes || !update.offsets || !update.elements) {
+          return;
+        }
+
+        for (let i = 0; i < update.elements.length; i++) {
+          const cells = update.elements[i];
+
+          if (cells) {
+            for (const cell of cells) {
+              cell.style.bottom = `${offsetFromTop + update.offsets[i]!}px`;
+            }
+          }
+        }
       });
   }
 
@@ -1434,6 +1597,55 @@ export class CdkTable<T>
     this._isShowingNoDataRow = shouldShow;
 
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Measures the size of the rendered range in the table.
+   * This is used for virtual scrolling when auto-sizing is enabled.
+   */
+  private _measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number {
+    if (range.start >= range.end || orientation !== 'vertical') {
+      return 0;
+    }
+
+    const renderedRange = this.viewChange.value;
+    const viewContainerRef = this._rowOutlet.viewContainer;
+
+    if (
+      (range.start < renderedRange.start || range.end > renderedRange.end) &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
+      throw Error(`Error: attempted to measure an item that isn't rendered.`);
+    }
+
+    const renderedStartIndex = range.start - renderedRange.start;
+    const rangeLen = range.end - range.start;
+    let firstNode: HTMLElement | undefined;
+    let lastNode: HTMLElement | undefined;
+
+    for (let i = 0; i < rangeLen; i++) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        firstNode = lastNode = view.rootNodes[0];
+        break;
+      }
+    }
+
+    for (let i = rangeLen - 1; i > -1; i--) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        lastNode = view.rootNodes[view.rootNodes.length - 1];
+        break;
+      }
+    }
+
+    const startRect = firstNode?.getBoundingClientRect?.();
+    const endRect = lastNode?.getBoundingClientRect?.();
+    return startRect && endRect ? endRect.bottom - startRect.top : 0;
+  }
+
+  private _virtualScrollEnabled(): boolean {
+    return !this._disableVirtualScrolling && this._virtualScrollViewport != null;
   }
 }
 

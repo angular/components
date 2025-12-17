@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Listbox, Option} from './listbox';
+export * from './public-api';

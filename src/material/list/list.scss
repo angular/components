@@ -131,7 +131,7 @@ a.mdc-list-item--activated {
 
   // For list items, render the focus indicator when the parent
   // listem item is focused.
-  &:focus > .mat-focus-indicator::before {
+  &:focus-visible > .mat-focus-indicator::before {
     content: '';
   }
 }
