@@ -19,10 +19,10 @@ import type {DragRef} from '../drag-ref';
  */
 export class MixedSortStrategy implements DropListSortStrategy {
   /** Root element container of the drop list. */
-  private _element: HTMLElement;
+  private _element!: HTMLElement;
 
   /** Function used to determine if an item can be sorted into a specific index. */
-  private _sortPredicate: SortPredicate<DragRef>;
+  private _sortPredicate!: SortPredicate<DragRef>;
 
   /** Lazily-resolved root node containing the list. Use `_getRootNode` to read this. */
   private _rootNode: DocumentOrShadowRoot | undefined;
@@ -32,7 +32,7 @@ export class MixedSortStrategy implements DropListSortStrategy {
    * that were there at the start of the sequence, as well as any items that have been dragged
    * in, but haven't been dropped yet.
    */
-  private _activeItems: DragRef[];
+  private _activeItems!: DragRef[];
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as well as what direction

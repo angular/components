@@ -30,7 +30,7 @@ export class CdkDragPlaceholder<T = any> implements OnDestroy {
   private _drag = inject(CDK_DRAG_PARENT, {optional: true});
 
   /** Context data to be added to the placeholder template instance. */
-  @Input() data: T;
+  @Input() data!: T;
 
   constructor(...args: unknown[]);
 

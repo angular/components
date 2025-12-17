@@ -139,9 +139,9 @@ describe('MapDirectionsRenderer', () => {
   imports: [GoogleMap, MapDirectionsRenderer],
 })
 class TestApp {
-  @ViewChild(MapDirectionsRenderer) directionsRenderer: MapDirectionsRenderer;
-  options: google.maps.DirectionsRendererOptions;
-  directions: google.maps.DirectionsResult;
+  @ViewChild(MapDirectionsRenderer) directionsRenderer!: MapDirectionsRenderer;
+  options!: google.maps.DirectionsRendererOptions;
+  directions!: google.maps.DirectionsResult;
 
   handleDirectionsChanged() {}
 }

@@ -169,10 +169,10 @@ describe('MapCircle', () => {
   imports: [GoogleMap, MapCircle],
 })
 class TestApp {
-  @ViewChild(MapCircle) circle: MapCircle;
-  options: google.maps.CircleOptions;
-  center: google.maps.LatLngLiteral;
-  radius: number;
+  @ViewChild(MapCircle) circle!: MapCircle;
+  options!: google.maps.CircleOptions;
+  center!: google.maps.LatLngLiteral;
+  radius!: number;
 
   handleCenterChange() {}
 

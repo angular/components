@@ -113,7 +113,7 @@ describe('Chip Remove', () => {
   imports: [MatChipsModule],
 })
 class TestChip {
-  removable: boolean;
+  removable = false;
   disabled = false;
   didRemove = jasmine.createSpy('didRemove spy');
 }

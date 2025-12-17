@@ -31,7 +31,7 @@ export class EditRef<FormValue> implements OnDestroy {
   readonly blurred: Observable<void> = this._blurredSubject;
 
   /** The value to set the form back to on revert. */
-  private _revertFormValue: FormValue;
+  private _revertFormValue!: FormValue;
 
   private _injector = inject(Injector);
 

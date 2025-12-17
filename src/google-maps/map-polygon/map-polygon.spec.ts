@@ -160,9 +160,9 @@ describe('MapPolygon', () => {
   imports: [GoogleMap, MapPolygon],
 })
 class TestApp {
-  @ViewChild(MapPolygon) polygon: MapPolygon;
-  options: google.maps.PolygonOptions;
-  paths: google.maps.LatLngLiteral[];
+  @ViewChild(MapPolygon) polygon!: MapPolygon;
+  options!: google.maps.PolygonOptions;
+  paths!: google.maps.LatLngLiteral[];
 
   handleClick() {}
 

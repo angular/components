@@ -316,5 +316,5 @@ class MultipleRadioButtonsHarnessTest {
   disabledInteractive = false;
   secondGroupId = 'my-group-2';
   thirdGroupName: string = 'third-group-name';
-  thirdGroupButtonName: string;
+  thirdGroupButtonName!: string;
 }

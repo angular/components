@@ -93,16 +93,16 @@ export class FocusMonitor implements OnDestroy {
   private _origin: FocusOrigin = null;
 
   /** The FocusOrigin of the last focus event tracked by the FocusMonitor. */
-  private _lastFocusOrigin: FocusOrigin;
+  private _lastFocusOrigin: FocusOrigin = null;
 
   /** Whether the window has just been focused. */
   private _windowFocused = false;
 
   /** The timeout id of the window focus timeout. */
-  private _windowFocusTimeoutId: ReturnType<typeof setTimeout>;
+  private _windowFocusTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: ReturnType<typeof setTimeout>;
+  private _originTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /**
    * Whether the origin was determined via a touch interaction. Necessary as properly attributing
@@ -617,7 +617,7 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
 
-  private _monitorSubscription: Subscription;
+  private _monitorSubscription: Subscription | undefined;
   private _focusOrigin: FocusOrigin = null;
 
   @Output() readonly cdkFocusChange = new EventEmitter<FocusOrigin>();
@@ -641,9 +641,6 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
-
-    if (this._monitorSubscription) {
-      this._monitorSubscription.unsubscribe();
-    }
+    this._monitorSubscription?.unsubscribe();
   }
 }

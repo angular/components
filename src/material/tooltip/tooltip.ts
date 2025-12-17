@@ -55,6 +55,15 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
 
+declare global {
+  interface CSSStyleDeclaration {
+    msUserSelect: string;
+    MozUserSelect: string;
+    webkitUserDrag: string;
+    webkitTapHighlightColor: string;
+  }
+}
+
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -186,22 +195,22 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     optional: true,
   });
 
-  _overlayRef: OverlayRef | null;
-  _tooltipInstance: TooltipComponent | null;
+  _overlayRef: OverlayRef | null = null;
+  _tooltipInstance: TooltipComponent | null = null;
   _overlayPanelClass: string[] | undefined; // Used for styling internally.
 
-  private _portal: ComponentPortal<TooltipComponent>;
+  private _portal!: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
   private _positionAtOrigin: boolean = false;
   private _disabled: boolean = false;
-  private _tooltipClass: string | string[] | Set<string> | {[key: string]: any};
+  private _tooltipClass!: string | string[] | Set<string> | {[key: string]: unknown};
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   private readonly _tooltipComponent = TooltipComponent;
   private _viewportMargin = 8;
-  private _currentPosition: TooltipPosition;
+  private _currentPosition!: TooltipPosition;
   private readonly _cssClassPrefix: string = 'mat-mdc';
-  private _ariaDescriptionPending: boolean;
+  private _ariaDescriptionPending = false;
   private _dirSubscribed = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
@@ -270,7 +279,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._showDelay = coerceNumberProperty(value);
   }
 
-  private _showDelay: number;
+  private _showDelay!: number;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
   @Input('matTooltipHideDelay')
@@ -286,7 +295,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     }
   }
 
-  private _hideDelay: number;
+  private _hideDelay!: number;
 
   /**
    * How touch gestures should be handled by the tooltip. On touch devices the tooltip directive
@@ -310,7 +319,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     return this._message;
   }
 
-  set message(value: string | null | undefined) {
+  set message(value: string | number | null | undefined) {
     const oldMessage = this._message;
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
@@ -336,7 +345,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     return this._tooltipClass;
   }
 
-  set tooltipClass(value: string | string[] | Set<string> | {[key: string]: any}) {
+  set tooltipClass(value: string | string[] | Set<string> | {[key: string]: unknown}) {
     this._tooltipClass = value;
     if (this._tooltipInstance) {
       this._setTooltipClass(this._tooltipClass);
@@ -529,7 +538,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
-      usePopover: true,
     });
 
     this._updatePosition(this._overlayRef);
@@ -701,7 +709,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   /** Updates the tooltip class */
-  private _setTooltipClass(tooltipClass: string | string[] | Set<string> | {[key: string]: any}) {
+  private _setTooltipClass(
+    tooltipClass: string | string[] | Set<string> | {[key: string]: unknown},
+  ) {
     if (this._tooltipInstance) {
       this._tooltipInstance.tooltipClass = tooltipClass;
       this._tooltipInstance._markForCheck();
@@ -889,20 +899,20 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       // textareas, because it prevents the user from typing into them on iOS Safari.
       if (gestures === 'on' || (element.nodeName !== 'INPUT' && element.nodeName !== 'TEXTAREA')) {
         style.userSelect =
-          (style as any).msUserSelect =
+          style.msUserSelect =
           style.webkitUserSelect =
-          (style as any).MozUserSelect =
+          style.MozUserSelect =
             'none';
       }
 
       // If we have `auto` gestures and the element uses native HTML dragging,
       // we don't set `-webkit-user-drag` because it prevents the native behavior.
       if (gestures === 'on' || !element.draggable) {
-        (style as any).webkitUserDrag = 'none';
+        style.webkitUserDrag = 'none';
       }
 
       style.touchAction = 'none';
-      (style as any).webkitTapHighlightColor = 'transparent';
+      style.webkitTapHighlightColor = 'transparent';
     }
   }
 
@@ -960,10 +970,10 @@ export class TooltipComponent implements OnDestroy {
   _isMultiline = false;
 
   /** Message to display in the tooltip */
-  message: string;
+  message!: string;
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass: string | string[] | Set<string> | {[key: string]: any};
+  tooltipClass!: string | string[] | Set<string> | {[key: string]: unknown};
 
   /** The timeout ID of any current timer set to show the tooltip */
   private _showTimeoutId: ReturnType<typeof setTimeout> | undefined;
@@ -972,10 +982,10 @@ export class TooltipComponent implements OnDestroy {
   private _hideTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /** Element that caused the tooltip to open. */
-  _triggerElement: HTMLElement;
+  _triggerElement!: HTMLElement;
 
   /** Amount of milliseconds to delay the closing sequence. */
-  _mouseLeaveHideDelay: number;
+  _mouseLeaveHideDelay!: number;
 
   /** Whether animations are currently disabled. */
   private _animationsDisabled = _animationsDisabled();
@@ -986,7 +996,7 @@ export class TooltipComponent implements OnDestroy {
     // the DOM which can happen before `ngAfterViewInit`.
     static: true,
   })
-  _tooltip: ElementRef<HTMLElement>;
+  _tooltip!: ElementRef<HTMLElement>;
 
   /** Whether interactions on the page should close the tooltip */
   private _closeOnInteraction = false;

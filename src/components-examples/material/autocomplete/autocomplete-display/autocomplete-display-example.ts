@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -27,12 +27,12 @@ export interface User {
     AsyncPipe,
   ],
 })
-export class AutocompleteDisplayExample implements OnInit {
+export class AutocompleteDisplayExample {
   myControl = new FormControl<string | User>('');
   options: User[] = [{name: 'Mary'}, {name: 'Shelley'}, {name: 'Igor'}];
   filteredOptions: Observable<User[]>;
 
-  ngOnInit() {
+  constructor() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {

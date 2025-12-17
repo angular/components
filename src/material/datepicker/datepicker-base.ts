@@ -135,12 +135,12 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   );
 
   private _stateChanges: Subscription | undefined;
-  private _model: MatDateSelectionModel<S, D>;
+  private _model!: MatDateSelectionModel<S, D>;
   private _eventCleanups: (() => void)[] | undefined;
   private _animationFallback: ReturnType<typeof setTimeout> | undefined;
 
   /** Reference to the internal calendar component. */
-  @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+  @ViewChild(MatCalendar) _calendar!: MatCalendar<D>;
 
   /**
    * Theme color of the internal calendar. This API is supported in M2 themes
@@ -149,25 +149,25 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
    * For information on applying color variants in M3, see
    * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
-  @Input() color: ThemePalette;
+  @Input() color!: ThemePalette;
 
   /** Reference to the datepicker that created the overlay. */
-  datepicker: MatDatepickerBase<any, S, D>;
+  datepicker!: MatDatepickerBase<any, S, D>;
 
   /** Start of the comparison range. */
-  comparisonStart: D | null;
+  comparisonStart: D | null = null;
 
   /** End of the comparison range. */
-  comparisonEnd: D | null;
+  comparisonEnd: D | null = null;
 
   /** ARIA Accessible name of the `<input matStartDate/>` */
-  startDateAccessibleName: string | null;
+  startDateAccessibleName: string | null = null;
 
   /** ARIA Accessible name of the `<input matEndDate/>` */
-  endDateAccessibleName: string | null;
+  endDateAccessibleName: string | null = null;
 
   /** Whether the datepicker is above or below the input. */
-  _isAbove: boolean;
+  _isAbove: boolean = false;
 
   /** Emits when an animation has finished. */
   readonly _animationDone = new Subject<void>();
@@ -179,13 +179,13 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   _closeButtonText: string;
 
   /** Whether the close button currently has focus. */
-  _closeButtonFocused: boolean;
+  _closeButtonFocused: boolean = false;
 
   /** Portal with projected action buttons. */
   _actionsPortal: TemplatePortal | null = null;
 
   /** Id of the label for the `role="dialog"` element. */
-  _dialogLabelId: string | null;
+  _dialogLabelId: string | null = null;
 
   constructor(...args: unknown[]);
 
@@ -368,10 +368,10 @@ export interface MatDatepickerPanel<
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<
-    C extends MatDatepickerControl<D>,
-    S,
-    D = ExtractDateTypeFromSelection<S>,
-  >
+  C extends MatDatepickerControl<D>,
+  S,
+  D = ExtractDateTypeFromSelection<S>,
+>
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
   private _injector = inject(Injector);
@@ -386,7 +386,7 @@ export abstract class MatDatepickerBase<
   private _document = inject(DOCUMENT);
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
-  @Input() calendarHeaderComponent: ComponentType<any>;
+  @Input() calendarHeaderComponent!: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()
@@ -398,7 +398,7 @@ export abstract class MatDatepickerBase<
   set startAt(value: D | null) {
     this._startAt = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  private _startAt: D | null = null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
@@ -419,7 +419,7 @@ export abstract class MatDatepickerBase<
   set color(value: ThemePalette) {
     this._color = value;
   }
-  _color: ThemePalette;
+  _color!: ThemePalette;
 
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
@@ -441,7 +441,7 @@ export abstract class MatDatepickerBase<
       this.stateChanges.next(undefined);
     }
   }
-  private _disabled: boolean;
+  private _disabled: boolean | undefined;
 
   /** Preferred position of the datepicker in the X axis. */
   @Input()
@@ -479,7 +479,7 @@ export abstract class MatDatepickerBase<
   );
 
   /** Function that can be used to add custom CSS classes to dates. */
-  @Input() dateClass: MatCalendarCellClassFunction<D>;
+  @Input() dateClass!: MatCalendarCellClassFunction<D>;
 
   /** Emits when the datepicker has been opened. */
   @Output('opened') readonly openedStream = new EventEmitter<void>();
@@ -495,7 +495,7 @@ export abstract class MatDatepickerBase<
   set panelClass(value: string | string[]) {
     this._panelClass = coerceStringArray(value);
   }
-  private _panelClass: string[];
+  private _panelClass!: string[];
 
   /** Whether the calendar is open. */
   @Input({transform: booleanAttribute})
@@ -529,10 +529,10 @@ export abstract class MatDatepickerBase<
   }
 
   /** A reference to the overlay into which we've rendered the calendar. */
-  private _overlayRef: OverlayRef | null;
+  private _overlayRef: OverlayRef | null = null;
 
   /** Reference to the component instance rendered in the overlay. */
-  private _componentRef: ComponentRef<MatDatepickerContent<S, D>> | null;
+  private _componentRef: ComponentRef<MatDatepickerContent<S, D>> | null = null;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
@@ -541,10 +541,10 @@ export abstract class MatDatepickerBase<
   private _backdropHarnessClass = `${this.id}-backdrop`;
 
   /** Currently-registered actions portal. */
-  private _actionsPortal: TemplatePortal | null;
+  private _actionsPortal: TemplatePortal | null = null;
 
   /** The input element this datepicker is associated with. */
-  datepickerInput: C;
+  datepickerInput!: C;
 
   /** Emits when the datepicker's state changes. */
   readonly stateChanges = new Subject<void>();

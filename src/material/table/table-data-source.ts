@@ -40,7 +40,11 @@ const MAX_SAFE_INTEGER = 9007199254740991;
  * interactions. If your app needs to support more advanced use cases, consider implementing your
  * own `DataSource`.
  */
-export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extends DataSource<T> {
+export class MatTableDataSource<
+  // TODO: Remove `any` type below in a breaking change:
+  T extends object | any,
+  P extends MatPaginator = MatPaginator,
+> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]>;
 
@@ -65,7 +69,7 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
    * For example, a 'selectAll()' function would likely want to select the set of filtered data
    * shown to the user rather than all the data.
    */
-  filteredData: T[];
+  filteredData!: T[];
 
   /** Array of data that should be rendered by the table, where each object represents one row. */
   get data() {
@@ -232,7 +236,8 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     // Loops over the values in the array and returns true if any of them match the filter string
-    return Object.values(data as {[key: string]: any}).some(value =>
+    // TODO: Remove `as object` cast when `T` stops extending `any`:
+    return Object.values(data as object).some(value =>
       `${value}`.toLowerCase().includes(transformedFilter),
     );
   };

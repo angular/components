@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal, WritableSignal} from '@angular/core';
+import {SignalLike, signal, WritableSignalLike} from '../signal-like/signal-like';
 import {ListFocus, ListFocusInputs, ListFocusItem} from './list-focus';
 
 type TestItem = ListFocusItem & {
-  disabled: WritableSignal<boolean>;
+  disabled: WritableSignalLike<boolean>;
 };
 
 type TestInputs = Partial<ListFocusInputs<ListFocusItem>> & {
@@ -30,7 +30,7 @@ export function getListFocus(inputs: TestInputs = {}): ListFocus<ListFocusItem> 
   });
 }
 
-function getItems(length: number): Signal<ListFocusItem[]> {
+function getItems(length: number): SignalLike<ListFocusItem[]> {
   return signal(
     Array.from({length}).map((_, i) => {
       return {

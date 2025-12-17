@@ -169,13 +169,13 @@ export class CdkVirtualForOf<T>
   private _differ: IterableDiffer<T> | null = null;
 
   /** The most recent data emitted from the DataSource. */
-  private _data: readonly T[];
+  private _data: readonly T[] = [];
 
   /** The currently rendered items. */
-  private _renderedItems: T[];
+  private _renderedItems: T[] = [];
 
   /** The currently rendered range of indices. */
-  private _renderedRange: ListRange;
+  private _renderedRange: ListRange = {start: 0, end: 0};
 
   /** Whether the rendered data should be updated during the next ngDoCheck cycle. */
   private _needsUpdate = false;

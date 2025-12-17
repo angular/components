@@ -1876,7 +1876,7 @@ class MatHorizontalStepperWithErrorsApp {
   imports: [MatStepperModule],
 })
 class SimpleMatHorizontalStepperApp {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = 'Step 3';
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
@@ -1917,7 +1917,7 @@ class SimpleMatHorizontalStepperApp {
   imports: [MatStepperModule],
 })
 class SimpleMatVerticalStepperApp {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = signal('Step 3');
   showStepTwo = signal(true);
   disableRipple = signal(false);
@@ -1989,7 +1989,7 @@ class LinearMatVerticalStepperApp {
   imports: [MatStepperModule],
 })
 class SimplePreselectedMatHorizontalStepperApp {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   index = 0;
 }
 
@@ -2034,7 +2034,7 @@ class SimplePreselectedMatHorizontalStepperApp {
   imports: [ReactiveFormsModule, MatStepperModule],
 })
 class LinearMatVerticalStepperAppForAlreadyFilledForm {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   selectedIndex = signal(2);
 
   oneGroup = new FormGroup({
@@ -2059,7 +2059,7 @@ class LinearMatVerticalStepperAppForAlreadyFilledForm {
   imports: [MatStepperModule],
 })
 class SimpleStepperWithoutStepControl {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   steps = [
     {label: 'One', completed: false},
     {label: 'Two', completed: false},
@@ -2081,7 +2081,7 @@ class SimpleStepperWithoutStepControl {
   imports: [MatStepperModule],
 })
 class SimpleStepperWithStepControlAndCompletedBinding {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 
   steps = [
     {label: 'One', completed: false, control: new FormControl('')},
@@ -2107,7 +2107,7 @@ class SimpleStepperWithStepControlAndCompletedBinding {
   imports: [MatStepperModule],
 })
 class IconOverridesStepper {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 
   getRomanNumeral(value: number) {
     const numberMap: {[key: number]: string} = {
@@ -2187,7 +2187,7 @@ class StepperWithAriaInputs {
   imports: [MatStepperModule],
 })
 class StepperWithIndirectDescendantSteps {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 }
 
 @Component({
@@ -2226,7 +2226,7 @@ class StepperWithNgIf {
   imports: [MatStepperModule],
 })
 class NestedSteppers {
-  @ViewChildren(MatStepper) steppers: QueryList<MatStepper>;
+  @ViewChildren(MatStepper) steppers!: QueryList<MatStepper>;
 }
 
 @Component({
@@ -2240,7 +2240,7 @@ class NestedSteppers {
   imports: [MatStepperModule],
 })
 class StepperWithStaticOutOfBoundsIndex {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 }
 
 @Component({
@@ -2279,7 +2279,7 @@ class StepperWithLazyContent {
   imports: [MatStepperModule],
 })
 class HorizontalStepperWithDelayedStep {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   renderSecondStep = signal(false);
 }
 
@@ -2312,7 +2312,7 @@ class StepperWithTwoWayBindingOnSelectedIndex {
   imports: [MatStepperModule],
 })
 class HorizontalStepperWithHeaderPrefix {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 }
 
 @Component({
@@ -2330,5 +2330,5 @@ class HorizontalStepperWithHeaderPrefix {
   imports: [MatStepperModule],
 })
 class VerticalStepperWithHeaderPrefix {
-  @ViewChild(MatStepper) stepper: MatStepper;
+  @ViewChild(MatStepper) stepper!: MatStepper;
 }

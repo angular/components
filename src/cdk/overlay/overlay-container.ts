@@ -32,7 +32,7 @@ export class _CdkOverlayStyleLoader {}
 export class OverlayContainer implements OnDestroy {
   protected _platform = inject(Platform);
 
-  protected _containerElement: HTMLElement;
+  protected _containerElement: HTMLElement | undefined;
   protected _document = inject(DOCUMENT);
   protected _styleLoader = inject(_CdkPrivateStyleLoader);
 
@@ -56,7 +56,7 @@ export class OverlayContainer implements OnDestroy {
       this._createContainer();
     }
 
-    return this._containerElement;
+    return this._containerElement!;
   }
 
   /**

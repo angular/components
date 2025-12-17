@@ -176,8 +176,8 @@ describe('MatSnackBarHarness', () => {
 class SnackbarHarnessTest {
   snackBar = inject(MatSnackBar);
 
-  @ViewChild('custom') customTmpl: TemplateRef<any>;
-  @ViewChild('customWithAction') customWithActionTmpl: TemplateRef<any>;
+  @ViewChild('custom') customTmpl!: TemplateRef<any>;
+  @ViewChild('customWithAction') customWithActionTmpl!: TemplateRef<any>;
 
   openSimple(message: string, action = '', config?: MatSnackBarConfig) {
     return this.snackBar.open(message, action, config);

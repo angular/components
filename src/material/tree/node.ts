@@ -31,7 +31,7 @@ import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@a
 function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
   keyManager: TreeKeyManagerStrategy<T>,
 ): keyManager is NoopTreeKeyManager<T> {
-  return !!(keyManager as any)._isNoopTreeKeyManager;
+  return !!(keyManager as NoopTreeKeyManager<T>)._isNoopTreeKeyManager;
 }
 
 /**
@@ -72,7 +72,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     // If the specified tabIndex value is null or undefined, fall back to the default value.
     this._tabIndexInputBinding = value;
   }
-  private _tabIndexInputBinding: number;
+  private _tabIndexInputBinding!: number;
 
   /**
    * The default tabindex of the tree node.
@@ -135,7 +135,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
-  @Input('matTreeNode') data: T;
+  @Input('matTreeNode') data!: T;
 }
 
 /**
@@ -158,7 +158,7 @@ export class MatNestedTreeNode<T, K = T>
   extends CdkNestedTreeNode<T, K>
   implements AfterContentInit, OnDestroy, OnInit
 {
-  @Input('matNestedTreeNode') node: T;
+  @Input('matNestedTreeNode') node!: T;
 
   /**
    * Whether the node is disabled.
@@ -185,7 +185,7 @@ export class MatNestedTreeNode<T, K = T>
     // If the specified tabIndex value is null or undefined, fall back to the default value.
     this._tabIndex = value;
   }
-  private _tabIndex: number;
+  private _tabIndex!: number;
 
   // This is a workaround for https://github.com/angular/angular/issues/19145
   // In aot mode, the lifecycle hooks from parent class are not called.

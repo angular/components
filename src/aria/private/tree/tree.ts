@@ -6,16 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, computed, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 import {ExpansionItem, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
 export interface TreeItemInputs<V>
-  extends Omit<ListItem<V>, 'index'>,
-    Omit<ExpansionItem, 'expandable'> {
+  extends Omit<ListItem<V>, 'index'>, Omit<ExpansionItem, 'expandable'> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 

@@ -609,7 +609,16 @@ export class HarnessPredicate<T extends ComponentHarness> {
     public harnessType: ComponentHarnessConstructor<T>,
     options: BaseHarnessFilters,
   ) {
-    this._addBaseOptions(options);
+    this._ancestor = options.ancestor || '';
+    if (this._ancestor) {
+      this._descriptions.push(`has ancestor matching selector "${this._ancestor}"`);
+    }
+    const selector = options.selector;
+    if (selector !== undefined) {
+      this.add(`host matches selector "${selector}"`, async item => {
+        return (await item.host()).matchesSelector(selector);
+      });
+    }
   }
 
   /**
@@ -713,20 +722,6 @@ export class HarnessPredicate<T extends ComponentHarness> {
     });
 
     return result.join(', ');
-  }
-
-  /** Adds base options common to all harness types. */
-  private _addBaseOptions(options: BaseHarnessFilters) {
-    this._ancestor = options.ancestor || '';
-    if (this._ancestor) {
-      this._descriptions.push(`has ancestor matching selector "${this._ancestor}"`);
-    }
-    const selector = options.selector;
-    if (selector !== undefined) {
-      this.add(`host matches selector "${selector}"`, async item => {
-        return (await item.host()).matchesSelector(selector);
-      });
-    }
   }
 }
 

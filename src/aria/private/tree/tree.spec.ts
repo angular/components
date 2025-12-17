@@ -6,16 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {WritableSignal, signal} from '@angular/core';
 import {TreeInputs, TreeItemInputs, TreeItemPattern, TreePattern} from './tree';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {WritableSignalLike, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 
 // Converts the SignalLike type to WritableSignal type for controlling test inputs.
 type WritableSignalOverrides<O> = {
   [K in keyof O as O[K] extends SignalLike<any> ? K : never]: O[K] extends SignalLike<infer T>
-    ? WritableSignal<T>
+    ? WritableSignalLike<T>
     : never;
 };
 

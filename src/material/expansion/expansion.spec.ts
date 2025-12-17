@@ -563,7 +563,7 @@ class PanelWithContent {
   disabled = false;
   openCallback = jasmine.createSpy('openCallback');
   closeCallback = jasmine.createSpy('closeCallback');
-  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
+  @ViewChild(MatExpansionPanel) panel!: MatExpansionPanel;
 }
 
 @Component({
@@ -580,7 +580,7 @@ class PanelWithContent {
 })
 class PanelWithContentInNgIf {
   expansionShown = true;
-  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
+  @ViewChild(MatExpansionPanel) panel!: MatExpansionPanel;
 }
 
 @Component({

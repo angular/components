@@ -30,3 +30,4 @@ export {TableDynamicArrayDataExample} from './table-dynamic-array-data/table-dyn
 export {TableDynamicObservableDataExample} from './table-dynamic-observable-data/table-dynamic-observable-data-example';
 export {TableGeneratedColumnsExample} from './table-generated-columns/table-generated-columns-example';
 export {TableFlexLargeRowExample} from './table-flex-large-row/table-flex-large-row-example';
+export {TableVirtualScrollExample} from './table-virtual-scroll/table-virtual-scroll-example';

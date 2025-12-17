@@ -11,7 +11,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 export class BreakpointObserverOverviewExample implements OnDestroy {
   destroyed = new Subject<void>();
-  currentScreenSize: string;
+  currentScreenSize!: string;
 
   // Create a map to display breakpoint names for demonstration purposes.
   displayNameMap = new Map([

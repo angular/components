@@ -24,7 +24,7 @@ interface FlatFoodNode {
 })
 export class CdkTreeFlatLevelAccessorExample {
   @ViewChild(CdkTree)
-  tree: CdkTree<FlatFoodNode>;
+  tree!: CdkTree<FlatFoodNode>;
 
   levelAccessor = (dataNode: FlatFoodNode) => dataNode.level;
 

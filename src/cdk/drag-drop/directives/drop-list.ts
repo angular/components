@@ -66,7 +66,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   private readonly _destroyed = new Subject<void>();
 
   /** Whether the element's scrollable parents have been resolved. */
-  private _scrollableParentsResolved: boolean;
+  private _scrollableParentsResolved = false;
 
   /** Keeps track of the drop lists that are currently on the page. */
   private static _dropLists: CdkDropList[] = [];
@@ -83,10 +83,10 @@ export class CdkDropList<T = any> implements OnDestroy {
   connectedTo: (CdkDropList | string)[] | CdkDropList | string = [];
 
   /** Arbitrary data to attach to this container. */
-  @Input('cdkDropListData') data: T;
+  @Input('cdkDropListData') data!: T;
 
   /** Direction in which the list is oriented. */
-  @Input('cdkDropListOrientation') orientation: DropListOrientation;
+  @Input('cdkDropListOrientation') orientation: DropListOrientation = 'vertical';
 
   /**
    * Unique ID for the drop zone. Can be used as a reference
@@ -109,11 +109,11 @@ export class CdkDropList<T = any> implements OnDestroy {
     // the user in a disabled state, so we also need to sync it as it's being set.
     this._dropListRef.disabled = this._disabled = value;
   }
-  private _disabled: boolean;
+  private _disabled = false;
 
   /** Whether sorting within this drop list is disabled. */
   @Input({alias: 'cdkDropListSortingDisabled', transform: booleanAttribute})
-  sortingDisabled: boolean;
+  sortingDisabled: boolean = false;
 
   /**
    * Function that is used to determine whether an item
@@ -128,7 +128,7 @@ export class CdkDropList<T = any> implements OnDestroy {
 
   /** Whether to auto-scroll the view when the user moves their pointer close to the edges. */
   @Input({alias: 'cdkDropListAutoScrollDisabled', transform: booleanAttribute})
-  autoScrollDisabled: boolean;
+  autoScrollDisabled: boolean = false;
 
   /** Number of pixels to scroll for each frame when auto-scrolling an element. */
   @Input('cdkDropListAutoScrollStep')
@@ -148,7 +148,7 @@ export class CdkDropList<T = any> implements OnDestroy {
    * </div>
    * ```
    */
-  @Input('cdkDropListElementContainer') elementContainerSelector: string | null;
+  @Input('cdkDropListElementContainer') elementContainerSelector: string | null = null;
 
   /**
    * By default when an item leaves its initial container, its placeholder will be transferred
@@ -162,7 +162,7 @@ export class CdkDropList<T = any> implements OnDestroy {
    * behavior in a drop list.
    */
   @Input({alias: 'cdkDropListHasAnchor', transform: booleanAttribute})
-  hasAnchor: boolean;
+  hasAnchor: boolean = false;
 
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')

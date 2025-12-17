@@ -45,6 +45,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
   },
   {
+    path: 'aria-select',
+    loadComponent: () => import('./aria-select/select-demo').then(m => m.SelectDemo),
+  },
+  {
     path: 'aria-grid',
     loadComponent: () => import('./aria-grid/grid-demo').then(m => m.GridDemo),
   },
@@ -71,6 +75,11 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'aria-tree',
     loadComponent: () => import('./aria-tree/tree-demo').then(m => m.TreeDemo),
+  },
+  {
+    path: 'aria-autocomplete',
+    loadComponent: () =>
+      import('./aria-autocomplete/autocomplete-demo').then(m => m.AutocompleteDemo),
   },
   {
     path: 'aria-toolbar',

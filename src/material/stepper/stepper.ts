@@ -77,10 +77,10 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   @Input() color: ThemePalette;
 
   /** Content that will be rendered lazily. */
-  @ContentChild(MatStepContent, {static: false}) _lazyContent: MatStepContent;
+  @ContentChild(MatStepContent, {static: false}) _lazyContent!: MatStepContent;
 
   /** Currently-attached portal containing the lazy content. */
-  _portal: TemplatePortal;
+  _portal!: TemplatePortal;
 
   ngAfterContentInit() {
     this._isSelected = this._stepper.steps.changes
@@ -148,7 +148,7 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   @ViewChildren(MatStepHeader) override _stepHeader: QueryList<MatStepHeader> = undefined!;
 
   /** Elements hosting the step animations. */
-  @ViewChildren('animatedContainer') _animatedContainers: QueryList<ElementRef>;
+  @ViewChildren('animatedContainer') _animatedContainers!: QueryList<ElementRef>;
 
   /** Full list of steps inside the stepper, including inside nested steppers. */
   @ContentChildren(MatStep, {descendants: true}) override _steps: QueryList<MatStep> = undefined!;
@@ -157,13 +157,13 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   override readonly steps: QueryList<MatStep> = new QueryList<MatStep>();
 
   /** Custom icon overrides passed in by the consumer. */
-  @ContentChildren(MatStepperIcon, {descendants: true}) _icons: QueryList<MatStepperIcon>;
+  @ContentChildren(MatStepperIcon, {descendants: true}) _icons!: QueryList<MatStepperIcon>;
 
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
 
   /** Whether ripples should be disabled for the step headers. */
-  @Input() disableRipple: boolean;
+  @Input() disableRipple: boolean = false;
 
   /**
    * Theme color for all of the steps in stepper. This API is supported in M2

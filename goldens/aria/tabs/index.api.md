@@ -4,14 +4,12 @@
 
 ```ts
 
+import * as _angular_aria_private from '@angular/aria/private';
+import * as _angular_aria_private_public_api from '@angular/aria/private/public-api';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import * as i1 from '@angular/aria/private';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { TabListPattern } from '@angular/aria/private';
-import { TabPanelPattern } from '@angular/aria/private';
-import { TabPattern } from '@angular/aria/private';
 
 // @public
 export class Tab implements HasElement, OnInit, OnDestroy {
@@ -36,7 +34,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
 // @public
 export class TabContent {
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabContent, "ng-template[ngTabContent]", ["ngTabContent"], {}, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabContent, "ng-template[ngTabContent]", ["ngTabContent"], {}, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<TabContent, never>;
 }
@@ -61,7 +59,7 @@ export class TabList implements OnInit, OnDestroy {
     readonly selectedTab: _angular_core.ModelSignal<string | undefined>;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly _tabPatterns: _angular_core.Signal<TabPattern[]>;
+    readonly _tabPatterns: _angular_core.Signal<_angular_aria_private_public_api.TabPattern[]>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)
     _unregister(child: Tab): void;
@@ -85,7 +83,7 @@ export class TabPanel implements OnInit, OnDestroy {
     readonly value: _angular_core.InputSignal<string>;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabPanel, "[ngTabPanel]", ["ngTabPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabPanel, "[ngTabPanel]", ["ngTabPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<TabPanel, never>;
 }
@@ -95,8 +93,8 @@ export class Tabs {
     readonly element: HTMLElement;
     // (undocumented)
     _register(child: TabList | TabPanel): void;
-    readonly _tabPatterns: _angular_core.Signal<TabPattern[] | undefined>;
-    readonly _unorderedTabpanelPatterns: _angular_core.Signal<TabPanelPattern[]>;
+    readonly _tabPatterns: _angular_core.Signal<_angular_aria_private.TabPattern[] | undefined>;
+    readonly _unorderedTabpanelPatterns: _angular_core.Signal<_angular_aria_private.TabPanelPattern[]>;
     // (undocumented)
     _unregister(child: TabList | TabPanel): void;
     // (undocumented)

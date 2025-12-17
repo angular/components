@@ -150,29 +150,30 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _attachSubscription = Subscription.EMPTY;
   private _detachSubscription = Subscription.EMPTY;
   private _positionSubscription = Subscription.EMPTY;
-  private _offsetX: number;
-  private _offsetY: number;
-  private _position: FlexibleConnectedPositionStrategy;
+  private _offsetX: number | undefined;
+  private _offsetY: number | undefined;
+  private _position: FlexibleConnectedPositionStrategy | undefined;
   private _scrollStrategyFactory = inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY);
   private _ngZone = inject(NgZone);
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin')
-  origin: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
+  origin!: CdkOverlayOrigin | FlexibleConnectedPositionStrategyOrigin;
 
   /** Registered connected position pairs. */
-  @Input('cdkConnectedOverlayPositions') positions: ConnectedPosition[];
+  @Input('cdkConnectedOverlayPositions') positions!: ConnectedPosition[];
 
   /**
    * This input overrides the positions input if specified. It lets users pass
    * in arbitrary positioning strategies.
    */
-  @Input('cdkConnectedOverlayPositionStrategy') positionStrategy: FlexibleConnectedPositionStrategy;
+  @Input('cdkConnectedOverlayPositionStrategy')
+  positionStrategy!: FlexibleConnectedPositionStrategy;
 
   /** The offset in pixels for the overlay connection point on the x-axis */
   @Input('cdkConnectedOverlayOffsetX')
   get offsetX(): number {
-    return this._offsetX;
+    return this._offsetX!;
   }
   set offsetX(offsetX: number) {
     this._offsetX = offsetX;
@@ -185,7 +186,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** The offset in pixels for the overlay connection point on the y-axis */
   @Input('cdkConnectedOverlayOffsetY')
   get offsetY() {
-    return this._offsetY;
+    return this._offsetY!;
   }
   set offsetY(offsetY: number) {
     this._offsetY = offsetY;
@@ -196,22 +197,22 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   /** The width of the overlay panel. */
-  @Input('cdkConnectedOverlayWidth') width: number | string;
+  @Input('cdkConnectedOverlayWidth') width!: number | string;
 
   /** The height of the overlay panel. */
-  @Input('cdkConnectedOverlayHeight') height: number | string;
+  @Input('cdkConnectedOverlayHeight') height!: number | string;
 
   /** The min width of the overlay panel. */
-  @Input('cdkConnectedOverlayMinWidth') minWidth: number | string;
+  @Input('cdkConnectedOverlayMinWidth') minWidth!: number | string;
 
   /** The min height of the overlay panel. */
-  @Input('cdkConnectedOverlayMinHeight') minHeight: number | string;
+  @Input('cdkConnectedOverlayMinHeight') minHeight!: number | string;
 
   /** The custom class to be set on the backdrop element. */
-  @Input('cdkConnectedOverlayBackdropClass') backdropClass: string | string[];
+  @Input('cdkConnectedOverlayBackdropClass') backdropClass!: string | string[];
 
   /** The custom class to add to the overlay pane element. */
-  @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
+  @Input('cdkConnectedOverlayPanelClass') panelClass!: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: ViewportMargin = 0;
@@ -226,7 +227,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayDisableClose') disableClose: boolean = false;
 
   /** CSS selector which to set the transform origin. */
-  @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
+  @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector!: string;
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input({alias: 'cdkConnectedOverlayHasBackdrop', transform: booleanAttribute})
@@ -499,15 +500,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     // Only subscribe to `positionChanges` if requested, because putting
     // together all the information for it can be expensive.
     if (this.positionChange.observers.length > 0) {
-      this._positionSubscription = this._position.positionChanges
-        .pipe(takeWhile(() => this.positionChange.observers.length > 0))
-        .subscribe(position => {
-          this._ngZone.run(() => this.positionChange.emit(position));
+      this._positionSubscription = this._position!.positionChanges.pipe(
+        takeWhile(() => this.positionChange.observers.length > 0),
+      ).subscribe(position => {
+        this._ngZone.run(() => this.positionChange.emit(position));
 
-          if (this.positionChange.observers.length === 0) {
-            this._positionSubscription.unsubscribe();
-          }
-        });
+        if (this.positionChange.observers.length === 0) {
+          this._positionSubscription.unsubscribe();
+        }
+      });
     }
 
     this.open = true;

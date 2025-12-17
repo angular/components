@@ -13,18 +13,18 @@ import {
   contentChildren,
   Directive,
   ElementRef,
-  forwardRef,
   inject,
   input,
   model,
   signal,
   untracked,
 } from '@angular/core';
-import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '@angular/aria/private';
 import {Directionality} from '@angular/cdk/bidi';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
+import {ComboboxListboxPattern, ListboxPattern} from '../private';
 import {ComboboxPopup} from '../combobox';
+import {Option} from './option';
+import {LISTBOX} from './tokens';
 
 /**
  * Represents a container used to display a list of items for a user to select from.
@@ -44,6 +44,11 @@ import {ComboboxPopup} from '../combobox';
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Listbox](guide/aria/listbox)
+ * @see [Autocomplete](guide/aria/autocomplete)
+ * @see [Select](guide/aria/select)
+ * @see [Multiselect](guide/aria/multiselect)
  */
 @Directive({
   selector: '[ngListbox]',
@@ -62,6 +67,7 @@ import {ComboboxPopup} from '../combobox';
     '(focusin)': '_onFocus()',
   },
   hostDirectives: [ComboboxPopup],
+  providers: [{provide: LISTBOX, useExisting: Listbox}],
 })
 export class Listbox<V> {
   /** A unique identifier for the listbox. */
@@ -78,22 +84,11 @@ export class Listbox<V> {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
   /** The Options nested inside of the Listbox. */
-  private readonly _options = contentChildren(
-    // We need a `forwardRef` here, because the option class is declared further down
-    // in the same file. When the reference is written to Angular's metadata this can
-    // cause an attempt to access the class before it's defined.
-    forwardRef(() => Option),
-    {descendants: true},
-  );
+  private readonly _options = contentChildren(Option, {descendants: true});
 
   /** A signal wrapper for directionality. */
-  protected textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  protected textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The Option UIPatterns of the child Options. */
   protected items = computed(() => this._options().map(option => option._pattern));
@@ -213,78 +208,4 @@ export class Listbox<V> {
   gotoFirst() {
     this._pattern.listBehavior.first();
   }
-}
-
-/**
- * A selectable option in an `ngListbox`.
- *
- * This directive should be applied to an element (e.g., `<li>`, `<div>`) within an
- * `ngListbox`. The `value` input is used to identify the option, and the `label` input provides
- * the accessible name for the option.
- *
- * ```html
- * <li ngOption value="item-id" label="Item Name">
- *   Item Name
- * </li>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: '[ngOption]',
-  exportAs: 'ngOption',
-  host: {
-    'role': 'option',
-    '[attr.data-active]': 'active()',
-    '[attr.id]': '_pattern.id()',
-    '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-selected]': '_pattern.selected()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-  },
-})
-export class Option<V> {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** Whether the option is currently active (focused). */
-  active = computed(() => this._pattern.active());
-
-  /** The parent Listbox. */
-  private readonly _listbox = inject(Listbox);
-
-  /** A unique identifier for the option. */
-  readonly id = input(inject(_IdGenerator).getId('ng-option-', true));
-
-  // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
-  // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
-  /** The text used by the typeahead search. */
-  protected searchTerm = computed(() => this.label() ?? this.element.textContent);
-
-  /** The parent Listbox UIPattern. */
-  private readonly _listboxPattern = computed(() => this._listbox._pattern);
-
-  /** The value of the option. */
-  value = input.required<V>();
-
-  /** Whether an item is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
-
-  /** The text used by the typeahead search. */
-  label = input<string>();
-
-  /** Whether the option is selected. */
-  readonly selected = computed(() => this._pattern.selected());
-
-  /** The Option UIPattern. */
-  readonly _pattern = new OptionPattern<V>({
-    ...this,
-    id: this.id,
-    value: this.value,
-    listbox: this._listboxPattern,
-    element: () => this.element,
-    searchTerm: () => this.searchTerm() ?? '',
-  });
 }

@@ -405,7 +405,7 @@ describe('Option Chips', () => {
   imports: [MatChipListbox, MatChipOption, MatChipAvatar],
 })
 class SingleChip {
-  @ViewChild(MatChipListbox) chipList: MatChipListbox;
+  @ViewChild(MatChipListbox) chipList!: MatChipListbox;
   disabled: boolean = false;
   name: string = 'Test';
   color: string = 'primary';

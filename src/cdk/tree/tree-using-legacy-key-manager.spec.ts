@@ -83,6 +83,6 @@ class SimpleCdkTreeApp {
 
   dataSource = of([new MinimalTestData('apple'), new MinimalTestData('banana')]);
 
-  @ViewChild('tree', {read: ElementRef}) tree: ElementRef<HTMLElement>;
-  @ViewChildren('node') treeNodes: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('tree', {read: ElementRef}) tree!: ElementRef<HTMLElement>;
+  @ViewChildren('node') treeNodes!: QueryList<ElementRef<HTMLElement>>;
 }

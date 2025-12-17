@@ -72,7 +72,7 @@ class ScrollableTooltipDemo {
   message: string = initialTooltipMessage;
   showButton: boolean = true;
 
-  @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
+  @ViewChild(CdkScrollable) scrollingContainer!: CdkScrollable;
 
   scrollDown() {
     const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;

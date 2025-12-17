@@ -120,7 +120,7 @@ export class MatExpansionPanel
   set togglePosition(value: MatAccordionTogglePosition) {
     this._togglePosition = value;
   }
-  private _togglePosition: MatAccordionTogglePosition;
+  private _togglePosition!: MatAccordionTogglePosition;
 
   /** An event emitted after the body's expansion animation happens. */
   @Output() readonly afterExpand = new EventEmitter<void>();
@@ -135,17 +135,17 @@ export class MatExpansionPanel
   override accordion = inject<MatAccordionBase>(MAT_ACCORDION, {optional: true, skipSelf: true})!;
 
   /** Content that will be rendered lazily. */
-  @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
+  @ContentChild(MatExpansionPanelContent) _lazyContent!: MatExpansionPanelContent;
 
   /** Element containing the panel's user-provided content. */
-  @ViewChild('body') _body: ElementRef<HTMLElement>;
+  @ViewChild('body') _body!: ElementRef<HTMLElement>;
 
   /** Element wrapping the panel body. */
   @ViewChild('bodyWrapper')
   protected _bodyWrapper: ElementRef<HTMLElement> | undefined;
 
   /** Portal holding the user's content. */
-  _portal: TemplatePortal;
+  _portal!: TemplatePortal;
 
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId: string = inject(_IdGenerator).getId('mat-expansion-panel-header-');

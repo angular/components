@@ -37,7 +37,7 @@ export abstract class MatListHarnessBase<
   C extends ComponentHarness,
   F extends BaseListItemHarnessFilters,
 > extends ComponentHarness {
-  protected _itemHarness: T;
+  protected _itemHarness!: T;
 
   /**
    * Gets a list of harnesses representing the items in this list.

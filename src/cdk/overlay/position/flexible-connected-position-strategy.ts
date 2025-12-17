@@ -78,10 +78,10 @@ export type FlexibleOverlayPopoverLocation =
  */
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayRef;
+  private _overlayRef!: OverlayRef;
 
   /** Whether we're performing the very first positioning of the overlay. */
-  private _isInitialRender: boolean;
+  private _isInitialRender = false;
 
   /** Last size used for the bounding box. Used to avoid resizing the overlay after open. */
   private _lastBoundingBoxSize = {width: 0, height: 0};
@@ -102,16 +102,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _positionLocked = false;
 
   /** Cached origin dimensions */
-  private _originRect: Dimensions;
+  private _originRect!: Dimensions;
 
   /** Cached overlay dimensions */
-  private _overlayRect: Dimensions;
+  private _overlayRect!: Dimensions;
 
   /** Cached viewport dimensions */
-  private _viewportRect: Dimensions;
+  private _viewportRect!: Dimensions;
 
   /** Cached container dimensions */
-  private _containerRect: Dimensions;
+  private _containerRect!: Dimensions;
 
   /** Amount of space that must be maintained between the overlay and the right edge of the viewport. */
   private _viewportMargin: ViewportMargin = 0;
@@ -123,25 +123,25 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   _preferredPositions: ConnectionPositionPair[] = [];
 
   /** The origin element against which the overlay will be positioned. */
-  _origin: FlexibleConnectedPositionStrategyOrigin;
+  _origin!: FlexibleConnectedPositionStrategyOrigin;
 
   /** The overlay pane element. */
-  private _pane: HTMLElement;
+  private _pane!: HTMLElement;
 
   /** Whether the strategy has been disposed of already. */
-  private _isDisposed: boolean;
+  private _isDisposed = false;
 
   /**
    * Parent element for the overlay panel used to constrain the overlay panel's size to fit
    * within the viewport.
    */
-  private _boundingBox: HTMLElement | null;
+  private _boundingBox: HTMLElement | null = null;
 
   /** The last position to have been calculated as the best fit position. */
-  private _lastPosition: ConnectedPosition | null;
+  private _lastPosition: ConnectedPosition | null = null;
 
   /** The last calculated scroll visibility. Only tracked  */
-  private _lastScrollVisibility: ScrollingVisibility | null;
+  private _lastScrollVisibility: ScrollingVisibility | null = null;
 
   /** Subject that emits whenever the position changes. */
   private readonly _positionChanges = new Subject<ConnectedOverlayPositionChange>();
@@ -156,13 +156,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _offsetY = 0;
 
   /** Selector to be used when finding the elements on which to set the transform origin. */
-  private _transformOriginSelector: string;
+  private _transformOriginSelector!: string;
 
   /** Keeps track of the CSS classes that the position strategy has applied on the overlay panel. */
   private _appliedPanelClasses: string[] = [];
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
-  private _previousPushAmount: {x: number; y: number} | null;
+  private _previousPushAmount: {x: number; y: number} | null = null;
 
   /** Configures where in the DOM to insert the overlay when popovers are enabled. */
   private _popoverLocation: FlexibleOverlayPopoverLocation = 'global';

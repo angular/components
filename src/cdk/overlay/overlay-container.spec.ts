@@ -87,5 +87,5 @@ describe('OverlayContainer', () => {
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  @ViewChild(CdkPortal) templatePortal!: CdkPortal;
 }

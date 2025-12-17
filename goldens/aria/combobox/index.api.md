@@ -6,12 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import { ComboboxDialogPattern } from '@angular/aria/private';
-import { ComboboxListboxControls } from '@angular/aria/private';
-import { ComboboxPattern } from '@angular/aria/private';
-import { ComboboxTreeControls } from '@angular/aria/private';
-import * as i1 from '@angular/aria/private';
-import { WritableSignal } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 
 // @public
 export class Combobox<V> {
@@ -30,7 +25,7 @@ export class Combobox<V> {
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox<any>, "[ngCombobox]", ["ngCombobox"], { "filterMode": { "alias": "filterMode"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "firstMatch": { "alias": "firstMatch"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; }, {}, ["popup"], never, true, [{ directive: typeof i1.DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox<any>, "[ngCombobox]", ["ngCombobox"], { "filterMode": { "alias": "filterMode"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "firstMatch": { "alias": "firstMatch"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; }, {}, ["popup"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox<any>, never>;
 }
@@ -65,7 +60,7 @@ export class ComboboxInput {
 // @public
 export class ComboboxPopup<V> {
     readonly combobox: Combobox<V> | null;
-    readonly _controls: WritableSignal<ComboboxDialogPattern | ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | undefined>;
+    readonly _controls: _angular_core.WritableSignal<ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | ComboboxDialogPattern | undefined>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup<any>, "[ngComboboxPopup]", ["ngComboboxPopup"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -75,7 +70,7 @@ export class ComboboxPopup<V> {
 // @public
 export class ComboboxPopupContainer {
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopupContainer, "ng-template[ngComboboxPopupContainer]", ["ngComboboxPopupContainer"], {}, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopupContainer, "ng-template[ngComboboxPopupContainer]", ["ngComboboxPopupContainer"], {}, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxPopupContainer, never>;
 }

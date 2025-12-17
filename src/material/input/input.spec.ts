@@ -1758,7 +1758,7 @@ class MatInputWithDisabled {
   imports: [MatInputModule],
 })
 class MatInputWithRequired {
-  required: boolean;
+  required = false;
 }
 
 @Component({
@@ -1766,7 +1766,7 @@ class MatInputWithRequired {
   imports: [MatInputModule],
 })
 class MatInputWithType {
-  type: string;
+  type!: string;
 }
 
 @Component({
@@ -1868,8 +1868,8 @@ class MatInputInvalidHintTestController {}
   imports: [MatInputModule],
 })
 class MatInputMultipleHintTestController {
-  startId: string;
-  endId: string;
+  startId!: string;
+  endId!: string;
 }
 
 @Component({
@@ -2036,7 +2036,7 @@ class MatInputMissingMatInputTestController {}
   imports: [MatInputModule, ReactiveFormsModule, FormsModule],
 })
 class MatInputWithFormErrorMessages {
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form') form!: NgForm;
   formControl = new FormControl('incorrect', [
     Validators.required,
     Validators.pattern(/valid value/),
@@ -2083,7 +2083,7 @@ class InputInFormGroup {
   imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithFormGroupErrorMessages {
-  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  @ViewChild(FormGroupDirective) formGroupDirective!: FormGroupDirective;
   formGroup = new FormGroup({
     name: new FormControl('incorrect', [Validators.required, Validators.pattern(/valid value/)]),
   });
@@ -2152,8 +2152,8 @@ class MatInputWithLabel {}
   imports: [MatInputModule],
 })
 class MatInputWithLabelAndPlaceholder {
-  floatLabel: FloatLabelType;
-  appearance: MatFormFieldAppearance;
+  floatLabel!: FloatLabelType;
+  appearance!: MatFormFieldAppearance;
 }
 
 @Component({
@@ -2166,8 +2166,8 @@ class MatInputWithLabelAndPlaceholder {
   imports: [MatInputModule],
 })
 class MatInputWithAppearance {
-  @ViewChild(MatFormField) formField: MatFormField;
-  appearance: MatFormFieldAppearance;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  appearance!: MatFormFieldAppearance;
 }
 
 @Component({
@@ -2180,8 +2180,8 @@ class MatInputWithAppearance {
   imports: [MatInputModule],
 })
 class MatInputWithSubscriptSizing {
-  @ViewChild(MatFormField) formField: MatFormField;
-  sizing: SubscriptSizing;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  sizing!: SubscriptSizing;
 }
 
 @Component({
@@ -2208,8 +2208,8 @@ class MatInputWithoutPlaceholder {}
   imports: [MatInputModule],
 })
 class MatInputSelect {
-  disabled: boolean;
-  required: boolean;
+  disabled: boolean = false;
+  required: boolean = false;
 }
 
 @Component({
@@ -2302,7 +2302,7 @@ class MatInputSelectWithoutOptions {}
   imports: [MatInputModule],
 })
 class MatInputWithColor {
-  color: ThemePalette;
+  color!: ThemePalette;
 }
 
 @Component({

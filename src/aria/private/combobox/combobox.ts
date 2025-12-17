@@ -7,8 +7,12 @@
  */
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {computed, signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  computed,
+  signal,
+  SignalLike,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {ListItem} from '../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */
@@ -105,8 +109,10 @@ export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   setValue: (value: V | undefined) => void; // For re-setting the value if the popup was destroyed.
 }
 
-export interface ComboboxTreeControls<T extends ListItem<V>, V>
-  extends ComboboxListboxControls<T, V> {
+export interface ComboboxTreeControls<T extends ListItem<V>, V> extends ComboboxListboxControls<
+  T,
+  V
+> {
   /** Whether the currently active item in the popup is collapsible. */
   isItemCollapsible: () => boolean;
 
@@ -388,6 +394,10 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     ) {
       this.isFocused.set(false);
 
+      if (!this.expanded()) {
+        return;
+      }
+
       if (this.readonly()) {
         this.close();
         return;
@@ -630,6 +640,12 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Selects an item in the combobox popup. */
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
     const controls = this.listControls();
+
+    const item = opts.item ?? controls?.getActiveItem();
+
+    if (item?.disabled()) {
+      return;
+    }
 
     if (opts.item) {
       controls?.focus(opts.item, {focusElement: false});

@@ -6,13 +6,17 @@
     <div class="docs-component-viewer-nav-content">
       <mat-nav-list>
         @for (component of items; track component) {
-          <a mat-list-item #link="routerLinkActive"
-              [routerLink]="'/' + params?.section + '/' + component.id"
-              [activated]="link.isActive"
-              routerLinkActive="docs-component-viewer-sidenav-item-selected"
-              [attr.aria-current]="link.isActive ? 'page': 'false'">
-            {{component.name}}
-          </a>
+          @if (component.externalRedirect) {
+            <a mat-list-item [href]="component.externalRedirect">{{component.name}}</a>
+          } @else {
+            <a mat-list-item #link="routerLinkActive"
+                [routerLink]="'/' + params?.section + '/' + component.id"
+                [activated]="link.isActive"
+                routerLinkActive="docs-component-viewer-sidenav-item-selected"
+                [attr.aria-current]="link.isActive ? 'page': 'false'">
+              {{component.name}}
+            </a>
+          }
         }
       </mat-nav-list>
     </div>

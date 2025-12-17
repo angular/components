@@ -137,10 +137,10 @@ export class DropListRef<T = any> {
   }>();
 
   /** Arbitrary data that can be attached to the drop list. */
-  data: T;
+  data!: T;
 
   /** Element that is the direct parent of the drag items. */
-  private _container: HTMLElement;
+  private _container!: HTMLElement;
 
   /** Whether an item in the list is being dragged. */
   private _isDragging = false;
@@ -149,7 +149,7 @@ export class DropListRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Strategy being used to sort items within the list. */
-  private _sortStrategy: DropListSortStrategy;
+  private _sortStrategy!: DropListSortStrategy;
 
   /** Cached `DOMRect` of the drop list. */
   private _domRect: DOMRect | undefined;
@@ -173,7 +173,7 @@ export class DropListRef<T = any> {
   private _horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
   /** Node that is being auto-scrolled. */
-  private _scrollNode: HTMLElement | Window;
+  private _scrollNode!: HTMLElement | Window;
 
   /** Used to signal to the current auto-scroll sequence when to stop. */
   private readonly _stopScrollTimers = new Subject<void>();
@@ -188,7 +188,7 @@ export class DropListRef<T = any> {
   private _scrollableElements: HTMLElement[] = [];
 
   /** Initial value for the element's `scroll-snap-type` style. */
-  private _initialScrollSnap: string;
+  private _initialScrollSnap!: string;
 
   /** Direction of the list's layout. */
   private _direction: Direction = 'ltr';

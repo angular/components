@@ -4,18 +4,15 @@
 
 ```ts
 
-import { AccordionGroupPattern } from '@angular/aria/private';
-import { AccordionPanelPattern } from '@angular/aria/private';
-import { AccordionTriggerPattern } from '@angular/aria/private';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
-import * as i1 from '@angular/aria/private';
+import { OnDestroy } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
 export class AccordionContent {
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionContent, "ng-template[ngAccordionContent]", never, {}, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionContent, "ng-template[ngAccordionContent]", never, {}, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionContent, never>;
 }
@@ -30,7 +27,7 @@ export class AccordionGroup {
     readonly multiExpandable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly _pattern: AccordionGroupPattern;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly textDirection: WritableSignal<_angular_cdk_bidi.Direction>;
+    readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionGroup, "[ngAccordionGroup]", ["ngAccordionGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiExpandable": { "alias": "multiExpandable"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, {}, ["_triggers", "_panels"], never, true, never>;
@@ -50,7 +47,7 @@ export class AccordionPanel {
     toggle(): void;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "panelId": { "alias": "panelId"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "panelId": { "alias": "panelId"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionPanel, never>;
 }

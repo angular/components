@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {afterRenderEffect, Component, viewChildren} from '@angular/core';
 import {Tab, Tabs, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
 
 /** @title Disabled Tabs are Skipped */
@@ -8,4 +8,13 @@ import {Tab, Tabs, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
   styleUrls: ['../tabs-common.css'],
   imports: [TabList, Tab, Tabs, TabPanel, TabContent],
 })
-export class TabsDisabledSkippedExample {}
+export class TabsDisabledSkippedExample {
+  tabs = viewChildren(Tab);
+
+  constructor() {
+    afterRenderEffect(() => {
+      const tab = this.tabs().find(t => t.active());
+      tab?.element.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'});
+    });
+  }
+}

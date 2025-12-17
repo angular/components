@@ -103,9 +103,9 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   protected _selectionList = inject<SelectionList>(SELECTION_LIST);
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
-  @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
-  @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
+  @ContentChildren(MatListItemLine, {descendants: true}) _lines!: QueryList<MatListItemLine>;
+  @ContentChildren(MatListItemTitle, {descendants: true}) _titles!: QueryList<MatListItemTitle>;
+  @ViewChild('unscopedContent') _unscopedContent!: ElementRef<HTMLSpanElement>;
 
   /**
    * Emits when the selected state of the option has changed.

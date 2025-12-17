@@ -419,7 +419,7 @@ export interface OverlayConnectionPosition {
 export class OverlayContainer implements OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
-    protected _containerElement: HTMLElement;
+    protected _containerElement: HTMLElement | undefined;
     protected _createContainer(): void;
     // (undocumented)
     protected _document: Document;

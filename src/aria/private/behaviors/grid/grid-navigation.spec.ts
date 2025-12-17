@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {GridData} from './grid-data';
 import {
   createGridA,
@@ -21,8 +21,8 @@ import {GridFocus, GridFocusInputs} from './grid-focus';
 import {direction, GridNavigation, GridNavigationInputs, WrapStrategy} from './grid-navigation';
 
 export interface TestGridNavigationCell extends TestBaseGridCell {
-  element: WritableSignal<HTMLElement>;
-  disabled: WritableSignal<boolean>;
+  element: WritableSignalLike<HTMLElement>;
+  disabled: WritableSignalLike<boolean>;
 }
 
 function createTestCell(): Omit<TestGridNavigationCell, keyof TestBaseGridCell> {
@@ -41,7 +41,7 @@ function createTestGrid(createGridFn: () => TestBaseGridCell[][]): TestGridNavig
 }
 
 function setupGridNavigation(
-  cells: Signal<TestGridNavigationCell[][]>,
+  cells: SignalLike<TestGridNavigationCell[][]>,
   inputs: Partial<GridNavigationInputs & GridFocusInputs> = {},
 ): {
   gridNav: GridNavigation<TestGridNavigationCell>;

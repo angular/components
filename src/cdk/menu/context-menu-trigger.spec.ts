@@ -286,7 +286,7 @@ describe('CdkContextMenuTrigger', () => {
   describe('with menubar and inline menu on page', () => {
     let fixture: ComponentFixture<ContextMenuWithMenuBarAndInlineMenu>;
     let nativeMenuBar: HTMLElement;
-    let nativeMenuBarTrigger: HTMLElement;
+    let nativeMenuBarTrigger!: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ContextMenuWithMenuBarAndInlineMenu);
@@ -423,12 +423,12 @@ describe('CdkContextMenuTrigger', () => {
   imports: [CdkContextMenuTrigger, CdkMenu, CdkMenuItem],
 })
 class SimpleContextMenu {
-  @ViewChild(CdkContextMenuTrigger) trigger: CdkContextMenuTrigger;
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkContextMenuTrigger) trigger!: CdkContextMenuTrigger;
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement!: ElementRef<HTMLElement>;
   @ViewChild(CdkMenu) menu?: CdkMenu;
   @ViewChild(CdkMenu, {read: ElementRef}) nativeMenu?: ElementRef<HTMLElement>;
 
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -452,11 +452,11 @@ class SimpleContextMenu {
   imports: [CdkContextMenuTrigger, CdkMenu],
 })
 class NestedContextMenu {
-  @ViewChild('cut_trigger', {read: ElementRef}) cutContext: ElementRef<HTMLElement>;
-  @ViewChild('copy_trigger', {read: ElementRef}) copyContext: ElementRef<HTMLElement>;
+  @ViewChild('cut_trigger', {read: ElementRef}) cutContext!: ElementRef<HTMLElement>;
+  @ViewChild('copy_trigger', {read: ElementRef}) copyContext!: ElementRef<HTMLElement>;
 
-  @ViewChild('cut_menu', {read: CdkMenu}) cutMenu: CdkMenu;
-  @ViewChild('copy_menu', {read: CdkMenu}) copyMenu: CdkMenu;
+  @ViewChild('cut_menu', {read: CdkMenu}) cutMenu!: CdkMenu;
+  @ViewChild('copy_menu', {read: CdkMenu}) copyMenu!: CdkMenu;
 
   copyMenuDisabled = false;
 }
@@ -478,11 +478,11 @@ class NestedContextMenu {
   imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem],
 })
 class ContextMenuWithSubmenu {
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) context: ElementRef<HTMLElement>;
-  @ViewChild(CdkMenuTrigger, {read: ElementRef}) triggerNativeElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) context!: ElementRef<HTMLElement>;
+  @ViewChild(CdkMenuTrigger, {read: ElementRef}) triggerNativeElement!: ElementRef<HTMLElement>;
 
-  @ViewChild('cut_menu', {read: CdkMenu}) cutMenu: CdkMenu;
-  @ViewChild('copy_menu', {read: CdkMenu}) copyMenu: CdkMenu;
+  @ViewChild('cut_menu', {read: CdkMenu}) cutMenu!: CdkMenu;
+  @ViewChild('copy_menu', {read: CdkMenu}) copyMenu!: CdkMenu;
 }
 
 @Component({
@@ -509,16 +509,16 @@ class ContextMenuWithSubmenu {
   imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuBar],
 })
 class ContextMenuWithMenuBarAndInlineMenu {
-  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
-  @ViewChild('trigger', {read: ElementRef}) nativeMenuBarTrigger: ElementRef;
+  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
+  @ViewChild('trigger', {read: ElementRef}) nativeMenuBarTrigger!: ElementRef;
 
   @ViewChild('context_menu') contextMenu?: CdkMenu;
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) trigger: ElementRef<HTMLElement>;
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) trigger!: ElementRef<HTMLElement>;
 
   @ViewChild('file_menu') fileMenu?: CdkMenu;
 
-  @ViewChild('inline_menu') nativeInlineMenu: ElementRef;
-  @ViewChild('inline_menu_button') nativeInlineMenuButton: ElementRef;
+  @ViewChild('inline_menu') nativeInlineMenu!: ElementRef;
+  @ViewChild('inline_menu_button') nativeInlineMenuButton!: ElementRef;
 }
 
 @Component({
@@ -538,9 +538,9 @@ class ContextMenuWithMenuBarAndInlineMenu {
   imports: [CdkMenuBar, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class MenuBarAndContextTriggerShareMenu {
-  @ViewChild(CdkMenuTrigger) menuBarTrigger: CdkMenuTrigger;
-  @ViewChild(CdkContextMenuTrigger) contextTrigger: CdkContextMenuTrigger;
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChild(CdkMenuTrigger) menuBarTrigger!: CdkMenuTrigger;
+  @ViewChild(CdkContextMenuTrigger) contextTrigger!: CdkContextMenuTrigger;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -554,6 +554,6 @@ class MenuBarAndContextTriggerShareMenu {
   imports: [CdkContextMenuTrigger, CdkMenu],
 })
 class ContextTriggerWithData {
-  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement!: ElementRef<HTMLElement>;
   menuData: unknown;
 }

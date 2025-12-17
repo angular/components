@@ -69,7 +69,7 @@ export abstract class CdkMenuBase
 
   /** All items inside the menu, including ones that belong to other menus. */
   @ContentChildren(CdkMenuItem, {descendants: true})
-  protected _allItems: QueryList<CdkMenuItem>;
+  protected _allItems!: QueryList<CdkMenuItem>;
 
   /** The id of the menu's host element. */
   @Input() id: string = inject(_IdGenerator).getId('cdk-menu-');
@@ -87,7 +87,7 @@ export abstract class CdkMenuBase
   isInline = false;
 
   /** Handles keyboard events for the menu. */
-  protected keyManager: FocusKeyManager<CdkMenuItem>;
+  protected keyManager!: FocusKeyManager<CdkMenuItem>;
 
   /** Emits when the MenuBar is destroyed. */
   protected readonly destroyed: Subject<void> = new Subject();

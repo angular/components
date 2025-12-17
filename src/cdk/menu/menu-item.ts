@@ -76,7 +76,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
    * The text used to locate this item during menu typeahead. If not specified,
    * the `textContent` of the item will be used.
    */
-  @Input('cdkMenuitemTypeaheadLabel') typeaheadLabel: string | null;
+  @Input('cdkMenuitemTypeaheadLabel') typeaheadLabel: string | null = null;
 
   /**
    * If this MenuItem is a regular MenuItem, outputs when it is triggered by a keyboard or mouse

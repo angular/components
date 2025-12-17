@@ -178,13 +178,13 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
   private _focusTrap: FocusTrap | null = null;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
-  private _eventCleanups: (() => void)[];
+  private _eventCleanups!: (() => void)[];
 
   /** Whether the view of the component has been attached. */
-  private _isAttached: boolean;
+  private _isAttached = false;
 
   /** Anchor node used to restore the drawer to its initial position. */
-  private _anchor: Comment | null;
+  private _anchor: Comment | null = null;
 
   /** The side that the drawer is attached to. */
   @Input()
@@ -273,7 +273,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _opened = signal(false);
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
-  private _openedVia: FocusOrigin | null;
+  private _openedVia: FocusOrigin | null = null;
 
   /** Emits whenever the drawer has started animating. */
   readonly _animationStarted = new Subject();
@@ -322,7 +322,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   @Output('positionChanged') readonly onPositionChanged = new EventEmitter<void>();
 
   /** Reference to the inner element that contains all the content. */
-  @ViewChild('content') _content: ElementRef<HTMLElement>;
+  @ViewChild('content') _content!: ElementRef<HTMLElement>;
 
   /**
    * An observable that emits when the drawer mode changes. This is used by the drawer container to
@@ -705,13 +705,13 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  _allDrawers: QueryList<MatDrawer>;
+  _allDrawers!: QueryList<MatDrawer>;
 
   /** Drawers that belong to this container. */
   _drawers = new QueryList<MatDrawer>();
 
-  @ContentChild(MatDrawerContent) _content: MatDrawerContent;
-  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
+  @ContentChild(MatDrawerContent) _content!: MatDrawerContent;
+  @ViewChild(MatDrawerContent) _userContent!: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null {
@@ -752,14 +752,14 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   set hasBackdrop(value: BooleanInput) {
     this._backdropOverride = value == null ? null : coerceBooleanProperty(value);
   }
-  _backdropOverride: boolean | null;
+  _backdropOverride: boolean | null = null;
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() readonly backdropClick: EventEmitter<void> = new EventEmitter<void>();
 
   /** The drawer at the start/end position, independent of direction. */
-  private _start: MatDrawer | null;
-  private _end: MatDrawer | null;
+  private _start: MatDrawer | null = null;
+  private _end: MatDrawer | null = null;
 
   /**
    * The drawer at the left/right. When direction changes, these will change as well.
@@ -767,8 +767,8 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * In LTR, _left == _start and _right == _end.
    * In RTL, _left == _end and _right == _start.
    */
-  private _left: MatDrawer | null;
-  private _right: MatDrawer | null;
+  private _left: MatDrawer | null = null;
+  private _right: MatDrawer | null = null;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();

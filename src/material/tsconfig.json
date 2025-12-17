@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDirs": ["..", "../../tools"],
     "baseUrl": ".",
+    "strictPropertyInitialization": true,
     "paths": {
       "@angular/cdk": ["../cdk"],
       "@angular/cdk/*": ["../cdk/*"],

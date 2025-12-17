@@ -6,10 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, Signal, WritableSignal} from '@angular/core';
 import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
 import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
-import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  SignalLike,
+  computed,
+  signal,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import type {GridCellPattern} from './cell';
 
 /** The inputs for the `GridCellWidgetPattern`. */
@@ -36,35 +40,35 @@ export class GridCellWidgetPattern implements ListNavigationItem {
   readonly element: SignalLike<HTMLElement> = () => this.inputs.element();
 
   /** The element that should receive focus. */
-  readonly widgetHost: Signal<HTMLElement> = computed(
+  readonly widgetHost: SignalLike<HTMLElement> = computed(
     () => this.inputs.focusTarget() ?? this.element(),
   );
 
   /** The index of the widget within the cell. */
-  readonly index: Signal<number> = computed(() =>
+  readonly index: SignalLike<number> = computed(() =>
     this.inputs.cell().inputs.widgets().indexOf(this),
   );
 
   /** Whether the widget is disabled. */
-  readonly disabled: Signal<boolean> = computed(
+  readonly disabled: SignalLike<boolean> = computed(
     () => this.inputs.disabled() || this.inputs.cell().disabled(),
   );
 
   /** The tab index for the widget. */
-  readonly tabIndex: Signal<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
+  readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
 
   /** Whether the widget is the active item in the widget list. */
-  readonly active: Signal<boolean> = computed(() => this.inputs.cell().activeWidget() === this);
+  readonly active: SignalLike<boolean> = computed(() => this.inputs.cell().activeWidget() === this);
 
   /** Whether the widget is currently activated. */
-  readonly isActivated: WritableSignal<boolean> = signal(false);
+  readonly isActivated: WritableSignalLike<boolean> = signal(false);
 
   /** The last event that caused the widget to be activated. */
-  readonly lastActivateEvent: WritableSignal<KeyboardEvent | FocusEvent | undefined> =
+  readonly lastActivateEvent: WritableSignalLike<KeyboardEvent | FocusEvent | undefined> =
     signal(undefined);
 
   /** The last event that caused the widget to be deactivated. */
-  readonly lastDeactivateEvent: WritableSignal<KeyboardEvent | FocusEvent | undefined> =
+  readonly lastDeactivateEvent: WritableSignalLike<KeyboardEvent | FocusEvent | undefined> =
     signal(undefined);
 
   /** The keyboard event manager for the widget. */

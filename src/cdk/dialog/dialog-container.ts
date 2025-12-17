@@ -87,7 +87,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   protected _document = inject(DOCUMENT);
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
-  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet!: CdkPortalOutlet;
 
   _focusTrapped: Observable<void> = new Subject<void>();
 

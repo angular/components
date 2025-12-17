@@ -38,7 +38,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {auditTime, startWith, takeUntil} from 'rxjs/operators';
+import {auditTime, distinctUntilChanged, filter, startWith, takeUntil} from 'rxjs/operators';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
@@ -102,6 +102,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Emits when the rendered range changes. */
   private readonly _renderedRangeSubject = new Subject<ListRange>();
+  private readonly _renderedContentOffsetSubject = new Subject<number | null>();
 
   /** The direction the viewport scrolls. */
   @Input()
@@ -136,10 +137,18 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   );
 
   /** The element that wraps the rendered content. */
-  @ViewChild('contentWrapper', {static: true}) _contentWrapper: ElementRef<HTMLElement>;
+  @ViewChild('contentWrapper', {static: true}) _contentWrapper!: ElementRef<HTMLElement>;
 
   /** A stream that emits whenever the rendered range changes. */
   readonly renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject;
+
+  /**
+   * Emits the offset from the start of the viewport to the start of the rendered data (in pixels).
+   */
+  readonly renderedContentOffset: Observable<number> = this._renderedContentOffsetSubject.pipe(
+    filter(offset => offset !== null),
+    distinctUntilChanged(),
+  );
 
   /**
    * The total size of all content (in pixels), including content that is not currently rendered.
@@ -156,7 +165,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    * The CSS transform applied to the rendered subset of items so that they appear within the bounds
    * of the visible viewport.
    */
-  private _renderedContentTransform: string;
+  private _renderedContentTransform: string | undefined;
 
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange = {start: 0, end: 0};
@@ -168,7 +177,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   private _viewportSize = 0;
 
   /** the currently attached CdkVirtualScrollRepeater. */
-  private _forOf: CdkVirtualScrollRepeater<any> | null;
+  private _forOf: CdkVirtualScrollRepeater<any> | null = null;
 
   /** The last rendered content offset that was set. */
   private _renderedContentOffset = 0;
@@ -536,7 +545,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
       // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
       // the `Number` function first to coerce it to a numeric value.
-      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform!;
+      this._renderedContentOffsetSubject.next(this.getOffsetToRenderedContentStart());
 
       afterNextRender(
         () => {

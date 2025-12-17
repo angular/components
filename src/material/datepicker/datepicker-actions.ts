@@ -74,8 +74,8 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
     inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
   private _viewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild(TemplateRef) _template: TemplateRef<unknown>;
-  private _portal: TemplatePortal;
+  @ViewChild(TemplateRef) _template!: TemplateRef<unknown>;
+  private _portal!: TemplatePortal;
 
   constructor(...args: unknown[]);
   constructor() {}

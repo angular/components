@@ -56,12 +56,12 @@ export class SelectDemo {
   pokemonDisabled = false;
   pokemonOptionsDisabled = false;
   showSelect = false;
-  currentDrink: string;
+  currentDrink = '';
   currentDrinkObject: {} | undefined = {value: 'tea-5', viewValue: 'Tea'};
-  currentPokemon: string[];
-  currentPokemonFromGroup: string;
-  currentDigimon: string;
-  currentAppearanceValue: string | null;
+  currentPokemon!: string[];
+  currentPokemonFromGroup = '';
+  currentDigimon = '';
+  currentAppearanceValue: string | null = null;
   latestChangeEvent: MatSelectChange | undefined;
   floatLabel: FloatLabelType = 'auto';
   drinksWidth = 'default';

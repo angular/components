@@ -65,7 +65,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
   // while avoiding mutating the original object passed to us. Just calling `.locale(...)` on the
   // input would mutate the object.
 
-  private _localeData: {
+  private _localeData!: {
     firstDayOfWeek: number;
     longMonths: string[];
     shortMonths: string[];

@@ -45,7 +45,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _typeaheadSubscription = Subscription.EMPTY;
   private _itemChangesSubscription?: Subscription;
   private _vertical = true;
-  private _horizontal: 'ltr' | 'rtl' | null;
+  private _horizontal: 'ltr' | 'rtl' | null = null;
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
   private _homeAndEnd = false;
   private _pageUpAndDown = {enabled: false, delta: 10};

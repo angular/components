@@ -335,7 +335,7 @@ class CalendarHarnessTest {
   // Start the datepickers off at a specific date so tests
   // run consistently no matter what the current date is.
   readonly startAt = new Date(calendarDate);
-  minDate: Date | null;
+  minDate: Date | null = null;
   singleValue: Date | null = null;
   rangeValue = new DateRange<Date>(null, null);
   comparisonStart: Date | null = null;

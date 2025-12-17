@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Tabs, TabList, Tab, TabPanel, TabContent} from './tabs';
+export * from './public-api';

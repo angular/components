@@ -16,35 +16,14 @@ import {
   input,
   model,
   signal,
-  Signal,
-  OnInit,
-  OnDestroy,
   untracked,
-  afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  ComboboxTreePattern,
-  TreeItemPattern,
-  TreePattern,
-  DeferredContent,
-  DeferredContentAware,
-} from '@angular/aria/private';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../private';
 import {ComboboxPopup} from '../combobox';
-
-interface HasElement {
-  element: HTMLElement;
-}
-
-/**
- * Sort directives by their document order.
- */
-function sortDirectives(a: HasElement, b: HasElement) {
-  return (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_PRECEDING) > 0
-    ? 1
-    : -1;
-}
+import type {TreeItem} from './tree-item';
+import {sortDirectives} from './utils';
 
 /**
  * A container that transforms nested lists into an accessible, ARIA-compliant tree structure.
@@ -79,6 +58,8 @@ function sortDirectives(a: HasElement, b: HasElement) {
  * ```
  *
  * @developerPreview 21.0
+ *
+ * @see [Tree](guide/aria/tree)
  */
 @Directive({
   selector: '[ngTree]',
@@ -236,216 +217,5 @@ export class Tree<V> {
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element()?.scrollIntoView(options);
-  }
-}
-
-/**
- * A selectable and expandable item in an `ngTree`.
- *
- * The `ngTreeItem` directive represents an individual node within an `ngTree`. It can be
- * selected, expanded (if it has children), and disabled. The `parent` input establishes
- * the hierarchical relationship within the tree.
- *
- * ```html
- * <li ngTreeItem [parent]="parentTreeOrGroup" value="item-id" label="Item Label">
- *   Item Label
- * </li>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: '[ngTreeItem]',
-  exportAs: 'ngTreeItem',
-  host: {
-    '[attr.data-active]': 'active()',
-    'role': 'treeitem',
-    '[id]': '_pattern.id()',
-    '[attr.aria-expanded]': '_expanded()',
-    '[attr.aria-selected]': 'selected()',
-    '[attr.aria-current]': '_pattern.current()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-level]': 'level()',
-    '[attr.aria-setsize]': '_pattern.setsize()',
-    '[attr.aria-posinset]': '_pattern.posinset()',
-    '[attr.tabindex]': '_pattern.tabIndex()',
-  },
-})
-export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** The owned tree item group. */
-  private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
-
-  /** A unique identifier for the tree item. */
-  readonly id = input(inject(_IdGenerator).getId('ng-tree-item-', true));
-
-  /** The value of the tree item. */
-  readonly value = input.required<V>();
-
-  /** The parent tree root or tree item group. */
-  readonly parent = input.required<Tree<V> | TreeItemGroup<V>>();
-
-  /** Whether the tree item is disabled. */
-  readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** Whether the tree item is selectable. */
-  readonly selectable = input<boolean>(true);
-
-  /** Whether the tree item is expanded. */
-  readonly expanded = model<boolean>(false);
-
-  /** Optional label for typeahead. Defaults to the element's textContent. */
-  readonly label = input<string>();
-
-  /** Search term for typeahead. */
-  readonly searchTerm = computed(() => this.label() ?? this.element.textContent);
-
-  /** The tree root. */
-  readonly tree: Signal<Tree<V>> = computed(() => {
-    if (this.parent() instanceof Tree) {
-      return this.parent() as Tree<V>;
-    }
-    return (this.parent() as TreeItemGroup<V>).ownedBy().tree();
-  });
-
-  /** Whether the item is active. */
-  readonly active = computed(() => this._pattern.active());
-
-  /** The level of the current item in a tree. */
-  readonly level = computed(() => this._pattern.level());
-
-  /** Whether the item is selected. */
-  readonly selected = computed(() => this._pattern.selected());
-
-  /** Whether this item is visible due to all of its parents being expanded. */
-  readonly visible = computed(() => this._pattern.visible());
-
-  /** Whether the tree is expanded. Use this value for aria-expanded. */
-  protected readonly _expanded: Signal<boolean | undefined> = computed(() =>
-    this._pattern.expandable() ? this._pattern.expanded() : undefined,
-  );
-
-  /** The UI pattern for this item. */
-  _pattern: TreeItemPattern<V>;
-
-  constructor() {
-    super();
-    afterNextRender(() => {
-      if (this.tree()._pattern instanceof ComboboxTreePattern) {
-        this.preserveContent.set(true);
-      }
-    });
-    // Connect the group's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this.tree()._pattern instanceof ComboboxTreePattern
-        ? this.contentVisible.set(true)
-        : this.contentVisible.set(this._pattern.expanded());
-    });
-  }
-
-  ngOnInit() {
-    this.parent()._register(this);
-    this.tree()._register(this);
-
-    const treePattern = computed(() => this.tree()._pattern);
-    const parentPattern = computed(() => {
-      if (this.parent() instanceof Tree) {
-        return treePattern();
-      }
-      return (this.parent() as TreeItemGroup<V>).ownedBy()._pattern;
-    });
-    this._pattern = new TreeItemPattern<V>({
-      ...this,
-      tree: treePattern,
-      parent: parentPattern,
-      children: computed(() => this._group()?._childPatterns() ?? []),
-      hasChildren: computed(() => !!this._group()),
-      element: () => this.element,
-      searchTerm: () => this.searchTerm() ?? '',
-    });
-  }
-
-  ngOnDestroy() {
-    this.parent()._unregister(this);
-    this.tree()._unregister(this);
-  }
-
-  _register(group: TreeItemGroup<V>) {
-    this._group.set(group);
-  }
-
-  _unregister() {
-    this._group.set(undefined);
-  }
-}
-
-/**
- * Group that contains children tree items.
- *
- * The `ngTreeItemGroup` structural directive should be applied to an `ng-template` that
- * wraps the child `ngTreeItem` elements. It is used to define a group of children for an
- * expandable `ngTreeItem`. The `ownedBy` input links the group to its parent `ngTreeItem`.
- *
- * ```html
- * <li ngTreeItem [value]="'parent-id'">
- *   Parent Item
- *   <ul role="group">
- *     <ng-template ngTreeItemGroup [ownedBy]="parentTreeItemRef">
- *       <li ngTreeItem [value]="'child-id'">Child Item</li>
- *     </ng-template>
- *   </ul>
- * </li>
- * ```
- *
- * @developerPreview 21.0
- */
-@Directive({
-  selector: 'ng-template[ngTreeItemGroup]',
-  exportAs: 'ngTreeItemGroup',
-  hostDirectives: [DeferredContent],
-})
-export class TreeItemGroup<V> implements OnInit, OnDestroy {
-  /** A reference to the host element. */
-  private readonly _elementRef = inject(ElementRef);
-
-  /** A reference to the host element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** The DeferredContent host directive. */
-  private readonly _deferredContent = inject(DeferredContent);
-
-  /** All groupable items that are descendants of the group. */
-  private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
-
-  /** Child items within this group. */
-  readonly _childPatterns = computed<TreeItemPattern<V>[]>(() =>
-    [...this._unorderedItems()].sort(sortDirectives).map(c => c._pattern),
-  );
-
-  /** Tree item that owns the group. */
-  readonly ownedBy = input.required<TreeItem<V>>();
-
-  ngOnInit() {
-    this._deferredContent.deferredContentAware.set(this.ownedBy());
-    this.ownedBy()._register(this);
-  }
-
-  ngOnDestroy() {
-    this.ownedBy()._unregister();
-  }
-
-  _register(child: TreeItem<V>) {
-    this._unorderedItems().add(child);
-    this._unorderedItems.set(new Set(this._unorderedItems()));
-  }
-
-  _unregister(child: TreeItem<V>) {
-    this._unorderedItems().delete(child);
-    this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 }

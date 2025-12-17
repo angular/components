@@ -687,7 +687,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
 @Directive()
 abstract class BaseTestComponent {
-  @ViewChild('table') table: ElementRef;
+  @ViewChild('table') table!: ElementRef;
 
   preservedValues = new FormValueContainer<PeriodicElement, {'name': string}>();
   nameEditDisabled = false;
@@ -860,7 +860,7 @@ abstract class BaseTestComponent {
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
 })
 class VanillaTableOutOfCell extends BaseTestComponent {
-  elements: ChemicalElement[];
+  elements!: ChemicalElement[];
 
   renderData() {
     this.elements = createElementData();
@@ -921,7 +921,7 @@ class VanillaTableOutOfCell extends BaseTestComponent {
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
 })
 class VanillaTableInCell extends BaseTestComponent {
-  elements: ChemicalElement[];
+  elements!: ChemicalElement[];
 
   renderData() {
     this.elements = createElementData();
@@ -1007,7 +1007,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 })
 class CdkFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
-  dataSource: ElementDataSource;
+  dataSource!: ElementDataSource;
 
   renderData() {
     this.dataSource = new ElementDataSource();
@@ -1081,7 +1081,7 @@ class CdkFlexTableInCell extends BaseTestComponent {
 })
 class CdkTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
-  dataSource: ElementDataSource;
+  dataSource!: ElementDataSource;
 
   renderData() {
     this.dataSource = new ElementDataSource();
@@ -1162,7 +1162,7 @@ class CdkTableInCell extends BaseTestComponent {
 })
 class CdkTableWithSkipRows extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
-  dataSource: ElementDataSource;
+  dataSource!: ElementDataSource;
 
   renderData() {
     this.dataSource = new ElementDataSource();

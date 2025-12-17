@@ -8,10 +8,7 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = glob([
-        "**/*.html",
-        "**/*.css",
-    ]),
+    assets = glob(["**/*.html"]),
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
@@ -28,7 +25,6 @@ filegroup(
     name = "source-files",
     srcs = glob([
         "**/*.html",
-        "**/*.css",
         "**/*.ts",
     ]),
 )

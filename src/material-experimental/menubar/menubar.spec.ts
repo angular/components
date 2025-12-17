@@ -52,6 +52,6 @@ describe('MatMenuBar', () => {
   imports: [MatMenuBarModule],
 })
 class SimpleMatMenuBar {
-  @ViewChild(CdkMenuBar) matMenubar: MatMenuBar;
-  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMatMenubar: ElementRef;
+  @ViewChild(CdkMenuBar) matMenubar!: MatMenuBar;
+  @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMatMenubar!: ElementRef;
 }

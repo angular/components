@@ -4,10 +4,10 @@ package(default_visibility = ["//visibility:public"])
 
 ng_project(
     name = "tree",
-    srcs = [
-        "index.ts",
-        "tree.ts",
-    ],
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/combobox",

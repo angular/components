@@ -58,8 +58,9 @@ ts_project(
     testonly = True,
     srcs = glob([
         "**/*.spec.ts",
+    ]) + [
         "index_bundled.d.ts",
-    ] + ["rules/components/test-setup-helper.ts"]),
+    ],
     data = [":index_bundled"],
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [

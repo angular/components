@@ -1,0 +1,6 @@
+.example-tablist-controls {
+  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+}

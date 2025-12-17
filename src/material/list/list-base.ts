@@ -112,8 +112,8 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   /** Whether animations are disabled. */
   _noopAnimations = _animationsDisabled();
 
-  @ContentChildren(MatListItemAvatar, {descendants: false}) _avatars: QueryList<never>;
-  @ContentChildren(MatListItemIcon, {descendants: false}) _icons: QueryList<never>;
+  @ContentChildren(MatListItemAvatar, {descendants: false}) _avatars!: QueryList<never>;
+  @ContentChildren(MatListItemIcon, {descendants: false}) _icons!: QueryList<never>;
 
   /**
    * The number of lines this list item should reserve space for. If not specified,

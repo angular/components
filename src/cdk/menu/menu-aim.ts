@@ -117,13 +117,13 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
   private readonly _points: Point[] = [];
 
   /** Reference to the root menu in which we are tracking mouse moves. */
-  private _menu: Menu;
+  private _menu!: Menu;
 
   /** Reference to the root menu's mouse manager. */
-  private _pointerTracker: PointerFocusTracker<Toggler & FocusableElement>;
+  private _pointerTracker!: PointerFocusTracker<Toggler & FocusableElement>;
 
   /** The id associated with the current timeout call waiting to resolve. */
-  private _timeoutId: number | null;
+  private _timeoutId: number | null = null;
 
   /** Emits when this service is destroyed. */
   private readonly _destroyed: Subject<void> = new Subject();

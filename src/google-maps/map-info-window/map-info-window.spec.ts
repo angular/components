@@ -261,9 +261,9 @@ describe('MapInfoWindow', () => {
   imports: [GoogleMap, MapInfoWindow],
 })
 class TestApp {
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
-  position: google.maps.LatLngLiteral;
-  options: google.maps.InfoWindowOptions;
+  @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
+  position!: google.maps.LatLngLiteral;
+  options!: google.maps.InfoWindowOptions;
 
   handleClose() {}
 }

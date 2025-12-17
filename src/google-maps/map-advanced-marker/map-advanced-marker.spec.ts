@@ -180,13 +180,13 @@ describe('MapAdvancedMarker', () => {
   imports: [GoogleMap, MapAdvancedMarker],
 })
 class TestApp {
-  @ViewChild(MapAdvancedMarker) advancedMarker: MapAdvancedMarker;
-  title: string;
-  position: google.maps.LatLng | google.maps.LatLngLiteral;
-  content: Node | google.maps.marker.PinElement;
-  gmpDraggable: boolean;
-  zIndex: number;
-  options: google.maps.marker.AdvancedMarkerElementOptions;
+  @ViewChild(MapAdvancedMarker) advancedMarker!: MapAdvancedMarker;
+  title!: string;
+  position!: google.maps.LatLng | google.maps.LatLngLiteral;
+  content!: Node | google.maps.marker.PinElement;
+  gmpDraggable!: boolean;
+  zIndex!: number;
+  options!: google.maps.marker.AdvancedMarkerElementOptions;
 
   handleClick() {}
   handleDblclick() {}

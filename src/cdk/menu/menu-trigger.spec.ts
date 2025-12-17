@@ -539,8 +539,8 @@ describe('MenuTrigger', () => {
   imports: [CdkMenuBar, CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class TriggerForEmptyMenu {
-  @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
-  @ViewChild(CdkMenuTrigger, {read: ElementRef}) nativeTrigger: ElementRef;
+  @ViewChild(CdkMenuTrigger) trigger!: CdkMenuTrigger;
+  @ViewChild(CdkMenuTrigger, {read: ElementRef}) nativeTrigger!: ElementRef;
 }
 
 @Component({
@@ -564,13 +564,13 @@ class TriggerForEmptyMenu {
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class MenuBarWithNestedSubMenus {
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
-  @ViewChildren(CdkMenuTrigger, {read: ElementRef}) nativeTriggers: QueryList<ElementRef>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenuTrigger, {read: ElementRef}) nativeTriggers!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenuItem) menuItems: QueryList<CdkMenuItem>;
+  @ViewChildren(CdkMenuItem) menuItems!: QueryList<CdkMenuItem>;
 }
 
 @Component({
@@ -591,11 +591,11 @@ class MenuBarWithNestedSubMenus {
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggersWithSameMenuDifferentMenuBars {
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
-  @ViewChildren(CdkMenuTrigger, {read: ElementRef}) nativeTriggers: QueryList<ElementRef>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenuTrigger, {read: ElementRef}) nativeTriggers!: QueryList<ElementRef>;
 
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
 }
 
 @Component({
@@ -614,8 +614,8 @@ class TriggersWithSameMenuDifferentMenuBars {
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggersWithSameMenuSameMenuBar {
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -633,8 +633,8 @@ class TriggersWithSameMenuSameMenuBar {
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggerOpensItsMenu {
-  @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
-  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
+  @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
 }
 
 @Component({
@@ -658,10 +658,10 @@ class TriggerOpensItsMenu {
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class StandaloneTriggerWithInlineMenu {
-  @ViewChild(CdkMenuItem, {read: ElementRef}) nativeTrigger: ElementRef<HTMLElement>;
-  @ViewChild('submenu_item', {read: ElementRef}) submenuItem?: ElementRef<HTMLElement>;
-  @ViewChild('inline_item', {read: ElementRef}) nativeInlineItem: ElementRef<HTMLElement>;
-  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+  @ViewChild(CdkMenuItem, {read: ElementRef}) nativeTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('submenu_item', {read: ElementRef}) submenuItem!: ElementRef<HTMLElement>;
+  @ViewChild('inline_item', {read: ElementRef}) nativeInlineItem!: ElementRef<HTMLElement>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus!: QueryList<ElementRef>;
   useButtonTrigger = true;
 }
 
@@ -689,8 +689,8 @@ class TriggerWithData {
 })
 class TriggerWithNullValue {
   @ViewChild(CdkMenuTrigger, {static: true})
-  trigger: CdkMenuTrigger;
+  trigger!: CdkMenuTrigger;
 
   @ViewChild(CdkMenuTrigger, {static: true, read: ElementRef})
-  nativeTrigger: ElementRef<HTMLElement>;
+  nativeTrigger!: ElementRef<HTMLElement>;
 }

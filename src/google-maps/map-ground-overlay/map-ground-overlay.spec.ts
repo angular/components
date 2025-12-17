@@ -171,7 +171,7 @@ describe('MapGroundOverlay', () => {
   imports: [GoogleMap, MapGroundOverlay],
 })
 class TestApp {
-  @ViewChild(MapGroundOverlay) groundOverlay: MapGroundOverlay;
+  @ViewChild(MapGroundOverlay) groundOverlay!: MapGroundOverlay;
   url!: string;
   bounds!: google.maps.LatLngBoundsLiteral;
   clickable = false;

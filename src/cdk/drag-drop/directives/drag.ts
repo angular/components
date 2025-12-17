@@ -81,14 +81,14 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
   private readonly _destroyed = new Subject<void>();
   private _handles = new BehaviorSubject<CdkDragHandle[]>([]);
-  private _previewTemplate: CdkDragPreview | null;
-  private _placeholderTemplate: CdkDragPlaceholder | null;
+  private _previewTemplate: CdkDragPreview | null = null;
+  private _placeholderTemplate: CdkDragPlaceholder | null = null;
 
   /** Reference to the underlying drag instance. */
   _dragRef: DragRef<CdkDrag<T>>;
 
   /** Arbitrary data to attach to this drag instance. */
-  @Input('cdkDragData') data: T;
+  @Input('cdkDragData') data!: T;
 
   /** Locks the position of the dragged element along the specified axis. */
   @Input('cdkDragLockAxis') lockAxis: DragAxis | null = null;
@@ -98,7 +98,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * the `cdkDrag` element and going up the DOM. Passing an alternate root element is useful
    * when trying to enable dragging on an element that you might not have access to.
    */
-  @Input('cdkDragRootElement') rootElementSelector: string;
+  @Input('cdkDragRootElement') rootElementSelector!: string;
 
   /**
    * Node or selector that will be used to determine the element to which the draggable's
@@ -106,19 +106,19 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * will be matched starting from the element's parent and going up the DOM until a match
    * has been found.
    */
-  @Input('cdkDragBoundary') boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
+  @Input('cdkDragBoundary') boundaryElement!: string | ElementRef<HTMLElement> | HTMLElement;
 
   /**
    * Amount of milliseconds to wait after the user has put their
    * pointer down before starting to drag the element.
    */
-  @Input('cdkDragStartDelay') dragStartDelay: DragStartDelay;
+  @Input('cdkDragStartDelay') dragStartDelay!: DragStartDelay;
 
   /**
    * Sets the position of a `CdkDrag` that is outside of a drop container.
    * Can be used to restore the element's position for a returning user.
    */
-  @Input('cdkDragFreeDragPosition') freeDragPosition: Point;
+  @Input('cdkDragFreeDragPosition') freeDragPosition!: Point;
 
   /** Whether starting to drag this element is disabled. */
   @Input({alias: 'cdkDragDisabled', transform: booleanAttribute})
@@ -129,7 +129,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     this._disabled = value;
     this._dragRef.disabled = this._disabled;
   }
-  private _disabled: boolean;
+  private _disabled = false;
 
   /**
    * Function that can be used to customize the logic of how the position of the drag item
@@ -140,7 +140,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragConstrainPosition') constrainPosition?: DragConstrainPosition;
 
   /** Class to be added to the preview element. */
-  @Input('cdkDragPreviewClass') previewClass: string | string[];
+  @Input('cdkDragPreviewClass') previewClass!: string | string[];
 
   /**
    * Configures the place into which the preview of the item will be inserted. Can be configured
@@ -155,7 +155,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * - `ElementRef<HTMLElement> | HTMLElement` - Preview will be inserted into a specific element.
    * Same advantages and disadvantages as `parent`.
    */
-  @Input('cdkDragPreviewContainer') previewContainer: PreviewContainer;
+  @Input('cdkDragPreviewContainer') previewContainer!: PreviewContainer;
 
   /**
    * If the parent of the dragged element has a `scale` transform, it can throw off the

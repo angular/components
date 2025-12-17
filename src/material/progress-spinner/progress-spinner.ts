@@ -113,7 +113,7 @@ export class MatProgressSpinner {
   private _defaultColor: ThemePalette = 'primary';
 
   /** The element of the determinate spinner. */
-  @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
+  @ViewChild('determinateSpinner') _determinateCircle!: ElementRef<HTMLElement>;
 
   constructor(...args: unknown[]);
 
@@ -182,7 +182,7 @@ export class MatProgressSpinner {
   set strokeWidth(value: number) {
     this._strokeWidth = value || 0;
   }
-  private _strokeWidth: number;
+  private _strokeWidth!: number;
 
   /** The radius of the spinner, adjusted for stroke width. */
   _circleRadius(): number {

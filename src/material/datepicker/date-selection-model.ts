@@ -17,7 +17,7 @@ export class DateRange<D> {
    * expects a `DateRange`
    */
   // tslint:disable-next-line:no-unused-variable
-  private _disableStructuralEquivalency: never;
+  private _disableStructuralEquivalency!: never;
 
   constructor(
     /** The start date of the range. */
@@ -53,9 +53,10 @@ export interface DateSelectionModelChange<S> {
  * @docs-private
  */
 @Injectable()
-export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
-  implements OnDestroy
-{
+export abstract class MatDateSelectionModel<
+  S,
+  D = ExtractDateTypeFromSelection<S>,
+> implements OnDestroy {
   private readonly _selectionChanged = new Subject<DateSelectionModelChange<S>>();
 
   /** Emits when the selection has changed. */
