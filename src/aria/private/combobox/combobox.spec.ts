@@ -84,6 +84,16 @@ function _type(
     (popup.inputs.items as WritableSignalLike<any[]>).set(options);
   } else if (popup instanceof ComboboxTreePattern) {
     (popup.inputs.items as WritableSignalLike<any[]>).set(options);
+    // Auto-expand parents of matched items so they are visible
+    options.forEach(option => {
+      if (option instanceof TreeItemPattern) {
+        let parent = option.parent();
+        while (parent instanceof TreeItemPattern) {
+          (parent.expanded as WritableSignalLike<boolean>).set(true);
+          parent = parent.parent();
+        }
+      }
+    });
   }
   firstMatch.set(options[0]?.value());
   combobox.onFilter();
@@ -187,9 +197,7 @@ function getTreePattern(
     currentType: signal('false'),
   });
 
-  class TestTreeItemPattern extends TreeItemPattern<string> {
-    override readonly focusable = computed(() => this.inputs.focusable?.() ?? true);
-  }
+  class TestTreeItemPattern extends TreeItemPattern<string> {}
 
   // Recursive function to create tree items
   function createTreeItems(
@@ -834,6 +842,9 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
+        // Expand Fruit: Down -> Right
+        combobox.onKeydown(down());
+        combobox.onKeydown(right());
         combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
@@ -891,6 +902,8 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
+        combobox.onKeydown(down());
+        combobox.onKeydown(right());
         combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
@@ -943,7 +956,6 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should commit the selected option on focusout', () => {
-        combobox.onKeydown(down());
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');

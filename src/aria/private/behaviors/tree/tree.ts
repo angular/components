@@ -52,6 +52,13 @@ export type TreeInputs<T extends TreeItem<V, T>, V> = ListFocusInputs<T> &
   ListTypeaheadInputs<T> &
   ListExpansionInputs;
 
+/** Controls focus for a tree, ensuring that only visible items are focusable. */
+class TreeListFocus<T extends TreeItem<V, T>, V> extends ListFocus<T> {
+  override isFocusable(item: T): boolean {
+    return super.isFocusable(item) && item.visible();
+  }
+}
+
 /** Controls the state of a tree. */
 export class Tree<T extends TreeItem<V, T>, V> {
   /** Controls navigation for the tree. */
@@ -88,7 +95,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
   private _wrap = signal(true);
 
   constructor(readonly inputs: TreeInputs<T, V>) {
-    this.focusBehavior = new ListFocus<T>(inputs);
+    this.focusBehavior = new TreeListFocus<T, V>(inputs);
     this.selectionBehavior = new ListSelection<T, V>({...inputs, focusManager: this.focusBehavior});
     this.typeaheadBehavior = new ListTypeahead<T>({...inputs, focusManager: this.focusBehavior});
     this.expansionBehavior = new ListExpansion(inputs);
@@ -106,29 +113,29 @@ export class Tree<T extends TreeItem<V, T>, V> {
 
   /** Navigates to the first option in the tree. */
   first(opts?: NavOptions<T>) {
-    this._navigate(opts, () => this.navigationBehavior.first(this._getNavOpts(opts)));
+    this._navigate(opts, () => this.navigationBehavior.first(opts));
   }
 
   /** Navigates to the last option in the tree. */
   last(opts?: NavOptions<T>) {
-    this._navigate(opts, () => this.navigationBehavior.last(this._getNavOpts(opts)));
+    this._navigate(opts, () => this.navigationBehavior.last(opts));
   }
 
   /** Navigates to the next option in the tree. */
   next(opts?: NavOptions<T>) {
-    this._navigate(opts, () => this.navigationBehavior.next(this._getNavOpts(opts)));
+    this._navigate(opts, () => this.navigationBehavior.next(opts));
   }
 
   /** Navigates to the previous option in the tree. */
   prev(opts?: NavOptions<T>) {
-    this._navigate(opts, () => this.navigationBehavior.prev(this._getNavOpts(opts)));
+    this._navigate(opts, () => this.navigationBehavior.prev(opts));
   }
 
   /** Navigates to the first child of the current active item. */
   firstChild(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items = item?.children?.()?.filter(c => c.visible() !== false) ?? [];
+      const items = item?.children?.() ?? [];
       return this.navigationBehavior.first({items, ...opts});
     });
   }
@@ -137,7 +144,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
   lastChild(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items = item?.children?.()?.filter(c => c.visible() !== false) ?? [];
+      const items = item?.children?.() ?? [];
       return this.navigationBehavior.last({items, ...opts});
     });
   }
@@ -146,11 +153,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
   nextSibling(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items =
-        item
-          ?.parent?.()
-          ?.children?.()
-          ?.filter(c => c.visible() !== false) ?? [];
+      const items = item?.parent?.()?.children?.() ?? [];
       return this.navigationBehavior.next({items, ...opts});
     });
   }
@@ -159,11 +162,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
   prevSibling(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items =
-        item
-          ?.parent?.()
-          ?.children?.()
-          ?.filter(c => c.visible() !== false) ?? [];
+      const items = item?.parent?.()?.children?.() ?? [];
       return this.navigationBehavior.prev({items, ...opts});
     });
   }
@@ -323,17 +322,5 @@ export class Tree<T extends TreeItem<V, T>, V> {
     }
 
     this._wrap.set(true);
-  }
-
-  /**
-   * Constructs navigation options with the visible items subset.
-   */
-  private _getNavOpts(opts?: NavOptions<T>): ListNavigationOpts<T> {
-    const visibleItems = this.inputs.items().filter(i => i.visible() !== false);
-
-    return {
-      items: visibleItems,
-      ...opts,
-    };
   }
 }

@@ -65,9 +65,6 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
   /** Whether the item is selectable. */
   readonly selectable: SignalLike<boolean> = () => this.inputs.selectable();
 
-  /** Whether the item is focusable. */
-  readonly focusable = computed(() => this.visible() && (this.inputs.focusable?.() ?? true));
-
   /** Whether the item is expanded. */
   readonly expanded: WritableSignalLike<boolean>;
 
