@@ -19,6 +19,7 @@
     "noUnusedLocals": false,
     "useDefineForClassFields": false,
     "strictNullChecks": true,
+    "strictPropertyInitialization": true,
     "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitOverride": true,

@@ -90,11 +90,11 @@ class SimpleFocusTrap implements AfterViewInit {
   @ViewChild('firstFocusable') firstFocusableElement!: ElementRef<HTMLElement>;
   @ViewChild('secondFocusable') secondFocusableElement!: ElementRef<HTMLElement>;
 
-  focusTrap: ConfigurableFocusTrap;
+  focusTrap!: ConfigurableFocusTrap;
 
   // Since our custom stubbing in `patchElementFocus` won't update
   // the `document.activeElement`, we need to keep track of it here.
-  activeElement: Element | null;
+  activeElement: Element | null = null;
 
   ngAfterViewInit() {
     // Ensure consistent focus timing across browsers.

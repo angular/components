@@ -5,8 +5,7 @@
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {},
-    "types": ["jasmine", "google.maps"],
-    "strictPropertyInitialization": true
+    "types": ["jasmine", "google.maps"]
   },
   "include": ["./**/*.ts", "../dev-mode-types.d.ts"]
 }
