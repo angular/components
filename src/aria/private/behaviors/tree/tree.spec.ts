@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, SignalLike, WritableSignalLike} from '../signal-like/signal-like';
+import {signal, WritableSignalLike} from '../signal-like/signal-like';
 import {Tree, TreeInputs, TreeItem} from './tree';
 
 interface TestItem<V = number> extends TreeItem<V, TestItem<V>> {
@@ -356,7 +356,7 @@ describe('Tree Behavior', () => {
       it('should not navigate to first child if no children', () => {
         const {tree, items} = getDefaultPatterns();
         tree.goto(items[0]);
-        const success = tree.firstChild();
+        tree.firstChild();
         expect(tree.inputs.activeItem()).toBe(items[0]); // Stays same
       });
 
@@ -385,7 +385,7 @@ describe('Tree Behavior', () => {
       });
 
       it('should select an item when navigating with selectOne:true', () => {
-        const {tree, items} = getTreeAndItems([0, 1], {values: signal([]), multi: signal(false)});
+        const {tree} = getTreeAndItems([0, 1], {values: signal([]), multi: signal(false)});
 
         tree.next({selectOne: true});
         expect(tree.inputs.values()).toEqual([1]);
@@ -464,7 +464,7 @@ describe('Tree Behavior', () => {
       });
 
       it('should not wrap when range selecting', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
         tree.anchor(0);
         tree.prev({selectRange: true});
         expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);

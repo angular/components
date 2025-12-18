@@ -780,6 +780,13 @@ describe('Combobox', () => {
 
         it('should select and commit on click', () => {
           click(inputElement);
+
+          // Iterate to the parent node and expand it so the child is visible
+          down(); // Winter
+          down(); // Spring
+          right(); // Expand Spring
+          fixture.detectChanges();
+
           const item = getTreeItem('April')!;
           click(item);
           fixture.detectChanges();
