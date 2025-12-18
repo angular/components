@@ -170,8 +170,8 @@ class BasicTextColumnApp {
     {propertyA: 'a_2', propertyB: 'b_2', propertyC: 'c_2'},
   ];
 
-  headerTextB: string;
-  dataAccessorA: (data: TestData) => string;
+  headerTextB!: string;
+  dataAccessorA!: (data: TestData) => string;
   justifyC = 'start' as const;
 }
 

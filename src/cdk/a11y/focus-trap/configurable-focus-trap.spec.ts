@@ -119,7 +119,7 @@ class SimpleFocusTrap implements AfterViewInit {
 
   @ViewChild('focusTrapElement') focusTrapElement!: ElementRef;
 
-  focusTrap: ConfigurableFocusTrap;
+  focusTrap!: ConfigurableFocusTrap;
 
   ngAfterViewInit() {
     this.focusTrap = this._focusTrapFactory.create(this.focusTrapElement.nativeElement);
