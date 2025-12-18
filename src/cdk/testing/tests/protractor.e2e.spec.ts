@@ -97,6 +97,7 @@ describe('ProtractorHarnessEnvironment', () => {
       () => ProtractorHarnessEnvironment.loader(),
       () => ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness),
       async () => (await activeElement()).getAttribute('id'),
+      false,
     ));
 });
 

@@ -143,5 +143,6 @@ describe('WebDriverHarnessEnvironment', () => {
       () => SeleniumWebDriverHarnessEnvironment.loader(wd),
       () => SeleniumWebDriverHarnessEnvironment.loader(wd).getHarness(MainComponentHarness),
       async () => (await activeElement()).getAttribute('id'),
+      false,
     ));
 });
