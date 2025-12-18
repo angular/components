@@ -28,7 +28,7 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
  * @param getHarnessLoaderFromEnvironment env specific closure to get HarnessLoader
  * @param getMainComponentHarnessFromEnvironment env specific closure to get MainComponentHarness
  * @param getActiveElementId env specific closure to get active element
- * @param isVirtualDom Whether the tests are running inside a virtual DOM implementation.
+ * @param testConfig Config used to configure the test behavior in different environments.
  *
  * @docs-private
  */
@@ -38,7 +38,12 @@ export function crossEnvironmentSpecs(
   // Maybe we should introduce HarnessLoader.getActiveElement(): TestElement
   // then this 3rd parameter could get removed.
   getActiveElementId: () => Promise<string | null>,
-  isVirtualDom: boolean,
+  testConfig: {
+    /** Whether to skip async tests. Used internally. */
+    skipAsyncTests: boolean;
+    /** Whether the current environment is using a virtual DOM implementation. */
+    isVirtualDom: boolean;
+  } = {skipAsyncTests: false, isVirtualDom: false},
 ) {
   describe('HarnessLoader', () => {
     let loader: HarnessLoader;
@@ -131,7 +136,7 @@ export function crossEnvironmentSpecs(
       const present = await harness.optionalUsername();
       const missing = await harness.nullItem();
       expect(present).not.toBeNull();
-      expect(await present!.text()).toBe('Hello Yi from Angular 2!');
+      expect(await present!.text()).toBe('Hello Yi from Angular!');
       expect(missing).toBeNull();
     });
 
@@ -260,12 +265,14 @@ export function crossEnvironmentSpecs(
       expect(await element.getText()).toBe('Has comma inside attribute');
     });
 
-    it('should wait for async operation to complete', async () => {
-      const asyncCounter = await harness.asyncCounter();
-      expect(await asyncCounter.text()).toBe('5');
-      await harness.increaseCounter(3);
-      expect(await asyncCounter.text()).toBe('8');
-    });
+    if (!testConfig.skipAsyncTests) {
+      it('should wait for async operation to complete', async () => {
+        const asyncCounter = await harness.asyncCounter();
+        expect(await asyncCounter.text()).toBe('5');
+        await harness.increaseCounter(3);
+        expect(await asyncCounter.text()).toBe('8');
+      });
+    }
   });
 
   describe('HarnessPredicate', () => {
@@ -403,7 +410,7 @@ export function crossEnvironmentSpecs(
       expect(await modifiersResult.text()).toBe('shift---meta');
     });
 
-    if (!isVirtualDom) {
+    if (!testConfig.isVirtualDom) {
       it('should be able to click the center of an element', async () => {
         const clickTest = await harness.clickTest();
         const clickTestResult = await harness.clickTestResult();
@@ -467,7 +474,7 @@ export function crossEnvironmentSpecs(
       expect(await value.text()).toBe('Number value: -123');
     });
 
-    if (!isVirtualDom) {
+    if (!testConfig.isVirtualDom) {
       it('should be able to retrieve dimensions', async () => {
         const dimensions = await (await harness.title()).getDimensions();
         expect(dimensions.height).toBe(100);
@@ -476,7 +483,8 @@ export function crossEnvironmentSpecs(
     }
 
     // TODO(crisbeto): this _should_ work with a virtual DOM.
-    if (!isVirtualDom) {
+    // Investigate the failure and enable the test.
+    if (!testConfig.isVirtualDom) {
       it('should dispatch `mouseenter` and `mouseover` on hover', async () => {
         const box = await harness.hoverTest();
         let classAttr = await box.getAttribute('class');
@@ -542,7 +550,8 @@ export function crossEnvironmentSpecs(
     });
 
     // TODO(crisbeto): this _should_ work with a virtual DOM.
-    if (!isVirtualDom) {
+    // Investigate the failure and enable the test.
+    if (!testConfig.isVirtualDom) {
       it('should be able to set the value of a select in single selection mode', async () => {
         const [select, value, changeEventCounter] = await parallel(() => [
           harness.singleSelect(),
