@@ -19,9 +19,6 @@ export interface ListFocusItem {
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
 
-  /** Whether an item is focusable. */
-  focusable?: SignalLike<boolean>;
-
   /** The index of the item in the list. */
   index: SignalLike<number>;
 }
@@ -118,9 +115,6 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns true if the given item can be navigated to. */
   isFocusable(item: T): boolean {
-    if (item.focusable && !item.focusable()) {
-      return false;
-    }
     return !item.disabled() || this.inputs.softDisabled();
   }
 }

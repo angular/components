@@ -11,7 +11,6 @@ import {ListFocus, ListFocusInputs, ListFocusItem} from './list-focus';
 
 type TestItem = ListFocusItem & {
   disabled: WritableSignalLike<boolean>;
-  focusable: WritableSignalLike<boolean>;
 };
 
 type TestInputs = Partial<ListFocusInputs<ListFocusItem>> & {
@@ -38,7 +37,6 @@ function getItems(length: number): SignalLike<ListFocusItem[]> {
         id: signal(`${i}`),
         disabled: signal(false),
         element: signal({focus: () => {}} as HTMLElement),
-        focusable: signal(true),
         index: signal(i),
       };
     }),
@@ -136,15 +134,6 @@ describe('List Focus', () => {
       expect(focusManager.isFocusable(items[0])).toBeTrue();
       expect(focusManager.isFocusable(items[1])).toBeTrue();
       expect(focusManager.isFocusable(items[2])).toBeTrue();
-    });
-
-    it('should return false if focusable is false', () => {
-      const focusManager = getListFocus({softDisabled: signal(true)});
-      const items = focusManager.inputs.items() as TestItem[];
-      items[1].focusable.set(false);
-
-      expect(focusManager.isFocusable(items[0])).toBeTrue();
-      expect(focusManager.isFocusable(items[1])).toBeFalse();
     });
   });
 });
