@@ -182,6 +182,7 @@
         "**/src/cdk/testing/testbed/task-state-zone-interceptor.ts",
         "**/src/cdk/testing/testbed/testbed-harness-environment.ts",
         "**/src/cdk/testing/tests/testbed.spec.ts",
+        "**/integration/vitest/src/vitest.spec.ts",
         // TODO: Tooltip harness still relies on Zone.js.
         "**/src/material/tooltip/testing/tooltip-harness.spec.ts",
         // TODO: Migrate docs app to zoneless.

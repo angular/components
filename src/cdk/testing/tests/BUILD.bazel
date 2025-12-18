@@ -100,3 +100,12 @@ ts_project(
         "//src/cdk/testing/selenium-webdriver",
     ],
 )
+
+# Source code of the tests exposed for integration test purposes.
+filegroup(
+    name = "sources_for_integration_tests",
+    srcs = glob([
+        "**/*.ts",
+        "**/*.html",
+    ]),
+)

@@ -63,7 +63,7 @@ describe('TestbedHarnessEnvironment', () => {
         expect(subcomponents[0]).not.toBeNull();
         const globalEl = await subcomponents[0]!.globalElement();
         expect(globalEl).not.toBeNull();
-        expect(await globalEl.text()).toBe('Hello Yi from Angular 2!');
+        expect(await globalEl.text()).toBe('Hello Yi from Angular!');
       });
 
       it('should be able to wait for tasks outside of Angular within native async/await', async () => {
@@ -189,6 +189,5 @@ describe('TestbedHarnessEnvironment', () => {
       () => TestbedHarnessEnvironment.loader(fixture),
       () => TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness),
       () => Promise.resolve(document.activeElement!.id),
-      false,
     ));
 });
