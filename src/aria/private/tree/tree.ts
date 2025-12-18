@@ -8,22 +8,18 @@
 
 import {SignalLike, computed, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {Tree, TreeItem, TreeInputs as TreeBehaviorInputs} from '../behaviors/tree/tree';
-import {ExpansionItem, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
-export interface TreeItemInputs<V>
-  extends
-    Omit<TreeItem<V, TreeItemPattern<V>>, 'index' | 'children' | 'parent' | 'visible' | 'expanded'>,
-    Omit<ExpansionItem, 'expandable'> {
+export interface TreeItemInputs<V> extends Omit<
+  TreeItem<V, TreeItemPattern<V>>,
+  'index' | 'parent' | 'visible' | 'expandable'
+> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 
   /** Whether this item has children. Children can be lazily loaded. */
   hasChildren: SignalLike<boolean>;
-
-  /** The children items. */
-  children: SignalLike<TreeItemPattern<V>[]>;
 
   /** The tree pattern this item belongs to. */
   tree: SignalLike<TreePattern<V>>;
@@ -32,7 +28,7 @@ export interface TreeItemInputs<V>
 /**
  * Represents an item in a Tree.
  */
-export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>>, ExpansionItem {
+export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
   /** A unique identifier for this item. */
   readonly id: SignalLike<string> = () => this.inputs.id();
 
@@ -52,19 +48,16 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>>, Expa
   readonly tree: SignalLike<TreePattern<V>> = () => this.inputs.tree();
 
   /** The parent item. */
-  get parent(): TreeItemPattern<V> | undefined {
+  readonly parent: SignalLike<TreeItemPattern<V> | undefined> = computed(() => {
     const parent = this.inputs.parent();
     return parent instanceof TreeItemPattern ? parent : undefined;
-  }
+  });
 
   /** The children items. */
-  readonly children: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.children();
+  readonly children: SignalLike<TreeItemPattern<V>[]> = () => this.inputs.children() ?? [];
 
   /** The position of this item among its siblings. */
   readonly index = computed(() => this.tree().inputs.items().indexOf(this));
-
-  /** Controls expansion for child items. */
-  readonly expansionBehavior: ListExpansion;
 
   /** Whether the item is expandable. It's expandable if children item exist. */
   readonly expandable: SignalLike<boolean> = () => this.inputs.hasChildren();
@@ -122,12 +115,6 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>>, Expa
 
   constructor(readonly inputs: TreeItemInputs<V>) {
     this.expanded = inputs.expanded;
-    this.expansionBehavior = new ListExpansion({
-      ...inputs,
-      multiExpandable: () => true,
-      items: this.children,
-      disabled: computed(() => this.tree()?.disabled() ?? false),
-    });
   }
 }
 
@@ -140,12 +127,12 @@ interface SelectOptions {
 }
 
 /** Represents the required inputs for a tree. */
-export interface TreeInputs<V> extends Omit<TreeBehaviorInputs<TreeItemPattern<V>, V>, 'items'> {
+export interface TreeInputs<V> extends Omit<
+  TreeBehaviorInputs<TreeItemPattern<V>, V>,
+  'multiExpandable'
+> {
   /** A unique identifier for the tree. */
   id: SignalLike<string>;
-
-  /** All items in the tree, in document order (DFS-like, a flattened list). */
-  items: SignalLike<TreeItemPattern<V>[]>;
 
   /** Whether the tree is in navigation mode. */
   nav: SignalLike<boolean>;
@@ -158,9 +145,6 @@ export interface TreeInputs<V> extends Omit<TreeBehaviorInputs<TreeItemPattern<V
 export class TreePattern<V> implements TreeInputs<V> {
   /** The tree behavior for the tree. */
   readonly treeBehavior: Tree<TreeItemPattern<V>, V>;
-
-  /** Controls expansion for direct children of the tree root (top-level items). */
-  readonly expansionBehavior: ListExpansion;
 
   /** The root level is 0. */
   readonly level = () => 0;
@@ -237,9 +221,9 @@ export class TreePattern<V> implements TreeInputs<V> {
       .on('Home', () => tree.first({selectOne: this.followFocus()}))
       .on('End', () => tree.last({selectOne: this.followFocus()}))
       .on(this.typeaheadRegexp, e => tree.search(e.key, {selectOne: this.followFocus()}))
-      .on(this.expandKey, () => this.expand({selectOne: this.followFocus()}))
-      .on(this.collapseKey, () => this.collapse({selectOne: this.followFocus()}))
-      .on(Modifier.Shift, '*', () => this.expandSiblings());
+      .on(Modifier.Shift, '*', () => tree.expandSiblings())
+      .on(this.expandKey, () => this._expandOrFirstChild({selectOne: this.followFocus()}))
+      .on(this.collapseKey, () => this._collapseOrParent({selectOne: this.followFocus()}));
 
     if (this.inputs.multi()) {
       manager
@@ -276,8 +260,8 @@ export class TreePattern<V> implements TreeInputs<V> {
       manager
         .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => tree.prev())
         .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => tree.next())
-        .on([Modifier.Ctrl, Modifier.Meta], this.expandKey, () => this.expand())
-        .on([Modifier.Ctrl, Modifier.Meta], this.collapseKey, () => this.collapse())
+        .on([Modifier.Ctrl, Modifier.Meta], this.expandKey, () => this._expandOrFirstChild())
+        .on([Modifier.Ctrl, Modifier.Meta], this.collapseKey, () => this._collapseOrParent())
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => tree.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => tree.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => tree.first())
@@ -370,16 +354,10 @@ export class TreePattern<V> implements TreeInputs<V> {
     this.activeItem = inputs.activeItem;
     this.values = inputs.values;
 
-    this.treeBehavior = new Tree({
+    this.treeBehavior = new Tree<TreeItemPattern<V>, V>({
       ...inputs,
-      items: this.inputs.items,
       multi: this.multi,
-    });
-
-    this.expansionBehavior = new ListExpansion({
       multiExpandable: () => true,
-      items: this.children,
-      disabled: this.disabled,
     });
   }
 
@@ -431,52 +409,25 @@ export class TreePattern<V> implements TreeInputs<V> {
     if (!item) return;
 
     this.treeBehavior.goto(item, opts);
-    this.toggleExpansion(item);
+    this.treeBehavior.toggleExpansion(item);
   }
 
-  /** Toggles to expand or collapse a tree item. */
-  toggleExpansion(item?: TreeItemPattern<V>) {
-    item ??= this.activeItem();
-    if (!item || !this.treeBehavior.isFocusable(item)) return;
-
-    if (!item.expandable()) return;
-    if (item.expanded()) {
-      this.collapse();
+  /** Expands the active item if possible, otherwise navigates to the first child. */
+  _expandOrFirstChild(opts?: SelectOptions) {
+    const item = this.treeBehavior.inputs.activeItem();
+    if (item && this.treeBehavior.isExpandable(item) && !item.expanded()) {
+      this.treeBehavior.expand(item);
     } else {
-      this.expansionBehavior.open(item);
-    }
-  }
-
-  /** Expands a tree item. */
-  expand(opts?: SelectOptions) {
-    const item = this.activeItem();
-    if (!item || !this.treeBehavior.isFocusable(item)) return;
-
-    if (item.expandable() && !item.expanded()) {
-      this.expansionBehavior.open(item);
-    } else if (
-      item.expanded() &&
-      item.children().some(item => this.treeBehavior.isFocusable(item))
-    ) {
       this.treeBehavior.firstChild(opts);
     }
   }
 
-  /** Expands all sibling tree items including itself. */
-  expandSiblings(item?: TreeItemPattern<V>) {
-    item ??= this.activeItem();
-    const siblings = item?.parent?.children?.() ?? this.children();
-    siblings?.forEach(item => this.expansionBehavior.open(item));
-  }
-
-  /** Collapses a tree item. */
-  collapse(opts?: SelectOptions) {
-    const item = this.activeItem();
-    if (!item || !this.treeBehavior.isFocusable(item)) return;
-
-    if (item.expandable() && item.expanded()) {
-      this.expansionBehavior.close(item);
-    } else if (item.parent) {
+  /** Collapses the active item if possible, otherwise navigates to the parent. */
+  _collapseOrParent(opts?: SelectOptions) {
+    const item = this.treeBehavior.inputs.activeItem();
+    if (item && this.treeBehavior.isExpandable(item) && item.expanded()) {
+      this.treeBehavior.collapse(item);
+    } else {
       this.treeBehavior.parent(opts);
     }
   }

@@ -7,6 +7,7 @@
  */
 
 import {computed, signal, SignalLike} from '../signal-like/signal-like';
+import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 import {
   ListNavigation,
@@ -28,15 +29,17 @@ import {NavOptions} from '../list/list';
 
 /** Represents an item in the tree. */
 export interface TreeItem<V, T extends TreeItem<V, T>>
-  extends ListTypeaheadItem, ListNavigationItem, ListSelectionItem<V>, ListFocusItem {
+  extends
+    ListTypeaheadItem,
+    ListNavigationItem,
+    ListSelectionItem<V>,
+    ListFocusItem,
+    ExpansionItem {
   /** The children of this item. */
-  children?: SignalLike<T[]>;
-
-  /** Whether this item is expanded. */
-  expanded?: SignalLike<boolean>;
+  children: SignalLike<T[] | undefined>;
 
   /** The parent of this item. */
-  parent?: T;
+  parent: SignalLike<T | undefined>;
 
   /** Whether this item is visible. */
   visible: SignalLike<boolean>;
@@ -46,7 +49,8 @@ export interface TreeItem<V, T extends TreeItem<V, T>>
 export type TreeInputs<T extends TreeItem<V, T>, V> = ListFocusInputs<T> &
   ListNavigationInputs<T> &
   ListSelectionInputs<T, V> &
-  ListTypeaheadInputs<T>;
+  ListTypeaheadInputs<T> &
+  ListExpansionInputs;
 
 /** Controls the state of a tree. */
 export class Tree<T extends TreeItem<V, T>, V> {
@@ -61,6 +65,9 @@ export class Tree<T extends TreeItem<V, T>, V> {
 
   /** Controls focus for the tree. */
   focusBehavior: ListFocus<T>;
+
+  /** Controls expansion for the tree. */
+  expansionBehavior: ListExpansion;
 
   /** Whether the tree is disabled. */
   disabled = computed(() => this.focusBehavior.isListDisabled());
@@ -81,10 +88,11 @@ export class Tree<T extends TreeItem<V, T>, V> {
   private _wrap = signal(true);
 
   constructor(readonly inputs: TreeInputs<T, V>) {
-    this.focusBehavior = new ListFocus(inputs);
-    this.selectionBehavior = new ListSelection({...inputs, focusManager: this.focusBehavior});
-    this.typeaheadBehavior = new ListTypeahead({...inputs, focusManager: this.focusBehavior});
-    this.navigationBehavior = new ListNavigation({
+    this.focusBehavior = new ListFocus<T>(inputs);
+    this.selectionBehavior = new ListSelection<T, V>({...inputs, focusManager: this.focusBehavior});
+    this.typeaheadBehavior = new ListTypeahead<T>({...inputs, focusManager: this.focusBehavior});
+    this.expansionBehavior = new ListExpansion(inputs);
+    this.navigationBehavior = new ListNavigation<T>({
       ...inputs,
       focusManager: this.focusBehavior,
       wrap: computed(() => this._wrap() && this.inputs.wrap()),
@@ -138,7 +146,11 @@ export class Tree<T extends TreeItem<V, T>, V> {
   nextSibling(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items = item?.parent?.children?.()?.filter(c => c.visible() !== false) ?? [];
+      const items =
+        item
+          ?.parent?.()
+          ?.children?.()
+          ?.filter(c => c.visible() !== false) ?? [];
       return this.navigationBehavior.next({items, ...opts});
     });
   }
@@ -147,7 +159,11 @@ export class Tree<T extends TreeItem<V, T>, V> {
   prevSibling(opts?: NavOptions<T>) {
     this._navigate(opts, () => {
       const item = this.inputs.activeItem();
-      const items = item?.parent?.children?.()?.filter(c => c.visible() !== false) ?? [];
+      const items =
+        item
+          ?.parent?.()
+          ?.children?.()
+          ?.filter(c => c.visible() !== false) ?? [];
       return this.navigationBehavior.prev({items, ...opts});
     });
   }
@@ -155,7 +171,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
   /** Navigates to the parent of the current active item. */
   parent(opts?: NavOptions<T>) {
     this._navigate(opts, () =>
-      this.navigationBehavior.goto(this.inputs.activeItem()?.parent, opts),
+      this.navigationBehavior.goto(this.inputs.activeItem()?.parent?.(), opts),
     );
   }
 
@@ -219,9 +235,57 @@ export class Tree<T extends TreeItem<V, T>, V> {
     this.selectionBehavior.toggleAll();
   }
 
+  /** Toggles the expansion of the given item. */
+  toggleExpansion(item?: T) {
+    item ??= this.inputs.activeItem();
+    if (!item || !this.isFocusable(item)) return;
+
+    if (this.isExpandable(item)) {
+      this.expansionBehavior.toggle(item);
+    }
+  }
+
+  /** Expands the given item. */
+  expand(item: T) {
+    if (this.isExpandable(item)) {
+      this.expansionBehavior.open(item);
+    }
+  }
+
+  /** Collapses the given item. */
+  collapse(item: T) {
+    this.expansionBehavior.close(item);
+  }
+
+  /** Expands all sibling items of the given item (or active item). */
+  expandSiblings(item?: T) {
+    item ??= this.inputs.activeItem();
+    if (!item) return;
+
+    const parent = item.parent?.();
+    // TODO: This assumes that items without a parent are root items.
+    const siblings = parent ? parent.children?.() : this.inputs.items().filter(i => !i.parent?.());
+    siblings?.forEach(s => this.expand(s));
+  }
+
+  /** Expands all items in the tree. */
+  expandAll() {
+    this.expansionBehavior.openAll();
+  }
+
+  /** Collapses all items in the tree. */
+  collapseAll() {
+    this.expansionBehavior.closeAll();
+  }
+
   /** Checks if the given item is able to receive focus. */
   isFocusable(item: T) {
     return this.focusBehavior.isFocusable(item);
+  }
+
+  /** Checks if the given item is expandable. */
+  isExpandable(item: T) {
+    return this.expansionBehavior.isExpandable(item);
   }
 
   /** Handles updating selection for the tree. */
@@ -265,9 +329,7 @@ export class Tree<T extends TreeItem<V, T>, V> {
    * Constructs navigation options with the visible items subset.
    */
   private _getNavOpts(opts?: NavOptions<T>): ListNavigationOpts<T> {
-    const visibleItems = this.inputs.items().filter(i => {
-      return i.visible() !== false;
-    });
+    const visibleItems = this.inputs.items().filter(i => i.visible() !== false);
 
     return {
       items: visibleItems,

@@ -17,9 +17,10 @@ interface TestItem<V = number> extends TreeItem<V, TestItem<V>> {
   searchTerm: WritableSignalLike<string>;
   index: WritableSignalLike<number>;
   children: WritableSignalLike<TestItem<V>[]>;
-  parent?: TestItem<V>;
+  parent: WritableSignalLike<TestItem<V> | undefined>;
   visible: WritableSignalLike<boolean>;
   expanded: WritableSignalLike<boolean>;
+  expandable: WritableSignalLike<boolean>;
   focusable: WritableSignalLike<boolean>;
 }
 
@@ -44,6 +45,7 @@ describe('Tree Behavior', () => {
       ...focusInputs,
       values: signal([]),
       multi: signal(false),
+      multiExpandable: signal(true),
       selectionMode: signal('follow'),
       wrap: signal(true),
       orientation: signal('vertical'),
@@ -65,8 +67,10 @@ describe('Tree Behavior', () => {
           searchTerm: signal(String(value)),
           index: signal(index),
           children: signal<TestItem<V>[]>([]),
+          parent: signal<TestItem<V> | undefined>(undefined),
           visible: signal(true),
           expanded: signal(false),
+          expandable: signal(true),
           focusable: signal(true),
         }) as TestItem<V>,
     );
@@ -79,7 +83,7 @@ describe('Tree Behavior', () => {
       const parent = items[Number(parentIdx)];
       const children = childIndices.map(i => items[i]);
       parent.children.set(children);
-      children.forEach(child => (child.parent = parent));
+      children.forEach(child => child.parent.set(parent));
     });
   }
 

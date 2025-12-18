@@ -19,8 +19,11 @@ export class ComboboxTreePattern<V>
   extends TreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>
 {
+  /** Toggles to expand or collapse a tree item. */
+  toggleExpansion = (item?: TreeItemPattern<V>) => this.treeBehavior.toggleExpansion(item);
+
   /** Whether the currently focused item is collapsible. */
-  isItemCollapsible = () => this.inputs.activeItem()?.parent instanceof TreeItemPattern;
+  isItemCollapsible = () => this.inputs.activeItem()?.parent() instanceof TreeItemPattern;
 
   /** The ARIA role for the tree. */
   role = () => 'tree' as const;
@@ -93,11 +96,11 @@ export class ComboboxTreePattern<V>
   /** Sets the value of the combobox tree. */
   setValue = (value: V | undefined) => this.inputs.values.set(value ? [value] : []);
 
-  /** Expands the currently focused item if it is expandable. */
-  expandItem = () => this.expand();
+  /** Expands the currently focused item if it is expandable, or navigates to the first child. */
+  expandItem = () => this._expandOrFirstChild();
 
-  /** Collapses the currently focused item if it is expandable. */
-  collapseItem = () => this.collapse();
+  /** Collapses the currently focused item if it is expandable, or navigates to the parent. */
+  collapseItem = () => this._collapseOrParent();
 
   /** Whether the specified item or the currently active item is expandable. */
   isItemExpandable(item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) {
@@ -105,10 +108,10 @@ export class ComboboxTreePattern<V>
   }
 
   /** Expands all of the tree items. */
-  expandAll = () => this.items().forEach(item => this.expansionBehavior.open(item));
+  expandAll = () => this.treeBehavior.expandAll();
 
   /** Collapses all of the tree items. */
-  collapseAll = () => this.items().forEach(item => item.expansionBehavior.close(item));
+  collapseAll = () => this.treeBehavior.collapseAll();
 
   /** Whether the currently active item is selectable. */
   isItemSelectable = (item: TreeItemPattern<V> | undefined = this.inputs.activeItem()) => {
