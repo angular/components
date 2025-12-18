@@ -1,3 +1,8 @@
+<a name="21.0.5"></a>
+# 21.0.5 "plastic-deer" (2025-12-18)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0-next.3"></a>
 # 21.1.0-next.3 "lego scooter" (2025-12-17)
 ### aria
