@@ -189,5 +189,6 @@ describe('TestbedHarnessEnvironment', () => {
       () => TestbedHarnessEnvironment.loader(fixture),
       () => TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness),
       () => Promise.resolve(document.activeElement!.id),
+      false,
     ));
 });
