@@ -35,7 +35,7 @@ import { ViewContainerRef } from '@angular/core';
 export const MAT_SNACK_BAR_DATA: InjectionToken<any>;
 
 // @public
-export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<any>>;
+export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<unknown>>;
 
 // @public
 export class MatSnackBar implements OnDestroy {
@@ -44,11 +44,11 @@ export class MatSnackBar implements OnDestroy {
     handsetCssClass: string;
     // (undocumented)
     ngOnDestroy(): void;
-    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
-    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
-    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
-    openFromComponent<T, D = any>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
-    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
+    open(message: string, action?: string, config?: MatSnackBarConfig<unknown>): MatSnackBarRef<TextOnlySnackBar, TextOnlySnackBarData>;
+    get _openedSnackBarRef(): MatSnackBarRef<unknown> | null;
+    set _openedSnackBarRef(value: MatSnackBarRef<unknown> | null);
+    openFromComponent<T, D>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T, D>;
+    openFromTemplate<D>(template: TemplateRef<SnackBarTemplateContext<D>>, config?: MatSnackBarConfig<D>): MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D>;
     simpleSnackBarComponent: typeof SimpleSnackBar;
     snackBarContainerComponent: typeof MatSnackBarContainer;
     // (undocumented)
@@ -87,7 +87,7 @@ export class MatSnackBarConfig<D = any> {
 }
 
 // @public
-export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
+export class MatSnackBarContainer<D = unknown> extends BasePortalOutlet implements OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
@@ -111,11 +111,11 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     _portalOutlet: CdkPortalOutlet;
     _role?: 'status' | 'alert';
     // (undocumented)
-    snackBarConfig: MatSnackBarConfig<any>;
+    snackBarConfig: MatSnackBarConfig<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer, "mat-snack-bar-container", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSnackBarContainer<any>, "mat-snack-bar-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarContainer, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarContainer<any>, never>;
 }
 
 // @public
@@ -145,13 +145,13 @@ export class MatSnackBarModule {
 }
 
 // @public
-export class MatSnackBarRef<T> {
-    constructor(containerInstance: MatSnackBarContainer, _overlayRef: OverlayRef);
+export class MatSnackBarRef<T, D = unknown> {
+    constructor(containerInstance: MatSnackBarContainer<D>, _overlayRef: OverlayRef);
     afterDismissed(): Observable<MatSnackBarDismiss>;
     afterOpened(): Observable<void>;
     // @deprecated
     closeWithAction(): void;
-    containerInstance: MatSnackBarContainer;
+    containerInstance: MatSnackBarContainer<D>;
     dismiss(): void;
     _dismissAfter(duration: number): void;
     dismissWithAction(): void;
@@ -168,14 +168,22 @@ export class SimpleSnackBar implements TextOnlySnackBar {
     constructor(...args: unknown[]);
     action(): void;
     // (undocumented)
-    data: any;
+    data: TextOnlySnackBarData;
     get hasAction(): boolean;
     // (undocumented)
-    snackBarRef: MatSnackBarRef<SimpleSnackBar>;
+    snackBarRef: MatSnackBarRef<SimpleSnackBar, TextOnlySnackBarData>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<SimpleSnackBar, "simple-snack-bar", ["matSnackBar"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<SimpleSnackBar, never>;
+}
+
+// @public (undocumented)
+export interface SnackBarTemplateContext<D> {
+    // (undocumented)
+    $implicit?: D | null;
+    // (undocumented)
+    snackBarRef?: MatSnackBarRef<EmbeddedViewRef<SnackBarTemplateContext<D>>, D>;
 }
 
 // @public
@@ -183,14 +191,19 @@ export interface TextOnlySnackBar {
     // (undocumented)
     action: () => void;
     // (undocumented)
-    data: {
-        message: string;
-        action: string;
-    };
+    data: TextOnlySnackBarData;
     // (undocumented)
     hasAction: boolean;
     // (undocumented)
-    snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+    snackBarRef: MatSnackBarRef<TextOnlySnackBar, TextOnlySnackBarData>;
+}
+
+// @public
+export interface TextOnlySnackBarData {
+    // (undocumented)
+    action: string;
+    // (undocumented)
+    message: string;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -22,6 +22,7 @@ export type MatSnackBarVerticalPosition = 'top' | 'bottom';
 /**
  * Configuration used when opening a snack-bar.
  */
+// TODO: Change `any` type to `unknown` in a breaking change.
 export class MatSnackBarConfig<D = any> {
   /** The politeness level for the MatAriaLiveAnnouncer announcement. */
   politeness?: AriaLivePoliteness = 'polite';
