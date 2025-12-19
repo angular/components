@@ -858,7 +858,6 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
-    readonly focusable: SignalLike<boolean>;
     readonly id: SignalLike<string>;
     readonly index: SignalLike<number>;
     // (undocumented)
