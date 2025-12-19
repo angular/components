@@ -108,7 +108,11 @@ export class ListNavigation<T extends ListNavigationItem> {
     const items = opts?.items ?? this.inputs.items();
     const itemCount = items.length;
     const activeItem = this.inputs.focusManager.inputs.activeItem();
-    const startIndex = activeItem ? items.indexOf(activeItem) : -1;
+    const startIndex =
+      opts?.items && activeItem
+        ? items.indexOf(activeItem)
+        : this.inputs.focusManager.activeIndex();
+
     const step = (i: number) =>
       this.inputs.wrap() ? (i + delta + itemCount) % itemCount : i + delta;
 
