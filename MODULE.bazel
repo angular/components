@@ -56,7 +56,7 @@ rules_ts_ext.deps(
 use_repo(rules_ts_ext, **{"npm_typescript": "components_npm_typescript"})
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(node_version = "22.12.0")
+node.toolchain(node_version_from_nvmrc = "//:.nvmrc")
 use_repo(node, "nodejs_toolchains")
 
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
