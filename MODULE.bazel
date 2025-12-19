@@ -56,10 +56,15 @@ rules_ts_ext.deps(
 use_repo(rules_ts_ext, **{"npm_typescript": "components_npm_typescript"})
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(node_version = "22.12.0")
+node.toolchain(node_version_from_nvmrc = "//:.nvmrc")
 use_repo(node, "nodejs_toolchains")
 
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+pnpm.pnpm(
+    name = "pnpm",
+    pnpm_version = "10.26.0",
+    pnpm_version_integrity = "sha512-Oz9scl6+cSUGwKsa1BM8+GsfS2h+/85iqbOLTXLjlUJC5kMZD8UfoWQpScc19APevUT1yw7dZXq+Y6i2p+HkAg==",
+)
 use_repo(pnpm, "pnpm")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
