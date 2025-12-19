@@ -10,12 +10,7 @@ import {ComboboxInputs, ComboboxPattern} from './combobox';
 import {OptionPattern} from '../listbox/option';
 import {ComboboxListboxPattern} from '../listbox/combobox-listbox';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {
-  SignalLike,
-  signal,
-  WritableSignalLike,
-  computed,
-} from '../behaviors/signal-like/signal-like';
+import {SignalLike, signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ModifierKeys} from '@angular/cdk/testing';
 import {TreeItemPattern} from '../tree/tree';
 import {ComboboxTreePattern} from '../tree/combobox-tree';

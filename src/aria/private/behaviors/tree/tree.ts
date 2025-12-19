@@ -13,7 +13,6 @@ import {
   ListNavigation,
   ListNavigationInputs,
   ListNavigationItem,
-  ListNavigationOpts,
 } from '../list-navigation/list-navigation';
 import {
   ListSelection,
