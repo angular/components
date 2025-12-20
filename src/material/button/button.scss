@@ -327,6 +327,3 @@ $fallbacks: m3-button.get-tokens();
   $offset: calc(#{$border-width} + 3px);
   margin: calc(#{$offset} * -1);
 }
-
-// Import Borze Design System Button Styles
-@use './borze-button';
