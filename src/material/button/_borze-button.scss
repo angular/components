@@ -1,0 +1,285 @@
+/**
+ * Borze Design System Button Styles
+ * Based on Figma Design: EB-DESIGN-SYSTEM
+ * Node ID: 305-2731
+ */
+
+// Borze Design System Colors
+$borze-primary-default: #006c35;
+$borze-primary-hover: #026030;
+$borze-primary-active: #203124;
+$borze-border-selected: #11b753;
+$borze-border-focus: #11b753;
+$borze-focus-button-focus: #32e87b;
+$borze-text-inverse: white;
+$borze-text-accent-green: #32e87b;
+$borze-text-selected: #11b753;
+$borze-text-brand: #026030;
+$borze-text-link: #11b753;
+$borze-text-link-pressed: #026030;
+$borze-text-disabled: rgba(134, 153, 169, 0.8);
+$borze-text-link-disabled: rgba(17, 183, 83, 0.5);
+$borze-background-disabled: rgba(175, 254, 206, 0.5);
+$borze-border: #dfe3e9;
+
+// Spacing tokens
+$space-2: 4px;
+$space-3: 8px;
+$space-4: 12px;
+$space-5: 16px;
+
+// Radius tokens
+$radius-3: 8px;
+
+// Shadow
+$shadow-xs: 0px 1px 2px 0px rgba(10, 13, 18, 0.05);
+
+// Typography - DM Sans
+$font-dm-sans-bold: 'DM Sans', sans-serif;
+$font-dm-sans-semibold: 'DM Sans', sans-serif;
+
+// Button Heights
+$height-large: 44px;
+$height-medium: 40px;
+$height-small: 32px; // Approximate from design
+
+// Override Material Button Styles for Borze Design System
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-tonal-button {
+  font-family: $font-dm-sans-bold;
+  border-radius: $radius-3 !important;
+  box-shadow: $shadow-xs;
+  transition: all 0.2s ease;
+  
+  // Remove default Material styles
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+// Primary Button (Filled) - Large
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button[color="primary"],
+.mat-mdc-raised-button[color="primary"],
+button[matButton="filled"].mat-primary,
+button[matButton="filled"][color="primary"] {
+  background-color: $borze-primary-default !important;
+  border: 1px solid $borze-border-selected !important;
+  color: $borze-text-inverse !important;
+  height: $height-large !important;
+  padding: 0 $space-5 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 24px !important;
+  
+  &:hover:not(:disabled):not(.mat-mdc-button-disabled) {
+    background-color: $borze-primary-hover !important;
+    border-color: $borze-border-selected !important;
+  }
+  
+  &:focus-visible:not(:disabled):not(.mat-mdc-button-disabled) {
+    background-color: $borze-primary-default !important;
+    border: 2px solid $borze-focus-button-focus !important;
+    outline: none !important;
+  }
+  
+  &:active:not(:disabled):not(.mat-mdc-button-disabled) {
+    background-color: $borze-primary-active !important;
+    border-color: $borze-border !important;
+  }
+  
+  &:disabled,
+  &.mat-mdc-button-disabled {
+    background-color: $borze-background-disabled !important;
+    border: none !important;
+    color: $borze-text-disabled !important;
+    box-shadow: none !important;
+  }
+}
+
+// Secondary Button (Outlined) - Large
+.mat-mdc-outlined-button.mat-primary,
+.mat-mdc-outlined-button[color="primary"],
+button[matButton="outlined"].mat-primary,
+button[matButton="outlined"][color="primary"] {
+  background-color: transparent !important;
+  border: 2px solid $borze-border-selected !important;
+  color: $borze-text-accent-green !important;
+  height: $height-large !important;
+  padding: 0 $space-5 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 24px !important;
+  
+  &:hover:not(:disabled):not(.mat-mdc-button-disabled) {
+    border-color: $borze-border-focus !important;
+    color: $borze-text-selected !important;
+  }
+  
+  &:focus-visible:not(:disabled):not(.mat-mdc-button-disabled) {
+    border: 3px solid $borze-focus-button-focus !important;
+    outline: none !important;
+  }
+  
+  &:active:not(:disabled):not(.mat-mdc-button-disabled) {
+    border-color: $borze-primary-active !important;
+    color: $borze-text-brand !important;
+  }
+  
+  &:disabled,
+  &.mat-mdc-button-disabled {
+    border: 2px solid $borze-text-link-disabled !important;
+    color: $borze-text-link-disabled !important;
+  }
+}
+
+// Tertiary Button (Text) - Large
+.mat-mdc-button.mat-primary,
+.mat-mdc-button[color="primary"],
+button[matButton="text"].mat-primary,
+button[matButton="text"][color="primary"],
+button[matButton].mat-primary:not([matButton="filled"]):not([matButton="outlined"]):not([matButton="elevated"]):not([matButton="tonal"]),
+button[matButton][color="primary"]:not([matButton="filled"]):not([matButton="outlined"]):not([matButton="elevated"]):not([matButton="tonal"]) {
+  background-color: transparent !important;
+  border: none !important;
+  color: $borze-text-link !important;
+  height: $height-large !important;
+  padding: 0 $space-5 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 24px !important;
+  box-shadow: none !important;
+  
+  &:hover:not(:disabled):not(.mat-mdc-button-disabled) {
+    color: $borze-text-link-pressed !important;
+  }
+  
+  &:focus-visible:not(:disabled):not(.mat-mdc-button-disabled) {
+    border: 3px solid $borze-border-focus !important;
+    outline: none !important;
+  }
+  
+  &:active:not(:disabled):not(.mat-mdc-button-disabled) {
+    color: $borze-text-link-pressed !important;
+  }
+  
+  &:disabled,
+  &.mat-mdc-button-disabled {
+    color: $borze-text-link-disabled !important;
+  }
+}
+
+// Medium Size Buttons
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button {
+  &.mat-primary {
+    // Medium size can be controlled via density or explicit class
+    &.mat-mdc-button-medium,
+    &[style*="height: 40px"] {
+      height: $height-medium;
+      padding: 0 $space-5;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+.mat-mdc-outlined-button {
+  &.mat-primary {
+    &.mat-mdc-button-medium,
+    &[style*="height: 40px"] {
+      height: $height-medium;
+      padding: 0 $space-5;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+.mat-mdc-button {
+  &.mat-primary {
+    &.mat-mdc-button-medium,
+    &[style*="height: 40px"] {
+      height: $height-medium;
+      padding: 0 $space-5;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+// Small Size Buttons
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button {
+  &.mat-primary {
+    &.mat-mdc-button-small,
+    &[style*="height: 32px"] {
+      height: $height-small;
+      padding: 0 $space-4;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+.mat-mdc-outlined-button {
+  &.mat-primary {
+    &.mat-mdc-button-small,
+    &[style*="height: 32px"] {
+      height: $height-small;
+      padding: 0 $space-4;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+.mat-mdc-button {
+  &.mat-primary {
+    &.mat-mdc-button-small,
+    &[style*="height: 32px"] {
+      height: $height-small;
+      padding: 0 $space-4;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+  }
+}
+
+// Override ripple colors
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  &.mat-primary {
+    .mat-ripple-element {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .mat-mdc-button-persistent-ripple::before {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// Ensure focus indicator matches design
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  &.mat-primary {
+    .mat-focus-indicator::before {
+      border-color: $borze-focus-button-focus;
+    }
+  }
+}
+

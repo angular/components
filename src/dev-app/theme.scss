@@ -33,6 +33,9 @@ $candy-app-theme: mat.m2-define-light-theme((
 
 @include mat.typography-hierarchy($candy-app-theme);
 
+// Import Borze Design System Button Styles after Material themes to ensure overrides
+@use '../material/button/borze-button';
+
 .demo-strong-focus {
   // Note: we can theme the indicators directly through `strong-focus-indicators` as well.
   // Use the theme so we have some coverage over the entire API surface.
