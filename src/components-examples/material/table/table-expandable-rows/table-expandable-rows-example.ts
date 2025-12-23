@@ -16,7 +16,7 @@ export class TableExpandableRowsExample {
   dataSource = ELEMENT_DATA;
   columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
-  expandedElement: PeriodicElement | null;
+  expandedElement: PeriodicElement | null = null;
 
   /** Checks whether an element is expanded. */
   isExpanded(element: PeriodicElement) {

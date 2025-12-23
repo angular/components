@@ -95,7 +95,7 @@ export interface SafeResourceUrlWithIconOptions {
  * @docs-private
  */
 class SvgIconConfig {
-  svgElement: SVGElement | null;
+  svgElement: SVGElement | null = null;
 
   constructor(
     public url: SafeResourceUrl,

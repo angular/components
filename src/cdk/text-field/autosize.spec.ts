@@ -390,7 +390,7 @@ const textareaStyleReset = `
   imports: [FormsModule, TextFieldModule],
 })
 class AutosizeTextAreaWithContent {
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  @ViewChild('autosize') autosize!: CdkTextareaAutosize;
   minRows: number | null = null;
   maxRows: number | null = null;
   content: string = '';

@@ -83,19 +83,19 @@ export class MatSelectionList
   private _renderer = inject(Renderer2);
 
   private _initialized = false;
-  private _keyManager: FocusKeyManager<MatListOption>;
+  private _keyManager!: FocusKeyManager<MatListOption>;
   private _listenerCleanups: (() => void)[] | undefined;
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
 
   /** Whether the list has been destroyed. */
-  private _isDestroyed: boolean;
+  private _isDestroyed = false;
 
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
 
-  @ContentChildren(MatListOption, {descendants: true}) _items: QueryList<MatListOption>;
+  @ContentChildren(MatListOption, {descendants: true}) _items!: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
@@ -154,7 +154,7 @@ export class MatSelectionList
   selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
   /** Keeps track of the currently-selected value. */
-  _value: string[] | null;
+  _value: string[] | null = null;
 
   /** View to model callback that should be called if the list or its options lost focus. */
   _onTouched: () => void = () => {};

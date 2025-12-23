@@ -1070,14 +1070,14 @@ describe('MatRadioDefaultOverrides', () => {
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadiosInsideRadioGroup {
-  labelPos: 'before' | 'after';
+  labelPos!: 'before' | 'after';
   isFirstDisabled = false;
   isGroupDisabled = false;
   isGroupRequired = false;
   isGroupDisabledInteractive = false;
   groupValue: string | null = null;
   disableRipple = false;
-  color: ThemePalette;
+  color!: ThemePalette;
   isFirstShown = true;
 }
 
@@ -1133,14 +1133,14 @@ class StandaloneRadioButtons {
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioGroupWithNgModel {
-  modelValue: string;
+  modelValue!: string;
   groupName = 'radio-group';
   options = [
     {label: 'Vanilla', value: 'vanilla'},
     {label: 'Chocolate', value: 'chocolate'},
     {label: 'Strawberry', value: 'strawberry'},
   ];
-  lastEvent: MatRadioChange;
+  lastEvent!: MatRadioChange;
 }
 
 @Component({
@@ -1154,7 +1154,7 @@ class DisableableRadioButton {
   disabled = false;
   disabledInteractive = false;
 
-  @ViewChild(MatRadioButton) matRadioButton: MatRadioButton;
+  @ViewChild(MatRadioButton) matRadioButton!: MatRadioButton;
 }
 
 @Component({
@@ -1167,7 +1167,7 @@ class DisableableRadioButton {
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class RadioGroupWithFormControl {
-  @ViewChild(MatRadioGroup) group: MatRadioGroup;
+  @ViewChild(MatRadioGroup) group!: MatRadioGroup;
   formControl = new FormControl('');
 }
 
@@ -1176,7 +1176,7 @@ class RadioGroupWithFormControl {
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class FocusableRadioButton {
-  tabIndex: number;
+  tabIndex!: number;
   disabled = false;
 }
 
@@ -1257,8 +1257,8 @@ class RadioButtonWithPredefinedAriaAttributes {}
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class PreselectedRadioWithStaticValueAndNgIf {
-  @ViewChild('preselectedGroup', {read: MatRadioGroup}) preselectedGroup: MatRadioGroup;
-  @ViewChild('preselectedRadio', {read: MatRadioButton}) preselectedRadio: MatRadioButton;
+  @ViewChild('preselectedGroup', {read: MatRadioGroup}) preselectedGroup!: MatRadioGroup;
+  @ViewChild('preselectedRadio', {read: MatRadioButton}) preselectedRadio!: MatRadioButton;
 
   controls = {
     predecessor: new FormControl('predecessor'),

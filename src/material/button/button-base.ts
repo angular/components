@@ -141,7 +141,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   /** Tab index for the button. */
   @Input({transform: transformTabIndex})
-  tabIndex: number;
+  tabIndex!: number;
 
   /**
    * Backwards-compatibility input that handles pre-existing `[tabindex]` bindings.

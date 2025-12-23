@@ -4,7 +4,7 @@ import {
   waitForAngularReady,
 } from '../../testing/selenium-webdriver';
 import * as webdriver from 'selenium-webdriver';
-import {crossEnvironmentSpecs} from './cross-environment.spec';
+import {crossEnvironmentSpecs} from './cross-environment-tests';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {Options, setDefaultService, ServiceBuilder} from 'selenium-webdriver/chrome';
 import path from 'path';

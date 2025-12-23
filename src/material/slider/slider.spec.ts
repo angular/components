@@ -1928,7 +1928,7 @@ class RangeSliderWithOneWayBinding {
   imports: [MatSliderModule, FormsModule],
 })
 class SliderWithNgModel {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   val: number | undefined = 0;
 }
 
@@ -1943,7 +1943,7 @@ class SliderWithNgModel {
   imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModel {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   startVal: number | undefined = 0;
   endVal: number | undefined = 100;
 }
@@ -1960,7 +1960,7 @@ class RangeSliderWithNgModel {
   imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModelEdgeCase {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   startValue: number = -0.7;
   endValue: number = -0.3;
 }
@@ -2015,8 +2015,8 @@ class SliderWithTwoWayBinding {
   imports: [MatSliderModule],
 })
 class RangeSliderWithTwoWayBinding {
-  @ViewChild(MatSlider) slider: MatSlider;
-  @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
+  @ViewChild(MatSlider) slider!: MatSlider;
+  @ViewChildren(MatSliderThumb) sliderInputs!: QueryList<MatSliderThumb>;
   startValue = 0;
   endValue = 100;
 }
@@ -2031,7 +2031,7 @@ class RangeSliderWithTwoWayBinding {
   imports: [MatSliderModule],
 })
 class SliderWithTickMarks {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
 }
 
 @Component({
@@ -2045,7 +2045,7 @@ class SliderWithTickMarks {
   imports: [MatSliderModule],
 })
 class RangeSliderWithTickMarks {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
 }
 
 @Component({

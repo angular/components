@@ -58,26 +58,26 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   private _listenerCleanups: (() => void)[] | undefined;
 
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
-  @Input() discrete: boolean;
+  @Input() discrete: boolean = false;
 
   /** Indicates which slider thumb this input corresponds to. */
-  @Input() thumbPosition: _MatThumb;
+  @Input() thumbPosition!: _MatThumb;
 
   /** The display value of the slider thumb. */
-  @Input() valueIndicatorText: string;
+  @Input() valueIndicatorText!: string;
 
   /** The MatRipple for this slider thumb. */
-  @ViewChild(MatRipple) readonly _ripple: MatRipple;
+  @ViewChild(MatRipple) readonly _ripple!: MatRipple;
 
   /** The slider thumb knob. */
-  @ViewChild('knob') _knob: ElementRef<HTMLElement>;
+  @ViewChild('knob') _knob!: ElementRef<HTMLElement>;
 
   /** The slider thumb value indicator container. */
   @ViewChild('valueIndicatorContainer')
-  _valueIndicatorContainer: ElementRef<HTMLElement>;
+  _valueIndicatorContainer!: ElementRef<HTMLElement>;
 
   /** The slider input corresponding to this slider thumb. */
-  private _sliderInput: _MatSliderThumb;
+  private _sliderInput!: _MatSliderThumb;
 
   /** The native html element of the slider input corresponding to this thumb. */
   private _sliderInputEl: HTMLInputElement | undefined;

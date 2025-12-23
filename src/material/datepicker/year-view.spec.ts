@@ -399,9 +399,9 @@ describe('MatYearView', () => {
 class StandardYearView {
   date = new Date(2017, JAN, 5);
   selected = new Date(2017, MAR, 10);
-  selectedMonth: Date;
+  selectedMonth!: Date;
 
-  @ViewChild(MatYearView) yearView: MatYearView<Date>;
+  @ViewChild(MatYearView) yearView!: MatYearView<Date>;
 }
 
 @Component({

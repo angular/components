@@ -21,6 +21,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestSubComponent {
-  @Input() title: string;
-  @Input() items: string[];
+  @Input() title = '';
+  @Input() items: string[] = [];
 }

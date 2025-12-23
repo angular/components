@@ -7,7 +7,6 @@
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { untracked } from '@angular/core/primitives/signals';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export interface AccordionGroupInputs extends Omit<ListNavigationInputs<AccordionTriggerPattern> & ListFocusInputs<AccordionTriggerPattern> & Omit<ListExpansionInputs, 'items'>, 'focusMode'> {
@@ -338,17 +337,17 @@ export class GridCellPattern implements GridCell {
     // (undocumented)
     readonly inputs: GridCellInputs;
     readonly isActivated: SignalLike<boolean>;
-    readonly isFocused: WritableSignal<boolean>;
-    readonly keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    readonly isFocused: WritableSignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly multiWidgetMode: SignalLike<boolean>;
     readonly navigationActivated: WritableSignalLike<boolean>;
     readonly navigationBehavior: ListNavigation<GridCellWidgetPattern>;
     readonly navigationDisabled: SignalLike<boolean>;
-    readonly nextKey: _angular_core.Signal<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly prevKey: _angular_core.Signal<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly rowSpan: SignalLike<number>;
     readonly selectable: SignalLike<boolean>;
     readonly selected: WritableSignalLike<boolean>;
@@ -660,16 +659,16 @@ export interface OptionInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable
 // @public
 export class OptionPattern<V> {
     constructor(args: OptionInputs<V>);
-    active: _angular_core.Signal<boolean>;
+    active: SignalLike<boolean>;
     disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement | undefined>;
     id: SignalLike<string>;
-    index: _angular_core.Signal<number>;
+    index: SignalLike<number>;
     listbox: SignalLike<ListboxPattern$1<V> | undefined>;
     searchTerm: SignalLike<string>;
     selectable: () => boolean;
-    selected: _angular_core.Signal<boolean | undefined>;
-    tabIndex: _angular_core.Signal<0 | -1 | undefined>;
+    selected: SignalLike<boolean | undefined>;
+    tabIndex: SignalLike<0 | -1 | undefined>;
     value: SignalLike<V>;
 }
 

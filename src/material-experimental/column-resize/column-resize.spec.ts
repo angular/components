@@ -158,7 +158,7 @@ const MOUSE_START_OFFSET = 1000;
 
 @Directive()
 abstract class BaseTestComponent {
-  @ViewChild('table') table: ElementRef;
+  @ViewChild('table') table!: ElementRef;
 
   abstract columnResize: AbstractMatColumnResize;
 
@@ -279,7 +279,7 @@ abstract class BaseTestComponentRtl extends BaseTestComponent {
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
 })
 class MatResizeTest extends BaseTestComponent {
-  @ViewChild(MatColumnResize) columnResize: AbstractMatColumnResize;
+  @ViewChild(MatColumnResize) columnResize!: AbstractMatColumnResize;
 }
 
 @Component({
@@ -294,7 +294,7 @@ class MatResizeOnPushTest extends MatResizeTest {}
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
 })
 class MatResizeDefaultTest extends BaseTestComponent {
-  @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
+  @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
 }
 
 @Component({
@@ -302,7 +302,7 @@ class MatResizeDefaultTest extends BaseTestComponent {
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
 })
 class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
-  @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
+  @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
 }
 
 @Component({
@@ -310,7 +310,7 @@ class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
 })
 class MatResizeFlexTest extends BaseTestComponent {
-  @ViewChild(MatColumnResizeFlex) columnResize: AbstractMatColumnResize;
+  @ViewChild(MatColumnResizeFlex) columnResize!: AbstractMatColumnResize;
 }
 
 @Component({
@@ -319,7 +319,7 @@ class MatResizeFlexTest extends BaseTestComponent {
 })
 class MatResizeDefaultFlexTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
-  columnResize: AbstractMatColumnResize;
+  columnResize!: AbstractMatColumnResize;
 }
 
 @Component({
@@ -328,7 +328,7 @@ class MatResizeDefaultFlexTest extends BaseTestComponent {
 })
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
-  columnResize: AbstractMatColumnResize;
+  columnResize!: AbstractMatColumnResize;
 }
 
 interface PeriodicElement {

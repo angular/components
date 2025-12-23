@@ -158,7 +158,7 @@ export class CustomHeaderNgContent<D> {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter);
 
   @ViewChild(MatCalendarHeader)
-  header: MatCalendarHeader<D>;
+  header!: MatCalendarHeader<D>;
 
   todayClicked() {
     let calendar = this.header.calendar;
@@ -189,17 +189,17 @@ export class CustomHeaderNgContent<D> {
   ],
 })
 export class DatepickerDemo {
-  touch: boolean;
-  filterOdd: boolean;
-  yearView: boolean;
-  inputDisabled: boolean;
-  datepickerDisabled: boolean;
-  minDate: Date;
-  maxDate: Date;
-  startAt: Date;
+  touch = false;
+  filterOdd = false;
+  yearView = false;
+  inputDisabled = false;
+  datepickerDisabled = false;
+  minDate!: Date;
+  maxDate!: Date;
+  startAt!: Date;
   date: any;
-  lastDateInput: Date | null;
-  lastDateChange: Date | null;
+  lastDateInput: Date | null = null;
+  lastDateChange: Date | null = null;
   color: ThemePalette;
   showActions = false;
 

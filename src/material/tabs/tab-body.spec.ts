@@ -139,10 +139,10 @@ describe('MatTabBody', () => {
 })
 class SimpleTabBodyApp implements AfterViewInit {
   content = signal<TemplatePortal | undefined>(undefined);
-  position: number;
+  position!: number;
 
-  @ViewChild(MatTabBody) tabBody: MatTabBody;
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(MatTabBody) tabBody!: MatTabBody;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   private readonly _viewContainerRef = inject(ViewContainerRef);
 

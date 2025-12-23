@@ -43,7 +43,7 @@ export class LiveAnnouncer implements OnDestroy {
   private _liveElement: HTMLElement;
   private _document = inject(DOCUMENT);
   private _sanitizer = inject(DomSanitizer);
-  private _previousTimeout: ReturnType<typeof setTimeout>;
+  private _previousTimeout: ReturnType<typeof setTimeout> | undefined;
   private _currentPromise: Promise<void> | undefined;
   private _currentResolve: (() => void) | undefined;
 
@@ -250,7 +250,7 @@ export class CdkAriaLive implements OnDestroy {
     if (this._politeness === 'off') {
       if (this._subscription) {
         this._subscription.unsubscribe();
-        this._subscription = null;
+        this._subscription = undefined;
       }
     } else if (!this._subscription) {
       this._subscription = this._ngZone.runOutsideAngular(() => {
@@ -271,10 +271,10 @@ export class CdkAriaLive implements OnDestroy {
   private _politeness: AriaLivePoliteness = 'polite';
 
   /** Time in milliseconds after which to clear out the announcer element. */
-  @Input('cdkAriaLiveDuration') duration: number;
+  @Input('cdkAriaLiveDuration') duration!: number;
 
   private _previousAnnouncedText?: string;
-  private _subscription: Subscription | null;
+  private _subscription: Subscription | undefined;
 
   constructor(...args: unknown[]);
 
@@ -283,8 +283,6 @@ export class CdkAriaLive implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-    }
+    this._subscription?.unsubscribe();
   }
 }

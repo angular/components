@@ -464,8 +464,8 @@ class TestApp {
   clickCount = 0;
   isDisabled = false;
   rippleDisabled = false;
-  buttonColor: ThemePalette;
-  tabIndex: number;
+  buttonColor!: ThemePalette;
+  tabIndex!: number;
   extended = false;
   disabledInteractive = false;
   appearance: MatButtonAppearance = 'text';

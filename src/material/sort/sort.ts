@@ -82,7 +82,7 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
   readonly _stateChanges = new Subject<void>();
 
   /** The id of the most recently sorted MatSortable. */
-  @Input('matSortActive') active: string;
+  @Input('matSortActive') active!: string;
 
   /**
    * The direction to set when an MatSortable is initially sorted.
@@ -113,7 +113,7 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
    * May be overridden by the MatSortable's disable clear input.
    */
   @Input({alias: 'matSortDisableClear', transform: booleanAttribute})
-  disableClear: boolean;
+  disableClear!: boolean;
 
   /** Whether the sortable is disabled. */
   @Input({alias: 'matSortDisabled', transform: booleanAttribute})

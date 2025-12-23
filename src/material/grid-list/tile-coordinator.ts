@@ -36,7 +36,7 @@ export interface Tile {
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
-  tracker: number[];
+  tracker!: number[];
 
   /** Index at which the search for the next gap will start. */
   columnIndex: number = 0;
@@ -61,7 +61,7 @@ export class TileCoordinator {
   }
 
   /** The computed (row, col) position of each tile (the output). */
-  positions: TilePosition[];
+  positions!: TilePosition[];
 
   /**
    * Updates the tile positions.

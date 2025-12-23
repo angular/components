@@ -64,11 +64,11 @@ export class MatList extends MatListBase {}
   imports: [CdkObserveContent],
 })
 export class MatListItem extends MatListItemBase {
-  @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;
-  @ContentChildren(MatListItemTitle, {descendants: true}) _titles: QueryList<MatListItemTitle>;
-  @ContentChildren(MatListItemMeta, {descendants: true}) _meta: QueryList<MatListItemMeta>;
-  @ViewChild('unscopedContent') _unscopedContent: ElementRef<HTMLSpanElement>;
-  @ViewChild('text') _itemText: ElementRef<HTMLElement>;
+  @ContentChildren(MatListItemLine, {descendants: true}) _lines!: QueryList<MatListItemLine>;
+  @ContentChildren(MatListItemTitle, {descendants: true}) _titles!: QueryList<MatListItemTitle>;
+  @ContentChildren(MatListItemMeta, {descendants: true}) _meta!: QueryList<MatListItemMeta>;
+  @ViewChild('unscopedContent') _unscopedContent!: ElementRef<HTMLSpanElement>;
+  @ViewChild('text') _itemText!: ElementRef<HTMLElement>;
 
   /** Indicates whether an item in a `<mat-nav-list>` is the currently active page. */
   @Input()

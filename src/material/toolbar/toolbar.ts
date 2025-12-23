@@ -59,7 +59,7 @@ export class MatToolbar implements AfterViewInit {
   @Input() color?: string | null;
 
   /** Reference to all toolbar row elements that have been projected. */
-  @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
+  @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows!: QueryList<MatToolbarRow>;
 
   constructor(...args: unknown[]);
   constructor() {}

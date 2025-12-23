@@ -98,7 +98,7 @@ describe('MenuGroup', () => {
   imports: [CdkMenuModule],
 })
 class CheckboxMenu {
-  @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
+  @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
 }
 
 @Component({
@@ -142,5 +142,5 @@ class CheckboxMenu {
   imports: [CdkMenuModule],
 })
 class MenuWithMultipleRadioGroups {
-  @ViewChild(CdkMenuItem) readonly trigger: CdkMenuItem;
+  @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
 }

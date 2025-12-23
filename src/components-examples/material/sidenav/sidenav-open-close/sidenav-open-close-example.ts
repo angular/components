@@ -13,7 +13,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 })
 export class SidenavOpenCloseExample {
   events: string[] = [];
-  opened: boolean;
+  opened = false;
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

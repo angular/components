@@ -12,6 +12,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [MatFormFieldModule, MatInputModule, TextFieldModule, MatButtonModule],
 })
 export class TextFieldAutofillDirectiveExample {
-  firstNameAutofilled: boolean;
-  lastNameAutofilled: boolean;
+  firstNameAutofilled = false;
+  lastNameAutofilled = false;
 }

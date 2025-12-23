@@ -34,7 +34,7 @@ export const ELEMENT_DATA: PeriodicElement[] = [
   imports: [CdkDropList, CdkDrag, MatTableModule, MatIconModule],
 })
 export class CdkDragDropTableExample {
-  @ViewChild('table', {static: true}) table: MatTable<PeriodicElement>;
+  @ViewChild('table', {static: true}) table!: MatTable<PeriodicElement>;
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'quantity'];
   dataSource = ELEMENT_DATA;

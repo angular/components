@@ -164,7 +164,7 @@ class SingleMenuItem {}
   imports: [CdkMenuModule, FakeMatIcon],
 })
 class MenuItemWithIcon {
-  typeahead: string;
+  typeahead: string | null = null;
 }
 
 @Component({
@@ -179,7 +179,7 @@ class MenuItemWithIcon {
   imports: [CdkMenuModule],
 })
 class MenuItemWithIconClass {
-  typeahead: string;
+  typeahead: string | null = null;
 }
 
 @Component({
@@ -210,5 +210,5 @@ class MenuItemWithBoldElement {}
   imports: [CdkMenuModule, FakeMatIcon],
 })
 class MenuItemWithMultipleNestings {
-  typeahead: string;
+  typeahead = '';
 }

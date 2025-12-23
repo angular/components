@@ -109,10 +109,10 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   }
 
   /** Height of the header while the panel is expanded. */
-  @Input() expandedHeight: string;
+  @Input() expandedHeight!: string;
 
   /** Height of the header while the panel is collapsed. */
-  @Input() collapsedHeight: string;
+  @Input() collapsedHeight!: string;
 
   /** Tab index of the header. */
   @Input({

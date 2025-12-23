@@ -28,7 +28,7 @@ export function createBlockScrollStrategy(injector: Injector): BlockScrollStrate
  */
 export class BlockScrollStrategy implements ScrollStrategy {
   private _previousHTMLStyles = {top: '', left: ''};
-  private _previousScrollPosition: {top: number; left: number};
+  private _previousScrollPosition: {top: number; left: number} | undefined;
   private _isEnabled = false;
   private _document: Document;
 
@@ -87,7 +87,7 @@ export class BlockScrollStrategy implements ScrollStrategy {
         htmlStyle.scrollBehavior = bodyStyle.scrollBehavior = 'auto';
       }
 
-      window.scroll(this._previousScrollPosition.left, this._previousScrollPosition.top);
+      window.scroll(this._previousScrollPosition!.left, this._previousScrollPosition!.top);
 
       if (scrollBehaviorSupported) {
         htmlStyle.scrollBehavior = previousHtmlScrollBehavior;

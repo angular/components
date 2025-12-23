@@ -134,8 +134,8 @@ function getSortedSiblings(item: Element) {
   imports: [CdkDropList, CdkDrag],
 })
 class DraggableInHorizontalWrappingDropZone {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance!: CdkDropList;
   items = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'];
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
     moveItemInArray(this.items, event.previousIndex, event.currentIndex);

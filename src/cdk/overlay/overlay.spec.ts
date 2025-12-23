@@ -1131,14 +1131,14 @@ class PizzaMsg {}
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);
 
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  @ViewChild(CdkPortal) templatePortal!: CdkPortal;
 }
 
 class FakePositionStrategy implements PositionStrategy {
-  element: HTMLElement;
+  element: HTMLElement | undefined;
 
   apply(): void {
-    this.element.classList.add('fake-positioned');
+    this.element?.classList.add('fake-positioned');
   }
 
   attach(overlayRef: OverlayRef) {
@@ -1150,7 +1150,7 @@ class FakePositionStrategy implements PositionStrategy {
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayRef;
+  overlayRef: OverlayRef | undefined;
 
   attach(overlayRef: OverlayRef) {
     this.overlayRef = overlayRef;

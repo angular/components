@@ -27,16 +27,16 @@ export class DialogRef<R = unknown, C = unknown> {
    * Instance of component opened into the dialog. Will be
    * null when the dialog is opened using a `TemplateRef`.
    */
-  readonly componentInstance: C | null;
+  readonly componentInstance: C | null = null;
 
   /**
    * `ComponentRef` of the component opened into the dialog. Will be
    * null when the dialog is opened using a `TemplateRef`.
    */
-  readonly componentRef: ComponentRef<C> | null;
+  readonly componentRef: ComponentRef<C> | null = null;
 
   /** Instance of the container that is rendering out the dialog content. */
-  readonly containerInstance: DialogContainer;
+  readonly containerInstance!: DialogContainer;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined;

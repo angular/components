@@ -4,7 +4,7 @@ import {TestbedHarnessEnvironment} from '../../testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {provideZoneChangeDetection} from '@angular/core';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
-import {crossEnvironmentSpecs} from './cross-environment.spec';
+import {crossEnvironmentSpecs} from './cross-environment-tests';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {TestMainComponent} from './test-main-component';
@@ -63,7 +63,7 @@ describe('TestbedHarnessEnvironment', () => {
         expect(subcomponents[0]).not.toBeNull();
         const globalEl = await subcomponents[0]!.globalElement();
         expect(globalEl).not.toBeNull();
-        expect(await globalEl.text()).toBe('Hello Yi from Angular 2!');
+        expect(await globalEl.text()).toBe('Hello Yi from Angular!');
       });
 
       it('should be able to wait for tasks outside of Angular within native async/await', async () => {

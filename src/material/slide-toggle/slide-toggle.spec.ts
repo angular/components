@@ -654,6 +654,8 @@ describe('MatSlideToggle with forms', () => {
 
     it('should update checked state on click if control is checked initially', fakeAsync(() => {
       fixture = TestBed.createComponent(SlideToggleWithModel);
+      fixture.detectChanges();
+
       slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.componentInstance;
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
 
@@ -858,15 +860,15 @@ class SlideToggleBasic {
   isRequired = false;
   disableRipple = false;
   slideChecked = false;
-  slideColor: string;
-  slideId: string;
-  slideName: string | null;
-  slideLabel: string | null;
-  slideLabelledBy: string | null;
-  slideAriaDescribedBy: string;
-  slideTabindex: number;
-  lastEvent: MatSlideToggleChange;
-  labelPosition: 'before' | 'after';
+  slideColor!: string;
+  slideId!: string;
+  slideName: string | null = null;
+  slideLabel: string | null = null;
+  slideLabelledBy: string | null = null;
+  slideAriaDescribedBy!: string;
+  slideTabindex!: number;
+  lastEvent!: MatSlideToggleChange;
+  labelPosition!: 'before' | 'after';
   toggleTriggered = 0;
   dragTriggered = 0;
   direction: Direction = 'ltr';
@@ -933,7 +935,7 @@ class SlideToggleWithTabindexAttr {
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 class SlideToggleWithModelAndChangeEvent {
-  checked: boolean;
+  checked = false;
   onChange: () => void = () => {};
 }
 

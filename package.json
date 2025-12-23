@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.26.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.25.0"
+    "pnpm": "10.26.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -53,7 +53,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "21.1.0-next.2",
+  "version": "21.1.0-next.3",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -76,7 +76,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#6e9e02173ce8b5c0f1694de04135931831e15e70",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#954985485f24f9847b9267e9af7adc7370302d2f",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
@@ -97,7 +97,7 @@
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
     "@types/semver": "^7.3.9",
-    "@types/shelljs": "^0.8.11",
+    "@types/shelljs": "^0.10.0",
     "@types/yargs": "^17.0.8",
     "autoprefixer": "^10.4.2",
     "axe-core": "^4.10.3",
@@ -105,7 +105,7 @@
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.30.0",
     "esbuild": "^0.27.0",
-    "firebase-tools": "14.27.0",
+    "firebase-tools": "15.0.0",
     "fs-extra": "^11.0.0",
     "glob": "^13.0.0",
     "highlight.js": "^11.0.0",

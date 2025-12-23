@@ -297,7 +297,7 @@ export class CdkTable<T>
   protected readonly _elementRef = inject(ElementRef);
   protected readonly _dir = inject(Directionality, {optional: true});
   private _platform = inject(Platform);
-  protected _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
+  protected _viewRepeater!: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
   private readonly _viewportRuler = inject(ViewportRuler);
   private _injector = inject(Injector);
   private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {
@@ -322,10 +322,10 @@ export class CdkTable<T>
   private readonly _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-  private _renderRows: RenderRow<T>[];
+  private _renderRows!: RenderRow<T>[];
 
   /** Subscription that listens for the data provided by the data source. */
-  private _renderChangeSubscription: Subscription | null;
+  private _renderChangeSubscription: Subscription | null = null;
 
   /**
    * Map of all the user's defined columns (header, data, and footer cell template) identified by
@@ -338,27 +338,27 @@ export class CdkTable<T>
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
-  private _rowDefs: CdkRowDef<T>[];
+  private _rowDefs!: CdkRowDef<T>[];
 
   /**
    * Set of all header row definitions that can be used by this table. Populated by the rows
    * gathered by using `ContentChildren` as well as any custom row definitions added to
    * `_customHeaderRowDefs`.
    */
-  private _headerRowDefs: CdkHeaderRowDef[];
+  private _headerRowDefs!: CdkHeaderRowDef[];
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to
    * `_customFooterRowDefs`.
    */
-  private _footerRowDefs: CdkFooterRowDef[];
+  private _footerRowDefs!: CdkFooterRowDef[];
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<RenderRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
-  private _defaultRowDef: CdkRowDef<T> | null;
+  private _defaultRowDef: CdkRowDef<T> | null = null;
 
   /**
    * Column definitions that were defined outside of the direct content children of the table.
@@ -389,7 +389,7 @@ export class CdkTable<T>
   private _customFooterRowDefs = new Set<CdkFooterRowDef>();
 
   /** No data row that was defined outside of the direct content children of the table. */
-  private _customNoDataRow: CdkNoDataRow | null;
+  private _customNoDataRow: CdkNoDataRow | null = null;
 
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
@@ -438,7 +438,7 @@ export class CdkTable<T>
    * Utility class that is responsible for applying the appropriate sticky positioning styles to
    * the table's rows and cells.
    */
-  private _stickyStyler: StickyStyler;
+  private _stickyStyler!: StickyStyler;
 
   /**
    * CSS class added to any row or cell that has sticky positioning applied. May be overridden by
@@ -509,7 +509,7 @@ export class CdkTable<T>
     }
     this._trackByFn = fn;
   }
-  private _trackByFn: TrackByFunction<T>;
+  private _trackByFn!: TrackByFunction<T>;
 
   /**
    * The table's source of data, which can be provided in three ways (in order of complexity):
@@ -541,7 +541,7 @@ export class CdkTable<T>
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _dataSource: CdkTableDataSourceInput<T>;
+  private _dataSource!: CdkTableDataSourceInput<T>;
   /** Emits when the data source changes. */
   readonly _dataSourceChanges = new Subject<CdkTableDataSourceInput<T>>();
   /** Observable that emits the data source's complete data set. */
@@ -613,34 +613,34 @@ export class CdkTable<T>
   });
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
-  _rowOutlet: DataRowOutlet;
-  _headerRowOutlet: HeaderRowOutlet;
-  _footerRowOutlet: FooterRowOutlet;
-  _noDataRowOutlet: NoDataRowOutlet;
+  _rowOutlet!: DataRowOutlet;
+  _headerRowOutlet!: HeaderRowOutlet;
+  _footerRowOutlet!: FooterRowOutlet;
+  _noDataRowOutlet!: NoDataRowOutlet;
 
   /**
    * The column definitions provided by the user that contain what the header, data, and footer
    * cells should render for each column.
    */
-  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs: QueryList<CdkColumnDef>;
+  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs!: QueryList<CdkColumnDef>;
 
   /** Set of data row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs: QueryList<CdkRowDef<T>>;
+  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs!: QueryList<CdkRowDef<T>>;
 
   /** Set of header row definitions that were provided to the table as content children. */
   @ContentChildren(CdkHeaderRowDef, {
     descendants: true,
   })
-  _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
+  _contentHeaderRowDefs!: QueryList<CdkHeaderRowDef>;
 
   /** Set of footer row definitions that were provided to the table as content children. */
   @ContentChildren(CdkFooterRowDef, {
     descendants: true,
   })
-  _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
+  _contentFooterRowDefs!: QueryList<CdkFooterRowDef>;
 
   /** Row definition that will only be rendered if there's no data in the table. */
-  @ContentChild(CdkNoDataRow) _noDataRow: CdkNoDataRow;
+  @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
 
   constructor(...args: unknown[]);
 

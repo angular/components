@@ -83,7 +83,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   private _rerenderSubscription = Subscription.EMPTY;
 
   /** Flag used to filter out space/enter keyup events that originated outside of the view. */
-  private _selectionKeyPressed: boolean;
+  private _selectionKeyPressed: boolean = false;
 
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
@@ -102,7 +102,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       this._init();
     }
   }
-  private _activeDate: D;
+  private _activeDate!: D;
 
   /** The currently selected date. */
   @Input()
@@ -118,7 +118,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
 
     this._setRanges(this._selected);
   }
-  private _selected: DateRange<D> | D | null;
+  private _selected: DateRange<D> | D | null = null;
 
   /** The minimum selectable date. */
   @Input()
@@ -128,7 +128,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   set minDate(value: D | null) {
     this._minDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  private _minDate: D | null = null;
 
   /** The maximum selectable date. */
   @Input()
@@ -138,25 +138,25 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   set maxDate(value: D | null) {
     this._maxDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  private _maxDate: D | null = null;
 
   /** Function used to filter which dates are selectable. */
   @Input() dateFilter: ((date: D) => boolean) | null | undefined;
 
   /** Function that can be used to add custom CSS classes to dates. */
-  @Input() dateClass: MatCalendarCellClassFunction<D>;
+  @Input() dateClass!: MatCalendarCellClassFunction<D>;
 
   /** Start of the comparison range. */
-  @Input() comparisonStart: D | null;
+  @Input() comparisonStart: D | null = null;
 
   /** End of the comparison range. */
-  @Input() comparisonEnd: D | null;
+  @Input() comparisonEnd: D | null = null;
 
   /** ARIA Accessible name of the `<input matStartDate/>` */
-  @Input() startDateAccessibleName: string | null;
+  @Input() startDateAccessibleName: string | null = null;
 
   /** ARIA Accessible name of the `<input matEndDate/>` */
-  @Input() endDateAccessibleName: string | null;
+  @Input() endDateAccessibleName: string | null = null;
 
   /** Origin of active drag, or null when dragging is not active. */
   @Input() activeDrag: MatCalendarUserEvent<D> | null = null;
@@ -181,7 +181,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody!: MatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel = signal('');

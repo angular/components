@@ -49,14 +49,14 @@ export class MatAccordion
   extends CdkAccordion
   implements MatAccordionBase, AfterContentInit, OnDestroy
 {
-  private _keyManager: FocusKeyManager<MatExpansionPanelHeader>;
+  private _keyManager!: FocusKeyManager<MatExpansionPanelHeader>;
 
   /** Headers belonging to this accordion. */
   private _ownHeaders = new QueryList<MatExpansionPanelHeader>();
 
   /** All headers inside the accordion. Includes headers inside nested accordions. */
   @ContentChildren(MatExpansionPanelHeader, {descendants: true})
-  _headers: QueryList<MatExpansionPanelHeader>;
+  _headers!: QueryList<MatExpansionPanelHeader>;
 
   /** Whether the expansion indicator should be hidden. */
   @Input({transform: booleanAttribute})

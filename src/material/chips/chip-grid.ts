@@ -164,7 +164,7 @@ export class MatChipGrid
     this._placeholder = value;
     this.stateChanges.next();
   }
-  protected _placeholder: string;
+  protected _placeholder = '';
 
   /** Whether any chips or the matChipInput inside of this chip-grid has focus. */
   override get focused(): boolean {

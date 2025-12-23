@@ -283,6 +283,6 @@ class ComponentWithDebouncedListener {
   imports: [ObserversModule],
 })
 class UnobservedComponentWithTextContent {
-  @ViewChild('contentEl') contentEl: ElementRef;
+  @ViewChild('contentEl') contentEl!: ElementRef<HTMLElement>;
   text = '';
 }

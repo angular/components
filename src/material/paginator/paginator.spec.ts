@@ -654,12 +654,12 @@ class MatPaginatorApp {
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;
-  disabled: boolean;
+  disabled = false;
   pageEvent = jasmine.createSpy('page event');
-  color: ThemePalette;
+  color!: ThemePalette;
   selectConfig: MatPaginatorSelectConfig = {};
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -674,7 +674,7 @@ class MatPaginatorApp {
   imports: [MatPaginator],
 })
 class MatPaginatorWithoutInputsApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 }
 
 @Component({
@@ -682,7 +682,7 @@ class MatPaginatorWithoutInputsApp {
   imports: [MatPaginator],
 })
 class MatPaginatorWithoutPageSizeApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 }
 
 @Component({
@@ -690,7 +690,7 @@ class MatPaginatorWithoutPageSizeApp {
   imports: [MatPaginator],
 })
 class MatPaginatorWithoutOptionsApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 }
 
 @Component({
@@ -704,7 +704,7 @@ class MatPaginatorWithoutOptionsApp {
   imports: [MatPaginator],
 })
 class MatPaginatorWithStringValues {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 }
 
 @Component({
@@ -712,6 +712,6 @@ class MatPaginatorWithStringValues {
   imports: [MatPaginator],
 })
 class MatPaginatorWithReadonlyOptions {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSizeOptions: readonly number[] = [5, 10, 25, 100];
 }

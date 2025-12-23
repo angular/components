@@ -652,9 +652,9 @@ describe('MatCalendar', () => {
   imports: [MatCalendar],
 })
 class StandardCalendar {
-  selected: Date;
-  selectedYear: Date;
-  selectedMonth: Date;
+  selected!: Date;
+  selectedYear!: Date;
+  selectedMonth!: Date;
   startDate = new Date(2017, JAN, 31);
 }
 
@@ -665,7 +665,7 @@ class StandardCalendar {
   imports: [MatCalendar],
 })
 class CalendarWithMinMax {
-  startAt: Date;
+  startAt!: Date;
   minDate = new Date(2016, JAN, 1);
   maxDate = new Date(2018, JAN, 1);
 }
@@ -678,7 +678,7 @@ class CalendarWithMinMax {
   imports: [MatCalendar],
 })
 class CalendarWithDateFilter {
-  selected: Date;
+  selected!: Date;
   startDate = new Date(2017, JAN, 1);
 
   dateFilter(date: Date) {
@@ -699,8 +699,8 @@ class CalendarWithDateFilter {
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);
-  selected: Date;
-  minDate: Date;
+  selected!: Date;
+  minDate!: Date;
 
   constructor() {
     this.select(new Date(2018, JUL, 10));

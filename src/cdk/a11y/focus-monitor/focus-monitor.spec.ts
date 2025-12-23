@@ -920,5 +920,5 @@ class CheckboxWithLabel {}
   imports: [A11yModule],
 })
 class ExportedFocusMonitor {
-  @ViewChild('exportedDir') exportedDirRef: CdkMonitorFocus;
+  @ViewChild('exportedDir') exportedDirRef!: CdkMonitorFocus;
 }

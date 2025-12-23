@@ -62,6 +62,6 @@ describe('MatDivider', () => {
   imports: [MatDividerModule],
 })
 class MatDividerTestComponent {
-  vertical: boolean;
-  inset: boolean;
+  vertical = false;
+  inset = false;
 }

@@ -421,5 +421,5 @@ class TestModal {
 class DivWithCdkAriaLive {
   politeness: AriaLivePoliteness = 'polite';
   content = 'Initial content';
-  duration: number;
+  duration!: number;
 }

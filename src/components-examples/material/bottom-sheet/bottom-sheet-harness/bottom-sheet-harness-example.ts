@@ -16,7 +16,7 @@ import {
 export class BottomSheetHarnessExample {
   readonly bottomSheet = inject(MatBottomSheet);
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   open(config?: MatBottomSheetConfig) {
     return this.bottomSheet.open(this.template, config);

@@ -23,7 +23,7 @@ interface FlatFoodNode {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeNestedLevelAccessorExample {
-  @ViewChild(CdkTree) tree: CdkTree<FlatFoodNode>;
+  @ViewChild(CdkTree) tree!: CdkTree<FlatFoodNode>;
 
   levelAccessor = (dataNode: FlatFoodNode) => dataNode.level;
 

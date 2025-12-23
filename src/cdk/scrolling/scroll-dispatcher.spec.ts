@@ -261,8 +261,8 @@ describe('ScrollDispatcher', () => {
   imports: [ScrollingModule],
 })
 class ScrollingComponent {
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollingElement') scrollingElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+  @ViewChild('scrollingElement') scrollingElement!: ElementRef<HTMLElement>;
 }
 
 /** Component containing nested scrollables. */
@@ -279,5 +279,5 @@ class ScrollingComponent {
   imports: [ScrollingModule],
 })
 class NestedScrollingComponent {
-  @ViewChild('interestingElement') interestingElement: ElementRef<HTMLElement>;
+  @ViewChild('interestingElement') interestingElement!: ElementRef<HTMLElement>;
 }

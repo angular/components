@@ -1425,8 +1425,8 @@ describe('MatTimepicker', () => {
   imports: [MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
 })
 class StandaloneTimepicker {
-  @ViewChild(MatTimepickerInput) input: MatTimepickerInput<Date>;
-  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
+  @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
+  @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
   readonly value = signal<Date | null>(null);
   readonly disabled = signal(false);
   readonly interval = signal<string | null>(null);
@@ -1464,8 +1464,8 @@ class StandaloneTimepicker {
   ],
 })
 class TimepickerInFormField {
-  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
-  @ViewChild(MatTimepickerToggle) toggle: MatTimepickerToggle<Date>;
+  @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
+  @ViewChild(MatTimepickerToggle) toggle!: MatTimepickerToggle<Date>;
 }
 
 @Component({
@@ -1476,7 +1476,7 @@ class TimepickerInFormField {
   imports: [MatTimepicker, MatTimepickerInput],
 })
 class TimepickerTwoWayBinding {
-  @ViewChild(MatTimepickerInput) input: MatTimepickerInput<Date>;
+  @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
   readonly value = signal(new Date(2024, 0, 15, 10, 30, 0));
 }
 
@@ -1492,8 +1492,8 @@ class TimepickerTwoWayBinding {
   imports: [MatTimepicker, MatTimepickerInput, ReactiveFormsModule],
 })
 class TimepickerWithForms {
-  @ViewChild(MatTimepickerInput) input: MatTimepickerInput<Date>;
-  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
+  @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
+  @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
   readonly control = new FormControl<Date | null>(null, [Validators.required]);
   readonly min = signal<Date | null>(null);
   readonly max = signal<Date | null>(null);
@@ -1514,7 +1514,7 @@ class TimepickerWithMultipleInputs {}
   imports: [MatTimepicker],
 })
 class TimepickerWithoutInput {
-  @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
+  @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
 }
 
 @Component({

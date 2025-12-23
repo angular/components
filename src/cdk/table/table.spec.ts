@@ -2209,7 +2209,7 @@ class SimpleCdkTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   contentChangedCount = 0;
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2240,7 +2240,7 @@ class CdkTableWithDifferentDataInputsApp {
   dataSource: DataSource<TestData> | Observable<TestData[]> | TestData[] | any = null;
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2375,7 +2375,7 @@ class WhenRowCdkTableApp {
     this.dataSource.addData();
   }
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 
   showIndexColumns() {
     const indexColumns = ['index', 'dataIndex', 'renderIndex'];
@@ -2480,7 +2480,7 @@ class WhenRowWithoutDefaultCdkTableApp {
   isIndex1 = (index: number, _rowData: TestData) => index == 1;
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2524,7 +2524,7 @@ class WhenRowMultipleDefaultsCdkTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2542,10 +2542,10 @@ class WhenRowMultipleDefaultsCdkTableApp {
   imports: [CdkTableModule],
 })
 class DynamicDataSourceCdkTableApp {
-  dataSource: FakeDataSource;
+  dataSource!: FakeDataSource;
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2573,7 +2573,7 @@ class TrackByCdkTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 
   trackBy = (index: number, item: TestData) => {
     switch (this.trackByStrategy) {
@@ -2656,7 +2656,7 @@ class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource = new FakeDataSource();
   columns = ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 
   dir: Direction = 'ltr';
   stickyHeaders: string[] = [];
@@ -2713,7 +2713,7 @@ class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource = new FakeDataSource();
   columns = ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
@@ -2745,7 +2745,7 @@ class DynamicColumnDefinitionsCdkTableApp {
   dynamicColumns: any[] = [];
   dataSource = new FakeDataSource();
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2766,7 +2766,7 @@ class CustomRoleCdkTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2787,7 +2787,7 @@ class CrazyColumnNameCdkTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['crazy-column-NAME-1!@#$%^-_&*()2'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -2846,7 +2846,7 @@ class MissingColumnDefCdkTableApp {
   imports: [CdkTableModule],
 })
 class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
-  dataSource: FakeDataSource;
+  dataSource!: FakeDataSource;
   displayedColumns: string[] = [];
   cdr = inject(ChangeDetectorRef);
 
@@ -2945,7 +2945,7 @@ class MissingFooterRowDefCdkTableApp {
   imports: [CdkTableModule],
 })
 class UndefinedColumnsCdkTableApp {
-  undefinedColumns: string[];
+  undefinedColumns: string[] | undefined;
   dataSource = new FakeDataSource();
 }
 
@@ -3006,15 +3006,15 @@ class RowContextCdkTableApp {
   imports: [CdkTableModule],
 })
 class WrapperCdkTableApp<T> implements AfterContentInit {
-  @ContentChildren(CdkColumnDef, {descendants: false}) columnDefs: QueryList<CdkColumnDef>;
-  @ContentChild(CdkHeaderRowDef) headerRowDef: CdkHeaderRowDef;
-  @ContentChildren(CdkRowDef, {descendants: false}) rowDefs: QueryList<CdkRowDef<T>>;
-  @ContentChild(CdkNoDataRow) noDataRow: CdkNoDataRow;
+  @ContentChildren(CdkColumnDef, {descendants: false}) columnDefs!: QueryList<CdkColumnDef>;
+  @ContentChild(CdkHeaderRowDef) headerRowDef!: CdkHeaderRowDef;
+  @ContentChildren(CdkRowDef, {descendants: false}) rowDefs!: QueryList<CdkRowDef<T>>;
+  @ContentChild(CdkNoDataRow) noDataRow!: CdkNoDataRow;
 
-  @ViewChild(CdkTable, {static: true}) table: CdkTable<T>;
+  @ViewChild(CdkTable, {static: true}) table!: CdkTable<T>;
 
-  @Input() columns: string[];
-  @Input() dataSource: DataSource<T>;
+  @Input() columns!: string[];
+  @Input() dataSource!: DataSource<T>;
 
   ngAfterContentInit() {
     // Register the content's column, row, and header row definitions.
@@ -3092,7 +3092,7 @@ class NativeHtmlTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -3171,7 +3171,7 @@ class NativeTableWithNoHeaderOrFooterRows {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -3193,7 +3193,7 @@ class NativeHtmlTableWithCaptionApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -3222,7 +3222,7 @@ class NativeHtmlTableWithColgroupAndCol {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
 }
 
 @Component({
@@ -3276,7 +3276,7 @@ class TableWithIndirectDescendantDefs {
   imports: [CdkTableModule],
 })
 class NativeHtmlTableAppOnPush {
-  @Input() dataSource: FakeDataSource;
+  @Input() dataSource!: FakeDataSource;
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
@@ -3327,8 +3327,8 @@ class WrapNativeHtmlTableAppOnPush {
   `,
 })
 class TableWithVirtualScroll {
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFixedLayout = signal(true);

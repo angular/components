@@ -82,7 +82,7 @@ export class DeprecatedMapMarkerClusterer
   set averageCenter(averageCenter: boolean) {
     this._averageCenter = averageCenter;
   }
-  private _averageCenter: boolean;
+  private _averageCenter: boolean | undefined;
 
   @Input() batchSize?: number;
 
@@ -90,97 +90,97 @@ export class DeprecatedMapMarkerClusterer
   set batchSizeIE(batchSizeIE: number) {
     this._batchSizeIE = batchSizeIE;
   }
-  private _batchSizeIE: number;
+  private _batchSizeIE!: number;
 
   @Input()
   set calculator(calculator: Calculator) {
     this._calculator = calculator;
   }
-  private _calculator: Calculator;
+  private _calculator!: Calculator;
 
   @Input()
   set clusterClass(clusterClass: string) {
     this._clusterClass = clusterClass;
   }
-  private _clusterClass: string;
+  private _clusterClass!: string;
 
   @Input()
   set enableRetinaIcons(enableRetinaIcons: boolean) {
     this._enableRetinaIcons = enableRetinaIcons;
   }
-  private _enableRetinaIcons: boolean;
+  private _enableRetinaIcons: boolean | undefined;
 
   @Input()
   set gridSize(gridSize: number) {
     this._gridSize = gridSize;
   }
-  private _gridSize: number;
+  private _gridSize!: number;
 
   @Input()
   set ignoreHidden(ignoreHidden: boolean) {
     this._ignoreHidden = ignoreHidden;
   }
-  private _ignoreHidden: boolean;
+  private _ignoreHidden: boolean | undefined;
 
   @Input()
   set imageExtension(imageExtension: string) {
     this._imageExtension = imageExtension;
   }
-  private _imageExtension: string;
+  private _imageExtension!: string;
 
   @Input()
   set imagePath(imagePath: string) {
     this._imagePath = imagePath;
   }
-  private _imagePath: string;
+  private _imagePath!: string;
 
   @Input()
   set imageSizes(imageSizes: number[]) {
     this._imageSizes = imageSizes;
   }
-  private _imageSizes: number[];
+  private _imageSizes!: number[];
 
   @Input()
   set maxZoom(maxZoom: number) {
     this._maxZoom = maxZoom;
   }
-  private _maxZoom: number;
+  private _maxZoom!: number;
 
   @Input()
   set minimumClusterSize(minimumClusterSize: number) {
     this._minimumClusterSize = minimumClusterSize;
   }
-  private _minimumClusterSize: number;
+  private _minimumClusterSize!: number;
 
   @Input()
   set styles(styles: ClusterIconStyle[]) {
     this._styles = styles;
   }
-  private _styles: ClusterIconStyle[];
+  private _styles!: ClusterIconStyle[];
 
   @Input()
   set title(title: string) {
     this._title = title;
   }
-  private _title: string;
+  private _title!: string;
 
   @Input()
   set zIndex(zIndex: number) {
     this._zIndex = zIndex;
   }
-  private _zIndex: number;
+  private _zIndex!: number;
 
   @Input()
   set zoomOnClick(zoomOnClick: boolean) {
     this._zoomOnClick = zoomOnClick;
   }
-  private _zoomOnClick: boolean;
+  private _zoomOnClick: boolean | undefined;
 
   @Input()
   set options(options: MarkerClustererOptions) {
     this._options = options;
   }
-  private _options: MarkerClustererOptions;
+  private _options!: MarkerClustererOptions;
 
   /**
    * See
@@ -201,7 +201,7 @@ export class DeprecatedMapMarkerClusterer
   @Output()
   readonly clusterClick: Observable<Cluster> = this._eventManager.getLazyEmitter<Cluster>('click');
 
-  @ContentChildren(MapMarker, {descendants: true}) _markers: QueryList<MapMarker>;
+  @ContentChildren(MapMarker, {descendants: true}) _markers!: QueryList<MapMarker>;
 
   /**
    * The underlying MarkerClusterer object.

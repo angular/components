@@ -113,7 +113,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _injector = inject(Injector);
 
-  private _keyManager: FocusKeyManager<MatMenuItem>;
+  private _keyManager!: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX;
   private _yPosition: MenuPositionY;
   private _firstItemFocusRef?: AfterRenderRef;
@@ -123,7 +123,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   protected _animationsDisabled = _animationsDisabled();
 
   /** All items inside the menu. Includes items nested inside another menu. */
-  @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
+  @ContentChildren(MatMenuItem, {descendants: true}) _allItems!: QueryList<MatMenuItem>;
 
   /** Only the direct descendant menu items. */
   _directDescendantItems = new QueryList<MatMenuItem>();
@@ -144,7 +144,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   parentMenu: MatMenuPanel | undefined;
 
   /** Layout direction of the menu. */
-  direction: Direction;
+  direction!: Direction;
 
   /** Class or list of classes to be added to the overlay panel. */
   overlayPanelClass: string | string[];
@@ -153,13 +153,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   @Input() backdropClass: string;
 
   /** aria-label for the menu panel. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** aria-labelledby for the menu panel. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** aria-describedby for the menu panel. */
-  @Input('aria-describedby') ariaDescribedby: string;
+  @Input('aria-describedby') ariaDescribedby!: string;
 
   /** Position of the menu in the X axis. */
   @Input()
@@ -192,23 +192,23 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   }
 
   /** @docs-private */
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   /**
    * List of the items inside of a menu.
    * @deprecated
    * @breaking-change 8.0.0
    */
-  @ContentChildren(MatMenuItem, {descendants: false}) items: QueryList<MatMenuItem>;
+  @ContentChildren(MatMenuItem, {descendants: false}) items!: QueryList<MatMenuItem>;
 
   /**
    * Menu content that will be rendered lazily.
    * @docs-private
    */
-  @ContentChild(MAT_MENU_CONTENT) lazyContent: MatMenuContent;
+  @ContentChild(MAT_MENU_CONTENT) lazyContent!: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
-  @Input({transform: booleanAttribute}) overlapTrigger: boolean;
+  @Input({transform: booleanAttribute}) overlapTrigger: boolean = false;
 
   /** Whether the menu has a backdrop. */
   @Input({transform: (value: any) => (value == null ? null : booleanAttribute(value))})
@@ -243,7 +243,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
     this._classList = newClassList;
   }
-  private _previousPanelClass: string;
+  private _previousPanelClass!: string;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the

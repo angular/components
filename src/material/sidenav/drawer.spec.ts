@@ -1180,7 +1180,7 @@ describe('MatDrawerContainer', () => {
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerTwoDrawerTestApp {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 }
 
 /** Test component that contains an MatDrawerContainer and one MatDrawer. */
@@ -1216,11 +1216,11 @@ class BasicTestApp {
   hasBackdrop: boolean | null = null;
   position: 'start' | 'end' = 'start';
 
-  @ViewChild('drawer') drawer: MatDrawer;
-  @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('openButton') openButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('svg') svg: ElementRef<SVGElement>;
-  @ViewChild('closeButton') closeButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawerButton') drawerButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('openButton') openButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('svg') svg!: ElementRef<SVGElement>;
+  @ViewChild('closeButton') closeButton!: ElementRef<HTMLButtonElement>;
 
   open() {
     this.openCount++;
@@ -1332,7 +1332,7 @@ class DrawerWithoutFocusableElements {}
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDelayed {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
   showDrawer = false;
 }
 
@@ -1346,8 +1346,8 @@ class DrawerDelayed {
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerStateChangesTestApp {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 
   direction: Direction = 'ltr';
   mode: MatDrawerMode = 'side';
@@ -1365,8 +1365,8 @@ class DrawerContainerStateChangesTestApp {
   imports: [MatSidenavModule, A11yModule],
 })
 class AutosizeDrawer {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
   fillerWidth = 0;
 }
 
@@ -1380,7 +1380,7 @@ class AutosizeDrawer {
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerWithContent {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 }
 
 @Component({
@@ -1395,8 +1395,8 @@ class DrawerContainerWithContent {
   imports: [MatSidenavModule, A11yModule],
 })
 class IndirectDescendantDrawer {
-  @ViewChild('container') container: MatDrawerContainer;
-  @ViewChild('drawer') drawer: MatDrawer;
+  @ViewChild('container') container!: MatDrawerContainer;
+  @ViewChild('drawer') drawer!: MatDrawer;
 }
 
 @Component({
@@ -1413,8 +1413,8 @@ class IndirectDescendantDrawer {
   imports: [MatSidenavModule, A11yModule],
 })
 class NestedDrawerContainers {
-  @ViewChild('outerContainer') outerContainer: MatDrawerContainer;
-  @ViewChild('outerDrawer') outerDrawer: MatDrawer;
-  @ViewChild('innerContainer') innerContainer: MatDrawerContainer;
-  @ViewChild('innerDrawer') innerDrawer: MatDrawer;
+  @ViewChild('outerContainer') outerContainer!: MatDrawerContainer;
+  @ViewChild('outerDrawer') outerDrawer!: MatDrawer;
+  @ViewChild('innerContainer') innerContainer!: MatDrawerContainer;
+  @ViewChild('innerDrawer') innerDrawer!: MatDrawer;
 }

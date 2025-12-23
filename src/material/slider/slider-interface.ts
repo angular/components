@@ -72,13 +72,13 @@ export interface MatSliderDragEvent {
  */
 export class MatSliderChange {
   /** The MatSliderThumb that was interacted with. */
-  source: _MatSliderThumb;
+  source!: _MatSliderThumb;
 
   /** The MatSlider that was interacted with. */
-  parent: _MatSlider;
+  parent!: _MatSlider;
 
   /** The new value of the source slider. */
-  value: number;
+  value!: number;
 }
 
 export interface _MatSlider {

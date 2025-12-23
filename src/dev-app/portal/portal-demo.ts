@@ -31,10 +31,10 @@ export class ScienceJoke {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortalDemo {
-  @ViewChildren(CdkPortal) templatePortals: QueryList<Portal<any>>;
-  @ViewChild('domPortalSource') domPortalSource: ElementRef<HTMLElement>;
+  @ViewChildren(CdkPortal) templatePortals!: QueryList<Portal<any>>;
+  @ViewChild('domPortalSource') domPortalSource!: ElementRef<HTMLElement>;
 
-  selectedPortal: Portal<any>;
+  selectedPortal!: Portal<any>;
 
   get programmingJoke() {
     return this.templatePortals.first;

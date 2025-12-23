@@ -756,10 +756,10 @@ class PizzaMsg {
 class SaveParentNodeOnInit implements AfterViewInit {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  parentOnViewInit: HTMLElement;
+  parentOnViewInit: HTMLElement | null = null;
 
   ngAfterViewInit() {
-    this.parentOnViewInit = this._elementRef.nativeElement.parentElement!;
+    this.parentOnViewInit = this._elementRef.nativeElement.parentElement;
   }
 }
 
@@ -779,8 +779,8 @@ class ArbitraryViewContainerRefComponent {
   viewContainerRef = inject(ViewContainerRef);
   injector = inject(Injector);
 
-  @ViewChild('template') template: TemplateRef<any>;
-  @ViewChild(SaveParentNodeOnInit) saveParentNodeOnInit: SaveParentNodeOnInit;
+  @ViewChild('template') template!: TemplateRef<any>;
+  @ViewChild(SaveParentNodeOnInit) saveParentNodeOnInit!: SaveParentNodeOnInit;
 }
 
 /** Test-bed component that contains a portal outlet and a couple of template portals. */
@@ -820,12 +820,12 @@ class PortalTestApp {
   viewContainerRef = inject(ViewContainerRef);
   injector = inject(Injector);
 
-  @ViewChildren(CdkPortal) portals: QueryList<CdkPortal>;
-  @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
-  @ViewChild('templateRef', {read: TemplateRef}) templateRef: TemplateRef<any>;
-  @ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
+  @ViewChildren(CdkPortal) portals!: QueryList<CdkPortal>;
+  @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;
+  @ViewChild('templateRef', {read: TemplateRef}) templateRef!: TemplateRef<any>;
+  @ViewChild('domPortalContent') domPortalContent!: ElementRef<HTMLElement>;
   @ViewChild('alternateContainer', {read: ViewContainerRef})
-  alternateContainer: ViewContainerRef;
+  alternateContainer!: ViewContainerRef;
 
   selectedPortal: Portal<any> | undefined;
   fruit: string = 'Banana';
@@ -859,5 +859,5 @@ class PortalTestApp {
   imports: [CdkPortalOutlet],
 })
 class UnboundPortalTestApp {
-  @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;
 }

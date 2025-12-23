@@ -85,7 +85,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
   private readonly _directionality = inject(Directionality, {optional: true});
   private readonly _renderer = inject(Renderer2);
   private readonly _injector = inject(Injector);
-  private _cleanupMouseenter: () => void;
+  private _cleanupMouseenter!: () => void;
 
   /** The app's menu tracking registry */
   private readonly _menuTracker = inject(MenuTracker);

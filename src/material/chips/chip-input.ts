@@ -83,7 +83,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
       this._chipGrid.registerInput(this);
     }
   }
-  protected _chipGrid: MatChipGrid;
+  protected _chipGrid!: MatChipGrid;
 
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.

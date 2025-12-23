@@ -88,17 +88,17 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   });
 
   /** The active portion of the slider track. */
-  @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
+  @ViewChild('trackActive') _trackActive!: ElementRef<HTMLElement>;
 
   /** The slider thumb(s). */
-  @ViewChildren(MAT_SLIDER_VISUAL_THUMB) _thumbs: QueryList<_MatSliderVisualThumb>;
+  @ViewChildren(MAT_SLIDER_VISUAL_THUMB) _thumbs!: QueryList<_MatSliderVisualThumb>;
 
   /** The sliders hidden range input(s). */
-  @ContentChild(MAT_SLIDER_THUMB) _input: _MatSliderThumb;
+  @ContentChild(MAT_SLIDER_THUMB) _input!: _MatSliderThumb;
 
   /** The sliders hidden range input(s). */
   @ContentChildren(MAT_SLIDER_RANGE_THUMB, {descendants: false})
-  _inputs: QueryList<_MatSliderRangeThumb>;
+  _inputs!: QueryList<_MatSliderRangeThumb>;
 
   /** Whether the slider is disabled. */
   @Input({transform: booleanAttribute})
@@ -367,21 +367,21 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   @Input() displayWith: (value: number) => string = (value: number) => `${value}`;
 
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
-  _tickMarks: _MatTickMark[];
+  _tickMarks!: _MatTickMark[];
 
   /** Whether animations have been disabled. */
   _noopAnimations = _animationsDisabled();
 
   /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
-  private _dirChangeSubscription: Subscription;
+  private _dirChangeSubscription: Subscription | undefined;
 
   /** Observer used to monitor size changes in the slider. */
-  private _resizeObserver: ResizeObserver | null;
+  private _resizeObserver: ResizeObserver | null = null;
 
   // Stored dimensions to avoid calling getBoundingClientRect redundantly.
 
-  _cachedWidth: number;
-  _cachedLeft: number;
+  _cachedWidth!: number;
+  _cachedLeft!: number;
 
   _rippleRadius: number = 24;
 
@@ -395,8 +395,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   // Used to control the translateX of the visual slider thumb(s).
 
-  _endThumbTransform: string;
-  _startThumbTransform: string;
+  _endThumbTransform!: string;
+  _startThumbTransform!: string;
 
   _isRange: boolean = false;
 
@@ -431,7 +431,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** The radius of the native slider's knob. AFAIK there is no way to avoid hardcoding this. */
   _knobRadius: number = 8;
 
-  _inputPadding: number;
+  _inputPadding!: number;
 
   ngAfterViewInit(): void {
     if (this._platform.isBrowser) {
@@ -499,7 +499,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   }
 
   ngOnDestroy(): void {
-    this._dirChangeSubscription.unsubscribe();
+    this._dirChangeSubscription?.unsubscribe();
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
   }

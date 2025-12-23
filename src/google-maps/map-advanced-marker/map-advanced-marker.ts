@@ -64,7 +64,7 @@ export class MapAdvancedMarker
   set title(title: string) {
     this._title = title;
   }
-  private _title: string;
+  private _title!: string;
 
   /**
    * Sets the AdvancedMarkerElement's position. An AdvancedMarkerElement may be constructed without a position, but will not be displayed until its position is provided - for example, by a user's actions or choices. An AdvancedMarkerElement's position can be provided by setting AdvancedMarkerElement.position if not provided at the construction.
@@ -81,7 +81,7 @@ export class MapAdvancedMarker
   ) {
     this._position = position;
   }
-  private _position: google.maps.LatLngLiteral | google.maps.LatLng;
+  private _position!: google.maps.LatLngLiteral | google.maps.LatLng;
 
   /**
    * The DOM Element backing the visual of an AdvancedMarkerElement.
@@ -92,7 +92,7 @@ export class MapAdvancedMarker
   set content(content: Node | google.maps.marker.PinElement | null) {
     this._content = content;
   }
-  private _content: Node | null;
+  private _content: Node | null = null;
 
   /**
    * If true, the AdvancedMarkerElement can be dragged.
@@ -103,7 +103,7 @@ export class MapAdvancedMarker
   set gmpDraggable(draggable: boolean) {
     this._draggable = draggable;
   }
-  private _draggable: boolean;
+  private _draggable: boolean | undefined;
 
   /**
    * Options for constructing an AdvancedMarkerElement.
@@ -113,7 +113,7 @@ export class MapAdvancedMarker
   set options(options: google.maps.marker.AdvancedMarkerElementOptions) {
     this._options = options;
   }
-  private _options: google.maps.marker.AdvancedMarkerElementOptions;
+  private _options!: google.maps.marker.AdvancedMarkerElementOptions;
 
   /**
    * AdvancedMarkerElements on the map are prioritized by zIndex, with higher values indicating higher display.
@@ -123,7 +123,7 @@ export class MapAdvancedMarker
   set zIndex(zIndex: number) {
     this._zIndex = zIndex;
   }
-  private _zIndex: number;
+  private _zIndex!: number;
 
   /**
    * This event is fired when the AdvancedMarkerElement element is clicked.
@@ -192,7 +192,7 @@ export class MapAdvancedMarker
    *
    * See developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement
    */
-  advancedMarker: google.maps.marker.AdvancedMarkerElement;
+  advancedMarker!: google.maps.marker.AdvancedMarkerElement;
 
   constructor(...args: unknown[]);
   constructor() {}

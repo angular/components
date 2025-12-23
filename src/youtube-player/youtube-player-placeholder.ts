@@ -39,22 +39,22 @@ export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 })
 export class YouTubePlayerPlaceholder {
   /** ID of the video for which to show the placeholder. */
-  @Input() videoId: string;
+  @Input() videoId!: string;
 
   /** Width of the video for which to show the placeholder. */
-  @Input() width: number;
+  @Input() width!: number;
 
   /** Height of the video for which to show the placeholder. */
-  @Input() height: number;
+  @Input() height!: number;
 
   /** Whether the video is currently being loaded. */
-  @Input() isLoading: boolean;
+  @Input() isLoading: boolean = false;
 
   /** Accessible label for the play button. */
-  @Input() buttonLabel: string;
+  @Input() buttonLabel!: string;
 
   /** Quality of the placeholder image. */
-  @Input() quality: PlaceholderImageQuality;
+  @Input() quality!: PlaceholderImageQuality;
 
   /** Gets the background image showing the placeholder. */
   protected _getBackgroundImage(): string | undefined {

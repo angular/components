@@ -45,10 +45,10 @@ export class CdkNestedTreeNode<T, K = T>
   protected _differs = inject(IterableDiffers);
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T>;
+  private _dataDiffer!: IterableDiffer<T>;
 
   /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
-  protected _children: T[];
+  protected _children!: T[];
 
   /** The children node placeholder. */
   @ContentChildren(CdkTreeNodeOutlet, {
@@ -56,7 +56,7 @@ export class CdkNestedTreeNode<T, K = T>
     // indirect descendants if it's left as false.
     descendants: true,
   })
-  nodeOutlet: QueryList<CdkTreeNodeOutlet>;
+  nodeOutlet!: QueryList<CdkTreeNodeOutlet>;
 
   constructor(...args: unknown[]);
 

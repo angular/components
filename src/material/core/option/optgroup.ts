@@ -65,7 +65,7 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
 })
 export class MatOptgroup {
   /** Label for the option group. */
-  @Input() label: string;
+  @Input() label!: string;
 
   /** whether the option group is disabled. */
   @Input({transform: booleanAttribute}) disabled: boolean = false;

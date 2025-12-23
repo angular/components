@@ -119,7 +119,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   );
 
   /** The UI pattern for this item. */
-  _pattern: TreeItemPattern<V>;
+  _pattern!: TreeItemPattern<V>;
 
   constructor() {
     super();

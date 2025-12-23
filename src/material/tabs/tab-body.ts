@@ -141,17 +141,17 @@ export class MatTabBody implements OnInit, OnDestroy {
   private _renderer = inject(Renderer2);
   private _diAnimationsDisabled = _animationsDisabled();
   private _eventCleanups?: (() => void)[];
-  private _initialized: boolean;
-  private _fallbackTimer: ReturnType<typeof setTimeout>;
+  private _initialized = false;
+  private _fallbackTimer: ReturnType<typeof setTimeout> | undefined;
 
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-  private _positionIndex: number;
+  private _positionIndex!: number;
 
   /** Subscription to the directionality change observable. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** Current position of the body within the tab group. */
-  _position: MatTabBodyPositionState;
+  _position!: MatTabBodyPositionState;
 
   /** Previous position of the body. */
   protected _previousPosition: MatTabBodyPositionState | undefined;
@@ -169,13 +169,13 @@ export class MatTabBody implements OnInit, OnDestroy {
   @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** The portal host inside of this container into which the tab body content will be loaded. */
-  @ViewChild(MatTabBodyPortal) _portalHost: MatTabBodyPortal;
+  @ViewChild(MatTabBodyPortal) _portalHost!: MatTabBodyPortal;
 
   /** Element in which the content is rendered. */
   @ViewChild('content') _contentElement: ElementRef<HTMLElement> | undefined;
 
   /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal;
+  @Input('content') _content!: TemplatePortal;
 
   // Note that the default value will always be overwritten by `MatTabBody`, but we need one
   // anyway to prevent the animations module from throwing an error if the body is used on its own.
