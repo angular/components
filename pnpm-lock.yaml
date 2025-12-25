@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.1
       firebase-tools:
-        specifier: 15.0.0
-        version: 15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.1.0
+        version: 15.1.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.0.0
-        version: 15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.1.0
+        version: 15.1.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: 5.13.0
         version: 5.13.0
@@ -490,8 +490,8 @@ importers:
         specifier: ^24.6.1
         version: 24.32.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.96.0
-        version: 1.96.0
+        specifier: 1.97.1
+        version: 1.97.1
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -5575,8 +5575,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.0.0:
-    resolution: {integrity: sha512-6HSF3meQwMNzDK5BIEFEq4jVMPqR6PBdqpuSLBE+3zpLlcmLknMVBDhdN32jhd2lj/wvfHBZV6ZSqTCNF7AtWw==}
+  firebase-tools@15.1.0:
+    resolution: {integrity: sha512-sVDiFTXiRd2tszJzttb6e5yzhJdljIVm8Q0Atg6MyHMirJrvrOJzxPis9MAg/R6RrfLo/+oYgx83suZfAAimPw==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8470,8 +8470,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.96.0:
-    resolution: {integrity: sha512-8u4xqqUeugGNCYwr9ARNtQKTOj4KmYiJAVKXf2CTIivTCR51j96htbMKWDru8H5SaQWpyVgTfOF8Ylyf5pun1Q==}
+  sass@1.97.1:
+    resolution: {integrity: sha512-uf6HoO8fy6ClsrShvMgaKUn14f2EHQLQRtpsZZLeU/Mv0Q1K5P0+x2uvH6Cub39TVVbWNSrraUhDAoFph6vh0A==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -15439,7 +15439,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@15.1.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.2)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -18836,7 +18836,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.96.0:
+  sass@1.97.1:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
