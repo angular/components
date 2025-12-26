@@ -83,19 +83,22 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
    * current query starting from the the current anchor index.
    */
   private _getItem() {
-    let items = this.focusManager.inputs.items();
-    const after = items.slice(this._startIndex()! + 1);
-    const before = items.slice(0, this._startIndex()!);
-    items = after.concat(before);
-    items.push(this.inputs.items()[this._startIndex()!]);
+    const items = this.focusManager.inputs.items();
+    const itemCount = items.length;
+    const startIndex = this._startIndex()!;
 
-    const focusableItems = [];
-    for (const item of items) {
-      if (this.focusManager.isFocusable(item)) {
-        focusableItems.push(item);
+    for (let i = 0; i < itemCount; i++) {
+      const index = (startIndex + 1 + i) % itemCount;
+      const item = items[index];
+
+      if (
+        this.focusManager.isFocusable(item) &&
+        item.searchTerm().toLowerCase().startsWith(this._query())
+      ) {
+        return item;
       }
     }
 
-    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this._query()));
+    return undefined;
   }
 }
