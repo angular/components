@@ -22,6 +22,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
+  booleanAttribute,
   ChangeDetectorRef,
   Directive,
   ElementRef,
@@ -29,6 +30,7 @@ import {
   inject,
   InjectionToken,
   Injector,
+  input,
   NgZone,
   OnDestroy,
   ViewContainerRef,
@@ -139,6 +141,9 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
   }
   private _menuInternal: MatMenuPanel | null = null;
 
+  /** Whether the host component is disabled. Needed to correctly handle disabledInteractive. */
+  readonly triggerIsDisabled = input(false, {alias: 'disabled', transform: booleanAttribute});
+
   /** Event emitted when the associated menu is opened. */
   abstract menuOpened: EventEmitter<void>;
 
@@ -191,6 +196,10 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
 
   /** Internal method to open menu providing option to auto focus on first item. */
   protected _openMenu(autoFocus: boolean): void {
+    if (this.triggerIsDisabled()) {
+      return;
+    }
+
     const menu = this._menu;
 
     if (this._menuOpen || !menu) {
