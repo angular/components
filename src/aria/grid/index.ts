@@ -6,7 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Grid} from './grid';
-export {GridCell} from './grid-cell';
-export {GridRow} from './grid-row';
-export {GridCellWidget} from './grid-cell-widget';
+export * from './public-api';
