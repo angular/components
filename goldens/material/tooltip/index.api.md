@@ -92,6 +92,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
 // @public
 export interface MatTooltipDefaultOptions {
+    detectHoverCapability?: boolean;
     disableTooltipInteractivity?: boolean;
     hideDelay: number;
     position?: TooltipPosition;
