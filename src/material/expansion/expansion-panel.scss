@@ -1,4 +1,3 @@
-
 @use '@angular/cdk';
 @use './m3-expansion';
 @use '../core/tokens/token-utils';
@@ -14,8 +13,9 @@ $fallbacks: m3-expansion.get-tokens();
   overflow: hidden;
 
   &.mat-expansion-panel-animations-enabled {
-    transition: margin 225ms variables.$fast-out-slow-in-timing-function,
-        elevation.private-transition-property-value();
+    transition:
+      margin 225ms variables.$fast-out-slow-in-timing-function,
+      elevation.private-transition-property-value();
   }
 
   // Required so that the `box-shadow` works after the
@@ -31,7 +31,8 @@ $fallbacks: m3-expansion.get-tokens();
   }
 
   .mat-accordion & {
-    &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {
+    &:not(.mat-expanded),
+    &:not(.mat-expansion-panel-spacing) {
       border-radius: 0;
     }
 
@@ -48,6 +49,15 @@ $fallbacks: m3-expansion.get-tokens();
 
   @include cdk.high-contrast {
     outline: solid 1px;
+  }
+}
+
+// Styles to use if grid isn't supported for some reason.
+@mixin _fallback-styles {
+  height: 0;
+
+  .mat-expansion-panel.mat-expanded > & {
+    height: auto;
   }
 }
 
@@ -72,13 +82,14 @@ $fallbacks: m3-expansion.get-tokens();
   // we have a fallback to `height` which doesn't animate, just in case.
   // stylelint-disable material/no-prefixes
   @supports not (grid-template-rows: 0fr) {
-    height: 0;
-
-    .mat-expansion-panel.mat-expanded > & {
-      height: auto;
-    }
+    @include _fallback-styles;
   }
   // stylelint-enable material/no-prefixes
+
+  // Use the fallback styles when printing, otherwise closed panel appear open (see #32327).
+  @media print {
+    @include _fallback-styles;
+  }
 }
 
 .mat-expansion-panel-content {
@@ -137,7 +148,8 @@ $fallbacks: m3-expansion.get-tokens();
 
   border-top-color: token-utils.slot(expansion-actions-divider-color, $fallbacks);
 
-  .mat-button-base, .mat-mdc-button-base {
+  .mat-button-base,
+  .mat-mdc-button-base {
     margin-left: 8px;
 
     [dir='rtl'] & {
