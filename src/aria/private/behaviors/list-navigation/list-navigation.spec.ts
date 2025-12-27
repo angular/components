@@ -254,4 +254,55 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[4]);
     });
   });
+
+  describe('with items subset', () => {
+    it('should navigate only within the provided subset for next/prev', () => {
+      const nav = getNavigation();
+      const allItems = nav.inputs.items();
+      const subset = [allItems[0], allItems[2], allItems[4]];
+
+      // Start at 0
+      expect(nav.inputs.activeItem()).toBe(allItems[0]);
+
+      // next(subset) -> 2 (skip 1)
+      nav.next({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[2]);
+
+      // next(subset) -> 4 (skip 3)
+      nav.next({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[4]);
+
+      // prev(subset) -> 2 (skip 3)
+      nav.prev({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[2]);
+    });
+
+    it('should wrap within the subset', () => {
+      const nav = getNavigation({wrap: signal(true)});
+      const allItems = nav.inputs.items();
+      const subset = [allItems[0], allItems[2], allItems[4]];
+
+      nav.goto(allItems[4]);
+
+      // next(subset) -> 0 (wrap)
+      nav.next({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[0]);
+
+      // prev(subset) -> 4 (wrap)
+      nav.prev({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[4]);
+    });
+
+    it('should find first/last within the subset', () => {
+      const nav = getNavigation();
+      const allItems = nav.inputs.items();
+      const subset = [allItems[1], allItems[2], allItems[3]];
+
+      nav.first({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[1]);
+
+      nav.last({focusElement: false, items: subset});
+      expect(nav.inputs.activeItem()).toBe(allItems[3]);
+    });
+  });
 });

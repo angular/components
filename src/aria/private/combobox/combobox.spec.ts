@@ -78,7 +78,17 @@ function _type(
   if (popup instanceof ComboboxListboxPattern) {
     (popup.inputs.items as WritableSignalLike<any[]>).set(options);
   } else if (popup instanceof ComboboxTreePattern) {
-    (popup.inputs.allItems as WritableSignalLike<any[]>).set(options);
+    (popup.inputs.items as WritableSignalLike<any[]>).set(options);
+    // Auto-expand parents of matched items so they are visible
+    options.forEach(option => {
+      if (option instanceof TreeItemPattern) {
+        let parent = option.parent();
+        while (parent instanceof TreeItemPattern) {
+          (parent.expanded as WritableSignalLike<boolean>).set(true);
+          parent = parent.parent();
+        }
+      }
+    });
   }
   firstMatch.set(options[0]?.value());
   combobox.onFilter();
@@ -164,7 +174,7 @@ function getTreePattern(
 
   const tree = new ComboboxTreePattern<string>({
     id: signal('tree-1'),
-    allItems: items,
+    items,
     values: signal(initialValue ? [initialValue] : []),
     combobox: signal(combobox) as any,
     activeItem: signal(undefined),
@@ -182,6 +192,8 @@ function getTreePattern(
     currentType: signal('false'),
   });
 
+  class TestTreeItemPattern extends TreeItemPattern<string> {}
+
   // Recursive function to create tree items
   function createTreeItems(
     data: TreeItemData[],
@@ -190,9 +202,9 @@ function getTreePattern(
     return data.map((node, index) => {
       const element = document.createElement('div');
       element.role = 'treeitem';
-      const treeItem = new TreeItemPattern<string>({
+      const treeItem = new TestTreeItemPattern({
         value: signal(node.value),
-        id: signal('tree-item-' + tree.inputs.allItems().length),
+        id: signal('tree-item-' + tree.inputs.items().length),
         disabled: signal(false),
         selectable: signal(true),
         expanded: signal(false),
@@ -204,7 +216,7 @@ function getTreePattern(
         children: signal([]),
       });
 
-      (tree.inputs.allItems as WritableSignalLike<TreeItemPattern<string>[]>).update(items =>
+      (tree.inputs.items as WritableSignalLike<TreeItemPattern<string>[]>).update(items =>
         items.concat(treeItem),
       );
 
@@ -686,11 +698,17 @@ describe('Combobox with Tree Pattern', () => {
 
     it('should expand a closed node on ArrowRight', () => {
       const {combobox, tree} = getPatterns();
-      const before = tree.visibleItems().map(i => i.searchTerm());
+      const before = tree.inputs
+        .items()
+        .filter(i => i.visible())
+        .map(i => i.searchTerm());
       expect(before).toEqual(['Fruit', 'Vegetables', 'Grains']);
       combobox.onKeydown(down());
       combobox.onKeydown(right());
-      const after = tree.visibleItems().map(i => i.searchTerm());
+      const after = tree.inputs
+        .items()
+        .filter(i => i.visible())
+        .map(i => i.searchTerm());
       expect(after).toEqual(['Fruit', 'Apple', 'Banana', 'Cantaloupe', 'Vegetables', 'Grains']);
     });
 
@@ -707,7 +725,10 @@ describe('Combobox with Tree Pattern', () => {
       combobox.onKeydown(down());
       combobox.onKeydown(right());
       combobox.onKeydown(left());
-      const after = tree.visibleItems().map(i => i.searchTerm());
+      const after = tree.inputs
+        .items()
+        .filter(i => i.visible())
+        .map(i => i.searchTerm());
       expect(after).toEqual(['Fruit', 'Vegetables', 'Grains']);
       expect(tree.inputs.activeItem()?.searchTerm()).toBe('Fruit');
     });
@@ -756,7 +777,7 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 0));
+        combobox.onClick(clickTreeItem(tree.inputs.items(), 0));
         expect(tree.inputs.values()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
@@ -764,7 +785,7 @@ describe('Combobox with Tree Pattern', () => {
       it('should select and commit to input on Enter', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[0]);
+        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
         expect(tree.inputs.values()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
@@ -816,8 +837,11 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 2));
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[2]);
+        // Expand Fruit: Down -> Right
+        combobox.onKeydown(down());
+        combobox.onKeydown(right());
+        combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
+        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
@@ -833,7 +857,7 @@ describe('Combobox with Tree Pattern', () => {
 
       it('should select the first item on arrow down when collapsed', () => {
         combobox.onKeydown(down());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[0]);
+        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
         expect(tree.inputs.values()).toEqual(['Fruit']);
       });
 
@@ -873,8 +897,10 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should select and commit on click', () => {
-        combobox.onClick(clickTreeItem(tree.inputs.allItems(), 2));
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[2]);
+        combobox.onKeydown(down());
+        combobox.onKeydown(right());
+        combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
+        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
         expect(tree.inputs.values()).toEqual(['Banana']);
         expect(inputEl.value).toBe('Banana');
       });
@@ -890,7 +916,7 @@ describe('Combobox with Tree Pattern', () => {
 
       it('should select the first item on arrow down when collapsed', () => {
         combobox.onKeydown(down());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.allItems()[0]);
+        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
         expect(tree.inputs.values()).toEqual(['Fruit']);
       });
 
@@ -925,7 +951,6 @@ describe('Combobox with Tree Pattern', () => {
       });
 
       it('should commit the selected option on focusout', () => {
-        combobox.onKeydown(down());
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');
@@ -945,7 +970,7 @@ describe('Combobox with Tree Pattern', () => {
       const {combobox, tree, inputEl} = getPatterns({readonly: true});
       combobox.onClick(clickInput(inputEl));
       expect(combobox.expanded()).toBe(true);
-      combobox.onClick(clickTreeItem(tree.inputs.allItems(), 0));
+      combobox.onClick(clickTreeItem(tree.inputs.items(), 0));
       expect(tree.inputs.values()).toEqual(['Fruit']);
       expect(inputEl.value).toBe('Fruit');
       expect(combobox.expanded()).toBe(false);
