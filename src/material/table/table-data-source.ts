@@ -233,6 +233,15 @@ export class MatTableDataSource<
    * @returns Whether the filter matches against the data
    */
   filterPredicate: (data: T, filter: string) => boolean = (data: T, filter: string): boolean => {
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      (typeof data !== 'object' || data === null)
+    ) {
+      console.warn(
+        'Default implementation of filterPredicate requires data to be a non-null object.',
+      );
+    }
+
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     // Loops over the values in the array and returns true if any of them match the filter string
