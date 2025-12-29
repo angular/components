@@ -25,13 +25,14 @@ import {
 } from '../list-typeahead/list-typeahead';
 
 /** The operations that the list can perform after navigation. */
-interface NavOptions {
+export interface NavOptions<T = any> {
   toggle?: boolean;
   select?: boolean;
   selectOne?: boolean;
   selectRange?: boolean;
   anchor?: boolean;
   focusElement?: boolean;
+  items?: T[];
 }
 
 /** Represents an item in the list. */
@@ -106,27 +107,27 @@ export class List<T extends ListItem<V>, V> {
   }
 
   /** Navigates to the first option in the list. */
-  first(opts?: NavOptions) {
+  first(opts?: NavOptions<T>) {
     this._navigate(opts, () => this.navigationBehavior.first(opts));
   }
 
   /** Navigates to the last option in the list. */
-  last(opts?: NavOptions) {
+  last(opts?: NavOptions<T>) {
     this._navigate(opts, () => this.navigationBehavior.last(opts));
   }
 
   /** Navigates to the next option in the list. */
-  next(opts?: NavOptions) {
+  next(opts?: NavOptions<T>) {
     this._navigate(opts, () => this.navigationBehavior.next(opts));
   }
 
   /** Navigates to the previous option in the list. */
-  prev(opts?: NavOptions) {
+  prev(opts?: NavOptions<T>) {
     this._navigate(opts, () => this.navigationBehavior.prev(opts));
   }
 
   /** Navigates to the given item in the list. */
-  goto(item: T, opts?: NavOptions) {
+  goto(item: T, opts?: NavOptions<T>) {
     this._navigate(opts, () => this.navigationBehavior.goto(item, opts));
   }
 
