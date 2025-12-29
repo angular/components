@@ -53,6 +53,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       !item ||
       item.disabled() ||
       !item.selectable() ||
+      !this.inputs.focusManager.isFocusable(item as T) ||
       this.inputs.values().includes(item.value())
     ) {
       return;
@@ -138,7 +139,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   toggleAll() {
     const selectableValues = this.inputs
       .items()
-      .filter(i => !i.disabled() && i.selectable())
+      .filter(i => !i.disabled() && i.selectable() && this.inputs.focusManager.isFocusable(i))
       .map(i => i.value());
 
     selectableValues.every(i => this.inputs.values().includes(i))

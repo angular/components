@@ -101,7 +101,9 @@ export class ToolbarPattern<V> {
 
     if (currGroup !== nextGroup) {
       this.listBehavior.goto(
-        this.listBehavior.navigationBehavior.peekFirst(currGroup.inputs.items())!,
+        this.listBehavior.navigationBehavior.peekFirst({
+          items: currGroup.inputs.items(),
+        })!,
       );
 
       return;
@@ -121,7 +123,9 @@ export class ToolbarPattern<V> {
 
     if (currGroup !== nextGroup) {
       this.listBehavior.goto(
-        this.listBehavior.navigationBehavior.peekLast(currGroup.inputs.items())!,
+        this.listBehavior.navigationBehavior.peekLast({
+          items: currGroup.inputs.items(),
+        })!,
       );
 
       return;
@@ -186,7 +190,9 @@ export class ToolbarPattern<V> {
    * Otherwise, sets the active index to the first focusable widget.
    */
   setDefaultState() {
-    const firstItem = this.listBehavior.navigationBehavior.peekFirst(this.inputs.items());
+    const firstItem = this.listBehavior.navigationBehavior.peekFirst({
+      items: this.inputs.items(),
+    });
 
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);

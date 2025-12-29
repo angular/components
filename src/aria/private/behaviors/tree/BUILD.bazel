@@ -4,32 +4,28 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "tree",
-    srcs = [
-        "combobox-tree.ts",
-        "tree.ts",
-    ],
+    srcs = ["tree.ts"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/private/behaviors/event-manager",
         "//src/aria/private/behaviors/expansion",
+        "//src/aria/private/behaviors/list",
+        "//src/aria/private/behaviors/list-focus",
+        "//src/aria/private/behaviors/list-navigation",
+        "//src/aria/private/behaviors/list-selection",
+        "//src/aria/private/behaviors/list-typeahead",
         "//src/aria/private/behaviors/signal-like",
-        "//src/aria/private/behaviors/tree",
-        "//src/aria/private/combobox",
     ],
 )
 
 ng_project(
     name = "unit_test_sources",
     testonly = True,
-    srcs = [
-        "tree.spec.ts",
-    ],
+    srcs = ["tree.spec.ts"],
     deps = [
         ":tree",
         "//:node_modules/@angular/core",
+        "//src/aria/private/behaviors/list-focus",
         "//src/aria/private/behaviors/signal-like",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
     ],
 )
 

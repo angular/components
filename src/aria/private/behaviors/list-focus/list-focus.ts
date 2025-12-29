@@ -40,6 +40,7 @@ export interface ListFocusInputs<T extends ListFocusItem> {
   /** Whether disabled items in the list should be focusable. */
   softDisabled: SignalLike<boolean>;
 
+  /** The html element that should receive focus. */
   element: SignalLike<HTMLElement | undefined>;
 }
 
