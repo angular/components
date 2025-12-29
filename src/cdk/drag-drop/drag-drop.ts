@@ -6,29 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, ElementRef, inject, RendererFactory2, DOCUMENT} from '@angular/core';
-
-import {ViewportRuler} from '../scrolling';
-import {DragRef, DragRefConfig} from './drag-ref';
-import {DropListRef} from './drop-list-ref';
-import {DragDropRegistry} from './drag-drop-registry';
-
-/** Default configuration to be used when creating a `DragRef`. */
-const DEFAULT_CONFIG = {
-  dragStartThreshold: 5,
-  pointerDirectionChangeThreshold: 5,
-};
+import {Injectable, ElementRef, inject, Injector} from '@angular/core';
+import {createDragRef, DragRef, DragRefConfig} from './drag-ref';
+import {createDropListRef, DropListRef} from './drop-list-ref';
 
 /**
  * Service that allows for drag-and-drop functionality to be attached to DOM elements.
+ * @deprecated Use the `createDragRef` or `createDropListRef` function for better tree shaking.
+ * Will be removed in v23.
+ * @breaking-change 23.0.0
  */
 @Injectable({providedIn: 'root'})
 export class DragDrop {
-  private _document = inject(DOCUMENT);
-  private _ngZone = inject(NgZone);
-  private _viewportRuler = inject(ViewportRuler);
-  private _dragDropRegistry = inject(DragDropRegistry);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _injector = inject(Injector);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -37,33 +27,23 @@ export class DragDrop {
    * Turns an element into a draggable item.
    * @param element Element to which to attach the dragging functionality.
    * @param config Object used to configure the dragging behavior.
+   * @deprecated Use the `createDragRef` function that provides better tree shaking.
+   * @breaking-change 23.0.0
    */
   createDrag<T = any>(
     element: ElementRef<HTMLElement> | HTMLElement,
-    config: DragRefConfig = DEFAULT_CONFIG,
+    config?: DragRefConfig,
   ): DragRef<T> {
-    return new DragRef<T>(
-      element,
-      config,
-      this._document,
-      this._ngZone,
-      this._viewportRuler,
-      this._dragDropRegistry,
-      this._renderer,
-    );
+    return createDragRef(this._injector, element, config);
   }
 
   /**
    * Turns an element into a drop list.
    * @param element Element to which to attach the drop list functionality.
+   * @deprecated Use the `createDropListRef` function that provides better tree shaking.
+   * @breaking-change 23.0.0
    */
   createDropList<T = any>(element: ElementRef<HTMLElement> | HTMLElement): DropListRef<T> {
-    return new DropListRef<T>(
-      element,
-      this._dragDropRegistry,
-      this._document,
-      this._ngZone,
-      this._viewportRuler,
-    );
+    return createDropListRef(this._injector, element);
   }
 }

@@ -12,10 +12,13 @@ import {coerceElement} from '../coercion';
 import {_getEventTarget, _getShadowRoot} from '../platform';
 import {ViewportRuler} from '../scrolling';
 import {
+  DOCUMENT,
   ElementRef,
   EmbeddedViewRef,
+  Injector,
   NgZone,
   Renderer2,
+  RendererFactory2,
   TemplateRef,
   ViewContainerRef,
   signal,
@@ -123,6 +126,35 @@ const dragImportantProperties = new Set([
  * Same advantages and disadvantages as `parent`.
  */
 export type PreviewContainer = 'global' | 'parent' | ElementRef<HTMLElement> | HTMLElement;
+
+/**
+ * Creates a `DragRef` for an element, turning it into a draggable item.
+ * @param injector Injector used to resolve dependencies.
+ * @param element Element to which to attach the dragging functionality.
+ * @param config Object used to configure the dragging behavior.
+ */
+export function createDragRef<T = unknown>(
+  injector: Injector,
+  element: ElementRef<HTMLElement> | HTMLElement,
+  config: DragRefConfig = {
+    dragStartThreshold: 5,
+    pointerDirectionChangeThreshold: 5,
+  },
+): DragRef<T> {
+  const renderer =
+    injector.get(Renderer2, null, {optional: true}) ||
+    injector.get(RendererFactory2).createRenderer(null, null);
+
+  return new DragRef(
+    element,
+    config,
+    injector.get(DOCUMENT),
+    injector.get(NgZone),
+    injector.get(ViewportRuler),
+    injector.get(DragDropRegistry),
+    renderer,
+  );
+}
 
 /**
  * Reference to a draggable item. Used to manipulate or dispose of the item.
