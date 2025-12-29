@@ -237,14 +237,14 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     const element = this._textareaElement;
     const previousMargin = element.style.marginBottom || '';
     const isFirefox = this._platform.FIREFOX;
-    const needsMarginFiller = isFirefox && this._hasFocus;
+    const needsMarginFiller = this._hasFocus;
     const measuringClass = isFirefox
       ? 'cdk-textarea-autosize-measuring-firefox'
       : 'cdk-textarea-autosize-measuring';
 
-    // In some cases the page might move around while we're measuring the `textarea` on Firefox. We
+    // In some cases the page might move around while we're measuring the `textarea`. We
     // work around it by assigning a temporary margin with the same height as the `textarea` so that
-    // it occupies the same amount of space. See #23233.
+    // it occupies the same amount of space. See #23233 and #23834.
     if (needsMarginFiller) {
       element.style.marginBottom = `${element.clientHeight}px`;
     }
