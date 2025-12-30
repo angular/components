@@ -1,0 +1,36 @@
+load(
+    "//tools:defaults.bzl",
+    "ng_project",
+    "ng_web_test_suite",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "aria-grid",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/cdk/table",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":aria-grid",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/table",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
