@@ -38,8 +38,9 @@ html {
     @include mat.all-component-themes($light-theme);
     @include mat.system-level-colors($light-theme);
     @include mat.system-level-typography($light-theme);
-    // TODO(mmalerba): Support M3 for experimental components.
     @include matx.column-resize-theme($light-theme);
+
+    // TODO(mmalerba): Support M3 for experimental popover-edit.
     // @include matx.popover-edit-theme($light-theme);
   }
 
@@ -52,6 +53,7 @@ html {
       typography: Roboto,
       density: 0,
     ));
+    @include matx.column-resize-theme();
   }
 
   @include mat.system-classes();
@@ -73,8 +75,8 @@ body.demo-unicorn-dark-theme {
     // Include the dark theme color styles.
     @include mat.all-component-colors($dark-theme);
     @include mat.system-level-colors($dark-theme);
-    // TODO(mmalerba): Support M3 for experimental components.
-    // @include matx.column-resize-color($dark-theme);
+    @include matx.column-resize-color($dark-theme);
+    // TODO(mmalerba): Support M3 for experimental popover-edit.
     // @include matx.popover-edit-color($dark-theme);
   }
 }
