@@ -114,7 +114,7 @@ export class MatDialog implements OnDestroy {
    */
   open<T, D = any, R = any>(
     component: ComponentType<T>,
-    config?: MatDialogConfig<D>,
+    config?: MatDialogConfig<D, T, R>,
   ): MatDialogRef<T, R>;
 
   /**
