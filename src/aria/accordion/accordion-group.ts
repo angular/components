@@ -71,19 +71,19 @@ import {ACCORDION_GROUP} from './accordion-tokens';
 })
 export class AccordionGroup {
   /** A reference to the group element. */
-  private readonly _elementRef = inject(ElementRef);
+  protected readonly _elementRef = inject(ElementRef);
 
   /** A reference to the group element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The AccordionTriggers nested inside this group. */
-  private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
+  protected readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
 
   /** The AccordionTrigger patterns nested inside this group. */
-  private readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
+  protected readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
 
   /** The AccordionPanels nested inside this group. */
-  private readonly _panels = contentChildren(AccordionPanel, {descendants: true});
+  protected readonly _panels = contentChildren(AccordionPanel, {descendants: true});
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -114,7 +114,7 @@ export class AccordionGroup {
     element: () => this.element,
   });
 
-  constructor() {
+  protected readonly _effects = [
     // Effect to link triggers with their corresponding panels and update the group's items.
     afterRenderEffect(() => {
       const triggers = this._triggers();
@@ -127,8 +127,8 @@ export class AccordionGroup {
           panel._accordionTriggerPattern.set(trigger._pattern);
         }
       }
-    });
-  }
+    }),
+  ];
 
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {
@@ -141,7 +141,7 @@ export class AccordionGroup {
   }
 
   /** Gets the trigger pattern for a given element. */
-  private _getItem(element: Element | null | undefined): AccordionTriggerPattern | undefined {
+  protected _getItem(element: Element | null | undefined): AccordionTriggerPattern | undefined {
     let target = element;
 
     while (target) {

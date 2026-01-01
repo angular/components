@@ -61,7 +61,7 @@ export class AccordionTrigger {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent AccordionGroup. */
-  private readonly _accordionGroup = inject(ACCORDION_GROUP);
+  protected readonly _accordionGroup = inject(ACCORDION_GROUP);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
