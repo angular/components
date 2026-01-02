@@ -253,7 +253,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     this._viewportRect = this._getNarrowedViewportRect();
     this._originRect = this._getOriginRect();
     this._overlayRect = this._pane.getBoundingClientRect();
-    this._containerRect = this._overlayContainer.getContainerElement().getBoundingClientRect();
+    this._containerRect = this._getContainerRect();
 
     const originRect = this._originRect;
     const overlayRect = this._overlayRect;
@@ -401,10 +401,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       this._originRect = this._getOriginRect();
       this._overlayRect = this._pane.getBoundingClientRect();
       this._viewportRect = this._getNarrowedViewportRect();
-      this._containerRect = this._overlayContainer.getContainerElement().getBoundingClientRect();
-
-      const originPoint = this._getOriginPoint(this._originRect, this._containerRect, lastPosition);
-      this._applyPosition(lastPosition, originPoint);
+      this._containerRect = this._getContainerRect();
+      this._applyPosition(
+        lastPosition,
+        this._getOriginPoint(this._originRect, this._containerRect, lastPosition),
+      );
     } else {
       this.apply();
     }
@@ -1295,6 +1296,29 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       height,
       width,
     };
+  }
+
+  /** Gets the dimensions of the overlay container. */
+  private _getContainerRect(): Dimensions {
+    // We have some CSS that hides the overlay container when it's empty. This can happen
+    // when a popover-based overlay is open and it hasn't been inserted into the overlay
+    // container. If that's the case, make the container temporarily visible so that we
+    // can measure it. This information is used to work around some issues in Safari.
+    const isInlinePopover =
+      this._overlayRef.getConfig().usePopover && this._popoverLocation !== 'global';
+    const element = this._overlayContainer.getContainerElement();
+
+    if (isInlinePopover) {
+      element.style.display = 'block';
+    }
+
+    const dimensions = element.getBoundingClientRect();
+
+    if (isInlinePopover) {
+      element.style.display = '';
+    }
+
+    return dimensions;
   }
 }
 
