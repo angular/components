@@ -237,17 +237,14 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     const element = this._textareaElement;
     const previousMargin = element.style.marginBottom || '';
     const isFirefox = this._platform.FIREFOX;
-    const needsMarginFiller = isFirefox && this._hasFocus;
     const measuringClass = isFirefox
       ? 'cdk-textarea-autosize-measuring-firefox'
       : 'cdk-textarea-autosize-measuring';
 
-    // In some cases the page might move around while we're measuring the `textarea` on Firefox. We
+    // In some cases the page might move around while we're measuring the `textarea`. We
     // work around it by assigning a temporary margin with the same height as the `textarea` so that
-    // it occupies the same amount of space. See #23233.
-    if (needsMarginFiller) {
-      element.style.marginBottom = `${element.clientHeight}px`;
-    }
+    // it occupies the same amount of space. See #23233 and #23834.
+    element.style.marginBottom = `${element.clientHeight}px`;
 
     // Reset the textarea height to auto in order to shrink back to its default size.
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
@@ -257,9 +254,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     const scrollHeight = element.scrollHeight - 4;
     element.classList.remove(measuringClass);
 
-    if (needsMarginFiller) {
-      element.style.marginBottom = previousMargin;
-    }
+    element.style.marginBottom = previousMargin;
 
     return scrollHeight;
   }
