@@ -183,6 +183,10 @@ export class GoogleMapDemo {
     this.markerPositions.pop();
   }
 
+  handleMarkerRightclick(event: google.maps.MapMouseEvent) {
+    console.log('Marker right-clicked');
+  }
+
   editablePolylineChanged(editable: boolean) {
     this.polylineOptions = {
       ...this.polylineOptions,
