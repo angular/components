@@ -119,7 +119,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   );
 
   /** The UI pattern for this item. */
-  _pattern: TreeItemPattern<V>;
+  _pattern!: TreeItemPattern<V>;
 
   constructor() {
     super();
@@ -151,7 +151,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       ...this,
       tree: treePattern,
       parent: parentPattern,
-      children: computed(() => this._group()?._childPatterns() ?? []),
+      children: computed(() => this._group()?._childPatterns()),
       hasChildren: computed(() => !!this._group()),
       element: () => this.element,
       searchTerm: () => this.searchTerm() ?? '',

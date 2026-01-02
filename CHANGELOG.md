@@ -1,3 +1,33 @@
+<a name="21.0.5"></a>
+# 21.0.5 "plastic-deer" (2025-12-18)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.1.0-next.3"></a>
+# 21.1.0-next.3 "lego scooter" (2025-12-17)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ebb1c176f2](https://github.com/angular/components/commit/ebb1c176f2f4909acad41c8bbbb87e023c9a0b99) | fix | **tabs:** disabled tab selection |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dd40f25a03](https://github.com/angular/components/commit/dd40f25a03337765d09ea43f89d0baf3ba6b84a8) | fix | **testing:** Skip task tracking if zone patches aren't present ([#32544](https://github.com/angular/components/pull/32544)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0669de57f2](https://github.com/angular/components/commit/0669de57f2eb0b80b418545ab5a8d9725c1c8f51) | fix | **form-field:** outline being thrown off by Tailwind ([#32513](https://github.com/angular/components/pull/32513)) |
+| [a364de5d01](https://github.com/angular/components/commit/a364de5d01c46fe94bd44813b0e584f4b80aa7bc) | fix | **schematics:** combine style resets ([#32496](https://github.com/angular/components/pull/32496)) |
+| [204788b945](https://github.com/angular/components/commit/204788b9458a24145cce55cc3744b0bc793fbb0f) | fix | **slide-toggle:** Fix a11y issues by hiding label when it has no content. ([#32480](https://github.com/angular/components/pull/32480)) |
+| [cdcae54a47](https://github.com/angular/components/commit/cdcae54a471906dbccdfbe905520eea855bebc23) | fix | **tooltip:** remove explicit usePopover ([#32528](https://github.com/angular/components/pull/32528)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e63c5648e8](https://github.com/angular/components/commit/e63c5648e8b08931435c087a12d20305d385f5bc) | fix | type issues when importing Aria directives ([#32561](https://github.com/angular/components/pull/32561)) |
+| [d4e104ab7f](https://github.com/angular/components/commit/d4e104ab7fba5b3ff9762d937bffae56a0c5b437) | fix | use focus-visible for focus indicator ([#32514](https://github.com/angular/components/pull/32514)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0-next.2"></a>
 # 21.1.0-next.2 "plastic-monkey" (2025-12-10)
 ### cdk

@@ -49,7 +49,7 @@ groups:
       - >
         contains_any_globs(files, [
           '.bazel_fix_commands.json',
-          '.bazelignore',
+          'REPO.bazel',
           '.bazelrc',
           '.bazelversion',
           '.firebaserc',

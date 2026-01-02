@@ -679,6 +679,22 @@ describe('YoutubePlayer', () => {
       expect(playerCtorSpy).toHaveBeenCalled();
     });
 
+    it('should apply startSeconds when disablePlaceholder and autoplay are both set', () => {
+      testComponent.disablePlaceholder = true;
+      testComponent.playerVars = {autoplay: 1};
+      testComponent.startSeconds = 30;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      // Simulate player state being PLAYING (autoplay has started the video)
+      playerSpy.getPlayerState.and.returnValue(window.YT!.PlayerState.PLAYING);
+      events.onReady({target: playerSpy});
+
+      // Should use seekTo instead of cueVideoById when player is already playing
+      expect(playerSpy.seekTo).toHaveBeenCalledWith(30, true);
+      expect(playerSpy.cueVideoById).not.toHaveBeenCalled();
+    });
+
     it('should allow for the placeholder image quality to be changed', () => {
       const placeholder = getPlaceholder(fixture);
       expect(placeholder.style.backgroundImage).toContain(

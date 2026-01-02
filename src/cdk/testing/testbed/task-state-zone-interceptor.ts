@@ -56,6 +56,13 @@ export class TaskStateZoneInterceptor {
     return {stable: !state.macroTask && !state.microTask};
   }
 
+  static isInProxyZone(): boolean {
+    if (typeof Zone === 'undefined') {
+      return false;
+    }
+    return ((Zone as any)['ProxyZoneSpec'] as ProxyZoneStatic | undefined)?.get() !== undefined;
+  }
+
   /**
    * Sets up the custom task state Zone interceptor in the  `ProxyZone`. Throws if
    * no `ProxyZone` could be found.

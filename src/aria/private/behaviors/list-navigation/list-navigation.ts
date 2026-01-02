@@ -24,54 +24,71 @@ export interface ListNavigationInputs<T extends ListNavigationItem> extends List
   textDirection: SignalLike<'rtl' | 'ltr'>;
 }
 
+/** Options for list navigation. */
+export interface ListNavigationOpts<T> {
+  /**
+   * Whether to focus the item's element.
+   * Defaults to true.
+   */
+  focusElement?: boolean;
+
+  /**
+   * The list of items to navigate through.
+   * Defaults to the list of items from the inputs.
+   */
+  items?: T[];
+}
+
 /** Controls navigation for a list of items. */
 export class ListNavigation<T extends ListNavigationItem> {
   constructor(readonly inputs: ListNavigationInputs<T> & {focusManager: ListFocus<T>}) {}
 
   /** Navigates to the given item. */
-  goto(item?: T, opts?: {focusElement?: boolean}): boolean {
+  goto(item?: T, opts?: ListNavigationOpts<T>): boolean {
     return item ? this.inputs.focusManager.focus(item, opts) : false;
   }
 
   /** Navigates to the next item in the list. */
-  next(opts?: {focusElement?: boolean}): boolean {
+  next(opts?: ListNavigationOpts<T>): boolean {
     return this._advance(1, opts);
   }
 
   /** Peeks the next item in the list. */
-  peekNext(): T | undefined {
-    return this._peek(1);
+  peekNext(opts?: ListNavigationOpts<T>): T | undefined {
+    return this._peek(1, opts);
   }
 
   /** Navigates to the previous item in the list. */
-  prev(opts?: {focusElement?: boolean}): boolean {
+  prev(opts?: ListNavigationOpts<T>): boolean {
     return this._advance(-1, opts);
   }
 
   /** Peeks the previous item in the list. */
-  peekPrev(): T | undefined {
-    return this._peek(-1);
+  peekPrev(opts?: ListNavigationOpts<T>): T | undefined {
+    return this._peek(-1, opts);
   }
 
   /** Navigates to the first item in the list. */
-  first(opts?: {focusElement?: boolean}): boolean {
-    const item = this.peekFirst();
+  first(opts?: ListNavigationOpts<T>): boolean {
+    const item = this.peekFirst(opts);
     return item ? this.goto(item, opts) : false;
   }
 
   /** Navigates to the last item in the list. */
-  last(opts?: {focusElement?: boolean}): boolean {
-    const item = this.peekLast();
+  last(opts?: ListNavigationOpts<T>): boolean {
+    const item = this.peekLast(opts);
     return item ? this.goto(item, opts) : false;
   }
 
   /** Gets the first focusable item from the given list of items. */
-  peekFirst(items: T[] = this.inputs.items()): T | undefined {
+  peekFirst(opts?: ListNavigationOpts<T>): T | undefined {
+    const items = opts?.items ?? this.inputs.items();
     return items.find(i => this.inputs.focusManager.isFocusable(i));
   }
 
   /** Gets the last focusable item from the given list of items. */
-  peekLast(items: T[] = this.inputs.items()): T | undefined {
+  peekLast(opts?: ListNavigationOpts<T>): T | undefined {
+    const items = opts?.items ?? this.inputs.items();
     for (let i = items.length - 1; i >= 0; i--) {
       if (this.inputs.focusManager.isFocusable(items[i])) {
         return items[i];
@@ -81,16 +98,21 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */
-  private _advance(delta: 1 | -1, opts?: {focusElement?: boolean}): boolean {
-    const item = this._peek(delta);
+  private _advance(delta: 1 | -1, opts?: ListNavigationOpts<T>): boolean {
+    const item = this._peek(delta, opts);
     return item ? this.goto(item, opts) : false;
   }
 
   /** Peeks the next or previous focusable item in the list based on the given delta. */
-  private _peek(delta: 1 | -1): T | undefined {
-    const items = this.inputs.items();
+  private _peek(delta: 1 | -1, opts?: ListNavigationOpts<T>): T | undefined {
+    const items = opts?.items ?? this.inputs.items();
     const itemCount = items.length;
-    const startIndex = this.inputs.focusManager.activeIndex();
+    const activeItem = this.inputs.focusManager.inputs.activeItem();
+    const startIndex =
+      opts?.items && activeItem
+        ? items.indexOf(activeItem)
+        : this.inputs.focusManager.activeIndex();
+
     const step = (i: number) =>
       this.inputs.wrap() ? (i + delta + itemCount) % itemCount : i + delta;
 
