@@ -52,6 +52,7 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
+import {MediaMatcher} from '@angular/cdk/layout';
 import {Observable, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
 
@@ -146,6 +147,14 @@ export interface MatTooltipDefaultOptions {
    * `tooltipClass` is defined directly on the tooltip element, as it will override the default.
    */
   tooltipClass?: string | string[];
+
+  /**
+   * Whether the tooltip should use a media query to detect if the device is able to hover.
+   * Note that this may affect tests that run in a headless browser which reports that it's
+   * unable to hover. In such cases you may need to include an additional timeout, because
+   * the tooltip will fall back to treating the device as a touch screen.
+   */
+  detectHoverCapability?: boolean;
 }
 
 /**
@@ -190,6 +199,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   protected _dir = inject(Directionality);
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
+  private _mediaMatcher = inject(MediaMatcher);
   private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
     optional: true,
@@ -784,7 +794,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
-    if (this._platformSupportsMouseEvents()) {
+    if (!this._isTouchPlatform()) {
       this._passiveListeners.push([
         'mouseenter',
         event => {
@@ -830,7 +840,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._pointerExitEventsInitialized = true;
 
     const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
-    if (this._platformSupportsMouseEvents()) {
+    if (!this._isTouchPlatform()) {
       exitListeners.push(
         [
           'mouseleave',
@@ -865,8 +875,19 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     });
   }
 
-  private _platformSupportsMouseEvents() {
-    return !this._platform.IOS && !this._platform.ANDROID;
+  private _isTouchPlatform(): boolean {
+    if (this._platform.IOS || this._platform.ANDROID) {
+      // If we detected iOS or Android, it's definitely supported.
+      return true;
+    } else if (!this._platform.isBrowser) {
+      // If it's not a browser, it's definitely not supported.
+      return false;
+    }
+
+    return (
+      !!this._defaultOptions?.detectHoverCapability &&
+      this._mediaMatcher.matchMedia('(any-hover: none)').matches
+    );
   }
 
   /** Listener for the `wheel` event on the element. */
