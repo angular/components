@@ -43,9 +43,8 @@ import {CDK_DRAG_HANDLE, CdkDragHandle} from './drag-handle';
 import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {DragRef, Point, PreviewContainer, DragConstrainPosition} from '../drag-ref';
+import {DragRef, Point, PreviewContainer, DragConstrainPosition, createDragRef} from '../drag-ref';
 import type {CdkDropList} from './drop-list';
-import {DragDrop} from '../drag-drop';
 import {CDK_DRAG_CONFIG, DragDropConfig, DragStartDelay, DragAxis} from './config';
 import {assertElementNode} from './assertions';
 import {DragDropRegistry} from '../drag-drop-registry';
@@ -222,9 +221,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   constructor() {
     const dropContainer = this.dropContainer;
     const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
-    const dragDrop = inject(DragDrop);
 
-    this._dragRef = dragDrop.createDrag(this.element, {
+    this._dragRef = createDragRef(this._injector, this.element, {
       dragStartThreshold:
         config && config.dragStartThreshold != null ? config.dragStartThreshold : 5,
       pointerDirectionChangeThreshold:

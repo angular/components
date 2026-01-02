@@ -9,6 +9,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -299,15 +300,23 @@ export class CdkDropListGroup<T> implements OnDestroy {
 export function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void;
 
 // @public
+export function createDragRef<T = unknown>(injector: Injector, element: ElementRef<HTMLElement> | HTMLElement, config?: DragRefConfig): DragRef<T>;
+
+// @public
+export function createDropListRef<T = unknown>(injector: Injector, element: ElementRef<HTMLElement> | HTMLElement): DropListRef<T>;
+
+// @public
 export type DragAxis = 'x' | 'y';
 
 // @public
 export type DragConstrainPosition = (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
 
-// @public
+// @public @deprecated
 export class DragDrop {
     constructor(...args: unknown[]);
+    // @deprecated
     createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement, config?: DragRefConfig): DragRef<T>;
+    // @deprecated
     createDropList<T = any>(element: ElementRef<HTMLElement> | HTMLElement): DropListRef<T>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DragDrop, never>;
