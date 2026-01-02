@@ -275,6 +275,7 @@ export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTr
     setValue: (value: V | undefined) => void;
     tabIndex: SignalLike<-1 | 0>;
     toggle: (item?: TreeItemPattern<V>) => void;
+    toggleExpansion: (item?: TreeItemPattern<V>) => void;
     unfocus: () => void;
 }
 
@@ -834,23 +835,21 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
 }
 
 // @public
-export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, 'items'> {
-    allItems: SignalLike<TreeItemPattern<V>[]>;
+export interface TreeInputs<V> extends Omit<TreeInputs$1<TreeItemPattern<V>, V>, 'multiExpandable'> {
     currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
     id: SignalLike<string>;
     nav: SignalLike<boolean>;
 }
 
 // @public
-export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'>, Omit<ExpansionItem, 'expandable'> {
-    children: SignalLike<TreeItemPattern<V>[]>;
+export interface TreeItemInputs<V> extends Omit<TreeItem<V, TreeItemPattern<V>>, 'index' | 'parent' | 'visible' | 'expandable'> {
     hasChildren: SignalLike<boolean>;
     parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
     tree: SignalLike<TreePattern<V>>;
 }
 
 // @public
-export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
+export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     constructor(inputs: TreeItemInputs<V>);
     readonly active: SignalLike<boolean>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
@@ -859,13 +858,12 @@ export class TreeItemPattern<V> implements ListItem<V>, ExpansionItem {
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
-    readonly expansionBehavior: ListExpansion;
     readonly id: SignalLike<string>;
     readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: TreeItemInputs<V>;
     readonly level: SignalLike<number>;
-    readonly parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
+    readonly parent: SignalLike<TreeItemPattern<V> | undefined>;
     readonly posinset: SignalLike<number>;
     readonly searchTerm: SignalLike<string>;
     readonly selectable: SignalLike<boolean>;
@@ -882,19 +880,16 @@ export class TreePattern<V> implements TreeInputs<V> {
     constructor(inputs: TreeInputs<V>);
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
-    readonly allItems: SignalLike<TreeItemPattern<V>[]>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
-    collapse(opts?: SelectOptions): void;
     readonly collapseKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    _collapseOrParent(opts?: SelectOptions): void;
     readonly currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
     readonly disabled: SignalLike<boolean>;
     readonly dynamicSpaceKey: SignalLike<"" | " ">;
     readonly element: SignalLike<HTMLElement>;
-    expand(opts?: SelectOptions): void;
     readonly expanded: () => boolean;
     readonly expandKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    expandSiblings(item?: TreeItemPattern<V>): void;
-    readonly expansionBehavior: ListExpansion;
+    _expandOrFirstChild(opts?: SelectOptions): void;
     readonly focusMode: SignalLike<'roving' | 'activedescendant'>;
     readonly followFocus: SignalLike<boolean>;
     protected _getItem(event: Event): TreeItemPattern<V> | undefined;
@@ -903,9 +898,9 @@ export class TreePattern<V> implements TreeInputs<V> {
     // (undocumented)
     readonly inputs: TreeInputs<V>;
     readonly isRtl: SignalLike<boolean>;
+    readonly items: SignalLike<TreeItemPattern<V>[]>;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly level: () => number;
-    readonly listBehavior: List<TreeItemPattern<V>, V>;
     readonly multi: SignalLike<boolean>;
     readonly nav: SignalLike<boolean>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
@@ -919,12 +914,11 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<-1 | 0>;
     readonly textDirection: SignalLike<'ltr' | 'rtl'>;
-    toggleExpansion(item?: TreeItemPattern<V>): void;
+    readonly treeBehavior: Tree<TreeItemPattern<V>, V>;
     readonly typeaheadDelay: SignalLike<number>;
     readonly typeaheadRegexp: RegExp;
     readonly values: WritableSignalLike<V[]>;
     readonly visible: () => boolean;
-    readonly visibleItems: SignalLike<TreeItemPattern<V>[]>;
     readonly wrap: SignalLike<boolean>;
 }
 

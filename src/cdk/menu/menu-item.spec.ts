@@ -210,5 +210,5 @@ class MenuItemWithBoldElement {}
   imports: [CdkMenuModule, FakeMatIcon],
 })
 class MenuItemWithMultipleNestings {
-  typeahead: string;
+  typeahead = '';
 }

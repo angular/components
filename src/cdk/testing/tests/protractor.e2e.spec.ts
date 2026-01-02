@@ -2,7 +2,7 @@ import {HarnessLoader} from '../../testing';
 import {ProtractorHarnessEnvironment} from '../../testing/protractor';
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {parallel} from '../change-detection';
-import {crossEnvironmentSpecs} from './cross-environment.spec';
+import {crossEnvironmentSpecs} from './cross-environment-tests';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the

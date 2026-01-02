@@ -158,7 +158,7 @@ export class Tree<V> {
     const inputs = {
       ...this,
       id: this.id,
-      allItems: computed(() =>
+      items: computed(() =>
         [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
       ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
@@ -181,18 +181,18 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
-      const items = inputs.allItems();
+      const items = inputs.items();
       const activeItem = untracked(() => inputs.activeItem());
 
       if (!items.some(i => i === activeItem) && activeItem) {
-        this._pattern.listBehavior.unfocus();
+        this._pattern.treeBehavior.unfocus();
       }
     });
 
     afterRenderEffect(() => {
       if (!(this._pattern instanceof ComboboxTreePattern)) return;
 
-      const items = inputs.allItems();
+      const items = inputs.items();
       const values = untracked(() => this.values());
 
       if (items && values.some(v => !items.some(i => i.value() === v))) {

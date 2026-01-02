@@ -9,6 +9,7 @@ ng_project(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
+            "cross-environment-tests.ts",
             "harnesses/**",
         ],
     ),
@@ -30,9 +31,9 @@ ts_project(
 )
 
 ts_project(
-    name = "cross_environment_specs",
+    name = "cross_environment_tests",
     testonly = True,
-    srcs = ["cross-environment.spec.ts"],
+    srcs = ["cross-environment-tests.ts"],
     deps = [
         ":test_harnesses",
         "//:node_modules/@angular/core",
@@ -48,12 +49,11 @@ ng_project(
             "**/*.spec.ts",
         ],
         exclude = [
-            "cross-environment.spec.ts",
             "**/*.e2e.spec.ts",
         ],
     ),
     deps = [
-        ":cross_environment_specs",
+        ":cross_environment_tests",
         ":test_components",
         ":test_harnesses",
         "//:node_modules/@angular/core",
@@ -76,7 +76,7 @@ ts_project(
         exclude = ["webdriver.e2e.spec.ts"],
     ),
     deps = [
-        ":cross_environment_specs",
+        ":cross_environment_tests",
         ":test_harnesses",
         "//:node_modules/protractor",
         "//src/cdk/testing",
@@ -90,7 +90,7 @@ ts_project(
     testonly = True,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
-        ":cross_environment_specs",
+        ":cross_environment_tests",
         ":test_harnesses",
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@types/jasmine",
@@ -99,4 +99,13 @@ ts_project(
         "//src/cdk/testing",
         "//src/cdk/testing/selenium-webdriver",
     ],
+)
+
+# Source code of the tests exposed for integration test purposes.
+filegroup(
+    name = "sources_for_integration_tests",
+    srcs = glob([
+        "**/*.ts",
+        "**/*.html",
+    ]),
 )

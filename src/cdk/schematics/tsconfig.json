@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "rootDir": ".",
     "strictNullChecks": true,
+    "strictPropertyInitialization": true,
     "noPropertyAccessFromIndexSignature": true,
     "strict": true,
     "useUnknownInCatchVariables": true,

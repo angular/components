@@ -756,10 +756,10 @@ class PizzaMsg {
 class SaveParentNodeOnInit implements AfterViewInit {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  parentOnViewInit: HTMLElement;
+  parentOnViewInit: HTMLElement | null = null;
 
   ngAfterViewInit() {
-    this.parentOnViewInit = this._elementRef.nativeElement.parentElement!;
+    this.parentOnViewInit = this._elementRef.nativeElement.parentElement;
   }
 }
 

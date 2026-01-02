@@ -143,7 +143,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _overlayRef: OverlayRef | null = null;
   private _portal: TemplatePortal<unknown> | null = null;
   private _optionsCacheKey: string | null = null;
-  private _localeChanges: Subscription;
+  private _localeChanges: Subscription | undefined;
   private _onOpenRender: AfterRenderRef | null = null;
 
   protected _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
@@ -307,7 +307,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   ngOnDestroy(): void {
     this._keyManager.destroy();
-    this._localeChanges.unsubscribe();
+    this._localeChanges?.unsubscribe();
     this._onOpenRender?.destroy();
     this._overlayRef?.dispose();
   }
