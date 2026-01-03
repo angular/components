@@ -15,7 +15,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 export class TimepickerOptionsExample {
   customOptions: MatTimepickerOption<Date>[] = [
     {label: 'Morning', value: new Date(2024, 0, 1, 9, 0, 0)},
-    {label: 'Noon', value: new Date(2024, 0, 1, 12, 0, 0)},
+    {label: 'Noon', value: new Date(2024, 0, 1, 12, 0, 0), disabled: true},
     {label: 'Evening', value: new Date(2024, 0, 1, 22, 0, 0)},
   ];
 }
