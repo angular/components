@@ -13,10 +13,10 @@
   $tokens: (
     base: (
       autocomplete-container-shape: map.get($system, corner-extra-small),
-      autocomplete-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     color: (
       autocomplete-background-color: map.get($system, surface-container),
+      autocomplete-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     typography: (),
     density: (),
