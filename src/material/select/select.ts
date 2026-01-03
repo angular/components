@@ -31,6 +31,8 @@ import {
   CdkOverlayOrigin,
   ConnectedPosition,
   createRepositionScrollStrategy,
+  FlexibleOverlayPopoverLocation,
+  OVERLAY_DEFAULT_CONFIG,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -210,6 +212,7 @@ export class MatSelect
   private _liveAnnouncer = inject(LiveAnnouncer);
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
   protected _animationsDisabled = _animationsDisabled();
+  protected _popoverLocation: FlexibleOverlayPopoverLocation | null;
   private _initialized = new Subject();
   private _cleanupDetach: (() => void) | undefined;
 
@@ -602,6 +605,7 @@ export class MatSelect
     const parentForm = inject(NgForm, {optional: true});
     const parentFormGroup = inject(FormGroupDirective, {optional: true});
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const defaultPopoverConfig = inject(OVERLAY_DEFAULT_CONFIG, {optional: true});
 
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
@@ -622,8 +626,10 @@ export class MatSelect
       parentForm,
       this.stateChanges,
     );
+
     this._scrollStrategy = this._scrollStrategyFactory();
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
+    this._popoverLocation = defaultPopoverConfig?.usePopover === false ? null : 'inline';
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
