@@ -136,6 +136,9 @@ export interface TreeInputs<V> extends Omit<
 
   /** The aria-current type. */
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+
+  /** The text direction of the tree. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** Controls the state and interactions of a tree view. */
