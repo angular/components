@@ -1,7 +1,7 @@
 load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//src/aria:config.bzl", "ARIA_TARGETS")
-load("//tools:defaults.bzl", "ng_package", "ts_project")
+load("//tools:defaults.bzl", "ng_examples_db", "ng_package", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -16,10 +16,26 @@ ts_project(
     deps = ["//:node_modules/@angular/core"],
 )
 
+ng_examples_db(
+    name = "aria_example_database",
+    srcs = glob(
+        include = [
+            "examples/**/*.md",
+        ],
+        # TODO: Remove this once examples are created. It should never be empty at that point.
+        allow_empty = True,
+    ),
+    out = "resources/code-examples.db",
+    path = "src/aria/examples",
+)
+
 ng_package(
     name = "npm_package",
     package_name = "@angular/aria",
-    srcs = ["package.json"],
+    srcs = [
+        "package.json",
+        "resources/code-examples.db",
+    ],
     nested_packages = select({
         "//:snapshot_adev_assets": [":adev_assets"],
         "//conditions:default": [],
