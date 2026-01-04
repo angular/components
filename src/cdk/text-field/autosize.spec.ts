@@ -373,11 +373,11 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
 
-  it('should not show scrollbar with decimal line-height values at 110% zoom', () => {
-    // Test for issue #32178: verifies that subtraction of 3.5 (not 4) prevents scrollbars
-    // when line-height has decimal values and scrollHeight has fractional pixels that get truncated.
+  // Regression for #32178. Issue mentions zoom, but we can't change browser zoom here;
+  // instead we simulate the kind of rounding/truncation that can occur in that environment.
+  it('should not show a scrollbar when line-height causes sub-pixel rounding', () => {
     const fixture = TestBed.createComponent(AutosizeTextAreaWithDecimalLineHeight);
-    const textarea = fixture.nativeElement.querySelector('textarea');
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
     const autosize = fixture.debugElement
       .query(By.css('textarea'))!
       .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
@@ -392,19 +392,15 @@ describe('CdkTextareaAutosize', () => {
     fixture.detectChanges();
     const actualNeededScrollHeight = textarea.scrollHeight;
 
-    // Simulate fractional pixel truncation: scrollHeight with measuring class would be
-    // actualNeededScrollHeight + 4.5px, but gets truncated to actualNeededScrollHeight + 4px
-    let measurementCallCount = 0;
+    // Simulate fractional pixel rounding/truncation:
+    // - During measurement, the measuring class adds 4px padding; if we had an extra 0.5px in
+    //   layout but it gets truncated, the value we read can be 1px smaller than the "real" need.
     const scrollHeightDuringMeasurement = Math.floor(actualNeededScrollHeight + 4.5);
     const actualNeededWithFractional = actualNeededScrollHeight + 0.5;
 
     Object.defineProperty(textarea, 'scrollHeight', {
       get: function () {
-        measurementCallCount++;
-        if (
-          measurementCallCount <= 10 &&
-          this.classList.contains('cdk-textarea-autosize-measuring')
-        ) {
+        if (this.classList.contains('cdk-textarea-autosize-measuring')) {
           return scrollHeightDuringMeasurement;
         }
         return Math.ceil(actualNeededWithFractional);
@@ -412,24 +408,26 @@ describe('CdkTextareaAutosize', () => {
       configurable: true,
     });
 
-    autosize.resizeToFitContent();
-    fixture.detectChanges();
-
-    delete (textarea as any).scrollHeight;
-    void textarea.offsetHeight;
+    try {
+      autosize.resizeToFitContent();
+      fixture.detectChanges();
+    } finally {
+      // Ensure we always restore the native property, even if the expectations fail.
+      delete (textarea as any).scrollHeight;
+    }
 
     const actualScrollHeight = textarea.scrollHeight;
     const actualClientHeight = textarea.clientHeight;
     const setHeight = parseFloat(textarea.style.height);
-    const heightWithSubtraction3_5 = scrollHeightDuringMeasurement - 3.5;
+    const heightWithBuffer = scrollHeightDuringMeasurement - 3.5;
 
     expect(actualClientHeight)
       .withContext(`Expected no scrollbar with decimal line-height`)
       .toBe(actualScrollHeight);
 
     expect(setHeight)
-      .withContext(`Set height (${setHeight}px) should be at least ${heightWithSubtraction3_5}px`)
-      .toBeGreaterThanOrEqual(heightWithSubtraction3_5);
+      .withContext(`Set height (${setHeight}px) should be at least ${heightWithBuffer}px`)
+      .toBeGreaterThanOrEqual(heightWithBuffer);
   });
 });
 
