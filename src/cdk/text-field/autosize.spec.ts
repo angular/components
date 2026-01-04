@@ -372,6 +372,39 @@ describe('CdkTextareaAutosize', () => {
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
+
+  // issue ticket: #32192
+  it('should correctly calculate height when textarea has padding and border-box sizing', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AutosizeTextareaWithWidthSensitiveStyling);
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    const autosize = fixture.debugElement
+      .query(By.css('textarea'))!
+      .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
+
+    fixture.detectChanges();
+    flush();
+
+    // Use many short words so wrapping is highly sensitive to the available content width.
+    // The width-sensitive styles ensure that switching `box-sizing`/padding during measurement
+    // would change wrapping, which would cause the textarea to underestimate its height.
+    textarea.value = Array(600).fill('word').join(' ');
+
+    fixture.detectChanges();
+    autosize.resizeToFitContent(true);
+    flush();
+    fixture.detectChanges();
+
+    const measuredHeight = textarea.clientHeight;
+    const requiredHeight = textarea.scrollHeight;
+    const heightDiff = requiredHeight - measuredHeight;
+
+    expect(heightDiff)
+      .withContext(
+        `Height should match scrollHeight when measuring does not change wrapping. ` +
+          `Required: ${requiredHeight}px, Measured: ${measuredHeight}px, Diff: ${heightDiff}px`,
+      )
+      .toBeLessThanOrEqual(5);
+  }));
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.
@@ -414,3 +447,22 @@ class AutosizeTextareaWithNgModel {
 class AutosizeTextareaWithoutAutosize {
   content: string = '';
 }
+
+@Component({
+  template: `<textarea cdkTextareaAutosize class="width-sensitive"></textarea>`,
+  styles: [
+    textareaStyleReset,
+    `
+    textarea.width-sensitive {
+      width: 120px;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0 24px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  `,
+  ],
+  imports: [FormsModule, TextFieldModule],
+})
+class AutosizeTextareaWithWidthSensitiveStyling {}
