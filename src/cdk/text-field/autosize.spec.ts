@@ -372,6 +372,85 @@ describe('CdkTextareaAutosize', () => {
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
+
+  it('should correctly calculate height when parent container has a scrollbar', fakeAsync(() => {
+    const fixtureWithScrollableParent = TestBed.createComponent(
+      AutosizeTextareaWithScrollableParent,
+    );
+    const container =
+      fixtureWithScrollableParent.nativeElement.querySelector('.scrollable-container');
+    const textareaInContainer = fixtureWithScrollableParent.nativeElement.querySelector('textarea');
+    const autosizeInContainer = fixtureWithScrollableParent.debugElement
+      .query(By.css('textarea'))!
+      .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
+
+    fixtureWithScrollableParent.detectChanges();
+    flush();
+
+    container.style.width = '110px';
+    container.style.height = '200px';
+    fixtureWithScrollableParent.detectChanges();
+
+    const baseText = Array(18)
+      .fill(
+        'This is text that will cause the container to show a scrollbar when the height is reduced significantly.',
+      )
+      .join(' ');
+
+    textareaInContainer.value = baseText;
+    fixtureWithScrollableParent.detectChanges();
+    autosizeInContainer.resizeToFitContent(true);
+    flush();
+    fixtureWithScrollableParent.detectChanges();
+
+    container.style.height = '60px';
+    fixtureWithScrollableParent.detectChanges();
+    autosizeInContainer.resizeToFitContent(true);
+    flush();
+    fixtureWithScrollableParent.detectChanges();
+
+    const hasScrollbar = container.scrollHeight > container.clientHeight;
+    expect(hasScrollbar).withContext('Container must have scrollbar').toBe(true);
+
+    if (!hasScrollbar) {
+      return;
+    }
+
+    // Capture the width with scrollbar present
+    // Note: With box-sizing: border-box and width: 100%, the scrollbar may not reduce clientWidth
+    // but it still affects the available content width for text wrapping
+    const widthWithScrollbar = textareaInContainer.clientWidth;
+
+    // Add text that will wrap differently due to the reduced width
+    // Use many repetitions to ensure wrapping is sensitive to width changes
+    const additionalText = Array(60)
+      .fill(
+        'More text with many short words that wrap frequently when width is reduced by scrollbar in narrow container.',
+      )
+      .join(' ');
+
+    textareaInContainer.value = baseText + ' ' + additionalText;
+    fixtureWithScrollableParent.detectChanges();
+    autosizeInContainer.resizeToFitContent(true);
+    flush();
+    fixtureWithScrollableParent.detectChanges();
+
+    // Verify scrollbar is still present
+    expect(container.scrollHeight)
+      .withContext('Scrollbar should still be present')
+      .toBeGreaterThan(container.clientHeight);
+
+    const measuredHeight = textareaInContainer.clientHeight;
+    const requiredHeight = textareaInContainer.scrollHeight;
+    const heightDiff = requiredHeight - measuredHeight;
+
+    expect(heightDiff)
+      .withContext(
+        `Height should match scrollHeight when parent has scrollbar. ` +
+          `Required: ${requiredHeight}px, Measured: ${measuredHeight}px, Diff: ${heightDiff}px`,
+      )
+      .toBeLessThanOrEqual(5);
+  }));
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.
@@ -414,3 +493,34 @@ class AutosizeTextareaWithNgModel {
 class AutosizeTextareaWithoutAutosize {
   content: string = '';
 }
+
+@Component({
+  template: `
+    <div class="scrollable-container">
+      <textarea cdkTextareaAutosize></textarea>
+    </div>
+  `,
+  styles: [
+    textareaStyleReset,
+    `
+    .scrollable-container {
+      width: 180px;
+      height: 150px;
+      overflow-y: auto;
+      padding: 0;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .scrollable-container textarea {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 2px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  `,
+  ],
+  imports: [FormsModule, TextFieldModule],
+})
+class AutosizeTextareaWithScrollableParent {}
