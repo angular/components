@@ -373,80 +373,34 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
 
-  it('should correctly calculate height when parent container has a scrollbar', fakeAsync(() => {
-    const fixtureWithScrollableParent = TestBed.createComponent(
-      AutosizeTextareaWithScrollableParent,
-    );
-    const container =
-      fixtureWithScrollableParent.nativeElement.querySelector('.scrollable-container');
-    const textareaInContainer = fixtureWithScrollableParent.nativeElement.querySelector('textarea');
-    const autosizeInContainer = fixtureWithScrollableParent.debugElement
+  // issue ticket: #32192
+  it('should correctly calculate height when textarea has padding and border-box sizing', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AutosizeTextareaWithWidthSensitiveStyling);
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    const autosize = fixture.debugElement
       .query(By.css('textarea'))!
       .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
 
-    fixtureWithScrollableParent.detectChanges();
+    fixture.detectChanges();
     flush();
 
-    container.style.width = '110px';
-    container.style.height = '200px';
-    fixtureWithScrollableParent.detectChanges();
+    // Use many short words so wrapping is highly sensitive to the available content width.
+    // The width-sensitive styles ensure that switching `box-sizing`/padding during measurement
+    // would change wrapping, which would cause the textarea to underestimate its height.
+    textarea.value = Array(600).fill('word').join(' ');
 
-    const baseText = Array(18)
-      .fill(
-        'This is text that will cause the container to show a scrollbar when the height is reduced significantly.',
-      )
-      .join(' ');
-
-    textareaInContainer.value = baseText;
-    fixtureWithScrollableParent.detectChanges();
-    autosizeInContainer.resizeToFitContent(true);
+    fixture.detectChanges();
+    autosize.resizeToFitContent(true);
     flush();
-    fixtureWithScrollableParent.detectChanges();
+    fixture.detectChanges();
 
-    container.style.height = '60px';
-    fixtureWithScrollableParent.detectChanges();
-    autosizeInContainer.resizeToFitContent(true);
-    flush();
-    fixtureWithScrollableParent.detectChanges();
-
-    const hasScrollbar = container.scrollHeight > container.clientHeight;
-    expect(hasScrollbar).withContext('Container must have scrollbar').toBe(true);
-
-    if (!hasScrollbar) {
-      return;
-    }
-
-    // Capture the width with scrollbar present
-    // Note: With box-sizing: border-box and width: 100%, the scrollbar may not reduce clientWidth
-    // but it still affects the available content width for text wrapping
-    const widthWithScrollbar = textareaInContainer.clientWidth;
-
-    // Add text that will wrap differently due to the reduced width
-    // Use many repetitions to ensure wrapping is sensitive to width changes
-    const additionalText = Array(60)
-      .fill(
-        'More text with many short words that wrap frequently when width is reduced by scrollbar in narrow container.',
-      )
-      .join(' ');
-
-    textareaInContainer.value = baseText + ' ' + additionalText;
-    fixtureWithScrollableParent.detectChanges();
-    autosizeInContainer.resizeToFitContent(true);
-    flush();
-    fixtureWithScrollableParent.detectChanges();
-
-    // Verify scrollbar is still present
-    expect(container.scrollHeight)
-      .withContext('Scrollbar should still be present')
-      .toBeGreaterThan(container.clientHeight);
-
-    const measuredHeight = textareaInContainer.clientHeight;
-    const requiredHeight = textareaInContainer.scrollHeight;
+    const measuredHeight = textarea.clientHeight;
+    const requiredHeight = textarea.scrollHeight;
     const heightDiff = requiredHeight - measuredHeight;
 
     expect(heightDiff)
       .withContext(
-        `Height should match scrollHeight when parent has scrollbar. ` +
+        `Height should match scrollHeight when measuring does not change wrapping. ` +
           `Required: ${requiredHeight}px, Measured: ${measuredHeight}px, Diff: ${heightDiff}px`,
       )
       .toBeLessThanOrEqual(5);
@@ -495,27 +449,15 @@ class AutosizeTextareaWithoutAutosize {
 }
 
 @Component({
-  template: `
-    <div class="scrollable-container">
-      <textarea cdkTextareaAutosize></textarea>
-    </div>
-  `,
+  template: `<textarea cdkTextareaAutosize class="width-sensitive"></textarea>`,
   styles: [
     textareaStyleReset,
     `
-    .scrollable-container {
-      width: 180px;
-      height: 150px;
-      overflow-y: auto;
-      padding: 0;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    .scrollable-container textarea {
-      width: 100%;
+    textarea.width-sensitive {
+      width: 120px;
       box-sizing: border-box;
       margin: 0;
-      padding: 2px;
+      padding: 0 24px;
       word-wrap: break-word;
       white-space: pre-wrap;
     }
@@ -523,4 +465,4 @@ class AutosizeTextareaWithoutAutosize {
   ],
   imports: [FormsModule, TextFieldModule],
 })
-class AutosizeTextareaWithScrollableParent {}
+class AutosizeTextareaWithWidthSensitiveStyling {}

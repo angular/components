@@ -121,8 +121,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Used to reference correct document/window */
   protected _document = inject(DOCUMENT);
-  /** Used to get width of text field */
-  private window = this._document.defaultView;
+  /** Cached reference to the current window (can be `null` in non-browser contexts). */
+  private _window = this._document.defaultView;
 
   private _hasFocus = false;
 
@@ -248,9 +248,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     let contentWidth: number | null = null;
 
     // Capture the *content* width (excluding horizontal padding) before we add the measuring class,
-    // because that class changes padding and box-sizing which in turn changes how text wraps
-    // and therefore the scrollHeight
-    const computedStyle = this.window ? this.window.getComputedStyle(element) : null;
+    // because that class changes padding and box-sizing which in turn changes how text wraps and
+    // therefore the scrollHeight. (Issue: #32192.)
+    const computedStyle = this._window ? this._window.getComputedStyle(element) : null;
 
     if (computedStyle) {
       const paddingLeft = parseFloat(computedStyle.paddingLeft || '0') || 0;
@@ -273,8 +273,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     element.classList.add(measuringClass);
 
     // When measuring, CSS applies `box-sizing: content-box` and strips horizontal padding, which
-    // effectively increases the available text width. To keep wrapping idential to the rendered
-    // textarea, lock the measuring width to the original conent width we captured above
+    // effectively increases the available text width. To keep wrapping identical to the rendered
+    // textarea, lock the measuring width to the original content width we captured above.
     if (contentWidth !== null) {
       element.style.width = `${contentWidth}px`;
     }
