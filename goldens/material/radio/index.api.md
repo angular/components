@@ -30,9 +30,9 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
     constructor(...args: unknown[]);
-    ariaDescribedby: string;
-    ariaLabel: string;
-    ariaLabelledby: string;
+    ariaDescribedby: string | null;
+    ariaLabel: string | null;
+    ariaLabelledby: string | null;
     readonly change: EventEmitter<MatRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);

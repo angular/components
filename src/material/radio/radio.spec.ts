@@ -816,8 +816,12 @@ describe('MatRadio', () => {
       testComponent.ariaLabel = 'Pineapple';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-
       expect(fruitRadioNativeInputs[0].getAttribute('aria-label')).toBe('Pineapple');
+
+      testComponent.ariaLabel = null;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(fruitRadioNativeInputs[0].hasAttribute('aria-label')).toBe(false);
     });
 
     it('should add aria-labelledby attribute to the underlying input element if defined', () => {
@@ -834,8 +838,12 @@ describe('MatRadio', () => {
       testComponent.ariaLabelledby = 'uvw';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-
       expect(fruitRadioNativeInputs[0].getAttribute('aria-labelledby')).toBe('uvw');
+
+      testComponent.ariaLabelledby = null;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(fruitRadioNativeInputs[0].hasAttribute('aria-labelledby')).toBe(false);
     });
 
     it('should add aria-describedby attribute to the underlying input element if defined', () => {
@@ -852,8 +860,12 @@ describe('MatRadio', () => {
       testComponent.ariaDescribedby = 'uvw';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-
       expect(fruitRadioNativeInputs[0].getAttribute('aria-describedby')).toBe('uvw');
+
+      testComponent.ariaDescribedby = null;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(fruitRadioNativeInputs[0].hasAttribute('aria-describedby')).toBe(false);
     });
 
     it('should focus on underlying input element when focus() is called', () => {
@@ -1117,9 +1129,9 @@ class RadiosInsidePreCheckedRadioGroup {}
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 class StandaloneRadioButtons {
-  ariaLabel: string = 'Banana';
-  ariaLabelledby: string = 'xyz';
-  ariaDescribedby: string = 'abc';
+  ariaLabel: string | null = 'Banana';
+  ariaLabelledby: string | null = 'xyz';
+  ariaDescribedby: string | null = 'abc';
 }
 
 @Component({
