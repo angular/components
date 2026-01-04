@@ -372,6 +372,65 @@ describe('CdkTextareaAutosize', () => {
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
+
+  it('should not show scrollbar with decimal line-height values at 110% zoom', () => {
+    // Test for issue #32178: verifies that subtraction of 3.5 (not 4) prevents scrollbars
+    // when line-height has decimal values and scrollHeight has fractional pixels that get truncated.
+    const fixture = TestBed.createComponent(AutosizeTextAreaWithDecimalLineHeight);
+    const textarea = fixture.nativeElement.querySelector('textarea');
+    const autosize = fixture.debugElement
+      .query(By.css('textarea'))!
+      .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
+
+    fixture.detectChanges();
+    textarea.style.width = '400px';
+    textarea.style.fontSize = '14px';
+
+    const longLine = 'a'.repeat(80);
+    textarea.value = `${longLine}\n${longLine}\n${longLine}a`;
+
+    fixture.detectChanges();
+    const actualNeededScrollHeight = textarea.scrollHeight;
+
+    // Simulate fractional pixel truncation: scrollHeight with measuring class would be
+    // actualNeededScrollHeight + 4.5px, but gets truncated to actualNeededScrollHeight + 4px
+    let measurementCallCount = 0;
+    const scrollHeightDuringMeasurement = Math.floor(actualNeededScrollHeight + 4.5);
+    const actualNeededWithFractional = actualNeededScrollHeight + 0.5;
+
+    Object.defineProperty(textarea, 'scrollHeight', {
+      get: function () {
+        measurementCallCount++;
+        if (
+          measurementCallCount <= 10 &&
+          this.classList.contains('cdk-textarea-autosize-measuring')
+        ) {
+          return scrollHeightDuringMeasurement;
+        }
+        return Math.ceil(actualNeededWithFractional);
+      },
+      configurable: true,
+    });
+
+    autosize.resizeToFitContent();
+    fixture.detectChanges();
+
+    delete (textarea as any).scrollHeight;
+    void textarea.offsetHeight;
+
+    const actualScrollHeight = textarea.scrollHeight;
+    const actualClientHeight = textarea.clientHeight;
+    const setHeight = parseFloat(textarea.style.height);
+    const heightWithSubtraction3_5 = scrollHeightDuringMeasurement - 3.5;
+
+    expect(actualClientHeight)
+      .withContext(`Expected no scrollbar with decimal line-height`)
+      .toBe(actualScrollHeight);
+
+    expect(setHeight)
+      .withContext(`Set height (${setHeight}px) should be at least ${heightWithSubtraction3_5}px`)
+      .toBeGreaterThanOrEqual(heightWithSubtraction3_5);
+  });
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.
@@ -413,4 +472,22 @@ class AutosizeTextareaWithNgModel {
 })
 class AutosizeTextareaWithoutAutosize {
   content: string = '';
+}
+
+const textareaStyleWithDecimalLineHeight = `
+    textarea {
+      padding: 0;
+      border: none;
+      overflow: auto;
+      line-height: 1.15;
+    }`;
+
+@Component({
+  template: `
+    <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize"></textarea>`,
+  styles: textareaStyleWithDecimalLineHeight,
+  imports: [FormsModule, TextFieldModule],
+})
+class AutosizeTextAreaWithDecimalLineHeight {
+  @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 }
