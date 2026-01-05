@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ElementRef, NgZone} from '@angular/core';
+import {DOCUMENT, ElementRef, Injector, NgZone} from '@angular/core';
 import {Direction} from '../bidi';
 import {coerceElement} from '../coercion';
 import {ViewportRuler} from '../scrolling';
@@ -47,6 +47,24 @@ enum AutoScrollHorizontalDirection {
   NONE,
   LEFT,
   RIGHT,
+}
+
+/**
+ * Creates a `DropListRef` for an element, turning it into a drop list.
+ * @param injector Injector used to resolve dependencies.
+ * @param element Element to which to attach the drop list functionality.
+ */
+export function createDropListRef<T = unknown>(
+  injector: Injector,
+  element: ElementRef<HTMLElement> | HTMLElement,
+): DropListRef<T> {
+  return new DropListRef(
+    element,
+    injector.get(DragDropRegistry),
+    injector.get(DOCUMENT),
+    injector.get(NgZone),
+    injector.get(ViewportRuler),
+  );
 }
 
 /**
