@@ -20,6 +20,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleOverlayPopoverLocation } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
@@ -340,6 +341,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     protected _parentFormField: MatFormField | null;
     get placeholder(): string;
     set placeholder(value: string);
+    // (undocumented)
+    protected _popoverLocation: FlexibleOverlayPopoverLocation | null;
     _positions: ConnectedPosition[];
     _preferredOverlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
     registerOnChange(fn: (value: any) => void): void;
