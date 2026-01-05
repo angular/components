@@ -42,6 +42,7 @@ import {
   provideFakeDirectionality,
 } from '../../cdk/testing/private';
 import {MATERIAL_ANIMATIONS, MatRipple} from '../core';
+import {MatButton} from '@angular/material/button';
 import {MatMenu, MatMenuItem} from './index';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
@@ -1278,6 +1279,23 @@ describe('MatMenu', () => {
       expect(item.textContent!.trim()).toBe('two');
     }));
   });
+
+  it('does not open if the trigger element is disabled (including disabledInteractive)', fakeAsync(() => {
+    const fixture = TestBed.createComponent(DisabledMenu);
+    fixture.detectChanges();
+
+    const trigger = fixture.componentInstance.triggerEl.nativeElement;
+    trigger.click();
+    fixture.detectChanges();
+    tick(500);
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel [mat-menu-item]')).toBeNull();
+
+    dispatchKeyboardEvent(trigger, 'keydown', ENTER);
+    trigger.click();
+    fixture.detectChanges();
+    tick(500);
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel [mat-menu-item]')).toBeNull();
+  }));
 
   describe('positions', () => {
     let fixture: ComponentFixture<PositionedMenu>;
@@ -2636,6 +2654,20 @@ class SimpleMenuOnPush extends SimpleMenu {}
 
 @Component({
   template: `
+    <button mat-button disabled [disabledInteractive]="true"
+        [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item> Action! </button>
+    </mat-menu>
+  `,
+  imports: [MatButton, MatMenuTrigger, MatMenu, MatMenuItem],
+})
+class DisabledMenu {
+  @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
+}
+
+@Component({
+  template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu [xPosition]="xPosition" [yPosition]="yPosition" #menu="matMenu">
       <button mat-menu-item> Positioned Content </button>
@@ -2666,7 +2698,7 @@ interface TestableMenu {
 class OverlapMenu implements TestableMenu {
   @Input() overlapTrigger: boolean = false;
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
-  @ViewChild('triggerEl') triggerEl!: ElementRef<HTMLElement>;
+  @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
 }
 
 @Component({
