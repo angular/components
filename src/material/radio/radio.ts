@@ -427,13 +427,13 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   @Input() name!: string;
 
   /** Used to set the 'aria-label' attribute on the underlying input element. */
-  @Input('aria-label') ariaLabel!: string;
+  @Input('aria-label') ariaLabel!: string | null;
 
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
-  @Input('aria-labelledby') ariaLabelledby!: string;
+  @Input('aria-labelledby') ariaLabelledby!: string | null;
 
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
-  @Input('aria-describedby') ariaDescribedby!: string;
+  @Input('aria-describedby') ariaDescribedby!: string | null;
 
   /** Whether ripples are disabled inside the radio button */
   @Input({transform: booleanAttribute})
