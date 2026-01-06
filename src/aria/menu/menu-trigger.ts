@@ -41,7 +41,7 @@ import type {Menu} from './menu';
  * @see [MenuBar](guide/aria/menubar)
  */
 @Directive({
-  selector: 'button[ngMenuTrigger]',
+  selector: '[ngMenuTrigger]',
   exportAs: 'ngMenuTrigger',
   host: {
     '[attr.tabindex]': '_pattern.tabIndex()',
