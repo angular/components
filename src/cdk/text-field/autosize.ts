@@ -253,8 +253,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
     element.classList.add(measuringClass);
     // The measuring class includes a 2px padding to workaround an issue with Chrome,
-    // so we account for that extra space here. We subtract 3.5 (instead of 4) to account for
-    // fractional pixel truncation that can occur with decimal line-height values. When the browser
+    // so we account for that extra space here. We subtract 3.5 (2px top + 2px bottom - 0.5px) to account
+    // for fractional pixel truncation that can occur with decimal line-height values. When the browser
     // truncates fractional pixels (e.g., 20.4px becomes 20px), subtracting 3.5 instead of 4
     // provides a small margin that prevents scrollbars from appearing. See issue #32178.
     const scrollHeight = element.scrollHeight - 3.5;
