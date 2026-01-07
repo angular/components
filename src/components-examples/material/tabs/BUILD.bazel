@@ -19,6 +19,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
         "//:node_modules/rxjs",
+        "//src/cdk/drag-drop",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",

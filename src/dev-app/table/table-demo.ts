@@ -16,6 +16,7 @@ import {
 } from '@angular/components-examples/cdk/table';
 import {
   TableBasicExample,
+  TableDragDropExample,
   TableDynamicColumnsExample,
   TableExpandableRowsExample,
   TableFilteringExample,
@@ -77,6 +78,7 @@ import {
     TableReorderableExample,
     TableRecycleRowsExample,
     TableFlexLargeRowExample,
+    TableDragDropExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

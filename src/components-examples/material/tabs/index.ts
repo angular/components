@@ -13,3 +13,4 @@ export {TabGroupPaginatedExample} from './tab-group-paginated/tab-group-paginate
 export {TabGroupPreserveContentExample} from './tab-group-preserve-content/tab-group-preserve-content-example';
 export {TabGroupStretchedExample} from './tab-group-stretched/tab-group-stretched-example';
 export {TabNavBarBasicExample} from './tab-nav-bar-basic/tab-nav-bar-basic-example';
+export {TabGroupDragDropExample} from './tab-group-drag-drop/tab-group-drag-drop-example';
