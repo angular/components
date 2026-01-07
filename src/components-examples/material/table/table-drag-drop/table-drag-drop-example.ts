@@ -25,15 +25,15 @@ export const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 /**
- * @title Drag&Drop table
+ * @title Table with drag&drop support
  */
 @Component({
-  selector: 'cdk-drag-drop-table-example',
-  templateUrl: 'cdk-drag-drop-table-example.html',
-  styleUrl: 'cdk-drag-drop-table-example.css',
+  selector: 'table-drag-drop-example',
+  templateUrl: 'table-drag-drop-example.html',
+  styleUrl: 'table-drag-drop-example.css',
   imports: [CdkDropList, CdkDrag, MatTableModule, MatIconModule],
 })
-export class CdkDragDropTableExample {
+export class TableDragDropExample {
   @ViewChild('table', {static: true}) table!: MatTable<PeriodicElement>;
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'quantity'];
