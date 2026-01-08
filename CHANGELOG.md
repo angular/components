@@ -1,3 +1,35 @@
+<a name="21.1.0-next.4"></a>
+# 21.1.0-next.4 "butter-bison" (2026-01-08)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [790accde6](https://github.com/angular/components/commit/790accde652f3fe721bdad88803d6ca814359334) | fix | **menu:** expand selector for trigger ([#32617](https://github.com/angular/components/pull/32617)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1f34b94a5](https://github.com/angular/components/commit/1f34b94a53ace6ba20238210577aa16f9d01d8b5) | fix | **drag-drop:** make item and list easier to tree shake ([#32604](https://github.com/angular/components/pull/32604)) |
+| [136841e7a](https://github.com/angular/components/commit/136841e7a834147df2235d72ba701d61aa6d0233) | fix | **overlay:** safari workaround not working with popovers ([#32588](https://github.com/angular/components/pull/32588)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fbbedc427](https://github.com/angular/components/commit/fbbedc427186f37a7d5572c5e8ebc0b2c693bfdf) | fix | **expansion:** all panels appearing open when printing ([#32602](https://github.com/angular/components/pull/32602)) |
+| [7b2627de2](https://github.com/angular/components/commit/7b2627de2acff330a0d3ae1956de8f5b96025532) | fix | **menu:** Do not open the menu when trigger is aria-disabled (properly handle disabledInteractive) ([#32601](https://github.com/angular/components/pull/32601)) |
+| [eba6ee844](https://github.com/angular/components/commit/eba6ee844b8e8e6044e1675b5e41ff13224ead75) | fix | **radio:** allow aria attributes to be reset ([#32613](https://github.com/angular/components/pull/32613)) |
+| [2c4f4bf04](https://github.com/angular/components/commit/2c4f4bf043953d5c612aa5ba15448c052c9e58fa) | fix | **select:** global option not disabling popover ([#32610](https://github.com/angular/components/pull/32610)) |
+| [c8bd62bb7](https://github.com/angular/components/commit/c8bd62bb79b5067e66bc6a7ca93e99834547ead6) | fix | **tooltip:** add opt-in for better touch device detection ([#32597](https://github.com/angular/components/pull/32597)) |
+| [8cff9c5b2](https://github.com/angular/components/commit/8cff9c5b2266dbcf4302d74db70d415d814e04e6) | perf | **checkbox:** Use > combinator for hover selector ([#32586](https://github.com/angular/components/pull/32586)) |
+| [89bdf4844](https://github.com/angular/components/commit/89bdf48443ff2c1064013feb7c90b96374afb8be) | perf | **table:** Use text-align: start instead of descendent dir selector. ([#32585](https://github.com/angular/components/pull/32585)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0302e4b55](https://github.com/angular/components/commit/0302e4b55e62218918a20af843b297ca8d588a2f) | fix | apply startSeconds with disablePlaceholder and autoplay ([#32570](https://github.com/angular/components/pull/32570)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [54b8a635c](https://github.com/angular/components/commit/54b8a635c3eb6ee021eafc87612251be3223380e) | fix | not all symbols exported in some aria packages ([#32591](https://github.com/angular/components/pull/32591)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.6"></a>
 # 21.0.6 "balsa-salsa" (2026-01-08)
 ### aria
