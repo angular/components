@@ -15,7 +15,7 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {OverlayContainer, OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
+import {OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -76,7 +76,6 @@ import {
 const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
 describe('MatSelect', () => {
-  const supportsPopover = 'showPopover' in document.body;
   let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
@@ -97,18 +96,11 @@ describe('MatSelect', () => {
   });
 
   function getOverlayHost(fixture: ComponentFixture<unknown>): HTMLElement | null {
-    return supportsPopover
-      ? fixture.nativeElement.querySelector('.cdk-overlay-popover')
-      : TestBed.inject(OverlayContainer)
-          .getContainerElement()
-          .querySelector('.cdk-overlay-connected-position-bounding-box');
+    return fixture.nativeElement.querySelector('.cdk-overlay-popover');
   }
 
   function getBackdrop(fixture: ComponentFixture<unknown>): HTMLElement | null {
-    const parent = supportsPopover
-      ? fixture.nativeElement
-      : TestBed.inject(OverlayContainer).getContainerElement();
-    return parent.querySelector('.cdk-overlay-backdrop');
+    return fixture.nativeElement.querySelector('.cdk-overlay-backdrop');
   }
 
   describe('core', () => {

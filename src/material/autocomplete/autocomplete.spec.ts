@@ -1,6 +1,6 @@
 import {Direction} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {OverlayContainer, OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
+import {OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -62,9 +62,6 @@ import {
 } from './index';
 
 describe('MatAutocomplete', () => {
-  const supportsPopover = 'showPopover' in document.body;
-  let overlayContainerElement: HTMLElement;
-
   // Creates a test component fixture.
   function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
     TestBed.configureTestingModule({
@@ -74,21 +71,17 @@ describe('MatAutocomplete', () => {
       ],
     });
 
-    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     return TestBed.createComponent<T>(component);
   }
 
   function getOverlayHost(fixture: ComponentFixture<unknown>): HTMLElement | null {
-    return supportsPopover
-      ? fixture.nativeElement.querySelector('.cdk-overlay-popover')
-      : overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box');
+    return fixture.nativeElement.querySelector('.cdk-overlay-popover');
   }
 
   function getBackdrop(fixture: ComponentFixture<unknown>): HTMLElement | null {
-    const selector = '.cdk-overlay-backdrop';
-    return supportsPopover
-      ? getOverlayHost(fixture)?.querySelector(selector) || null
-      : overlayContainerElement.querySelector(selector);
+    return (
+      fixture.nativeElement.querySelector('.cdk-overlay-popover .cdk-overlay-backdrop') || null
+    );
   }
 
   describe('panel toggling', () => {
