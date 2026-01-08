@@ -1,3 +1,33 @@
+<a name="21.0.6"></a>
+# 21.0.6 "balsa-salsa" (2026-01-08)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c8028789d](https://github.com/angular/components/commit/c8028789db4a6973bc80c5c3f0466b9e5ab1a879) | fix | **menu:** expand selector for trigger ([#32617](https://github.com/angular/components/pull/32617)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [66e2a08bc](https://github.com/angular/components/commit/66e2a08bccb89dfa97293a23eaa1d18434931215) | fix | **drag-drop:** make item and list easier to tree shake ([#32604](https://github.com/angular/components/pull/32604)) |
+| [cf61d587d](https://github.com/angular/components/commit/cf61d587dcc0f7f95a820700f39cd1eb6ae16c4d) | fix | **overlay:** safari workaround not working with popovers ([#32588](https://github.com/angular/components/pull/32588)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0d543d2de](https://github.com/angular/components/commit/0d543d2deccb84739882cf46501013a5ee3c6506) | fix | **expansion:** all panels appearing open when printing ([#32602](https://github.com/angular/components/pull/32602)) |
+| [e4ce169ba](https://github.com/angular/components/commit/e4ce169ba15b982fcb12d469d6b2ca25aeef6212) | fix | **select:** global option not disabling popover ([#32610](https://github.com/angular/components/pull/32610)) |
+| [964c39eb6](https://github.com/angular/components/commit/964c39eb652a71bd44a481ef8f4cb807878d871e) | fix | **tooltip:** add opt-in for better touch device detection ([#32597](https://github.com/angular/components/pull/32597)) |
+| [4b594fbdc](https://github.com/angular/components/commit/4b594fbdc98dd62323abe1338809b4798aaa35de) | perf | **checkbox:** Use > combinator for hover selector ([#32586](https://github.com/angular/components/pull/32586)) |
+| [ca4a7a4b9](https://github.com/angular/components/commit/ca4a7a4b9095cbb344a1e1fe9ae5e51f04bc586a) | perf | **table:** Use text-align: start instead of descendent dir selector. ([#32585](https://github.com/angular/components/pull/32585)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b1f61c4c3](https://github.com/angular/components/commit/b1f61c4c3616d844277020e3897381bd3a7ad246) | fix | apply startSeconds with disablePlaceholder and autoplay ([#32570](https://github.com/angular/components/pull/32570)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [63004702e](https://github.com/angular/components/commit/63004702e2f02ab4d24e1484f41794d93b418045) | fix | not all symbols exported in some aria packages ([#32591](https://github.com/angular/components/pull/32591)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.0.5"></a>
 # 21.0.5 "plastic-deer" (2025-12-18)
 
