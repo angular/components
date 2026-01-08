@@ -1,3 +1,9 @@
 .mat-tab-group {
   margin-bottom: 48px;
 }
+
+.example-action-button {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
