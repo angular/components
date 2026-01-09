@@ -209,6 +209,28 @@ describe('DocViewer', () => {
     expect(clipboardSpy.copy).toHaveBeenCalled();
   });
 
+  it('should show copy icon button for code blocks', () => {
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    fixture.componentInstance.documentUrl = `http://material.angular.io/doc-with-code-block.html`;
+    fixture.detectChanges();
+
+    const url = fixture.componentInstance.documentUrl;
+    http.expectOne(url).flush(FAKE_DOCS[url]);
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer).not.toBeNull();
+
+    // Query all copy buttons within code blocks
+    const iconButtons = fixture.debugElement.queryAll(By.directive(MatIconButton));
+    // At least one icon button for copying code should exist
+    expect(iconButtons.length).toBeGreaterThan(0);
+
+    // Click on the first icon button to trigger copying the code
+    iconButtons[0].nativeNode.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+    expect(clipboardSpy.copy).toHaveBeenCalledWith('const example = "test code";');
+  });
+
   // TODO(mmalerba): Add test that example-viewer is instantiated.
 });
 
@@ -259,6 +281,10 @@ const FAKE_DOCS: {[key: string]: string} = {
       <div class="docs-api-module-import-button"
         data-docs-api-module-import-button="import {MatIconModule} from '@angular/material/icon';">
       </div>
+    </div>`,
+  'http://material.angular.io/doc-with-code-block.html': `
+    <div class="docs-markdown">
+      <pre><code>const example = "test code";</code></pre>
     </div>`,
 };
 
