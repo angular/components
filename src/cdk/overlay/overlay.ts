@@ -89,15 +89,12 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
     ? overlayConfig.positionStrategy?.getPopoverInsertionPoint?.()
     : null;
 
-  // Note: this is redundant since the host will be moved into its final location immediately
-  // after. We're keeping it as a temporary workaround, because an internal team depends on
-  // this behavior. We can roll this back after January 5th 2026.
-  overlayContainer.getContainerElement().appendChild(host);
-
   if (isElement(customInsertionPoint)) {
     customInsertionPoint.after(host);
   } else if (customInsertionPoint?.type === 'parent') {
     customInsertionPoint.element.appendChild(host);
+  } else {
+    overlayContainer.getContainerElement().appendChild(host);
   }
 
   return new OverlayRef(
