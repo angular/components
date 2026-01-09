@@ -34,6 +34,7 @@ import {ScrollStrategyOptions} from './scroll/index';
 
 /** Object used to configure the default options for overlays. */
 export interface OverlayDefaultConfig {
+  alwaysInline?: boolean;
   usePopover?: boolean;
 }
 
