@@ -601,7 +601,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
     const offset = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
     const translateX = this._isRtl ? this._cachedWidth - 6 - offset : offset;
-    return `translateX(${translateX}px`;
+    return `translateX(${translateX}px)`;
   }
 
   // Handlers for updating the slider ui.
