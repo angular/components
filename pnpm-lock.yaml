@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.1
       firebase-tools:
-        specifier: 15.0.0
-        version: 15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.2.1
+        version: 15.2.1(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.2
@@ -436,8 +436,8 @@ importers:
         specifier: ^1.12.1
         version: 1.26.0
       '@types/jasmine':
-        specifier: 5.1.13
-        version: 5.1.13
+        specifier: 5.1.14
+        version: 5.1.14
       '@types/node':
         specifier: ^22.14.1
         version: 22.19.2
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.0.0
-        version: 15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.2.1
+        version: 15.2.1(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: 5.13.0
         version: 5.13.0
@@ -490,8 +490,8 @@ importers:
         specifier: ^24.6.1
         version: 24.32.1(bufferutil@4.0.9)
       sass:
-        specifier: 1.96.0
-        version: 1.96.0
+        specifier: 1.97.2
+        version: 1.97.2
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -3753,6 +3753,9 @@ packages:
   '@types/jasmine@5.1.13':
     resolution: {integrity: sha512-MYCcDkruFc92LeYZux5BC0dmqo2jk+M5UIZ4/oFnAPCXN9mCcQhLyj7F3/Za7rocVyt5YRr1MmqJqFlvQ9LVcg==}
 
+  '@types/jasmine@5.1.14':
+    resolution: {integrity: sha512-16bJdpgUPNKXuaelVxuLZUeDd02+PnF0aQd5HY4xLWoUOMoRE+CyNkRpjRMIcPBCR1dscSb52pmFNILAN1uzkw==}
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -5575,8 +5578,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.0.0:
-    resolution: {integrity: sha512-6HSF3meQwMNzDK5BIEFEq4jVMPqR6PBdqpuSLBE+3zpLlcmLknMVBDhdN32jhd2lj/wvfHBZV6ZSqTCNF7AtWw==}
+  firebase-tools@15.2.1:
+    resolution: {integrity: sha512-S75K4L/CsYSpyoOZAWHeTrx5TrpNCdUeSutr9oto+yBgg5qfbtnrGUxP+iPiBK6g4pdQFzf4p6rN1c7RoGE09A==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -6692,6 +6695,7 @@ packages:
 
   json-ptr@3.1.1:
     resolution: {integrity: sha512-SiSJQ805W1sDUCD1+/t1/1BIrveq2Fe9HJqENxZmMCILmrPI7WhS/pePpIOx85v6/H2z1Vy7AI08GV2TzfXocg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
@@ -8470,8 +8474,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.96.0:
-    resolution: {integrity: sha512-8u4xqqUeugGNCYwr9ARNtQKTOj4KmYiJAVKXf2CTIivTCR51j96htbMKWDru8H5SaQWpyVgTfOF8Ylyf5pun1Q==}
+  sass@1.97.2:
+    resolution: {integrity: sha512-y5LWb0IlbO4e97Zr7c3mlpabcbBtS+ieiZ9iwDooShpFKWXf62zz5pEPdwrLYm+Bxn1fnbwFGzHuCLSA9tBmrw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -13321,6 +13325,8 @@ snapshots:
 
   '@types/jasmine@5.1.13': {}
 
+  '@types/jasmine@5.1.14': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/jsonfile@6.1.4':
@@ -15439,7 +15445,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.0.0(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@15.2.1(@types/node@22.19.2)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.2)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -18836,7 +18842,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.96.0:
+  sass@1.97.2:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
