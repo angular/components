@@ -49,7 +49,6 @@ ALL_EXAMPLES = [
     "//src/components-examples/cdk/portal",
     "//src/components-examples/cdk/accordion",
     "//src/components-examples/cdk/platform",
-    "//src/components-examples/cdk/drag-drop",
     "//src/components-examples/cdk/clipboard",
     "//src/components-examples/cdk/a11y",
     "//src/components-examples/cdk/layout",
