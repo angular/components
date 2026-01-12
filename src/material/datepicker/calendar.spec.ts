@@ -639,6 +639,28 @@ describe('MatCalendar', () => {
       });
     });
   });
+
+  it("should not throw when updating today's date too early", () => {
+    const fixture = TestBed.createComponent(StandardCalendar);
+    const calendar = fixture.debugElement.query(By.directive(MatCalendar))
+      .componentInstance as MatCalendar<Date>;
+
+    expect(() => {
+      calendar.updateTodaysDate();
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
+
+  it('should not throw when focusing the active cell too early', () => {
+    const fixture = TestBed.createComponent(StandardCalendar);
+    const calendar = fixture.debugElement.query(By.directive(MatCalendar))
+      .componentInstance as MatCalendar<Date>;
+
+    expect(() => {
+      calendar.focusActiveCell();
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
 });
 
 @Component({
