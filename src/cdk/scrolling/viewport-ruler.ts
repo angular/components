@@ -125,14 +125,17 @@ export class ViewportRuler implements OnDestroy {
 
     const top =
       -documentRect.top ||
-      document.body.scrollTop ||
+      // `document.body` can be `null` per WHATWG spec when document element is not `<html>`
+      // or has no body/frameset child: https://html.spec.whatwg.org/multipage/dom.html#dom-document-body
+      // Note: TypeScript incorrectly types this as non-nullable, but it can be `null` in practice.
+      document.body?.scrollTop ||
       window.scrollY ||
       documentElement.scrollTop ||
       0;
 
     const left =
       -documentRect.left ||
-      document.body.scrollLeft ||
+      document.body?.scrollLeft ||
       window.scrollX ||
       documentElement.scrollLeft ||
       0;
