@@ -121,6 +121,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Used to reference correct document/window */
   protected _document = inject(DOCUMENT);
+  /** Cached reference to the current window (can be `null` in non-browser contexts). */
+  private _window = this._document.defaultView;
 
   private _hasFocus = false;
 
@@ -242,6 +244,23 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       ? 'cdk-textarea-autosize-measuring-firefox'
       : 'cdk-textarea-autosize-measuring';
 
+    const previousWidth = element.style.width;
+    let contentWidth: number | null = null;
+
+    // Capture the *content* width (excluding horizontal padding) before we add the measuring class,
+    // because that class changes padding and box-sizing which in turn changes how text wraps and
+    // therefore the scrollHeight. (Issue: #32192.)
+    const computedStyle = this._window ? this._window.getComputedStyle(element) : null;
+
+    if (computedStyle) {
+      const paddingLeft = parseFloat(computedStyle.paddingLeft || '0') || 0;
+      const paddingRight = parseFloat(computedStyle.paddingRight || '0') || 0;
+      contentWidth = element.clientWidth - paddingLeft - paddingRight;
+      if (contentWidth <= 0) {
+        contentWidth = null;
+      }
+    }
+
     // In some cases the page might move around while we're measuring the `textarea` on Firefox. We
     // work around it by assigning a temporary margin with the same height as the `textarea` so that
     // it occupies the same amount of space. See #23233.
@@ -252,10 +271,22 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Reset the textarea height to auto in order to shrink back to its default size.
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
     element.classList.add(measuringClass);
+
+    // When measuring, CSS applies `box-sizing: content-box` and strips horizontal padding, which
+    // effectively increases the available text width. To keep wrapping identical to the rendered
+    // textarea, lock the measuring width to the original content width we captured above.
+    if (contentWidth !== null) {
+      element.style.width = `${contentWidth}px`;
+    }
+
     // The measuring class includes a 2px padding to workaround an issue with Chrome,
     // so we account for that extra space here by subtracting 4 (2px top + 2px bottom).
     const scrollHeight = element.scrollHeight - 4;
     element.classList.remove(measuringClass);
+
+    if (contentWidth !== null) {
+      element.style.width = previousWidth;
+    }
 
     if (needsMarginFiller) {
       element.style.marginBottom = previousMargin;
