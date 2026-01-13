@@ -3,16 +3,16 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/d
 import {MatTabsModule} from '@angular/material/tabs';
 
 /**
- * @title Drag&Drop tabs
+ * @title Tabs with drag*drop integration.
  */
 @Component({
-  selector: 'cdk-drag-drop-tabs-example',
-  templateUrl: 'cdk-drag-drop-tabs-example.html',
-  styleUrl: 'cdk-drag-drop-tabs-example.css',
+  selector: 'tab-group-drag-drop-example',
+  templateUrl: 'tab-group-drag-drop-example.html',
+  styleUrl: 'tab-group-drag-drop-example.css',
   imports: [CdkDrag, CdkDropList, MatTabsModule],
   encapsulation: ViewEncapsulation.None,
 })
-export class CdkDragDropTabsExample {
+export class TabGroupDragDropExample {
   protected tabs = ['One', 'Two', 'Three', 'Four', 'Five'];
   protected selectedTabIndex = 0;
 

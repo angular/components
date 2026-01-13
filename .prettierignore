@@ -17,3 +17,9 @@ pnpm-lock.yaml
 
 # TODO: Enable formatting on markdown files
 **/*.md
+
+# TODO: enable formatting on templates and styles.
+# For styles specifically the formatting ends up causing build failures.
+**/*.scss
+**/*.css
+**/*.html

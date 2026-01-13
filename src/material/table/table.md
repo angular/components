@@ -249,7 +249,15 @@ takes a data object and filter string and returns true if the data object is con
 If you want to show a message when not data matches the filter, you can use the `*matNoDataRow`
 directive.
 
-<!--- example(table-filtering) -->
+<!-- example(table-filtering) -->
+
+#### Drag and drop
+
+Material tables can be integrated with the `@angular/cdk/drag-drop` module to support drag&drop of
+either columns or rows.
+
+<!-- example(table-reorderable) -->
+<!-- example(table-drag-drop) -->
 
 #### Selection
 

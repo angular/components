@@ -2992,10 +2992,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     it('should be able to opt into placing the overlay inside an adjacent popover element', () => {
-      if (!('showPopover' in document.body)) {
-        return;
-      }
-
       attachOverlay({positionStrategy, usePopover: true});
 
       expect(containerElement.contains(overlayRef.hostElement)).toBe(false);
@@ -3004,10 +3000,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     it('should re-attach the popover next to the origin element', () => {
-      if (!('showPopover' in document.body)) {
-        return;
-      }
-
       attachOverlay({positionStrategy, usePopover: true});
       expect(originElement.nextElementSibling).toBe(overlayRef.hostElement);
 
@@ -3020,10 +3012,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     it('should insert the overlay as a child of a custom element', () => {
-      if (!('showPopover' in document.body)) {
-        return;
-      }
-
       positionStrategy.withPopoverLocation({type: 'parent', element: customHostElement});
       attachOverlay({positionStrategy, usePopover: true});
 
@@ -3033,10 +3021,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     it('should insert the overlay as a child of the origin', () => {
-      if (!('showPopover' in document.body)) {
-        return;
-      }
-
       positionStrategy.withPopoverLocation({type: 'parent', element: originElement});
       attachOverlay({positionStrategy, usePopover: true});
 

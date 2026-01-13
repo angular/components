@@ -17,6 +17,7 @@ import {
   ChangeDetectorRef,
   booleanAttribute,
   inject,
+  Injector,
 } from '@angular/core';
 import {Directionality} from '../../bidi';
 import {_IdGenerator} from '../../a11y';
@@ -24,9 +25,8 @@ import {ScrollDispatcher} from '../../scrolling';
 import {CDK_DROP_LIST, CdkDrag} from './drag';
 import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
 import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';
-import {DropListRef} from '../drop-list-ref';
+import {createDropListRef, DropListRef} from '../drop-list-ref';
 import {DragRef} from '../drag-ref';
-import {DragDrop} from '../drag-drop';
 import {DropListOrientation, DragAxis, DragDropConfig, CDK_DRAG_CONFIG} from './config';
 import {merge, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -197,14 +197,14 @@ export class CdkDropList<T = any> implements OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
-    const dragDrop = inject(DragDrop);
     const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
+    const injector = inject(Injector);
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       assertElementNode(this.element.nativeElement, 'cdkDropList');
     }
 
-    this._dropListRef = dragDrop.createDropList(this.element);
+    this._dropListRef = createDropListRef(injector, this.element);
     this._dropListRef.data = this;
 
     if (config) {
