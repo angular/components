@@ -1,9 +1,17 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
 
-@mixin color($theme) {
-  $resizable-hover-divider: mat.get-theme-color($theme, primary, 60);
-  $resizable-active-divider: mat.get-theme-color($theme, primary, 60);
+@mixin color($theme: null) {
+  // If a theme is provided, use the primary color defined by the system map. Otherwise, let it
+  // fallback to the CSS variable system token. Wrap CSS variable definition in a root selector, if
+  // the call was made at the top level without a selector.
+  @if ($theme) {
+    @include _current-selector-or-root() {
+      --mat-column-resize-outline-color: #{map.get($theme, _mat-system, outline)};
+      --mat-column-resize-outline-hover-color: #{map.get($theme, _mat-system, primary)};
+      --mat-column-resize-outline-active-color: #{map.get($theme, _mat-system, primary)};
+    }
+  }
 
   // TODO: these styles don't really belong in the `color` part of the theme.
   // We should figure out a better place for them.
@@ -65,15 +73,15 @@
 
     .mat-header-cell:not(.mat-resizable)::after,
     .mat-mdc-header-cell:not(.mat-resizable)::after {
-      background: map.get($theme, _mat-system, outline);
+      background: var(--mat-column-resize-border-color, var(--mat-sys-outline));
     }
 
     .mat-resizable-handle {
-      background: $resizable-hover-divider;
+      background: var(--mat-column-resize-outline-hover-color, var(--mat-sys-primary));
     }
 
     .cdk-resizable-resize-disabled > .mat-resizable-handle {
-      background: map.get($theme, _mat-system, outline);
+      background: var(--mat-column-resize-border-color, var(--mat-sys-outline));
     }
   }
 
@@ -98,6 +106,8 @@
     opacity: 0;
     transition: none;
   }
+
+  $resizable-active-divider: var(--mat-column-resize-outline-active-color, var(--mat-sys-primary));
 
   .mat-resizable-handle:focus,
   .mat-header-row.cdk-column-resize-hover-or-active .mat-resizable-handle:focus,
@@ -136,18 +146,32 @@
   }
 }
 
-@mixin typography($theme) {}
+@mixin typography($theme: null) {}
 
-@mixin density($theme) {}
+@mixin density($theme: null) {}
 
-@mixin theme($theme) {
-  @if mat.theme-has($theme, color) {
+@mixin theme($theme: null) {
+  @if mat.theme-has($theme, color) or not $theme {
     @include color($theme);
   }
-  @if mat.theme-has($theme, density) {
+  @if mat.theme-has($theme, density) or not $theme {
     @include density($theme);
   }
-  @if mat.theme-has($theme, typography) {
+  @if mat.theme-has($theme, typography) or not $theme {
     @include typography($theme);
+  }
+}
+
+// Copy of Angular Material's `sass-utils.current-selector-or-root` function so
+// that variables can be defined at a top-level safely.
+// src/material/core/style/_sass-utils.scss
+@mixin _current-selector-or-root($root: html) {
+  @if & {
+    @content;
+  }
+  @else {
+    #{$root} {
+      @content;
+    }
   }
 }
