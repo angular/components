@@ -1,3 +1,7 @@
 table {
   width: 100%;
 }
+
+th.cdk-drag {
+  cursor: move;
+}

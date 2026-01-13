@@ -94,6 +94,12 @@ off-screen tabs in the DOM, you can set the `preserveContent` input to `true`.
 
 <!-- example(tab-group-preserve-content) -->
 
+### Sortable tabs
+
+The `mat-tab-group` component can be integrated with the `@angular/cdk/drag-drop` module.
+
+<!-- example(tab-group-drag-drop) -->
+
 ### Accessibility
 `MatTabGroup` and `MatTabNavBar` both implement the
 [ARIA Tabs design pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/). Both components

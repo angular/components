@@ -23,6 +23,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
+  booleanAttribute,
   ChangeDetectorRef,
   Directive,
   ElementRef,
@@ -192,6 +193,10 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
 
   /** Internal method to open menu providing option to auto focus on first item. */
   protected _openMenu(autoFocus: boolean): void {
+    if (this._triggerIsAriaDisabled()) {
+      return;
+    }
+
     const menu = this._menu;
 
     if (this._menuOpen || !menu) {
@@ -482,5 +487,13 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
    */
   private _ownsMenu(menu: MatMenuPanel): boolean {
     return PANELS_TO_TRIGGERS.get(menu) === this;
+  }
+
+  /**
+   * Detect if the trigger element is aria-disabled, indicating it should behave as
+   * disabled and not open the menu.
+   */
+  private _triggerIsAriaDisabled() {
+    return booleanAttribute(this._element.nativeElement.getAttribute('aria-disabled'));
   }
 }
