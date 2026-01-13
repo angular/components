@@ -499,12 +499,12 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Focuses the active date. */
   focusActiveCell() {
-    this._getCurrentViewComponent()._focusActiveCell(false);
+    this._getCurrentViewComponent()?._focusActiveCell(false);
   }
 
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
-    this._getCurrentViewComponent()._init();
+    this._getCurrentViewComponent()?._init();
   }
 
   /** Handles date selection in the month view. */
@@ -557,7 +557,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   /** Returns the component instance that corresponds to the current calendar view. */
-  private _getCurrentViewComponent(): MatMonthView<D> | MatYearView<D> | MatMultiYearView<D> {
+  private _getCurrentViewComponent():
+    | MatMonthView<D>
+    | MatYearView<D>
+    | MatMultiYearView<D>
+    | undefined {
     // The return type is explicitly written as a union to ensure that the Closure compiler does
     // not optimize calls to _init(). Without the explicit return type, TypeScript narrows it to
     // only the first component type. See https://github.com/angular/components/issues/22996.
