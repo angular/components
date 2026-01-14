@@ -1,51 +1,32 @@
-<a name="21.1.0-rc.0"></a>
-# 21.1.0-rc.0 "cadmium-crow" (2026-01-14)
+<a name="21.1.0"></a>
+# 21.1.0 "cadmium-crane" (2026-01-14)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b45cda3f9](https://github.com/angular/components/commit/b45cda3f975433e08c8d5b8099357bfbf7b79de3) | fix | **ui-patterns:** enable overwriting `preventDefault` to allow triggering hyperlinks using enter key ([#32123](https://github.com/angular/components/pull/32123)) |
 ### cdk
 | Commit | Type | Description |
 | -- | -- | -- |
+| [a20aeabbe](https://github.com/angular/components/commit/a20aeabbec9151d382b421074cdc88226a07f9f2) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32386](https://github.com/angular/components/pull/32386)) |
+| [75b373bbc](https://github.com/angular/components/commit/75b373bbcf2c38115b8c4fe32cbf96c097fe6e49) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32412](https://github.com/angular/components/pull/32412)) |
+| [439d1f92a](https://github.com/angular/components/commit/439d1f92a81246dc77be1e19c0296a1740511fc6) | feat | **table:** add virtual scrolling support |
+| [67f213a35](https://github.com/angular/components/commit/67f213a3510b09e0a3fec3054052f49d0c02be00) | fix | **a11y:** add `@angular/platform-browser` to peer dependencies ([#32471](https://github.com/angular/components/pull/32471)) |
 | [efa0d4f6f](https://github.com/angular/components/commit/efa0d4f6f18dea25e30c389a7c4cb4140de112ff) | fix | **scrolling:** handle null document.body in ViewportRuler ([#32477](https://github.com/angular/components/pull/32477)) |
 | [c62c64f21](https://github.com/angular/components/commit/c62c64f21fdbe8d818da519f774c4783a5f77f27) | fix | **text-field:** avoid page jump on auto-resize ([#32605](https://github.com/angular/components/pull/32605)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
+| [ef1355914](https://github.com/angular/components/commit/ef1355914a9dcabd8f00820ad3f2ea67fb5074fe) | feat | **schematics:** add preconnect links for Google Fonts in index.html ([#32238](https://github.com/angular/components/pull/32238)) |
+| [6b9decb77](https://github.com/angular/components/commit/6b9decb77a0628875d0562bba37a95c19d07982d) | feat | **stepper:** add a prefix section to the horizontal stepper header ([#32184](https://github.com/angular/components/pull/32184)) |
 | [5db8dca18](https://github.com/angular/components/commit/5db8dca18b5967c203a5898dfa713ff03d9e7134) | fix | **datepicker:** error if some methods are called too early. ([#32630](https://github.com/angular/components/pull/32630)) |
+| [7b2627de2](https://github.com/angular/components/commit/7b2627de2acff330a0d3ae1956de8f5b96025532) | fix | **menu:** Do not open the menu when trigger is aria-disabled (properly handle disabledInteractive) ([#32601](https://github.com/angular/components/pull/32601)) |
+| [eba6ee844](https://github.com/angular/components/commit/eba6ee844b8e8e6044e1675b5e41ff13224ead75) | fix | **radio:** allow aria attributes to be reset ([#32613](https://github.com/angular/components/pull/32613)) |
 | [fb1b66be9](https://github.com/angular/components/commit/fb1b66be96dc3292d65a3dd070a8513d7521ddbe) | fix | **slider:** add missing closing parenthesis in tick mark transform ([#32580](https://github.com/angular/components/pull/32580)) |
 ### material-experimental
 | Commit | Type | Description |
 | -- | -- | -- |
+| [29e2c4633](https://github.com/angular/components/commit/29e2c463334589429ca2df8a43e9a4c20d72e0f9) | fix | **column-resize:** add null checks for overlay ([#32259](https://github.com/angular/components/pull/32259)) |
 | [c40f42821](https://github.com/angular/components/commit/c40f42821efbe3f2665d6ea756242261b03a53bc) | fix | **column-resize:** fix m2 colors ([#32388](https://github.com/angular/components/pull/32388)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.1.0-next.4"></a>
-# 21.1.0-next.4 "butter-bison" (2026-01-08)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [790accde6](https://github.com/angular/components/commit/790accde652f3fe721bdad88803d6ca814359334) | fix | **menu:** expand selector for trigger ([#32617](https://github.com/angular/components/pull/32617)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1f34b94a5](https://github.com/angular/components/commit/1f34b94a53ace6ba20238210577aa16f9d01d8b5) | fix | **drag-drop:** make item and list easier to tree shake ([#32604](https://github.com/angular/components/pull/32604)) |
-| [136841e7a](https://github.com/angular/components/commit/136841e7a834147df2235d72ba701d61aa6d0233) | fix | **overlay:** safari workaround not working with popovers ([#32588](https://github.com/angular/components/pull/32588)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [fbbedc427](https://github.com/angular/components/commit/fbbedc427186f37a7d5572c5e8ebc0b2c693bfdf) | fix | **expansion:** all panels appearing open when printing ([#32602](https://github.com/angular/components/pull/32602)) |
-| [7b2627de2](https://github.com/angular/components/commit/7b2627de2acff330a0d3ae1956de8f5b96025532) | fix | **menu:** Do not open the menu when trigger is aria-disabled (properly handle disabledInteractive) ([#32601](https://github.com/angular/components/pull/32601)) |
-| [eba6ee844](https://github.com/angular/components/commit/eba6ee844b8e8e6044e1675b5e41ff13224ead75) | fix | **radio:** allow aria attributes to be reset ([#32613](https://github.com/angular/components/pull/32613)) |
-| [2c4f4bf04](https://github.com/angular/components/commit/2c4f4bf043953d5c612aa5ba15448c052c9e58fa) | fix | **select:** global option not disabling popover ([#32610](https://github.com/angular/components/pull/32610)) |
-| [c8bd62bb7](https://github.com/angular/components/commit/c8bd62bb79b5067e66bc6a7ca93e99834547ead6) | fix | **tooltip:** add opt-in for better touch device detection ([#32597](https://github.com/angular/components/pull/32597)) |
-| [8cff9c5b2](https://github.com/angular/components/commit/8cff9c5b2266dbcf4302d74db70d415d814e04e6) | perf | **checkbox:** Use > combinator for hover selector ([#32586](https://github.com/angular/components/pull/32586)) |
-| [89bdf4844](https://github.com/angular/components/commit/89bdf48443ff2c1064013feb7c90b96374afb8be) | perf | **table:** Use text-align: start instead of descendent dir selector. ([#32585](https://github.com/angular/components/pull/32585)) |
-### youtube-player
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0302e4b55](https://github.com/angular/components/commit/0302e4b55e62218918a20af843b297ca8d588a2f) | fix | apply startSeconds with disablePlaceholder and autoplay ([#32570](https://github.com/angular/components/pull/32570)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [54b8a635c](https://github.com/angular/components/commit/54b8a635c3eb6ee021eafc87612251be3223380e) | fix | not all symbols exported in some aria packages ([#32591](https://github.com/angular/components/pull/32591)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -84,49 +65,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="21.1.0-next.3"></a>
-# 21.1.0-next.3 "lego scooter" (2025-12-17)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ebb1c176f2](https://github.com/angular/components/commit/ebb1c176f2f4909acad41c8bbbb87e023c9a0b99) | fix | **tabs:** disabled tab selection |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [dd40f25a03](https://github.com/angular/components/commit/dd40f25a03337765d09ea43f89d0baf3ba6b84a8) | fix | **testing:** Skip task tracking if zone patches aren't present ([#32544](https://github.com/angular/components/pull/32544)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0669de57f2](https://github.com/angular/components/commit/0669de57f2eb0b80b418545ab5a8d9725c1c8f51) | fix | **form-field:** outline being thrown off by Tailwind ([#32513](https://github.com/angular/components/pull/32513)) |
-| [a364de5d01](https://github.com/angular/components/commit/a364de5d01c46fe94bd44813b0e584f4b80aa7bc) | fix | **schematics:** combine style resets ([#32496](https://github.com/angular/components/pull/32496)) |
-| [204788b945](https://github.com/angular/components/commit/204788b9458a24145cce55cc3744b0bc793fbb0f) | fix | **slide-toggle:** Fix a11y issues by hiding label when it has no content. ([#32480](https://github.com/angular/components/pull/32480)) |
-| [cdcae54a47](https://github.com/angular/components/commit/cdcae54a471906dbccdfbe905520eea855bebc23) | fix | **tooltip:** remove explicit usePopover ([#32528](https://github.com/angular/components/pull/32528)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e63c5648e8](https://github.com/angular/components/commit/e63c5648e8b08931435c087a12d20305d385f5bc) | fix | type issues when importing Aria directives ([#32561](https://github.com/angular/components/pull/32561)) |
-| [d4e104ab7f](https://github.com/angular/components/commit/d4e104ab7fba5b3ff9762d937bffae56a0c5b437) | fix | use focus-visible for focus indicator ([#32514](https://github.com/angular/components/pull/32514)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.1.0-next.2"></a>
-# 21.1.0-next.2 "plastic-monkey" (2025-12-10)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [439d1f92a8](https://github.com/angular/components/commit/439d1f92a81246dc77be1e19c0296a1740511fc6) | feat | **table:** add virtual scrolling support |
-| [67f213a351](https://github.com/angular/components/commit/67f213a3510b09e0a3fec3054052f49d0c02be00) | fix | **a11y:** add `@angular/platform-browser` to peer dependencies ([#32471](https://github.com/angular/components/pull/32471)) |
-| [789274f423](https://github.com/angular/components/commit/789274f423581235e97948c708d0bb2d42e60b11) | fix | **menu:** allow user to pass selector for transform origin ([#32462](https://github.com/angular/components/pull/32462)) |
-| [52720a3688](https://github.com/angular/components/commit/52720a368855b1fd2baaab8263341060a77a7173) | fix | **overlay:** error when attempting to attach disposed overlay ([#32489](https://github.com/angular/components/pull/32489)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ed7e1dab2f](https://github.com/angular/components/commit/ed7e1dab2f3bc4acc849169bd65d5c44c219242f) | fix | **core:** default secondary color for focus indicator ([#32491](https://github.com/angular/components/pull/32491)) |
-| [29a8a2fddc](https://github.com/angular/components/commit/29a8a2fddcc67ac82fbc9c6d744959945f5ae139) | fix | **datepicker:** value reset when invalid value is entered using signal forms ([#32485](https://github.com/angular/components/pull/32485)) |
-| [1fab386620](https://github.com/angular/components/commit/1fab386620dd0541d928c3272c403d52f1192d41) | fix | **table:** fixed layout not working ([#32494](https://github.com/angular/components/pull/32494)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="21.0.3"></a>
 # 21.0.3 "plastic-moose" (2025-12-10)
 ### cdk
@@ -143,26 +81,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="21.1.0-next.1"></a>
-# 21.1.0-next.1 "babingtonite-blinds" (2025-12-03)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8533f4285](https://github.com/angular/components/commit/8533f4285f74791f483bf80fef14343dcc1de550) | fix | **menu:** focus flicker bug |
-| [c097570e2](https://github.com/angular/components/commit/c097570e2856f919ebd5ca3accd79d2ec42f9627) | fix | **menu:** update api goldens ([#32463](https://github.com/angular/components/pull/32463)) |
-| [5c7b36fe1](https://github.com/angular/components/commit/5c7b36fe13912c395a6c62e833b541aa40ea0b45) | fix | **menu:** update unit tests to use ngMenuContent |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [75b373bbc](https://github.com/angular/components/commit/75b373bbcf2c38115b8c4fe32cbf96c097fe6e49) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32412](https://github.com/angular/components/pull/32412)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4cc5880d4](https://github.com/angular/components/commit/4cc5880d42eacf4d0793e2f84d925f4b7cabd29e) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
-| [cd22ab69f](https://github.com/angular/components/commit/cd22ab69f0760843fa452b366e707c00c098dd6b) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="21.0.2"></a>
 # 21.0.2 "babefphite-button" (2025-12-03)
 ### aria
@@ -176,28 +94,6 @@
 | -- | -- | -- |
 | [a6de52a67](https://github.com/angular/components/commit/a6de52a67c9caafce5dde03a24a7042315091771) | fix | **datepicker:** do not re-assign the same forms value ([#32447](https://github.com/angular/components/pull/32447)) |
 | [ef8388b71](https://github.com/angular/components/commit/ef8388b714ca88def0bad2f9fa5ca544dd5260e1) | fix | **timepicker:** valueChanges emitting on init ([#32434](https://github.com/angular/components/pull/32434)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.1.0-next.0"></a>
-# 21.1.0-next.0 "sulfur-sombrero" (2025-11-26)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b45cda3f9](https://github.com/angular/components/commit/b45cda3f975433e08c8d5b8099357bfbf7b79de3) | fix | **ui-patterns:** enable overwriting `preventDefault` to allow triggering hyperlinks using enter key ([#32123](https://github.com/angular/components/pull/32123)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [a20aeabbe](https://github.com/angular/components/commit/a20aeabbec9151d382b421074cdc88226a07f9f2) | feat | **a11y:** allow safe HTML to be passed to live announcer ([#32386](https://github.com/angular/components/pull/32386)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ef1355914](https://github.com/angular/components/commit/ef1355914a9dcabd8f00820ad3f2ea67fb5074fe) | feat | **schematics:** add preconnect links for Google Fonts in index.html ([#32238](https://github.com/angular/components/pull/32238)) |
-| [6b9decb77](https://github.com/angular/components/commit/6b9decb77a0628875d0562bba37a95c19d07982d) | feat | **stepper:** add a prefix section to the horizontal stepper header ([#32184](https://github.com/angular/components/pull/32184)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [29e2c4633](https://github.com/angular/components/commit/29e2c463334589429ca2df8a43e9a4c20d72e0f9) | fix | **column-resize:** add null checks for overlay ([#32259](https://github.com/angular/components/pull/32259)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
