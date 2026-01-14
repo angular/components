@@ -14,10 +14,13 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   afterNextRender,
+  inject,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
@@ -72,8 +75,10 @@ export interface MatChipEditedEvent extends MatChipEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatChipAction, MatChipEditInput],
 })
-export class MatChipRow extends MatChip implements AfterViewInit {
+export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
   protected override basicChipAttrName = 'mat-basic-chip-row';
+  private _renderer = inject(Renderer2);
+  private _cleanupMousedown: (() => void) | undefined;
 
   /**
    * The editing action has to be triggered in a timeout. While we're waiting on it, a blur
@@ -123,12 +128,16 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     super.ngAfterViewInit();
 
     // Sets _alreadyFocused (ahead of click) when chip already has focus.
-    this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener(
-        'mousedown',
-        () => (this._alreadyFocused = this._hasFocus()),
-      );
-    });
+    this._cleanupMousedown = this._ngZone.runOutsideAngular(() =>
+      this._renderer.listen(this._elementRef.nativeElement, 'mousedown', () => {
+        this._alreadyFocused = this._hasFocus();
+      }),
+    );
+  }
+
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this._cleanupMousedown?.();
   }
 
   protected _hasLeadingActionIcon() {

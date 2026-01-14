@@ -435,7 +435,7 @@ export class MatChipRemove extends MatChipAction {
 }
 
 // @public
-export class MatChipRow extends MatChip implements AfterViewInit {
+export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
     protected basicChipAttrName: string;
@@ -463,6 +463,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     _isRippleDisabled(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["[matChipEdit]", "mat-chip-avatar, [matChipAvatar]", "[matChipEditInput]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
