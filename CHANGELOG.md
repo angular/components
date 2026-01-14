@@ -1,3 +1,8 @@
+<a name="21.2.0-next.0"></a>
+# 21.2.0-next.0 "cadmium-chicken" (2026-01-14)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0"></a>
 # 21.1.0 "cadmium-crane" (2026-01-14)
 ### aria
