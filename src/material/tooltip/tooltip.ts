@@ -31,9 +31,10 @@ import {
   afterNextRender,
   Injector,
   DOCUMENT,
+  Renderer2,
 } from '@angular/core';
 import {NgClass} from '@angular/common';
-import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {Platform} from '@angular/cdk/platform';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
@@ -167,7 +168,7 @@ export const TOOLTIP_PANEL_CLASS = 'mat-mdc-tooltip-panel';
 const PANEL_CLASS = 'tooltip-panel';
 
 /** Options used to bind passive event listeners. */
-const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
+const passiveListenerOptions = {passive: true};
 
 // These constants were taken from MDC's `numbers` object. We can't import them from MDC,
 // because they have some top-level references to `window` which break during SSR.
@@ -200,6 +201,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
   private _mediaMatcher = inject(MediaMatcher);
+  private _document = inject(DOCUMENT);
+  private _renderer = inject(Renderer2);
   private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
     optional: true,
@@ -363,8 +366,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   /** Manually-bound passive event listeners. */
-  private readonly _passiveListeners: (readonly [string, EventListenerOrEventListenerObject])[] =
-    [];
+  private readonly _eventCleanups: (() => void)[] = [];
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: null | ReturnType<typeof setTimeout> = null;
@@ -438,17 +440,11 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       this._tooltipInstance = null;
     }
 
-    // Clean up the event listeners set in the constructor
-    this._passiveListeners.forEach(([event, listener]) => {
-      nativeElement.removeEventListener(event, listener, passiveListenerOptions);
-    });
-    this._passiveListeners.length = 0;
-
+    this._eventCleanups.forEach(cleanup => cleanup());
+    this._eventCleanups.length = 0;
     this._destroyed.next();
     this._destroyed.complete();
-
     this._isDestroyed = true;
-
     this._ariaDescriber.removeDescription(nativeElement, this.message, 'tooltip');
     this._focusMonitor.stopMonitoring(nativeElement);
   }
@@ -783,54 +779,40 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Binds the pointer events to the tooltip trigger. */
   private _setupPointerEnterEventsIfNeeded() {
     // Optimization: Defer hooking up events if there's no message or the tooltip is disabled.
-    if (
-      this._disabled ||
-      !this.message ||
-      !this._viewInitialized ||
-      this._passiveListeners.length
-    ) {
+    if (this._disabled || !this.message || !this._viewInitialized || this._eventCleanups.length) {
       return;
     }
 
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
     if (!this._isTouchPlatform()) {
-      this._passiveListeners.push([
-        'mouseenter',
-        event => {
-          this._setupPointerExitEventsIfNeeded();
-          let point = undefined;
-          if ((event as MouseEvent).x !== undefined && (event as MouseEvent).y !== undefined) {
-            point = event as MouseEvent;
-          }
-          this.show(undefined, point);
-        },
-      ]);
+      this._addListener('mouseenter', (event: MouseEvent) => {
+        this._setupPointerExitEventsIfNeeded();
+        let point = undefined;
+        if (event.x !== undefined && event.y !== undefined) {
+          point = event;
+        }
+        this.show(undefined, point);
+      });
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
+      this._addListener('touchstart', (event: TouchEvent) => {
+        const touch = event.targetTouches?.[0];
+        const origin = touch ? {x: touch.clientX, y: touch.clientY} : undefined;
+        // Note that it's important that we don't `preventDefault` here,
+        // because it can prevent click events from firing on the element.
+        this._setupPointerExitEventsIfNeeded();
+        if (this._touchstartTimeout) {
+          clearTimeout(this._touchstartTimeout);
+        }
 
-      this._passiveListeners.push([
-        'touchstart',
-        event => {
-          const touch = (event as TouchEvent).targetTouches?.[0];
-          const origin = touch ? {x: touch.clientX, y: touch.clientY} : undefined;
-          // Note that it's important that we don't `preventDefault` here,
-          // because it can prevent click events from firing on the element.
-          this._setupPointerExitEventsIfNeeded();
-          if (this._touchstartTimeout) {
-            clearTimeout(this._touchstartTimeout);
-          }
-
-          const DEFAULT_LONGPRESS_DELAY = 500;
-          this._touchstartTimeout = setTimeout(() => {
-            this._touchstartTimeout = null;
-            this.show(undefined, origin);
-          }, this._defaultOptions?.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
-        },
-      ]);
+        const DEFAULT_LONGPRESS_DELAY = 500;
+        this._touchstartTimeout = setTimeout(() => {
+          this._touchstartTimeout = null;
+          this.show(undefined, origin);
+        }, this._defaultOptions?.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
+      });
     }
-
-    this._addListeners(this._passiveListeners);
   }
 
   private _setupPointerExitEventsIfNeeded() {
@@ -839,20 +821,28 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     }
     this._pointerExitEventsInitialized = true;
 
-    const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
     if (!this._isTouchPlatform()) {
-      exitListeners.push(
-        [
-          'mouseleave',
-          event => {
-            const newTarget = (event as MouseEvent).relatedTarget as Node | null;
-            if (!newTarget || !this._overlayRef?.overlayElement.contains(newTarget)) {
-              this.hide();
-            }
-          },
-        ],
-        ['wheel', event => this._wheelListener(event as WheelEvent)],
-      );
+      this._addListener('mouseleave', (event: MouseEvent) => {
+        const newTarget = event.relatedTarget as Node | null;
+        if (!newTarget || !this._overlayRef?.overlayElement.contains(newTarget)) {
+          this.hide();
+        }
+      });
+
+      this._addListener('wheel', (event: WheelEvent) => {
+        if (this._isTooltipVisible()) {
+          const elementUnderPointer = this._document.elementFromPoint(event.clientX, event.clientY);
+          const element = this._elementRef.nativeElement;
+
+          // On non-touch devices we depend on the `mouseleave` event to close the tooltip, but it
+          // won't fire if the user scrolls away using the wheel without moving their cursor. We
+          // work around it by finding the element under the user's cursor and closing the tooltip
+          // if it's not the trigger.
+          if (elementUnderPointer !== element && !element.contains(elementUnderPointer)) {
+            this.hide();
+          }
+        }
+      });
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
       const touchendListener = () => {
@@ -862,17 +852,15 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
         this.hide(this._defaultOptions?.touchendHideDelay);
       };
 
-      exitListeners.push(['touchend', touchendListener], ['touchcancel', touchendListener]);
+      this._addListener('touchend', touchendListener);
+      this._addListener('touchcancel', touchendListener);
     }
-
-    this._addListeners(exitListeners);
-    this._passiveListeners.push(...exitListeners);
   }
 
-  private _addListeners(listeners: (readonly [string, EventListenerOrEventListenerObject])[]) {
-    listeners.forEach(([event, listener]) => {
-      this._elementRef.nativeElement.addEventListener(event, listener, passiveListenerOptions);
-    });
+  private _addListener<T extends Event>(name: string, listener: (event: T) => void) {
+    this._eventCleanups.push(
+      this._renderer.listen(this._elementRef.nativeElement, name, listener, passiveListenerOptions),
+    );
   }
 
   private _isTouchPlatform(): boolean {
@@ -888,24 +876,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       !!this._defaultOptions?.detectHoverCapability &&
       this._mediaMatcher.matchMedia('(any-hover: none)').matches
     );
-  }
-
-  /** Listener for the `wheel` event on the element. */
-  private _wheelListener(event: WheelEvent) {
-    if (this._isTooltipVisible()) {
-      const elementUnderPointer = this._injector
-        .get(DOCUMENT)
-        .elementFromPoint(event.clientX, event.clientY);
-      const element = this._elementRef.nativeElement;
-
-      // On non-touch devices we depend on the `mouseleave` event to close the tooltip, but it
-      // won't fire if the user scrolls away using the wheel without moving their cursor. We
-      // work around it by finding the element under the user's cursor and closing the tooltip
-      // if it's not the trigger.
-      if (elementUnderPointer !== element && !element.contains(elementUnderPointer)) {
-        this.hide();
-      }
-    }
   }
 
   /** Disables the native browser gestures, based on how the tooltip has been configured. */
