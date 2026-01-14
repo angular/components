@@ -44,7 +44,7 @@ import {
   DOCUMENT,
   signal,
 } from '@angular/core';
-import {fromEvent, merge, Observable, Subject} from 'rxjs';
+import {merge, Observable, Subject} from 'rxjs';
 import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
@@ -350,27 +350,23 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
      * time a key is pressed. Instead we re-enter the zone only if the `ESC` key is pressed
      * and we don't have close disabled.
      */
-    this._ngZone.runOutsideAngular(() => {
+    this._eventCleanups = this._ngZone.runOutsideAngular(() => {
+      const renderer = this._renderer;
       const element = this._elementRef.nativeElement;
-      (fromEvent(element, 'keydown') as Observable<KeyboardEvent>)
-        .pipe(
-          filter(event => {
-            return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
-          }),
-          takeUntil(this._destroyed),
-        )
-        .subscribe(event =>
-          this._ngZone.run(() => {
-            this.close();
-            event.stopPropagation();
-            event.preventDefault();
-          }),
-        );
 
-      this._eventCleanups = [
-        this._renderer.listen(element, 'transitionrun', this._handleTransitionEvent),
-        this._renderer.listen(element, 'transitionend', this._handleTransitionEvent),
-        this._renderer.listen(element, 'transitioncancel', this._handleTransitionEvent),
+      return [
+        renderer.listen(element, 'keydown', (event: KeyboardEvent) => {
+          if (event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)) {
+            this._ngZone.run(() => {
+              this.close();
+              event.stopPropagation();
+              event.preventDefault();
+            });
+          }
+        }),
+        renderer.listen(element, 'transitionrun', this._handleTransitionEvent),
+        renderer.listen(element, 'transitionend', this._handleTransitionEvent),
+        renderer.listen(element, 'transitioncancel', this._handleTransitionEvent),
       ];
     });
 
