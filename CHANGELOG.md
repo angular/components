@@ -1,3 +1,22 @@
+<a name="21.1.0-rc.0"></a>
+# 21.1.0-rc.0 "cadmium-crow" (2026-01-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [efa0d4f6f](https://github.com/angular/components/commit/efa0d4f6f18dea25e30c389a7c4cb4140de112ff) | fix | **scrolling:** handle null document.body in ViewportRuler ([#32477](https://github.com/angular/components/pull/32477)) |
+| [c62c64f21](https://github.com/angular/components/commit/c62c64f21fdbe8d818da519f774c4783a5f77f27) | fix | **text-field:** avoid page jump on auto-resize ([#32605](https://github.com/angular/components/pull/32605)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5db8dca18](https://github.com/angular/components/commit/5db8dca18b5967c203a5898dfa713ff03d9e7134) | fix | **datepicker:** error if some methods are called too early. ([#32630](https://github.com/angular/components/pull/32630)) |
+| [fb1b66be9](https://github.com/angular/components/commit/fb1b66be96dc3292d65a3dd070a8513d7521ddbe) | fix | **slider:** add missing closing parenthesis in tick mark transform ([#32580](https://github.com/angular/components/pull/32580)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c40f42821](https://github.com/angular/components/commit/c40f42821efbe3f2665d6ea756242261b03a53bc) | fix | **column-resize:** fix m2 colors ([#32388](https://github.com/angular/components/pull/32388)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.0-next.4"></a>
 # 21.1.0-next.4 "butter-bison" (2026-01-08)
 ### aria
