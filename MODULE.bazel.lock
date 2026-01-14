@@ -1093,7 +1093,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "NwcLXHrbh2hoorA/Ybmcpjxsn/6avQmewDglodkDrgo=",
-        "usagesDigest": "P0CNJ+IG4EXlTVEl5N4fXYzzKHmmfFLPk5tgemBOg7k=",
+        "usagesDigest": "cn6a7z/JxyIeCL5mEsWW6ZcuIFWkYim3+1FHxHIHnHo=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
