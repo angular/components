@@ -440,6 +440,8 @@ export class OverlayContainer implements OnDestroy {
 // @public
 export interface OverlayDefaultConfig {
     // (undocumented)
+    alwaysInline?: boolean;
+    // (undocumented)
     usePopover?: boolean;
 }
 
