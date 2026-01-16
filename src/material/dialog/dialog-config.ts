@@ -35,7 +35,7 @@ export interface DialogPosition {
 /**
  * Configuration for opening a modal dialog with the MatDialog service.
  */
-export class MatDialogConfig<D = any> {
+export class MatDialogConfig<D = any, Component = unknown, Result = any> {
   /**
    * Where the attached component should live in Angular's *logical* component tree.
    * This affects what is available for injection and the change detection order for the
@@ -69,13 +69,9 @@ export class MatDialogConfig<D = any> {
   disableClose?: boolean = false;
 
   /** Function used to determine whether the dialog is allowed to close. */
-  closePredicate?: <
-    Result = unknown,
-    Component = unknown,
-    Config extends DialogConfig = MatDialogConfig,
-  >(
+  closePredicate?: (
     result: Result | undefined,
-    config: Config,
+    config: this,
     componentInstance: Component | null,
   ) => boolean;
 
