@@ -341,10 +341,12 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     });
 
     let nextButton: MatButtonToggle | null = null;
+    let shouldSelect = false;
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
         nextButton = this._buttonToggles.get(index) || null;
+        shouldSelect = true;
         break;
       case UP_ARROW:
         nextButton = this._getNextButton(index, -1);
@@ -364,7 +366,9 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     if (nextButton) {
       event.preventDefault();
-      nextButton._onButtonClick();
+      if (shouldSelect) {
+        nextButton._onButtonClick();
+      }
       nextButton.focus();
     }
   }
