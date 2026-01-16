@@ -78,7 +78,7 @@ $fallbacks: m3-button.get-tokens();
   text-transform: token-utils.slot(button-text-label-text-transform, $fallbacks);
   font-weight: token-utils.slot(button-text-label-text-weight, $fallbacks);
 
-  &, .mdc-button__ripple {
+  &, & > .mdc-button__ripple {
     border-radius: token-utils.slot(button-text-container-shape, $fallbacks);
   }
 
