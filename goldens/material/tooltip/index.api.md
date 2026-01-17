@@ -143,7 +143,7 @@ export class TooltipComponent implements OnDestroy {
     protected _onShow(): void;
     show(delay: number): void;
     _tooltip: ElementRef<HTMLElement>;
-    tooltipClass: string | string[] | Set<string> | {
+    tooltipClass: string | string[] | {
         [key: string]: unknown;
     };
     _triggerElement: HTMLElement;
