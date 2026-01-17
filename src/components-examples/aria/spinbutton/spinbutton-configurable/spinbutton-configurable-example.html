@@ -1,0 +1,42 @@
+<div class="example-spinbutton-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
+  <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Min</mat-label>
+    <input matInput type="number" [formControl]="min" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Max</mat-label>
+    <input matInput type="number" [formControl]="max" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Step</mat-label>
+    <input matInput type="number" [formControl]="step" />
+  </mat-form-field>
+</div>
+
+<label id="configurable-label">Configurable value</label>
+
+<div ngSpinButtonGroup class="example-spinbutton-group" aria-labelledby="configurable-label">
+  <button type="button" ngSpinButtonDecrement class="example-spinbutton-btn">−</button>
+  <input
+    ngSpinButton
+    ngSpinButtonInput
+    type="text"
+    class="example-spinbutton-input"
+    [(value)]="value"
+    [min]="min.value"
+    [max]="max.value"
+    [step]="step.value"
+    [disabled]="disabled.value"
+    [readonly]="readonly.value"
+    [wrap]="wrap.value"
+    (beforeinput)="onBeforeInput($event)" />
+  <button type="button" ngSpinButtonIncrement class="example-spinbutton-btn">+</button>
+</div>
+
+<p class="example-help-text">Value: {{ value() }}</p>

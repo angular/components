@@ -1,0 +1,61 @@
+<span id="time-label">Select time</span>
+
+<div
+  role="group"
+  aria-labelledby="time-label"
+  class="example-time-field"
+  (keydown)="onGroupKeydown($event)">
+
+  <span
+    ngSpinButton
+    [(value)]="hour"
+    min="1"
+    max="12"
+    wrap
+    [valueText]="hourDisplay()"
+    inputMode="numeric"
+    contenteditable="true"
+    class="example-time-segment"
+    aria-label="Hour"
+    (beforeinput)="onHourInput($event)"
+  >
+    {{ hourDisplay() }}
+  </span>
+
+  <span class="example-time-separator" aria-hidden="true">:</span>
+
+  <span
+    ngSpinButton
+    [(value)]="minute"
+    min="0"
+    max="59"
+    wrap
+    [valueText]="minuteDisplay()"
+    inputMode="numeric"
+    contenteditable="true"
+    class="example-time-segment"
+    tabindex="-1"
+    aria-label="Minute"
+    (beforeinput)="onMinuteInput($event)"
+  >
+    {{ minuteDisplay() }}
+  </span>
+
+  <span aria-hidden="true">&nbsp;</span>
+
+  <span
+    ngSpinButton
+    [(value)]="period"
+    min="0"
+    max="1"
+    [valueText]="periodDisplay()"
+    class="example-time-segment"
+    tabindex="-1"
+    aria-label="AM/PM"
+    (keydown)="onPeriodKeydown($event)"
+  >
+    {{ periodDisplay() }}
+  </span>
+</div>
+
+<p class="example-time-output">Selected: {{ formattedTime() }}</p>

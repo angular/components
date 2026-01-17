@@ -1,0 +1,15 @@
+<label id="readonly-label">Readonly counter</label>
+
+<div ngSpinButtonGroup class="example-spinbutton-group" aria-labelledby="readonly-label">
+  <button type="button" ngSpinButtonDecrement class="example-spinbutton-btn">−</button>
+  <input
+    ngSpinButton
+    ngSpinButtonInput
+    type="text"
+    class="example-spinbutton-input"
+    [(value)]="count"
+    readonly />
+  <button type="button" ngSpinButtonIncrement class="example-spinbutton-btn">+</button>
+</div>
+
+<p class="example-help-text">Value: {{ count() }} (readonly)</p>
