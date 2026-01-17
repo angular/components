@@ -1,0 +1,15 @@
+<label id="count-label">Counter</label>
+
+<div ngSpinButtonGroup class="example-spinbutton-group" aria-labelledby="count-label">
+  <button type="button" ngSpinButtonDecrement class="example-spinbutton-btn">−</button>
+  <input
+    ngSpinButton
+    ngSpinButtonInput
+    type="text"
+    class="example-spinbutton-input"
+    [(value)]="count"
+    (beforeinput)="onBeforeInput($event)" />
+  <button type="button" ngSpinButtonIncrement class="example-spinbutton-btn">+</button>
+</div>
+
+<p class="example-help-text">Value: {{ count() }}</p>

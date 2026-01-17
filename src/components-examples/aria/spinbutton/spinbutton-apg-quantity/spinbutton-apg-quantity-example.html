@@ -1,0 +1,160 @@
+<fieldset class="example-fieldset">
+  <legend>Guests</legend>
+
+  <div class="example-spinner-field">
+    <label for="adults">Adults</label>
+
+    <div ngSpinButtonGroup class="example-spinner">
+      <button
+        type="button"
+        ngSpinButtonDecrement
+        class="example-spinner-btn"
+        title="Remove adult">
+        <span aria-hidden="true">−</span>
+      </button>
+
+      <input
+        #adultsSpinbutton="ngSpinButton"
+        id="adults"
+        ngSpinButton
+        ngSpinButtonInput
+        type="text"
+        class="example-spinner-input"
+        size="4"
+        autocomplete="off"
+        spellcheck="false"
+        [(value)]="adultCount"
+        min="1"
+        max="8"
+        aria-errormessage="error-adults"
+        (beforeinput)="onBeforeInput($event)" />
+
+      <button
+        type="button"
+        ngSpinButtonIncrement
+        class="example-spinner-btn"
+        title="Add adult">
+        <span aria-hidden="true">+</span>
+      </button>
+    </div>
+
+    <small
+      id="error-adults"
+      class="example-error"
+      [class.example-hidden]="!adultsSpinbutton.invalid()">
+      Must be between 1 and 8
+    </small>
+    <small
+      id="help-adults"
+      class="example-help"
+      [class.example-hidden]="adultsSpinbutton.invalid()">
+      1 to 8
+    </small>
+
+    <output for="adults" class="example-visually-hidden" aria-live="polite">
+      {{ summary() }}
+    </output>
+  </div>
+
+  <div class="example-spinner-field">
+    <label for="kids">Kids</label>
+
+    <div ngSpinButtonGroup class="example-spinner">
+      <button
+        type="button"
+        ngSpinButtonDecrement
+        class="example-spinner-btn"
+        title="Remove kid">
+        <span aria-hidden="true">−</span>
+      </button>
+
+      <input
+        #kidsSpinbutton="ngSpinButton"
+        id="kids"
+        ngSpinButton
+        ngSpinButtonInput
+        type="text"
+        class="example-spinner-input"
+        size="4"
+        autocomplete="off"
+        spellcheck="false"
+        [(value)]="kidCount"
+        min="0"
+        max="8"
+        aria-errormessage="error-kids"
+        (beforeinput)="onBeforeInput($event)" />
+
+      <button
+        type="button"
+        ngSpinButtonIncrement
+        class="example-spinner-btn"
+        title="Add kid">
+        <span aria-hidden="true">+</span>
+      </button>
+    </div>
+
+    <small
+      id="error-kids"
+      class="example-error"
+      [class.example-hidden]="!kidsSpinbutton.invalid()">
+      Must be between 0 and 8
+    </small>
+    <small
+      id="help-kids"
+      class="example-help"
+      [class.example-hidden]="kidsSpinbutton.invalid()">
+      0 to 8
+    </small>
+  </div>
+
+  <div class="example-spinner-field">
+    <label for="animals">Animals</label>
+
+    <div ngSpinButtonGroup class="example-spinner">
+      <button
+        type="button"
+        ngSpinButtonDecrement
+        class="example-spinner-btn"
+        title="Remove animal">
+        <span aria-hidden="true">−</span>
+      </button>
+
+      <input
+        #animalsSpinbutton="ngSpinButton"
+        id="animals"
+        ngSpinButton
+        ngSpinButtonInput
+        type="text"
+        class="example-spinner-input"
+        size="4"
+        autocomplete="off"
+        spellcheck="false"
+        [(value)]="animalCount"
+        min="0"
+        max="12"
+        aria-errormessage="error-animals"
+        (beforeinput)="onBeforeInput($event)" />
+
+      <button
+        type="button"
+        ngSpinButtonIncrement
+        class="example-spinner-btn"
+        title="Add animal">
+        <span aria-hidden="true">+</span>
+      </button>
+    </div>
+
+    <small
+      id="error-animals"
+      class="example-error"
+      [class.example-hidden]="!animalsSpinbutton.invalid()">
+      Must be between 0 and 12
+    </small>
+    <small
+      id="help-animals"
+      class="example-help"
+      [class.example-hidden]="animalsSpinbutton.invalid()">
+      0 to 12
+    </small>
+  </div>
+</fieldset>

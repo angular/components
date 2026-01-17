@@ -1,0 +1,23 @@
+.example-container {
+  margin-bottom: 32px;
+  padding: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.example-container h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.example-grid .example-container {
+  margin-bottom: 0;
+}

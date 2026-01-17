@@ -1,0 +1,256 @@
+/* Shared styles for spinbutton examples */
+
+.example-spinbutton-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s ease;
+}
+
+.example-spinbutton-group:focus-within:not(:has(input:disabled)) {
+  outline-color: #1976d2;
+}
+
+.example-spinbutton-input {
+  width: 60px;
+  text-align: center;
+  border: none;
+  font-size: 16px;
+  padding: 8px 4px;
+  background: transparent;
+}
+
+.example-spinbutton-input:focus {
+  outline: none;
+}
+
+.example-spinbutton-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-spinbutton-btn:hover:not([aria-disabled='true']) {
+  background: #e0e0e0;
+}
+
+.example-spinbutton-btn:focus {
+  outline: none;
+}
+
+.example-spinbutton-btn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.example-help-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.example-error-text {
+  font-size: 12px;
+  color: #d32f2f;
+  margin-top: 4px;
+}
+
+.example-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Time field styles */
+.example-time-field {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: monospace;
+  font-size: 18px;
+  margin-left: 8px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s ease;
+}
+
+.example-time-field:focus-within:not(:has(input:disabled)) {
+  outline-color: #1976d2;
+}
+
+.example-time-segment {
+  min-width: 28px;
+  text-align: center;
+  padding: 4px;
+  border-radius: 4px;
+  caret-color: transparent;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.example-time-segment:focus {
+  outline: none;
+  background: #e3f2fd;
+}
+
+.example-time-separator {
+  padding: 0 2px;
+}
+
+.example-time-output {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* APG Quantity Picker styles */
+.example-fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.example-fieldset legend {
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.example-spinner-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.example-spinner-field:last-child {
+  margin-bottom: 0;
+}
+
+.example-spinner-field > label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.example-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.15s ease;
+}
+
+.example-spinner:focus-within:not(:has(input:disabled)) {
+  outline-color: #1976d2;
+}
+
+.example-spinner-input {
+  width: 48px;
+  text-align: center;
+  border: none;
+  font-size: 16px;
+  padding: 8px 4px;
+  background: transparent;
+}
+
+.example-spinner-input:focus {
+  outline: none;
+}
+
+.example-spinner-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-spinner-btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.example-spinner-btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.example-spinner-btn:hover:not([aria-disabled='true']) {
+  background: #e0e0e0;
+}
+
+.example-spinner-btn:focus {
+  outline: none;
+}
+
+.example-spinner-btn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.example-error {
+  font-size: 12px;
+  color: #d32f2f;
+}
+
+.example-help {
+  font-size: 12px;
+  color: #666;
+}
+
+.example-hidden {
+  display: none;
+}
+
+.example-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Configurable example styles */
+.example-spinbutton-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
