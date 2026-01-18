@@ -8,6 +8,7 @@ ANGULAR_COMPONENTS_SCOPED_PACKAGES = ["@angular/%s" % p for p in [
     "material-luxon-adapter",
     "material-moment-adapter",
     "material-date-fns-adapter",
+    "material-temporal-adapter",
 ]]
 
 PKG_GROUP_REPLACEMENTS = {
