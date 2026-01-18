@@ -6,6 +6,7 @@ import sh from 'shelljs';
 import {guessPackageName} from './util.mjs';
 
 const bazel = process.env['BAZEL'] || 'pnpm -s bazel';
+const targetsToRun = new Set<string>();
 
 if (process.argv.length < 3) {
   console.error(chalk.red('No package name has been passed in for API golden approval.'));
@@ -29,7 +30,9 @@ for (const searchPackageName of process.argv.slice(2)) {
   }
 
   const [packageName] = packageNameGuess.result.split('/');
-  const apiGoldenTargetName = `//goldens:${packageName}_api.accept`.replace(/-/g, '_');
+  targetsToRun.add(`//goldens:${packageName}_api.accept`.replace(/-/g, '_'));
+}
 
-  sh.exec(`${bazel} run ${apiGoldenTargetName}`);
+for (const target of targetsToRun) {
+  sh.exec(`${bazel} run ${target}`);
 }
