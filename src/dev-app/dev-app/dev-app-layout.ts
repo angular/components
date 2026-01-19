@@ -70,6 +70,7 @@ export class DevAppLayout {
     {name: 'Aria Menu', route: '/aria-menu'},
     {name: 'Aria Menubar', route: '/aria-menubar'},
     {name: 'Aria Select', route: '/aria-select'},
+    {name: 'Aria Spinbutton', route: '/aria-spinbutton'},
     {name: 'Aria Tabs', route: '/aria-tabs'},
     {name: 'Aria Toolbar', route: '/aria-toolbar'},
     {name: 'Aria Tree', route: '/aria-tree'},
