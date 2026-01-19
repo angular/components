@@ -3,8 +3,16 @@
 // well. We reset some properties here to prevent these container elements from introducing
 // additional space that would throw off the scrolling calculations.
 @mixin _clear-container-space($direction) {
-  $start: if($direction == horizontal, 'left', 'top');
-  $end: if($direction == horizontal, 'right', 'bottom');
+  $start: '';
+  $end: '';
+
+  @if ($direction == horizontal) {
+    $start: 'left';
+    $end: 'right';
+  } @else {
+    $start: 'top';
+    $end: 'bottom';
+  }
 
   & > dl:not([cdkVirtualFor]),
   & > ol:not([cdkVirtualFor]),

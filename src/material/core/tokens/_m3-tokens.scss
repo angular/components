@@ -39,9 +39,13 @@
 }
 
 @function get-sys-color($type, $palettes, $prefix) {
-  $sys-color: if($type == dark,
-    m3.md-sys-color-values-dark($palettes),
-    m3.md-sys-color-values-light($palettes));
+  $sys-color: null;
+
+  @if ($type == dark) {
+    $sys-color: m3.md-sys-color-values-dark($palettes);
+  } @else {
+    $sys-color: m3.md-sys-color-values-light($palettes);
+  }
 
   @if (sass-utils.$use-system-color-variables) {
     $var-values: ();

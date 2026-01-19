@@ -84,7 +84,13 @@
 
   // We cast the $hue to a string, because some hues starting with a number, like `700-contrast`,
   // might be inferred as numbers by Sass. Casting them to string fixes the map lookup.
-  $color: if(map.has-key($palette, $hue), map.get($palette, $hue), map.get($palette, $hue + ''));
+  $color: null;
+
+  @if (map.has-key($palette, $hue)) {
+    $color: map.get($palette, $hue);
+  } @else {
+    $color: map.get($palette, $hue + '');
+  }
 
   @if ($opacity == null) {
     @return $color;
@@ -121,12 +127,15 @@
     warn: $warn,
   );
 
-  $sys-color: if(
-      $is-dark,
-      m2.md-sys-color-values-dark($palettes),
-      m2.md-sys-color-values-light($palettes));
   $sys-state: m2.md-sys-state-values();
   $sys-typography: m2.md-sys-typescale-values($typography);
+  $sys-color: null;
+
+  @if ($is-dark) {
+    $sys-color: m2.md-sys-color-values-dark($palettes);
+  } @else {
+    $sys-color: m2.md-sys-color-values-light($palettes);
+  }
 
   $system: (density-scale: $density-scale);
   @each $map in ($sys-color, $sys-state, $sys-typography) {
@@ -139,16 +148,22 @@
 // Creates a color configuration from the specified
 // primary, accent and warn palettes.
 @function _mat-create-color-config($primary, $accent, $warn: null, $is-dark) {
-  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
-  $foreground:
-      if($is-dark, palette.$dark-theme-foreground-palette, palette.$light-theme-foreground-palette);
-  $background:
-      if($is-dark, palette.$dark-theme-background-palette, palette.$light-theme-background-palette);
+  $foreground: null;
+  $background: null;
+  $warn-palette: $warn or define-palette(palette.$red-palette);
+
+  @if ($is-dark) {
+    $foreground: palette.$dark-theme-foreground-palette;
+    $background: palette.$dark-theme-background-palette;
+  } @else {
+    $foreground: palette.$light-theme-foreground-palette;
+    $background: palette.$light-theme-background-palette;
+  }
 
   @return (
     primary: $primary,
     accent: $accent,
-    warn: $warn,
+    warn: $warn-palette,
     is-dark: $is-dark,
     foreground: $foreground,
     background: $background,

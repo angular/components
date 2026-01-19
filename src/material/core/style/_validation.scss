@@ -11,7 +11,10 @@
   @if ($result == list and list.index($types, map) and list.length($obj) == 0) {
     @return null;
   }
-  @return if(list.index($types, $result), null, $result);
+  @if (list.index($types, $result)) {
+    @return null;
+  }
+  @return $result;
 }
 
 /// Validates that a list contains only values from the allowed list of values.
@@ -25,7 +28,10 @@
       $invalid: list.append($invalid, $element);
     }
   }
-  @return if(list.length($invalid) > 0, $invalid, null);
+  @if (list.length($invalid) > 0) {
+    @return $invalid;
+  }
+  @return null;
 }
 
 /// Validates that a list contains all values from the required list of values.
@@ -39,5 +45,8 @@
       $invalid: list.append($invalid, $element);
     }
   }
-  @return if(list.length($invalid) > 0, $invalid, null);
+  @if (list.length($invalid) > 0) {
+    @return $invalid;
+  }
+  @return null;
 }

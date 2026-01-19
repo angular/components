@@ -16,8 +16,12 @@
     -2: 28px,
     -3: 24px,
   ), $scale);
-  $touch-target-display: if($scale < -1, none, block);
   $touch-target-size: 48px;
+  $touch-target-display: block;
+
+  @if ($scale < -1) {
+    $touch-target-display: none;
+  }
 
   @return (
     base: (
