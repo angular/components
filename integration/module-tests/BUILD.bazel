@@ -17,6 +17,7 @@ ts_project(
 module_test(
     name = "test",
     npm_packages = {
+        "//src/aria:npm_package": "src/aria/npm_package",
         "//src/cdk:npm_package": "src/cdk/npm_package",
         "//src/material:npm_package": "src/material/npm_package",
     },

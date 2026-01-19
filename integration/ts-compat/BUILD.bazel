@@ -27,6 +27,7 @@ typescript_version_packages = [
             "test.mjs",
             ":import-all-entry-points-file",
             "//:node_modules/shelljs",
+            "//integration:node_modules/@angular/aria",
             "//integration:node_modules/@angular/cdk",
             "//integration:node_modules/@angular/cdk-experimental",
             "//integration:node_modules/@angular/google-maps",
