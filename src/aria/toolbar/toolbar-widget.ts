@@ -16,7 +16,12 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, SignalLike} from '../private';
+import {
+  ToolbarWidgetPattern,
+  ToolbarWidgetGroupPattern,
+  SignalLike,
+  ToolbarPattern,
+} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Toolbar} from './toolbar';
 import {TOOLBAR_WIDGET_GROUP} from './utils';
@@ -65,7 +70,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-toolbar-widget-', true));
 
   /** The parent Toolbar UIPattern. */
-  readonly _toolbarPattern = computed(() => this._toolbar._pattern);
+  readonly _toolbarPattern = computed<ToolbarPattern<V>>(() => this._toolbar._pattern);
 
   /** Whether the widget is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});

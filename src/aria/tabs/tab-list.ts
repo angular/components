@@ -20,7 +20,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabListPattern} from '../private';
+import {TabListPattern, TabPattern} from '../private';
 import {sortDirectives, TABS} from './utils';
 import type {Tab} from './tab';
 
@@ -73,7 +73,7 @@ export class TabList implements OnInit, OnDestroy {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The Tab UIPatterns of the child Tabs. */
-  readonly _tabPatterns = computed(() =>
+  readonly _tabPatterns = computed<TabPattern[]>(() =>
     [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab._pattern),
   );
 

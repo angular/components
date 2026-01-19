@@ -17,7 +17,7 @@ import {
   signal,
   model,
 } from '@angular/core';
-import {ToolbarPattern} from '../private';
+import {ToolbarPattern, ToolbarWidgetPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {ToolbarWidget} from './toolbar-widget';
 import {sortDirectives} from './utils';
@@ -72,7 +72,7 @@ export class Toolbar<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
-  readonly _itemPatterns = computed(() =>
+  readonly _itemPatterns = computed<ToolbarWidgetPattern<V>[]>(() =>
     [...this._widgets()].sort(sortDirectives).map(widget => widget._pattern),
   );
 
