@@ -10,6 +10,7 @@ js_test(
         "//:node_modules/@babel/core",
         "//:node_modules/chalk",
         "//:node_modules/glob",
+        "//src/aria:npm_package",
         "//src/cdk:npm_package",
         "//src/cdk-experimental:npm_package",
         "//src/google-maps:npm_package",

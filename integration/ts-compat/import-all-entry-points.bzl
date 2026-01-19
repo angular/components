@@ -1,3 +1,4 @@
+load("//src/aria:config.bzl", "ARIA_ENTRYPOINTS")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
@@ -33,6 +34,8 @@ def generate_import_all_entry_points_file():
     import * as youtube_player from "@angular/youtube-player";
     export {cdk, cdk_experimental, material_experimental, google_maps, youtube_player};
   """
+    for ep in ARIA_ENTRYPOINTS:
+        output += create_import_export(ep, "aria")
     for ep in CDK_ENTRYPOINTS:
         output += create_import_export(ep, "cdk")
     for ep in CDK_EXPERIMENTAL_ENTRYPOINTS:

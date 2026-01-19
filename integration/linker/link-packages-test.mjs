@@ -17,6 +17,7 @@ const fileSystem = new NodeJSFileSystem();
 const logger = new ConsoleLogger(LogLevel.info);
 /** List of NPM packages available in the Bazel runfiles. */
 const npmPackages = [
+  {name: 'aria', pkgPath: '../../src/aria/npm_package'},
   {name: 'cdk', pkgPath: '../../src/cdk/npm_package'},
   {name: 'cdk-experimental', pkgPath: '../../src/cdk-experimental/npm_package'},
   {name: 'google-maps', pkgPath: '../../src/google-maps/npm_package'},
