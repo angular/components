@@ -33,7 +33,6 @@ import {
   DOCUMENT,
   Renderer2,
 } from '@angular/core';
-import {NgClass} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
@@ -719,7 +718,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     tooltipClass: string | string[] | Set<string> | {[key: string]: unknown},
   ) {
     if (this._tooltipInstance) {
-      this._tooltipInstance.tooltipClass = tooltipClass;
+      this._tooltipInstance.tooltipClass =
+        tooltipClass instanceof Set ? Array.from(tooltipClass) : tooltipClass;
       this._tooltipInstance._markForCheck();
     }
   }
@@ -951,7 +951,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
   },
-  imports: [NgClass],
 })
 export class TooltipComponent implements OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -963,8 +962,8 @@ export class TooltipComponent implements OnDestroy {
   /** Message to display in the tooltip */
   message!: string;
 
-  /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass!: string | string[] | Set<string> | {[key: string]: unknown};
+  /** Classes to be added to the tooltip. */
+  tooltipClass!: string | string[] | {[key: string]: unknown};
 
   /** The timeout ID of any current timer set to show the tooltip */
   private _showTimeoutId: ReturnType<typeof setTimeout> | undefined;
