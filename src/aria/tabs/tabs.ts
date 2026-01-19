@@ -10,6 +10,7 @@ import {computed, Directive, ElementRef, inject, signal} from '@angular/core';
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
 import {TABS} from './utils';
+import {TabPanelPattern, TabPattern} from '../private';
 
 /**
  * A Tabs container.
@@ -61,10 +62,10 @@ export class Tabs {
   private readonly _unorderedPanels = signal(new Set<TabPanel>());
 
   /** The Tab UIPattern of the child Tabs. */
-  readonly _tabPatterns = computed(() => this._tablist()?._tabPatterns());
+  readonly _tabPatterns = computed<TabPattern[] | undefined>(() => this._tablist()?._tabPatterns());
 
   /** The TabPanel UIPattern of the child TabPanels. */
-  readonly _unorderedTabpanelPatterns = computed(() =>
+  readonly _unorderedTabpanelPatterns = computed<TabPanelPattern[]>(() =>
     [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
   );
 

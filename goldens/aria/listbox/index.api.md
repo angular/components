@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as _angular_aria_private_public_api from '@angular/aria/private/public-api';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 
@@ -16,7 +15,7 @@ export class Listbox<V> {
     focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     gotoFirst(): void;
     readonly id: _angular_core.InputSignal<string>;
-    protected items: _angular_core.Signal<_angular_aria_private_public_api.OptionPattern<any>[]>;
+    protected items: _angular_core.Signal<OptionPattern<V>[]>;
     multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     _onFocus(): void;

@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxListboxPattern, ListboxPattern} from '../private';
+import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../private';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
@@ -91,7 +91,9 @@ export class Listbox<V> {
   protected textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The Option UIPatterns of the child Options. */
-  protected items = computed(() => this._options().map(option => option._pattern));
+  protected items = computed<OptionPattern<V>[]>(() =>
+    this._options().map(option => option._pattern),
+  );
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('vertical');

@@ -15,7 +15,7 @@ import {
   input,
   Signal,
 } from '@angular/core';
-import {GridRowPattern} from '../private';
+import {GridPattern, GridRowPattern} from '../private';
 import {Grid} from './grid';
 import {GRID_CELL, GRID_ROW} from './grid-tokens';
 
@@ -60,7 +60,7 @@ export class GridRow {
   private readonly _grid = inject(Grid);
 
   /** The parent grid UI pattern. */
-  readonly _gridPattern = computed(() => this._grid._pattern);
+  readonly _gridPattern = computed<GridPattern>(() => this._grid._pattern);
 
   /** The index of this row within the grid. */
   readonly rowIndex = input<number>();

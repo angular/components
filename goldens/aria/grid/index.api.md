@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as _angular_aria_private_public_api from '@angular/aria/private/public-api';
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -83,7 +82,7 @@ export class GridCellWidget {
 // @public
 export class GridRow {
     readonly element: HTMLElement;
-    readonly _gridPattern: Signal<_angular_aria_private_public_api.GridPattern>;
+    readonly _gridPattern: Signal<GridPattern>;
     readonly _pattern: GridRowPattern;
     readonly rowIndex: _angular_core.InputSignal<number | undefined>;
     // (undocumented)
