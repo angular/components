@@ -53,10 +53,7 @@ export class MatFooterCellDef extends CdkFooterCellDef {}
  */
 @Directive({
   selector: '[matColumnDef]',
-  providers: [
-    {provide: CdkColumnDef, useExisting: MatColumnDef},
-    {provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: MatColumnDef},
-  ],
+  providers: [{provide: CdkColumnDef, useExisting: MatColumnDef}],
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
