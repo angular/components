@@ -231,8 +231,8 @@ importers:
         specifier: ^5.6.0
         version: 5.13.0
       jasmine-core:
-        specifier: 5.13.0
-        version: 5.13.0
+        specifier: 6.0.1
+        version: 6.0.1
       jasmine-reporters:
         specifier: ^2.5.2
         version: 2.5.2
@@ -448,8 +448,8 @@ importers:
         specifier: 15.2.1
         version: 15.2.1(@types/node@22.19.5)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
-        specifier: 5.13.0
-        version: 5.13.0
+        specifier: 6.0.1
+        version: 6.0.1
       jasmine-spec-reporter:
         specifier: 7.0.0
         version: 7.0.0
@@ -470,7 +470,7 @@ importers:
         version: 5.1.0(karma@6.4.4(bufferutil@4.1.0))
       karma-jasmine-html-reporter:
         specifier: ^2.0.0
-        version: 2.1.0(jasmine-core@5.13.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)))(karma@6.4.4(bufferutil@4.1.0))
+        version: 2.1.0(jasmine-core@6.0.1)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)))(karma@6.4.4(bufferutil@4.1.0))
       light-server:
         specifier: ^2.9.1
         version: 2.9.1(bufferutil@4.1.0)
@@ -6447,6 +6447,9 @@ packages:
   jasmine-core@5.13.0:
     resolution: {integrity: sha512-vsYjfh7lyqvZX5QgqKc4YH8phs7g96Z8bsdIFNEU3VqXhlHaq+vov/Fgn/sr6MiUczdZkyXRC3TX369Ll4Nzbw==}
 
+  jasmine-core@6.0.1:
+    resolution: {integrity: sha512-gUtzV5ASR0MLBwDNqri4kBsgKNCcRQd9qOlNw/w/deavD0cl3JmWXXfH8JhKM4LTg6LPTt2IOQ4px3YYfgh2Xg==}
+
   jasmine-reporters@2.5.2:
     resolution: {integrity: sha512-qdewRUuFOSiWhiyWZX8Yx3YNQ9JG51ntBEO4ekLQRpktxFTwUHy24a86zD/Oi2BRTKksEdfWQZcQFqzjqIkPig==}
 
@@ -8792,6 +8795,7 @@ packages:
   tar@7.5.2:
     resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   tcp-port-used@1.0.2:
     resolution: {integrity: sha512-l7ar8lLUD3XS1V2lfoJlCBaeoaWo/2xfYt81hM7VlvR4RrMVFqfmzfhLVk40hAb368uitje5gPtBRL1m/DGvLA==}
@@ -16332,6 +16336,8 @@ snapshots:
 
   jasmine-core@5.13.0: {}
 
+  jasmine-core@6.0.1: {}
+
   jasmine-reporters@2.5.2:
     dependencies:
       '@xmldom/xmldom': 0.8.11
@@ -16504,9 +16510,9 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.13.0)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)))(karma@6.4.4(bufferutil@4.1.0)):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@6.0.1)(karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)))(karma@6.4.4(bufferutil@4.1.0)):
     dependencies:
-      jasmine-core: 5.13.0
+      jasmine-core: 6.0.1
       karma: 6.4.4(bufferutil@4.1.0)
       karma-jasmine: 5.1.0(karma@6.4.4(bufferutil@4.1.0))
 
