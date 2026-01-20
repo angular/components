@@ -81,16 +81,12 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     // (undocumented)
     protected _animationsDisabled: boolean;
     arrowPosition: SortHeaderArrowPosition;
-    // (undocumented)
-    _columnDef: MatSortHeaderColumnDef | null;
     disableClear: boolean;
     disabled: boolean;
     _getAriaSortAttribute(): "none" | "ascending" | "descending";
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
     id: string;
-    // (undocumented)
-    _intl: MatSortHeaderIntl;
     // (undocumented)
     _isDisabled(): boolean;
     _isSorted(): boolean;
@@ -107,7 +103,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     protected _recentlyCleared: i0.WritableSignal<SortDirection | null>;
     _renderArrow(): boolean;
     // (undocumented)
-    _sort: MatSort;
+    protected _sort: MatSort;
     get sortActionDescription(): string;
     set sortActionDescription(value: string);
     start: SortDirection;

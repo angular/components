@@ -82,6 +82,7 @@ ng_project(
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
+        "//src/cdk/table",
         "//src/material/core",
     ],
 )

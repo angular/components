@@ -22,6 +22,8 @@ import {
   signal,
   ChangeDetectorRef,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {merge, Subscription} from 'rxjs';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
@@ -32,8 +34,6 @@ import {
 } from './sort';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
-import {MatSortHeaderIntl} from './sort-header-intl';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_animationsDisabled, _StructuralStylesLoader} from '../core';
 
 /**
@@ -58,11 +58,6 @@ export type ArrowViewState = SortDirection | 'hint' | 'active';
 export interface ArrowViewStateTransition {
   fromState?: ArrowViewState;
   toState?: ArrowViewState;
-}
-
-/** Column definition associated with a `MatSortHeader`. */
-interface MatSortHeaderColumnDef {
-  name: string;
 }
 
 /**
@@ -91,11 +86,8 @@ interface MatSortHeaderColumnDef {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
-  _intl = inject(MatSortHeaderIntl);
-  _sort = inject(MatSort, {optional: true})!;
-  _columnDef = inject<MatSortHeaderColumnDef>('MAT_SORT_HEADER_COLUMN_DEF' as any, {
-    optional: true,
-  });
+  protected _sort = inject(MatSort, {optional: true})!;
+  private _columnDef = inject(CdkColumnDef, {optional: true});
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _focusMonitor = inject(FocusMonitor);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

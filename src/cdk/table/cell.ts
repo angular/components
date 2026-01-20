@@ -72,10 +72,7 @@ export class CdkFooterCellDef implements CellDef {
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.
  */
-@Directive({
-  selector: '[cdkColumnDef]',
-  providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
-})
+@Directive({selector: '[cdkColumnDef]'})
 export class CdkColumnDef implements CanStick {
   _table? = inject(CDK_TABLE, {optional: true});
 
