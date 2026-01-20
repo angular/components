@@ -18,6 +18,21 @@
     $is-dark: inspection.get-theme-type($theme) == dark;
   }
 
+  // Note the spelling of the `GrayText` here which is a system color. See:
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
+  $select-disabled-option-text-color: GrayText;
+  $select-option-text-color: inherit;
+
+  @if ($is-dark) {
+    // On dark themes we set the native `select` color to some shade of white,
+    // however the color propagates to all of the `option` elements, which are
+    // always on a white background inside the dropdown, causing them to blend in.
+    // Since we can't change background of the dropdown, we need to explicitly
+    // reset the color of the options to something dark.
+    $select-option-text-color: m2-palette.$dark-primary-text;
+    $select-disabled-option-text-color: m2-palette.$dark-disabled-text;
+  }
+
   @return (
     base: (
       form-field-filled-active-indicator-height: 1px,
@@ -32,17 +47,8 @@
       form-field-disabled-input-text-placeholder-color: $disabled,
       form-field-state-layer-color: map.get($system, on-surface),
       form-field-error-text-color: map.get($system, error),
-
-      // On dark themes we set the native `select` color to some shade of white,
-      // however the color propagates to all of the `option` elements, which are
-      // always on a white background inside the dropdown, causing them to blend in.
-      // Since we can't change background of the dropdown, we need to explicitly
-      // reset the color of the options to something dark.
-      form-field-select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
-      // Note the spelling of the `GrayText` here which is a system color. See:
-      // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
-      form-field-select-disabled-option-text-color:
-          if($is-dark, m2-palette.$dark-disabled-text, GrayText),
+      form-field-select-option-text-color: $select-option-text-color,
+      form-field-select-disabled-option-text-color: $select-disabled-option-text-color,
 
       // These tokens are necessary for M3. MDC has them built in already, but:
       // 1. They are too specific, breaking a lot of internal clients.
@@ -199,14 +205,22 @@
   $filled-with-label-padding-top: 24px - $vertical-deduction;
   $filled-with-label-padding-bottom: 8px - $vertical-deduction;
   $vertical-padding: 16px - $vertical-deduction;
+  $filled-label-display: block;
+  $filled-with-label-container-padding-top: $filled-with-label-padding-top;
+  $filled-with-label-container-padding-bottom: $filled-with-label-padding-bottom;
+
+  @if ($hide-label) {
+    $filled-label-display: none;
+    $filled-with-label-container-padding-top: $vertical-padding;
+    $filled-with-label-container-padding-bottom: $vertical-padding;
+  }
 
   @return (
     form-field-container-height: $height,
-    form-field-filled-label-display: if($hide-label, none, block),
+    form-field-filled-label-display: $filled-label-display,
     form-field-container-vertical-padding: $vertical-padding,
-    form-field-filled-with-label-container-padding-top:
-      if($hide-label, $vertical-padding, $filled-with-label-padding-top),
+    form-field-filled-with-label-container-padding-top: $filled-with-label-container-padding-top,
     form-field-filled-with-label-container-padding-bottom:
-      if($hide-label, $vertical-padding, $filled-with-label-padding-bottom),
+      $filled-with-label-container-padding-bottom,
   );
 }

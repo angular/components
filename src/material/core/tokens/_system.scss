@@ -347,10 +347,14 @@
 
   $color: map.get($config, color);
   @if (m2-inspection.theme-has($theme-config, color)) {
-    $system-colors: if(map.get($color, is-dark),
-      m2.md-sys-color-values-dark($color),
-      m2.md-sys-color-values-light($color),
-    );
+    $system-colors: null;
+
+    @if (map.get($color, is-dark)) {
+      $system-colors: m2.md-sys-color-values-dark($color);
+    } @else {
+      $system-colors: m2.md-sys-color-values-light($color);
+    }
+
     @include _define-m2-system-vars($system-colors, $overrides);
 
     $shadow: map.get($theme-config, _mat-system, shadow);

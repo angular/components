@@ -294,7 +294,7 @@ importers:
         specifier: 0.5.4
         version: 0.5.4(@types/node@22.19.5)(rollup@4.55.1)
       sass:
-        specifier: ^1.80.6
+        specifier: ^1.97.2
         version: 1.97.2
       selenium-webdriver:
         specifier: ^3.6.0

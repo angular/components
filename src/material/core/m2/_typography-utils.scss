@@ -73,5 +73,9 @@
   }
 
   // Guard against unquoting non-string values, because it's deprecated.
-  @return if(meta.type-of($font-family) == string, string.unquote($font-family), $font-family);
+  @if (meta.type-of($font-family) == string) {
+    $font-family: string.unquote($font-family);
+  }
+
+  @return $font-family;
 }

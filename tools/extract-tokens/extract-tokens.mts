@@ -247,7 +247,11 @@ function getTokenExtractionCode(
     @function ${stringJoin}($value, $separator) {
       $result: '';
       @each $part in $value {
-        $result: if($result == '', $part, '#{$result}#{$separator}#{$part}');
+        @if ($result == '') {
+          $result: $part;
+        } @else {
+          $result: '#{$result}#{$separator}#{$part}';
+        }
       }
       @return $result;
     }
@@ -326,15 +330,26 @@ function jsonStringifyImplementation(
         $current: '';
 
         @each $key, $inner in $value {
-          $pair: if($current == '', '', ', ') + '"#{${stringJoin}($key, '-')}":#{${name}($inner)}';
-          $current: $current + $pair;
+          $to-append: '"#{${stringJoin}($key, '-')}":#{${name}($inner)}';
+
+          @if ($current == '') {
+            $current: $to-append;
+          } @else {
+            $current: $current + ', ' + $to-append;
+          }
         }
 
         @return '{#{$current}}';
       } @else if ($type == 'list') {
         $current: '';
         @each $inner in $value {
-          $current: $current + (if($current == '', '', ', ') + ${name}($inner));
+          $to-append: ${name}($inner);
+
+          @if ($current == '') {
+            $current: $to-append;
+          } @else {
+            $current: $current + ', ' + $to-append;
+          }
         }
         @return '[#{$current}]';
       } @else if (($type == 'number' and ${math}.is-unitless($value)) or $type == 'bool' or $type == 'null') {

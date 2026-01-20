@@ -17,6 +17,11 @@
   $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
   $touch-target-size: 48px;
+  $touch-target-display: block;
+
+  @if ($density-scale < -1) {
+    $touch-target-display: none;
+  }
 
   @return (
     base: (
@@ -70,8 +75,8 @@
       fab-extended-label-text-weight: map.get($system, label-small-weight)
     ),
     density: (
-      fab-small-touch-target-display: if($density-scale < -1, none, block),
-      fab-touch-target-display: if($density-scale < -1, none, block),
+      fab-small-touch-target-display: $touch-target-display,
+      fab-touch-target-display: $touch-target-display,
     ),
   );
 }

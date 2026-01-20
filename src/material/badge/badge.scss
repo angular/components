@@ -10,7 +10,12 @@ $large-size: $default-size + 6;
 $fallbacks: m3-badge.get-tokens();
 
 @mixin _badge-size($size) {
-  $prefix: if($size == 'medium', '', $size + '-size-');
+  $prefix: '';
+
+  @if ($size != 'medium') {
+    $prefix: $size + '-size-';
+  }
+
   $legacy-size-var-name: 'badge-legacy-#{$prefix}container-size';
   $size-var-name: 'badge-#{$prefix}container-size';
 

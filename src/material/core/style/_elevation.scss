@@ -159,8 +159,12 @@ $prefix: 'mat-elevation-z';
   $umbra-z-value: map.get($_umbra-map, $zValue);
   $penumbra-z-value: map.get($_penumbra-map, $zValue);
   $ambient-z-value: map.get($_ambient-map, $zValue);
+  $color-opacity: 1;
 
-  $color-opacity: if($opacity != null, $opacity, 1);
+  @if ($opacity != null) {
+    $color-opacity: $opacity;
+  }
+
   $umbra-color: _compute-color-opacity($shadow-color, $_umbra-opacity * $color-opacity);
   $penumbra-color: _compute-color-opacity($shadow-color, $_penumbra-opacity * $color-opacity);
   $ambient-color: _compute-color-opacity($shadow-color, $_ambient-opacity * $color-opacity);

@@ -7,6 +7,11 @@
 @function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+  $touch-target-display: block;
+
+  @if ($density-scale < -1) {
+    $touch-target-display: none;
+  }
 
   @return (
     base: (
@@ -101,7 +106,7 @@
         -2: 32px,
         -3: 28px,
       ), $density-scale),
-      slide-toggle-touch-target-display: if($density-scale < -1, none, block)
+      slide-toggle-touch-target-display: $touch-target-display
     ),
   );
 }

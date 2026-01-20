@@ -54,7 +54,13 @@
            'Allowed values are "active" and "none"';
   }
 
-  @media (forced-colors: #{if($target == none, none, active)}) {
+  $query-value: active;
+
+  @if ($target == none) {
+    $query-value: none;
+  }
+
+  @media (forced-colors: #{$query-value}) {
     @content;
   }
 }
