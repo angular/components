@@ -90,8 +90,13 @@
 
     @each $config in $namespace-configs {
       $namespace: map.get($config, namespace);
-      $prefix: if(map.has-key($config, prefix), map.get($config, prefix), '');
       $tokens: map.get(map.get($config, tokens), all);
+      $prefix: '';
+
+      @if (map.has-key($config, prefix)) {
+        $prefix: map.get($config, prefix);
+      }
+
       @each $name, $value in $tokens {
         $prefixed-name: $prefix + $name;
         $all-names: list.append($all-names, $prefixed-name, $separator: comma);

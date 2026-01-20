@@ -45,7 +45,10 @@ $private-internal-name: _mat-theming-internals-do-not-access;
       $result: map.set($result, $key, $value);
     }
   }
-  @return if($result == (), null, $result);
+  @if ($result == ()) {
+    @return null;
+  }
+  @return $result;
 }
 
 // Checks whether the given value resolves to a theme object. Theme objects are always

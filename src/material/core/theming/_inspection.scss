@@ -31,7 +31,10 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 @function _validate-theme-object($theme) {
   $err: validation.validate-type($theme, 'map') or
         map.get($theme, $internals, theme-version) == null;
-  @return if($err, true, null);
+  @if ($err) {
+    @return true;
+  }
+  @return null;
 }
 
 /// Gets the version number of a theme object. A theme that is not a valid versioned theme object is
@@ -40,7 +43,12 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @return {Number} The version number of the theme (0 if unknown).
 @function get-theme-version($theme) {
   $err: _validate-theme-object($theme);
-  @return if($err, 0, map.get($theme, $internals, theme-version) or 0);
+
+  @if ($err) {
+    @return 0;
+  }
+
+  @return map.get($theme, $internals, theme-version) or 0;
 }
 
 /// Gets the type of theme represented by a theme object (light or dark).
@@ -99,10 +107,10 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @if $args-count < 2 or $args-count > 3 {
       @error 'Expected either 2 or 3 arguments when working with an M3 theme. Got: #{$args-count}';
     }
-    @return if($args-count == 2,
-      _get-theme-role-color($theme, $args...),
-      _get-theme-palette-color($theme, $args...)
-    );
+    @if ($args-count == 2) {
+      @return _get-theme-role-color($theme, $args...);
+    }
+    @return _get-theme-palette-color($theme, $args...);
   }
 
   @error 'Unrecognized theme version: #{$version}';

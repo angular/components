@@ -71,6 +71,7 @@
     "function-url-quotes": "always",
     "function-url-scheme-disallowed-list": ["data"],
     "function-whitespace-after": "always",
+    "function-disallowed-list": ["if"],
 
     "number-leading-zero": "always",
     "number-no-trailing-zeros": true,

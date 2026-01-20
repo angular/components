@@ -49,7 +49,10 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   $internal: map.get($theme, $_internals, m2-config);
   $theme: map.remove($theme, $_internals);
-  @return if(_is-error-theme($theme), $internal, $theme);
+  @if (_is-error-theme($theme)) {
+    @return $internal;
+  }
+  @return $theme;
 }
 
 /// Checks whether the given theme contains error values.
@@ -99,7 +102,10 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if theme-has($colors, color) {
     $colors: m2-theming.get-color-config($colors);
   }
-  @return if(map.get($colors, is-dark), dark, light);
+  @if (map.get($colors, is-dark)) {
+    @return dark;
+  }
+  @return light;
 }
 
 /// Gets a color from a theme object. This function can take between 2 and 4 arguments. The first

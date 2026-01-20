@@ -24,7 +24,11 @@
 $_overrides-only: true;
 
 @mixin _color-variant-styles($theme, $color-variant) {
-  $secondary-when-primary: if($color-variant == primary, secondary, $color-variant);
+  $secondary-when-primary: $color-variant;
+
+  @if ($color-variant == primary) {
+    $secondary-when-primary: secondary;
+  }
 
   & {
     @if ($color-variant != primary) {

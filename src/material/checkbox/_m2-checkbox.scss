@@ -6,6 +6,11 @@
 @function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+  $touch-target-display: block;
+
+  @if ($density-scale < -1) {
+    $touch-target-display: none;
+  }
 
   @return (
     base: (
@@ -28,7 +33,7 @@
       checkbox-label-text-weight: map.get($system, body-medium-weight)
     ),
     density: (
-      checkbox-touch-target-display: if($density-scale < -1, none, block),
+      checkbox-touch-target-display: $touch-target-display,
       checkbox-state-layer-size: map.get((
         0: 40px,
         -1: 36px,

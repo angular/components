@@ -15,7 +15,18 @@
   }
   $scrim-opacity: 0.6;
   $scrim-color: m3-utils.color-with-opacity(map.get($system, surface), 60%);
-  $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
+
+  @if (meta.type-of($scrim-color) == color) {
+    // We use invert() here to have the darken the background color expected to be used.
+    // If the background is light, we use a dark backdrop. If the background is dark, we
+    // use a light backdrop. If the value isn't a color, Sass will throw an error so we
+    // fall back to something generic.
+    $scrim-color: color.invert($scrim-color);
+  } @else if ($is-dark) {
+    $scrim-color: rgba(#fff, $scrim-opacity);
+  } @else {
+    $scrim-color: rgba(#000, $scrim-opacity);
+  }
 
   @return (
     base: (
@@ -29,13 +40,7 @@
       sidenav-container-text-color: map.get($system, on-surface),
       sidenav-content-background-color: map.get($system, background),
       sidenav-content-text-color: map.get($system, on-surface),
-
-      // We use invert() here to have the darken the background color expected to be used.
-      // If the background is light, we use a dark backdrop. If the background is dark, we
-      // use a light backdrop. If the value isn't a color, Sass will throw an error so we
-      // fall back to something generic.
-      sidenav-scrim-color: if(meta.type-of($scrim-color) == color,
-        color.invert($scrim-color), $fallback-scrim-color),
+      sidenav-scrim-color: $scrim-color,
     ),
     typography: (),
     density: (),
