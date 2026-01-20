@@ -1,0 +1,35 @@
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "npm_package", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+copy_to_bin(
+    name = "schematics_assets",
+    srcs = glob(
+        ["**/*.json"],
+        exclude = ["tsconfig.json"],
+    ),
+)
+
+ts_project(
+    name = "schematics",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    tsconfig = "tsconfig.json",
+    deps = [
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@types/node",
+    ],
+)
+
+# This package is intended to be combined into the main @angular/material-temporal-adapter package as a dep.
+npm_package(
+    name = "npm_package",
+    srcs = [
+        ":schematics",
+        ":schematics_assets",
+    ],
+)

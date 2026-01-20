@@ -19,6 +19,7 @@ node_modules
 /packages
 /pubspec.lock
 /src/.pub
+PR_DESCRIPTION.md
 /src/.packages
 /src/packages
 /src/pubspec.lock

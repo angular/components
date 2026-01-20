@@ -1,0 +1,51 @@
+load("//tools:defaults.bzl", "ng_package", "ng_project", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "material-temporal-adapter",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src:dev_mode_types",
+        "//src/material/core",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":material-temporal-adapter",
+        "//:node_modules/@angular/core",
+        "//src/material/core",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [
+        ":unit_test_sources",
+    ],
+)
+
+ng_package(
+    name = "npm_package",
+    package_name = "@angular/material-temporal-adapter",
+    srcs = ["package.json"],
+    nested_packages = ["//src/material-temporal-adapter/schematics:npm_package"],
+    tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
+    deps = [":material-temporal-adapter"],
+)
