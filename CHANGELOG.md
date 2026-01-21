@@ -1,3 +1,21 @@
+<a name="21.2.0-next.1"></a>
+# 21.2.0-next.1 "plastic-ant" (2026-01-21)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ec384a37ab](https://github.com/angular/components/commit/ec384a37ab7df3838eaf7fcc238aab0ce8ba5ef2) | fix | **grid:** unit tests for grid pattern ([#32633](https://github.com/angular/components/pull/32633)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e397ecbcfa](https://github.com/angular/components/commit/e397ecbcfad4e85fde8d116faf5caa80dcddca45) | fix | **table:** remove string-based DI tokens ([#32677](https://github.com/angular/components/pull/32677)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3612ef6094](https://github.com/angular/components/commit/3612ef6094d268f14e2068db71ff7dada278476c) | fix | incorrect paths in declaration files for aria |
+| [f3357c1dff](https://github.com/angular/components/commit/f3357c1dff6e68de75f1c35ff8dde3b4f3874345) | fix | resolve sass if function deprecation warnings ([#32674](https://github.com/angular/components/pull/32674)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.1"></a>
 # 21.1.1 "plastic-bear" (2026-01-21)
 ### aria
