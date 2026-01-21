@@ -1,3 +1,17 @@
+<a name="21.1.1"></a>
+# 21.1.1 "plastic-bear" (2026-01-21)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d24f099179](https://github.com/angular/components/commit/d24f099179a2f0b2bd8d123b18bc82cd0426c226) | fix | **grid:** unit tests for grid pattern ([#32633](https://github.com/angular/components/pull/32633)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6b5466afb2](https://github.com/angular/components/commit/6b5466afb2e17677b2ad3eea61a6b7568190e7d3) | fix | incorrect paths in declaration files for aria |
+| [028f89b4d8](https://github.com/angular/components/commit/028f89b4d84bb708c809b2572da24d1284bf9f2d) | fix | resolve sass if function deprecation warnings ([#32674](https://github.com/angular/components/pull/32674)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0-next.0"></a>
 # 21.2.0-next.0 "cadmium-chicken" (2026-01-14)
 
