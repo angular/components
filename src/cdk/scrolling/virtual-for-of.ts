@@ -90,7 +90,7 @@ export class CdkVirtualForOf<T>
   private _differs = inject(IterableDiffers);
   private _viewRepeater =
     inject<_RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>>(_VIEW_REPEATER_STRATEGY);
-  private _viewport = inject(CdkVirtualScrollViewport, {skipSelf: true});
+  private _viewport = inject(CdkVirtualScrollViewport);
 
   /** Emits when the rendered view of the data changes. */
   readonly viewChange = new Subject<ListRange>();
@@ -130,8 +130,39 @@ export class CdkVirtualForOf<T>
     this._cdkVirtualForTrackBy = fn
       ? (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item)
       : undefined;
+
+    // Pass the trackBy function to the view repeater for scroll state persistence
+    // Only if scroll position storing is enabled
+    this._updateTrackByFunction();
   }
   private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
+
+  /**
+   * Whether to store and restore scroll positions for items.
+   * When enabled, scroll positions are saved when items are detached/destroyed
+   * and restored when items are created/moved/recycled.
+   * Requires a trackBy function to be set.
+   */
+  @Input()
+  get cdkVirtualForStoreScrollPosition(): boolean {
+    return this._storeScrollPosition;
+  }
+  set cdkVirtualForStoreScrollPosition(value: boolean) {
+    this._storeScrollPosition = value;
+    // Pass the flag to the view repeater strategy
+    this._viewRepeater.setStoreScrollPosition(value);
+    this._updateTrackByFunction();
+  }
+  private _storeScrollPosition: boolean = false;
+
+  /**
+   * Updates the trackBy function in the view repeater based on current settings.
+   */
+  private _updateTrackByFunction(): void {
+    if (this._storeScrollPosition && this._cdkVirtualForTrackBy) {
+      this._viewRepeater.setTrackByFunction(this._cdkVirtualForTrackBy);
+    }
+  }
 
   /** The template used to stamp out new elements. */
   @Input()
