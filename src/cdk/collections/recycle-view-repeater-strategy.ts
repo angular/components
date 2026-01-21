@@ -37,7 +37,6 @@ import {RecycleViewElementsState} from './recycle-view-elements-state.service';
  * @template R The type for the item in each IterableDiffer change record.
  * @template C The type for the context passed to each embedded view.
  */
-@Injectable()
 export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>>
   implements _ViewRepeater<T, R, C>
 {
