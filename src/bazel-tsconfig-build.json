@@ -3,7 +3,6 @@
 // used by Bazel to build the sources for an entry-point.
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
