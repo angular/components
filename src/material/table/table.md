@@ -183,6 +183,10 @@ virtual scrolling which will only render the the visible rows in the DOM as the 
 To enable virtual scrolling you have to wrap the Material table in a `<cdk-virtual-scroll-viewport>`
 element and add CSS to make the viewport scrollable.
 
+**Note:** tables with virtual scrolling have the following limitations:
+* `fixedLayout` is always enabled, in order to prevent jumping when rows are swapped out.
+* Conditional templates via the `when` input are [not supported at the moment](https://github.com/angular/components/issues/32670).
+
 <!-- example(table-virtual-scroll) -->
 
 #### Sorting
