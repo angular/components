@@ -1147,12 +1147,21 @@ export class CdkTable<T>
 
     // After all row definitions are determined, find the row definition to be considered default.
     const defaultRowDefs = this._rowDefs.filter(def => !def.when);
-    if (
-      !this.multiTemplateDataRows &&
-      defaultRowDefs.length > 1 &&
-      (typeof ngDevMode === 'undefined' || ngDevMode)
-    ) {
-      throw getTableMultipleDefaultRowDefsError();
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      // At the moment of writing, it's tricky to support `when` with virtual scrolling
+      // because we reuse templates and they can change arbitrarily based on the `when`
+      // condition. We may be able to support it in the future (see #32670).
+      if (this._virtualScrollEnabled() && this._rowDefs.some(def => def.when)) {
+        throw new Error(
+          'Conditional row definitions via the `when` input are not ' +
+            'supported when virtual scrolling is enabled, at the moment.',
+        );
+      }
+
+      if (!this.multiTemplateDataRows && defaultRowDefs.length > 1) {
+        throw getTableMultipleDefaultRowDefsError();
+      }
     }
     this._defaultRowDef = defaultRowDefs[0];
   }
@@ -1317,7 +1326,7 @@ export class CdkTable<T>
    * definition.
    */
   _getRowDefs(data: T, dataIndex: number): CdkRowDef<T>[] {
-    if (this._rowDefs.length == 1) {
+    if (this._rowDefs.length === 1) {
       return [this._rowDefs[0]];
     }
 
