@@ -173,6 +173,10 @@ If you're showing a large amount of data in your table, you can use virtual scro
 smooth experience for the user. To enable virtual scrolling, you have to wrap the CDK table in a
 `cdk-virtual-scroll-viewport` element and add some CSS to make it scrollable.
 
+**Note:** tables with virtual scrolling have the following limitations:
+* `fixedLayout` is always enabled, in order to prevent jumping when rows are swapped out.
+* Conditional templates via the `when` input are [not supported at the moment](https://github.com/angular/components/issues/32670).
+
 <!-- example(cdk-table-virtual-scroll) -->
 
 ### Alternate HTML to using native table

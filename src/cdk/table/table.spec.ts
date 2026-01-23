@@ -2007,11 +2007,11 @@ describe('CdkTable', () => {
   });
 
   describe('virtual scrolling', () => {
-    let fixture: ComponentFixture<TableWithVirtualScroll>;
-    let table: HTMLTableElement;
-
-    beforeEach(fakeAsync(() => {
-      fixture = TestBed.createComponent(TableWithVirtualScroll);
+    function createVirtualScroll<T>(component: Type<T>): {
+      fixture: ComponentFixture<T>;
+      table: HTMLTableElement;
+    } {
+      const fixture = TestBed.createComponent(component);
 
       // Init logic copied from the virtual scroll tests.
       fixture.detectChanges();
@@ -2021,10 +2021,17 @@ describe('CdkTable', () => {
       tick(16);
       flush();
       fixture.detectChanges();
-      table = fixture.nativeElement.querySelector('table');
-    }));
 
-    function triggerScroll(offset: number) {
+      return {
+        fixture,
+        table: fixture.nativeElement.querySelector('table'),
+      };
+    }
+
+    function triggerScroll(
+      fixture: ComponentFixture<{viewport: CdkVirtualScrollViewport}>,
+      offset: number,
+    ) {
       const viewport = fixture.componentInstance.viewport;
       viewport.scrollToOffset(offset);
       dispatchFakeEvent(viewport.scrollable!.getElementRef().nativeElement, 'scroll');
@@ -2032,24 +2039,28 @@ describe('CdkTable', () => {
     }
 
     it('should not render the full data set when using virtual scrolling', fakeAsync(() => {
+      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
       expect(fixture.componentInstance.dataSource.data.length).toBeGreaterThan(2000);
       expect(getRows(table).length).toBe(10);
     }));
 
     it('should maintain a limited amount of data as the user is scrolling', fakeAsync(() => {
+      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
       expect(getRows(table).length).toBe(10);
 
-      triggerScroll(500);
+      triggerScroll(fixture, 500);
       expect(getRows(table).length).toBe(13);
 
-      triggerScroll(500);
+      triggerScroll(fixture, 500);
       expect(getRows(table).length).toBe(13);
 
-      triggerScroll(1000);
+      triggerScroll(fixture, 1000);
       expect(getRows(table).length).toBe(12);
     }));
 
     it('should update the table data as the user is scrolling', fakeAsync(() => {
+      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+
       expectTableToMatchContent(table, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
@@ -2065,7 +2076,7 @@ describe('CdkTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-      triggerScroll(1000);
+      triggerScroll(fixture, 1000);
 
       expectTableToMatchContent(table, [
         ['Column A', 'Column B', 'Column C'],
@@ -2086,17 +2097,19 @@ describe('CdkTable', () => {
     }));
 
     it('should update the position of sticky cells as the user is scrolling', fakeAsync(() => {
+      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
       const assertStickyOffsets = (position: number) => {
         getHeaderCells(table).forEach(cell => expect(cell.style.top).toBe(`${position * -1}px`));
         getFooterCells(table).forEach(cell => expect(cell.style.bottom).toBe(`${position}px`));
       };
 
       assertStickyOffsets(0);
-      triggerScroll(1000);
+      triggerScroll(fixture, 1000);
       assertStickyOffsets(884);
     }));
 
     it('should force tables with virtual scrolling to have a fixed layout', fakeAsync(() => {
+      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
       expect(fixture.componentInstance.isFixedLayout()).toBe(true);
       expect(table.classList).toContain('cdk-table-fixed-layout');
 
@@ -2104,6 +2117,14 @@ describe('CdkTable', () => {
       fixture.detectChanges();
 
       expect(table.classList).toContain('cdk-table-fixed-layout');
+    }));
+
+    it('should throw if multiple row templates are used with virtual scrolling', fakeAsync(() => {
+      expect(() => {
+        createVirtualScroll(TableWithVirtualScrollAndMultipleDefinitions);
+      }).toThrowError(
+        /Conditional row definitions via the `when` input are not supported when virtual scrolling is enabled/,
+      );
     }));
   });
 });
@@ -3336,6 +3357,25 @@ class TableWithVirtualScroll {
   constructor() {
     this.dataSource.addData(2000);
   }
+}
+
+@Component({
+  template: `
+    <cdk-virtual-scroll-viewport [itemSize]="52">
+      <table cdk-table [dataSource]="dataSource" [fixedLayout]="isFixedLayout()">
+        <ng-container cdkColumnDef="column_a">
+          <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+        </ng-container>
+
+        <tr cdk-row *cdkRowDef="let row; columns: ['column_a']"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: ['column_b']; when: predicate"></tr>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  `,
+  imports: [CdkTableModule, ScrollingModule],
+})
+class TableWithVirtualScrollAndMultipleDefinitions extends TableWithVirtualScroll {
+  predicate = () => true;
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
