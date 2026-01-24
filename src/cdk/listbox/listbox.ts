@@ -1018,7 +1018,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
       const invalidValues = this._getInvalidOptionValues(selected);
 
       if (!this.multiple && selected.length > 1) {
-        throw Error('Listbox cannot have more than one selected value in multi-selection mode.');
+        throw Error('Listbox cannot have more than one selected value in single selection mode.');
       }
 
       if (invalidValues.length) {
