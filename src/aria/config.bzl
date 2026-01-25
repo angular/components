@@ -2,6 +2,7 @@
 ARIA_ENTRYPOINTS = [
     "accordion",
     "combobox",
+    "disclosure",
     "grid",
     "listbox",
     "menu",

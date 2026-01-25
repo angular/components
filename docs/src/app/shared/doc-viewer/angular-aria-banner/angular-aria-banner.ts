@@ -17,6 +17,7 @@ const ANGULAR_ARIA_LINKS: Record<string, string> = {
   'tree': 'https://angular.dev/guide/aria/tree',
   'accordion': 'https://angular.dev/guide/aria/accordion',
   'menu': 'https://angular.dev/guide/aria/menu',
+  'disclosure': 'https://angular.dev/guide/aria/disclosure',
 };
 
 /**
