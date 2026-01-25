@@ -8,6 +8,7 @@
 
 export * from './timepicker';
 export * from './timepicker-input';
+export * from './timepicker-option';
 export * from './timepicker-toggle';
 export * from './timepicker-module';
 export {MatTimepickerOption, MAT_TIMEPICKER_CONFIG, MatTimepickerConfig} from './util';

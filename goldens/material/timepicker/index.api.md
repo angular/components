@@ -38,7 +38,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     constructor();
     readonly activeDescendant: Signal<string | null>;
     // (undocumented)
-    protected _animationsDisabled: boolean;
+    protected readonly _animationsDisabled: boolean;
     readonly ariaLabel: InputSignal<string | null>;
     readonly ariaLabelledby: InputSignal<string | null>;
     close(): void;
@@ -57,17 +57,19 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly opened: OutputEmitterRef<void>;
     readonly options: InputSignal<readonly MatTimepickerOption<D>[] | null>;
     // (undocumented)
-    protected _options: Signal<readonly MatOption<any>[]>;
+    protected readonly _options: Signal<readonly MatOption<any>[]>;
+    // (undocumented)
+    protected readonly _optionTemplate: Signal<MatTimepickerOptionTemplate<D> | undefined>;
     readonly panelId: string;
     // (undocumented)
-    protected _panelTemplate: Signal<TemplateRef<unknown>>;
+    protected readonly _panelTemplate: Signal<TemplateRef<unknown>>;
     registerInput(input: MatTimepickerConnectedInput<D>): void;
     readonly selected: OutputEmitterRef<MatTimepickerSelected<D>>;
     protected _selectValue(option: MatOption<D>): void;
     // (undocumented)
     protected _timeOptions: readonly MatTimepickerOption<D>[];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepicker<any>, "mat-timepicker", ["matTimepicker"], { "interval": { "alias": "interval"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; }, { "selected": "selected"; "opened": "opened"; "closed": "closed"; }, ["_optionTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepicker<any>, never>;
 }
@@ -131,13 +133,23 @@ export class MatTimepickerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTimepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle], [typeof i1.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTimepickerModule, never, [typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerOptionTemplate, typeof MatTimepickerToggle], [typeof i1.CdkScrollableModule, typeof MatTimepicker, typeof MatTimepickerInput, typeof MatTimepickerOptionTemplate, typeof MatTimepickerToggle]>;
 }
 
 // @public
 export interface MatTimepickerOption<D = unknown> {
     label: string;
     value: D;
+}
+
+// @public
+export class MatTimepickerOptionTemplate<D> {
+    // (undocumented)
+    readonly template: TemplateRef<MatTimepickerOption<D>>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerOptionTemplate<any>, "ng-template[matTimepickerOption]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerOptionTemplate<any>, never>;
 }
 
 // @public
