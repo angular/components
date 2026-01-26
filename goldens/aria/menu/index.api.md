@@ -73,6 +73,7 @@ export class MenuItem<V> {
     readonly expanded: _angular_core.Signal<boolean | null>;
     readonly hasPopup: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
+    readonly label: _angular_core.InputSignal<string | null>;
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
     readonly _pattern: MenuItemPattern<V>;
@@ -80,7 +81,7 @@ export class MenuItem<V> {
     readonly submenu: _angular_core.InputSignal<Menu<V> | undefined>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuItem<any>, never>;
 }

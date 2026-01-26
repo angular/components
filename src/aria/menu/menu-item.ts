@@ -38,6 +38,7 @@ import type {MenuBar} from './menu-bar';
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
+    '[attr.aria-label]': 'label() || value()',
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -54,8 +55,11 @@ export class MenuItem<V> {
   /** The unique ID of the menu item. */
   readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));
 
-  /** The value of the menu item. */
+  /** The value of the menu item, used as the default aria-label */
   readonly value = input.required<V>();
+
+  /** The label for the menu item, used as the aria-label. */
+  readonly label = input<string | null>(null);
 
   /** Whether the menu item is disabled. */
   readonly disabled = input<boolean>(false);
