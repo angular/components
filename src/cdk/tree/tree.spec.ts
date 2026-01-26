@@ -135,7 +135,12 @@ describe('CdkTree', () => {
         dataSource.addChild(data[0], true);
         fixture.detectChanges();
 
-        const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
+        let ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
+        expect(ariaLevels).toEqual(['2', '2', '2']);
+
+        tree.expandAll();
+        fixture.detectChanges();
+        ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
         expect(ariaLevels).toEqual(['2', '3', '2', '2']);
       });
 
@@ -145,7 +150,7 @@ describe('CdkTree', () => {
         dataSource.addChild(data[2]);
         fixture.detectChanges();
         let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
-        expect(ariaExpandedStates).toEqual([null, null, 'false', null]);
+        expect(ariaExpandedStates).toEqual([null, null, 'false']);
 
         component.tree.expandAll();
         fixture.detectChanges();
@@ -328,7 +333,7 @@ describe('CdkTree', () => {
 
         expect(getNodes(treeElement).map(x => x.getAttribute('tabindex')))
           .withContext(`Expecting parent node to be focused since it was collapsed.`)
-          .toEqual(['0', '-1']);
+          .toEqual(['0']);
       });
 
       it('should expand/collapse the node recursively', () => {
@@ -438,6 +443,18 @@ describe('CdkTree', () => {
           'px',
           [`[topping_1] - [cheese_1] + [base_1]`],
           [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`],
+        );
+
+        tree.expandAll();
+        fixture.detectChanges();
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        expectFlatTreeToMatch(
+          treeElement,
+          28,
+          'px',
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
           [_, `topping_4 - cheese_4 + base_4`],
           [`[topping_3] - [cheese_3] + [base_3]`],
         );
@@ -477,6 +494,18 @@ describe('CdkTree', () => {
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
         data = dataSource.data;
         expect(data.length).toBe(4);
+        expectFlatTreeToMatch(
+          treeElement,
+          28,
+          'px',
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`],
+        );
+
+        tree.expandAll();
+        fixture.detectChanges();
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
         expectFlatTreeToMatch(
           treeElement,
           28,
@@ -523,6 +552,18 @@ describe('CdkTree', () => {
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
         data = dataSource.data;
         expect(data.length).toBe(4);
+        expectFlatTreeToMatch(
+          treeElement,
+          28,
+          'px',
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`],
+        );
+
+        tree.expandAll();
+        fixture.detectChanges();
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
         expectFlatTreeToMatch(
           treeElement,
           28,
