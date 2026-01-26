@@ -407,6 +407,7 @@ export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'>
 // @public
 export class GridPattern {
     constructor(inputs: GridInputs);
+    readonly acceptsPointerMove: SignalLike<boolean>;
     readonly activeCell: SignalLike<GridCellPattern | undefined>;
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly anchorCell: SignalLike<GridCellPattern | undefined>;
