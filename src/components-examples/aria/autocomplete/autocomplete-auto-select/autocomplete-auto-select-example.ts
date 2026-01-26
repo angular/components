@@ -23,6 +23,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import {COUNTRIES} from '../countries';
+import {CdkAriaLive} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
 
@@ -32,6 +33,7 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'autocomplete-auto-select-example.html',
   styleUrl: '../autocomplete.css',
   imports: [
+    CdkAriaLive,
     Combobox,
     ComboboxInput,
     ComboboxPopup,

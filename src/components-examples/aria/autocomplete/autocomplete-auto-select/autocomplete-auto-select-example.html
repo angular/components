@@ -17,6 +17,10 @@
     </button>
   </div>
 
+  <div class="cdk-visually-hidden"[cdkAriaLive]="'polite'">
+    {{countries().length === 0 ? 'No results found' : ''}}
+  </div>
+
   <ng-template ngComboboxPopupContainer>
     <ng-template
       [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
