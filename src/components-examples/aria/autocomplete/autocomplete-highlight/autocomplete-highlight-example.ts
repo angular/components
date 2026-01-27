@@ -18,7 +18,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  signal,
   viewChild,
   viewChildren,
 } from '@angular/core';
@@ -53,8 +52,11 @@ export class AutocompleteHighlightExample {
   /** A reference to the ng aria combobox. */
   combobox = viewChild<Combobox<string>>(Combobox);
 
+  /** A reference to the ng aria combobox input. */
+  comboboxInput = viewChild<ComboboxInput>(ComboboxInput);
+
   /** The query string used to filter the list of countries. */
-  query = signal('');
+  query = computed(() => this.comboboxInput()?.value() || '');
 
   /** The list of countries filtered by the query. */
   countries = computed(() =>
@@ -73,7 +75,7 @@ export class AutocompleteHighlightExample {
 
   /** Clears the query and the listbox value. */
   clear(): void {
-    this.query.set('');
+    this.comboboxInput()?.value.set('');
     this.listbox?.()?.values.set([]);
   }
 
