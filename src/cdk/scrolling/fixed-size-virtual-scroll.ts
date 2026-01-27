@@ -7,7 +7,7 @@
  */
 
 import {coerceNumberProperty, NumberInput} from '../coercion';
-import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
+import {Directive, forwardRef, Input, isDevMode, OnChanges} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -16,6 +16,15 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 /** Virtual scrolling strategy for lists with items of known fixed size. */
 export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private readonly _scrolledIndexChange = new Subject<number>();
+
+  /** @param renderedRange keeps maximum rendered range and helps render only visible items.
+   *
+   * [appendOnly] always renders range with start = 0, but when we use virtual-scroll in a grid it is not a performant solution.
+   * For case when we rendered a grid, then we scrolled up to the right to the end and then started scrolling to the bottom,
+   * default [appendOnly] would render range { start: 0, end: 40 } for each row, but in reality we need only 10 columns for example.
+   * renderedRange keeps maximum rendered range and helps render only visible items.
+   * */
+  renderedRange: {start: number | null; end: number | null} = {start: null, end: null};
 
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   scrolledIndexChange: Observable<number> = this._scrolledIndexChange.pipe(distinctUntilChanged());
@@ -50,7 +59,6 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   attach(viewport: CdkVirtualScrollViewport) {
     this._viewport = viewport;
     this._updateTotalContentSize();
-    this._updateRenderedRange();
   }
 
   /** Detaches this scroll strategy from the currently attached viewport. */
@@ -66,6 +74,8 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
    */
   updateItemAndBufferSize(itemSize: number, minBufferPx: number, maxBufferPx: number) {
+    this.renderedRange = {start: null, end: null};
+
     if (maxBufferPx < minBufferPx && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx');
     }
@@ -83,6 +93,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
+    this.renderedRange = {start: null, end: null};
     this._updateTotalContentSize();
     this._updateRenderedRange();
   }
@@ -171,6 +182,19 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
           );
         }
       }
+    }
+
+    // todo: move this application code to somewhere else
+    if (this.renderedRange.start === null || this.renderedRange.start > newRange.start) {
+      this.renderedRange.start = newRange.start;
+    } else {
+      newRange.start = this.renderedRange.start;
+    }
+
+    if (this.renderedRange.end === null || this.renderedRange.end < newRange.end) {
+      this.renderedRange.end = newRange.end;
+    } else {
+      newRange.end = this.renderedRange.end;
     }
 
     this._viewport.setRenderedRange(newRange);

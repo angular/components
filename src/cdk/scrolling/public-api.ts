@@ -7,6 +7,9 @@
  */
 
 export * from './fixed-size-virtual-scroll';
+export * from './dynamic-size.directive';
+export * from './dynamic-size-strategy';
+export * from './cdk-visible-range.directive';
 export * from './scroll-dispatcher';
 export * from './scrollable';
 export * from './scrolling-module';

@@ -11,6 +11,7 @@ export * from './collection-viewer';
 export * from './data-source';
 export * from './dispose-view-repeater-strategy';
 export * from './recycle-view-repeater-strategy';
+export * from './recycle-view-elements-state.service';
 export * from './selection-model';
 export {
   UniqueSelectionDispatcher,
