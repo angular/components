@@ -212,6 +212,9 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   /** Whether the timepicker is currently disabled. */
   readonly disabled: Signal<boolean> = computed(() => !!this._input()?.disabled());
 
+  /** Classes to be passed to the timepicker panel. */
+  readonly panelClass = input<string | string[]>();
+
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       validateAdapter(this._dateAdapter, this._dateFormats);
@@ -383,6 +386,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       direction: this._dir || 'ltr',
       hasBackdrop: false,
       disableAnimations: this._animationsDisabled,
+      panelClass: this.panelClass(),
     });
 
     this._overlayRef.detachments().subscribe(() => this.close());
