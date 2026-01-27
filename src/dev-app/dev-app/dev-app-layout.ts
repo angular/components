@@ -7,6 +7,7 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -56,6 +57,7 @@ export class DevAppLayout {
   private _document = inject(DOCUMENT);
   private _iconRegistry = inject(MatIconRegistry);
   private _route = inject(ActivatedRoute);
+  private _liveAnnouncer = inject(LiveAnnouncer);
 
   state = getAppState();
   testMode: Observable<boolean>;
@@ -165,33 +167,43 @@ export class DevAppLayout {
     this.state.darkTheme = value;
     this._document.body.classList.toggle('demo-unicorn-dark-theme', value);
     setAppState(this.state);
+    this._liveAnnouncer.announce(value ? 'Dark theme enabled.' : 'Light theme enabled.');
   }
 
   toggleSystemTheme(value = !this.state.systemTheme) {
     this.state.systemTheme = value;
     this._document.body.classList.toggle('demo-experimental-theme', value);
     setAppState(this.state);
+    this._liveAnnouncer.announce(value ? 'System theme enabled.' : 'Standard theme enabled.');
   }
 
   toggleFullscreen() {
     this._element.nativeElement.querySelector('.demo-content')?.requestFullscreen();
+    this._liveAnnouncer.announce('Fullscreen toggled.');
   }
 
   toggleStrongFocus(value = !this.state.strongFocusEnabled) {
     this.state.strongFocusEnabled = value;
     this._document.body.classList.toggle('demo-strong-focus', value);
     setAppState(this.state);
+    this._liveAnnouncer.announce(value ? 'Strong focus enabled.' : 'Strong focus disabled.');
   }
 
-  toggleZoneless(value = !this.isZoneless) {
+  async toggleZoneless(value = !this.isZoneless) {
     this.state.zoneless = value;
     setAppState(this.state);
+    const message = value ? 'Zoneless enabled, reloading.' : 'Zoned enabled, reloading.';
+    await this._liveAnnouncer.announce(message);
     location.reload();
   }
 
-  toggleAnimations() {
+  async toggleAnimations() {
     this.state.animations = !this.state.animations;
     setAppState(this.state);
+    const message = this.state.animations
+      ? 'Animations enabled, reloading.'
+      : 'Animations disabled, reloading.';
+    await this._liveAnnouncer.announce(message);
     location.reload();
   }
 
@@ -202,6 +214,7 @@ export class DevAppLayout {
 
     this.state.density = this._densityScales[index];
     setAppState(this.state);
+    this._liveAnnouncer.announce(`Density set to ${this.state.density}`);
 
     // Keep the tooltip open so we can see what the density was changed to. Ideally we'd
     // always show the density in a badge, but the M2 badge is too large for the toolbar.
@@ -213,6 +226,7 @@ export class DevAppLayout {
   toggleRippleDisabled(value = !this.state.rippleDisabled) {
     this._rippleOptions.disabled = this.state.rippleDisabled = value;
     setAppState(this.state);
+    this._liveAnnouncer.announce(value ? 'Ripples disabled.' : 'Ripples enabled.');
   }
 
   toggleDirection(value: Direction = this.state.direction === 'ltr' ? 'rtl' : 'ltr') {
@@ -220,6 +234,9 @@ export class DevAppLayout {
       this._dir.value = this.state.direction = value;
       this._changeDetectorRef.markForCheck();
       setAppState(this.state);
+      this._liveAnnouncer.announce(
+        value === 'ltr' ? 'Direction set to LTR.' : 'Direction set to RTL.',
+      );
     }
   }
 
@@ -236,12 +253,16 @@ export class DevAppLayout {
     );
     this.state.m3Enabled = value;
     setAppState(this.state);
+    this._liveAnnouncer.announce(value ? 'Using M3 theme.' : 'Using M2 theme.');
   }
 
   toggleColorApiBackCompat(value = !this.state.colorApiBackCompat) {
     this.state.colorApiBackCompat = value;
     this._document.body.classList.toggle('demo-color-api-back-compat', value);
     setAppState(this.state);
+    this._liveAnnouncer.announce(
+      value ? 'Color API back-compatibility enabled.' : 'Color API back-compatibility disabled.',
+    );
   }
 
   getDensityClass() {
