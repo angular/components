@@ -904,6 +904,17 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(input.hasAttribute('aria-activedescendant')).toBe(false);
     });
+
+    it('should be able to set classes on the panel', () => {
+      const fixture = TestBed.createComponent(StandaloneTimepicker);
+      fixture.componentInstance.panelClass.set(['foo', 'bar']);
+      fixture.detectChanges();
+      getInput(fixture).click();
+      fixture.detectChanges();
+      const classList = fixture.nativeElement.querySelector('.cdk-overlay-pane').classList;
+      expect(classList).toContain('foo');
+      expect(classList).toContain('bar');
+    });
   });
 
   describe('forms integration', () => {
@@ -1415,7 +1426,8 @@ describe('MatTimepicker', () => {
       [interval]="interval()"
       [options]="customOptions()"
       [aria-label]="ariaLabel()"
-      [aria-labelledby]="ariaLabelledby()"/>
+      [aria-labelledby]="ariaLabelledby()"
+      [panelClass]="panelClass()"/>
     <mat-timepicker-toggle
       [for]="picker"
       [aria-label]="toggleAriaLabel()"
@@ -1439,6 +1451,7 @@ class StandaloneTimepicker {
   readonly toggleTabIndex = signal<number>(0);
   readonly customOptions = signal<MatTimepickerOption<Date>[] | null>(null);
   readonly openOnClick = signal(true);
+  readonly panelClass = signal<string[]>([]);
   readonly openedSpy = jasmine.createSpy('opened');
   readonly closedSpy = jasmine.createSpy('closed');
   readonly selectedSpy = jasmine.createSpy('selected');
