@@ -98,12 +98,22 @@ export class SpinButtonPattern {
 
   /** Validates the spinbutton configuration and returns a list of violations. */
   validate(): string[] {
+    const violations: string[] = [];
     const min = this.inputs.min();
     const max = this.inputs.max();
+
     if (min !== undefined && max !== undefined && min > max) {
-      return [`Spinbutton has invalid bounds: min (${min}) is greater than max (${max}).`];
+      violations.push(`Spinbutton has invalid bounds: min (${min}) is greater than max (${max}).`);
     }
-    return [];
+
+    if (this.inputs.wrap() && (min === undefined || max === undefined)) {
+      violations.push(
+        `Spinbutton has wrap enabled but ${min === undefined ? 'min' : 'max'} is not defined. ` +
+          `Wrap behavior requires both min and max to be set.`,
+      );
+    }
+
+    return violations;
   }
 
   /** Noop. Spinbuttons don't manage items requiring default state initialization. */
