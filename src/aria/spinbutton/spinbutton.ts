@@ -16,7 +16,6 @@ import {
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {SpinButtonPattern} from '../private';
@@ -85,9 +84,6 @@ export class SpinButton {
   /** Signal for the input element reference. */
   private readonly _inputElement = computed(() => this._inputChild()?.element);
 
-  /** Whether the spinbutton has received focus yet. */
-  private _hasFocused = signal(false);
-
   /** The UI pattern instance for this spinbutton. */
   readonly _pattern: SpinButtonPattern = new SpinButtonPattern({
     id: this.inputId,
@@ -104,25 +100,14 @@ export class SpinButton {
   });
 
   constructor() {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        afterRenderEffect(() => {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect(() => {
         const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
-    });
-   }
-
-    afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
-    });
-  }
-
-  /** Called when the input receives focus. */
-  _onFocus(): void {
-    this._hasFocused.set(true);
+      });
+    }
   }
 
   /** Increments the value by the step amount. */

@@ -20,7 +20,6 @@ export class SpinButton {
     readonly inputId: _angular_core.InputSignal<string>;
     readonly max: _angular_core.InputSignal<number | undefined>;
     readonly min: _angular_core.InputSignal<number | undefined>;
-    _onFocus(): void;
     readonly pageStep: _angular_core.InputSignal<number | undefined>;
     readonly _pattern: SpinButtonPattern;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -36,8 +35,8 @@ export class SpinButton {
 
 // @public
 export class SpinButtonDecrement {
-    readonly _isDisabled: _angular_core.Signal<boolean>;
-    _onClick(): void;
+    protected readonly _isDisabled: _angular_core.Signal<boolean>;
+    protected _onClick(): void;
     readonly spinButton: SpinButton;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<SpinButtonDecrement, "[ngSpinButtonDecrement]", ["ngSpinButtonDecrement"], {}, {}, never, never, true, never>;
@@ -47,8 +46,8 @@ export class SpinButtonDecrement {
 
 // @public
 export class SpinButtonIncrement {
-    readonly _isDisabled: _angular_core.Signal<boolean>;
-    _onClick(): void;
+    protected readonly _isDisabled: _angular_core.Signal<boolean>;
+    protected _onClick(): void;
     readonly spinButton: SpinButton;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<SpinButtonIncrement, "[ngSpinButtonIncrement]", ["ngSpinButtonIncrement"], {}, {}, never, never, true, never>;

@@ -106,7 +106,7 @@ export class SpinButtonPattern {
     return [];
   }
 
-  /** Sets the spinbutton to its default initial state. */
+  /** Noop. Spinbuttons don't manage items requiring default state initialization. */
   setDefaultState(): void {}
 
   /** Handles keydown events for the spinbutton. */
