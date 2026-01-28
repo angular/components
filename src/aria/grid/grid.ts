@@ -50,8 +50,8 @@ import {GRID_ROW} from './grid-tokens';
   host: {
     'role': 'grid',
     '[tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '[aria-disabled]': '_pattern.disabled()',
+    '[aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(pointermove)': '_pattern.onPointermove($event)',

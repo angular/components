@@ -47,7 +47,7 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[aria-disabled]': '_pattern.disabled()',
     '[id]': '_pattern.id()',
   },
 })

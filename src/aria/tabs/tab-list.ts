@@ -48,9 +48,9 @@ import type {Tab} from './tab';
   host: {
     'role': 'tablist',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-orientation]': '_pattern.orientation()',
-    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
+    '[aria-disabled]': '_pattern.disabled()',
+    '[aria-orientation]': '_pattern.orientation()',
+    '[aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
     '(focusin)': '_onFocus()',
