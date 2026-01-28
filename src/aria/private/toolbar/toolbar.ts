@@ -198,10 +198,4 @@ export class ToolbarPattern<V> {
       this.inputs.activeItem.set(firstItem);
     }
   }
-
-  /** Validates the state of the toolbar and returns a list of accessibility violations. */
-  validate(): string[] {
-    const violations: string[] = [];
-    return violations;
-  }
 }
