@@ -37,7 +37,7 @@ export class SpinButtonIncrement {
   readonly spinButton = inject(SPINBUTTON);
 
   /** Whether the increment button should be disabled. */
-  readonly _isDisabled = computed(() => {
+  protected readonly _isDisabled = computed(() => {
     if (this.spinButton.disabled() || this.spinButton.readonly()) return true;
     if (this.spinButton.wrap()) return false;
     return this.spinButton._pattern.atMax();
