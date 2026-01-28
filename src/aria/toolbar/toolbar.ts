@@ -109,14 +109,14 @@ export class Toolbar<V> {
   private _hasBeenFocused = signal(false);
 
   constructor() {
-    afterRenderEffect(() => {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect(() => {
         const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
-      }
-    });
+      });
+    }
 
     afterRenderEffect(() => {
       if (!this._hasBeenFocused()) {
