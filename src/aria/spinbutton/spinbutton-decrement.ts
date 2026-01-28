@@ -26,8 +26,8 @@ import {SPINBUTTON} from './spinbutton-tokens';
   selector: '[ngSpinButtonDecrement]',
   exportAs: 'ngSpinButtonDecrement',
   host: {
-    '[attr.aria-controls]': 'spinButton.inputId()',
-    '[attr.aria-disabled]': '_isDisabled() || null',
+    '[aria-controls]': 'spinButton.inputId()',
+    '[aria-disabled]': '_isDisabled() || null',
     '[attr.tabindex]': '-1',
     '(click)': '_onClick()',
   },
