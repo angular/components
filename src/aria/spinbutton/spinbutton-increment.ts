@@ -44,7 +44,7 @@ export class SpinButtonIncrement {
   });
 
   /** Handles click events on the increment button. */
-  _onClick(): void {
+  protected _onClick(): void {
     if (!this._isDisabled()) {
       this.spinButton.increment();
     }
