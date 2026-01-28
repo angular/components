@@ -403,6 +403,52 @@ describe('SpinButton', () => {
       setupDefaultSpinButton();
       expect(inputElement.getAttribute('inputmode')).toBe('numeric');
     });
+
+    it('should filter non-numeric characters from input', () => {
+      setupSpinButton({value: 5});
+      const input = inputElement as HTMLInputElement;
+      input.value = '1a2b3';
+      input.dispatchEvent(new Event('input', {bubbles: true}));
+      fixture.detectChanges();
+      expect(input.value).toBe('123');
+    });
+
+    it('should update value model on change event with valid number', () => {
+      setupSpinButton({value: 5});
+      const input = inputElement as HTMLInputElement;
+      input.value = '42';
+      input.dispatchEvent(new Event('change', {bubbles: true}));
+      fixture.detectChanges();
+      expect(spinButtonInstance.value()).toBe(42);
+    });
+
+    it('should revert input to current value on invalid input', () => {
+      setupSpinButton({value: 5});
+      const input = inputElement as HTMLInputElement;
+      input.value = 'invalid';
+      input.dispatchEvent(new Event('change', {bubbles: true}));
+      fixture.detectChanges();
+      expect(input.value).toBe('5');
+      expect(spinButtonInstance.value()).toBe(5);
+    });
+
+    it('should sync input value when model changes externally', async () => {
+      setupSpinButton({value: 5});
+      const input = inputElement as HTMLInputElement;
+      spinButtonInstance.value.set(10);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(input.value).toBe('10');
+    });
+
+    it('should allow negative numbers', () => {
+      setupSpinButton({value: 0, min: -10});
+      const input = inputElement as HTMLInputElement;
+      input.value = '-5';
+      input.dispatchEvent(new Event('change', {bubbles: true}));
+      fixture.detectChanges();
+      expect(spinButtonInstance.value()).toBe(-5);
+    });
   });
 
   describe('span-based spinbutton', () => {
