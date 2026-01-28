@@ -449,6 +449,41 @@ describe('SpinButton', () => {
       fixture.detectChanges();
       expect(spinButtonInstance.value()).toBe(-5);
     });
+
+    it('should allow numeric key input without preventing default', () => {
+      setupSpinButton({value: 5});
+      const event = new KeyboardEvent('keydown', {key: '3', bubbles: true});
+      inputElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should allow backspace key without preventing default', () => {
+      setupSpinButton({value: 5});
+      const event = new KeyboardEvent('keydown', {key: 'Backspace', bubbles: true});
+      inputElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should allow delete key without preventing default', () => {
+      setupSpinButton({value: 5});
+      const event = new KeyboardEvent('keydown', {key: 'Delete', bubbles: true});
+      inputElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should allow tab key without preventing default', () => {
+      setupSpinButton({value: 5});
+      const event = new KeyboardEvent('keydown', {key: 'Tab', bubbles: true});
+      inputElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should allow minus key for negative numbers', () => {
+      setupSpinButton({value: 5});
+      const event = new KeyboardEvent('keydown', {key: '-', bubbles: true});
+      inputElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    });
   });
 
   describe('span-based spinbutton', () => {
