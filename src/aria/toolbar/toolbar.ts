@@ -110,15 +110,6 @@ export class Toolbar<V> {
 
   constructor() {
     afterRenderEffect(() => {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this._pattern.validate();
-        for (const violation of violations) {
-          console.error(violation);
-        }
-      }
-    });
-
-    afterRenderEffect(() => {
       if (!this._hasBeenFocused()) {
         this._pattern.setDefaultState();
       }
