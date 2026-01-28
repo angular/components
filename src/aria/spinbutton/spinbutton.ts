@@ -104,14 +104,14 @@ export class SpinButton {
   });
 
   constructor() {
-    afterRenderEffect(() => {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        afterRenderEffect(() => {
         const violations = this._pattern.validate();
         for (const violation of violations) {
           console.error(violation);
         }
-      }
     });
+   }
 
     afterRenderEffect(() => {
       if (!this._hasFocused()) {
