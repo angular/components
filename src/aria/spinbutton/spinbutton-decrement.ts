@@ -44,7 +44,7 @@ export class SpinButtonDecrement {
   });
 
   /** Handles click events on the decrement button. */
-  _onClick(): void {
+  protected _onClick(): void {
     if (!this._isDisabled()) {
       this.spinButton.decrement();
     }
