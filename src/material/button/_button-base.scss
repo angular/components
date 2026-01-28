@@ -74,11 +74,11 @@
     background-color: token-utils.slot($ripple-color-token, $fallbacks);
   }
 
-  .mat-mdc-button-persistent-ripple::before {
+  & > .mat-mdc-button-persistent-ripple::before {
     background-color: token-utils.slot($state-layer-color-token, $fallbacks);
   }
 
-  &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
+  &.mat-mdc-button-disabled > .mat-mdc-button-persistent-ripple::before {
     background-color: token-utils.slot($disabled-state-layer-color-token, $fallbacks);
   }
 
@@ -124,7 +124,7 @@
   $touch-target-size-token,
   $touch-target-display-token,
   $fallbacks) {
-  .mat-mdc-button-touch-target {
+  & > .mat-mdc-button-touch-target {
     position: absolute;
     top: 50%;
     height: token-utils.slot($touch-target-size-token, $fallbacks);
@@ -170,7 +170,7 @@
     }
   }
 
-  .mdc-button__label + .mat-icon {
+  & > .mdc-button__label + .mat-icon {
     margin-right: $icon-offset;
     margin-left: $icon-spacing;
 
