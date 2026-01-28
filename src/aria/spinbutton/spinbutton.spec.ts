@@ -515,6 +515,50 @@ describe('SpinButton', () => {
     });
   });
 
+  describe('edge cases', () => {
+    it('should do nothing on Home when min is undefined', () => {
+      setupSpinButton({value: 50, max: 100});
+      home();
+      expect(spinButtonInstance.value()).toBe(50);
+    });
+
+    it('should do nothing on End when max is undefined', () => {
+      setupSpinButton({value: 50, min: 0});
+      end();
+      expect(spinButtonInstance.value()).toBe(50);
+    });
+
+    it('should wrap correctly with step > 1', () => {
+      setupSpinButton({value: 10, min: 0, max: 10, step: 3, wrap: true});
+      up();
+      expect(spinButtonInstance.value()).toBe(2); // 10 + 3 = 13, wraps to 2
+    });
+
+    it('should clamp PageUp when it would exceed max', () => {
+      setupSpinButton({value: 95, min: 0, max: 100, pageStep: 10});
+      pageUp();
+      expect(spinButtonInstance.value()).toBe(100);
+    });
+
+    it('should clamp PageDown when it would go below min', () => {
+      setupSpinButton({value: 5, min: 0, max: 100, pageStep: 10});
+      pageDown();
+      expect(spinButtonInstance.value()).toBe(0);
+    });
+
+    it('should wrap PageUp when wrap is enabled', () => {
+      setupSpinButton({value: 95, min: 0, max: 100, pageStep: 10, wrap: true});
+      pageUp();
+      expect(spinButtonInstance.value()).toBe(4); // 95 + 10 = 105, wraps to 4
+    });
+
+    it('should wrap PageDown when wrap is enabled', () => {
+      setupSpinButton({value: 5, min: 0, max: 100, pageStep: 10, wrap: true});
+      pageDown();
+      expect(spinButtonInstance.value()).toBe(96); // 5 - 10 = -5, wraps to 96
+    });
+  });
+
   describe('RTL support', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
