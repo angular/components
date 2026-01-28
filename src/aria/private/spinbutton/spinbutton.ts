@@ -113,6 +113,18 @@ export class SpinButtonPattern {
       );
     }
 
+    const step = this.inputs.step();
+    if (step <= 0) {
+      violations.push(`Spinbutton has invalid step: ${step}. Step must be a positive number.`);
+    }
+
+    const pageStep = this.inputs.pageStep();
+    if (pageStep !== undefined && pageStep <= 0) {
+      violations.push(
+        `Spinbutton has invalid pageStep: ${pageStep}. PageStep must be a positive number.`,
+      );
+    }
+
     return violations;
   }
 
