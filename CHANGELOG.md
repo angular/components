@@ -1,3 +1,23 @@
+<a name="21.1.2"></a>
+# 21.1.2 "glass-bottle" (2026-01-28)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1d9918a9de](https://github.com/angular/components/commit/1d9918a9dea48c1d4349233dc8a0d5cee7c48ea8) | fix | **combobox:** Add announcement for empty results to autocomplete demo ([#32707](https://github.com/angular/components/pull/32707)) |
+| [81b407d353](https://github.com/angular/components/commit/81b407d353ab8a8b52447d8e2ec9c2d3c4471a1a) | perf | **grid:** avoid excessive change detections ([#32705](https://github.com/angular/components/pull/32705)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9b54cb20da](https://github.com/angular/components/commit/9b54cb20daff4faaae64e882da7efccd66c7cc28) | fix | **listbox:** incorrect wording in error message ([#32697](https://github.com/angular/components/pull/32697)) |
+| [4b8fc71c08](https://github.com/angular/components/commit/4b8fc71c08024cbac0f6f5221ecbd5ae2263f065) | fix | **table:** throw when multiple row templates are used with virtual scrolling ([#32682](https://github.com/angular/components/pull/32682)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bb69f3ca7d](https://github.com/angular/components/commit/bb69f3ca7daeeaaf30c4c86310c504f9d2925bd5) | fix | **sidenav:** incorrectly trapping focus in some cases ([#32699](https://github.com/angular/components/pull/32699)) |
+| [7824225a5b](https://github.com/angular/components/commit/7824225a5b5e9911867e378b8b7529ec852baca2) | fix | **timepicker:** make it easier to style timepicker panel ([#32711](https://github.com/angular/components/pull/32711)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0-next.1"></a>
 # 21.2.0-next.1 "plastic-ant" (2026-01-21)
 ### aria
