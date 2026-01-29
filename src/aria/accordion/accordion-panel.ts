@@ -51,7 +51,7 @@ import {DeferredContentAware, AccordionPanelPattern, AccordionTriggerPattern} fr
   host: {
     'role': 'region',
     '[attr.id]': '_pattern.id()',
-    '[attr.aria-labelledby]': '_pattern.accordionTrigger()?.id()',
+    '[aria-labelledby]': '_pattern.accordionTrigger()?.id()',
     '[attr.inert]': '!visible() ? true : null',
   },
 })

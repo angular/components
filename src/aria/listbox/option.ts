@@ -39,8 +39,8 @@ import {LISTBOX} from './tokens';
     '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-selected]': '_pattern.selected()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[aria-selected]': '_pattern.selected()',
+    '[aria-disabled]': '_pattern.disabled()',
   },
 })
 export class Option<V> {

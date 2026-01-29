@@ -47,7 +47,7 @@ import {TABS} from './utils';
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': '!visible() ? true : null',
-    '[attr.aria-labelledby]': '_pattern.labelledBy()',
+    '[aria-labelledby]': '_pattern.labelledBy()',
   },
   hostDirectives: [
     {

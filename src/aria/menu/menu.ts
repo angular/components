@@ -61,7 +61,7 @@ import {MENU_COMPONENT} from './menu-tokens';
   host: {
     'role': 'menu',
     '[attr.id]': '_pattern.id()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[aria-disabled]': '_pattern.disabled()',
     '[attr.tabindex]': 'tabIndex()',
     '[attr.data-visible]': 'visible()',
     '(keydown)': '_pattern.onKeydown($event)',

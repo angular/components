@@ -37,7 +37,7 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
   exportAs: 'ngGridRow',
   host: {
     'role': 'row',
-    '[attr.aria-rowindex]': '_pattern.rowIndex()',
+    '[aria-rowindex]': '_pattern.rowIndex()',
   },
   providers: [{provide: GRID_ROW, useExisting: GridRow}],
 })

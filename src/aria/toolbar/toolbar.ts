@@ -50,8 +50,8 @@ import {sortDirectives} from './utils';
   host: {
     'role': 'toolbar',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-orientation]': '_pattern.orientation()',
+    '[aria-disabled]': '_pattern.disabled()',
+    '[aria-orientation]': '_pattern.orientation()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',

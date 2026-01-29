@@ -46,9 +46,9 @@ import {HasElement, TABS} from './utils';
     '[attr.data-active]': 'active()',
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
-    '[attr.aria-selected]': 'selected()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-controls]': '_pattern.controls()',
+    '[aria-selected]': 'selected()',
+    '[aria-disabled]': '_pattern.disabled()',
+    '[aria-controls]': '_pattern.controls()',
   },
 })
 export class Tab implements HasElement, OnInit, OnDestroy {

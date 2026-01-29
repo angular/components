@@ -38,10 +38,10 @@ import type {MenuBar} from './menu-bar';
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
-    '[attr.aria-haspopup]': 'hasPopup()',
-    '[attr.aria-expanded]': 'expanded()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-controls]': '_pattern.submenu()?.id()',
+    '[aria-haspopup]': 'hasPopup()',
+    '[aria-expanded]': 'expanded()',
+    '[aria-disabled]': '_pattern.disabled()',
+    '[aria-controls]': '_pattern.submenu()?.id()',
   },
 })
 export class MenuItem<V> {
