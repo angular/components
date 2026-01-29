@@ -184,11 +184,15 @@ export class TabListPattern {
   /** The keydown event manager for the tablist. */
   readonly keydown = computed(() => {
     return new KeyboardEventManager()
-      .on(this.prevKey, () =>
-        this._navigate(() => this.navigationBehavior.prev(), this.followFocus()),
+      .on(
+        this.prevKey,
+        () => this._navigate(() => this.navigationBehavior.prev(), this.followFocus()),
+        {ignoreRepeat: false},
       )
-      .on(this.nextKey, () =>
-        this._navigate(() => this.navigationBehavior.next(), this.followFocus()),
+      .on(
+        this.nextKey,
+        () => this._navigate(() => this.navigationBehavior.next(), this.followFocus()),
+        {ignoreRepeat: false},
       )
       .on('Home', () => this._navigate(() => this.navigationBehavior.first(), this.followFocus()))
       .on('End', () => this._navigate(() => this.navigationBehavior.last(), this.followFocus()))

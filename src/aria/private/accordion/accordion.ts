@@ -74,8 +74,8 @@ export class AccordionGroupPattern {
   /** The keydown event manager for the accordion trigger. */
   keydown = computed(() => {
     return new KeyboardEventManager()
-      .on(this.prevKey, () => this.navigationBehavior.prev())
-      .on(this.nextKey, () => this.navigationBehavior.next())
+      .on(this.prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
+      .on(this.nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
       .on('Home', () => this.navigationBehavior.first())
       .on('End', () => this.navigationBehavior.last())
       .on(' ', () => this.toggle())
