@@ -19,7 +19,7 @@ import {
   MatSnackBarRef,
   SimpleSnackBar,
 } from './index';
-import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from './snack-bar';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, SnackBarTemplateContext} from './snack-bar';
 import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatSnackBar', () => {
@@ -571,7 +571,10 @@ describe('MatSnackBar', () => {
     });
 
     it('should inject the snack bar reference into the component', () => {
-      const snackBarRef = snackBar.openFromComponent(BurritosNotification);
+      const snackBarRef = snackBar.openFromComponent<
+        BurritosNotification,
+        BurritosNotificationData
+      >(BurritosNotification);
 
       expect(snackBarRef.instance.snackBarRef)
         .withContext('Expected component to have an injected snack bar reference.')
@@ -585,10 +588,11 @@ describe('MatSnackBar', () => {
     });
 
     it('should be able to inject arbitrary user data', () => {
+      const data: BurritosNotificationData = {
+        burritoType: 'Chimichanga',
+      };
       const snackBarRef = snackBar.openFromComponent(BurritosNotification, {
-        data: {
-          burritoType: 'Chimichanga',
-        },
+        data,
       });
 
       expect(snackBarRef.instance.data)
@@ -997,8 +1001,12 @@ class ComponentWithChildViewContainer {
   `,
 })
 class ComponentWithTemplateRef {
-  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<SnackBarTemplateContext<{value: string}>>;
   localValue!: string;
+}
+
+interface BurritosNotificationData {
+  burritoType: string;
 }
 
 /** Simple component for testing ComponentPortal. */
@@ -1006,8 +1014,9 @@ class ComponentWithTemplateRef {
   template: '<p>Burritos are on the way.</p>',
 })
 class BurritosNotification {
-  snackBarRef = inject<MatSnackBarRef<BurritosNotification>>(MatSnackBarRef);
-  data = inject(MAT_SNACK_BAR_DATA);
+  snackBarRef =
+    inject<MatSnackBarRef<BurritosNotification, BurritosNotificationData>>(MatSnackBarRef);
+  data = inject<BurritosNotificationData>(MAT_SNACK_BAR_DATA);
 }
 
 @Component({
