@@ -8,7 +8,6 @@
   @return (
     base: (
       dialog-container-shape: 4px,
-      dialog-container-elevation-shadow: elevation.get-box-shadow(24),
       dialog-container-max-width: 80vw,
       dialog-container-small-max-width: 80vw,
       dialog-container-min-width: 0,
@@ -23,6 +22,7 @@
     ),
     color: (
       dialog-container-color: map.get($system, surface),
+      dialog-container-elevation-shadow: elevation.get-box-shadow(24),
       dialog-subhead-color: map.get($system, on-surface),
       dialog-supporting-text-color: map.get($system, on-surface-variant),
     ),
