@@ -80,10 +80,10 @@ export class ToolbarPattern<V> {
     const manager = new KeyboardEventManager();
 
     return manager
-      .on(this._nextKey, () => this.listBehavior.next())
-      .on(this._prevKey, () => this.listBehavior.prev())
-      .on(this._altNextKey, () => this._groupNext())
-      .on(this._altPrevKey, () => this._groupPrev())
+      .on(this._nextKey, () => this.listBehavior.next(), {handleRepeat: true})
+      .on(this._prevKey, () => this.listBehavior.prev(), {handleRepeat: true})
+      .on(this._altNextKey, () => this._groupNext(), {handleRepeat: true})
+      .on(this._altPrevKey, () => this._groupPrev(), {handleRepeat: true})
       .on(' ', () => this.select())
       .on('Enter', () => this.select())
       .on('Home', () => this.listBehavior.first())
