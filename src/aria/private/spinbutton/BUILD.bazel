@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "spinbutton",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src/aria/private/behaviors/event-manager",
+        "//src/aria/private/behaviors/signal-like",
+    ],
+)
