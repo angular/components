@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 /**
  * @title Button overview
@@ -10,6 +11,6 @@ import {MatButtonModule} from '@angular/material/button';
   selector: 'button-overview-example',
   templateUrl: 'button-overview-example.html',
   styleUrl: 'button-overview-example.css',
-  imports: [MatButtonModule, MatDividerModule, MatIconModule],
+  imports: [MatButtonModule, MatDividerModule, MatIconModule, MatProgressSpinner],
 })
 export class ButtonOverviewExample {}
