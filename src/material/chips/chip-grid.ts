@@ -282,6 +282,11 @@ export class MatChipGrid
       this.stateChanges.next();
     });
 
+    this.chipRemovedChanges.pipe(takeUntil(this._destroyed)).subscribe(() => {
+      this._change();
+      this.stateChanges.next();
+    });
+
     merge(this.chipFocusChanges, this._chips.changes)
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.stateChanges.next());
@@ -431,6 +436,16 @@ export class MatChipGrid
           this._propagateChanges();
           this._markAsTouched();
         }
+      });
+    }
+  }
+
+  /** When called, propagates the changes and update the immediately */
+  _change() {
+    if (!this.disabled) {
+      // Timeout is needed to wait for the focus() event trigger on chip input.
+      setTimeout(() => {
+        this._propagateChanges();
       });
     }
   }

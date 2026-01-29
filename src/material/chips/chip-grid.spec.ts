@@ -1089,6 +1089,27 @@ describe('MatChipGrid', () => {
     }));
   });
 
+  it('should update the form control immediately when remove button is clicked', fakeAsync(() => {
+    const fixture = createComponent(ChipGridWithRemoveAndFormControl, undefined, []);
+
+    const component = fixture.componentRef.instance;
+
+    flush();
+    const trailingActions = chipGridNativeElement.querySelectorAll<HTMLElement>(
+      '.mdc-evolution-chip__action--secondary',
+    );
+    const chip = chips.get(2)!;
+    chip.focus();
+    fixture.detectChanges();
+
+    trailingActions[2].click();
+    fixture.detectChanges();
+    flush();
+
+    expect(component.formControl.value?.length).toBe(3);
+    expect(component.formControl.value?.indexOf('tutorial')).toBe(-1);
+  }));
+
   function createComponent<T>(
     component: Type<T>,
     direction: Direction = 'ltr',
@@ -1314,4 +1335,51 @@ class ChipGridWithRemove {
 class ChipGridWithoutInput {
   chips = ['Pizza', 'Pasta', 'Tacos'];
   placeholder = '';
+}
+
+@Component({
+  template: `
+      <mat-form-field>
+        <mat-chip-grid #chipGrid [formControl]="formControl">
+          @for (keyword of keywords(); track keyword) {
+            <mat-chip-row (removed)="removeKeyword(keyword)">
+              {{keyword}}
+               <span matChipRemove>Remove</span>
+            </mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input
+          placeholder="New keyword..."
+          [matChipInputFor]="chipGrid"
+        />
+      </mat-form-field>
+  `,
+  imports: [
+    MatChipGrid,
+    MatChipRow,
+    MatChipInput,
+    MatFormField,
+    MatChipRemove,
+    ReactiveFormsModule,
+  ],
+})
+class ChipGridWithRemoveAndFormControl {
+  readonly keywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
+  readonly formControl = new FormControl([...this.keywords()]);
+
+  constructor() {
+    this.formControl.setValidators(Validators.required);
+  }
+
+  removeKeyword(keyword: string) {
+    this.keywords.update(keywords => {
+      const index = keywords.indexOf(keyword);
+      if (index < 0) {
+        return keywords;
+      }
+
+      keywords.splice(index, 1);
+      return [...keywords];
+    });
+  }
 }
