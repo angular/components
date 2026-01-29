@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "io.github.ChromeDevTools/chrome-devtools-mcp": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp"],
+      "env": {},
+      "type": "stdio"
+    }
+  },
+  "inputs": []
+}
