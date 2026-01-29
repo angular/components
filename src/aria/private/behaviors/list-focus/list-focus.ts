@@ -106,9 +106,9 @@ export class ListFocus<T extends ListFocusItem> {
     this.inputs.activeItem.set(item);
 
     if (opts?.focusElement || opts?.focusElement === undefined) {
-      this.inputs.focusMode() === 'roving'
-        ? item.element()?.focus()
-        : this.inputs.element()?.focus();
+      if (this.inputs.focusMode() === 'roving') {
+        item.element()?.focus();
+      }
     }
 
     return true;
