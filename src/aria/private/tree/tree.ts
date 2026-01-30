@@ -136,6 +136,9 @@ export interface TreeInputs<V> extends Omit<
 
   /** The aria-current type. */
   currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
+
+  /** The text direction of the tree. */
+  textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** Controls the state and interactions of a tree view. */
@@ -356,6 +359,19 @@ export class TreePattern<V> implements TreeInputs<V> {
       multi: this.multi,
       multiExpandable: () => true,
     });
+  }
+
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+      violations.push(
+        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+      );
+    }
+
+    return violations;
   }
 
   /**

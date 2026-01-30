@@ -66,5 +66,4 @@ jasmine_test(
         "//src/material/schematics:node_modules/@angular/cdk/schematics",
         "//src/material/schematics:package_json",
     ],
-    shard_count = 4,
 )

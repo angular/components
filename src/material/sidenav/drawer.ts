@@ -569,7 +569,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._opened.set(isOpen);
 
     if (this._container?._transitionsEnabled) {
-      // Note: it's importatnt to set this as early as possible,
+      // Note: it's important to set this as early as possible,
       // otherwise the animation can look glitchy in some cases.
       this._setIsAnimating(true);
     } else {
@@ -609,7 +609,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     if (this._focusTrap) {
       // Trap focus only if the backdrop is enabled. Otherwise, allow end user to interact with the
       // sidenav content.
-      this._focusTrap.enabled = !!this._container?.hasBackdrop && this.opened;
+      this._focusTrap.enabled = this.opened && !!this._container?._isShowingBackdrop();
     }
   }
 

@@ -714,6 +714,22 @@ describe('MatDrawer', () => {
       flush();
       expect(anchors.map(anchor => anchor.getAttribute('tabindex'))).toEqual([null, null]);
     }));
+
+    it('should not trap focus if the drawer container has a backdrop, but is not showing it', fakeAsync(() => {
+      fixture.destroy();
+
+      const hiddenBackdropFixture = TestBed.createComponent(DrawerWithSideAndHiddenBackdrop);
+      hiddenBackdropFixture.detectChanges();
+      tick();
+      hiddenBackdropFixture.detectChanges();
+
+      const anchors = Array.from<HTMLElement>(
+        hiddenBackdropFixture.nativeElement.querySelectorAll('.cdk-focus-trap-anchor'),
+      );
+
+      expect(anchors.length).toBeGreaterThan(0);
+      expect(anchors.every(anchor => !anchor.hasAttribute('tabindex'))).toBe(true);
+    }));
   });
 
   it('should mark the drawer content as scrollable', () => {
@@ -1418,3 +1434,16 @@ class NestedDrawerContainers {
   @ViewChild('innerContainer') innerContainer!: MatDrawerContainer;
   @ViewChild('innerDrawer') innerDrawer!: MatDrawer;
 }
+
+@Component({
+  template: `
+    <mat-sidenav-container>
+      <mat-sidenav opened mode="side">
+        <button>Button inside</button>
+      </mat-sidenav>
+      <mat-sidenav mode="over" position="end">End content</mat-sidenav>
+    </mat-sidenav-container>
+  `,
+  imports: [MatSidenavModule],
+})
+class DrawerWithSideAndHiddenBackdrop {}

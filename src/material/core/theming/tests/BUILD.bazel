@@ -88,5 +88,4 @@ jasmine_test(
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
     ],
-    shard_count = 4,
 )

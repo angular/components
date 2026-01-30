@@ -926,7 +926,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(() => {
         testComponent.formControl.setValue(['orange', 'banana']);
         fixture.detectChanges();
-      }).toThrowError('Listbox cannot have more than one selected value in multi-selection mode.');
+      }).toThrowError('Listbox cannot have more than one selected value in single selection mode.');
     });
 
     it('should throw when an invalid value is selected', () => {

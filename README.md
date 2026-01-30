@@ -6,12 +6,13 @@
 The Angular team builds and maintains both common UI components and tools to help you build your
 own custom components. The team maintains several npm packages.
 
-| Package                   | Description                                                                         | Docs             |
-| ------------------------- | ----------------------------------------------------------------------------------- | ---------------- |
-| `@angular/cdk`            | Library that helps you author custom UI components with common interaction patterns | [Docs][cdk-docs] |
-| `@angular/material`       | [Material Design][] UI components for Angular applications                          | [Docs][mat-docs] |
-| `@angular/google-maps`    | Angular components built on top of the [Google Maps JavaScript API][]               | [Docs][map-docs] |
-| `@angular/youtube-player` | Angular component built on top of the [YouTube Player API][]                        | [Docs][ytp-docs] |
+| Package                   | Description                                                                           | Docs              |
+| ------------------------- | ------------------------------------------------------------------------------------- | ----------------- |
+| `@angular/aria`           | Collection of headless, accessible directives that implement common WAI-ARIA patterns | [Docs][aria-docs] |
+| `@angular/cdk`            | Library that helps you author custom UI components with common interaction patterns   | [Docs][cdk-docs]  |
+| `@angular/material`       | [Material Design][] UI components for Angular applications                            | [Docs][mat-docs]  |
+| `@angular/google-maps`    | Angular components built on top of the [Google Maps JavaScript API][]                 | [Docs][map-docs]  |
+| `@angular/youtube-player` | Angular component built on top of the [YouTube Player API][]                          | [Docs][ytp-docs]  |
 
 
 #### Quick links
@@ -68,6 +69,7 @@ We aim for great user experience with the following screen readers:
 [Material Design]: https://material.io
 [Google Maps JavaScript API]: https://developers.google.com/maps/documentation/javascript/tutorial
 [YouTube Player API]: https://developers.google.com/youtube/iframe_api_reference
+[aria-docs]: https://angular.dev/guide/aria/overview
 [cdk-docs]: https://material.angular.dev/cdk/categories
 [mat-docs]: https://material.angular.dev
 [map-docs]: https://github.com/angular/components/blob/main/src/google-maps/README.md

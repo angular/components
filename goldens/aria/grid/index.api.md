@@ -67,8 +67,8 @@ export class GridCellWidget {
     readonly focusTarget: _angular_core.InputSignal<ElementRef<any> | HTMLElement | undefined>;
     readonly id: _angular_core.InputSignal<string>;
     get isActivated(): Signal<boolean>;
-    readonly onActivate: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
-    readonly onDeactivate: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
+    readonly onActivate: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
+    readonly onDeactivate: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly _pattern: GridCellWidgetPattern;
     protected readonly _tabIndex: Signal<number>;
     readonly tabindex: _angular_core.InputSignal<number | undefined>;

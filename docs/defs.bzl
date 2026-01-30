@@ -45,7 +45,6 @@ TEST_DEPS = [
     "//docs:node_modules/karma-coverage",
     "//docs:node_modules/karma-firefox-launcher",
     "//docs:node_modules/karma-jasmine",
-    "//docs:node_modules/karma-jasmine-html-reporter",
 ]
 
 # Common dependencies of Angular CLI test suites

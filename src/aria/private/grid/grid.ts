@@ -93,6 +93,16 @@ export class GridPattern {
     this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight',
   );
 
+  /** Whether the grid pattern is currently accepting `pointermove` events. */
+  readonly acceptsPointerMove = computed(() => {
+    return (
+      !this.disabled() &&
+      this.inputs.enableSelection() &&
+      this.inputs.enableRangeSelection() &&
+      this.dragging()
+    );
+  });
+
   /** The keydown event manager for the grid. */
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
@@ -252,20 +262,13 @@ export class GridPattern {
 
   /** Handles pointermove events on the grid. */
   onPointermove(event: PointerEvent) {
-    if (
-      this.disabled() ||
-      !this.inputs.enableSelection() ||
-      !this.inputs.enableRangeSelection() ||
-      !this.dragging()
-    ) {
-      return;
-    }
+    if (this.acceptsPointerMove()) {
+      const cell = this.inputs.getCell(event.target as Element);
 
-    const cell = this.inputs.getCell(event.target as Element);
-
-    // Dragging anchor.
-    if (cell !== undefined) {
-      this.gridBehavior.gotoCell(cell, {anchor: true});
+      // Dragging anchor.
+      if (cell !== undefined) {
+        this.gridBehavior.gotoCell(cell, {anchor: true});
+      }
     }
   }
 
