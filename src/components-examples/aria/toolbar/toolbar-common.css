@@ -185,3 +185,11 @@
 .example-option[aria-selected='false'] .example-option-icon {
   visibility: hidden;
 }
+
+@media (forced-colors: active) {
+  .example-button[aria-pressed='true'],
+  .example-button[aria-checked='true'],
+  .example-option[aria-selected='true'] {
+    outline: solid 2px;
+  }
+}
