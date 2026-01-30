@@ -781,7 +781,6 @@ export class ToolbarPattern<V> {
     setDefaultState(): void;
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<0 | -1>;
-    validate(): string[];
 }
 
 // @public
@@ -918,6 +917,7 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly treeBehavior: Tree<TreeItemPattern<V>, V>;
     readonly typeaheadDelay: SignalLike<number>;
     readonly typeaheadRegexp: RegExp;
+    validate(): string[];
     readonly values: WritableSignalLike<V[]>;
     readonly visible: () => boolean;
     readonly wrap: SignalLike<boolean>;

@@ -358,6 +358,19 @@ export class TreePattern<V> implements TreeInputs<V> {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+      violations.push(
+        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+      );
+    }
+
+    return violations;
+  }
+
   /**
    * Sets the tree to it's default initial state.
    *

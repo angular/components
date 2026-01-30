@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@10.28.2",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.28.0"
+    "pnpm": "10.28.2"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -53,7 +53,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "21.2.0-next.1",
+  "version": "21.2.0-next.2",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -92,7 +92,7 @@
     "@schematics/angular": "catalog:",
     "@types/babel__core": "^7.1.18",
     "@types/fs-extra": "^11.0.0",
-    "@types/jasmine": "^5.0.0",
+    "@types/jasmine": "^6.0.0",
     "@types/luxon": "^3.0.0",
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
@@ -110,8 +110,8 @@
     "glob": "^13.0.0",
     "highlight.js": "^11.0.0",
     "husky": "^9.0.1",
-    "jasmine": "^5.6.0",
-    "jasmine-core": "5.13.0",
+    "jasmine": "^6.0.0",
+    "jasmine-core": "^6.0.0",
     "jasmine-reporters": "^2.5.2",
     "jsonc-parser": "^3.3.1",
     "kagekiri": "^2.0.0",

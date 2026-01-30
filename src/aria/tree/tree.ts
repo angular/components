@@ -175,6 +175,15 @@ export class Tree<V> {
     }
 
     afterRenderEffect(() => {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        const violations = this._pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
+        }
+      }
+    });
+
+    afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this._pattern.setDefaultState();
       }
