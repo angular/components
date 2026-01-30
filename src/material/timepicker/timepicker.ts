@@ -417,13 +417,25 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       const timeFormat = this._dateFormats.display.timeInput;
       const min = input?.min() || adapter.setTime(adapter.today(), 0, 0, 0);
       const max = input?.max() || adapter.setTime(adapter.today(), 23, 59, 0);
-      const cacheKey =
-        interval + '/' + adapter.format(min, timeFormat) + '/' + adapter.format(max, timeFormat);
+      const shouldDisplayUnavailableItems = input?.shouldDisplayUnavailableItems() || false;
+      const cacheKey = [
+        interval,
+        adapter.format(min, timeFormat),
+        adapter.format(max, timeFormat),
+        shouldDisplayUnavailableItems ? 'displayUnavailable' : 'hideUnavailable',
+      ].join('/');
 
       // Don't re-generate the options if the inputs haven't changed.
       if (cacheKey !== this._optionsCacheKey) {
         this._optionsCacheKey = cacheKey;
-        this._timeOptions = generateOptions(adapter, this._dateFormats, min, max, interval);
+        this._timeOptions = generateOptions(
+          adapter,
+          this._dateFormats,
+          min,
+          max,
+          interval,
+          shouldDisplayUnavailableItems,
+        );
       }
     }
   }
