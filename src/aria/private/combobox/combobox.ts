@@ -651,7 +651,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       controls?.focus(opts.item, {focusElement: false});
     }
 
-    controls?.multi() ? controls.toggle(opts.item) : controls?.select(opts.item);
+    controls?.multi() ? controls.toggle(item) : controls?.select(item);
 
     if (opts.commit) {
       this.commit();
