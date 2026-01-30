@@ -17,12 +17,12 @@
         </button>
       </mat-chip-row>
     }
-    <input
-      placeholder="New fruit..."
-      [matChipInputFor]="chipGrid"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="addOnBlur"
-      (matChipInputTokenEnd)="add($event)"
-    />
   </mat-chip-grid>
+  <input
+    placeholder="New fruit..."
+    [matChipInputFor]="chipGrid"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    [matChipInputAddOnBlur]="addOnBlur"
+    (matChipInputTokenEnd)="add($event)"
+  />
 </mat-form-field>
