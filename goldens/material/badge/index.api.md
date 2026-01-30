@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/bidi';
@@ -11,7 +12,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
 // @public
-export class MatBadge implements OnInit, OnDestroy {
+export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     get color(): ThemePalette;
     set color(value: ThemePalette);
@@ -30,6 +31,8 @@ export class MatBadge implements OnInit, OnDestroy {
     static ngAcceptInputType_hidden: unknown;
     // (undocumented)
     static ngAcceptInputType_overlap: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
