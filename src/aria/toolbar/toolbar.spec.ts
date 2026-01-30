@@ -23,7 +23,9 @@ describe('Toolbar', () => {
   };
 
   const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
-    element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
+    element.dispatchEvent(
+      new PointerEvent('click', {bubbles: true, pointerType: 'mouse', ...eventInit}),
+    );
     fixture.detectChanges();
   };
 

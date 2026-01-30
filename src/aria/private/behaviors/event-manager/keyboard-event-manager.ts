@@ -30,6 +30,7 @@ type KeyCode = string | SignalLike<string> | RegExp;
  */
 export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<T> {
   options: EventHandlerOptions = {
+    handleRepeat: false,
     preventDefault: true,
     stopPropagation: true,
   };
@@ -50,7 +51,7 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
 
     this.configs.push({
       handler: handler,
-      matcher: event => this._isMatch(event, key, modifiers),
+      matcher: event => this._isMatch(event, key, modifiers, options),
       ...this.options,
       ...options,
     });
@@ -73,8 +74,17 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
     };
   }
 
-  private _isMatch(event: T, key: KeyCode, modifiers: ModifierInputs) {
+  private _isMatch(
+    event: T,
+    key: KeyCode,
+    modifiers: ModifierInputs,
+    options?: Partial<EventHandlerOptions>,
+  ): boolean {
     if (!hasModifiers(event, modifiers)) {
+      return false;
+    }
+
+    if (event.repeat && !options?.handleRepeat) {
       return false;
     }
 
