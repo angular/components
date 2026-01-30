@@ -179,7 +179,7 @@ export class ToolbarPattern<V> {
 
   /** Handles click events for the toolbar. */
   onClick(event: MouseEvent) {
-    if (this.disabled()) return;
+    if (this.disabled() || (event as PointerEvent).pointerType === '') return;
     this._goto(event);
   }
 
