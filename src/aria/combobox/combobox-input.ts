@@ -47,12 +47,12 @@ import {Combobox} from './combobox';
   host: {
     'role': 'combobox',
     '[value]': 'value()',
-    '[attr.aria-disabled]': 'combobox._pattern.disabled()',
-    '[attr.aria-expanded]': 'combobox._pattern.expanded()',
-    '[attr.aria-activedescendant]': 'combobox._pattern.activeDescendant()',
-    '[attr.aria-controls]': 'combobox._pattern.popupId()',
-    '[attr.aria-haspopup]': 'combobox._pattern.hasPopup()',
-    '[attr.aria-autocomplete]': 'combobox._pattern.autocomplete()',
+    '[aria-disabled]': 'combobox._pattern.disabled()',
+    '[aria-expanded]': 'combobox._pattern.expanded()',
+    '[aria-activedescendant]': 'combobox._pattern.activeDescendant()',
+    '[aria-controls]': 'combobox._pattern.popupId()',
+    '[aria-haspopup]': 'combobox._pattern.hasPopup()',
+    '[aria-autocomplete]': 'combobox._pattern.autocomplete()',
     '[attr.readonly]': 'combobox._pattern.readonly()',
   },
 })

@@ -59,7 +59,7 @@ import {MENU_COMPONENT} from './menu-tokens';
   host: {
     'role': 'menubar',
     '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
-    '[attr.aria-disabled]': '_pattern.disabled()',
+    '[aria-disabled]': '_pattern.disabled()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
