@@ -1,0 +1,112 @@
+.example-fieldset {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small);
+  padding: 16px;
+  margin: 0;
+}
+
+.example-legend {
+  font-weight: 500;
+  padding: 0 8px;
+}
+
+.example-spinner-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.example-spinner-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.example-spinner-field .example-label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.example-spinner-field small {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 12px;
+}
+
+.example-spinner {
+  display: inline-flex;
+  align-items: stretch;
+  width: fit-content;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.example-spinner:focus-within {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+
+.example-spinner:has([aria-invalid='true']) .example-spinner-button,
+.example-spinner:has([aria-invalid='true']) .example-spinner-input {
+  border-color: var(--mat-sys-error);
+}
+
+.example-spinner-button {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-spinner-button:first-child {
+  border-radius: var(--mat-sys-corner-small) 0 0 var(--mat-sys-corner-small);
+  border-right: none;
+}
+
+.example-spinner-button:last-child {
+  border-radius: 0 var(--mat-sys-corner-small) var(--mat-sys-corner-small) 0;
+  border-left: none;
+}
+
+.example-spinner-button:hover:not([aria-disabled='true']) {
+  background: var(--mat-sys-surface-container-high);
+}
+
+.example-spinner-button:active:not([aria-disabled='true']) {
+  background: var(--mat-sys-surface-container-highest);
+}
+
+.example-spinner-button[aria-disabled='true'] {
+  cursor: not-allowed;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  background: var(--mat-sys-surface-container);
+}
+
+.example-spinner-input {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: none;
+  border-right: none;
+  padding: 8px;
+  text-align: center;
+  width: 60px;
+  font-size: 16px;
+  background: var(--mat-sys-surface);
+  outline: none;
+}
+
+.example-spinner-input[aria-invalid='true'] {
+  background: color-mix(in srgb, var(--mat-sys-error) 10%, var(--mat-sys-surface));
+}
+
+.example-spinner-field small.example-error {
+  color: var(--mat-sys-error);
+}
+
+.example-hidden {
+  display: none;
+}

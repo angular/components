@@ -1,0 +1,23 @@
+.example-spinbutton-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.example-spinbutton-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.example-spinbutton-container:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
