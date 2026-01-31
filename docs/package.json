@@ -61,7 +61,7 @@
     "@types/jasmine": "^6.0.0",
     "@types/node": "^22.14.1",
     "@types/shelljs": "0.10.0",
-    "firebase-tools": "15.2.1",
+    "firebase-tools": "15.5.1",
     "jasmine-core": "^6.0.0",
     "jasmine-spec-reporter": "7.0.0",
     "karma": "~6.4.4",
@@ -75,7 +75,7 @@
     "npm-run-all": "^4.1.5",
     "protractor": "^7.0.0",
     "puppeteer-core": "^24.6.1",
-    "sass": "1.97.2",
+    "sass": "1.97.3",
     "shelljs": "^0.10.0",
     "ts-node": "10.9.2",
     "typescript": "~5.9.2"

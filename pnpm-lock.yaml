@@ -138,8 +138,8 @@ importers:
         specifier: ^7.16.12
         version: 7.28.6
       '@bazel/bazelisk':
-        specifier: 1.26.0
-        version: 1.26.0
+        specifier: 1.28.1
+        version: 1.28.1
       '@bazel/buildifier':
         specifier: 8.2.1
         version: 8.2.1
@@ -153,8 +153,8 @@ importers:
         specifier: ^0.9.0
         version: 0.9.3
       '@material/material-color-utilities':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.0
+        version: 0.4.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.2
       firebase-tools:
-        specifier: 15.2.1
-        version: 15.2.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.5.1
+        version: 15.5.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.3
@@ -322,7 +322,7 @@ importers:
         version: 10.9.2(@types/node@22.19.7)(typescript@5.9.2)
       tsec:
         specifier: 0.2.9
-        version: 0.2.9(@bazel/bazelisk@1.26.0)(typescript@5.9.2)
+        version: 0.2.9(@bazel/bazelisk@1.28.1)(typescript@5.9.2)
       tsickle:
         specifier: 0.46.3
         version: 0.46.3(typescript@5.9.2)
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.2.1
-        version: 15.2.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.5.1
+        version: 15.5.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.0.1
@@ -487,8 +487,8 @@ importers:
         specifier: ^24.6.1
         version: 24.35.0(bufferutil@4.1.0)
       sass:
-        specifier: 1.97.2
-        version: 1.97.2
+        specifier: 1.97.3
+        version: 1.97.3
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -1561,6 +1561,10 @@ packages:
     resolution: {integrity: sha512-bTNcHdGyEQ9r7SczEYUa0gkEQhJo1ld2BjXI8fWBvsUeoHi03QpUs2HZgDbjjrpQFQqG2ZbO7ihZvH8MjhUTHw==}
     hasBin: true
 
+  '@bazel/bazelisk@1.28.1':
+    resolution: {integrity: sha512-K21x83NXOtd0yb2qzjMES3UV4xEWZ1q1vnXFhADA1u7IoiMVQkJAVQRK3oZ5txpnrGafY15HS+YYr2nmsEP4Tg==}
+    hasBin: true
+
   '@bazel/buildifier@8.2.1':
     resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
     hasBin: true
@@ -2491,8 +2495,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@material/material-color-utilities@0.3.0':
-    resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
+  '@material/material-color-utilities@0.4.0':
+    resolution: {integrity: sha512-dlq6VExJReb8dhjj3a/yTigr3ncNwoFmL5Iy2ENtbDX03EmNeOEdZ+vsaGrj7RTuO+mB7L58II4LCsl4NpM8uw==}
 
   '@modelcontextprotocol/sdk@1.25.2':
     resolution: {integrity: sha512-LZFeo4F9M5qOhC/Uc1aQSrBHxMrvxett+9KLHt7OhcExtoiRN9DKgbZffMP/nxjutWDQpfMDfP3nkHI4X9ijww==}
@@ -5424,8 +5428,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.2.1:
-    resolution: {integrity: sha512-S75K4L/CsYSpyoOZAWHeTrx5TrpNCdUeSutr9oto+yBgg5qfbtnrGUxP+iPiBK6g4pdQFzf4p6rN1c7RoGE09A==}
+  firebase-tools@15.5.1:
+    resolution: {integrity: sha512-9O05782lt45YTLsaV3IvVKop99Ah3BEFDiBHfzvZfFgPMS2liwIhpcbaNboYjDbhE6poyIRUlaAv1pSqNWvf0w==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -7920,6 +7924,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   q@1.5.1:
@@ -7927,6 +7932,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qjobs@1.2.0:
@@ -8288,6 +8294,11 @@ packages:
 
   sass@1.97.2:
     resolution: {integrity: sha512-y5LWb0IlbO4e97Zr7c3mlpabcbBtS+ieiZ9iwDooShpFKWXf62zz5pEPdwrLYm+Bxn1fnbwFGzHuCLSA9tBmrw==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  sass@1.97.3:
+    resolution: {integrity: sha512-fDz1zJpd5GycprAbu4Q2PV/RprsRtKC/0z82z0JLgdytmcq0+ujJbJ/09bPGDxCLkKY3Np5cRAOcWiVkLXJURg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -10954,6 +10965,8 @@ snapshots:
 
   '@bazel/bazelisk@1.26.0': {}
 
+  '@bazel/bazelisk@1.28.1': {}
+
   '@bazel/buildifier@8.2.1': {}
 
   '@bazel/ibazel@0.28.0': {}
@@ -11938,7 +11951,7 @@ snapshots:
   '@lmdb/lmdb-win32-x64@3.4.4':
     optional: true
 
-  '@material/material-color-utilities@0.3.0': {}
+  '@material/material-color-utilities@0.4.0': {}
 
   '@modelcontextprotocol/sdk@1.25.2':
     dependencies:
@@ -15150,7 +15163,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.2.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@15.5.1(@types/node@22.19.7)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.7)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -15543,7 +15556,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -18496,6 +18509,14 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.4
 
+  sass@1.97.3:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.4
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.4
+
   saucelabs@1.5.0:
     dependencies:
       https-proxy-agent: 2.2.4
@@ -19385,9 +19406,9 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  tsec@0.2.9(@bazel/bazelisk@1.26.0)(typescript@5.9.2):
+  tsec@0.2.9(@bazel/bazelisk@1.28.1)(typescript@5.9.2):
     dependencies:
-      '@bazel/bazelisk': 1.26.0
+      '@bazel/bazelisk': 1.28.1
       glob: 11.1.0
       minimatch: 10.1.1
       typescript: 5.9.2
