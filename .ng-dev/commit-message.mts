@@ -11,6 +11,7 @@ export const commitMessage: CommitMessageConfig = {
     'multiple', // For when a commit applies to multiple components.
     'aria/accordion',
     'aria/combobox',
+    'aria/disclosure',
     'aria/grid',
     'aria/listbox',
     'aria/menu',
