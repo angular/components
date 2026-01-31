@@ -369,6 +369,63 @@ The easiest way to ensure this is to import one of the provided date adapters:
   </tbody>
 </table>
 
+`provideTemporalDateAdapter` or `MatTemporalModule` (installed via `ng add @angular/material-temporal-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Temporal.PlainDate</code>, <code>Temporal.PlainDateTime</code>, or <code>Temporal.ZonedDateTime</code> (configurable)</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td>Depends on the platform’s Intl/Temporal support</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td>Temporal (native or polyfill, e.g. <code>@js-temporal/polyfill</code>)</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-temporal-adapter</code></td>
+    </tr>
+  </tbody>
+</table>
+
+Note: if your environment doesn’t support Temporal natively, you’ll need a polyfill (e.g. <code>@js-temporal/polyfill</code> or <code>temporal-polyfill</code>) loaded before using the adapter.
+Temporal uses `Intl.DateTimeFormatOptions` for `MAT_DATE_FORMATS`; parse formats are ignored (Temporal parses ISO strings only).
+
+#### Temporal adapter options
+- `mode`: `date | datetime | zoned` (default: `date`).
+- `timezone` (zoned only): IANA ID like `Europe/Warsaw` or `UTC` (default: system timezone).
+- `calendar`: calendar system for calculations (default: `iso8601`).
+- `outputCalendar`: calendar system for output/formatting (default: same as `calendar`) — MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate/withCalendar
+- `disambiguation` (zoned only): `'compatible' | 'earlier' | 'later' | 'reject'` for DST gaps/overlaps — MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDateTime/toZonedDateTime
+- `offset` (zoned only): `'use' | 'ignore' | 'reject' | 'prefer'` for offset ambiguity on parse — MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime/from
+- `rounding` (zoned only): `{smallestUnit, roundingIncrement?, roundingMode?}` applied to zoned output — MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime/round
+- `overflow`: `reject` (default) or `constrain` for invalid dates.
+
+#### Migration examples (Temporal)
+```ts
+// NativeDateAdapter -> Temporal date-only
+provideTemporalDateAdapter({mode: 'date'});
+// Value: Temporal.PlainDate.from('2024-01-15')
+const value = Temporal.PlainDate.from('2024-01-15');
+```
+
+```ts
+// Moment/Luxon UTC workflows
+provideTemporalDateAdapter({mode: 'zoned', timezone: 'UTC'});
+// Value: Temporal.ZonedDateTime.from('2024-01-15T12:30[UTC]')
+const value = Temporal.ZonedDateTime.from('2024-01-15T12:30[UTC]');
+```
+
+```ts
+// Luxon defaultOutputCalendar equivalent
+provideTemporalDateAdapter({calendar: 'iso8601', outputCalendar: 'japanese'});
+// Values remain ISO; output labels render in Japanese calendar
+```
+
 `provideMomentDateAdapter` or `MatMomentDateModule` (installed via `ng add @angular/material-moment-adapter`)
 
 <table>

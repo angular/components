@@ -48,3 +48,8 @@ api_golden_test_npm_package(
     golden_dir = "goldens/aria",
     npm_package = "src/aria/npm_package",
 )
+
+# Note: material-temporal-adapter API golden tests are not included because
+# api-extractor cannot resolve the global Temporal namespace (similar to how
+# material-moment-adapter, material-luxon-adapter, and material-date-fns-adapter
+# also don't have API golden tests).

@@ -95,6 +95,7 @@ export const commitMessage: CommitMessageConfig = {
     'material-moment-adapter',
     'material-date-fns-adapter',
     'material-luxon-adapter',
+    'material-temporal-adapter',
     'youtube-player',
     'material-angular-io',
   ],
