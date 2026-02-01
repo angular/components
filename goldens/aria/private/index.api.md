@@ -839,6 +839,7 @@ export interface TreeInputs<V> extends Omit<TreeInputs$1<TreeItemPattern<V>, V>,
     currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
     id: SignalLike<string>;
     nav: SignalLike<boolean>;
+    textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 // @public
