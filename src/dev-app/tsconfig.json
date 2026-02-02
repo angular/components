@@ -4,7 +4,6 @@
   "compilerOptions": {
     // Needed for Moment.js since it doesn't have a default export.
     "rootDir": "..",
-    "baseUrl": ".",
     "paths": {
       "@angular/aria": ["../aria"],
       "@angular/aria/*": ["../aria/*"],
