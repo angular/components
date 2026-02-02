@@ -134,7 +134,7 @@ export class Menu<V> {
   readonly tabIndex = computed(() => this._pattern.tabIndex());
 
   /** A callback function triggered when a menu item is selected. */
-  onSelect = output<V>();
+  readonly itemSelected = output<V>();
 
   /** The delay in milliseconds before expanding sub-menus on hover. */
   readonly expansionDelay = input<number>(100); // Arbitrarily chosen.
@@ -151,7 +151,7 @@ export class Menu<V> {
       selectionMode: () => 'explicit',
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-      onSelect: (value: V) => this.onSelect.emit(value),
+      itemSelected: (value: V) => this.itemSelected.emit(value),
     });
 
     afterRenderEffect(() => {
