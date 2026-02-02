@@ -24,7 +24,6 @@
     "target": "es2022",
     "lib": ["es2020", "dom"],
     "types": ["jasmine"],
-    "baseUrl": ".",
     "paths": {
       "@angular/aria": ["./src/aria"],
       "@angular/aria/*": ["./src/aria/*"],

@@ -84,10 +84,6 @@ if (require.main === module) {
       });
     }
 
-    // Base URL for the `tsParser`. The base URL refer to the directory that includes all
-    // package sources that need to be processed by Dgeni.
-    tsParser.options.baseUrl = packagePath;
-
     // This is ensures that the Dgeni TypeScript processor is able to parse node modules such
     // as the Angular packages which might be needed for doc items. e.g. if a class implements
     // the "AfterViewInit" interface from "@angular/core". This needs to be relative to the

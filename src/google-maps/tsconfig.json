@@ -3,7 +3,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "..",
-    "baseUrl": ".",
     "paths": {},
     "types": ["jasmine", "google.maps"]
   },
