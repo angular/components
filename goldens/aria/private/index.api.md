@@ -497,7 +497,7 @@ export class ListboxPattern<V> {
 // @public
 export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
     items: SignalLike<MenuItemPattern<V>[]>;
-    onSelect?: (value: V) => void;
+    itemSelected?: (value: V) => void;
     textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
@@ -533,7 +533,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
     expansionDelay: SignalLike<number>;
     id: SignalLike<string>;
     items: SignalLike<MenuItemPattern<V>[]>;
-    onSelect?: (value: V) => void;
+    itemSelected?: (value: V) => void;
     parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
     textDirection: SignalLike<'ltr' | 'rtl'>;
 }

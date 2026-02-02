@@ -107,7 +107,7 @@ export class MenuBar<V> {
   private readonly _itemPatterns = signal<any[]>([]);
 
   /** A callback function triggered when a menu item is selected. */
-  onSelect = output<V>();
+  readonly itemSelected = output<V>();
 
   constructor() {
     this._pattern = new MenuBarPattern({
@@ -118,7 +118,7 @@ export class MenuBar<V> {
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',
-      onSelect: (value: V) => this.onSelect.emit(value),
+      itemSelected: (value: V) => this.itemSelected.emit(value),
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
     });
