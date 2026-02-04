@@ -1,3 +1,22 @@
+<a name="21.1.3"></a>
+# 21.1.3 "wooden-duck" (2026-02-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4186f740f](https://github.com/angular/components/commit/4186f740faf9b9510002fd2ddab13d49770a7bc5) | fix | **menu:** Add label property for proper aria-label ([#32710](https://github.com/angular/components/pull/32710)) |
+| [d72693582](https://github.com/angular/components/commit/d72693582b7b8947f30d20824d07eb5a12365542) | fix | **toolbar:** show outline on selected items when forced colors active ([#32708](https://github.com/angular/components/pull/32708)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c4f745ce7](https://github.com/angular/components/commit/c4f745ce7aa3b6ef13cd181037ae1076f6e957fa) | fix | **badge:** move warning check later ([#32724](https://github.com/angular/components/pull/32724)) |
+| [910aed3c8](https://github.com/angular/components/commit/910aed3c88717d87e9942cc33ea207e2f6825abf) | fix | **chips:** Example violates axe accessibility tests ([#32679](https://github.com/angular/components/pull/32679)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [591516c93](https://github.com/angular/components/commit/591516c9312f2f710bbcac63955b817f50e6ef84) | perf | **column-resize:** add debounce to column header hover to prevent excessive handler rendering ([#30709](https://github.com/angular/components/pull/30709)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.2"></a>
 # 21.1.2 "glass-bottle" (2026-01-28)
 ### aria
