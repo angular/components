@@ -1,4 +1,4 @@
-The `overlay` package provides a way to open floating panels on the screen.
+﻿The `overlay` package provides a way to open floating panels on the screen.
 
 ### Initial setup
 The CDK overlays depend on a small set of structural styles to work correctly. If you're using
