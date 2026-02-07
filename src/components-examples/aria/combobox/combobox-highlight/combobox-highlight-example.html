@@ -2,6 +2,7 @@
   <div class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input
+      #triggerRef
       ngComboboxInput
       placeholder="Search..."
       [(value)]="searchString"
@@ -9,8 +10,15 @@
     />
   </div>
 
-  <div popover="manual" #popover class="example-popover">
-    <ng-template ngComboboxPopupContainer>
+  <ng-template
+    cdkConnectedOverlay
+    [open]="combobox.expanded()"
+    [hasBackdrop]="false"
+    [width]="panelWidth()"
+    [origin]="triggerRef"
+    ngComboboxPopupContainer
+  >
+    <ng-container *ngIf="combobox.expanded()">
       <div ngListbox class="example-listbox">
         @for (option of options(); track option) {
           <div
@@ -28,6 +36,6 @@
           </div>
         }
       </div>
-    </ng-template>
-  </div>
+    </ng-container>
+  </ng-template>
 </div>
