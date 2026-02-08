@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, OnDestroy, Input, InjectionToken, booleanAttribute} from '@angular/core';
+import {Directive, InjectionToken, Input, OnDestroy, booleanAttribute} from '@angular/core';
+import type {CdkDropList} from './drop-list';
 
 /**
  * Injection token that can be used to reference instances of `CdkDropListGroup`. It serves as
  * alternative token to the actual `CdkDropListGroup` class which could cause unnecessary
  * retention of the class and its directive metadata.
  */
-export const CDK_DROP_LIST_GROUP = new InjectionToken<CdkDropListGroup<unknown>>(
+export const CDK_DROP_LIST_GROUP = new InjectionToken<CdkDropListGroup<CdkDropList>>(
   'CdkDropListGroup',
 );
 
