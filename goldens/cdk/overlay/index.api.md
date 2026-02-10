@@ -394,6 +394,7 @@ export class OverlayConfig {
     direction?: Direction | Directionality;
     disableAnimations?: boolean;
     disposeOnNavigation?: boolean;
+    eventPredicate?: (event: Event) => boolean;
     hasBackdrop?: boolean;
     height?: number | string;
     maxHeight?: number | string;
@@ -501,6 +502,7 @@ export class OverlayRef implements PortalOutlet {
     detachBackdrop(): void;
     detachments(): Observable<void>;
     dispose(): void;
+    get eventPredicate(): ((event: Event) => boolean) | null;
     getConfig(): OverlayConfig;
     getDirection(): Direction;
     hasAttached(): boolean;

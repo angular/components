@@ -334,6 +334,34 @@ describe('OverlayOutsideClickDispatcher', () => {
     thirdOverlayRef.dispose();
   });
 
+  it('should not dispatch to overlays whose eventPredicate does not allow the event', () => {
+    const eventPredicate = () => false;
+    const overlayOne = createOverlayRef(injector, {eventPredicate});
+    overlayOne.attach(new ComponentPortal(TestComponent));
+    const overlayTwo = createOverlayRef(injector, {eventPredicate});
+    overlayTwo.attach(new ComponentPortal(TestComponent));
+
+    const overlayOneSpy = jasmine.createSpy('overlayOne mouse click event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo mouse click event spy');
+
+    overlayOne.outsidePointerEvents().subscribe(overlayOneSpy);
+    overlayTwo.outsidePointerEvents().subscribe(overlayTwoSpy);
+
+    outsideClickDispatcher.add(overlayOne);
+    outsideClickDispatcher.add(overlayTwo);
+
+    const button = document.createElement('button');
+    document.body.appendChild(button);
+    button.click();
+
+    expect(overlayOneSpy).not.toHaveBeenCalled();
+    expect(overlayTwoSpy).not.toHaveBeenCalled();
+
+    button.remove();
+    overlayOne.dispose();
+    overlayTwo.dispose();
+  });
+
   describe('change detection behavior', () => {
     it('should not run change detection if there is no portal attached to the overlay', () => {
       spyOn(appRef, 'tick');

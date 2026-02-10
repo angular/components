@@ -8,6 +8,7 @@
 
 import {Injectable, OnDestroy, inject, DOCUMENT} from '@angular/core';
 import type {OverlayRef} from '../overlay-ref';
+import {Subject} from 'rxjs';
 
 /**
  * Service for dispatching events that land on the body to appropriate overlay ref,
@@ -53,4 +54,17 @@ export abstract class BaseOverlayDispatcher implements OnDestroy {
 
   /** Detaches the global event listener. */
   protected abstract detach(): void;
+
+  /** Determines whether an overlay is allowed to receive an event. */
+  protected canReceiveEvent<T>(overlayRef: OverlayRef, event: Event, stream: Subject<T>): boolean {
+    if (stream.observers.length < 1) {
+      return false;
+    }
+
+    if (overlayRef.eventPredicate) {
+      return overlayRef.eventPredicate(event);
+    }
+
+    return true;
+  }
 }

@@ -67,6 +67,12 @@ export class OverlayConfig {
    */
   usePopover?: boolean;
 
+  /**
+   * Function that determines if the overlay should receive a specific
+   * event or if the event should go to the next overlay in the stack.
+   */
+  eventPredicate?: (event: Event) => boolean;
+
   constructor(config?: OverlayConfig) {
     if (config) {
       // Use `Iterable` instead of `Array` because TypeScript, as of 3.6.3,
