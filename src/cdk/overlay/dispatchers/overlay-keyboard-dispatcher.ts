@@ -54,8 +54,9 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
       // (e.g. for select and autocomplete). We skip overlays without keydown event subscriptions,
       // because we don't want overlays that don't handle keyboard events to block the ones below
       // them that do.
-      if (overlays[i]._keydownEvents.observers.length > 0) {
-        this._ngZone.run(() => overlays[i]._keydownEvents.next(event));
+      const overlayRef = overlays[i];
+      if (this.canReceiveEvent(overlayRef, event, overlayRef._keydownEvents)) {
+        this._ngZone.run(() => overlayRef._keydownEvents.next(event));
         break;
       }
     }

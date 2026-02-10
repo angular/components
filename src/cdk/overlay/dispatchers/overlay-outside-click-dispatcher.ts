@@ -107,7 +107,13 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     // the loop.
     for (let i = overlays.length - 1; i > -1; i--) {
       const overlayRef = overlays[i];
-      if (overlayRef._outsidePointerEvents.observers.length < 1 || !overlayRef.hasAttached()) {
+      const outsidePointerEvents = overlayRef._outsidePointerEvents;
+
+      if (
+        // TODO(crisbeto): this should move into `canReceiveEvent` but may be breaking.
+        !overlayRef.hasAttached() ||
+        !this.canReceiveEvent(overlayRef, event, outsidePointerEvents)
+      ) {
         continue;
       }
 
@@ -121,7 +127,6 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
         break;
       }
 
-      const outsidePointerEvents = overlayRef._outsidePointerEvents;
       /** @breaking-change 14.0.0 _ngZone will be required. */
       if (this._ngZone) {
         this._ngZone.run(() => outsidePointerEvents.next(event));
