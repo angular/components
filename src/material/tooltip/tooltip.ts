@@ -543,6 +543,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
+      eventPredicate: this._overlayEventPredicate,
     });
 
     this._updatePosition(this._overlayRef);
@@ -561,11 +562,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .keydownEvents()
       .pipe(takeUntil(this._destroyed))
       .subscribe(event => {
-        if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
-          event.preventDefault();
-          event.stopPropagation();
-          this._ngZone.run(() => this.hide(0));
-        }
+        // Note: we don't check the `keyCode` since it's covered by the `eventPredicate` above.
+        event.preventDefault();
+        event.stopPropagation();
+        this._ngZone.run(() => this.hide(0));
       });
 
     if (this._defaultOptions?.disableTooltipInteractivity) {
@@ -935,6 +935,18 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       );
     }
   }
+
+  /** Determines which events should be routed to the tooltip overlay. */
+  private _overlayEventPredicate = (event: Event) => {
+    if (event.type === 'keydown') {
+      return (
+        this._isTooltipVisible() &&
+        (event as KeyboardEvent).keyCode === ESCAPE &&
+        !hasModifierKey(event as KeyboardEvent)
+      );
+    }
+    return true;
+  };
 }
 
 /**
