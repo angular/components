@@ -158,8 +158,8 @@ export class MenuPattern<V> {
   /** Handles keyboard events for the menu. */
   keydownManager = computed(() => {
     return new KeyboardEventManager()
-      .on('ArrowDown', () => this.next())
-      .on('ArrowUp', () => this.prev())
+      .on('ArrowDown', () => this.next(), {ignoreRepeat: false})
+      .on('ArrowUp', () => this.prev(), {ignoreRepeat: false})
       .on('Home', () => this.first())
       .on('End', () => this.last())
       .on('Enter', () => this.trigger())
@@ -485,8 +485,8 @@ export class MenuBarPattern<V> {
   /** Handles keyboard events for the menu. */
   keydownManager = computed(() => {
     return new KeyboardEventManager()
-      .on(this._nextKey, () => this.next())
-      .on(this._previousKey, () => this.prev())
+      .on(this._nextKey, () => this.next(), {ignoreRepeat: false})
+      .on(this._previousKey, () => this.prev(), {ignoreRepeat: false})
       .on('End', () => this.listBehavior.last())
       .on('Home', () => this.listBehavior.first())
       .on('Enter', () => this.inputs.activeItem()?.open({first: true}))

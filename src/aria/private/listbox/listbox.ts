@@ -79,8 +79,8 @@ export class ListboxPattern<V> {
 
     if (this.readonly()) {
       return manager
-        .on(this.prevKey, () => this.listBehavior.prev())
-        .on(this.nextKey, () => this.listBehavior.next())
+        .on(this.prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first())
         .on('End', () => this.listBehavior.last())
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
@@ -88,8 +88,8 @@ export class ListboxPattern<V> {
 
     if (!this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.listBehavior.prev())
-        .on(this.nextKey, () => this.listBehavior.next())
+        .on(this.prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first())
         .on('End', () => this.listBehavior.last())
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
@@ -97,8 +97,8 @@ export class ListboxPattern<V> {
 
     if (this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}))
-        .on(this.nextKey, () => this.listBehavior.next({selectOne: true}))
+        .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next({selectOne: true}), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first({selectOne: true}))
         .on('End', () => this.listBehavior.last({selectOne: true}))
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key, {selectOne: true}));
@@ -107,8 +107,12 @@ export class ListboxPattern<V> {
     if (this.inputs.multi()) {
       manager
         .on(Modifier.Any, 'Shift', () => this.listBehavior.anchor(this.listBehavior.activeIndex()))
-        .on(Modifier.Shift, this.prevKey, () => this.listBehavior.prev({selectRange: true}))
-        .on(Modifier.Shift, this.nextKey, () => this.listBehavior.next({selectRange: true}))
+        .on(Modifier.Shift, this.prevKey, () => this.listBehavior.prev({selectRange: true}), {
+          ignoreRepeat: false,
+        })
+        .on(Modifier.Shift, this.nextKey, () => this.listBehavior.next({selectRange: true}), {
+          ignoreRepeat: false,
+        })
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
           this.listBehavior.first({selectRange: true, anchor: false}),
         )
@@ -137,8 +141,12 @@ export class ListboxPattern<V> {
 
     if (this.inputs.multi() && this.followFocus()) {
       manager
-        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.listBehavior.prev())
-        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.listBehavior.next())
+        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.listBehavior.prev(), {
+          ignoreRepeat: false,
+        })
+        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.listBehavior.next(), {
+          ignoreRepeat: false,
+        })
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.listBehavior.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => this.listBehavior.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => this.listBehavior.first())

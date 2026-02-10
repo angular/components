@@ -216,8 +216,8 @@ export class TreePattern<V> implements TreeInputs<V> {
     const tree = this.treeBehavior;
 
     manager
-      .on(this.prevKey, () => tree.prev({selectOne: this.followFocus()}))
-      .on(this.nextKey, () => tree.next({selectOne: this.followFocus()}))
+      .on(this.prevKey, () => tree.prev({selectOne: this.followFocus()}), {ignoreRepeat: false})
+      .on(this.nextKey, () => tree.next({selectOne: this.followFocus()}), {ignoreRepeat: false})
       .on('Home', () => tree.first({selectOne: this.followFocus()}))
       .on('End', () => tree.last({selectOne: this.followFocus()}))
       .on(this.typeaheadRegexp, e => tree.search(e.key, {selectOne: this.followFocus()}))
@@ -230,8 +230,12 @@ export class TreePattern<V> implements TreeInputs<V> {
         // TODO: Tracking the anchor by index can break if the
         // tree is expanded or collapsed causing the index to change.
         .on(Modifier.Any, 'Shift', () => tree.anchor(this.treeBehavior.activeIndex()))
-        .on(Modifier.Shift, this.prevKey, () => tree.prev({selectRange: true}))
-        .on(Modifier.Shift, this.nextKey, () => tree.next({selectRange: true}))
+        .on(Modifier.Shift, this.prevKey, () => tree.prev({selectRange: true}), {
+          ignoreRepeat: false,
+        })
+        .on(Modifier.Shift, this.nextKey, () => tree.next({selectRange: true}), {
+          ignoreRepeat: false,
+        })
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
           tree.first({selectRange: true, anchor: false}),
         )
@@ -258,8 +262,8 @@ export class TreePattern<V> implements TreeInputs<V> {
 
     if (this.inputs.multi() && this.followFocus()) {
       manager
-        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => tree.prev())
-        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => tree.next())
+        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => tree.prev(), {ignoreRepeat: false})
+        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => tree.next(), {ignoreRepeat: false})
         .on([Modifier.Ctrl, Modifier.Meta], this.expandKey, () => this._expandOrFirstChild())
         .on([Modifier.Ctrl, Modifier.Meta], this.collapseKey, () => this._collapseOrParent())
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => tree.toggle())

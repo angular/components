@@ -181,11 +181,15 @@ export class GridCellPattern implements GridCell {
     // Start list navigation.
     manager
       .on('Escape', () => this.stopNavigation())
-      .on(this.prevKey(), () =>
-        this._advance(() => this.navigationBehavior.prev({focusElement: false})),
+      .on(
+        this.prevKey(),
+        () => this._advance(() => this.navigationBehavior.prev({focusElement: false})),
+        {ignoreRepeat: false},
       )
-      .on(this.nextKey(), () =>
-        this._advance(() => this.navigationBehavior.next({focusElement: false})),
+      .on(
+        this.nextKey(),
+        () => this._advance(() => this.navigationBehavior.next({focusElement: false})),
+        {ignoreRepeat: false},
       )
       .on('Home', () => this._advance(() => this.navigationBehavior.next({focusElement: false})))
       .on('End', () => this._advance(() => this.navigationBehavior.next({focusElement: false})));

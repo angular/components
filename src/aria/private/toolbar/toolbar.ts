@@ -80,10 +80,10 @@ export class ToolbarPattern<V> {
     const manager = new KeyboardEventManager();
 
     return manager
-      .on(this._nextKey, () => this.listBehavior.next())
-      .on(this._prevKey, () => this.listBehavior.prev())
-      .on(this._altNextKey, () => this._groupNext())
-      .on(this._altPrevKey, () => this._groupPrev())
+      .on(this._nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
+      .on(this._prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+      .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
+      .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false})
       .on(' ', () => this.select())
       .on('Enter', () => this.select())
       .on('Home', () => this.listBehavior.first())
@@ -179,7 +179,7 @@ export class ToolbarPattern<V> {
 
   /** Handles click events for the toolbar. */
   onClick(event: MouseEvent) {
-    if (this.disabled()) return;
+    if (this.disabled() || (event as PointerEvent).pointerType === '') return;
     this._goto(event);
   }
 
