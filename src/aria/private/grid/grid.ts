@@ -116,10 +116,10 @@ export class GridPattern {
       selectOne: this.inputs.enableSelection() && this.inputs.selectionMode() === 'follow',
     };
     manager
-      .on('ArrowUp', () => this.gridBehavior.up(opts))
-      .on('ArrowDown', () => this.gridBehavior.down(opts))
-      .on(this.prevColKey(), () => this.gridBehavior.left(opts))
-      .on(this.nextColKey(), () => this.gridBehavior.right(opts))
+      .on('ArrowUp', () => this.gridBehavior.up(opts), {ignoreRepeat: false})
+      .on('ArrowDown', () => this.gridBehavior.down(opts), {ignoreRepeat: false})
+      .on(this.prevColKey(), () => this.gridBehavior.left(opts), {ignoreRepeat: false})
+      .on(this.nextColKey(), () => this.gridBehavior.right(opts), {ignoreRepeat: false})
       .on('Home', () => this.gridBehavior.firstInRow(opts))
       .on('End', () => this.gridBehavior.lastInRow(opts))
       .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first(opts))

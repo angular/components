@@ -250,8 +250,8 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     }
 
     manager
-      .on('ArrowDown', () => this.next())
-      .on('ArrowUp', () => this.prev())
+      .on('ArrowDown', () => this.next(), {ignoreRepeat: false})
+      .on('ArrowUp', () => this.prev(), {ignoreRepeat: false})
       .on('Home', () => this.first())
       .on('End', () => this.last());
 
