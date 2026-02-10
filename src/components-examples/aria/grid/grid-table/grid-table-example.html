@@ -34,8 +34,8 @@
             role="button"
             ngGridCellWidget
             widgetType="editable"
-            (onActivate)="startEdit($event, task, summaryInput)"
-            (onDeactivate)="completeEdit($event, task)"
+            (activated)="startEdit($event, task, summaryInput)"
+            (deactivated)="completeEdit($event, task)"
             (click)="onClickEdit(widget, task, summaryInput)"
             #widget="ngGridCellWidget"
           >
@@ -59,7 +59,7 @@
             role="button"
             ngGridCellWidget
             widgetType="complex"
-            (onActivate)="select.focus()"
+            (activated)="select.focus()"
             #widget="ngGridCellWidget"
           >
             <mat-form-field subscriptSizing="dynamic">
@@ -77,7 +77,7 @@
               role="button"
               ngGridCellWidget
               widgetType="complex"
-              (onActivate)="chips.focus()"
+              (activated)="chips.focus()"
               #widget="ngGridCellWidget"
             >
               <grid-chips [(values)]="task.tags" [tabindex]="-1" #chips />
@@ -89,7 +89,7 @@
               ngGridCellWidget
               widgetType="editable"
               placeholder="add new tag"
-              (onDeactivate)="addTag($event, task, tagInput)"
+              (deactivated)="addTag($event, task, tagInput)"
               #tagInput
             />
           </div>

@@ -254,43 +254,43 @@ describe('Standalone Menu Pattern', () => {
   describe('Selection', () => {
     it('should select an item on click', () => {
       const items = menu.inputs.items();
-      menu.inputs.onSelect = jasmine.createSpy('onSelect');
+      menu.inputs.itemSelected = jasmine.createSpy('itemSelected');
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
+      expect(menu.inputs.itemSelected).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on enter', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSelect = jasmine.createSpy('onSelect');
+      menu.inputs.itemSelected = jasmine.createSpy('itemSelected');
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
+      expect(menu.inputs.itemSelected).toHaveBeenCalledWith('b');
     });
 
     it('should select an item on space', () => {
       const items = menu.inputs.items();
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSelect = jasmine.createSpy('onSelect');
+      menu.inputs.itemSelected = jasmine.createSpy('itemSelected');
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSelect).toHaveBeenCalledWith('b');
+      expect(menu.inputs.itemSelected).toHaveBeenCalledWith('b');
     });
 
     it('should not select a disabled item', () => {
       const items = menu.inputs.items() as TestMenuItem[];
       items[1].inputs.disabled.set(true);
       menu.inputs.activeItem.set(items[1]);
-      menu.inputs.onSelect = jasmine.createSpy('onSelect');
+      menu.inputs.itemSelected = jasmine.createSpy('itemSelected');
 
       menu.onClick(clickMenuItem(items, 1));
-      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
+      expect(menu.inputs.itemSelected).not.toHaveBeenCalled();
 
       menu.onKeydown(enter());
-      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
+      expect(menu.inputs.itemSelected).not.toHaveBeenCalled();
 
       menu.onKeydown(space());
-      expect(menu.inputs.onSelect).not.toHaveBeenCalled();
+      expect(menu.inputs.itemSelected).not.toHaveBeenCalled();
     });
   });
 

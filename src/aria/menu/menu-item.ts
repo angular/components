@@ -20,9 +20,10 @@ import type {MenuBar} from './menu-bar';
  * or action a user can take. They can also act as triggers for sub-menus.
  *
  * ```html
- * <div ngMenuItem (onSelect)="doAction()">Action Item</div>
- *
- * <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ * <div ngMenu (itemSelected)="doAction()">
+ *   <div ngMenuItem >Action Item</div>
+ *   <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ * </div>
  * ```
  *
  * @developerPreview 21.0

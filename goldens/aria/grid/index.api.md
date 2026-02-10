@@ -60,21 +60,21 @@ export class GridCell {
 export class GridCellWidget {
     constructor();
     activate(): void;
+    readonly activated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly active: Signal<boolean>;
     deactivate(): void;
+    readonly deactivated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly focusTarget: _angular_core.InputSignal<ElementRef<any> | HTMLElement | undefined>;
     readonly id: _angular_core.InputSignal<string>;
     get isActivated(): Signal<boolean>;
-    readonly onActivate: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
-    readonly onDeactivate: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly _pattern: GridCellWidgetPattern;
     protected readonly _tabIndex: Signal<number>;
     readonly tabindex: _angular_core.InputSignal<number | undefined>;
     readonly widgetType: _angular_core.InputSignal<"simple" | "complex" | "editable">;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCellWidget, "[ngGridCellWidget]", ["ngGridCellWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "widgetType": { "alias": "widgetType"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "focusTarget": { "alias": "focusTarget"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "onActivate": "onActivate"; "onDeactivate": "onDeactivate"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCellWidget, "[ngGridCellWidget]", ["ngGridCellWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "widgetType": { "alias": "widgetType"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "focusTarget": { "alias": "focusTarget"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "activated": "activated"; "deactivated": "deactivated"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<GridCellWidget, never>;
 }

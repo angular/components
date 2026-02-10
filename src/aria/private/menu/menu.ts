@@ -16,7 +16,7 @@ export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
   items: SignalLike<MenuItemPattern<V>[]>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSelect?: (value: V) => void;
+  itemSelected?: (value: V) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -34,7 +34,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
   parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
 
   /** Callback function triggered when a menu item is selected. */
-  onSelect?: (value: V) => void;
+  itemSelected?: (value: V) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -370,12 +370,12 @@ export class MenuPattern<V> {
 
       if (!item.submenu() && isMenuBar) {
         root.close();
-        root?.inputs.onSelect?.(item.value());
+        root?.inputs.itemSelected?.(item.value());
       }
 
       if (!item.submenu() && isMenu) {
         root.inputs.activeItem()?.close({refocus: true});
-        root?.inputs.onSelect?.(item.value());
+        root?.inputs.itemSelected?.(item.value());
       }
     }
   }

@@ -74,10 +74,10 @@ export class GridCellWidget {
   readonly focusTarget = input<ElementRef | HTMLElement | undefined>();
 
   /** Emits when the widget is activated. */
-  readonly onActivate = output<KeyboardEvent | FocusEvent | undefined>();
+  readonly activated = output<KeyboardEvent | FocusEvent | undefined>();
 
   /** Emits when the widget is deactivated. */
-  readonly onDeactivate = output<KeyboardEvent | FocusEvent | undefined>();
+  readonly deactivated = output<KeyboardEvent | FocusEvent | undefined>();
 
   /** The tabindex override. */
   readonly tabindex = input<number | undefined>();
@@ -96,10 +96,8 @@ export class GridCellWidget {
     element: () => this.element,
     cell: () => this._cell._pattern,
     focusTarget: computed(() => {
-      if (this.focusTarget() instanceof ElementRef) {
-        return (this.focusTarget() as ElementRef).nativeElement;
-      }
-      return this.focusTarget();
+      const target = this.focusTarget();
+      return target instanceof ElementRef ? target.nativeElement : target;
     }),
   });
 
@@ -112,14 +110,14 @@ export class GridCellWidget {
     afterRenderEffect(() => {
       const activateEvent = this._pattern.lastActivateEvent();
       if (activateEvent) {
-        this.onActivate.emit(activateEvent);
+        this.activated.emit(activateEvent);
       }
     });
 
     afterRenderEffect(() => {
       const deactivateEvent = this._pattern.lastDeactivateEvent();
       if (deactivateEvent) {
-        this.onDeactivate.emit(deactivateEvent);
+        this.deactivated.emit(deactivateEvent);
       }
     });
   }

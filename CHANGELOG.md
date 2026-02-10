@@ -1,3 +1,43 @@
+<a name="21.2.0-next.3"></a>
+# 21.2.0-next.3 "wooden-kiwi" (2026-02-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [31ff7f26b](https://github.com/angular/components/commit/31ff7f26b5dd08c1d48dc5ebb8f1a9ba57a2dc9c) | fix | **grid:** align output naming with styleguide |
+| [f1157b1c8](https://github.com/angular/components/commit/f1157b1c88b78b87ae6e16a74ff2445aeb4156bf) | fix | **menu:** Add label property for proper aria-label ([#32710](https://github.com/angular/components/pull/32710)) |
+| [d030725f4](https://github.com/angular/components/commit/d030725f462d93bbca9918f153a48b5631ef0476) | fix | **menu:** align output naming with styleguide |
+| [06e3d756c](https://github.com/angular/components/commit/06e3d756ca1114ee05d785cd38a7e144795b709e) | fix | **toolbar:** show outline on selected items when forced colors active ([#32708](https://github.com/angular/components/pull/32708)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a3f2ec8a9](https://github.com/angular/components/commit/a3f2ec8a94aadf459797114d31ba487741b37d35) | fix | **badge:** move warning check later ([#32724](https://github.com/angular/components/pull/32724)) |
+| [865e3d50c](https://github.com/angular/components/commit/865e3d50ca86b237cdf0c78ca411164dfb0a85a1) | fix | **chips:** Example violates axe accessibility tests ([#32679](https://github.com/angular/components/pull/32679)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6fd833d2b](https://github.com/angular/components/commit/6fd833d2bcf1c0745ddff8fadb63210c31cf8b07) | perf | **column-resize:** add debounce to column header hover to prevent excessive handler rendering ([#30709](https://github.com/angular/components/pull/30709)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.1.3"></a>
+# 21.1.3 "wooden-duck" (2026-02-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4186f740f](https://github.com/angular/components/commit/4186f740faf9b9510002fd2ddab13d49770a7bc5) | fix | **menu:** Add label property for proper aria-label ([#32710](https://github.com/angular/components/pull/32710)) |
+| [d72693582](https://github.com/angular/components/commit/d72693582b7b8947f30d20824d07eb5a12365542) | fix | **toolbar:** show outline on selected items when forced colors active ([#32708](https://github.com/angular/components/pull/32708)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c4f745ce7](https://github.com/angular/components/commit/c4f745ce7aa3b6ef13cd181037ae1076f6e957fa) | fix | **badge:** move warning check later ([#32724](https://github.com/angular/components/pull/32724)) |
+| [910aed3c8](https://github.com/angular/components/commit/910aed3c88717d87e9942cc33ea207e2f6825abf) | fix | **chips:** Example violates axe accessibility tests ([#32679](https://github.com/angular/components/pull/32679)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [591516c93](https://github.com/angular/components/commit/591516c9312f2f710bbcac63955b817f50e6ef84) | perf | **column-resize:** add debounce to column header hover to prevent excessive handler rendering ([#30709](https://github.com/angular/components/pull/30709)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0-next.2"></a>
 # 21.2.0-next.2 "plastic-bottle" (2026-01-29)
 ### aria
