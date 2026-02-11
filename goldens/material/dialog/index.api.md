@@ -143,7 +143,7 @@ export class MatDialogConfig<D = any> {
     minWidth?: number | string;
     panelClass?: string | string[];
     position?: DialogPosition;
-    restoreFocus?: boolean;
+    restoreFocus?: boolean | string | HTMLElement;
     role?: DialogRole;
     scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;
