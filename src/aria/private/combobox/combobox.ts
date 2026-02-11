@@ -641,8 +641,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   select(opts: {item?: T; commit?: boolean; close?: boolean} = {}) {
     const controls = this.listControls();
 
+    // When no item is specified (e.g. on keyboard toggle), get the active item instead.
+    // Note: this is only necessary for disabled check, as select/toggle will check active item too.
     const item = opts.item ?? controls?.getActiveItem();
 
+    // Check if item is disabled before proceeding.
     if (item?.disabled()) {
       return;
     }
