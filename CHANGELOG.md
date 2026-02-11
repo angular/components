@@ -1,3 +1,22 @@
+<a name="21.1.4"></a>
+# 21.1.4 "zircaloy-gondola" (2026-02-11)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0bd0ad639](https://github.com/angular/components/commit/0bd0ad6397dd4bbedd58a6df189c9dfbcec037b5) | perf | **grid:** performance when selecting in a large grid ([#32766](https://github.com/angular/components/pull/32766)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [84b5dd766](https://github.com/angular/components/commit/84b5dd766a7a7c293614bd0b792d35bffccefb2a) | fix | **radio:** hide empty labels ([#32754](https://github.com/angular/components/pull/32754)) |
+| [58870b511](https://github.com/angular/components/commit/58870b5117ef910b5ae3c6fc2ea6cd6e2f712aa2) | fix | **slide-toggle:** overly broad selector ([#32740](https://github.com/angular/components/pull/32740)) |
+| [d175b0180](https://github.com/angular/components/commit/d175b0180e7e2b35cf7c10db3b76da394c8b35f4) | fix | **tooltip:** do not block events to other overlays |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2a269598a](https://github.com/angular/components/commit/2a269598af0fc30cae41378cb2a92112738c26fc) | fix | change aria keyboard manager to only handle repeated events in correct places ([#32728](https://github.com/angular/components/pull/32728)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.3"></a>
 # 21.1.3 "wooden-duck" (2026-02-04)
 ### aria
