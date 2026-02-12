@@ -22,6 +22,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 import {TREE_NODES, TreeNode} from '../data';
 import {NgTemplateOutlet} from '@angular/common';
 
@@ -39,13 +40,15 @@ import {NgTemplateOutlet} from '@angular/common';
     TreeItem,
     TreeItemGroup,
     NgTemplateOutlet,
+    CdkConnectedOverlay,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxTreeManualExample {
-  popover = viewChild<ElementRef>('popover');
   tree = viewChild<Tree<TreeNode>>(Tree);
   combobox = viewChild<Combobox<any>>(Combobox);
+
+  panelWidth = signal<number | undefined>(undefined);
 
   searchString = signal('');
 
@@ -79,26 +82,14 @@ export class ComboboxTreeManualExample {
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      if (combobox.expanded()) {
+        const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+        this.panelWidth(comboboxRect?.width);
+      } else {
+        this.panelWidth(undefined);
+      }
       this.tree()?.scrollActiveItemIntoView();
     });
-  }
-
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
-    }
-
-    popover.nativeElement.showPopover();
   }
 }

@@ -148,6 +148,55 @@ attribute, or the `aria-labelledby` attribute.
 `MatAutocomplete` preserves focus on the text trigger, using `aria-activedescendant` to support
 navigation though the autocomplete options.
 
+### Making combobox/autocomplete overlays consistent with menus
+
+Some implementations render the combobox panel into the DOM always and hide it with CSS (for
+example by setting `visibility: hidden` or `opacity: 0`). This can cause differences in behavior
+compared to components (like menus) that attach the overlay only when the panel is opened. The
+differences can affect keyboard event targeting, focus handling, and performance when many
+comboboxes are present.
+
+Recommended approach:
+- Render the overlay only when the panel is open (attach/detach) or use the CDK "popover"
+  insertion strategy which places the panel inline with the origin when appropriate. This keeps
+  the menu and combobox behavior consistent and avoids relying on CSS to toggle visibility.
+
+How to opt-in
+- For template-driven overlays (via `cdkConnectedOverlay`) set the `cdkConnectedOverlayUsePopover`
+  input to `'inline'` or a `FlexibleOverlayPopoverLocation` value so that the overlay will be
+  inserted as a popover when supported:
+
+```html
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOrigin]="trigger"
+             [cdkConnectedOverlayOpen]="isOpen"
+             [cdkConnectedOverlayUsePopover]="'inline'"
+             [cdkConnectedOverlayPositions]="positions">
+  <!-- panel content -->
+</ng-template>
+```
+
+- For components that create an `OverlayRef` programmatically (like `MatAutocompleteTrigger`),
+  ensure the position strategy uses `withPopoverLocation('inline')` when appropriate. The
+  autocomplete implementation in this repo already uses `withPopoverLocation('inline')` in
+  `_getOverlayPosition()`; if you have custom combobox code, apply the same strategy:
+
+```ts
+const strategy = createFlexibleConnectedPositionStrategy(injector, origin)
+  .withFlexibleDimensions(false)
+  .withPush(false)
+  .withPopoverLocation('inline');
+
+const overlayRef = createOverlayRef(injector, {positionStrategy: strategy, width});
+```
+
+Notes
+- After switching to inline/popover insertion, verify keyboard navigation and focus behavior in
+  complex interactions (e.g., nested modals or form fields). If you rely on `visibility: hidden`
+  to keep the panel in the DOM for styling reasons, consider moving that styling into the
+  panel's classes and controlling rendering via the overlay open state instead.
+
+
 By default, `MatAutocomplete` displays a checkmark to identify the selected item. While you can hide
 the checkmark indicator via `hideSingleSelectionIndicator`, this makes the component less accessible
 by making it harder or impossible for users to visually identify selected items.

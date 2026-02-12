@@ -16,6 +16,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 
 @Directive({
   selector: 'button[toolbar-button]',
@@ -70,6 +71,7 @@ export class SimpleToolbarRadioButton {
     Listbox,
     Option,
     ToolbarWidget,
+    CdkConnectedOverlay,
   ],
   styleUrl: 'toolbar-common.css',
   host: {class: 'example-combobox-container'},
@@ -88,8 +90,15 @@ export class SimpleToolbarRadioButton {
         >
       </div>
 
-      <div popover="manual" #popover class="example-popover">
-        <ng-template ngComboboxPopupContainer>
+      <ng-template
+        cdkConnectedOverlay
+        [open]="combobox.expanded()"
+        [hasBackdrop]="false"
+        [width]="panelWidth()"
+        [origin]="triggerRef"
+        ngComboboxPopupContainer
+      >
+        <ng-container *ngIf="combobox.expanded()">
           <div ngListbox [values]="[value()]" class="example-listbox">
             @for (option of options; track option) {
               <div ngOption [value]="option" [label]="option" class="example-option">
@@ -100,43 +109,32 @@ export class SimpleToolbarRadioButton {
               </div>
             }
           </div>
-        </ng-template>
-      </div>
+        </ng-container>
+      </ng-template>
     </div>
   `,
 })
 export class SimpleCombobox {
   dir = inject(Directionality).valueSignal;
-  popover = viewChild<ElementRef>('popover');
   listbox = viewChild<Listbox<any>>(Listbox);
   combobox = viewChild<Combobox<any>>(Combobox);
+
+  panelWidth = signal<number | undefined>(undefined);
 
   value = signal('Normal text');
   options = ['Normal text', 'Title', 'Subtitle', 'Heading 1', 'Heading 2', 'Heading 3'];
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      if (combobox.expanded()) {
+        const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+        this.panelWidth(comboboxRect?.width);
+      } else {
+        this.panelWidth(undefined);
+      }
 
       this.listbox()?.scrollActiveItemIntoView();
     });
-  }
-
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
-    }
-
-    popover.nativeElement.showPopover();
   }
 }

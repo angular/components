@@ -2,6 +2,7 @@
   <div class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input
+      #triggerRef
       ngComboboxInput
       placeholder="Search..."
       [(value)]="searchString"
@@ -9,25 +10,30 @@
     />
   </div>
 
-  <div popover="manual" #popover class="example-popover">
-    <ng-template ngComboboxPopupContainer>
-      <div ngListbox class="example-listbox">
-        @for (option of options(); track option) {
-          <div
-            class="example-option example-selectable example-stateful"
-            ngOption
-            [value]="option"
-            [label]="option"
+  <ng-template
+    cdkConnectedOverlay
+    ngComboboxPopupContainer
+    [cdkConnectedOverlayOrigin]="triggerRef"
+    [cdkConnectedOverlayOpen]="combobox.expanded()"
+    [cdkConnectedOverlayUsePopover]="'inline'"
+    [cdkConnectedOverlayWidth]="panelWidth()"
+  >
+    <div ngListbox class="example-listbox">
+      @for (option of options(); track option) {
+        <div
+          class="example-option example-selectable example-stateful"
+          ngOption
+          [value]="option"
+          [label]="option"
+        >
+          <span>{{option}}</span>
+          <span
+            aria-hidden="true"
+            class="material-symbols-outlined example-icon example-selected-icon"
+            >check</span
           >
-            <span>{{option}}</span>
-            <span
-              aria-hidden="true"
-              class="material-symbols-outlined example-icon example-selected-icon"
-              >check</span
-            >
-          </div>
-        }
-      </div>
-    </ng-template>
-  </div>
+        </div>
+      }
+    </div>
+  </ng-template>
 </div>
