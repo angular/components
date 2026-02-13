@@ -17,6 +17,7 @@ import {
   HorizontalConnectionPos,
   OverlayConfig,
   OverlayRef,
+  OVERLAY_DEFAULT_CONFIG,
   ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
@@ -359,6 +360,9 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
    * @returns OverlayConfig
    */
   private _getOverlayConfig(menu: MatMenuPanel): OverlayConfig {
+    const inline =
+      this._injector.get(OVERLAY_DEFAULT_CONFIG, null, {optional: true})?.alwaysInline ?? false;
+
     return new OverlayConfig({
       positionStrategy: createFlexibleConnectedPositionStrategy(
         this._injector,
@@ -366,12 +370,14 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
       )
         .withLockedPosition()
         .withGrowAfterOpen()
+        .withPopoverLocation(inline ? 'inline' : 'global')
         .withTransformOriginOn('.mat-menu-panel, .mat-mdc-menu-panel'),
       backdropClass: menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       panelClass: menu.overlayPanelClass,
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir || 'ltr',
       disableAnimations: this._animationsDisabled,
+      usePopover: true,
     });
   }
 
