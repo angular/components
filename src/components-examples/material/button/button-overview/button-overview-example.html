@@ -4,6 +4,16 @@
     <button matButton>Basic</button>
     <button matButton disabled>Disabled</button>
     <a matButton href="https://www.google.com/" target="_blank">Link</a>
+    <button matButton showProgress="true">
+      Progress
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
   </div>
 </section>
 <mat-divider/>
@@ -13,6 +23,16 @@
     <button matButton="elevated">Basic</button>
     <button matButton="elevated" disabled>Disabled</button>
     <a matButton="elevated" href="https://www.google.com/" target="_blank">Link</a>
+    <button matButton="elevated" showProgress="true">
+      Progress
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
   </div>
 </section>
 <mat-divider/>
@@ -22,6 +42,16 @@
     <button matButton="outlined">Basic</button>
     <button matButton="outlined" disabled>Disabled</button>
     <a matButton="outlined" href="https://www.google.com/" target="_blank">Link</a>
+    <button matButton="outlined" showProgress="true">
+      Progress
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
   </div>
 </section>
 <mat-divider/>
@@ -31,6 +61,16 @@
     <button matButton="filled">Basic</button>
     <button matButton="filled" disabled>Disabled</button>
     <a matButton="filled" href="https://www.google.com/" target="_blank">Link</a>
+    <button matButton="filled" showProgress="true">
+      Progress
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
   </div>
 </section>
 <mat-divider/>
@@ -40,6 +80,16 @@
     <button matButton="tonal" >Basic</button>
     <button matButton="tonal"  disabled>Disabled</button>
     <a matButton="tonal" href="https://www.google.com/" target="_blank">Link</a>
+    <button matButton="tonal" showProgress="true">
+      Progress
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
   </div>
 </section>
 <mat-divider/>
@@ -52,6 +102,16 @@
       </button>
       <button matIconButton disabled aria-label="Example icon button with a open in new tab icon">
         <mat-icon>open_in_new</mat-icon>
+      </button>
+      <button matIconButton showProgress="true" aria-label="Example icon button with a download icon">
+        <mat-icon>download</mat-icon>
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
     </div>
   </div>
@@ -67,6 +127,16 @@
       <button matFab disabled aria-label="Example icon button with a heart icon">
         <mat-icon>favorite</mat-icon>
       </button>
+      <button matFab showProgress="true" aria-label="Example icon button with a skull icon">
+        <mat-icon>skull</mat-icon>
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
+      </button>
     </div>
   </div>
 </section>
@@ -80,6 +150,16 @@
       </button>
       <button matMiniFab disabled aria-label="Example icon button with a home icon">
         <mat-icon>home</mat-icon>
+      </button>
+      <button matMiniFab showProgress="true" aria-label="Example icon button with a wifi icon">
+        <mat-icon>wifi</mat-icon>
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
     </div>
   </div>
@@ -101,6 +181,17 @@
         <mat-icon>favorite</mat-icon>
         Link
       </a>
+      <button matFab extended showProgress="true">
+        <mat-icon>favorite</mat-icon>
+        Progress
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
+      </button>
     </div>
   </div>
 </section>

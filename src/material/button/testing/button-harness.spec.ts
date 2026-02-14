@@ -21,7 +21,7 @@ describe('MatButtonHarness', () => {
 
   it('should load all button harnesses', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
-    expect(buttons.length).toBe(18);
+    expect(buttons.length).toBe(22);
   });
 
   it('should load button with exact text', async () => {
@@ -40,7 +40,7 @@ describe('MatButtonHarness', () => {
   it('should filter by whether a button is disabled', async () => {
     const enabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: false}));
     const disabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: true}));
-    expect(enabledButtons.length).toBe(16);
+    expect(enabledButtons.length).toBe(20);
     expect(disabledButtons.length).toBe(2);
   });
 
@@ -138,12 +138,16 @@ describe('MatButtonHarness', () => {
       'mini-fab',
       'basic',
       'basic',
+      'icon',
+      'basic',
       'basic',
       'basic',
       'basic',
       'basic',
       'icon',
       'fab',
+      'fab',
+      'mini-fab',
       'mini-fab',
     ]);
   });
@@ -164,10 +168,14 @@ describe('MatButtonHarness', () => {
       null,
       'text',
       'text',
+      null,
+      'text',
       'filled',
       'elevated',
       'outlined',
       'tonal',
+      null,
+      null,
       null,
       null,
       null,
@@ -191,6 +199,28 @@ describe('MatButtonHarness', () => {
     expect(await button.getAppearance()).toBe('tonal');
     fixture.componentInstance.dynamicAppearance.set('filled');
     expect(await button.getAppearance()).toBe('filled');
+  });
+
+  it('should be able to tell if a button is showing a progress indicator', async () => {
+    const buttonWithIndicator = await loader.getHarness(
+      MatButtonHarness.with({selector: '#with-progress-indicator'}),
+    );
+    const iconButtonWithIndicator = await loader.getHarness(
+      MatButtonHarness.with({selector: '#icon-with-progress-indicator'}),
+    );
+    const fabAnchorWithIndicator = await loader.getHarness(
+      MatButtonHarness.with({selector: '#anchor-fab-with-progress-indicator'}),
+    );
+    const miniFabAnchorWithIndicator = await loader.getHarness(
+      MatButtonHarness.with({selector: '#anchor-mini-fab-with-progress-indicator'}),
+    );
+    const regularButton = await loader.getHarness(MatButtonHarness.with({selector: '#basic'}));
+
+    expect(await buttonWithIndicator.isShowingProgress()).toBe(true);
+    expect(await iconButtonWithIndicator.isShowingProgress()).toBe(true);
+    expect(await fabAnchorWithIndicator.isShowingProgress()).toBe(true);
+    expect(await miniFabAnchorWithIndicator.isShowingProgress()).toBe(true);
+    expect(await regularButton.isShowingProgress()).toBe(false);
   });
 });
 
@@ -216,6 +246,14 @@ describe('MatButtonHarness', () => {
     <button id="fab" type="button" matFab>Fab button</button>
     <button id="mini-fab" type="button" matMiniFab>Mini Fab button</button>
     <button id="submit" type="submit" matButton>Submit button</button>
+    <button id="with-progress-indicator" type="button" matButton showProgress>
+      Button with progress indicator
+      <div progressIndicator></div>
+    </button>
+    <button id="icon-with-progress-indicator" type="button" matIconButton showProgress>
+      <mat-icon>home</mat-icon>
+      <div progressIndicator></div>
+    </button>
 
     <a id="anchor-basic" matButton>Basic anchor</a>
     <a id="anchor-flat" matButton="filled">Filled anchor</a>
@@ -224,7 +262,15 @@ describe('MatButtonHarness', () => {
     <a id="dynamic-appearance" [matButton]="dynamicAppearance()">Stroked anchor</a>
     <a id="anchor-icon" matIconButton>Icon anchor</a>
     <a id="anchor-fab" matFab>Fab anchor</a>
-    <a id="anchor-mini-fab" matMiniFab>Mini Fab anchor</a>
+    <a id="anchor-fab-with-progress-indicator" matFab showProgress>
+      Fab anchor with progress indicator
+      <div progressIndicator></div>
+    </a>
+    <a id="anchor-mini-fab" matMiniFab showProgress>Mini Fab anchor</a>
+    <a id="anchor-mini-fab-with-progress-indicator" matMiniFab showProgress>
+      Mini Fab anchor with progress indicator
+      <div progressIndicator></div>
+    </a>
   `,
   imports: [MatButtonModule, MatIconModule],
 })

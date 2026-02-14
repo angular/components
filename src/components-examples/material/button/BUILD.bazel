@@ -20,8 +20,10 @@ ng_project(
         "//src/cdk/testing/testbed",
         "//src/material/button",
         "//src/material/button/testing",
+        "//src/material/checkbox",
         "//src/material/divider",
         "//src/material/icon",
+        "//src/material/progress-spinner",
         "//src/material/tooltip",
     ],
 )
