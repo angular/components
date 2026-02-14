@@ -43,7 +43,7 @@ function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
   outputs: ['activation', 'expandedChange'],
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}],
   host: {
-    'class': 'mat-tree-node',
+    'class': 'mat-tree-node mat-focus-indicator',
     '[attr.aria-expanded]': '_getAriaExpanded()',
     '[attr.aria-level]': 'level + 1',
     '[attr.aria-posinset]': '_getPositionInSet()',
@@ -151,7 +151,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode},
   ],
   host: {
-    'class': 'mat-nested-tree-node',
+    'class': 'mat-nested-tree-node mat-focus-indicator',
   },
 })
 export class MatNestedTreeNode<T, K = T>
