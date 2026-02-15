@@ -8,6 +8,7 @@
 
 import {ENTER, ModifierKey} from '@angular/cdk/keycodes';
 import {InjectionToken} from '@angular/core';
+import type {MatChip} from './chip';
 
 /** Key that can be used as a separator between chips. */
 export interface SeparatorKey {
@@ -69,4 +70,4 @@ export const MAT_CHIP_REMOVE = new InjectionToken('MatChipRemove');
 /**
  * Injection token used to avoid a circular dependency between the `MatChip` and `MatChipAction`.
  */
-export const MAT_CHIP = new InjectionToken('MatChip');
+export const MAT_CHIP = new InjectionToken<MatChip>('MatChip');
