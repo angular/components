@@ -274,7 +274,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     get focused(): boolean;
     _getAriaActiveDescendant(): string | null;
     _getPanelAriaLabelledby(): string | null;
-    _getPanelTheme(): string;
     _handleKeydown(event: KeyboardEvent): void;
     protected _handleOverlayKeydown(event: KeyboardEvent): void;
     get hideSingleSelectionIndicator(): boolean;

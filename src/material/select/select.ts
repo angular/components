@@ -94,7 +94,6 @@ import {
   getMatSelectNonArrayValueError,
   getMatSelectNonFunctionValueError,
 } from './select-errors';
-import {NgClass} from '@angular/common';
 
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -189,7 +188,7 @@ export class MatSelectChange<T = any> {
     {provide: MatFormFieldControl, useExisting: MatSelect},
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
   ],
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgClass],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay],
 })
 export class MatSelect
   implements
@@ -711,6 +710,10 @@ export class MatSelect
     if (changes['typeaheadDebounceInterval'] && this._keyManager) {
       this._keyManager.withTypeAhead(this.typeaheadDebounceInterval);
     }
+
+    if (changes['panelClass'] && this.panelClass instanceof Set) {
+      this.panelClass = Array.from(this.panelClass);
+    }
   }
 
   ngOnDestroy() {
@@ -1083,11 +1086,6 @@ export class MatSelect
       this._changeDetectorRef.markForCheck();
       this.stateChanges.next();
     }
-  }
-
-  /** Returns the theme to be used on the panel. */
-  _getPanelTheme(): string {
-    return this._parentFormField ? `mat-${this._parentFormField.color}` : '';
   }
 
   /** Whether the select has a value. */
