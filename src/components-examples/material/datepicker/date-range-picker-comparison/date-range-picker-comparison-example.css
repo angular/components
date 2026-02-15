@@ -1,3 +1,15 @@
 .example-form-field {
   margin: 0 8px 16px 0;
 }
+
+.date-range-comparison-calendar {
+  --mat-datepicker-calendar-date-in-range-state-background-color:
+      color-mix(in srgb, var(--mat-sys-primary) 28%, transparent);
+  --mat-datepicker-calendar-date-in-comparison-range-state-background-color:
+      color-mix(in srgb, var(--mat-sys-error) 32%, transparent);
+  --mat-datepicker-calendar-date-in-overlap-range-state-background-color:
+      color-mix(in srgb, var(--mat-sys-error) 55%, transparent);
+  --mat-datepicker-calendar-date-in-overlap-range-selected-state-background-color:
+      var(--mat-sys-error);
+}
+
