@@ -23,6 +23,8 @@ import {
   inject,
   HostAttributeToken,
 } from '@angular/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '../core';
 import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
 
 /**
@@ -109,6 +111,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
 
   constructor() {
     super();
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
 
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     this.tabIndexInputBinding = Number(tabIndex) || this.defaultTabIndex;
