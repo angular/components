@@ -43,21 +43,24 @@
   [cdkConnectedOverlayUsePopover]="_popoverLocation"
   (detach)="close()"
   (backdropClick)="close()"
-  (overlayKeydown)="_handleOverlayKeydown($event)"
->
+  (overlayKeydown)="_handleOverlayKeydown($event)">
+  <!-- `mat-undefined` is weird, but we were using it internally -->
   <div
     #panel
     role="listbox"
     tabindex="-1"
-    class="mat-mdc-select-panel mdc-menu-surface mdc-menu-surface--open {{ _getPanelTheme() }}"
+    class="mat-mdc-select-panel mdc-menu-surface mdc-menu-surface--open"
+    [class]="panelClass"
     [class.mat-select-panel-animations-enabled]="!_animationsDisabled"
+    [class.mat-primary]="_parentFormField?.color === 'primary'"
+    [class.mat-accent]="_parentFormField?.color === 'accent'"
+    [class.mat-warn]="_parentFormField?.color === 'warn'"
+    [class.mat-undefined]="!_parentFormField?.color"
     [attr.id]="id + '-panel'"
     [attr.aria-multiselectable]="multiple"
     [attr.aria-label]="ariaLabel || null"
     [attr.aria-labelledby]="_getPanelAriaLabelledby()"
-    [ngClass]="panelClass"
-    (keydown)="_handleKeydown($event)"
-  >
+    (keydown)="_handleKeydown($event)">
     <ng-content></ng-content>
   </div>
 </ng-template>
