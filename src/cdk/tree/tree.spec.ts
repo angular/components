@@ -1281,6 +1281,16 @@ describe('CdkTree', () => {
         expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
       });
 
+      it('should ensure that at least one item is focusable when the items are swapped out', () => {
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+
+        dataSource.data = [new TestData('foo'), new TestData('bar'), new TestData('baz')];
+        fixture.detectChanges();
+        nodes = getNodes(treeElement);
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+      });
+
       it('maintains tabindex when component is blurred', () => {
         // activate the second child by clicking on it
         nodes[1].click();
