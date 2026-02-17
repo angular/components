@@ -51,8 +51,6 @@ export type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount:
 // @public (undocumented)
 export interface Cluster {
     // (undocumented)
-    new (options: ClusterOptions): Cluster;
-    // (undocumented)
     bounds?: google.maps.LatLngBounds;
     // (undocumented)
     count: number;
@@ -61,7 +59,7 @@ export interface Cluster {
     // (undocumented)
     marker?: Marker;
     // (undocumented)
-    readonly markers?: Marker[];
+    markers?: Marker[];
     // (undocumented)
     position: google.maps.LatLng;
     // (undocumented)
