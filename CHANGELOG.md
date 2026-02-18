@@ -1,3 +1,8 @@
+<a name="21.2.0-rc.0"></a>
+# 21.2.0-rc.0 "chlorine-canine" (2026-02-18)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0-next.5"></a>
 # 21.2.0-next.5 "chlorine-cat" (2026-02-18)
 ### aria
