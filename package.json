@@ -53,7 +53,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "21.1.4",
+  "version": "21.1.5",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",

@@ -1,3 +1,24 @@
+<a name="21.1.5"></a>
+# 21.1.5 "chlorine-car" (2026-02-18)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [017caa3be7](https://github.com/angular/components/commit/017caa3be77563aafa7fe2d964172559bfc7874b) | fix | **combobox:** fix autocomplete examples and add comments explaining combobox selection behavior ([#32714](https://github.com/angular/components/pull/32714)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c825fa208d](https://github.com/angular/components/commit/c825fa208d0313429321dc66d680f09378488399) | fix | **tree:** no nodes focusable if data is replaced ([#32781](https://github.com/angular/components/pull/32781)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8f412ec5b7](https://github.com/angular/components/commit/8f412ec5b72b9fe6e8cb9be8956eb126a5f697c3) | fix | **select:** disable position locking ([#32772](https://github.com/angular/components/pull/32772)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a73a70d291](https://github.com/angular/components/commit/a73a70d291f0dc8229241cd45ec8775b392cdc86) | fix | fix mismatch in clusterer types ([#32778](https://github.com/angular/components/pull/32778)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.1.4"></a>
 # 21.1.4 "zircaloy-gondola" (2026-02-11)
 ### aria
