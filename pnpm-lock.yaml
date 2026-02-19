@@ -126,8 +126,8 @@ importers:
         specifier: 'catalog:'
         version: 21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/compiler@21.2.0-rc.0)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#0125e8e025e98825616c46350f58502dbeddb038
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/0125e8e025e98825616c46350f58502dbeddb038(@modelcontextprotocol/sdk@1.26.0)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#b0ab31189ecbeaaafce2bd9259385879b9beabcc
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b0ab31189ecbeaaafce2bd9259385879b9beabcc(@modelcontextprotocol/sdk@1.26.0)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 21.2.0-rc.0(@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.0))(rxjs@6.6.7))(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/compiler@21.2.0-rc.0)(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-rc.0(@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.0))(rxjs@6.6.7))(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.0)))(rxjs@6.6.7)
@@ -972,9 +972,9 @@ packages:
       '@angular/compiler': 21.2.0-rc.0
       '@angular/compiler-cli': 21.2.0-rc.0
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/0125e8e025e98825616c46350f58502dbeddb038':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/0125e8e025e98825616c46350f58502dbeddb038}
-    version: 0.0.0-7c08ac2a4f396bad752829fba09dbaefbcded9fc
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b0ab31189ecbeaaafce2bd9259385879b9beabcc':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b0ab31189ecbeaaafce2bd9259385879b9beabcc}
+    version: 0.0.0-e006a332028a4c3cb24e9d92437fac7ae99e2ed5
     hasBin: true
 
   '@angular/platform-browser-dynamic@21.2.0-rc.0':
@@ -10241,7 +10241,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/0125e8e025e98825616c46350f58502dbeddb038(@modelcontextprotocol/sdk@1.26.0)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/b0ab31189ecbeaaafce2bd9259385879b9beabcc(@modelcontextprotocol/sdk@1.26.0)':
     dependencies:
       '@actions/core': 3.0.0
       '@google-cloud/spanner': 8.0.0(supports-color@10.2.2)
