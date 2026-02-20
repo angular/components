@@ -4,6 +4,11 @@
       "version": "21.0.0-0",
       "description": "Updates the Angular Google Maps package to v21",
       "factory": "./ng-update/index#updateToV21"
+    },
+    "migration-v22": {
+      "version": "22.0.0-0",
+      "description": "Updates the Angular Google Maps package to v22",
+      "factory": "./ng-update/index#updateToV22"
     }
   }
 }

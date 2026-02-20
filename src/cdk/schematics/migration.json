@@ -6,6 +6,11 @@
       "description": "Updates the Angular CDK to v21",
       "factory": "./ng-update/index#updateToV21"
     },
+    "migration-v22": {
+      "version": "22.0.0-0",
+      "description": "Updates the Angular CDK to v22",
+      "factory": "./ng-update/index#updateToV22"
+    },
     "ng-post-update": {
       "description": "Prints out results after ng-update.",
       "factory": "./ng-update/index#postUpdate",

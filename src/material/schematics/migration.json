@@ -5,6 +5,11 @@
       "version": "21.0.0-0",
       "description": "Updates Angular Material to v21",
       "factory": "./ng-update/index_bundled#updateToV21"
+    },
+    "migration-v22": {
+      "version": "22.0.0-0",
+      "description": "Updates Angular Material to v22",
+      "factory": "./ng-update/index_bundled#updateToV22"
     }
   }
 }
