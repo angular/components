@@ -37,7 +37,7 @@
 @forward './core/core' show core, app-background, elevation-classes;
 @forward './core/ripple/ripple' show ripple;
 @forward './core/focus-indicators/private' show strong-focus-indicators,
-  strong-focus-indicators-color, strong-focus-indicators-theme;
+  strong-focus-indicators-color, strong-focus-indicators-theme, strong-focus-indicators-structure;
 @forward './core/style/elevation' show elevation, overridable-elevation, elevation-transition;
 
 // Theme bundles
