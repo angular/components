@@ -13,10 +13,20 @@ import {createMigrationSchematicRule, NullableDevkitMigration} from './devkit-mi
 
 const cdkMigrations: NullableDevkitMigration[] = [];
 
-/** Entry point for the migration schematics with target of Angular CDK 20.0.0 */
+/** Entry point for the migration schematics with target of Angular CDK 21.0.0 */
 export function updateToV21(): Rule {
   return createMigrationSchematicRule(
     TargetVersion.V21,
+    cdkMigrations,
+    cdkUpgradeData,
+    onMigrationComplete,
+  );
+}
+
+/** Entry point for the migration schematics with target of Angular CDK 22.0.0 */
+export function updateToV22(): Rule {
+  return createMigrationSchematicRule(
+    TargetVersion.V22,
     cdkMigrations,
     cdkUpgradeData,
     onMigrationComplete,
