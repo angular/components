@@ -23,3 +23,10 @@ export function updateToV21(): Rule {
     createMigrationSchematicRule(TargetVersion.V21, materialMigrations, materialUpgradeData),
   ]);
 }
+
+/** Entry point for the migration schematics with target of Angular Material v22 */
+export function updateToV22(): Rule {
+  return chain([
+    createMigrationSchematicRule(TargetVersion.V22, materialMigrations, materialUpgradeData),
+  ]);
+}
