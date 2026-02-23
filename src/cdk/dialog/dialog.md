@@ -117,14 +117,14 @@ class MyDialogContainer extends CdkDialogContainer {}
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `DialogConfig` for
-`DEFAULT_DIALOG_CONFIG` in your application's root module.
+`DEFAULT_DIALOG_CONFIG` in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: DEFAULT_DIALOG_CONFIG, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
 
 ### Sharing data with the Dialog component.

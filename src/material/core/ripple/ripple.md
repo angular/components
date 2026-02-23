@@ -89,11 +89,11 @@ const globalRippleConfig: RippleGlobalOptions = {
   }
 };
 
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
   ]
-})
+});
 ```
 
 All available global options can be seen in the `RippleGlobalOptions` interface.
@@ -158,12 +158,11 @@ export class AppGlobalRippleOptions implements RippleGlobalOptions {
 ```
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: AppGlobalRippleOptions},
   ]
-})
-export class MyModule {...}
+});
 ```
 
 Now that the global ripple options are set to a service we can inject, the service can be
