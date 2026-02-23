@@ -12,7 +12,7 @@ of their container.
 ## Reading the text-direction in your own components
 
 `@angular/cdk/bidi` provides a `Directionality` injectable that can be used by any component
-in your application. To consume it, you must import `BidiModule` from `@angular/cdk/bidi`.
+in your application.
 
 `Directionality` provides two useful properties:
 * `value`: the current text direction, either `'ltr'` or `'rtl'`.
@@ -25,13 +25,12 @@ emit for changes to `dir` on `<html>` and `<body>`, as they are assumed to be st
 ```ts
 @Component({ /* ... */ })
 export class MyCustomComponent {
-  private dir: Direction;
+  private directionality = inject(Directionality);
+  private dir = this.directionality.value;
 
-  constructor(directionality: Directionality) {
-    this.dir = directionality.value;
-
-    directionality.change.subscribe(() => {
-      this.dir = directionality.value;
+  constructor() {
+    this.directionality.change.subscribe(() => {
+      this.dir = this.directionality.value;
     });
   }
 }
