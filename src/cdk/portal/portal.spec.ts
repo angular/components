@@ -7,6 +7,7 @@ import {
   ElementRef,
   EnvironmentInjector,
   Injector,
+  Input,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -15,6 +16,7 @@ import {
   createComponent,
   createEnvironmentInjector,
   inject,
+  inputBinding,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
@@ -459,6 +461,25 @@ describe('Portals', () => {
 
       expect(fixture.nativeElement.textContent).toContain('Projectable node');
     });
+
+    it('should be able to pass bindings to the component', () => {
+      let flavor = 'pepperoni';
+      const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, [
+        inputBinding('flavor', () => flavor),
+      ]);
+
+      fixture.componentInstance.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const ref = fixture.componentInstance.portalOutlet.attachedRef as ComponentRef<PizzaMsg>;
+      expect(ref.instance.flavor).toBe('pepperoni');
+
+      flavor = 'cheese';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(ref.instance.flavor).toBe('cheese');
+    });
   });
 
   describe('DomPortalOutlet', () => {
@@ -717,6 +738,17 @@ describe('Portals', () => {
       host.attachDomPortal(new DomPortal(fixture.componentInstance.domPortalContent));
       expect(host.hasAttached()).toBe(true);
     });
+
+    it('should be able to pass bindings to the component', () => {
+      const portal = new ComponentPortal(PizzaMsg, null, null, null, [
+        inputBinding('flavor', () => 'pepperoni'),
+      ]);
+
+      const componentInstance: PizzaMsg = portal.attach(host).instance;
+      someFixture.changeDetectorRef.markForCheck();
+      someFixture.detectChanges();
+      expect(componentInstance.flavor).toBe('pepperoni');
+    });
   });
 });
 
@@ -744,6 +776,8 @@ class ChocolateInjector {
 })
 class PizzaMsg {
   snack = inject(Chocolate, {optional: true});
+
+  @Input() flavor = 'unknown';
 }
 
 /**

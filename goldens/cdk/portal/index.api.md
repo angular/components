@@ -5,6 +5,7 @@
 ```ts
 
 import { ApplicationRef } from '@angular/core';
+import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -72,7 +73,8 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 
 // @public
 export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
-    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, projectableNodes?: Node[][] | null);
+    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, projectableNodes?: Node[][] | null, bindings?: Binding[]);
+    readonly bindings: Binding[] | null;
     component: ComponentType<T>;
     injector?: Injector | null;
     projectableNodes?: Node[][] | null;
