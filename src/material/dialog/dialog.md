@@ -41,15 +41,27 @@ export class YourDialog {
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `MatDialogConfig` for
-MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+MAT_DIALOG_DEFAULT_OPTIONS in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
+
+> **Note:** The value provided for `MAT_DIALOG_DEFAULT_OPTIONS` **replaces** the built-in defaults
+> entirely rather than merging with them. For example, providing `{disableClose: true}` means that
+> all other defaults (such as `hasBackdrop`) will be `undefined`. If you only want to override
+> specific properties, spread the defaults first:
+>
+> ```ts
+> {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {...new MatDialogConfig(), disableClose: true}}
+> ```
+>
+> When you call `dialog.open()` with a config, that config is merged on top of these defaults, so
+> per-dialog options always take precedence.
 
 ### Sharing data with the Dialog component.
 If you want to share data with your dialog, you can use the `data`
