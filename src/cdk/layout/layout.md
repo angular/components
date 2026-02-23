@@ -79,8 +79,7 @@ The `matchMedia` method can be used to get a native
 ```ts
 @Component({...})
 class MyComponent {
-  constructor(mediaMatcher: MediaMatcher) {
-    const mediaQueryList = mediaMatcher.matchMedia('(min-width: 1px)');
-  }
+  private mediaMatcher = inject(MediaMatcher);
+  private mediaQueryList = this.mediaMatcher.matchMedia('(min-width: 1px)');
 }
 ```

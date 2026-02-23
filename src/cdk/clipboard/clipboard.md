@@ -21,7 +21,7 @@ directly to place it on the clipboard.
 import {Clipboard} from '@angular/cdk/clipboard';
 
 class HeroProfile {
-  constructor(private clipboard: Clipboard) {}
+  private clipboard = inject(Clipboard);
 
   copyHeroName() {
     this.clipboard.copy('Alphonso');
@@ -39,9 +39,9 @@ the text that was buffered. Please note, if you call `beginCopy`, you must clean
 import {Clipboard} from '@angular/cdk/clipboard';
 
 class HeroProfile {
-  lifetimeAchievements: string;
+  private clipboard = inject(Clipboard);
 
-  constructor(private clipboard: Clipboard) {}
+  lifetimeAchievements: string;
 
   copyAchievements() {
     const pending = this.clipboard.beginCopy(this.lifetimeAchievements);
