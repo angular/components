@@ -12,7 +12,8 @@
     <td mat-cell *matCellDef="let element">
       <button
         matIconButton
-        aria-label="expand row"
+        [attr.aria-label]="isExpanded(element) ? 'collapse row' : 'expand row'"
+        [attr.aria-expanded]="isExpanded(element)"
         (click)="toggle(element); $event.stopPropagation()"
         class="example-toggle-button"
         [class.example-toggle-button-expanded]="isExpanded(element)">
