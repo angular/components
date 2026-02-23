@@ -44,7 +44,7 @@ In addition to CSS classes, these directives add aria attributes that can be tar
 
 ### Getting started
 
-Import the `CdkListboxModule` into the `NgModule` in which you want to create a listbox. You can
+Import `CdkListbox` and `CdkOption` in the component where you want to create a listbox. You can
 then apply listbox directives to build your custom listbox. A typical listbox consists of the
 following directives:
 
