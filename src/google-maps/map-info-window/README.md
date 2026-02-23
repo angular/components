@@ -2,13 +2,13 @@
 
 The `MapInfoWindow` component wraps the [`google.maps.InfoWindow` class](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow) from the Google Maps JavaScript API. The `MapInfoWindow` has an `options` input as well as a convenience `position` input. Content for the `MapInfoWindow` is the inner HTML of the component, and will keep the structure and css styling of any content that is put there when it is displayed as an info window on the map.
 
-To display the `MapInfoWindow`, it must be a child of a `GoogleMap` component, and it must have its `open` method called, so a reference to `MapInfoWindow` will need to be loaded using the [`ViewChild` decorator](https://angular.dev/api/core/ViewChild) or via [`viewChild`](https://angular.dev/api/core/viewChild). The `open` method accepts an `MapMarker` as an optional input, if you want to anchor the `MapInfoWindow` to a `MapMarker`.
+To display the `MapInfoWindow`, it must be a child of a `GoogleMap` component, and it must have its `open` method called, so a reference to `MapInfoWindow` will need to be loaded using the [`viewChild`](https://angular.dev/api/core/viewChild) function. The `open` method accepts an `MapMarker` as an optional input, if you want to anchor the `MapInfoWindow` to a `MapMarker`.
 
 ## Example
 
 ```typescript
 // google-maps-demo.component.ts
-import {Component, ViewChild} from '@angular/core';
+import {Component, viewChild} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 
 @Component({
@@ -17,7 +17,7 @@ import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
   imports: [GoogleMap, MapInfoWindow, MapMarker],
 })
 export class GoogleMapDemo {
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  infoWindow = viewChild.required(MapInfoWindow);
 
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   markerPositions: google.maps.LatLngLiteral[] = [];
@@ -28,7 +28,7 @@ export class GoogleMapDemo {
   }
 
   openInfoWindow(marker: MapMarker) {
-    this.infoWindow.open(marker);
+    this.infoWindow().open(marker);
   }
 }
 ```

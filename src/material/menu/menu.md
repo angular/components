@@ -13,11 +13,13 @@ The menu exposes an API to open/close programmatically. Please note that in this
 `matMenuTriggerFor` directive is still necessary to attach the menu to a trigger element in the DOM.
 
 ```ts
+import {viewChild} from '@angular/core';
+
 class MyComponent {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  trigger = viewChild.required(MatMenuTrigger);
 
   someMethod() {
-    this.trigger.openMenu();
+    this.trigger().openMenu();
   }
 }
 ```
