@@ -140,6 +140,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
       injector: portal.injector || viewContainerRef.injector,
       projectableNodes: portal.projectableNodes || undefined,
       ngModuleRef: this._moduleRef || undefined,
+      bindings: portal.bindings || undefined,
     });
 
     // If we're using a view container that's different from the injected one (e.g. when the portal

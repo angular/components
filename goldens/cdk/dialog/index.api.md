@@ -7,6 +7,7 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_cdk_portal from '@angular/cdk/portal';
+import { Binding } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { DoCheck } from '@angular/core';

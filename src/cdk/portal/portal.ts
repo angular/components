@@ -13,6 +13,7 @@ import {
   ComponentRef,
   EmbeddedViewRef,
   Injector,
+  Binding,
 } from '@angular/core';
 import {
   throwNullPortalOutletError,
@@ -99,17 +100,24 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
    */
   projectableNodes?: Node[][] | null;
 
+  /**
+   * Bindings to apply to the created component.
+   */
+  readonly bindings: Binding[] | null;
+
   constructor(
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
     projectableNodes?: Node[][] | null,
+    bindings?: Binding[],
   ) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
     this.injector = injector;
     this.projectableNodes = projectableNodes;
+    this.bindings = bindings || null;
   }
 }
 
