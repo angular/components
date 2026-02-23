@@ -8,8 +8,7 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 To install, run `ng add @angular/youtube-player`.
 
 ## Usage
-Import the component either by adding the `YouTubePlayerModule` to your app or by importing
-`YouTubePlayer` into a standalone component. Then add the `<youtube-player videoId="<your ID>"`
+Import `YouTubePlayer` into your component. Then add the `<youtube-player videoId="<your ID>"`
 to your template.
 
 ## Example
@@ -43,19 +42,16 @@ If you don't want it to be loaded, you can either control it on a per-component 
 Or at a global level using the `YOUTUBE_PLAYER_CONFIG` injection token:
 
 ```typescript
-import {NgModule} from '@angular/core';
 import {YouTubePlayer, YOUTUBE_PLAYER_CONFIG} from '@angular/youtube-player';
 
-@NgModule({
-  imports: [YouTubePlayer],
+bootstrapApplication(YourApp, {
   providers: [{
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {
       loadApi: false
     }
   }]
-})
-export class YourApp {}
+});
 ```
 
 ## Loading behavior
@@ -78,19 +74,16 @@ initialization, you can either pass in the `disablePlaceholder` input:
 Or set it at a global level using the `YOUTUBE_PLAYER_CONFIG` injection token:
 
 ```typescript
-import {NgModule} from '@angular/core';
 import {YouTubePlayer, YOUTUBE_PLAYER_CONFIG} from '@angular/youtube-player';
 
-@NgModule({
-  imports: [YouTubePlayer],
+bootstrapApplication(YourApp, {
   providers: [{
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {
       disablePlaceholder: true
     }
   }]
-})
-export class YourApp {}
+});
 ```
 
 ### Placeholder image quality
