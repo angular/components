@@ -421,6 +421,7 @@ export class GridPattern {
     readonly inputs: GridInputs;
     readonly isFocused: WritableSignalLike<boolean>;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    readonly multiSelectable: SignalLike<boolean | undefined>;
     readonly nextColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;

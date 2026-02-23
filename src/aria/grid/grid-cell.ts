@@ -135,7 +135,7 @@ export class GridCell {
         toggle('role', this.role());
         toggle('id', pattern.id());
         toggle('rowspan', rowSpan);
-        toggle('colspan', rowSpan);
+        toggle('colspan', colSpan);
         toggle('aria-rowspan', rowSpan);
         toggle('aria-colspan', colSpan);
         toggle('data-active', this.active());
