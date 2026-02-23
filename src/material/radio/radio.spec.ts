@@ -868,6 +868,17 @@ describe('MatRadio', () => {
       expect(fruitRadioNativeInputs[0].hasAttribute('aria-describedby')).toBe(false);
     });
 
+    it('should hide supporting elements from assistive technology', () => {
+      const radioNativeElement = fruitRadioNativeElements[0];
+      const touchTarget = radioNativeElement.querySelector('.mat-mdc-radio-touch-target')!;
+      const background = radioNativeElement.querySelector('.mdc-radio__background')!;
+      const ripple = radioNativeElement.querySelector('.mat-radio-ripple')!;
+
+      expect(touchTarget.getAttribute('aria-hidden')).toBe('true');
+      expect(background.getAttribute('aria-hidden')).toBe('true');
+      expect(ripple.getAttribute('aria-hidden')).toBe('true');
+    });
+
     it('should focus on underlying input element when focus() is called', () => {
       for (let i = 0; i < fruitRadioInstances.length; i++) {
         expect(document.activeElement).not.toBe(fruitRadioNativeInputs[i]);
