@@ -229,7 +229,7 @@ export class MatCalendarCell<D = any> {
     // (undocumented)
     compareValue: number;
     // (undocumented)
-    cssClasses: MatCalendarCellCssClasses;
+    readonly cssClasses: string | string[] | Record<string, any> | undefined;
     // (undocumented)
     displayValue: string;
     // (undocumented)
@@ -246,9 +246,7 @@ export class MatCalendarCell<D = any> {
 export type MatCalendarCellClassFunction<D> = (date: D, view: 'month' | 'year' | 'multi-year') => MatCalendarCellCssClasses;
 
 // @public
-export type MatCalendarCellCssClasses = string | string[] | Set<string> | {
-    [key: string]: any;
-};
+export type MatCalendarCellCssClasses = string | string[] | Set<string> | Record<string, any>;
 
 // @public
 export class MatCalendarHeader<D> {
