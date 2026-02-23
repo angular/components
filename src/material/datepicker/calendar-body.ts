@@ -26,13 +26,12 @@ import {
   Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {NgClass} from '@angular/common';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
 import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
-export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
+export type MatCalendarCellCssClasses = string | string[] | Set<string> | Record<string, any>;
 
 /** Function that can generate the extra classes that should be added to a calendar cell. */
 export type MatCalendarCellClassFunction<D> = (
@@ -48,16 +47,19 @@ let uniqueIdCounter = 0;
  */
 export class MatCalendarCell<D = any> {
   readonly id = uniqueIdCounter++;
+  readonly cssClasses: string | string[] | Record<string, any> | undefined;
 
   constructor(
     public value: number,
     public displayValue: string,
     public ariaLabel: string,
     public enabled: boolean,
-    public cssClasses: MatCalendarCellCssClasses = {},
+    cssClasses?: MatCalendarCellCssClasses,
     public compareValue = value,
     public rawValue?: D,
-  ) {}
+  ) {
+    this.cssClasses = cssClasses instanceof Set ? Array.from(cssClasses) : cssClasses;
+  }
 }
 
 /** Event emitted when a date inside the calendar is triggered as a result of a user action. */
@@ -95,7 +97,6 @@ const passiveEventOptions = {passive: true};
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass],
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
