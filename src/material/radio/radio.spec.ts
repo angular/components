@@ -282,6 +282,23 @@ describe('MatRadio', () => {
       expect(rippleAmount).withContext('Expected an enabled radio button to show ripples').toBe(1);
     });
 
+    it('should hide decorative elements from assistive technology', () => {
+      const radioElement = radioNativeElements[0];
+      const touchTarget = radioElement.querySelector('.mat-mdc-radio-touch-target');
+      const background = radioElement.querySelector('.mdc-radio__background');
+      const ripple = radioElement.querySelector('.mat-radio-ripple');
+
+      expect(touchTarget?.getAttribute('aria-hidden'))
+        .withContext('Expected touch target to be hidden from assistive technology')
+        .toBe('true');
+      expect(background?.getAttribute('aria-hidden'))
+        .withContext('Expected background to be hidden from assistive technology')
+        .toBe('true');
+      expect(ripple?.getAttribute('aria-hidden'))
+        .withContext('Expected ripple to be hidden from assistive technology')
+        .toBe('true');
+    });
+
     it('should not show ripples if matRippleDisabled input is set', () => {
       testComponent.disableRipple = true;
       fixture.changeDetectorRef.markForCheck();
