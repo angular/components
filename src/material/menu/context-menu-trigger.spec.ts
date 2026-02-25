@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {MatContextMenuTrigger} from './context-menu-trigger';
 import {MatMenu} from './menu';
@@ -14,6 +14,10 @@ describe('context menu trigger', () => {
 
   function getMenu(): HTMLElement | null {
     return document.querySelector('.mat-mdc-menu-panel');
+  }
+
+  function getBackdrop(): HTMLElement | null {
+    return document.querySelector('.cdk-overlay-backdrop');
   }
 
   beforeEach(() => {
@@ -157,6 +161,21 @@ describe('context menu trigger', () => {
     fixture.detectChanges();
     expect(getMenu()).toBe(null);
   });
+
+  it('should not create a backdrop for context menu by default', () => {
+    dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
+    fixture.detectChanges();
+    expect(getBackdrop()).toBeFalsy();
+    expect(getMenu()).toBeTruthy();
+  });
+
+  it('should create a backdrop for context menus if the menu explicitly opted into it', () => {
+    fixture.componentInstance.menuInstance.hasBackdrop = true;
+    dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
+    fixture.detectChanges();
+    expect(getBackdrop()).toBeTruthy();
+    expect(getMenu()).toBeTruthy();
+  });
 });
 
 @Component({
@@ -185,6 +204,7 @@ describe('context menu trigger', () => {
   `,
 })
 class ContextMenuTest {
+  @ViewChild(MatMenu) menuInstance!: MatMenu;
   showTrigger = signal(true);
   disabled = signal(false);
   opened = jasmine.createSpy('opened');
