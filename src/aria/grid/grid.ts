@@ -120,6 +120,12 @@ export class Grid {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
+  /** Whether enable range selections (with modifier keys or dragging). */
+  readonly enableRangeSelection = input(false, {transform: booleanAttribute});
+
+  /** Overrides the default tab index of the grid. */
+  readonly tabIndex = input<number | undefined>(undefined);
+
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -134,6 +140,11 @@ export class Grid {
     afterRenderEffect(() => this._pattern.resetFocusEffect());
     afterRenderEffect(() => this._pattern.restoreFocusEffect());
     afterRenderEffect(() => this._pattern.focusEffect());
+  }
+
+  /** Scrolls the active cell into view. */
+  scrollActiveCellIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
+    this._pattern.activeCell()?.element().scrollIntoView(options);
   }
 
   /** Gets the cell pattern for a given element. */
