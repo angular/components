@@ -1,26 +1,20 @@
-<a name="21.2.0-rc.0"></a>
-# 21.2.0-rc.0 "chlorine-canine" (2026-02-18)
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.2.0-next.5"></a>
-# 21.2.0-next.5 "chlorine-cat" (2026-02-18)
+<a name="21.2.0"></a>
+# 21.2.0 "plastic-lion" (2026-02-25)
 ### aria
 | Commit | Type | Description |
 | -- | -- | -- |
-| [c57e6a1545](https://github.com/angular/components/commit/c57e6a1545d79d6ad515082fc89f0dfb5cb1ab8f) | fix | **combobox:** fix autocomplete examples and add comments explaining combobox selection behavior ([#32714](https://github.com/angular/components/pull/32714)) |
+| [31ff7f26b5](https://github.com/angular/components/commit/31ff7f26b5dd08c1d48dc5ebb8f1a9ba57a2dc9c) | fix | **grid:** align output naming with styleguide |
+| [d030725f46](https://github.com/angular/components/commit/d030725f462d93bbca9918f153a48b5631ef0476) | fix | **menu:** align output naming with styleguide |
 ### cdk
 | Commit | Type | Description |
 | -- | -- | -- |
-| [b15b48df98](https://github.com/angular/components/commit/b15b48df980b1f86885d4d25fdc8ba58b2bac62b) | fix | **tree:** no nodes focusable if data is replaced ([#32781](https://github.com/angular/components/pull/32781)) |
+| [cd5209e9f5](https://github.com/angular/components/commit/cd5209e9f59c8bd31de29d03fd743452d8ae3d03) | fix | **portal:** allow bindings to be passed to component portal ([#32814](https://github.com/angular/components/pull/32814)) |
+| [e397ecbcfa](https://github.com/angular/components/commit/e397ecbcfad4e85fde8d116faf5caa80dcddca45) | fix | **table:** remove string-based DI tokens ([#32677](https://github.com/angular/components/pull/32677)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [f5c586925e](https://github.com/angular/components/commit/f5c586925eb9a1cc00a9b2e22860be1f69ef9184) | fix | **select:** disable position locking ([#32772](https://github.com/angular/components/pull/32772)) |
-### google-maps
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0870786036](https://github.com/angular/components/commit/0870786036286c3b0d3485cb31098afdf22c0350) | fix | fix mismatch in clusterer types ([#32778](https://github.com/angular/components/pull/32778)) |
+| [8c4526935e](https://github.com/angular/components/commit/8c4526935ef7e960ed4245a4621d41065ba34e3b) | fix | **core:** expose strong focus indicator structural styles ([#32808](https://github.com/angular/components/pull/32808)) |
+| [7fe3081148](https://github.com/angular/components/commit/7fe308114829c4ce454cc247e59e59387ee7fd17) | fix | **datepicker:** drop dependency on NgClass ([#32810](https://github.com/angular/components/pull/32810)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -45,25 +39,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="21.2.0-next.4"></a>
-# 21.2.0-next.4 "marzipan-rutabaga" (2026-02-11)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [70f8b6aac](https://github.com/angular/components/commit/70f8b6aac471a20dcc8f51da7aefdc930469b185) | perf | **grid:** performance when selecting in a large grid ([#32766](https://github.com/angular/components/pull/32766)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4ff346bbb](https://github.com/angular/components/commit/4ff346bbb56bb8f6b117c9d03b6f80eac32bc2f8) | fix | **radio:** hide empty labels ([#32754](https://github.com/angular/components/pull/32754)) |
-| [bee55117c](https://github.com/angular/components/commit/bee55117c674ac1ab3ec44acc624e92d1f960e14) | fix | **slide-toggle:** overly broad selector ([#32740](https://github.com/angular/components/pull/32740)) |
-| [06750e02e](https://github.com/angular/components/commit/06750e02e42283f7cdf84772da76ef3d9426b5ab) | fix | **tooltip:** do not block events to other overlays |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [529c1bfd7](https://github.com/angular/components/commit/529c1bfd75ddb1e80136d509fdf336f9efc2a1bc) | fix | change aria keyboard manager to only handle repeated events in correct places ([#32728](https://github.com/angular/components/pull/32728)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="21.1.4"></a>
 # 21.1.4 "zircaloy-gondola" (2026-02-11)
 ### aria
@@ -83,27 +58,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="21.2.0-next.3"></a>
-# 21.2.0-next.3 "wooden-kiwi" (2026-02-04)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [31ff7f26b](https://github.com/angular/components/commit/31ff7f26b5dd08c1d48dc5ebb8f1a9ba57a2dc9c) | fix | **grid:** align output naming with styleguide |
-| [f1157b1c8](https://github.com/angular/components/commit/f1157b1c88b78b87ae6e16a74ff2445aeb4156bf) | fix | **menu:** Add label property for proper aria-label ([#32710](https://github.com/angular/components/pull/32710)) |
-| [d030725f4](https://github.com/angular/components/commit/d030725f462d93bbca9918f153a48b5631ef0476) | fix | **menu:** align output naming with styleguide |
-| [06e3d756c](https://github.com/angular/components/commit/06e3d756ca1114ee05d785cd38a7e144795b709e) | fix | **toolbar:** show outline on selected items when forced colors active ([#32708](https://github.com/angular/components/pull/32708)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [a3f2ec8a9](https://github.com/angular/components/commit/a3f2ec8a94aadf459797114d31ba487741b37d35) | fix | **badge:** move warning check later ([#32724](https://github.com/angular/components/pull/32724)) |
-| [865e3d50c](https://github.com/angular/components/commit/865e3d50ca86b237cdf0c78ca411164dfb0a85a1) | fix | **chips:** Example violates axe accessibility tests ([#32679](https://github.com/angular/components/pull/32679)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6fd833d2b](https://github.com/angular/components/commit/6fd833d2bcf1c0745ddff8fadb63210c31cf8b07) | perf | **column-resize:** add debounce to column header hover to prevent excessive handler rendering ([#30709](https://github.com/angular/components/pull/30709)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="21.1.3"></a>
 # 21.1.3 "wooden-duck" (2026-02-04)
 ### aria
@@ -120,26 +74,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [591516c93](https://github.com/angular/components/commit/591516c9312f2f710bbcac63955b817f50e6ef84) | perf | **column-resize:** add debounce to column header hover to prevent excessive handler rendering ([#30709](https://github.com/angular/components/pull/30709)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.2.0-next.2"></a>
-# 21.2.0-next.2 "plastic-bottle" (2026-01-29)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [82a51f367b](https://github.com/angular/components/commit/82a51f367b2741245f77ff694a1a894910cdbdea) | fix | **combobox:** Add announcement for empty results to autocomplete demo ([#32707](https://github.com/angular/components/pull/32707)) |
-| [0395ca20f4](https://github.com/angular/components/commit/0395ca20f4cd0bf563b63aa412e1b4956e384f9b) | perf | **grid:** avoid excessive change detections ([#32705](https://github.com/angular/components/pull/32705)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c71256dfdb](https://github.com/angular/components/commit/c71256dfdb981a628120d6bbafdc3001836dd9a8) | fix | **listbox:** incorrect wording in error message ([#32697](https://github.com/angular/components/pull/32697)) |
-| [e78587f2bf](https://github.com/angular/components/commit/e78587f2bfc87abf06a78cc95da201700b14a962) | fix | **table:** throw when multiple row templates are used with virtual scrolling ([#32682](https://github.com/angular/components/pull/32682)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c70a4737a9](https://github.com/angular/components/commit/c70a4737a9fbe398c535be68bf1bcd625a52d8d2) | fix | **sidenav:** incorrectly trapping focus in some cases ([#32699](https://github.com/angular/components/pull/32699)) |
-| [34bcffb9f5](https://github.com/angular/components/commit/34bcffb9f53074b1f9b2a0a2491da1774612b97b) | fix | **timepicker:** make it easier to style timepicker panel ([#32711](https://github.com/angular/components/pull/32711)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -163,24 +97,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="21.2.0-next.1"></a>
-# 21.2.0-next.1 "plastic-ant" (2026-01-21)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [ec384a37ab](https://github.com/angular/components/commit/ec384a37ab7df3838eaf7fcc238aab0ce8ba5ef2) | fix | **grid:** unit tests for grid pattern ([#32633](https://github.com/angular/components/pull/32633)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e397ecbcfa](https://github.com/angular/components/commit/e397ecbcfad4e85fde8d116faf5caa80dcddca45) | fix | **table:** remove string-based DI tokens ([#32677](https://github.com/angular/components/pull/32677)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3612ef6094](https://github.com/angular/components/commit/3612ef6094d268f14e2068db71ff7dada278476c) | fix | incorrect paths in declaration files for aria |
-| [f3357c1dff](https://github.com/angular/components/commit/f3357c1dff6e68de75f1c35ff8dde3b4f3874345) | fix | resolve sass if function deprecation warnings ([#32674](https://github.com/angular/components/pull/32674)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="21.1.1"></a>
 # 21.1.1 "plastic-bear" (2026-01-21)
 ### aria
@@ -192,11 +108,6 @@
 | -- | -- | -- |
 | [6b5466afb2](https://github.com/angular/components/commit/6b5466afb2e17677b2ad3eea61a6b7568190e7d3) | fix | incorrect paths in declaration files for aria |
 | [028f89b4d8](https://github.com/angular/components/commit/028f89b4d84bb708c809b2572da24d1284bf9f2d) | fix | resolve sass if function deprecation warnings ([#32674](https://github.com/angular/components/pull/32674)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="21.2.0-next.0"></a>
-# 21.2.0-next.0 "cadmium-chicken" (2026-01-14)
 
 <!-- CHANGELOG SPLIT MARKER -->
 
