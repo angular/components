@@ -10,28 +10,28 @@ import {
   Directive,
   input,
   ElementRef,
+  OnInit,
   inject,
-  signal,
   model,
   booleanAttribute,
   computed,
-  WritableSignal,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {AccordionPanelPattern, AccordionTriggerPattern} from '../private';
+import {AccordionTriggerPattern} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
+import {AccordionPanel} from './accordion-panel';
 
 /**
  * The trigger that toggles the visibility of its associated `ngAccordionPanel`.
  *
- * This directive requires a `panelId` that must match the `panelId` of the `ngAccordionPanel` it
- * controls. When clicked, it will expand or collapse the panel. It also handles keyboard
+ * This directive requires the `panel` input be set to the template reference of the `ngAccordionPanel`
+ * it controls. When clicked, it will expand or collapse the panel. It also handles keyboard
  * interactions for navigation within the `ngAccordionGroup`. It applies `role="button"` and manages
  * `aria-expanded`, `aria-controls`, and `aria-disabled` attributes for accessibility.
  * The `disabled` input can be used to disable the trigger.
  *
  * ```html
- * <button ngAccordionTrigger panelId="unique-id-1">
+ * <button ngAccordionTrigger panel="panel">
  *   Accordion Trigger Text
  * </button>
  * ```
@@ -45,7 +45,7 @@ import {ACCORDION_GROUP} from './accordion-tokens';
   host: {
     '[attr.data-active]': 'active()',
     'role': 'button',
-    '[id]': '_pattern.id()',
+    '[id]': 'id()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-controls]': '_pattern.controls()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -53,7 +53,7 @@ import {ACCORDION_GROUP} from './accordion-tokens';
     '[attr.tabindex]': '_pattern.tabIndex()',
   },
 })
-export class AccordionTrigger {
+export class AccordionTrigger implements OnInit {
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -63,11 +63,11 @@ export class AccordionTrigger {
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(ACCORDION_GROUP);
 
+  /** The associated AccordionPanel. */
+  readonly panel = input.required<AccordionPanel>();
+
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
-
-  /** A local unique identifier for the trigger, used to match with its panel's `panelId`. */
-  readonly panelId = input.required<string>();
 
   /** Whether the trigger is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -76,19 +76,20 @@ export class AccordionTrigger {
   readonly expanded = model<boolean>(false);
 
   /** Whether the trigger is active. */
-  readonly active = computed(() => this._pattern.active());
-
-  /** The accordion panel pattern controlled by this trigger. This is set by AccordionGroup. */
-  readonly _accordionPanelPattern: WritableSignal<AccordionPanelPattern | undefined> =
-    signal(undefined);
+  readonly active = computed(() => this._pattern!.active());
 
   /** The UI pattern instance for this trigger. */
-  readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
-    ...this,
-    accordionGroup: computed(() => this._accordionGroup._pattern),
-    accordionPanel: this._accordionPanelPattern,
-    element: () => this.element,
-  });
+  _pattern!: AccordionTriggerPattern;
+
+  ngOnInit() {
+    this._pattern = new AccordionTriggerPattern({
+      ...this,
+      accordionGroup: () => this._accordionGroup._pattern,
+      accordionPanelId: () => this.panel().id(),
+      element: () => this.element,
+    });
+    this.panel()._accordionTriggerPattern.set(this._pattern);
+  }
 
   /** Expands this item. */
   expand() {

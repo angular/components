@@ -32,27 +32,9 @@ export class AccordionGroupPattern {
 }
 
 // @public
-export interface AccordionPanelInputs {
-    accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
-    id: SignalLike<string>;
-    panelId: SignalLike<string>;
-}
-
-// @public
-export class AccordionPanelPattern {
-    constructor(inputs: AccordionPanelInputs);
-    accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
-    hidden: SignalLike<boolean>;
-    id: SignalLike<string>;
-    // (undocumented)
-    readonly inputs: AccordionPanelInputs;
-}
-
-// @public
 export interface AccordionTriggerInputs extends Omit<ListNavigationItem & ListFocusItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
     accordionGroup: SignalLike<AccordionGroupPattern>;
-    accordionPanel: SignalLike<AccordionPanelPattern | undefined>;
-    panelId: SignalLike<string>;
+    accordionPanelId: SignalLike<string>;
 }
 
 // @public
@@ -60,14 +42,13 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     constructor(inputs: AccordionTriggerInputs);
     readonly active: SignalLike<boolean>;
     close(): void;
-    readonly controls: SignalLike<string | undefined>;
+    readonly controls: SignalLike<string>;
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
     readonly hardDisabled: SignalLike<boolean>;
     readonly id: SignalLike<string>;
-    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: AccordionTriggerInputs;
     open(): void;
