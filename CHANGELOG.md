@@ -1,3 +1,12 @@
+<a name="21.1.6"></a>
+# 21.1.6 "plastic-monkey" (2026-02-25)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [50c34e6ef3](https://github.com/angular/components/commit/50c34e6ef314177cdd725a5b0c3177b65cc2809a) | fix | **combobox:** Adjust AutoComplete examples to properly announce no results text ([#32786](https://github.com/angular/components/pull/32786)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0-rc.0"></a>
 # 21.2.0-rc.0 "chlorine-canine" (2026-02-18)
 
