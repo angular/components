@@ -318,20 +318,45 @@ export class Grid<T extends GridCell> {
     }
 
     if (this.focusBehavior.stateStale()) {
+      const activeCell = this.focusBehavior.activeCell();
+      const activeCoords = this.focusBehavior.activeCoords();
+
       // Try focus on the same active cell after if a reordering happened.
-      if (this.focusBehavior.focusCell(this.focusBehavior.activeCell()!)) {
+      if (activeCell && this.focusBehavior.focusCell(activeCell)) {
         return true;
       }
 
       // If the active cell is no longer exist, focus on the coordinates instead.
-      if (this.focusBehavior.focusCoordinates(this.focusBehavior.activeCoords())) {
+      if (this.focusBehavior.focusCoordinates(activeCoords)) {
         return true;
       }
 
+      // If the coordinates are no longer valid (e.g. because the row was deleted at the end),
+      // try to focus on the previous row focusing on the same column.
+      const maxRow = this.data.maxRowCount() - 1;
+      const targetRow = Math.min(activeCoords.row, maxRow);
+
+      if (targetRow >= 0) {
+        // Try same column in the clamped row.
+        if (this.focusBehavior.focusCoordinates({row: targetRow, col: activeCoords.col})) {
+          return true;
+        }
+
+        // If that fails, try to find ANY cell in that row.
+        const firstInRow = this.navigationBehavior.peekFirst(targetRow);
+        if (firstInRow !== undefined && this.focusBehavior.focusCoordinates(firstInRow)) {
+          return true;
+        }
+      }
+
       // If the coordinates no longer valid, go back to the first available cell.
-      if (this.focusBehavior.focusCoordinates(this.navigationBehavior.peekFirst()!)) {
+      const firstAvailable = this.navigationBehavior.peekFirst();
+      if (firstAvailable !== undefined && this.focusBehavior.focusCoordinates(firstAvailable)) {
         return true;
       }
+
+      this.focusBehavior.activeCell.set(undefined);
+      this.focusBehavior.activeCoords.set({row: -1, col: -1});
     }
 
     return false;

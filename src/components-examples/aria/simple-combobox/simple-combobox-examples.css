@@ -58,7 +58,7 @@
   transition: transform 0.2s ease;
 }
 
-.example-combobox-input[aria-expanded='true'] + .example-arrow-icon {
+.example-combobox-input[aria-expanded='true']+.example-arrow-icon {
   transform: rotate(180deg);
 }
 
@@ -85,6 +85,8 @@
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
   background-color: var(--mat-sys-surface);
+  max-height: 15rem;
+  overflow: auto;
 }
 
 .example-listbox {
@@ -147,7 +149,7 @@
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
 }
 
-.example-combobox-container:focus-within [data-active='true'] {
+.example-combobox-container:focus-within [data-active='true']:not(button) {
   outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 80%, transparent);
 }
 
@@ -166,7 +168,7 @@
   padding: 0.3rem 1rem;
 }
 
-li[aria-expanded='false'] + ul[role='group'] {
+li[aria-expanded='false']+ul[role='group'] {
   display: none;
 }
 
@@ -200,4 +202,114 @@ ul[role='group'] {
 .example-combobox-container:has([aria-disabled='true']) {
   opacity: 0.4;
   cursor: default;
+}
+
+.example-grid-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px;
+  border-radius: var(--mat-sys-corner-extra-small);
+  transition: background-color 0.2s ease;
+}
+
+.example-grid-row.selectable {
+  cursor: pointer;
+}
+
+.example-grid-row.selectable:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+}
+
+.example-grid-row.selectable:active {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+}
+
+.example-grid-row[data-active='true'] {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  outline: 2px solid var(--mat-sys-primary);
+}
+
+.example-grid-header-row {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+  border-bottom: 1px solid var(--mat-sys-outline);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.example-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+}
+
+.example-cell-header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.example-cell-label {
+  flex: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.example-cell-checkbox,
+.example-cell-button {
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.example-cell-input {
+  flex: 1;
+}
+
+.example-button {
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 40px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: var(--mat-sys-on-surface);
+  transition: opacity 0.2s, color 0.2s, transform 0.2s;
+}
+
+.example-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.example-button:focus,
+.example-button:hover,
+.example-button[data-active='true'] {
+  opacity: 1;
+  color: var(--mat-sys-primary);
+  outline: none;
+  transform: scale(1.15);
+}
+
+.example-button:active {
+  transform: scale(0.95);
+}
+
+.example-button[aria-pressed='true'],
+.example-button[aria-checked='true'] {
+  color: var(--mat-sys-primary);
+}
+
+.example-button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.45;
 }

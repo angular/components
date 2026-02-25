@@ -13,10 +13,16 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/aria/grid",
         "//src/aria/listbox",
         "//src/aria/simple-combobox",
         "//src/aria/tree",
+        "//src/cdk/a11y",
         "//src/cdk/overlay",
+        "//src/material/checkbox",
+        "//src/material/core",
+        "//src/material/icon",
+        "//src/material/tooltip",
     ],
 )
 
