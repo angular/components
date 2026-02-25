@@ -107,17 +107,17 @@ export class SimpleComboboxPattern {
         e => {
           this.keyboardEventRelay.set(e);
         },
-        {preventDefault: this.popupType() !== 'listbox'},
+        {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
       .on(
         'ArrowRight',
         e => {
           this.keyboardEventRelay.set(e);
         },
-        {preventDefault: this.popupType() !== 'listbox'},
+        {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
-      .on('ArrowUp', e => this.keyboardEventRelay.set(e))
-      .on('ArrowDown', e => this.keyboardEventRelay.set(e))
+      .on('ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
+      .on('ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
       .on('Home', e => this.keyboardEventRelay.set(e))
       .on('End', e => this.keyboardEventRelay.set(e))
       .on('Enter', e => this.keyboardEventRelay.set(e))
