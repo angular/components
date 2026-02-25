@@ -58,9 +58,9 @@ describe('MatCheckbox', () => {
       expect(inputElement.checked).toBe(false);
     }));
 
-    it('should hide the internal SVG', () => {
-      const svg = checkboxNativeElement.querySelector('svg')!;
-      expect(svg.getAttribute('aria-hidden')).toBe('true');
+    it('should hide the decorative element', () => {
+      const background = checkboxNativeElement.querySelector('.mdc-checkbox__background')!;
+      expect(background.getAttribute('aria-hidden')).toBe('true');
     });
 
     it('should toggle checkbox ripple disabledness correctly', fakeAsync(() => {
