@@ -130,6 +130,24 @@ describe('MatButton', () => {
         .withContext('Expected fab buttons to use accent palette by default')
         .toContain('mat-accent');
     });
+
+    it('should show progress indicator when showProgress is true', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const fabButtonDebugEl = fixture.debugElement.query(By.css('button[mat-fab]'))!;
+
+      expect(fabButtonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(0);
+      expect(fabButtonDebugEl.nativeElement.classList).not.toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
+      fixture.componentInstance.showProgress = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(fabButtonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(1);
+      expect(fabButtonDebugEl.nativeElement.classList).toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
+    });
   });
 
   describe('button[mat-mini-fab]', () => {
@@ -142,6 +160,24 @@ describe('MatButton', () => {
       expect(miniFabButtonDebugEl.nativeElement.classList)
         .withContext('Expected mini-fab buttons to use accent palette by default')
         .toContain('mat-accent');
+    });
+
+    it('should show progress indicator when showProgress is true', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const miniFabButtonDebugEl = fixture.debugElement.query(By.css('button[mat-mini-fab]'))!;
+
+      expect(miniFabButtonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(0);
+      expect(miniFabButtonDebugEl.nativeElement.classList).not.toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
+      fixture.componentInstance.showProgress = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(miniFabButtonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(1);
+      expect(miniFabButtonDebugEl.nativeElement.classList).toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
     });
   });
 
@@ -201,6 +237,24 @@ describe('MatButton', () => {
       expect(buttonNativeElement.disabled)
         .withContext('Expected button to be disabled')
         .toBeTruthy();
+    });
+
+    it('should show progress indicator when showProgress is true', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const buttonDebugEl = fixture.debugElement.query(By.css('button'))!;
+
+      expect(buttonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(0);
+      expect(buttonDebugEl.nativeElement.classList).not.toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
+      fixture.componentInstance.showProgress = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(buttonDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(1);
+      expect(buttonDebugEl.nativeElement.classList).toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
     });
   });
 
@@ -287,6 +341,24 @@ describe('MatButton', () => {
       fixture.detectChanges();
 
       expect(buttonElement.hasAttribute('tabindex')).toBe(false);
+    });
+
+    it('should show progress indicator when showProgress is true', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const anchorDebugEl = fixture.debugElement.query(By.css('a'))!;
+
+      expect(anchorDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(0);
+      expect(anchorDebugEl.nativeElement.classList).not.toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
+      fixture.componentInstance.showProgress = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(anchorDebugEl.queryAll(By.css('[progressIndicator]')).length).toBe(1);
+      expect(anchorDebugEl.nativeElement.classList).toContain(
+        'mat-mdc-button-progress-indicator-shown',
+      );
     });
 
     describe('change detection behavior', () => {
@@ -445,16 +517,26 @@ describe('MatFabDefaultOptions', () => {
   template: `
     <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled"
-      [disabledInteractive]="disabledInteractive">
+      [disabledInteractive]="disabledInteractive"
+      [showProgress]="showProgress">
       Go
+      <span progressIndicator>Progress...</span>
     </button>
     <a [tabIndex]="tabIndex" href="https://www.google.com" mat-button [disabled]="isDisabled"
-      [color]="buttonColor" [disabledInteractive]="disabledInteractive">
+      [color]="buttonColor" [disabledInteractive]="disabledInteractive"
+      [showProgress]="showProgress">
       Link
+      <span progressIndicator>Progress...</span>
     </a>
-    <button mat-fab>Fab Button</button>
+    <button mat-fab [showProgress]="showProgress">
+      Fab Button
+      <span progressIndicator>Progress...</span>
+    </button>
     <button mat-fab [extended]="extended" class="extended-fab-test">Extended</button>
-    <button mat-mini-fab>Mini Fab Button</button>
+    <button mat-mini-fab [showProgress]="showProgress">
+      Mini Fab Button
+      <span progressIndicator>Progress...</span>
+    </button>
     <button class="dynamic" [matButton]="appearance">Dynamic button</button>
     <button class="default-appearance" matButton>Dynamic button</button>
   `,
@@ -469,6 +551,7 @@ class TestApp {
   extended = false;
   disabledInteractive = false;
   appearance: MatButtonAppearance = 'text';
+  showProgress = false;
 
   increment() {
     this.clickCount++;

@@ -66,6 +66,8 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       });
   }
 
+  private readonly _progressIndicator = this.locatorForOptional('[progressIndicator]');
+
   /**
    * Clicks the button at the given position relative to its top-left.
    * @param relativeX The relative x position of the click.
@@ -107,6 +109,11 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
   /** Whether the button is focused. */
   async isFocused(): Promise<boolean> {
     return (await this.host()).isFocused();
+  }
+
+  /** Whether the button is showing a progress indicator. */
+  async isShowingProgress(): Promise<boolean> {
+    return (await this._progressIndicator()) !== null;
   }
 
   /** Gets the variant of the button. */
