@@ -1,29 +1,29 @@
 <div ngTabs>
-  <div ngTabList focusMode="activedescendant" selectedTab="tab-1">
-    <div ngTab value="tab-1">Tab 1</div>
-    <div ngTab value="tab-2">Tab 2</div>
-    <div ngTab value="tab-3">Tab 3</div>
-    <div ngTab value="tab-4">Tab 4</div>
-    <div ngTab value="tab-5">Tab 5</div>
+  <div ngTabList focusMode="activedescendant" [selectedTab]="tab1">
+    <div ngTab #tab1="ngTab" [panel]="panel1">Tab 1</div>
+    <div ngTab [panel]="panel2">Tab 2</div>
+    <div ngTab [panel]="panel3">Tab 3</div>
+    <div ngTab [panel]="panel4">Tab 4</div>
+    <div ngTab [panel]="panel5">Tab 5</div>
   </div>
 
-  <div ngTabPanel value="tab-1">
+  <div ngTabPanel #panel1="ngTabPanel">
     <ng-template ngTabContent>Panel 1</ng-template>
   </div>
 
-  <div ngTabPanel value="tab-2">
+  <div ngTabPanel #panel2="ngTabPanel">
     <ng-template ngTabContent>Panel 2</ng-template>
   </div>
 
-  <div ngTabPanel value="tab-3">
+  <div ngTabPanel #panel3="ngTabPanel">
     <ng-template ngTabContent>Panel 3</ng-template>
   </div>
 
-  <div ngTabPanel value="tab-4">
+  <div ngTabPanel #panel4="ngTabPanel">
     <ng-template ngTabContent>Panel 4</ng-template>
   </div>
 
-  <div ngTabPanel value="tab-5">
+  <div ngTabPanel #panel5="ngTabPanel">
     <ng-template ngTabContent>Panel 5</ng-template>
   </div>
 </div>

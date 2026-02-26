@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, viewChildren} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
@@ -17,7 +17,6 @@ interface ModifierKeys {
 }
 
 interface TestTabDefinition {
-  value: string;
   label: string;
   content: string;
   disabled?: boolean;
@@ -132,9 +131,9 @@ describe('Tabs', () => {
       setupTestTabs();
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
       });
     });
@@ -265,9 +264,9 @@ describe('Tabs', () => {
             setupTestTabs({textDirection: 'ltr'});
             updateTabs({
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
               selectedTab: 'tab1',
@@ -356,9 +355,9 @@ describe('Tabs', () => {
             setupTestTabs({textDirection: 'rtl'});
             updateTabs({
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
               selectedTab: 'tab1',
@@ -401,9 +400,9 @@ describe('Tabs', () => {
             updateTabs({
               orientation: 'vertical',
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
               selectedTab: 'tab1',
@@ -487,9 +486,9 @@ describe('Tabs', () => {
       setupTestTabs();
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2'},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
         selectedTab: 'tab1',
       });
@@ -638,9 +637,9 @@ describe('Tabs', () => {
     it('should not select a disabled tab via click', () => {
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
         selectedTab: 'tab1',
       });
@@ -653,9 +652,9 @@ describe('Tabs', () => {
     it('should not select a disabled tab via keyboard', () => {
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
         selectedTab: 'tab1',
         selectionMode: 'explicit',
@@ -720,13 +719,13 @@ describe('Tabs', () => {
           [softDisabled]="softDisabled()"
           [focusMode]="focusMode()"
           [selectionMode]="selectionMode()">
-        @for (tabDef of tabsData(); track tabDef.value) {
-          <li ngTab [value]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
+        @for (tabDef of tabsData(); track tabDef.label) {
+          <li ngTab [panel]="tabPanels[0]" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
         }
       </ul>
 
-      @for (tabDef of tabsData(); track tabDef.value) {
-        <div ngTabPanel [value]="tabDef.value">
+      @for (tabDef of tabsData(); track tabDef.label) {
+        <div ngTabPanel>
           <ng-template ngTabContent>{{ tabDef.content }}</ng-template>
         </div>
       }
@@ -737,30 +736,29 @@ describe('Tabs', () => {
 class TestTabsComponent {
   tabsData = signal<TestTabDefinition[]>([
     {
-      value: 'tab1',
       label: 'Tab 1',
       content: 'Content 1',
       disabled: false,
     },
     {
-      value: 'tab2',
       label: 'Tab 2',
       content: 'Content 2',
       disabled: false,
     },
     {
-      value: 'tab3',
       label: 'Tab 3',
       content: 'Content 3',
       disabled: true,
     },
   ]);
 
-  selectedTab = signal<string | undefined>(undefined);
+  selectedTab = signal<Tab | undefined>(undefined);
   orientation = signal<'horizontal' | 'vertical'>('horizontal');
   disabled = signal(false);
   wrap = signal(true);
   softDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'follow' | 'explicit'>('follow');
+
+  tabPanels = viewChildren(TabPanel);
 }

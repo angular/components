@@ -7,18 +7,8 @@
  */
 
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {
-  computed,
-  Directive,
-  ElementRef,
-  inject,
-  input,
-  afterRenderEffect,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '../private';
-import {TABS} from './utils';
+import {computed, Directive, ElementRef, inject, input, afterRenderEffect} from '@angular/core';
+import {TabPattern, TabPanelPattern, DeferredContentAware} from '../private';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
@@ -56,7 +46,7 @@ import {TABS} from './utils';
     },
   ],
 })
-export class TabPanel implements OnInit, OnDestroy {
+export class TabPanel {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -66,19 +56,11 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
-  /** The parent Tabs. */
-  private readonly _tabs = inject(TABS);
-
   /** A global unique identifier for the tab. */
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  private readonly _tabPattern = computed(() =>
-    this._tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
-  );
-
-  /** A local unique identifier for the tabpanel. */
-  readonly value = input.required<string>();
+  _tabPattern?: TabPattern;
 
   /** Whether the tab panel is visible. */
   readonly visible = computed(() => !this._pattern.hidden());
@@ -86,18 +68,10 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The TabPanel UIPattern. */
   readonly _pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
-    tab: this._tabPattern,
+    tab: () => this._tabPattern,
   });
 
   constructor() {
     afterRenderEffect(() => this._deferredContentAware.contentVisible.set(this.visible()));
-  }
-
-  ngOnInit() {
-    this._tabs._register(this);
-  }
-
-  ngOnDestroy() {
-    this._tabs._unregister(this);
   }
 }
