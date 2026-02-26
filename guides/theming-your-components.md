@@ -942,7 +942,7 @@ configuration.
 
 $theme: mat.m2-define-light-theme((
   color: (
-    primary: mat.define-palette(mat.$indigo-palette, 500),
+    primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500),
   ),
   ...
 ));
