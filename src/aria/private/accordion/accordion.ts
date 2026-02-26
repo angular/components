@@ -123,14 +123,11 @@ export class AccordionGroupPattern {
 /** Inputs for the AccordionTriggerPattern. */
 export interface AccordionTriggerInputs
   extends Omit<ListNavigationItem & ListFocusItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
-  /** A local unique identifier for the trigger's corresponding panel. */
-  panelId: SignalLike<string>;
-
   /** The parent accordion group that controls this trigger. */
   accordionGroup: SignalLike<AccordionGroupPattern>;
 
-  /** The accordion panel controlled by this trigger. */
-  accordionPanel: SignalLike<AccordionPanelPattern | undefined>;
+  /** The accordion panel id controlled by this trigger. */
+  accordionPanelId: SignalLike<string>;
 }
 
 /** A pattern controls the expansion state of an accordion. */
@@ -151,7 +148,7 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
   readonly active = computed(() => this.inputs.accordionGroup().inputs.activeItem() === this);
 
   /** Id of the accordion panel controlled by the trigger. */
-  readonly controls = computed(() => this.inputs.accordionPanel()?.inputs.id());
+  readonly controls = computed(() => this.inputs.accordionPanelId());
 
   /** The tabindex of the trigger. */
   readonly tabIndex = computed(() =>
@@ -167,9 +164,6 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
   readonly hardDisabled = computed(
     () => this.disabled() && !this.inputs.accordionGroup().inputs.softDisabled(),
   );
-
-  /** The index of the trigger within its accordion group. */
-  readonly index = computed(() => this.inputs.accordionGroup().inputs.items().indexOf(this));
 
   constructor(readonly inputs: AccordionTriggerInputs) {
     this.expanded = inputs.expanded;
@@ -188,35 +182,5 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
   /** Toggles the accordion panel. */
   toggle(): void {
     this.inputs.accordionGroup().expansionBehavior.toggle(this);
-  }
-}
-
-/** Represents the required inputs for the AccordionPanelPattern. */
-export interface AccordionPanelInputs {
-  /** A global unique identifier for the panel. */
-  id: SignalLike<string>;
-
-  /** A local unique identifier for the panel, matching its trigger's panelId. */
-  panelId: SignalLike<string>;
-
-  /** The parent accordion trigger that controls this panel. */
-  accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
-}
-
-/** Represents an accordion panel. */
-export class AccordionPanelPattern {
-  /** A global unique identifier for the panel. */
-  id: SignalLike<string>;
-
-  /** The parent accordion trigger that controls this panel. */
-  accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
-
-  /** Whether the accordion panel is hidden. True if the associated trigger is not expanded. */
-  hidden: SignalLike<boolean>;
-
-  constructor(readonly inputs: AccordionPanelInputs) {
-    this.id = inputs.id;
-    this.accordionTrigger = inputs.accordionTrigger;
-    this.hidden = computed(() => inputs.accordionTrigger()?.expanded() === false);
   }
 }

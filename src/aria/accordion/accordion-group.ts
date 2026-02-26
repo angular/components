@@ -12,7 +12,6 @@ import {
   ElementRef,
   inject,
   contentChildren,
-  afterRenderEffect,
   signal,
   booleanAttribute,
   computed,
@@ -20,7 +19,6 @@ import {
 import {Directionality} from '@angular/cdk/bidi';
 import {AccordionGroupPattern, AccordionTriggerPattern} from '../private';
 import {AccordionTrigger} from './accordion-trigger';
-import {AccordionPanel} from './accordion-panel';
 import {ACCORDION_GROUP} from './accordion-tokens';
 
 /**
@@ -32,12 +30,12 @@ import {ACCORDION_GROUP} from './accordion-tokens';
  * It supports both single and multiple expansion modes.
  *
  * ```html
- * <div ngAccordionGroup [multiExpandable]="true" [(expandedPanels)]="expandedItems">
+ * <div ngAccordionGroup [multiExpandable]="true">
  *   <div class="accordion-item">
  *     <h3>
- *       <button ngAccordionTrigger panelId="item-1">Item 1</button>
+ *       <button ngAccordionTrigger panel="panel1">Item 1</button>
  *     </h3>
- *     <div ngAccordionPanel panelId="item-1">
+ *     <div ngAccordionPanel #panel1="ngAccordionTrigger">
  *       <ng-template ngAccordionContent>
  *         <p>Content for Item 1.</p>
  *       </ng-template>
@@ -45,9 +43,9 @@ import {ACCORDION_GROUP} from './accordion-tokens';
  *   </div>
  *   <div class="accordion-item">
  *     <h3>
- *       <button ngAccordionTrigger panelId="item-2">Item 2</button>
+ *       <button ngAccordionTrigger panel="panel2">Item 2</button>
  *     </h3>
- *     <div ngAccordionPanel panelId="item-2">
+ *     <div ngAccordionPanel #panel2="ngAccordionTrigger">
  *       <ng-template ngAccordionContent>
  *         <p>Content for Item 2.</p>
  *       </ng-template>
@@ -80,10 +78,11 @@ export class AccordionGroup {
   private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
 
   /** The AccordionTrigger patterns nested inside this group. */
-  private readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
-
-  /** The AccordionPanels nested inside this group. */
-  private readonly _panels = contentChildren(AccordionPanel, {descendants: true});
+  private readonly _triggerPatterns = computed(() =>
+    this._triggers()
+      .map(t => t._pattern)
+      .filter(p => !!p),
+  );
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -110,25 +109,9 @@ export class AccordionGroup {
     items: this._triggerPatterns,
     // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
-    getItem: e => this._getItem(e),
+    getItem: element => this._findTriggerPattern(element),
     element: () => this.element,
   });
-
-  constructor() {
-    // Effect to link triggers with their corresponding panels and update the group's items.
-    afterRenderEffect(() => {
-      const triggers = this._triggers();
-      const panels = this._panels();
-
-      for (const trigger of triggers) {
-        const panel = panels.find(p => p.panelId() === trigger.panelId());
-        trigger._accordionPanelPattern.set(panel?._pattern);
-        if (panel) {
-          panel._accordionTriggerPattern.set(trigger._pattern);
-        }
-      }
-    });
-  }
 
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {
@@ -141,7 +124,9 @@ export class AccordionGroup {
   }
 
   /** Gets the trigger pattern for a given element. */
-  private _getItem(element: Element | null | undefined): AccordionTriggerPattern | undefined {
+  private _findTriggerPattern(
+    element: Element | null | undefined,
+  ): AccordionTriggerPattern | undefined {
     let target = element;
 
     while (target) {
