@@ -216,6 +216,43 @@ pop-up contexts, such as the date picker. The Material Design density guidance
 explicitly discourages changes to density for such interactions because they
 don't compete for space in the application's layout.
 
+## Prebuilt Themes
+
+Angular Material includes eight prebuilt theme CSS files as an alternative to
+defining a custom theme with Sass. Four of these themes use the current Material
+3 design system, while the other four use the older Material 2 design system.
+
+If you want your application to follow the modern Material 3 design language,
+make sure to use one of the M3 themes. The M2 themes are provided for backwards
+compatibility and will be removed in a future version.
+
+| Theme                    | Design system | Light or dark? | Palettes (primary, tertiary) |
+|--------------------------|---------------|----------------|------------------------------|
+| `azure-blue.css`         | **M3**        | Light          | azure, blue                  |
+| `rose-red.css`           | **M3**        | Light          | rose, red                    |
+| `cyan-orange.css`        | **M3**        | Dark           | cyan, orange                 |
+| `magenta-violet.css`     | **M3**        | Dark           | magenta, violet              |
+| `deeppurple-amber.css`   | M2            | Light          | deep-purple, amber           |
+| `indigo-pink.css`        | M2            | Light          | indigo, pink                 |
+| `pink-bluegrey.css`      | M2            | Dark           | pink, blue-grey              |
+| `purple-green.css`       | M2            | Dark           | purple, green                |
+
+You can find the prebuilt theme files in the `prebuilt-themes` directory of
+Angular Material’s npm package (`@angular/material/prebuilt-themes`). To include
+a prebuilt theme in your application, add the chosen CSS file to the `styles`
+array of your project’s `angular.json` file:
+
+```json
+"styles": [
+  "@angular/material/prebuilt-themes/azure-blue.css"
+]
+```
+
+You can [reference the source code for these prebuilt themes][prebuilt] to see
+examples of complete theme definitions.
+
+[prebuilt]: https://github.com/angular/components/blob/main/src/material/core/theming/prebuilt
+
 ## Color Palettes
 
 A color palette is a set of similar colors with different hues ranging from
