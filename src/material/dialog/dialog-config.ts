@@ -130,10 +130,14 @@ export class MatDialogConfig<D = any> {
   autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
 
   /**
-   * Whether the dialog should restore focus to the
-   * previously-focused element, after it's closed.
+   * Whether the dialog should restore focus to the previously-focused element upon closing.
+   * Has the following behavior based on the type that is passed in:
+   * - `boolean` - when true, will return focus to the element that was focused before the dialog
+   *    was opened, otherwise won't restore focus at all.
+   * - `string` - focus will be restored to the first element that matches the CSS selector.
+   * - `HTMLElement` - focus will be restored to the specific element.
    */
-  restoreFocus?: boolean = true;
+  restoreFocus?: boolean | string | HTMLElement = true;
 
   /** Whether to wait for the opening animation to finish before trapping focus. */
   delayFocusTrap?: boolean = true;
