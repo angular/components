@@ -74,11 +74,8 @@ export class TabPanel implements OnInit, OnDestroy {
 
   /** The Tab UIPattern associated with the tabpanel */
   private readonly _tabPattern = computed(() =>
-    this._tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
+    this._tabs._tabPatterns()?.find(tab => tab.inputs.tabpanel() === this._pattern),
   );
-
-  /** A local unique identifier for the tabpanel. */
-  readonly value = input.required<string>();
 
   /** Whether the tab panel is visible. */
   readonly visible = computed(() => !this._pattern.hidden());

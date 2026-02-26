@@ -30,9 +30,6 @@ export interface TabInputs
 
   /** The remote tabpanel controlled by the tab. */
   tabpanel: SignalLike<TabPanelPattern | undefined>;
-
-  /** The remote tabpanel unique identifier. */
-  value: SignalLike<string>;
 }
 
 /** A tab in a tablist. */
@@ -42,9 +39,6 @@ export class TabPattern {
 
   /** The index of the tab. */
   readonly index = computed(() => this.inputs.tablist().inputs.items().indexOf(this));
-
-  /** The remote tabpanel unique identifier. */
-  readonly value: SignalLike<string> = () => this.inputs.value();
 
   /** Whether the tab is disabled. */
   readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
@@ -87,18 +81,12 @@ export interface TabPanelInputs extends LabelControlOptionalInputs {
 
   /** The tab that controls this tabpanel. */
   tab: SignalLike<TabPattern | undefined>;
-
-  /** A local unique identifier for the tabpanel. */
-  value: SignalLike<string>;
 }
 
 /** A tabpanel associated with a tab. */
 export class TabPanelPattern {
   /** A global unique identifier for the tabpanel. */
   readonly id: SignalLike<string> = () => this.inputs.id();
-
-  /** A local unique identifier for the tabpanel. */
-  readonly value: SignalLike<string> = () => this.inputs.value();
 
   /** Controls label for this tabpanel. */
   readonly labelManager: LabelControl;
@@ -263,18 +251,10 @@ export class TabListPattern {
     }
   }
 
-  /** Opens the tab by given value. */
-  open(value: string): boolean;
-
   /** Opens the given tab or the current active tab. */
   open(tab?: TabPattern): boolean;
-
-  open(tab: TabPattern | string | undefined): boolean {
+  open(tab: TabPattern | undefined): boolean {
     tab ??= this.activeTab();
-
-    if (typeof tab === 'string') {
-      tab = this.inputs.items().find(t => t.value() === tab);
-    }
 
     if (tab === undefined) return false;
 

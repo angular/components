@@ -21,6 +21,7 @@ import {
 import {TabPattern} from '../private';
 import {TabList} from './tab-list';
 import {HasElement, TABS} from './utils';
+import {TabPanel} from './tab-panel';
 
 /**
  * A selectable tab in a TabList.
@@ -71,15 +72,12 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   private readonly _tablistPattern = computed(() => this._tabList._pattern);
 
   /** The TabPanel UIPattern associated with the tab */
-  private readonly _tabpanelPattern = computed(() =>
-    this._tabs._unorderedTabpanelPatterns().find(tabpanel => tabpanel.value() === this.value()),
-  );
+  private readonly _tabpanelPattern = computed(() => this.panel()?._pattern);
+
+  readonly panel = input<TabPanel>();
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** The remote tabpanel unique identifier. */
-  readonly value = input.required<string>();
 
   /** Whether the tab is active. */
   readonly active = computed(() => this._pattern.active());

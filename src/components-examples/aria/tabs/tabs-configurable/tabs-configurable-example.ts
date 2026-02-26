@@ -4,6 +4,7 @@ import {Tabs, TabList, Tab, TabPanel, TabContent} from '@angular/aria/tabs';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {computed} from '@angular/aria/private';
 
 /** @title Configurable Tabs. */
 @Component({
@@ -26,7 +27,7 @@ export class TabsConfigurableExample {
   orientation: 'vertical' | 'horizontal' = 'horizontal';
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'follow';
-  tabSelection = 'tab-1';
+  tabSelectionIndex = 0;
 
   wrap = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});

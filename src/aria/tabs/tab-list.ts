@@ -104,7 +104,7 @@ export class TabList implements OnInit, OnDestroy {
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** The current selected tab. */
-  readonly selectedTab = model<string | undefined>();
+  readonly selectedTab = model<Tab | undefined>();
 
   /** Whether the tablist is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -128,19 +128,19 @@ export class TabList implements OnInit, OnDestroy {
     });
 
     afterRenderEffect(() => {
-      const tab = this._pattern.selectedTab();
-      if (tab) {
-        this.selectedTab.set(tab.value());
+      const tabPattern = this._pattern.selectedTab();
+      if (tabPattern) {
+        const tab = [...this._unorderedTabs()].find(tab => tab._pattern === tabPattern);
+        this.selectedTab.set(tab);
       }
     });
 
     afterRenderEffect(() => {
-      const value = this.selectedTab();
-      if (value) {
+      const tab = this.selectedTab();
+      if (tab) {
         this._tabPatterns().forEach(tab => tab.expanded.set(false));
-        const tab = this._tabPatterns().find(t => t.value() === value);
-        this._pattern.selectedTab.set(tab);
-        tab?.expanded.set(true);
+        this._pattern.selectedTab.set(tab._pattern);
+        tab._pattern.expanded.set(true);
       }
     });
   }
@@ -165,10 +165,5 @@ export class TabList implements OnInit, OnDestroy {
   _unregister(child: Tab) {
     this._unorderedTabs().delete(child);
     this._unorderedTabs.set(new Set(this._unorderedTabs()));
-  }
-
-  /** Opens the tab panel with the specified value. */
-  open(value: string): boolean {
-    return this._pattern.open(value);
   }
 }
