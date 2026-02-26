@@ -1,0 +1,67 @@
+<div class="example-combobox-container">
+  <div #origin class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">calendar_month</span>
+    <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Pick a date..."
+      [(value)]="selection" [(expanded)]="popupExpanded" />
+  </div>
+
+  <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: false}"
+    [cdkConnectedOverlayOpen]="popupExpanded()">
+    <ng-template ngComboboxPopup [combobox]="combobox" popupType="grid">
+      <div ngComboboxWidget class="example-popup example-datepicker-popup" cdkTrapFocus [cdkTrapFocusAutoCapture]="true"
+        [attr.aria-activedescendant]="grid._pattern.activeDescendant()" (keydown)="handleWidgetKeydown($event)">
+        <div class="example-datepicker-header">
+          <button type="button" class="example-datepicker-nav-button" (click)="prevMonth()"
+            (keydown)="handleButtonKeydown($event)">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <div class="example-datepicker-title" aria-live="polite">{{ monthYearLabel() }}</div>
+          <button type="button" class="example-datepicker-nav-button" (click)="nextMonth()"
+            (keydown)="handleButtonKeydown($event)">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+
+        <table ngGrid #grid="ngGrid" cdkFocusInitial tabindex="0" focusMode="activedescendant"
+          class="example-datepicker-grid" colWrap="continuous" rowWrap="nowrap" [enableSelection]="true"
+          selectionMode="explicit">
+          <thead>
+            <tr>
+              @for (day of weekdays(); track day.long) {
+              <th scope="col" class="example-datepicker-cell example-datepicker-weekday">
+                <span class="cdk-visually-hidden">{{ day.long }}</span>
+                <span aria-hidden="true">{{ day.narrow }}</span>
+              </th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (week of weeks(); track week) {
+            <tr ngGridRow>
+              @if ($first) {
+              @for (day of daysFromPrevMonth(); track day) {
+              <td class="example-datepicker-cell example-datepicker-empty">{{ day }}</td>
+              }
+              }
+
+              @for (day of week; track day) {
+              <td class="example-datepicker-cell" ngGridCell [(selected)]="day.selected" (click)="selectDate(day)">
+                <button ngGridCellWidget class="example-datepicker-day-button" [attr.aria-label]="day.ariaLabel">
+                  {{ day.displayName }}
+                </button>
+              </td>
+              }
+
+              @if ($last && week.length < 7) { @for (day of [].constructor(7 - week.length); track $index) { <td
+                class="example-datepicker-cell example-datepicker-empty">{{ $index + 1 }}</td>
+                }
+                }
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

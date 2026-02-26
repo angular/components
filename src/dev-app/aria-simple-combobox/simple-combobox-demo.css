@@ -1,0 +1,25 @@
+.example-combobox-row {
+  display: flex;
+  gap: 20px;
+}
+
+.example-combobox-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 350px;
+  padding: 20px 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  padding-top: 20px;
+}
+
+h3 {
+    font-size: 1rem;
+}
+.simple-combobox-demo {
+  padding-bottom: 300px;
+}

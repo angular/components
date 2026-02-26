@@ -1,0 +1,48 @@
+<div class="example-combobox-container">
+  <div #origin class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input
+      ngCombobox
+      #combobox="ngCombobox"
+      class="example-combobox-input"
+      placeholder="Search..."
+      [(value)]="searchString"
+      [(expanded)]="popupExpanded"
+      [inlineSuggestion]="selectedOption()[0] || options()[0]"
+    />
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlayDisableClose]="true"
+  >
+    <ng-template ngComboboxPopup [combobox]="combobox">
+      <div
+        ngListbox
+        ngComboboxWidget
+        class="example-listbox example-popup"
+        focusMode="activedescendant"
+        [(values)]="selectedOption"
+        (click)="onCommit()"
+        (keydown.enter)="onCommit()"
+      >
+        @for (option of options(); track option) {
+          <div
+            class="example-option example-selectable example-stateful"
+            ngOption
+            [value]="option"
+            [label]="option"
+          >
+            <span>{{option}}</span>
+            <span
+              aria-hidden="true"
+              class="material-symbols-outlined example-icon example-selected-icon"
+              >check</span
+            >
+          </div>
+        }
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

@@ -1,0 +1,108 @@
+.example-datepicker-popup {
+  padding: 16px;
+  width: 320px;
+  max-height: none;
+  overflow: visible;
+  background-color: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  box-shadow: var(--mat-sys-level2-shadow);
+}
+
+.example-datepicker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  margin-bottom: 12px;
+}
+
+.example-datepicker-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--mat-sys-on-surface);
+}
+
+.example-datepicker-nav-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface);
+  transition: background-color 0.2s ease;
+}
+
+.example-datepicker-nav-button:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+}
+
+.example-datepicker-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.example-datepicker-cell {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+}
+
+.example-datepicker-weekday {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+  padding-bottom: 8px;
+}
+
+.example-datepicker-empty {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 30%, transparent);
+  font-size: 0.8rem;
+}
+
+.example-datepicker-day-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.example-datepicker-cell:hover .example-datepicker-day-button {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+}
+
+/* Show circular focus ring on the day button when active using box-shadow */
+/* Subdued grey by default when navigating from the input */
+.example-datepicker-cell[data-active='true'] .example-datepicker-day-button {
+  box-shadow: 0 0 0 2px var(--mat-sys-outline);
+}
+
+/* Highlight circle with primary color when the grid has actual focus */
+.example-datepicker-grid:focus .example-datepicker-cell[data-active='true'] .example-datepicker-day-button,
+.example-datepicker-grid:focus-within .example-datepicker-cell[data-active='true'] .example-datepicker-day-button {
+  box-shadow: 0 0 0 2px var(--mat-sys-primary);
+}
+
+/* Hide all grid focus indicators when focus is in the header navigation */
+.example-datepicker-header:focus-within~.example-datepicker-grid .example-datepicker-cell[data-active='true'] .example-datepicker-day-button {
+  box-shadow: none;
+}
+
+.example-datepicker-cell[aria-selected='true'] .example-datepicker-day-button {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}

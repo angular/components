@@ -33,6 +33,7 @@ ng_project(
         "//src/dev-app/aria-menu",
         "//src/dev-app/aria-menubar",
         "//src/dev-app/aria-select",
+        "//src/dev-app/aria-simple-combobox",
         "//src/dev-app/aria-tabs",
         "//src/dev-app/aria-toolbar",
         "//src/dev-app/aria-tree",
