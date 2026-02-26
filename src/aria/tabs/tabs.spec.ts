@@ -1,9 +1,8 @@
-import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement, model, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tabs} from './tabs';
 import {TabList} from './tab-list';
 import {Tab} from './tab';
 import {TabPanel} from './tab-panel';
@@ -17,7 +16,6 @@ interface ModifierKeys {
 }
 
 interface TestTabDefinition {
-  value: string;
   label: string;
   content: string;
   disabled?: boolean;
@@ -27,12 +25,10 @@ describe('Tabs', () => {
   let fixture: ComponentFixture<TestTabsComponent>;
   let testComponent: TestTabsComponent;
 
-  let tabsDebugElement: DebugElement;
   let tabListDebugElement: DebugElement;
   let tabDebugElements: DebugElement[];
   let tabPanelDebugElements: DebugElement[];
 
-  let tabsElement: HTMLElement;
   let tabListElement: HTMLElement;
   let tabElements: HTMLElement[];
   let tabPanelElements: HTMLElement[];
@@ -79,7 +75,7 @@ describe('Tabs', () => {
   function updateTabs(
     options: {
       initialTabs?: TestTabDefinition[];
-      selectedTab?: string | undefined;
+      selectedTab?: number | undefined;
       orientation?: 'horizontal' | 'vertical';
       disabled?: boolean;
       wrap?: boolean;
@@ -102,12 +98,10 @@ describe('Tabs', () => {
   }
 
   function defineTestVariables() {
-    tabsDebugElement = fixture.debugElement.query(By.directive(Tabs));
     tabListDebugElement = fixture.debugElement.query(By.directive(TabList));
     tabDebugElements = fixture.debugElement.queryAll(By.directive(Tab));
     tabPanelDebugElements = fixture.debugElement.queryAll(By.directive(TabPanel));
 
-    tabsElement = tabsDebugElement.nativeElement;
     tabListElement = tabListDebugElement.nativeElement;
     tabElements = tabDebugElements.map(debugEl => debugEl.nativeElement);
     tabPanelElements = tabPanelDebugElements.map(debugEl => debugEl.nativeElement);
@@ -122,8 +116,8 @@ describe('Tabs', () => {
   }
 
   afterEach(async () => {
-    if (tabsElement) {
-      await runAccessibilityChecks(tabsElement);
+    if (fixture.nativeElement) {
+      await runAccessibilityChecks(fixture.nativeElement);
     }
   });
 
@@ -132,9 +126,9 @@ describe('Tabs', () => {
       setupTestTabs();
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
       });
     });
@@ -165,12 +159,12 @@ describe('Tabs', () => {
       });
 
       it('should set aria-activedescendant in activedescendant mode', () => {
-        updateTabs({focusMode: 'activedescendant', selectedTab: 'tab1'});
+        updateTabs({focusMode: 'activedescendant', selectedTab: 0});
         expect(tabListElement.getAttribute('aria-activedescendant')).toBe(tabElements[0].id);
       });
 
       it('should not set aria-activedescendant in roving mode', () => {
-        updateTabs({selectedTab: 'tab1'});
+        updateTabs({selectedTab: 0});
         expect(tabListElement.hasAttribute('aria-activedescendant')).toBe(false);
       });
     });
@@ -183,12 +177,12 @@ describe('Tabs', () => {
       });
 
       it('should have aria-selected based on selection state', () => {
-        updateTabs({selectedTab: 'tab1'});
+        updateTabs({selectedTab: 0});
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[2].getAttribute('aria-selected')).toBe('false');
 
-        updateTabs({selectedTab: 'tab3'});
+        updateTabs({selectedTab: 2});
         expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
@@ -207,7 +201,7 @@ describe('Tabs', () => {
       });
 
       it('should have tabindex set by focusMode and active state', () => {
-        updateTabs({focusMode: 'roving', selectedTab: 'tab1'});
+        updateTabs({focusMode: 'roving', selectedTab: 0});
         expect(tabElements[0].getAttribute('tabindex')).toBe('0');
         expect(tabElements[1].getAttribute('tabindex')).toBe('-1');
         expect(tabElements[2].getAttribute('tabindex')).toBe('-1');
@@ -227,12 +221,12 @@ describe('Tabs', () => {
       });
 
       it('should have tabindex="0" when visible.', () => {
-        updateTabs({selectedTab: 'tab1'});
+        updateTabs({selectedTab: 0});
         expect(tabPanelElements[0].getAttribute('tabindex')).toBe('0');
       });
 
       it('should have tabindex="-1" when hidden.', () => {
-        updateTabs({selectedTab: 'tab1'});
+        updateTabs({selectedTab: 0});
         expect(tabPanelElements[1].getAttribute('tabindex')).toBe('-1');
         expect(tabPanelElements[2].getAttribute('tabindex')).toBe('-1');
       });
@@ -244,12 +238,12 @@ describe('Tabs', () => {
       });
 
       it('should have inert attribute when hidden and not when visible', () => {
-        updateTabs({selectedTab: 'tab1'});
+        updateTabs({selectedTab: 0});
         expect(tabPanelElements[0].hasAttribute('inert')).toBe(false);
         expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
 
-        updateTabs({selectedTab: 'tab3'});
+        updateTabs({selectedTab: 2});
         expect(tabPanelElements[0].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[2].hasAttribute('inert')).toBe(false);
@@ -265,12 +259,12 @@ describe('Tabs', () => {
             setupTestTabs({textDirection: 'ltr'});
             updateTabs({
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
-              selectedTab: 'tab1',
+              selectedTab: 0,
             });
           });
 
@@ -356,12 +350,12 @@ describe('Tabs', () => {
             setupTestTabs({textDirection: 'rtl'});
             updateTabs({
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
-              selectedTab: 'tab1',
+              selectedTab: 0,
             });
           });
           it('should move focus with ArrowLeft (effectively next)', () => {
@@ -401,12 +395,12 @@ describe('Tabs', () => {
             updateTabs({
               orientation: 'vertical',
               initialTabs: [
-                {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-                {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-                {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+                {label: 'Tab 1', content: 'Content 1'},
+                {label: 'Tab 2', content: 'Content 2', disabled: true},
+                {label: 'Tab 3', content: 'Content 3'},
               ],
               focusMode,
-              selectedTab: 'tab1',
+              selectedTab: 0,
             });
           });
 
@@ -487,11 +481,11 @@ describe('Tabs', () => {
       setupTestTabs();
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2'},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
-        selectedTab: 'tab1',
+        selectedTab: 0,
       });
     });
 
@@ -501,49 +495,49 @@ describe('Tabs', () => {
       });
 
       it('should select tab on focus via ArrowKeys', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
         right();
-        expect(testComponent.selectedTab()).toBe('tab2');
+        expect(testComponent.selectedTab()).toBe(1);
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
 
         left();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
       });
 
       it('should select tab on focus via Home/End', () => {
-        updateTabs({selectedTab: 'tab2'});
-        expect(testComponent.selectedTab()).toBe('tab2');
+        updateTabs({selectedTab: 1});
+        expect(testComponent.selectedTab()).toBe(1);
 
         home();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
         end();
-        expect(testComponent.selectedTab()).toBe('tab3');
+        expect(testComponent.selectedTab()).toBe(2);
         expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
       });
 
       it('should select tab on click', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
         pointerDown(tabElements[1]);
-        expect(testComponent.selectedTab()).toBe('tab2');
+        expect(testComponent.selectedTab()).toBe(1);
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
       it('should not change selection with Space/Enter on already selected tab', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
         space();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
         enter();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
       });
     });
 
@@ -553,84 +547,84 @@ describe('Tabs', () => {
       });
 
       it('should not select tab on focus via ArrowKeys', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
         right();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(isTabFocused(1)).toBe(true);
 
         left();
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(isTabFocused(0)).toBe(true);
       });
 
       it('should select focused tab on Space', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
 
         right();
         expect(isTabFocused(1)).toBe(true);
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
 
         space();
-        expect(testComponent.selectedTab()).toBe('tab2');
+        expect(testComponent.selectedTab()).toBe(1);
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
       it('should select focused tab on Enter', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
 
         right();
         expect(isTabFocused(1)).toBe(true);
-        expect(testComponent.selectedTab()).toBe('tab1');
+        expect(testComponent.selectedTab()).toBe(0);
 
         enter();
-        expect(testComponent.selectedTab()).toBe('tab2');
+        expect(testComponent.selectedTab()).toBe(1);
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
       it('should select tab on click', () => {
-        updateTabs({selectedTab: 'tab1'});
-        expect(testComponent.selectedTab()).toBe('tab1');
+        updateTabs({selectedTab: 0});
+        expect(testComponent.selectedTab()).toBe(0);
         pointerDown(tabElements[1]);
-        expect(testComponent.selectedTab()).toBe('tab2');
+        expect(testComponent.selectedTab()).toBe(1);
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
     });
 
     it('should update selectedTab model on selection change', () => {
-      updateTabs({selectedTab: 'tab1', selectionMode: 'follow'});
-      expect(testComponent.selectedTab()).toBe('tab1');
+      updateTabs({selectedTab: 0, selectionMode: 'follow'});
+      expect(testComponent.selectedTab()).toBe(0);
 
       right();
-      expect(testComponent.selectedTab()).toBe('tab2');
+      expect(testComponent.selectedTab()).toBe(1);
 
       updateTabs({selectionMode: 'explicit'});
       right();
-      expect(testComponent.selectedTab()).toBe('tab2');
+      expect(testComponent.selectedTab()).toBe(1);
       enter();
-      expect(testComponent.selectedTab()).toBe('tab3');
+      expect(testComponent.selectedTab()).toBe(2);
 
       pointerDown(tabElements[0]);
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
     });
 
     it('should update selection when selectedTab model changes', () => {
-      updateTabs({selectedTab: 'tab1'});
+      updateTabs({selectedTab: 0});
       expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
-      updateTabs({selectedTab: 'tab2'});
+      updateTabs({selectedTab: 1});
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
 
-      updateTabs({selectedTab: 'tab3'});
+      updateTabs({selectedTab: 2});
       expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
@@ -638,49 +632,49 @@ describe('Tabs', () => {
     it('should not select a disabled tab via click', () => {
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
-        selectedTab: 'tab1',
+        selectedTab: 0,
       });
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
       pointerDown(tabElements[1]);
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
     it('should not select a disabled tab via keyboard', () => {
       updateTabs({
         initialTabs: [
-          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
-          {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
-          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+          {label: 'Tab 1', content: 'Content 1'},
+          {label: 'Tab 2', content: 'Content 2', disabled: true},
+          {label: 'Tab 3', content: 'Content 3'},
         ],
-        selectedTab: 'tab1',
+        selectedTab: 0,
         selectionMode: 'explicit',
         softDisabled: true,
       });
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
       right();
       expect(isTabFocused(1)).toBe(true);
       enter();
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
     it('should not change selection if tablist is disabled', () => {
-      updateTabs({selectedTab: 'tab1', disabled: true});
-      expect(testComponent.selectedTab()).toBe('tab1');
+      updateTabs({selectedTab: 0, disabled: true});
+      expect(testComponent.selectedTab()).toBe(0);
       pointerDown(tabElements[1]);
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
       right();
-      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(testComponent.selectedTab()).toBe(0);
     });
 
     it('should handle initial selection via input', () => {
-      updateTabs({selectedTab: 'tab2'});
-      expect(testComponent.selectedTab()).toBe('tab2');
+      updateTabs({selectedTab: 1});
+      expect(testComponent.selectedTab()).toBe(1);
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
     });
@@ -696,7 +690,7 @@ describe('Tabs', () => {
       expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
       expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
 
-      updateTabs({selectedTab: 'tab2'});
+      updateTabs({selectedTab: 1});
 
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
@@ -711,53 +705,53 @@ describe('Tabs', () => {
 
 @Component({
   template: `
-    <div ngTabs>
+    <div>
       <ul ngTabList
-          [(selectedTab)]="selectedTab"
+          [(selectedTabIndex)]="selectedTab"
           [orientation]="orientation()"
           [disabled]="disabled()"
           [wrap]="wrap()"
           [softDisabled]="softDisabled()"
           [focusMode]="focusMode()"
           [selectionMode]="selectionMode()">
-        @for (tabDef of tabsData(); track tabDef.value) {
-          <li ngTab [value]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
-        }
+        <li ngTab [panel]="panel1" [disabled]="!!tabsData()[0].disabled">{{ tabsData()[0].label }}</li>
+        <li ngTab [panel]="panel2" [disabled]="!!tabsData()[1].disabled">{{ tabsData()[1].label }}</li>
+        <li ngTab [panel]="panel3" [disabled]="!!tabsData()[2].disabled">{{ tabsData()[2].label }}</li>
       </ul>
-
-      @for (tabDef of tabsData(); track tabDef.value) {
-        <div ngTabPanel [value]="tabDef.value">
-          <ng-template ngTabContent>{{ tabDef.content }}</ng-template>
-        </div>
-      }
+      <div ngTabPanel #panel1="ngTabPanel">
+        <ng-template ngTabContent>{{ tabsData()[0].content }}</ng-template>
+      </div>
+      <div ngTabPanel #panel2="ngTabPanel">
+        <ng-template ngTabContent>{{ tabsData()[1].content }}</ng-template>
+      </div>
+      <div ngTabPanel #panel3="ngTabPanel">
+        <ng-template ngTabContent>{{ tabsData()[2].content }}</ng-template>
+      </div>
     </div>
   `,
-  imports: [Tabs, TabList, Tab, TabPanel, TabContent],
+  imports: [TabList, Tab, TabPanel, TabContent],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestTabsComponent {
   tabsData = signal<TestTabDefinition[]>([
     {
-      value: 'tab1',
       label: 'Tab 1',
       content: 'Content 1',
       disabled: false,
     },
     {
-      value: 'tab2',
       label: 'Tab 2',
       content: 'Content 2',
       disabled: false,
     },
     {
-      value: 'tab3',
       label: 'Tab 3',
       content: 'Content 3',
       disabled: true,
     },
   ]);
 
-  selectedTab = signal<string | undefined>(undefined);
+  selectedTab = model<number>(0);
   orientation = signal<'horizontal' | 'vertical'>('horizontal');
   disabled = signal(false);
   wrap = signal(true);
