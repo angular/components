@@ -222,7 +222,7 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
       overlayConfig.hasBackdrop =
         menu.hasBackdrop == null ? !this._triggersSubmenu() : menu.hasBackdrop;
     } else {
-      overlayConfig.hasBackdrop = false;
+      overlayConfig.hasBackdrop = menu.hasBackdrop ?? false;
     }
 
     // We need the `hasAttached` check for the case where the user kicked off a removal animation,
