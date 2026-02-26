@@ -321,7 +321,7 @@ export class CdkCellOutlet implements OnDestroy {
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })
@@ -337,7 +337,7 @@ export class CdkHeaderRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })
@@ -353,7 +353,7 @@ export class CdkFooterRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })

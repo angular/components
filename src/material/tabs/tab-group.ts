@@ -65,7 +65,7 @@ const ENABLE_BACKGROUND_INPUT = true;
   styleUrl: 'tab-group.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: MAT_TAB_GROUP,

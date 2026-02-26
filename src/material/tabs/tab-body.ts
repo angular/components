@@ -122,7 +122,7 @@ export type MatTabBodyOriginState = 'left' | 'right';
   styleUrl: 'tab-body.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     'class': 'mat-mdc-tab-body',
     // In most cases the `hidden` that we set on the off-screen content is enough
