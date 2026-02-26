@@ -48,11 +48,11 @@ let loader: HarnessLoader;
 
 describe('my-component', () => {
   beforeEach(async () => {
-    TestBed.configureTestingModule({imports: [MyModule], declarations: [UserProfile]});
+    await TestBed.configureTestingModule({imports: [UserProfile]}).compileComponents();
     fixture = TestBed.createComponent(UserProfile);
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
-}
+});
 ```
 
 This code creates a fixture for `UserProfile` and then creates a `HarnessLoader` for that fixture.
@@ -172,10 +172,9 @@ describe('issue-report-selector', () => {
   let fixture: ComponentFixture<IssueReportSelector>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [IssueReportSelectorModule],
-      declarations: [IssueReportSelector],
-    });
+    await TestBed.configureTestingModule({
+      imports: [IssueReportSelector],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IssueReportSelector);
     fixture.detectChanges();
@@ -204,10 +203,9 @@ describe('issue-report-selector', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [IssueReportSelectorModule],
-      declarations: [IssueReportSelector],
-    });
+    await TestBed.configureTestingModule({
+      imports: [IssueReportSelector],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IssueReportSelector);
     fixture.detectChanges();
