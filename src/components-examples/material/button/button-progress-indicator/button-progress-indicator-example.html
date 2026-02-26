@@ -1,0 +1,29 @@
+<section>
+  <mat-checkbox
+    (change)="toggleShowProgress()"
+  >
+    Show the progress indicator
+  </mat-checkbox>
+</section>
+<section>
+    <h3>Button with a MatProgressSpinner</h3>
+    <button matButton="outlined" [showProgress]="showProgress()">
+      Download
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+    </button>
+</section>
+<section>
+    <h3>Button with a custom progress indicator</h3>
+    <button matButton="outlined" [showProgress]="showProgress()">
+      Download
+    <div progressIndicator role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        Loading...
+    </div>
+    </button>
+</section>

@@ -14,6 +14,7 @@ import {
   ElementRef,
   inject,
   InjectionToken,
+  input,
   Input,
   NgZone,
   numberAttribute,
@@ -55,6 +56,7 @@ function transformTabIndex(value: unknown): number | undefined {
     // wants to target all Material buttons.
     'class': 'mat-mdc-button-base',
     '[class]': 'color ? "mat-" + color : ""',
+    '[class.mat-mdc-button-progress-indicator-shown]': 'showProgress()',
     '[attr.disabled]': '_getDisabledAttribute()',
     '[attr.aria-disabled]': '_getAriaDisabled()',
     '[attr.tabindex]': '_getTabIndex()',
@@ -149,6 +151,9 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   set _tabindex(value: number) {
     this.tabIndex = value;
   }
+
+  /** Whether the button is showing a progress indicator. */
+  readonly showProgress = input(false, {transform: booleanAttribute});
 
   constructor(...args: unknown[]);
 
