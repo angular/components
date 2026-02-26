@@ -16,11 +16,9 @@ import {
   input,
   signal,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
 import {TabPattern} from '../private';
 import {TabList} from './tab-list';
-import {HasElement, TABS} from './utils';
 import {TabPanel} from './tab-panel';
 
 /**
@@ -52,15 +50,12 @@ import {TabPanel} from './tab-panel';
     '[attr.aria-controls]': '_pattern.controls()',
   },
 })
-export class Tab implements HasElement, OnInit, OnDestroy {
+export class Tab implements OnInit {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** The parent Tabs. */
-  private readonly _tabs = inject(TABS);
 
   /** The parent TabList. */
   private readonly _tabList = inject(TabList);
@@ -68,13 +63,8 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
-  /** The parent TabList UIPattern. */
-  private readonly _tablistPattern = computed(() => this._tabList._pattern);
-
-  /** The TabPanel UIPattern associated with the tab */
-  private readonly _tabpanelPattern = computed(() => this.panel()?._pattern);
-
-  readonly panel = input<TabPanel>();
+  /** The panel associated with this tab. */
+  readonly panel = input.required<TabPanel>();
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -88,22 +78,18 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
     ...this,
-    tablist: this._tablistPattern,
-    tabpanel: this._tabpanelPattern,
+    tablist: () => this._tabList._pattern,
+    tabpanel: () => this.panel()._pattern,
     expanded: signal(false),
     element: () => this.element,
   });
 
+  ngOnInit() {
+    this.panel()._tabPattern = this._pattern;
+  }
+
   /** Opens this tab panel. */
   open() {
     this._pattern.open();
-  }
-
-  ngOnInit() {
-    this._tabList._register(this);
-  }
-
-  ngOnDestroy() {
-    this._tabList._unregister(this);
   }
 }

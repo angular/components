@@ -4,7 +4,6 @@ import {Tabs, TabList, Tab, TabPanel, TabContent} from '@angular/aria/tabs';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {computed} from '@angular/aria/private';
 
 /** @title Configurable Tabs. */
 @Component({
