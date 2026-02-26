@@ -76,7 +76,6 @@ describe('Tabs Pattern', () => {
         id: signal('tab-1-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-1'),
         expanded: signal(false),
       },
       {
@@ -85,7 +84,6 @@ describe('Tabs Pattern', () => {
         id: signal('tab-2-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-2'),
         expanded: signal(false),
       },
       {
@@ -94,7 +92,6 @@ describe('Tabs Pattern', () => {
         id: signal('tab-3-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-3'),
         expanded: signal(false),
       },
     ];
@@ -109,17 +106,14 @@ describe('Tabs Pattern', () => {
       {
         id: signal('tabpanel-1-id'),
         tab: signal(undefined),
-        value: signal('tab-1'),
       },
       {
         id: signal('tabpanel-2-id'),
         tab: signal(undefined),
-        value: signal('tab-2'),
       },
       {
         id: signal('tabpanel-3-id'),
         tab: signal(undefined),
-        value: signal('tab-3'),
       },
     ];
     tabPanelPatterns = [
@@ -143,8 +137,8 @@ describe('Tabs Pattern', () => {
     describe('#open', () => {
       it('should open a tab with value', () => {
         expect(tabListPattern.selectedTab()).toBeUndefined();
-        tabListPattern.open('tab-1');
-        expect(tabListPattern.selectedTab()!.value()).toBe('tab-1');
+        tabListPattern.open(tabPatterns[0]);
+        expect(tabListPattern.selectedTab()!).toBe(tabPatterns[0]);
       });
 
       it('should open a tab with tab pattern instance', () => {
