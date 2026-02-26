@@ -68,7 +68,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {

@@ -112,7 +112,7 @@ type RenderingData<T> =
   // The view for `CdkTree` consists entirely of templates declared in other views. As they are
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>

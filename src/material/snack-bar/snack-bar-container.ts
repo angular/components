@@ -51,7 +51,7 @@ const EXIT_ANIMATION = '_mat-snack-bar-exit';
   // where they were stamped out. This means that we can't have the snack bar container be OnPush,
   // because it might cause snack bars that were opened from a template not to be out of date.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkPortalOutlet],
   host: {

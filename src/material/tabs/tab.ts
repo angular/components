@@ -43,7 +43,7 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   // that creating the extra class will generate more code than just duplicating the template.
   templateUrl: 'tab.html',
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatTab}],
