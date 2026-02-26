@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.3
       firebase-tools:
-        specifier: 15.6.0
-        version: 15.6.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.8.0
+        version: 15.8.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.3
@@ -291,8 +291,8 @@ importers:
         specifier: 6.3.0
         version: 6.3.0(rollup@4.57.1)(typescript@5.9.2)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.4
-        version: 0.5.4(@types/node@22.19.11)(rollup@4.57.1)
+        specifier: 0.5.6
+        version: 0.5.6(@types/node@22.19.11)(rollup@4.57.1)
       sass:
         specifier: ^1.97.2
         version: 1.97.2
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.6.0
-        version: 15.6.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.8.0
+        version: 15.8.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.0.1
@@ -3409,15 +3409,6 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/pluginutils@5.2.0':
-    resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
     engines: {node: '>=14.0.0'}
@@ -4319,6 +4310,7 @@ packages:
   basic-ftp@5.1.0:
     resolution: {integrity: sha512-RkaJzeJKDbaDWTIPiJwubyljaEPwpVWkm9Rt5h9Nd6h7tEXTJ3VB4qxdZBioV7JO5yLUaOKwz7vDOzlncUsegw==}
     engines: {node: '>=10.0.0'}
+    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
 
   batch@0.6.1:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
@@ -5573,8 +5565,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.6.0:
-    resolution: {integrity: sha512-AE9VtePOMbufjs4NlsRX3z4LNvP5yQXvWbohDmuygUAE1RVs498IXrNNliwhwnc6yguV+ZolawBGcGF4izy2gw==}
+  firebase-tools@15.8.0:
+    resolution: {integrity: sha512-X989aD39b/K3nEunUaCYlhJ6CUrEKVcOJPIYfEvp3aJ8plCfe839ImZHZsRB7zAluAxUlJzzvWtsml15BGhimQ==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8361,8 +8353,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 5.9.2
 
-  rollup-plugin-sourcemaps2@0.5.4:
-    resolution: {integrity: sha512-XK6ITvEsKtUFN1GQbYKoqilwh1yKxTS9BLaFlVsm0IaYUYe3eVnhBWzKP4AHbkBO2BNOheGNlf407K7wCj6Rrw==}
+  rollup-plugin-sourcemaps2@0.5.6:
+    resolution: {integrity: sha512-oalmewAT4GLVsW6NugcDybx0ypet94vU0dUK3VofdYoWiN4ZjoX1L4dizFd0OhoJ78r/Am9sARTR9gMrX0cJ7w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -13072,14 +13064,6 @@ snapshots:
     optionalDependencies:
       rollup: 4.57.1
 
-  '@rollup/pluginutils@5.2.0(rollup@4.57.1)':
-    dependencies:
-      '@types/estree': 1.0.8
-      estree-walker: 2.0.2
-      picomatch: 4.0.3
-    optionalDependencies:
-      rollup: 4.57.1
-
   '@rollup/pluginutils@5.3.0(rollup@4.57.1)':
     dependencies:
       '@types/estree': 1.0.8
@@ -15503,7 +15487,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.6.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@15.8.0(@types/node@22.19.11)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.11)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -18728,9 +18712,9 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.0
 
-  rollup-plugin-sourcemaps2@0.5.4(@types/node@22.19.11)(rollup@4.57.1):
+  rollup-plugin-sourcemaps2@0.5.6(@types/node@22.19.11)(rollup@4.57.1):
     dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.57.1)
+      '@rollup/pluginutils': 5.3.0(rollup@4.57.1)
       rollup: 4.57.1
     optionalDependencies:
       '@types/node': 22.19.11
