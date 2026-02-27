@@ -10,16 +10,16 @@ Announce the given message via aria-live region. The politeness argument determi
 `aria-live` attribute on the announcer element, defaulting to 'polite'.
 
 #### Examples
-The LiveAnnouncer is injected into a component:
+The `LiveAnnouncer` is injected into a component:
 ```ts
 @Component({
-  selector: 'my-component'
-  providers: [LiveAnnouncer]
+  selector: 'my-component',
 })
 export class MyComponent {
+  private liveAnnouncer = inject(LiveAnnouncer);
 
-  constructor(liveAnnouncer: LiveAnnouncer) {
-    liveAnnouncer.announce("Hey Google");
+  announceMessage() {
+    this.liveAnnouncer.announce("Hey Google");
   }
 }
 ```
