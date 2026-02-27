@@ -8,6 +8,7 @@
   <div class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input
+      #triggerRef
       ngComboboxInput
       class="example-combobox-input"
       placeholder="Search..."
@@ -15,16 +16,23 @@
     />
   </div>
 
-  <div popover="manual" #popover class="example-popover">
-    <ng-template ngComboboxPopupContainer>
+  <ng-template
+    cdkConnectedOverlay
+    [open]="combobox.expanded()"
+    [hasBackdrop]="false"
+    [width]="panelWidth()"
+    [origin]="triggerRef"
+    ngComboboxPopupContainer
+  >
+    <ng-container *ngIf="combobox.expanded()">
       <ul ngTree #tree="ngTree" class="example-tree">
         <ng-template
           [ngTemplateOutlet]="treeNodes"
           [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
         />
       </ul>
-    </ng-template>
-  </div>
+    </ng-container>
+  </ng-template>
 </div>
 
 <ng-template #treeNodes let-nodes="nodes" let-parent="parent">

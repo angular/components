@@ -13,6 +13,7 @@ import {
   ComboboxPopupContainer,
 } from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
+import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
@@ -37,13 +38,15 @@ import {FormsModule} from '@angular/forms';
     Listbox,
     Option,
     FormsModule,
+    CdkConnectedOverlay,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxManualExample {
-  popover = viewChild<ElementRef>('popover');
   listbox = viewChild<Listbox<any>>(Listbox);
   combobox = viewChild<Combobox<any>>(Combobox);
+
+  panelWidth = signal<number | undefined>(undefined);
 
   searchString = signal('');
 
@@ -53,28 +56,16 @@ export class ComboboxManualExample {
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      if (combobox.expanded()) {
+        const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+        this.panelWidth(comboboxRect?.width);
+      } else {
+        this.panelWidth(undefined);
+      }
 
       this.listbox()?.scrollActiveItemIntoView();
     });
-  }
-
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
-    }
-
-    popover.nativeElement.showPopover();
   }
 }
 
