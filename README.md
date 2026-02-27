@@ -54,6 +54,11 @@ What do we mean by "high-quality" components?
 * Performance cost is minimized.
 * Code is clean and well-documented to serve as an example for Angular developers.
 
+## Support policy
+Angular Material and the CDK follow the same support and release policy as the Angular framework.
+For details on supported versions and update practices, see the
+[Angular support policy and schedule](https://angular.dev/reference/releases).
+
 ## Browser and screen reader support
 The Angular Components team supports the most recent two versions of all major browsers:
 Chrome (including Android), Firefox, Safari (including iOS), and  Edge.
