@@ -46,6 +46,7 @@ import {GRID_CELL} from './grid-tokens';
     '[attr.data-active]': 'active()',
     '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
     '[tabindex]': '_tabIndex()',
+    '[attr.id]': 'id()',
   },
 })
 export class GridCellWidget {

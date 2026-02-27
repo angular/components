@@ -53,6 +53,11 @@ export class GridPattern {
   /** Whether the grid is disabled. */
   readonly disabled = computed(() => this.gridBehavior.gridDisabled());
 
+  /** Whether the grid is multi-selectable. */
+  readonly multiSelectable = computed(() =>
+    this.inputs.enableSelection() ? this.inputs.multi() : undefined,
+  );
+
   /** The ID of the currently active descendant cell. */
   readonly activeDescendant = computed(() => this.gridBehavior.activeDescendant());
 
@@ -61,9 +66,7 @@ export class GridPattern {
 
   /** The current selection anchor cell. */
   readonly anchorCell: SignalLike<GridCellPattern | undefined> = computed(() =>
-    this.inputs.enableSelection() && this.inputs.multi()
-      ? this.gridBehavior.selectionAnchorCell()
-      : undefined,
+    this.multiSelectable() ? this.gridBehavior.selectionAnchorCell() : undefined,
   );
 
   /** Whether to pause grid navigation and give the keyboard control to cell or widget. */
