@@ -460,6 +460,26 @@ describe('MatTabGroup', () => {
     });
   });
 
+  describe('animation duration', () => {
+    it('should set the body and header animation duration when value is a string', () => {
+      const fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+      fixture.detectChanges();
+
+      const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('500ms');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
+    });
+
+    it('should set the body and header animation duration when value is an object', () => {
+      const fixture = TestBed.createComponent(TabsWithObjectAnimationDuration);
+      fixture.detectChanges();
+
+      const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('100ms');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('200ms');
+    });
+  });
+
   describe('aria labelling', () => {
     let fixture: ComponentFixture<TabGroupWithAriaInputs>;
     let tab: HTMLElement;
@@ -1062,7 +1082,8 @@ describe('nested MatTabGroup with enabled animations', () => {
     tick();
 
     const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
-    expect(tabGroup.style.getPropertyValue('--mat-tab-animation-duration')).toBe('500ms');
+    expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('500ms');
+    expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
   }));
 });
 
@@ -1472,6 +1493,17 @@ class TabGroupWithIsActiveBinding {}
   imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {}
+
+@Component({
+  template: `
+    <mat-tab-group [animationDuration]="{body: '100ms', header: '200ms'}">
+      <mat-tab label="One">Tab one content</mat-tab>
+      <mat-tab label="Two">Tab two content</mat-tab>
+    </mat-tab-group>
+  `,
+  imports: [MatTabsModule],
+})
+class TabsWithObjectAnimationDuration {}
 
 @Component({
   template: `

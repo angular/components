@@ -247,7 +247,7 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   .mdc-tab-indicator .mdc-tab-indicator__content {
-    transition-duration: var(--mat-tab-animation-duration, 250ms);
+    transition-duration: var(--mat-tab-header-animation-duration, 250ms);
   }
 
   .mat-mdc-tab-header-pagination {
