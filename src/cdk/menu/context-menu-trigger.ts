@@ -138,6 +138,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       positionStrategy: this._getOverlayPositionStrategy(coordinates),
       scrollStrategy: this.menuScrollStrategy(),
       direction: this._directionality || undefined,
+      usePopover: true,
     });
   }
 
@@ -151,6 +152,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     const strategy = createFlexibleConnectedPositionStrategy(this._injector, coordinates)
       .withLockedPosition()
       .withGrowAfterOpen()
+      .withPopoverLocation('inline')
       .withPositions(this.menuPosition ?? CONTEXT_MENU_POSITIONS);
 
     if (this.transformOriginSelector) {
