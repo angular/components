@@ -373,7 +373,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     }
   }
 
-  /** Sets thte `type` attribute of the trigger. */
+  /** Sets the `type` attribute of the trigger. */
   private _setType() {
     const element = this._elementRef.nativeElement;
 
