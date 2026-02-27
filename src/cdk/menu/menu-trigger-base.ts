@@ -43,6 +43,29 @@ export const MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   },
 );
 
+/** Default `cdk-menu` options that can be overridden. */
+export interface CdkMenuDefaultOptions {
+  /** Class to be applied to the menu's backdrop. */
+  backdropClass?: string;
+
+  /** Whether the menu has a backdrop. */
+  hasBackdrop?: boolean;
+
+  /** Class or list of classes to be applied to the menu's overlay panel. */
+  overlayPanelClass?: string | string[];
+}
+
+/** Injection token to be used to override the default options for `cdk-menu`. */
+export const CDK_MENU_DEFAULT_OPTIONS = new InjectionToken<CdkMenuDefaultOptions>(
+  'cdk-menu-default-options',
+  {
+    providedIn: 'root',
+    factory: () => ({
+      hasBackdrop: false,
+    }),
+  },
+);
+
 /** Tracks the last open menu trigger across the entire application. */
 @Injectable({providedIn: 'root'})
 export class MenuTracker {
