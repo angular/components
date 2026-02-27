@@ -681,6 +681,43 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 export type SignalLike<T> = () => T;
 
 // @public
+export interface SpinButtonInputs {
+    disabled: SignalLike<boolean>;
+    id: SignalLike<string>;
+    inputElement: SignalLike<HTMLElement | undefined>;
+    max: SignalLike<number | undefined>;
+    min: SignalLike<number | undefined>;
+    pageStep: SignalLike<number | undefined>;
+    readonly: SignalLike<boolean>;
+    step: SignalLike<number>;
+    value: WritableSignalLike<number>;
+    valueText: SignalLike<string | undefined>;
+    wrap: SignalLike<boolean>;
+}
+
+// @public
+export class SpinButtonPattern {
+    constructor(inputs: SpinButtonInputs);
+    readonly ariaValueNow: SignalLike<number>;
+    readonly atMax: SignalLike<boolean>;
+    readonly atMin: SignalLike<boolean>;
+    decrement(): void;
+    decrementByPage(): void;
+    goToMax(): void;
+    goToMin(): void;
+    increment(): void;
+    incrementByPage(): void;
+    readonly inputs: SpinButtonInputs;
+    readonly invalid: SignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    onKeydown(event: KeyboardEvent): void;
+    onPointerdown(_event: PointerEvent): void;
+    setDefaultState(): void;
+    readonly tabIndex: SignalLike<-1 | 0>;
+    validate(): string[];
+}
+
+// @public
 export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
     tablist: SignalLike<TabListPattern>;
     tabpanel: SignalLike<TabPanelPattern | undefined>;

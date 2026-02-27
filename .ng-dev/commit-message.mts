@@ -14,6 +14,7 @@ export const commitMessage: CommitMessageConfig = {
     'aria/grid',
     'aria/listbox',
     'aria/menu',
+    'aria/spinbutton',
     'aria/tabs',
     'aria/toolbar',
     'aria/tree',

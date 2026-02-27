@@ -86,6 +86,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },
   {
+    path: 'aria-spinbutton',
+    loadComponent: () => import('./aria-spinbutton/spinbutton-demo').then(m => m.SpinButtonDemo),
+  },
+  {
     path: 'cdk-dialog',
     loadComponent: () => import('./cdk-dialog/dialog-demo').then(m => m.DialogDemo),
   },
