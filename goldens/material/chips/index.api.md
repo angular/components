@@ -31,7 +31,7 @@ import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
-export const MAT_CHIP: InjectionToken<unknown>;
+export const MAT_CHIP: InjectionToken<MatChip>;
 
 // @public
 export const MAT_CHIP_AVATAR: InjectionToken<unknown>;

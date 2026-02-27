@@ -78,7 +78,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
  * Used to provide a drawer container to a drawer while avoiding circular references.
  * @docs-private
  */
-export const MAT_DRAWER_CONTAINER = new InjectionToken('MAT_DRAWER_CONTAINER');
+export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_DRAWER_CONTAINER');
 
 @Component({
   selector: 'mat-drawer-content',

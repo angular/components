@@ -41,7 +41,7 @@ export const CDK_DRAG_PREVIEW: InjectionToken<CdkDragPreview<any>>;
 export const CDK_DROP_LIST: InjectionToken<CdkDropList<any>>;
 
 // @public
-export const CDK_DROP_LIST_GROUP: InjectionToken<CdkDropListGroup<unknown>>;
+export const CDK_DROP_LIST_GROUP: InjectionToken<CdkDropListGroup<CdkDropList<any>>>;
 
 // @public
 export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
