@@ -1,0 +1,57 @@
+load("//tools:defaults.bzl", "extract_api_to_json", "ng_project", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "disclosure",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/aria/private",
+        "//src/aria/private/disclosure",
+        "//src/cdk/a11y",
+    ],
+)
+
+ng_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = [
+        "disclosure.spec.ts",
+    ],
+    deps = [
+        ":disclosure",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/a11y",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+)
+
+extract_api_to_json(
+    name = "json_api",
+    srcs = [
+        ":source-files",
+    ],
+    entry_point = ":index.ts",
+    module_name = "@angular/aria/disclosure",
+    output_name = "aria-disclosure.json",
+    private_modules = [""],
+    repo = "angular/components",
+)
