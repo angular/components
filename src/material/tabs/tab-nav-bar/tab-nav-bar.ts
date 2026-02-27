@@ -64,7 +64,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_animationsDisabled',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
+    '[style.--mat-tab-header-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators

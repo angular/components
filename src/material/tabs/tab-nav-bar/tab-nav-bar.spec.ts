@@ -530,7 +530,7 @@ describe('MatTabNavBar with enabled animations', () => {
     tick();
 
     const tabNavBar = fixture.nativeElement.querySelector('.mat-mdc-tab-nav-bar');
-    expect(tabNavBar.style.getPropertyValue('--mat-tab-animation-duration')).toBe('500ms');
+    expect(tabNavBar.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
   }));
 });
 

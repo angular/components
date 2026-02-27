@@ -243,15 +243,17 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     alignTabs: string | null;
     _allTabs: QueryList<MatTab>;
     readonly animationDone: EventEmitter<void>;
-    get animationDuration(): string;
-    set animationDuration(value: string | number);
-    // (undocumented)
-    protected _animationsDisabled(): boolean;
+    get animationDuration(): MatTabGroupAnimationDuration;
+    set animationDuration(value: MatTabGroupAnimationDuration);
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
+    // (undocumented)
+    protected _bodyAnimationDuration: string;
+    // (undocumented)
+    protected _bodyAnimationsDisabled(): boolean;
     protected _bodyCentered(isCenter: boolean): void;
     color: ThemePalette;
     get contentTabIndex(): number | null;
@@ -271,6 +273,8 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     _getTabIndex(index: number): number;
     _getTabLabelId(tab: MatTab, index: number): string;
     _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
+    // (undocumented)
+    protected _headerAnimationDuration: string;
     headerPosition: MatTabHeaderPosition;
     protected _isServer: boolean;
     // (undocumented)
