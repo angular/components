@@ -1173,6 +1173,50 @@ describe('MatDialog', () => {
 
       overlayContainerElement.remove();
     }));
+
+    it('should support async closePredicate that returns a Promise', fakeAsync(() => {
+      let resolvePromise: (value: boolean) => void;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () =>
+          new Promise<boolean>(resolve => {
+            resolvePromise = resolve;
+          }),
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.afterClosed().subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      // Try to close - should not close immediately
+      ref.close('test-result');
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      // Resolve promise with false - should still not close
+      resolvePromise!(false);
+      tick();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      // Try to close again and resolve with true - should close
+      ref.close('test-result');
+      resolvePromise!(true);
+      tick();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledWith('test-result');
+    }));
   });
 
   it(

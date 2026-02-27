@@ -77,7 +77,7 @@ export class MatDialogConfig<D = any> {
     result: Result | undefined,
     config: Config,
     componentInstance: Component | null,
-  ) => boolean;
+  ) => boolean | Promise<boolean>;
 
   /** Width of the dialog. */
   width?: string = '';
