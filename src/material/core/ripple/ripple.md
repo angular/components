@@ -39,14 +39,16 @@ the `matRippleTrigger` option that expects a reference to an `HTMLElement`.
 Ripples can be shown programmatically by getting a reference to the `MatRipple` directive.
 
 ```ts
+import {viewChild} from '@angular/core';
+
 class MyComponent {
 
   /** Reference to the directive instance of the ripple. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  ripple = viewChild.required(MatRipple);
 
   /** Shows a centered and persistent ripple. */
   launchRipple() {
-    const rippleRef = this.ripple.launch({
+    const rippleRef = this.ripple().launch({
       persistent: true,
       centered: true
     });
@@ -89,11 +91,11 @@ const globalRippleConfig: RippleGlobalOptions = {
   }
 };
 
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig}
   ]
-})
+});
 ```
 
 All available global options can be seen in the `RippleGlobalOptions` interface.
@@ -158,21 +160,22 @@ export class AppGlobalRippleOptions implements RippleGlobalOptions {
 ```
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: AppGlobalRippleOptions},
   ]
-})
-export class MyModule {...}
+});
 ```
 
 Now that the global ripple options are set to a service we can inject, the service can be
 used update any global ripple option at runtime.
 
 ```ts
+import {inject} from '@angular/core';
+
 @Component(...)
 export class MyComponent {
-  constructor(private _appRippleOptions: AppGlobalRippleOptions) {}
+  private _appRippleOptions = inject(AppGlobalRippleOptions);
 
   disableRipples() {
     this._appRippleOptions.disabled = true;
