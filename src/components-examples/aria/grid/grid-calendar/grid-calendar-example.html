@@ -18,6 +18,7 @@
     [enableSelection]="true"
     [softDisabled]="false"
     selectionMode="explicit"
+    (keydown)="onKeyDown($event)"
   >
     <thead>
       <tr>
@@ -44,6 +45,7 @@
               ngGridCellWidget
               class="example-calendar-day-button"
               [attr.aria-label]="day.ariaLabel"
+              [attr.data-day]="day.dayNum"
             >
               {{day.displayName}}
             </button>
