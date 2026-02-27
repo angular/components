@@ -50,9 +50,11 @@ in which they are contained. When closing, an optional result value can be provi
 value is forwarded as the result of the `closed` Observable.
 
 ```ts
+import {inject} from '@angular/core';
+
 @Component({/* ... */})
 export class YourDialog {
-  constructor(public dialogRef: DialogRef<string>) {}
+  dialogRef = inject<DialogRef<string>>(DialogRef);
 
   closeDialog() {
     this.dialogRef.close('Pizza!');
@@ -117,14 +119,14 @@ class MyDialogContainer extends CdkDialogContainer {}
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `DialogConfig` for
-`DEFAULT_DIALOG_CONFIG` in your application's root module.
+`DEFAULT_DIALOG_CONFIG` in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: DEFAULT_DIALOG_CONFIG, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
 
 ### Sharing data with the Dialog component.
@@ -139,7 +141,7 @@ const dialogRef = dialog.open(YourDialog, {
 Access the data in your dialog component with the `DIALOG_DATA` injection token:
 
 ```ts
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
 
 @Component({
@@ -147,7 +149,7 @@ import {DIALOG_DATA} from '@angular/cdk/dialog';
   template: 'passed in {{ data.name }}',
 })
 export class YourDialog {
-  constructor(@Inject(DIALOG_DATA) public data: {name: string}) { }
+  data = inject<{name: string}>(DIALOG_DATA);
 }
 ```
 
