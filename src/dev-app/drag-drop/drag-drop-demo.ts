@@ -6,22 +6,32 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy, inject} from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  inject,
+  QueryList,
+  AfterViewInit,
+  ViewChildren,
+} from '@angular/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
-  CdkDragDrop,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
   Point,
   DragRef,
+  CdkDropList,
 } from '@angular/cdk/drag-drop';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {asapScheduler} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'drag-drop-demo',
@@ -39,7 +49,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatCheckbox,
   ],
 })
-export class DragAndDropDemo {
+export class DragAndDropDemo implements AfterViewInit {
   axisLock!: 'x' | 'y';
   dragStartDelay = 0;
   todo = ['Go out for Lunch', 'Make a cool app', 'Watch TV', 'Eat a healthy dinner', 'Go to sleep'];
@@ -50,6 +60,17 @@ export class DragAndDropDemo {
 
   ages = ['Stone age', 'Bronze age', 'Iron age', 'Middle ages'];
   preferredAges = ['Modern period', 'Renaissance'];
+  dls: CdkDropList[] = [];
+
+  todo2 = [
+    'Get to work',
+    ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'],
+    ['Preare for work', 'Drive to office', 'Üark car'],
+    'Pick up groceries',
+    'Go home',
+    'Fall asleep',
+  ];
+  @ViewChildren(CdkDropList) dlq: QueryList<CdkDropList> | undefined;
 
   constructor() {
     const iconRegistry = inject(MatIconRegistry);
@@ -69,7 +90,22 @@ export class DragAndDropDemo {
     );
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  ngAfterViewInit() {
+    this.dlq?.changes.pipe(startWith(this.dlq)).subscribe(() => {
+      const ldls: CdkDropList[] = [];
+
+      this.dlq?.forEach(dl => {
+        ldls.push(dl);
+      });
+
+      asapScheduler.schedule(() => {
+        this.dls = ldls;
+      });
+    });
+  }
+
+  // CdkDragDrop<string[]>
+  drop(event: any) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -87,5 +123,9 @@ export class DragAndDropDemo {
     x -= pickup.x;
     y -= pickup.y;
     return {x, y};
+  }
+
+  isArray(item: any): boolean {
+    return Array.isArray(item);
   }
 }
