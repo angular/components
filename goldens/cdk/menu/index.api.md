@@ -217,7 +217,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     getMenu(): Menu | undefined;
     _handleClick(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;

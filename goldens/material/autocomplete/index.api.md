@@ -176,7 +176,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _onChange: (value: any) => void;

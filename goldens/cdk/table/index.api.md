@@ -46,7 +46,7 @@ export abstract class BaseRowDef implements OnChanges {
     extractCellTemplate(column: CdkColumnDef): TemplateRef<any>;
     getColumnsDiff(): IterableChanges<any> | null;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -187,7 +187,7 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
     // (undocumented)
     static ngAcceptInputType_sticky: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     resetStickyChanged(): void;
     get sticky(): boolean;
     set sticky(value: boolean);
@@ -233,7 +233,7 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
     // (undocumented)
     static ngAcceptInputType_sticky: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     resetStickyChanged(): void;
     get sticky(): boolean;
     set sticky(value: boolean);

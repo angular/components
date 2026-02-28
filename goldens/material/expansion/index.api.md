@@ -96,7 +96,33 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     get hideToggle(): boolean;
     set hideToggle(value: boolean);
     readonly _inputChanges: Subject<{
-        [propName: string]: i0.SimpleChange<any>;
+        hideToggle?: i0.SimpleChange<boolean> | undefined;
+        togglePosition?: i0.SimpleChange<MatAccordionTogglePosition> | undefined;
+        readonly afterExpand?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly afterCollapse?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly _inputChanges?: i0.SimpleChange<Subject</*elided*/ any>> | undefined;
+        accordion?: i0.SimpleChange<MatAccordionBase> | undefined;
+        _lazyContent?: i0.SimpleChange<MatExpansionPanelContent> | undefined;
+        _body?: i0.SimpleChange<ElementRef<HTMLElement>> | undefined;
+        _portal?: i0.SimpleChange<TemplatePortal<any>> | undefined;
+        _headerId?: i0.SimpleChange<string> | undefined;
+        _hasSpacing?: i0.SimpleChange<() => boolean> | undefined;
+        _getExpandedState?: i0.SimpleChange<() => MatExpansionPanelState> | undefined;
+        toggle?: i0.SimpleChange<() => void> | undefined;
+        close?: i0.SimpleChange<() => void> | undefined;
+        open?: i0.SimpleChange<() => void> | undefined;
+        ngAfterContentInit?: i0.SimpleChange<() => void> | undefined;
+        ngOnChanges?: i0.SimpleChange<(changes: /*elided*/ any) => void> | undefined;
+        ngOnDestroy?: i0.SimpleChange<() => void> | undefined;
+        _containsFocus?: i0.SimpleChange<() => boolean> | undefined;
+        readonly closed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly opened?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly destroyed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly expandedChange?: i0.SimpleChange<EventEmitter<boolean>> | undefined;
+        readonly id?: i0.SimpleChange<string> | undefined;
+        expanded?: i0.SimpleChange<boolean> | undefined;
+        disabled?: i0.SimpleChange<boolean> | undefined;
+        ngOnInit?: i0.SimpleChange<() => void> | undefined;
     }>;
     _lazyContent: MatExpansionPanelContent;
     // (undocumented)
@@ -104,7 +130,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;

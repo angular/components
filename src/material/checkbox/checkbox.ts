@@ -252,7 +252,7 @@ export class MatCheckbox
     this.disabledInteractive = this._options?.disabledInteractive ?? false;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (changes['required']) {
       this._validatorChangeFn();
     }

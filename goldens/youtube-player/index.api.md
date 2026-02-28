@@ -69,7 +69,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     pauseVideo(): void;

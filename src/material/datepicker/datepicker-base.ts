@@ -563,7 +563,7 @@ export abstract class MatDatepickerBase<
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const positionChange = changes['xPosition'] || changes['yPosition'];
 
     if (positionChange && !positionChange.firstChange && this._overlayRef) {

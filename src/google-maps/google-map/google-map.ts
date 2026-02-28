@@ -274,7 +274,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (changes['height'] || changes['width']) {
       this._setSize();
     }

@@ -142,7 +142,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
       this._stateChanges.next();
     }

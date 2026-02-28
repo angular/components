@@ -72,7 +72,7 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _noopAnimations: boolean;
