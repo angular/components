@@ -255,7 +255,7 @@ export class MatAutocompleteTrigger
     this._cleanupWindowBlur = this._renderer.listen('window', 'blur', this._windowBlurHandler);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (changes['position'] && this._positionStrategy) {
       this._setStrategyPositions(this._positionStrategy);
 

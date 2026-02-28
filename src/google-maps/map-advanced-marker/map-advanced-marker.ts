@@ -230,7 +230,7 @@ export class MapAdvancedMarker
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const {advancedMarker, _content, _position, _title, _draggable, _zIndex} = this;
     if (advancedMarker) {
       if (changes['title']) {

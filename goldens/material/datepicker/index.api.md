@@ -130,7 +130,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     get selected(): DateRange<D> | D | null;
@@ -200,7 +200,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     numCols: number;
@@ -504,7 +504,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -569,7 +569,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     ngAfterContentInit(): void;
     ngControl: NgControl | null;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     onContainerClick(): void;
@@ -693,7 +693,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _previewChanged({ event, value: cell }: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;

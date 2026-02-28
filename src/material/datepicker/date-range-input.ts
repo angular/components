@@ -339,7 +339,7 @@ export class MatDateRangeInput<D>
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (dateInputsHaveChanged(changes, this._dateAdapter)) {
       this.stateChanges.next(undefined);
     }
