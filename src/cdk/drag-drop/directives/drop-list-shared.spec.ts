@@ -31,7 +31,7 @@ import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
 import {provideFakeDirectionality} from '@angular/cdk/testing/private/fake-directionality';
-import {NgClass, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
+import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
 import {CdkDrag} from './drag';
 import {CdkDragPlaceholder} from './drag-placeholder';
@@ -5402,7 +5402,7 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
           @if (renderPlaceholder) {
             <div
               class="custom-placeholder"
-              [ngClass]="extraPlaceholderClass"
+              [class]="extraPlaceholderClass"
               *cdkDragPlaceholder>Custom placeholder</div>
           }
         </div>
@@ -5414,7 +5414,7 @@ class DraggableInDropZoneWithCustomMultiNodePreview {
       height: ${ITEM_HEIGHT * 3}px;
     }
   `,
-  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, NgClass],
+  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
 })
 class DraggableInDropZoneWithCustomPlaceholder {
   @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
