@@ -43,7 +43,6 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError,
 } from './table-errors';
-import {NgClass} from '@angular/common';
 import {CdkVirtualScrollViewport, ScrollingModule} from '../scrolling';
 import {dispatchFakeEvent} from '../testing/private';
 
@@ -2977,7 +2976,7 @@ class UndefinedColumnsCdkTableApp {
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row; let first = first;
                                let last = last; let even = even; let odd = odd"
-                  [ngClass]="{
+                  [class]="{
                     'custom-cell-class-first': enableCellContextClasses && first,
                     'custom-cell-class-last': enableCellContextClasses && last,
                     'custom-cell-class-even': enableCellContextClasses && even,
@@ -2989,7 +2988,7 @@ class UndefinedColumnsCdkTableApp {
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: columnsToRender;
                            let first = first; let last = last; let even = even; let odd = odd"
-               [ngClass]="{
+               [class]="{
                  'custom-row-class-first': enableRowContextClasses && first,
                  'custom-row-class-last': enableRowContextClasses && last,
                  'custom-row-class-even': enableRowContextClasses && even,
@@ -2998,7 +2997,7 @@ class UndefinedColumnsCdkTableApp {
       </cdk-row>
     </cdk-table>
   `,
-  imports: [CdkTableModule, NgClass],
+  imports: [CdkTableModule],
 })
 class RowContextCdkTableApp {
   dataSource = new FakeDataSource();
