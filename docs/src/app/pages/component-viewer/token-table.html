@@ -24,9 +24,9 @@
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
-    <mat-label>Filter by system token</mat-label>
-    <input #systemTokenInput matInput [value]="systemTokenFilter()"
-           (input)="systemTokenFilter.set(systemTokenInput.value)"/>
+    <mat-label>Filter by default value</mat-label>
+    <input #defaultValueInput matInput [value]="defaultValueFilter()"
+           (input)="defaultValueFilter.set(defaultValueInput.value)"/>
   </mat-form-field>
 
   <button mat-button (click)="reset()">Reset filters</button>
@@ -38,7 +38,7 @@
       <tr>
         <th>Name</th>
         <th class="docs-type-header">Type</th>
-        <th class="docs-system-header">Based on system token</th>
+        <th class="docs-value-header">Default value</th>
       </tr>
     </thead>
 
@@ -47,13 +47,7 @@
         <tr>
           <td><token-name [name]="token.overridesName"/></td>
           <td>{{token.type | titlecase}}</td>
-          <td>
-            @if (token.derivedFrom) {
-              <token-name [name]="token.derivedFrom"/>
-            } @else {
-              None
-            }
-          </td>
+          <td>{{token.value}}</td>
         </tr>
       } @empty {
         <tr>
