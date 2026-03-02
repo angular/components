@@ -101,7 +101,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     this.tabIndex = parsedTabIndex || parsedTabIndex === 0 ? parsedTabIndex : null;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (changes['datepicker']) {
       this._watchStateChanges();
     }

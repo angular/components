@@ -309,7 +309,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

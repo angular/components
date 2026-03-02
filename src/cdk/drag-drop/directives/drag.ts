@@ -315,7 +315,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     );
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const rootSelectorChange = changes['rootElementSelector'];
     const positionChange = changes['freeDragPosition'];
 

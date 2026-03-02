@@ -471,7 +471,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const autoCaptureChange = changes['autoCapture'];
 
     if (

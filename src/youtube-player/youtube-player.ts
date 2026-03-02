@@ -269,7 +269,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     this._conditionallyLoad();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     if (this._shouldRecreatePlayer(changes)) {
       this._conditionallyLoad();
     } else if (this._player) {

@@ -129,7 +129,7 @@ export class MatExpansionPanel
   @Output() readonly afterCollapse = new EventEmitter<void>();
 
   /** Stream that emits for changes in `@Input` properties. */
-  readonly _inputChanges = new Subject<SimpleChanges>();
+  readonly _inputChanges = new Subject<SimpleChanges<MatExpansionPanel>>();
 
   /** Optionally defined accordion the expansion panel belongs to. */
   override accordion = inject<MatAccordionBase>(MAT_ACCORDION, {optional: true, skipSelf: true})!;
@@ -212,7 +212,7 @@ export class MatExpansionPanel
     this._setupAnimationEvents();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     this._inputChanges.next(changes);
   }
 

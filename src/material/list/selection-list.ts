@@ -190,7 +190,7 @@ export class MatSelectionList
     this._watchForSelectionChange();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const disabledChanges = changes['disabled'];
     const disableRippleChanges = changes['disableRipple'];
     const hideSingleSelectionIndicatorChanges = changes['hideSingleSelectionIndicator'];

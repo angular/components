@@ -254,7 +254,7 @@ export class MatSelectionList extends MatListBase implements SelectionList, Cont
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _onTouched: () => void;

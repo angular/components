@@ -284,7 +284,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     return this.startValue === value || this.endValue === value;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const columnChanges = changes['numCols'];
     const {rows, numCols} = this;
 

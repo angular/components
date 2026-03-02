@@ -85,7 +85,7 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     _onBlur(): void;
     // (undocumented)

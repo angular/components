@@ -114,7 +114,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

@@ -119,7 +119,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const {_data, heatmap} = this;
 
     if (heatmap) {

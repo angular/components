@@ -261,7 +261,7 @@ export class DeprecatedMapMarkerClusterer
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const {
       markerClusterer: clusterer,
       ariaLabelFn,

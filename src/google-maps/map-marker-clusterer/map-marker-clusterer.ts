@@ -107,7 +107,7 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges<this>) {
     const change = changes['renderer'] || changes['algorithm'];
 
     // Since the options are set in the constructor, we have to recreate the cluster if they change.

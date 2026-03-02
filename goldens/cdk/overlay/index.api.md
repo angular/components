@@ -78,7 +78,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     // (undocumented)
     static ngAcceptInputType_push: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     get offsetX(): number;

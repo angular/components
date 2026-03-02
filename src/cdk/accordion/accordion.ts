@@ -36,7 +36,7 @@ export const CDK_ACCORDION = new InjectionToken<CdkAccordion>('CdkAccordion');
 })
 export class CdkAccordion implements OnDestroy, OnChanges {
   /** Emits when the state of the accordion changes */
-  readonly _stateChanges = new Subject<SimpleChanges>();
+  readonly _stateChanges = new Subject<SimpleChanges<this>>();
 
   /** Stream that emits true/false when openAll/closeAll is triggered. */
   readonly _openCloseAllActions: Subject<boolean> = new Subject<boolean>();
@@ -59,7 +59,7 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     this._openCloseAllActions.next(false);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     this._stateChanges.next(changes);
   }
 

@@ -241,7 +241,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       .subscribe(() => this._init());
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const comparisonChange = changes['comparisonStart'] || changes['comparisonEnd'];
 
     if (comparisonChange && !comparisonChange.firstChange) {

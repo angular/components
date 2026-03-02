@@ -51,7 +51,7 @@ export abstract class BaseRowDef implements OnChanges {
   constructor(...args: unknown[]);
   constructor() {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property or an empty array if none is provided.
     if (!this._columnsDiffer) {
@@ -116,7 +116,7 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
-  override ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges<this>): void {
     super.ngOnChanges(changes);
   }
 
@@ -167,7 +167,7 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
-  override ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges<this>): void {
     super.ngOnChanges(changes);
   }
 

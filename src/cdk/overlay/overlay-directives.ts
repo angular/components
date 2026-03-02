@@ -323,7 +323,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._overlayRef?.dispose();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (this._position) {
       this._updatePositionStrategy(this._position);
       this._overlayRef?.updateSize({

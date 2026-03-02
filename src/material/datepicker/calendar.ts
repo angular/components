@@ -459,18 +459,24 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this.stateChanges.complete();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     // Ignore date changes that are at a different time on the same day. This fixes issues where
     // the calendar re-renders when there is no meaningful change to [minDate] or [maxDate]
     // (#24435).
     const minDateChange: SimpleChange | undefined =
       changes['minDate'] &&
-      !this._dateAdapter.sameDate(changes['minDate'].previousValue, changes['minDate'].currentValue)
+      !this._dateAdapter.sameDate(
+        changes['minDate'].previousValue as D | null,
+        changes['minDate'].currentValue as D | null,
+      )
         ? changes['minDate']
         : undefined;
     const maxDateChange: SimpleChange | undefined =
       changes['maxDate'] &&
-      !this._dateAdapter.sameDate(changes['maxDate'].previousValue, changes['maxDate'].currentValue)
+      !this._dateAdapter.sameDate(
+        changes['maxDate'].previousValue as D | null,
+        changes['maxDate'].currentValue as D | null,
+      )
         ? changes['maxDate']
         : undefined;
 

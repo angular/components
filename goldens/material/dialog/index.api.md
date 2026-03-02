@@ -105,7 +105,7 @@ export class MatDialogClose implements OnInit, OnChanges {
     // (undocumented)
     _matDialogClose: any;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)

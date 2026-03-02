@@ -239,7 +239,7 @@ export class MatSlideToggle
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     if (changes['required']) {
       this._validatorOnChange();
     }

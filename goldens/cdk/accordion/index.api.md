@@ -24,14 +24,12 @@ export class CdkAccordion implements OnDestroy, OnChanges {
     // (undocumented)
     static ngAcceptInputType_multi: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     openAll(): void;
     readonly _openCloseAllActions: Subject<boolean>;
-    readonly _stateChanges: Subject<{
-        [propName: string]: i0.SimpleChange<any>;
-    }>;
+    readonly _stateChanges: Subject<SimpleChanges<this>>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAccordion, "cdk-accordion, [cdkAccordion]", ["cdkAccordion"], { "multi": { "alias": "multi"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)

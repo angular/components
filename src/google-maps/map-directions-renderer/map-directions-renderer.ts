@@ -107,7 +107,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (this.directionsRenderer) {
       if (changes['options']) {
         this.directionsRenderer.setOptions(this._combineOptions());
