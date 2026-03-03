@@ -342,6 +342,18 @@ export class Grid<T extends GridCell> {
           return true;
         }
 
+        // Try clamping the column as well.
+        const colCount = this.data.getColCount(targetRow);
+        if (colCount !== undefined) {
+          const targetCol = Math.min(activeCoords.col, colCount - 1);
+          if (
+            targetCol >= 0 &&
+            this.focusBehavior.focusCoordinates({row: targetRow, col: targetCol})
+          ) {
+            return true;
+          }
+        }
+
         // If that fails, try to find ANY cell in that row.
         const firstInRow = this.navigationBehavior.peekFirst(targetRow);
         if (firstInRow !== undefined && this.focusBehavior.focusCoordinates(firstInRow)) {
