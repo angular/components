@@ -18,6 +18,7 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
@@ -63,7 +64,7 @@ export class MatBottomSheetConfig<D = any> {
     maxHeight?: number | string;
     minHeight?: number | string;
     panelClass?: string | string[];
-    restoreFocus?: boolean;
+    restoreFocus?: RestoreFocusValue;
     scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;
 }
