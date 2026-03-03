@@ -32,8 +32,8 @@ export interface GridFocusInputs {
   /** Whether disabled cells in the grid should be focusable. */
   softDisabled: SignalLike<boolean>;
 
-  /** Overrides the default tab index of the grid. */
-  tabIndex?: SignalLike<number | undefined>;
+  /** Whether the grid is tabbable. */
+  tabbable?: SignalLike<boolean | undefined>;
 }
 
 /** Dependencies for the `GridFocus` class. */
@@ -98,10 +98,13 @@ export class GridFocus<T extends GridFocusCell> {
   });
 
   /** The tab index for the grid container. */
-  readonly gridTabIndex = computed<-1 | 0>(() => {
-    const tabIndexOverride = this.inputs.tabIndex?.();
-    if (tabIndexOverride !== undefined && tabIndexOverride !== null) {
-      return (tabIndexOverride === -1 ? -1 : 0) as -1 | 0;
+  readonly gridTabIndex = computed<-1 | 0 | null>(() => {
+    const isTabbable = this.inputs.tabbable?.();
+    if (isTabbable === false) {
+      return -1;
+    }
+    if (isTabbable === true) {
+      return 0;
     }
 
     if (this.gridDisabled()) {

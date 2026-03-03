@@ -125,8 +125,8 @@ export class Grid {
   /** Whether enable range selections (with modifier keys or dragging). */
   readonly enableRangeSelection = input(false, {transform: booleanAttribute});
 
-  /** Overrides the default tab index of the grid. */
-  readonly tabIndex = input<number | undefined>(undefined);
+  /** Whether the grid is tabbable. */
+  readonly tabbable = input<boolean | undefined>(undefined);
 
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
