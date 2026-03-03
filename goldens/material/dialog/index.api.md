@@ -26,6 +26,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -143,7 +144,7 @@ export class MatDialogConfig<D = any> {
     minWidth?: number | string;
     panelClass?: string | string[];
     position?: DialogPosition;
-    restoreFocus?: boolean;
+    restoreFocus?: RestoreFocusValue;
     role?: DialogRole;
     scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;

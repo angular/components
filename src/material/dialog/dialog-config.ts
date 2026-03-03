@@ -9,7 +9,7 @@
 import {ViewContainerRef, Injector} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
-import {DialogConfig} from '@angular/cdk/dialog';
+import {DialogConfig, RestoreFocusValue} from '@angular/cdk/dialog';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -129,11 +129,8 @@ export class MatDialogConfig<D = any> {
    */
   autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
 
-  /**
-   * Whether the dialog should restore focus to the
-   * previously-focused element, after it's closed.
-   */
-  restoreFocus?: boolean = true;
+  /** Configures the focus restoration behavior. See `RestoreFocusValue` for more information. */
+  restoreFocus?: RestoreFocusValue = true;
 
   /** Whether to wait for the opening animation to finish before trapping focus. */
   delayFocusTrap?: boolean = true;

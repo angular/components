@@ -16,6 +16,16 @@ import {FocusOrigin} from '../a11y';
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
+/**
+ * Value that determines the focus restoration behavior for a dialog.
+ * The values represent the following behaviors:
+ * - `boolean` - when true, will return focus to the element that was focused before the dialog
+ *    was opened, otherwise won't restore focus at all.
+ * - `string` - focus will be restored to the first element that matches the CSS selector.
+ * - `HTMLElement` - focus will be restored to the specific element.
+ */
+export type RestoreFocusValue = boolean | string | HTMLElement;
+
 /** Valid ARIA roles for a dialog. */
 export type DialogRole = 'dialog' | 'alertdialog';
 
@@ -121,15 +131,8 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
    */
   autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
 
-  /**
-   * Whether the dialog should restore focus to the previously-focused element upon closing.
-   * Has the following behavior based on the type that is passed in:
-   * - `boolean` - when true, will return focus to the element that was focused before the dialog
-   *    was opened, otherwise won't restore focus at all.
-   * - `string` - focus will be restored to the first element that matches the CSS selector.
-   * - `HTMLElement` - focus will be restored to the specific element.
-   */
-  restoreFocus?: boolean | string | HTMLElement = true;
+  /** Configures the focus restoration behavior. See `RestoreFocusValue` for more information. */
+  restoreFocus?: RestoreFocusValue = true;
 
   /**
    * Scroll strategy to be used for the dialog. This determines how
