@@ -63,13 +63,13 @@ const EXIT_ANIMATION = '_mat-snack-bar-exit';
     '(animationcancel)': 'onAnimationEnd($event.animationName)',
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
+export class MatSnackBarContainer<D = unknown> extends BasePortalOutlet implements OnDestroy {
   private _ngZone = inject(NgZone);
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
   protected _animationsDisabled = _animationsDisabled();
-  snackBarConfig = inject(MatSnackBarConfig);
+  snackBarConfig = inject<MatSnackBarConfig<D>>(MatSnackBarConfig);
 
   private _document = inject(DOCUMENT);
   private _trackedModals = new Set<Element>();
