@@ -626,6 +626,17 @@ describe('Menu Trigger Pattern', () => {
       expect(isExpanded()).toBe(false);
     });
   });
+
+  describe('Selection', () => {
+    beforeEach(() => setupMenu());
+
+    it('should select an item on click', () => {
+      spyOn(fixture.componentInstance, 'itemSelected');
+      click(getTrigger());
+      click(getItem('Apple')!);
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
+    });
+  });
 });
 
 describe('Menu Bar Pattern', () => {
@@ -987,7 +998,7 @@ class StandaloneMenuExample {
   template: `
 <button ngMenuTrigger [menu]="menu">Open menu</button>
 
-<div ngMenu [expansionDelay]="0" #menu="ngMenu">
+<div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
   <ng-template ngMenuContent>
     <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
     <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
@@ -1007,7 +1018,9 @@ class StandaloneMenuExample {
   `,
   imports: [Menu, MenuItem, MenuTrigger, MenuContent],
 })
-class MenuTriggerExample {}
+class MenuTriggerExample {
+  itemSelected(value: string) {}
+}
 
 @Component({
   template: `
