@@ -357,26 +357,21 @@ export class MenuPattern<V> {
 
   /** Submits the menu. */
   submit(item = this.inputs.activeItem()) {
+    if (!item || item.disabled() || item.submenu()) {
+      return;
+    }
+
     const root = this.root();
 
-    if (item && !item.disabled()) {
-      const isMenu = root instanceof MenuPattern;
-      const isMenuBar = root instanceof MenuBarPattern;
-      const isMenuTrigger = root instanceof MenuTriggerPattern;
-
-      if (!item.submenu() && isMenuTrigger) {
-        root.close({refocus: true});
-      }
-
-      if (!item.submenu() && isMenuBar) {
-        root.close();
-        root?.inputs.itemSelected?.(item.value());
-      }
-
-      if (!item.submenu() && isMenu) {
-        root.inputs.activeItem()?.close({refocus: true});
-        root?.inputs.itemSelected?.(item.value());
-      }
+    if (root instanceof MenuTriggerPattern) {
+      root.close({refocus: true});
+      root?.inputs.menu()?.inputs.itemSelected?.(item.value());
+    } else if (root instanceof MenuBarPattern) {
+      root.close();
+      root?.inputs.itemSelected?.(item.value());
+    } else if (root instanceof MenuPattern) {
+      root.inputs.activeItem()?.close({refocus: true});
+      root?.inputs.itemSelected?.(item.value());
     }
   }
 
