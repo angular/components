@@ -1,3 +1,22 @@
+<a name="21.2.1"></a>
+# 21.2.1 "leather heels" (2026-03-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c1295c5818](https://github.com/angular/components/commit/c1295c5818c820ab182727b4f85e5f55a05f6385) | fix | **menu:** itemSelected not emitted when menu is attached to a trigger ([#32880](https://github.com/angular/components/pull/32880)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cebf303417](https://github.com/angular/components/commit/cebf303417678ea4f48e32f17e55d6649da04a27) | fix | **checkbox:** hide decorative elements from assistive technology |
+| [2abe8e6b73](https://github.com/angular/components/commit/2abe8e6b7330f5281b560b202ab70bdf593782cc) | fix | **menu:** render backdrop for context menu if explicitly opted in ([#32845](https://github.com/angular/components/pull/32845)) |
+| [e2f7308dc4](https://github.com/angular/components/commit/e2f7308dc4b5e539c2ccacf138a7997f9f5fdf03) | fix | **radio:** hide decorative elements from assistive technology |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [17c19cc73b](https://github.com/angular/components/commit/17c19cc73b4e7e24ae5579c32ae5a784d92c2a12) | fix | expand type for restoreFocus ([#32877](https://github.com/angular/components/pull/32877)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.0"></a>
 # 21.2.0 "plastic-lion" (2026-02-25)
 ### aria
