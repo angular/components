@@ -23,13 +23,13 @@
  * @param value the value to coerce into an array of strings
  * @param separator split-separator if value isn't an array
  */
-export function coerceStringArray(value: any, separator: string | RegExp = /\s+/): string[] {
+export function coerceStringArray(value: unknown, separator: string | RegExp = /\s+/): string[] {
   const result = [];
 
   if (value != null) {
-    const sourceValues = Array.isArray(value) ? value : `${value}`.split(separator);
+    const sourceValues = Array.isArray(value) ? value : String(value).split(separator);
     for (const sourceValue of sourceValues) {
-      const trimmedString = `${sourceValue}`.trim();
+      const trimmedString = String(sourceValue).trim();
       if (trimmedString) {
         result.push(trimmedString);
       }

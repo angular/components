@@ -13,6 +13,6 @@
 export type BooleanInput = string | boolean | null | undefined;
 
 /** Coerces a data-bound value (typically a string) to a boolean. */
-export function coerceBooleanProperty(value: any): boolean {
-  return value != null && `${value}` !== 'false';
+export function coerceBooleanProperty(value: unknown): boolean {
+  return value != null && String(value) !== 'false';
 }

@@ -16,25 +16,25 @@ export function coerceArray<T>(value: T | T[]): T[];
 export function coerceArray<T>(value: T | readonly T[]): readonly T[];
 
 // @public
-export function coerceBooleanProperty(value: any): boolean;
+export function coerceBooleanProperty(value: unknown): boolean;
 
 // @public
-export function coerceCssPixelValue(value: any): string;
+export function coerceCssPixelValue(value: unknown): string;
 
 // @public
 export function coerceElement<T>(elementOrRef: ElementRef<T> | T): T;
 
 // @public
-export function coerceNumberProperty(value: any): number;
+export function coerceNumberProperty(value: unknown): number;
 
 // @public (undocumented)
-export function coerceNumberProperty<D>(value: any, fallback: D): number | D;
+export function coerceNumberProperty<D>(value: unknown, fallback: D): number | D;
 
 // @public
-export function coerceStringArray(value: any, separator?: string | RegExp): string[];
+export function coerceStringArray(value: unknown, separator?: string | RegExp): string[];
 
 // @public
-export function _isNumberValue(value: any): boolean;
+export function _isNumberValue(value: unknown): boolean;
 
 // @public
 export type NumberInput = string | number | null | undefined;
