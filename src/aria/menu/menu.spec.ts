@@ -201,6 +201,15 @@ describe('Standalone Menu Pattern', () => {
       keydown(cherry!, ' ');
       expect(fixture.componentInstance.itemSelected).not.toHaveBeenCalled();
     });
+
+    it('should use aria-label for icon-only menu items', () => {
+      const iconOnlyItem = fixture.nativeElement.querySelector('#peach-item') as HTMLElement;
+      expect(iconOnlyItem).not.toBeNull();
+      expect(iconOnlyItem?.getAttribute('aria-label')).toBe('Peaches');
+      expect(iconOnlyItem?.getAttribute('aria-label')).not.toBe(
+        iconOnlyItem?.getAttribute('value'),
+      );
+    });
   });
 
   describe('Expansion', () => {
@@ -984,6 +993,7 @@ describe('Menu Bar Pattern', () => {
       </ng-template>
     </div>
 
+    <div ngMenuItem value='Peach' searchTerm='Peaches' aria-label='Peaches' id="peach-item"></div>
     <div ngMenuItem value='Cherry' searchTerm='Cherry' [disabled]="true">Cherry</div>
   </ng-template>
 </div>
