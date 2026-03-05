@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.3
       firebase-tools:
-        specifier: 15.6.0
-        version: 15.6.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.8.0
+        version: 15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.3
@@ -291,8 +291,8 @@ importers:
         specifier: 6.3.0
         version: 6.3.0(rollup@4.59.0)(typescript@5.9.2)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.4
-        version: 0.5.4(@types/node@22.19.13)(rollup@4.59.0)
+        specifier: 0.5.6
+        version: 0.5.6(@types/node@22.19.13)(rollup@4.59.0)
       sass:
         specifier: ^1.97.2
         version: 1.97.3
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.6.0
-        version: 15.6.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
+        specifier: 15.8.0
+        version: 15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.1.0
@@ -3418,15 +3418,6 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/pluginutils@5.2.0':
-    resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
     engines: {node: '>=14.0.0'}
@@ -5584,8 +5575,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.6.0:
-    resolution: {integrity: sha512-AE9VtePOMbufjs4NlsRX3z4LNvP5yQXvWbohDmuygUAE1RVs498IXrNNliwhwnc6yguV+ZolawBGcGF4izy2gw==}
+  firebase-tools@15.8.0:
+    resolution: {integrity: sha512-X989aD39b/K3nEunUaCYlhJ6CUrEKVcOJPIYfEvp3aJ8plCfe839ImZHZsRB7zAluAxUlJzzvWtsml15BGhimQ==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8367,8 +8358,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 5.9.2
 
-  rollup-plugin-sourcemaps2@0.5.4:
-    resolution: {integrity: sha512-XK6ITvEsKtUFN1GQbYKoqilwh1yKxTS9BLaFlVsm0IaYUYe3eVnhBWzKP4AHbkBO2BNOheGNlf407K7wCj6Rrw==}
+  rollup-plugin-sourcemaps2@0.5.6:
+    resolution: {integrity: sha512-oalmewAT4GLVsW6NugcDybx0ypet94vU0dUK3VofdYoWiN4ZjoX1L4dizFd0OhoJ78r/Am9sARTR9gMrX0cJ7w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -11575,7 +11566,7 @@ snapshots:
   '@google-cloud/cloud-sql-connector@1.9.1':
     dependencies:
       '@googleapis/sqladmin': 35.2.0
-      gaxios: 7.1.4
+      gaxios: 7.1.4(supports-color@10.2.2)
       google-auth-library: 10.6.1(supports-color@10.2.2)
       p-throttle: 7.0.0
     transitivePeerDependencies:
@@ -12214,8 +12205,8 @@ snapshots:
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.1(zod@3.25.76)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -13096,14 +13087,6 @@ snapshots:
       deepmerge: 4.3.1
       is-module: 1.0.0
       resolve: 1.22.11
-    optionalDependencies:
-      rollup: 4.59.0
-
-  '@rollup/pluginutils@5.2.0(rollup@4.59.0)':
-    dependencies:
-      '@types/estree': 1.0.8
-      estree-walker: 2.0.2
-      picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.59.0
 
@@ -15521,7 +15504,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.6.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
+  firebase-tools@15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.13)(typescript@5.9.2)
       '@apphosting/common': 0.0.8
@@ -15770,7 +15753,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  gaxios@7.1.4:
+  gaxios@7.1.4(supports-color@10.2.2):
     dependencies:
       extend: 3.0.2
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
@@ -15793,7 +15776,7 @@ snapshots:
 
   gcp-metadata@8.1.2(supports-color@10.2.2):
     dependencies:
-      gaxios: 7.1.3(supports-color@10.2.2)
+      gaxios: 7.1.4(supports-color@10.2.2)
       google-logging-utils: 1.1.3
       json-bigint: 1.0.0
     transitivePeerDependencies:
@@ -15920,7 +15903,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -16024,7 +16007,7 @@ snapshots:
   googleapis-common@8.0.1:
     dependencies:
       extend: 3.0.2
-      gaxios: 7.1.4
+      gaxios: 7.1.4(supports-color@10.2.2)
       google-auth-library: 10.6.1(supports-color@10.2.2)
       qs: 6.15.0
       url-template: 2.0.8
@@ -18747,9 +18730,9 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.0
 
-  rollup-plugin-sourcemaps2@0.5.4(@types/node@22.19.13)(rollup@4.59.0):
+  rollup-plugin-sourcemaps2@0.5.6(@types/node@22.19.13)(rollup@4.59.0):
     dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.59.0)
+      '@rollup/pluginutils': 5.3.0(rollup@4.59.0)
       rollup: 4.59.0
     optionalDependencies:
       '@types/node': 22.19.13
