@@ -309,7 +309,9 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.marker = new markerConstructor(this._combineOptions());
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.marker.setMap(map);
       this._eventManager.setTarget(this.marker);
       this.markerInitialized.next(this.marker);
@@ -361,8 +363,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getAnimation
    */
   getAnimation(): google.maps.Animation | null {
-    this._assertInitialized();
-    return this.marker.getAnimation() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getAnimation() || null;
   }
 
   /**
@@ -370,8 +374,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getClickable
    */
   getClickable(): boolean {
-    this._assertInitialized();
-    return this.marker.getClickable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getClickable();
   }
 
   /**
@@ -379,8 +385,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getCursor
    */
   getCursor(): string | null {
-    this._assertInitialized();
-    return this.marker.getCursor() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getCursor() || null;
   }
 
   /**
@@ -388,8 +396,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getDraggable
    */
   getDraggable(): boolean {
-    this._assertInitialized();
-    return !!this.marker.getDraggable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return !!this.marker!.getDraggable();
   }
 
   /**
@@ -397,8 +407,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getIcon
    */
   getIcon(): string | google.maps.Icon | google.maps.Symbol | null {
-    this._assertInitialized();
-    return this.marker.getIcon() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getIcon() || null;
   }
 
   /**
@@ -406,8 +418,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
    */
   getLabel(): google.maps.MarkerLabel | string | null {
-    this._assertInitialized();
-    return this.marker.getLabel() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getLabel() || null;
   }
 
   /**
@@ -415,8 +429,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getOpacity
    */
   getOpacity(): number | null {
-    this._assertInitialized();
-    return this.marker.getOpacity() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getOpacity() || null;
   }
 
   /**
@@ -424,8 +440,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getPosition
    */
   getPosition(): google.maps.LatLng | null {
-    this._assertInitialized();
-    return this.marker.getPosition() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getPosition() || null;
   }
 
   /**
@@ -433,8 +451,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getShape
    */
   getShape(): google.maps.MarkerShape | null {
-    this._assertInitialized();
-    return this.marker.getShape() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getShape() || null;
   }
 
   /**
@@ -442,8 +462,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getTitle
    */
   getTitle(): string | null {
-    this._assertInitialized();
-    return this.marker.getTitle() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getTitle() || null;
   }
 
   /**
@@ -451,8 +473,10 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getVisible
    */
   getVisible(): boolean {
-    this._assertInitialized();
-    return this.marker.getVisible();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getVisible();
   }
 
   /**
@@ -460,14 +484,18 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getZIndex
    */
   getZIndex(): number | null {
-    this._assertInitialized();
-    return this.marker.getZIndex() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!.getZIndex() || null;
   }
 
   /** Gets the anchor point that can be used to attach other Google Maps objects. */
   getAnchor(): google.maps.MVCObject {
-    this._assertInitialized();
-    return this.marker;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.marker!;
   }
 
   /** Returns a promise that resolves when the marker has been initialized. */
@@ -491,15 +519,13 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
       visible: this._visible ?? options.visible,
     };
   }
+}
 
-  private _assertInitialized(): asserts this is {marker: google.maps.Marker} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.marker) {
-        throw Error(
-          'Cannot interact with a Google Map Marker before it has been ' +
-            'initialized. Please wait for the Marker to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapMarker) {
+  if (!ctx.marker) {
+    throw Error(
+      'Cannot interact with a Google Map Marker before it has been ' +
+        'initialized. Please wait for the Marker to load before trying to interact with it.',
+    );
   }
 }
