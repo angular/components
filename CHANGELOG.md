@@ -1,3 +1,17 @@
+<a name="21.3.0-next.0"></a>
+# 21.3.0-next.0 "glass heels" (2026-03-04)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b4a89d5996](https://github.com/angular/components/commit/b4a89d5996864e591cfac762db420ec591d931e2) | feat | **button:** Add support for showing a progress indicator inside the button ([#32698](https://github.com/angular/components/pull/32698)) |
+| [85c16fe4bb](https://github.com/angular/components/commit/85c16fe4bb68d89d1f304350ecf965aeceea4662) | feat | **tabs:** add support for separate tab animation durations ([#32869](https://github.com/angular/components/pull/32869)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [936f1148b3](https://github.com/angular/components/commit/936f1148b3d6951bcfa1ce5e05538e8b746b677c) | fix | use eager change detection |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.1"></a>
 # 21.2.1 "leather heels" (2026-03-04)
 ### aria
