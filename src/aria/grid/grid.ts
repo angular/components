@@ -52,6 +52,7 @@ import {GRID_ROW} from './grid-tokens';
     'role': 'grid',
     '[tabindex]': '_pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-multiselectable]': '_pattern.multiSelectable()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',

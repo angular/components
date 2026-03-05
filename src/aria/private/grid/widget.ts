@@ -58,7 +58,9 @@ export class GridCellWidgetPattern implements ListNavigationItem {
   readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
 
   /** Whether the widget is the active item in the widget list. */
-  readonly active: SignalLike<boolean> = computed(() => this.inputs.cell().activeWidget() === this);
+  readonly active: SignalLike<boolean> = computed(
+    () => this.inputs.cell().active() && this.inputs.cell().activeWidget() === this,
+  );
 
   /** Whether the widget is currently activated. */
   readonly isActivated: WritableSignalLike<boolean> = signal(false);
