@@ -46,8 +46,15 @@ Usage:
 </p>
 ```
 
-A component can use `@ViewChild` or `@ViewChildren` to get a reference to a
-`CdkPortal`.
+A component can use `viewChild` or `viewChildren` to get a reference to a
+`CdkPortal`. Query by the `CdkPortal` class rather than a template reference variable to ensure the
+query works with both syntaxes above.
+
+```ts
+import {CdkPortal} from '@angular/cdk/portal';
+
+readonly myPortal = viewChild(CdkPortal);
+```
 
 ##### `ComponentPortal`
 Used to create a portal from a component type.
@@ -68,11 +75,13 @@ Usage:
 ```
 
 ```ts
-@ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
+private _viewContainerRef = inject(ViewContainerRef);
+
+readonly templatePortalContent = viewChild<TemplateRef<unknown>>('templatePortalContent');
 
 ngAfterViewInit() {
   this.templatePortal = new TemplatePortal(
-    this.templatePortalContent,
+    this.templatePortalContent()!,
     this._viewContainerRef
   );
 }
@@ -87,9 +96,10 @@ Usage:
 ```
 
 ```ts
-@ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
+readonly domPortalContent = viewChild<ElementRef<HTMLElement>>('domPortalContent');
+
 ngAfterViewInit() {
-  this.domPortal = new DomPortal(this.domPortalContent);
+  this.domPortal = new DomPortal(this.domPortalContent()!);
 }
 ```
 
