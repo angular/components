@@ -181,5 +181,9 @@ mat-action-list button {
 
   &.mdc-list-item--activated {
     background-color: token-utils.slot(list-active-indicator-color, $fallbacks);
+
+    .mdc-list-item__primary-text {
+      color: var(--mat-sys-on-secondary-container, currentColor);
+    }
   }
 }
