@@ -36,6 +36,7 @@ import {dirname, join, resolve} from 'path';
 import * as ts from 'typescript';
 import {getProjectFromWorkspace} from './get-project';
 import {getDefaultComponentOptions, isStandaloneSchematic} from './schematic-options';
+import {AnyDuringTs6Migration} from './ast';
 
 /**
  * Build a default project path for generating.
@@ -83,7 +84,7 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
     const classifiedName = strings.classify(`${options.name}Component`);
 
     const declarationChanges = addDeclarationToModule(
-      source,
+      source as AnyDuringTs6Migration,
       modulePath,
       classifiedName,
       relativePath,
@@ -103,7 +104,7 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
 
       const exportRecorder = host.beginUpdate(modulePath);
       const exportChanges = addExportToModule(
-        source,
+        source as AnyDuringTs6Migration,
         modulePath,
         strings.classify(`${options.name}Component`),
         relativePath,

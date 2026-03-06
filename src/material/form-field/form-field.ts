@@ -283,7 +283,7 @@ export class MatFormField
     }
     this._appearanceSignal.set(newAppearance);
   }
-  private _appearanceSignal = signal(DEFAULT_APPEARANCE);
+  private _appearanceSignal = signal<MatFormFieldAppearance>(DEFAULT_APPEARANCE);
 
   /**
    * Whether the form field should reserve space for one line of hint/error text (default)
