@@ -40,16 +40,13 @@ You're done! Angular Material is now configured to be used in your application.
 
 Let's display a slide toggle component in your app and verify that everything works.
 
-You need to import the `MatSlideToggleModule` that you want to display by adding the following lines to
-your standalone component's imports, or otherwise your component's `NgModule`.
+You need to import the `MatSlideToggle` component by adding it to your component's `imports`:
 
 ```ts
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 
-@Component ({
-  imports: [
-    MatSlideToggleModule,
-  ]
+@Component({
+  imports: [MatSlideToggle],
 })
 class AppComponent {}
 ```
