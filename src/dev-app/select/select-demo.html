@@ -174,13 +174,14 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   </mat-card>
 
   <mat-card>
-    <mat-card-subtitle>Appearance comparison</mat-card-subtitle>
+    <mat-card-subtitle>Appearance comparison (with dividers)</mat-card-subtitle>
     <mat-card-content>
       <p>
         <mat-form-field appearance="fill">
           <mat-label>Fill</mat-label>
           <mat-select [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
+            <mat-divider />
             @for (creature of digimon; track creature) {
               <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
             }
@@ -193,6 +194,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <mat-label>Outline</mat-label>
           <mat-select [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
+            <mat-divider />
             @for (creature of digimon; track creature) {
               <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
             }
