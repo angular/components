@@ -6,7 +6,7 @@ module(
 
 bazel_dep(name = "yq.bzl", version = "0.3.5")
 bazel_dep(name = "rules_nodejs", version = "6.7.3")
-bazel_dep(name = "aspect_rules_js", version = "2.9.2")
+bazel_dep(name = "aspect_rules_js", version = "3.0.2")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
 bazel_dep(name = "tar.bzl", version = "0.9.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
