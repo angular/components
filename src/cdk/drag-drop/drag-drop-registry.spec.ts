@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {fakeAsync, TestBed, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {
   createMouseEvent,
   dispatchMouseEvent,
@@ -15,11 +15,11 @@ describe('DragDropRegistry', () => {
   let fixture: ComponentFixture<BlankComponent>;
   let registry: DragDropRegistry;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(BlankComponent);
     fixture.detectChanges();
     registry = TestBed.inject(DragDropRegistry);
-  }));
+  });
 
   it('should be able to start dragging an item', () => {
     const item = new DragItem() as unknown as DragRef;
