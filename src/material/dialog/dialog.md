@@ -41,14 +41,14 @@ export class YourDialog {
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `MatDialogConfig` for
-MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+MAT_DIALOG_DEFAULT_OPTIONS in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
 
 ### Sharing data with the Dialog component.

@@ -51,14 +51,14 @@ export class HobbitSheet {
 
 ### Specifying global configuration defaults
 Default bottom sheet options can be specified by providing an instance of `MatBottomSheetConfig`
-for `MAT_BOTTOM_SHEET_DEFAULT_OPTIONS` in your application's root module.
+for `MAT_BOTTOM_SHEET_DEFAULT_OPTIONS` in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
 
 

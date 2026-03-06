@@ -91,11 +91,11 @@ If you want to override the default snack bar options, you can do so using the
 `MAT_SNACK_BAR_DEFAULT_OPTIONS` injection token.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
   ]
-})
+});
 ```
 
 ### Accessibility
