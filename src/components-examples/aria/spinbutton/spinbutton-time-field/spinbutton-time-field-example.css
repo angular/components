@@ -1,0 +1,62 @@
+.example-time-field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.example-time-field .example-label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.example-time-segments {
+  display: inline-flex;
+  align-items: baseline;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small);
+  padding: 8px 12px;
+  background: var(--mat-sys-surface);
+}
+
+.example-time-segments:focus-within {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.example-time-segment {
+  outline: none;
+}
+
+.example-time-segment [ngSpinButtonInput] {
+  padding: 4px;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  min-width: 2em;
+  text-align: center;
+  cursor: default;
+  border-radius: var(--mat-sys-corner-extra-small);
+  outline: none;
+  user-select: none;
+  caret-color: transparent;
+  color: var(--mat-sys-on-surface);
+}
+
+.example-time-segment [ngSpinButtonInput]:focus {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.example-time-segment.example-period [ngSpinButtonInput] {
+  min-width: 2.5em;
+}
+
+.example-time-separator {
+  font-size: 20px;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 0 2px;
+}
+
+.example-time-output {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 12px;
+}
