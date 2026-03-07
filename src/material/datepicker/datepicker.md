@@ -408,14 +408,16 @@ bootstrapApplication(MyApp, {
 ```
 
 Because `DateAdapter` is a generic class, `MatDatepicker` and `MatDatepickerInput` also need to be
-made generic. When working with these classes (for example as a `ViewChild`) you should include the
-appropriate generic type that corresponds to the `DateAdapter` implementation you are using. For
-example:
+made generic. When working with these classes (for example as a `viewChild` query) you should
+include the appropriate generic type that corresponds to the `DateAdapter` implementation you are
+using. For example:
 
 ```ts
+import {viewChild} from '@angular/core';
+
 @Component({...})
 export class MyComponent {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+  datepicker = viewChild.required<MatDatepicker<Date>>(MatDatepicker);
 }
 ```
 
