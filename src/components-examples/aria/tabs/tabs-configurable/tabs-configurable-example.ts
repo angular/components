@@ -1,6 +1,6 @@
 import {afterRenderEffect, Component, viewChildren} from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {Tabs, TabList, Tab, TabPanel, TabContent} from '@angular/aria/tabs';
+import {TabList, Tab, TabPanel, TabContent} from '@angular/aria/tabs';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -11,7 +11,6 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
   templateUrl: 'tabs-configurable-example.html',
   styleUrls: ['../tabs-common.css', 'tabs-configurable-example.css'],
   imports: [
-    Tabs,
     TabList,
     Tab,
     TabPanel,
@@ -26,7 +25,7 @@ export class TabsConfigurableExample {
   orientation: 'vertical' | 'horizontal' = 'horizontal';
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'follow';
-  tabSelection = 'tab-1';
+  tabSelectionIndex = 0;
 
   wrap = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});

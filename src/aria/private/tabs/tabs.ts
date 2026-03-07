@@ -7,32 +7,29 @@
  */
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
+import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {
   SignalLike,
-  computed,
-  signal,
   WritableSignalLike,
+  computed,
+  linkedSignal,
 } from '../behaviors/signal-like/signal-like';
 import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
 import {ListFocus} from '../behaviors/list-focus/list-focus';
 import {
-  ListNavigationItem,
   ListNavigation,
   ListNavigationInputs,
+  ListNavigationItem,
 } from '../behaviors/list-navigation/list-navigation';
 
 /** The required inputs to tabs. */
 export interface TabInputs
-  extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
+  extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable' | 'expanded'> {
   /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
 
   /** The remote tabpanel controlled by the tab. */
   tabpanel: SignalLike<TabPanelPattern | undefined>;
-
-  /** The remote tabpanel unique identifier. */
-  value: SignalLike<string>;
 }
 
 /** A tab in a tablist. */
@@ -43,9 +40,6 @@ export class TabPattern {
   /** The index of the tab. */
   readonly index = computed(() => this.inputs.tablist().inputs.items().indexOf(this));
 
-  /** The remote tabpanel unique identifier. */
-  readonly value: SignalLike<string> = () => this.inputs.value();
-
   /** Whether the tab is disabled. */
   readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
 
@@ -55,8 +49,15 @@ export class TabPattern {
   /** Whether this tab has expandable panel. */
   readonly expandable: SignalLike<boolean> = () => true;
 
-  /** Whether the tab panel is expanded. */
-  readonly expanded: WritableSignalLike<boolean>;
+  /*
+   * Whether the tab panel is expanded.
+   * Primarily controlled by the behavior, which will read/write this value.
+   * The consumer of this pattern will instead only use the selectedTab input.
+   * The pattern will be responsible for synchronizing their state.
+   */
+  readonly expanded: WritableSignalLike<boolean> = linkedSignal(
+    () => this.inputs.tablist().selectedTab() === this,
+  );
 
   /** Whether the tab is active. */
   readonly active = computed(() => this.inputs.tablist().inputs.activeItem() === this);
@@ -70,9 +71,7 @@ export class TabPattern {
   /** The id of the tabpanel associated with the tab. */
   readonly controls = computed(() => this.inputs.tabpanel()?.id());
 
-  constructor(readonly inputs: TabInputs) {
-    this.expanded = inputs.expanded;
-  }
+  constructor(readonly inputs: TabInputs) {}
 
   /** Opens the tab. */
   open(): boolean {
@@ -87,18 +86,12 @@ export interface TabPanelInputs extends LabelControlOptionalInputs {
 
   /** The tab that controls this tabpanel. */
   tab: SignalLike<TabPattern | undefined>;
-
-  /** A local unique identifier for the tabpanel. */
-  value: SignalLike<string>;
 }
 
 /** A tabpanel associated with a tab. */
 export class TabPanelPattern {
   /** A global unique identifier for the tabpanel. */
   readonly id: SignalLike<string> = () => this.inputs.id();
-
-  /** A local unique identifier for the tabpanel. */
-  readonly value: SignalLike<string> = () => this.inputs.value();
 
   /** Controls label for this tabpanel. */
   readonly labelManager: LabelControl;
@@ -131,6 +124,9 @@ export interface TabListInputs
     Omit<ListExpansionInputs, 'multiExpandable' | 'items'> {
   /** The selection strategy used by the tablist. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
+
+  /** The currently selected tab. */
+  selectedTab: WritableSignalLike<TabPattern | undefined>;
 }
 
 /** Controls the state of a tablist. */
@@ -148,7 +144,7 @@ export class TabListPattern {
   readonly activeTab: SignalLike<TabPattern | undefined> = () => this.inputs.activeItem();
 
   /** The currently selected tab. */
-  readonly selectedTab: WritableSignalLike<TabPattern | undefined> = signal(undefined);
+  readonly selectedTab: WritableSignalLike<TabPattern | undefined>;
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
@@ -208,6 +204,8 @@ export class TabListPattern {
   });
 
   constructor(readonly inputs: TabListInputs) {
+    this.selectedTab = inputs.selectedTab;
+
     this.focusBehavior = new ListFocus(inputs);
 
     this.navigationBehavior = new ListNavigation({
@@ -263,18 +261,10 @@ export class TabListPattern {
     }
   }
 
-  /** Opens the tab by given value. */
-  open(value: string): boolean;
-
   /** Opens the given tab or the current active tab. */
   open(tab?: TabPattern): boolean;
-
-  open(tab: TabPattern | string | undefined): boolean {
+  open(tab: TabPattern | undefined): boolean {
     tab ??= this.activeTab();
-
-    if (typeof tab === 'string') {
-      tab = this.inputs.items().find(t => t.value() === tab);
-    }
 
     if (tab === undefined) return false;
 
