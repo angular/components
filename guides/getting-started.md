@@ -18,7 +18,7 @@ The `ng add` command will install Angular Material, the [Component Dev Kit (CDK)
 
 1. Choose a prebuilt theme name, or "custom" for a custom theme:
 
-   You can choose from [prebuilt material design themes](https://material.angular.dev/guide/theming#pre-built-themes) or set up an extensible [custom theme](https://material.angular.dev/guide/theming#defining-a-theme).
+   You can choose from [prebuilt material design themes](https://material.angular.dev/guide/theming#prebuilt-themes) or set up an extensible [custom theme](https://material.angular.dev/guide/theming#getting-started).
 
 2. Set up global Angular Material typography styles:
 
