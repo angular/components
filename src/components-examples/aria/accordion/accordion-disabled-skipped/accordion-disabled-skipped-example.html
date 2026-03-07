@@ -6,12 +6,12 @@
 >
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item1">
+      <button ngAccordionTrigger class="example-accordion-trigger" [panel]="panel1">
         Item 1 Trigger
-        <mat-icon aria-hidden="true">{{expansionIcon('item1')()}}</mat-icon>
+        <mat-icon aria-hidden="true">{{expansionIcon(panel1)}}</mat-icon>
       </button>
     </h3>
-    <div ngAccordionPanel panelId="item1" class="example-accordion-panel">
+    <div ngAccordionPanel #panel1="ngAccordionPanel" class="example-accordion-panel">
       <ng-template ngAccordionContent>
         <p>This is the content for Item 1.</p>
       </ng-template>
@@ -20,12 +20,12 @@
 
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item2" disabled>
+      <button ngAccordionTrigger class="example-accordion-trigger" [panel]="panel2" disabled>
         Item 2 Trigger (disabled)
-        <mat-icon aria-hidden="true">{{expansionIcon('item2')()}}</mat-icon>
+        <mat-icon aria-hidden="true">{{expansionIcon(panel2)}}</mat-icon>
       </button>
     </h3>
-    <div ngAccordionPanel panelId="item2" class="example-accordion-panel">
+    <div ngAccordionPanel #panel2="ngAccordionPanel" class="example-accordion-panel">
       <ng-template ngAccordionContent>
         <p>This is the content for Item 2. This should not be reachable or expandable.</p>
       </ng-template>
@@ -34,12 +34,12 @@
 
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item3">
+      <button ngAccordionTrigger class="example-accordion-trigger" [panel]="panel3">
         Item 3 Trigger
-        <mat-icon aria-hidden="true">{{expansionIcon('item3')()}}</mat-icon>
+        <mat-icon aria-hidden="true">{{expansionIcon(panel3)}}</mat-icon>
       </button>
     </h3>
-    <div ngAccordionPanel panelId="item3" class="example-accordion-panel">
+    <div ngAccordionPanel #panel3="ngAccordionPanel" class="example-accordion-panel">
       <ng-template ngAccordionContent>
         <p>This is the content for Item 3.</p>
       </ng-template>
@@ -48,12 +48,12 @@
 
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item4">
+      <button ngAccordionTrigger class="example-accordion-trigger" [panel]="panel4">
         Item 4 Trigger
-        <mat-icon aria-hidden="true">{{expansionIcon('item4')()}}</mat-icon>
+        <mat-icon aria-hidden="true">{{expansionIcon(panel4)}}</mat-icon>
       </button>
     </h3>
-    <div ngAccordionPanel panelId="item4" class="example-accordion-panel">
+    <div ngAccordionPanel #panel4="ngAccordionPanel" class="example-accordion-panel">
       <ng-template ngAccordionContent>
         <p>This is the content for Item 4</p>
       </ng-template>
@@ -62,12 +62,12 @@
 
   <div class="example-accordion">
     <h3 class="example-accordion-header">
-      <button ngAccordionTrigger class="example-accordion-trigger" panelId="item5">
+      <button ngAccordionTrigger class="example-accordion-trigger" [panel]="panel5">
         Item 5 Trigger
-        <mat-icon aria-hidden="true">{{expansionIcon('item5')()}}</mat-icon>
+        <mat-icon aria-hidden="true">{{expansionIcon(panel5)}}</mat-icon>
       </button>
     </h3>
-    <div ngAccordionPanel panelId="item5" class="example-accordion-panel">
+    <div ngAccordionPanel #panel5="ngAccordionPanel" class="example-accordion-panel">
       <ng-template ngAccordionContent>
         <p>This is the content for Item 5</p>
       </ng-template>
