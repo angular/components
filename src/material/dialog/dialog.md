@@ -29,9 +29,11 @@ in which they are contained. When closing, an optional result value can be provi
 value is forwarded as the result of the `afterClosed` Observable.
 
 ```ts
+import {inject} from '@angular/core';
+
 @Component({/* ... */})
 export class YourDialog {
-  constructor(public dialogRef: MatDialogRef<YourDialog>) { }
+  dialogRef = inject(MatDialogRef);
 
   closeDialog() {
     this.dialogRef.close('Pizza!');
@@ -41,14 +43,14 @@ export class YourDialog {
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `MatDialogConfig` for
-MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+`MAT_DIALOG_DEFAULT_OPTIONS` in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
 
 ### Sharing data with the Dialog component.
@@ -64,15 +66,15 @@ let dialogRef = dialog.open(YourDialog, {
 To access the data in your dialog component, you have to use the MAT_DIALOG_DATA injection token:
 
 ```ts
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from '../dialog';
+import {Component, inject} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'your-dialog',
   template: 'passed in {{ data.name }}',
 })
 export class YourDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {name: string}) { }
+  data = inject<{name: string}>(MAT_DIALOG_DATA);
 }
 ```
 
