@@ -18,10 +18,20 @@ let hasV8BreakIterator: boolean;
 // the consumer is providing a polyfilled `Map`. See:
 // https://github.com/Microsoft/ChakraCore/issues/3189
 // https://github.com/angular/components/issues/15687
+
+interface IntlWithV8BreakIterator {
+  v8BreakIterator?: boolean;
+}
+
 try {
-  hasV8BreakIterator = typeof Intl !== 'undefined' && (Intl as any).v8BreakIterator;
+  hasV8BreakIterator =
+    typeof Intl !== 'undefined' && !!(Intl as IntlWithV8BreakIterator).v8BreakIterator;
 } catch {
   hasV8BreakIterator = false;
+}
+
+interface WindowWithChrome extends Window {
+  chrome?: unknown;
 }
 
 /**
@@ -50,7 +60,7 @@ export class Platform {
   /** Whether the current rendering engine is Blink. */
   BLINK: boolean =
     this.isBrowser &&
-    !!((window as any).chrome || hasV8BreakIterator) &&
+    !!((window as WindowWithChrome).chrome || hasV8BreakIterator) &&
     typeof CSS !== 'undefined' &&
     !this.EDGE &&
     !this.TRIDENT;

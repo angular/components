@@ -85,12 +85,14 @@ function createEmptyStyleRule(query: string, nonce: string | undefined | null) {
 
 /** No-op matchMedia replacement for non-browser platforms. */
 function noopMatchMedia(query: string): MediaQueryList {
-  // Use `as any` here to avoid adding additional necessary properties for
-  // the noop matcher.
   return {
     matches: query === 'all' || query === '',
     media: query,
+    onchange: null,
     addListener: () => {},
     removeListener: () => {},
-  } as any;
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => true,
+  };
 }
