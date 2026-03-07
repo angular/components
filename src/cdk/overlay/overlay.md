@@ -1,4 +1,4 @@
-The `overlay` package provides a way to open floating panels on the screen.
+﻿The `overlay` package provides a way to open floating panels on the screen.
 
 ### Initial setup
 The CDK overlays depend on a small set of structural styles to work correctly. If you're using
@@ -86,6 +86,46 @@ A custom scroll strategy can be created by implementing the `ScrollStrategy` int
 strategy will typically inject `ScrollDispatcher` (from `@angular/cdk/scrolling`) to be notified
 of when scrolling takes place. See the documentation for `ScrollDispatcher` for more information
 on how scroll events are detected and dispatched.
+
+#### Using the native Popover API
+As of Angular v21, the CDK overlay supports rendering overlays as native popover elements instead
+of using the traditional overlay container. This uses the browser's native [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API),
+which provides improved accessibility, automatic focus management, and better handling of scrolling
+and positioning.
+
+To enable the popover behavior, set the `usePopover` option to `true` when creating an overlay:
+
+```ts
+const overlayRef = overlay.create({
+  positionStrategy: this.overlay.position()
+    .flexibleConnectedTo(trigger)
+    .withPositions(positions),
+  usePopover: true,
+});
+```
+
+When using `FlexibleConnectedPositionStrategy` with popovers, you can also specify the popover
+insertion point:
+
+```ts
+const overlayRef = overlay.create({
+  positionStrategy: this.overlay.position()
+    .flexibleConnectedTo(trigger)
+    .withPositions(positions)
+    .withPopoverInsertionPoint(triggerElement),
+  usePopover: 'auto', // Can also use 'auto', 'manual'
+});
+```
+
+**Benefits of using the native Popover API:**
+- Better accessibility with automatic focus management
+- Automatic dismissal on outside click (for auto popovers)
+- Improved performance with less CSS in the critical path
+- Native browser support for popover stacking
+- Better integration with screen readers
+
+**Note:** The popover API is not supported on older browsers. Always provide a fallback or test
+browser compatibility before using this feature in production.
 
 ### The overlay container
 The `OverlayContainer` provides a handle to the container element in which all individual overlay

@@ -23,6 +23,7 @@ import {
   viewChild,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 
 /** @title Disabled combobox example. */
 @Component({
@@ -37,13 +38,15 @@ import {FormsModule} from '@angular/forms';
     Listbox,
     Option,
     FormsModule,
+    CdkConnectedOverlay,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDisabledExample {
-  popover = viewChild<ElementRef>('popover');
   listbox = viewChild<Listbox<any>>(Listbox);
   combobox = viewChild<Combobox<any>>(Combobox);
+
+  panelWidth = signal<number | undefined>(undefined);
 
   searchString = signal('');
 
@@ -53,28 +56,16 @@ export class ComboboxDisabledExample {
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
       const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      if (combobox.expanded()) {
+        const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+        this.panelWidth(comboboxRect?.width);
+      } else {
+        this.panelWidth(undefined);
+      }
 
       this.listbox()?.scrollActiveItemIntoView();
     });
-  }
-
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
-    }
-
-    popover.nativeElement.showPopover();
   }
 }
 
