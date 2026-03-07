@@ -10,7 +10,6 @@ import {
   signal,
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {fakeAsync, flush, tick} from '@angular/core/testing';
 import {
   dispatchEvent,
   createMouseEvent,
@@ -32,12 +31,13 @@ import {
   makeScrollable,
   startDraggingViaMouse,
   startDraggingViaTouch,
+  wait,
 } from './test-utils.spec';
 import {isInsideClientRect, isOverflowingParent} from '../dom/dom-rect';
 
 describe('Standalone CdkDrag', () => {
   describe('mouse dragging', () => {
-    it('should drag an element freely to a particular position', fakeAsync(() => {
+    it('should drag an element freely to a particular position', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -45,9 +45,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should reset drag item to boundary', fakeAsync(() => {
+    it('should reset drag item to boundary', () => {
       const fixture = createComponent(DragWithResizeableBoundary);
       fixture.detectChanges();
       let boundaryElement = fixture.componentInstance.boundaryElement.nativeElement;
@@ -134,9 +134,9 @@ describe('Standalone CdkDrag', () => {
           dragElement.getBoundingClientRect(),
         ),
       ).toBeFalse();
-    }));
+    });
 
-    it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
+    it('should drag an element freely to a particular position when the page is scrolled', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -148,9 +148,9 @@ describe('Standalone CdkDrag', () => {
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
       cleanup();
-    }));
+    });
 
-    it('should continue dragging the element from where it was left off', fakeAsync(() => {
+    it('should continue dragging the element from where it was left off', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -162,9 +162,9 @@ describe('Standalone CdkDrag', () => {
 
       dragElementViaMouse(fixture, dragElement, 100, 200);
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
-    }));
+    });
 
-    it('should continue dragging from where it was left off when the page is scrolled', fakeAsync(() => {
+    it('should continue dragging from where it was left off when the page is scrolled', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -181,9 +181,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
 
       cleanup();
-    }));
+    });
 
-    it('should not drag an element with the right mouse button', fakeAsync(() => {
+    it('should not drag an element with the right mouse button', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -201,9 +201,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should not drag the element if it was not moved more than the minimum distance', fakeAsync(() => {
+    it('should not drag the element if it was not moved more than the minimum distance', () => {
       const fixture = createComponent(StandaloneDraggable, {dragDistance: 5});
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -211,9 +211,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 2, 2);
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should be able to stop dragging after a double click', fakeAsync(() => {
+    it('should be able to stop dragging after a double click', () => {
       const fixture = createComponent(StandaloneDraggable, {dragDistance: 5});
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -234,9 +234,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should preserve the previous `transform` value', fakeAsync(() => {
+    it('should preserve the previous `transform` value', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -244,9 +244,9 @@ describe('Standalone CdkDrag', () => {
       dragElement.style.transform = 'translateX(-50%)';
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px) translateX(-50%)');
-    }));
+    });
 
-    it('should not generate multiple own `translate3d` values', fakeAsync(() => {
+    it('should not generate multiple own `translate3d` values', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -258,9 +258,9 @@ describe('Standalone CdkDrag', () => {
 
       dragElementViaMouse(fixture, dragElement, 100, 200);
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px) translateY(-50%)');
-    }));
+    });
 
-    it('should prevent the `mousedown` action for native draggable elements', fakeAsync(() => {
+    it('should prevent the `mousedown` action for native draggable elements', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -277,9 +277,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(mousedownEvent.preventDefault).toHaveBeenCalled();
-    }));
+    });
 
-    it('should not start dragging an element with a fake mousedown event', fakeAsync(() => {
+    it('should not start dragging an element with a fake mousedown event', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -304,9 +304,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should prevent the default dragstart action', fakeAsync(() => {
+    it('should prevent the default dragstart action', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const event = dispatchFakeEvent(
@@ -316,9 +316,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(event.defaultPrevented).toBe(true);
-    }));
+    });
 
-    it('should not prevent the default dragstart action when dragging is disabled', fakeAsync(() => {
+    it('should not prevent the default dragstart action when dragging is disabled', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.componentInstance.dragDisabled.set(true);
       fixture.detectChanges();
@@ -329,11 +329,11 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(event.defaultPrevented).toBe(false);
-    }));
+    });
   });
 
   describe('touch dragging', () => {
-    it('should drag an element freely to a particular position', fakeAsync(() => {
+    it('should drag an element freely to a particular position', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -341,9 +341,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaTouch(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
+    it('should drag an element freely to a particular position when the page is scrolled', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -355,9 +355,9 @@ describe('Standalone CdkDrag', () => {
       dragElementViaTouch(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
       cleanup();
-    }));
+    });
 
-    it('should continue dragging the element from where it was left off', fakeAsync(() => {
+    it('should continue dragging the element from where it was left off', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -369,9 +369,9 @@ describe('Standalone CdkDrag', () => {
 
       dragElementViaTouch(fixture, dragElement, 100, 200);
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
-    }));
+    });
 
-    it('should continue dragging from where it was left off when the page is scrolled', fakeAsync(() => {
+    it('should continue dragging from where it was left off when the page is scrolled', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -388,9 +388,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
 
       cleanup();
-    }));
+    });
 
-    it('should prevent the default `touchmove` action on the page while dragging', fakeAsync(() => {
+    it('should prevent the default `touchmove` action on the page while dragging', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -406,9 +406,9 @@ describe('Standalone CdkDrag', () => {
 
       dispatchTouchEvent(document, 'touchend');
       fixture.detectChanges();
-    }));
+    });
 
-    it('should not prevent `touchstart` action for native draggable elements', fakeAsync(() => {
+    it('should not prevent `touchstart` action for native draggable elements', async () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -425,9 +425,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(touchstartEvent.preventDefault).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should not start dragging an element with a fake touchstart event', fakeAsync(() => {
+    it('should not start dragging an element with a fake touchstart event', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -453,9 +453,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should stop dragging on touchcancel', fakeAsync(() => {
+    it('should stop dragging on touchcancel', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -469,11 +469,11 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
       expect(fixture.componentInstance.endedSpy).toHaveBeenCalled();
-    }));
+    });
   });
 
   describe('mouse dragging when initial transform is none', () => {
-    it('should drag an element freely to a particular position', fakeAsync(() => {
+    it('should drag an element freely to a particular position', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -481,10 +481,10 @@ describe('Standalone CdkDrag', () => {
 
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
   });
 
-  it('should dispatch an event when the user has started dragging', fakeAsync(() => {
+  it('should dispatch an event when the user has started dragging', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -500,9 +500,9 @@ describe('Standalone CdkDrag', () => {
       source: fixture.componentInstance.dragInstance,
       event: jasmine.anything(),
     });
-  }));
+  });
 
-  it('should dispatch an event when the user has stopped dragging', fakeAsync(() => {
+  it('should dispatch an event when the user has stopped dragging', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -520,9 +520,9 @@ describe('Standalone CdkDrag', () => {
       dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
       event: jasmine.anything(),
     });
-  }));
+  });
 
-  it('should include the drag distance in the ended event', fakeAsync(() => {
+  it('should include the drag distance in the ended event', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -545,7 +545,7 @@ describe('Standalone CdkDrag', () => {
       dropPoint: {x: 40, y: 50},
       event: jasmine.anything(),
     });
-  }));
+  });
 
   it('should emit when the user is moving the drag element', () => {
     const fixture = createComponent(StandaloneDraggable);
@@ -591,7 +591,7 @@ describe('Standalone CdkDrag', () => {
     subscription.unsubscribe();
   });
 
-  it('should be able to lock dragging along the x axis', fakeAsync(() => {
+  it('should be able to lock dragging along the x axis', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.dragLockAxis.set('x');
     fixture.detectChanges();
@@ -605,9 +605,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 100, 200);
     expect(dragElement.style.transform).toBe('translate3d(150px, 0px, 0px)');
-  }));
+  });
 
-  it('should be able to lock dragging along the x axis while using constrainPosition', fakeAsync(() => {
+  it('should be able to lock dragging along the x axis while using constrainPosition', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.dragLockAxis.set('x');
     fixture.componentInstance.constrainPosition = (
@@ -632,9 +632,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 100, 200);
     expect(dragElement.style.transform).toBe('translate3d(150px, 0px, 0px)');
-  }));
+  });
 
-  it('should be able to lock dragging along the y axis', fakeAsync(() => {
+  it('should be able to lock dragging along the y axis', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.dragLockAxis.set('y');
     fixture.detectChanges();
@@ -648,9 +648,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 100, 200);
     expect(dragElement.style.transform).toBe('translate3d(0px, 300px, 0px)');
-  }));
+  });
 
-  it('should be able to lock dragging along the y axis while using constrainPosition', fakeAsync(() => {
+  it('should be able to lock dragging along the y axis while using constrainPosition', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.dragLockAxis.set('y');
     fixture.componentInstance.constrainPosition = (
@@ -675,9 +675,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 100, 200);
     expect(dragElement.style.transform).toBe('translate3d(0px, 300px, 0px)');
-  }));
+  });
 
-  it('should add a class while an element is being dragged', fakeAsync(() => {
+  it('should add a class while an element is being dragged', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -693,9 +693,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(element.classList).not.toContain('cdk-drag-dragging');
-  }));
+  });
 
-  it('should add a class while an element is being dragged with OnPush change detection', fakeAsync(() => {
+  it('should add a class while an element is being dragged with OnPush change detection', () => {
     const fixture = createComponent(StandaloneDraggableWithOnPush);
     fixture.detectChanges();
 
@@ -711,9 +711,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(element.classList).not.toContain('cdk-drag-dragging');
-  }));
+  });
 
-  it('should not add a class if item was not dragged more than the threshold', fakeAsync(() => {
+  it('should not add a class if item was not dragged more than the threshold', async () => {
     const fixture = createComponent(StandaloneDraggable, {dragDistance: 5});
     fixture.detectChanges();
 
@@ -724,9 +724,9 @@ describe('Standalone CdkDrag', () => {
     startDraggingViaMouse(fixture, element);
 
     expect(element.classList).not.toContain('cdk-drag-dragging');
-  }));
+  });
 
-  it('should be able to set an alternate drag root element', fakeAsync(() => {
+  it('should be able to set an alternate drag root element', () => {
     const fixture = createComponent(DraggableWithAlternateRoot);
     fixture.componentInstance.rootElementSelector = '.alternate-root';
     fixture.changeDetectorRef.markForCheck();
@@ -742,9 +742,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
     expect(dragElement.style.transform).toBeFalsy();
-  }));
+  });
 
-  it('should be able to set the cdkDrag element as handle if it has a different root element', fakeAsync(() => {
+  it('should be able to set the cdkDrag element as handle if it has a different root element', () => {
     const fixture = createComponent(DraggableWithAlternateRootAndSelfHandle);
     fixture.detectChanges();
 
@@ -765,9 +765,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
     expect(dragElement.style.transform).toBeFalsy();
-  }));
+  });
 
-  it('should be able to set an alternate drag root element for ng-container', fakeAsync(() => {
+  it('should be able to set an alternate drag root element for ng-container', () => {
     const fixture = createComponent(DraggableNgContainerWithAlternateRoot);
     fixture.detectChanges();
 
@@ -778,9 +778,9 @@ describe('Standalone CdkDrag', () => {
     dragElementViaMouse(fixture, dragRoot, 50, 100);
 
     expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
-  }));
+  });
 
-  it('should preserve the initial transform if the root element changes', fakeAsync(() => {
+  it('should preserve the initial transform if the root element changes', () => {
     const fixture = createComponent(DraggableWithAlternateRoot);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -799,12 +799,12 @@ describe('Standalone CdkDrag', () => {
 
     expect(alternateRoot.style.transform).not.toContain('translateX(-50%)');
     expect(alternateRoot.style.transform).toContain('scale(2)');
-  }));
+  });
 
-  it('should handle the root element selector changing after init', fakeAsync(() => {
+  it('should handle the root element selector changing after init', async () => {
     const fixture = createComponent(DraggableWithAlternateRoot);
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
 
     fixture.componentInstance.rootElementSelector = '.alternate-root';
     fixture.changeDetectorRef.markForCheck();
@@ -820,9 +820,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
     expect(dragElement.style.transform).toBeFalsy();
-  }));
+  });
 
-  it('should not be able to drag the element if dragging is disabled', fakeAsync(() => {
+  it('should not be able to drag the element if dragging is disabled', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -836,9 +836,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 50, 100);
     expect(dragElement.style.transform).toBeFalsy();
-  }));
+  });
 
-  it('should enable native drag interactions if dragging is disabled', fakeAsync(() => {
+  it('should enable native drag interactions if dragging is disabled', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -850,18 +850,18 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
-  }));
+  });
 
-  it('should enable native drag interactions if not dragging', fakeAsync(() => {
+  it('should enable native drag interactions if not dragging', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
     const styles = dragElement.style;
 
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
-  }));
+  });
 
-  it('should disable native drag interactions if dragging', fakeAsync(() => {
+  it('should disable native drag interactions if dragging', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -874,9 +874,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
-  }));
+  });
 
-  it('should re-enable drag interactions once dragging is over', fakeAsync(() => {
+  it('should re-enable drag interactions once dragging is over', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -892,9 +892,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
-  }));
+  });
 
-  it('should not stop propagation for the drag sequence start event by default', fakeAsync(() => {
+  it('should not stop propagation for the drag sequence start event by default', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -906,15 +906,15 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(event.stopPropagation).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('should not throw if destroyed before the first change detection run', fakeAsync(() => {
+  it('should not throw if destroyed before the first change detection run', () => {
     const fixture = createComponent(StandaloneDraggable);
 
     expect(() => {
       fixture.destroy();
     }).not.toThrow();
-  }));
+  });
 
   it('should enable native drag interactions on the drag item when there is a handle', () => {
     const fixture = createComponent(StandaloneDraggableWithHandle);
@@ -966,7 +966,7 @@ describe('Standalone CdkDrag', () => {
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
   });
 
-  it('should be able to reset a freely-dragged item to its initial position', fakeAsync(() => {
+  it('should be able to reset a freely-dragged item to its initial position', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -977,9 +977,9 @@ describe('Standalone CdkDrag', () => {
 
     fixture.componentInstance.dragInstance.reset();
     expect(dragElement.style.transform).toBeFalsy();
-  }));
+  });
 
-  it('should preserve initial transform after resetting', fakeAsync(() => {
+  it('should preserve initial transform after resetting', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -991,9 +991,9 @@ describe('Standalone CdkDrag', () => {
 
     fixture.componentInstance.dragInstance.reset();
     expect(dragElement.style.transform).toBe('scale(2)');
-  }));
+  });
 
-  it('should start dragging an item from its initial position after a reset', fakeAsync(() => {
+  it('should start dragging an item from its initial position after a reset', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1005,9 +1005,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 25, 50);
     expect(dragElement.style.transform).toBe('translate3d(25px, 50px, 0px)');
-  }));
+  });
 
-  it('should not dispatch multiple events for a mouse event right after a touch event', fakeAsync(() => {
+  it('should not dispatch multiple events for a mouse event right after a touch event', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1018,20 +1018,20 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
     dispatchTouchEvent(dragElement, 'touchend');
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
 
     // Immediately dispatch a mouse sequence to simulate a fake event.
     startDraggingViaMouse(fixture, dragElement);
     fixture.detectChanges();
     dispatchMouseEvent(dragElement, 'mouseup');
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
 
     expect(fixture.componentInstance.startedSpy).toHaveBeenCalledTimes(1);
     expect(fixture.componentInstance.endedSpy).toHaveBeenCalledTimes(1);
-  }));
+  });
 
-  it('should round the transform value', fakeAsync(() => {
+  it('should round the transform value', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1039,9 +1039,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 13.37, 37);
     expect(dragElement.style.transform).toBe('translate3d(13px, 37px, 0px)');
-  }));
+  });
 
-  it('should allow for dragging to be constrained to an element', fakeAsync(() => {
+  it('should allow for dragging to be constrained to an element', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.boundary = '.wrapper';
     fixture.detectChanges();
@@ -1050,9 +1050,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 300, 300);
     expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
-  }));
+  });
 
-  it('should allow for dragging to be constrained to an element while using constrainPosition', fakeAsync(() => {
+  it('should allow for dragging to be constrained to an element while using constrainPosition', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.boundary = '.wrapper';
     fixture.detectChanges();
@@ -1073,9 +1073,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 300, 300);
     expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
-  }));
+  });
 
-  it('should be able to pass in a DOM node as the boundary', fakeAsync(() => {
+  it('should be able to pass in a DOM node as the boundary', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.boundary = fixture.nativeElement.querySelector('.wrapper');
     fixture.detectChanges();
@@ -1084,9 +1084,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 300, 300);
     expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
-  }));
+  });
 
-  it('should adjust the x offset if the boundary becomes narrower after a viewport resize', fakeAsync(() => {
+  it('should adjust the x offset if the boundary becomes narrower after a viewport resize', async () => {
     const fixture = createComponent(StandaloneDraggable);
     const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
     fixture.componentInstance.boundary = boundary;
@@ -1098,12 +1098,12 @@ describe('Standalone CdkDrag', () => {
 
     boundary.style.width = '150px';
     dispatchFakeEvent(window, 'resize');
-    tick(20);
+    await wait(20);
 
     expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-  }));
+  });
 
-  it('should keep the old position if the boundary is invisible after a resize', fakeAsync(() => {
+  it('should keep the old position if the boundary is invisible after a resize', async () => {
     const fixture = createComponent(StandaloneDraggable);
     const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
     fixture.componentInstance.boundary = boundary;
@@ -1115,12 +1115,12 @@ describe('Standalone CdkDrag', () => {
 
     boundary.style.display = 'none';
     dispatchFakeEvent(window, 'resize');
-    tick(20);
+    await wait(20);
 
     expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
-  }));
+  });
 
-  it('should handle the element and boundary dimensions changing between drag sequences', fakeAsync(() => {
+  it('should handle the element and boundary dimensions changing between drag sequences', () => {
     const fixture = createComponent(StandaloneDraggable);
     const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
     fixture.componentInstance.boundary = boundary;
@@ -1136,9 +1136,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 300, 300);
     expect(dragElement.style.transform).toBe('translate3d(150px, 150px, 0px)');
-  }));
+  });
 
-  it('should adjust the y offset if the boundary becomes shorter after a viewport resize', fakeAsync(() => {
+  it('should adjust the y offset if the boundary becomes shorter after a viewport resize', async () => {
     const fixture = createComponent(StandaloneDraggable);
     const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
     fixture.componentInstance.boundary = boundary;
@@ -1150,15 +1150,15 @@ describe('Standalone CdkDrag', () => {
 
     boundary.style.height = '150px';
     dispatchFakeEvent(window, 'resize');
-    tick(20);
+    await wait(20);
 
     expect(dragElement.style.transform).toBe('translate3d(100px, 50px, 0px)');
-  }));
+  });
 
   it(
     'should reset the x offset if the boundary becomes narrower than the element ' +
       'after a resize',
-    fakeAsync(() => {
+    async () => {
       const fixture = createComponent(StandaloneDraggable);
       const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
       fixture.componentInstance.boundary = boundary;
@@ -1170,13 +1170,13 @@ describe('Standalone CdkDrag', () => {
 
       boundary.style.width = '50px';
       dispatchFakeEvent(window, 'resize');
-      tick(20);
+      await wait(20);
 
       expect(dragElement.style.transform).toBe('translate3d(0px, 100px, 0px)');
-    }),
+    },
   );
 
-  it('should reset the y offset if the boundary becomes shorter than the element after a resize', fakeAsync(() => {
+  it('should reset the y offset if the boundary becomes shorter than the element after a resize', async () => {
     const fixture = createComponent(StandaloneDraggable);
     const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
     fixture.componentInstance.boundary = boundary;
@@ -1188,12 +1188,12 @@ describe('Standalone CdkDrag', () => {
 
     boundary.style.height = '50px';
     dispatchFakeEvent(window, 'resize');
-    tick(20);
+    await wait(20);
 
     expect(dragElement.style.transform).toBe('translate3d(100px, 0px, 0px)');
-  }));
+  });
 
-  it('should allow for the position constrain logic to be customized', fakeAsync(() => {
+  it('should allow for the position constrain logic to be customized', () => {
     const fixture = createComponent(StandaloneDraggable);
     const spy = jasmine.createSpy('constrain position spy').and.returnValue({
       x: 50,
@@ -1217,7 +1217,7 @@ describe('Standalone CdkDrag', () => {
     const elementRect = dragElement.getBoundingClientRect();
     expect(Math.floor(elementRect.top)).toBe(50);
     expect(Math.floor(elementRect.left)).toBe(50);
-  }));
+  });
 
   it('should throw if drag item is attached to an ng-container', () => {
     const errorHandler = jasmine.createSpyObj(['handleError']);
@@ -1234,7 +1234,7 @@ describe('Standalone CdkDrag', () => {
     );
   });
 
-  it('should cancel drag if the mouse moves before the delay is elapsed', fakeAsync(() => {
+  it('should cancel drag if the mouse moves before the delay is elapsed', async () => {
     // We can't use Jasmine's `clock` because Zone.js interferes with it.
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
@@ -1257,9 +1257,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform)
       .withContext('Expected element not to be moved if the mouse moved before the delay.')
       .toBeFalsy();
-  }));
+  });
 
-  it('should enable native drag interactions if mouse moves before the delay', fakeAsync(() => {
+  it('should enable native drag interactions if mouse moves before the delay', async () => {
     // We can't use Jasmine's `clock` because Zone.js interferes with it.
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
@@ -1281,9 +1281,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
-  }));
+  });
 
-  it('should allow dragging after the drag start delay is elapsed', fakeAsync(() => {
+  it('should allow dragging after the drag start delay is elapsed', () => {
     // We can't use Jasmine's `clock` because Zone.js interferes with it.
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
@@ -1309,9 +1309,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform)
       .withContext('Expected element to be dragged after all the time has passed.')
       .toBe('translate3d(50px, 100px, 0px)');
-  }));
+  });
 
-  it('should not prevent the default touch action before the delay has elapsed', fakeAsync(() => {
+  it('should not prevent the default touch action before the delay has elapsed', async () => {
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
 
@@ -1329,9 +1329,9 @@ describe('Standalone CdkDrag', () => {
     currentTime += 250;
 
     expect(dispatchTouchEvent(document, 'touchmove', 50, 100).defaultPrevented).toBe(false);
-  }));
+  });
 
-  it('should handle the drag delay as a string', fakeAsync(() => {
+  it('should handle the drag delay as a string', () => {
     // We can't use Jasmine's `clock` because Zone.js interferes with it.
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
@@ -1357,9 +1357,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform)
       .withContext('Expected element to be dragged after all the time has passed.')
       .toBe('translate3d(50px, 100px, 0px)');
-  }));
+  });
 
-  it('should be able to configure the drag start delay based on the event type', fakeAsync(() => {
+  it('should be able to configure the drag start delay based on the event type', () => {
     // We can't use Jasmine's `clock` because Zone.js interferes with it.
     spyOn(Date, 'now').and.callFake(() => currentTime);
     let currentTime = 0;
@@ -1382,9 +1382,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform)
       .withContext('Expected element to be moved via mouse because it has no delay.')
       .toBe('translate3d(50px, 100px, 0px)');
-  }));
+  });
 
-  it('should be able to get the current position', fakeAsync(() => {
+  it('should be able to get the current position', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1398,9 +1398,9 @@ describe('Standalone CdkDrag', () => {
 
     dragElementViaMouse(fixture, dragElement, 100, 200);
     expect(dragInstance.getFreeDragPosition()).toEqual({x: 150, y: 300});
-  }));
+  });
 
-  it('should be able to set the current position programmatically', fakeAsync(() => {
+  it('should be able to set the current position programmatically', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1411,9 +1411,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
     expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
-  }));
+  });
 
-  it('should be able to set the current position', fakeAsync(() => {
+  it('should be able to set the current position', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
     fixture.changeDetectorRef.markForCheck();
@@ -1424,9 +1424,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
     expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
-  }));
+  });
 
-  it('should be able to get the up-to-date position as the user is dragging', fakeAsync(() => {
+  it('should be able to get the up-to-date position as the user is dragging', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1445,9 +1445,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(dragInstance.getFreeDragPosition()).toEqual({x: 100, y: 200});
-  }));
+  });
 
-  it('should react to changes in the free drag position', fakeAsync(() => {
+  it('should react to changes in the free drag position', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
     fixture.changeDetectorRef.markForCheck();
@@ -1462,9 +1462,9 @@ describe('Standalone CdkDrag', () => {
     fixture.detectChanges();
 
     expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
-  }));
+  });
 
-  it('should be able to continue dragging after the current position was set', fakeAsync(() => {
+  it('should be able to continue dragging after the current position was set', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
     fixture.changeDetectorRef.markForCheck();
@@ -1476,9 +1476,9 @@ describe('Standalone CdkDrag', () => {
     dragElementViaMouse(fixture, dragElement, 100, 200);
 
     expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
-  }));
+  });
 
-  it('should account for the scale when setting the free drag position', fakeAsync(() => {
+  it('should account for the scale when setting the free drag position', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.scale = 0.5;
     fixture.componentInstance.freeDragPosition = {x: 50, y: 100};
@@ -1490,9 +1490,9 @@ describe('Standalone CdkDrag', () => {
 
     expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
     expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
-  }));
+  });
 
-  it('should include the dragged distance as the user is dragging', fakeAsync(() => {
+  it('should include the dragged distance as the user is dragging', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1514,9 +1514,9 @@ describe('Standalone CdkDrag', () => {
     expect(event.distance).toEqual({x: 75, y: 50});
 
     subscription.unsubscribe();
-  }));
+  });
 
-  it('should be able to configure the drag input defaults through a provider', fakeAsync(() => {
+  it('should be able to configure the drag input defaults through a provider', () => {
     const config: DragDropConfig = {
       draggingDisabled: true,
       dragStartDelay: 1337,
@@ -1546,9 +1546,9 @@ describe('Standalone CdkDrag', () => {
     expect(drag.boundaryElement).toBe('.boundary');
     expect(drag.rootElementSelector).toBe('.root');
     expect(drag.previewContainer).toBe('parent');
-  }));
+  });
 
-  it('should not throw if touches and changedTouches are empty', fakeAsync(() => {
+  it('should not throw if touches and changedTouches are empty', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1556,20 +1556,19 @@ describe('Standalone CdkDrag', () => {
     startDraggingViaTouch(fixture, dragElement);
     continueDraggingViaTouch(fixture, 50, 100);
 
-    const event = createTouchEvent('touchend', 50, 100);
-    Object.defineProperties(event, {
-      touches: {get: () => []},
-      changedTouches: {get: () => []},
-    });
-
     expect(() => {
+      const event = createTouchEvent('touchend', 50, 100);
+      Object.defineProperties(event, {
+        touches: {get: () => []},
+        changedTouches: {get: () => []},
+      });
+
       dispatchEvent(document, event);
       fixture.detectChanges();
-      tick();
     }).not.toThrow();
-  }));
+  });
 
-  it('should update the free drag position if the page is scrolled', fakeAsync(() => {
+  it('should update the free drag position if the page is scrolled', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1589,9 +1588,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBe('translate3d(50px, 600px, 0px)');
 
     cleanup();
-  }));
+  });
 
-  it('should update the free drag position if the user moves their pointer after the page is scrolled', fakeAsync(() => {
+  it('should update the free drag position if the user moves their pointer after the page is scrolled', async () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.detectChanges();
 
@@ -1614,9 +1613,9 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBe('translate3d(50px, 700px, 0px)');
 
     cleanup();
-  }));
+  });
 
-  it('should account for scale when moving the element', fakeAsync(() => {
+  it('should account for scale when moving the element', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.scale = 0.5;
     fixture.detectChanges();
@@ -1625,10 +1624,10 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBeFalsy();
     dragElementViaMouse(fixture, dragElement, 50, 100);
     expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
-  }));
+  });
 
   describe('with a handle', () => {
-    it('should not be able to drag the entire element if it has a handle', fakeAsync(() => {
+    it('should not be able to drag the entire element if it has a handle', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1636,9 +1635,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 50, 100);
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should be able to drag an element using its handle', fakeAsync(() => {
+    it('should be able to drag an element using its handle', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1647,9 +1646,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should not be able to drag the element if the handle is disabled', fakeAsync(() => {
+    it('should not be able to drag the element if the handle is disabled', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1660,9 +1659,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should not be able to drag the element if the handle is disabled before init', fakeAsync(() => {
+    it('should not be able to drag the element if the handle is disabled before init', () => {
       const fixture = createComponent(StandaloneDraggableWithPreDisabledHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1671,9 +1670,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should not be able to drag using the handle if the element is disabled', fakeAsync(() => {
+    it('should not be able to drag using the handle if the element is disabled', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1686,9 +1685,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBeFalsy();
-    }));
+    });
 
-    it('should be able to use a handle that was added after init', fakeAsync(() => {
+    it('should be able to use a handle that was added after init', () => {
       const fixture = createComponent(StandaloneDraggableWithDelayedHandle);
 
       fixture.detectChanges();
@@ -1702,9 +1701,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should be able to use more than one handle to drag the element', fakeAsync(async () => {
+    it('should be able to use more than one handle to drag the element', () => {
       const fixture = createComponent(StandaloneDraggableWithMultipleHandles);
       fixture.detectChanges();
 
@@ -1717,9 +1716,9 @@ describe('Standalone CdkDrag', () => {
 
       dragElementViaMouse(fixture, handles[0], 100, 200);
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
-    }));
+    });
 
-    it('should be able to drag with a handle that is not a direct descendant', fakeAsync(() => {
+    it('should be able to drag with a handle that is not a direct descendant', () => {
       const fixture = createComponent(StandaloneDraggableWithIndirectHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1736,9 +1735,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform)
         .withContext('Expected to drag the element by its handle.')
         .toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should be able to drag with a handle that is defined in a separate embedded view', fakeAsync(() => {
+    it('should be able to drag with a handle that is defined in a separate embedded view', () => {
       const fixture = createComponent(StandaloneDraggableWithExternalTemplateHandle);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -1755,9 +1754,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform)
         .withContext('Expected to drag the element by its handle.')
         .toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should disable the tap highlight while dragging via the handle', fakeAsync(() => {
+    it('should disable the tap highlight while dragging via the handle', () => {
       // This test is irrelevant if the browser doesn't support styling the tap highlight color.
       if (!('webkitTapHighlightColor' in document.body.style)) {
         return;
@@ -1781,9 +1780,9 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect((dragElement.style as any).webkitTapHighlightColor).toBeFalsy();
-    }));
+    });
 
-    it('should preserve any existing `webkitTapHighlightColor`', fakeAsync(() => {
+    it('should preserve any existing `webkitTapHighlightColor`', () => {
       // This test is irrelevant if the browser doesn't support styling the tap highlight color.
       if (!('webkitTapHighlightColor' in document.body.style)) {
         return;
@@ -1807,16 +1806,15 @@ describe('Standalone CdkDrag', () => {
       fixture.detectChanges();
 
       expect((dragElement.style as any).webkitTapHighlightColor).toBe('purple');
-    }));
+    });
 
-    it('should throw if drag handle is attached to an ng-container', fakeAsync(() => {
+    it('should throw if drag handle is attached to an ng-container', () => {
       expect(() => {
         createComponent(DragHandleOnNgContainer).detectChanges();
-        flush();
       }).toThrowError(/^cdkDragHandle must be attached to an element node/);
-    }));
+    });
 
-    it('should be able to drag an element using a handle with a shadow DOM child', fakeAsync(() => {
+    it('should be able to drag an element using a handle with a shadow DOM child', () => {
       if (!_supportsShadowDom()) {
         return;
       }
@@ -1829,9 +1827,9 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handleChild, 50, 100);
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should prevent default dragStart on handle, not on entire draggable', fakeAsync(() => {
+    it('should prevent default dragStart on handle, not on entire draggable', () => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
       fixture.detectChanges();
 
@@ -1850,7 +1848,7 @@ describe('Standalone CdkDrag', () => {
 
       expect(draggableEvent.defaultPrevented).toBe(false);
       expect(handleEvent.defaultPrevented).toBe(true);
-    }));
+    });
   });
 });
 
