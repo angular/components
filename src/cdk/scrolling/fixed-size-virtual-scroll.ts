@@ -11,6 +11,7 @@ import {Directive, forwardRef, Input, isDevMode, OnChanges} from '@angular/core'
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
+import {expandRenderedRange} from './virtual-scroll-utils';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 /** Virtual scrolling strategy for lists with items of known fixed size. */
@@ -184,21 +185,10 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       }
     }
 
-    // todo: move this application code to somewhere else
-    if (this.renderedRange.start === null || this.renderedRange.start > newRange.start) {
-      this.renderedRange.start = newRange.start;
-    } else {
-      newRange.start = this.renderedRange.start;
-    }
+    const expandedRange = expandRenderedRange(this.renderedRange, newRange);
 
-    if (this.renderedRange.end === null || this.renderedRange.end < newRange.end) {
-      this.renderedRange.end = newRange.end;
-    } else {
-      newRange.end = this.renderedRange.end;
-    }
-
-    this._viewport.setRenderedRange(newRange);
-    this._viewport.setRenderedContentOffset(this._itemSize * newRange.start);
+    this._viewport.setRenderedRange(expandedRange);
+    this._viewport.setRenderedContentOffset(this._itemSize * expandedRange.start);
     this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));
   }
 }

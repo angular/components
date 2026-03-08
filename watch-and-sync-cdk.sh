@@ -3,7 +3,7 @@
 # Usage: ./scripts/watch-and-sync-cdk.sh /path/to/target/project
 #
 # This script builds the CDK with ibazel (watch mode) and syncs the output
-# to the target project's node_modules/@angular/cdk folder on every rebuild.
+# to the target project's node_modules/@nomad2102npm/cdk folder on every rebuild.
 
 set -e
 
@@ -24,7 +24,7 @@ if [ -z "$1" ]; then
 fi
 
 TARGET_PROJECT="$1"
-TARGET_CDK_PATH="$TARGET_PROJECT/node_modules/@angular/cdk"
+TARGET_CDK_PATH="$TARGET_PROJECT/node_modules/@nomad2102npm/cdk"
 
 # Validate target project exists
 if [ ! -d "$TARGET_PROJECT" ]; then

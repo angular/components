@@ -9,7 +9,6 @@
 import {
   EmbeddedViewRef,
   Injector,
-  Injectable,
   inject,
   IterableChangeRecord,
   IterableChanges,
@@ -146,11 +145,10 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
 
   detach() {
     // Save scroll positions before destroying cached views
-    for (let i = 0; i < this._viewCache.length; i++) {
-      const view = this._viewCache[i];
+    this._viewCache.forEach((view, i) => {
       this._saveScrollPosition(view, i);
       view.destroy();
-    }
+    });
     this._viewCache = [];
   }
 
@@ -274,7 +272,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       return null;
     }
     const trackByValue = this._trackByFn(index, value);
-    return trackByValue != null ? String(trackByValue) : null;
+    return trackByValue !== null ? String(trackByValue) : null;
   }
 
   /**

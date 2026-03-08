@@ -2,6 +2,7 @@ import {ListRange} from '@angular/cdk/collections';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {VisibleRange} from './cdk-visible-range.directive';
+import {expandRenderedRange} from './virtual-scroll-utils';
 import {VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
@@ -174,56 +175,32 @@ export class CdkDynamicSizeVirtualScrollStrategy implements VirtualScrollStrateg
 
     // If user scrolls to the bottom of the list and data changes to a smaller list
     if (newRange.end > dataLength) {
-      const lastVisibleIndex = this._getItemIdxByOffset(scrollOffset + viewportSize);
-      // We have to recalculate the first visible index based on new data length and viewport size.
-      const newVisibleIndex = this._getItemIdxByOffset(viewportSize, lastVisibleIndex, 'down');
-
-      // If first visible index changed we must update scroll offset to handle start/end buffers
-      // Current range must also be adjusted to cover the new position (bottom of new list).
-      if (firstVisibleIndex !== newVisibleIndex) {
-        firstVisibleIndex = newVisibleIndex;
-        scrollOffset = this._getOffsetByItemIdx(newVisibleIndex);
-        newRange.start = firstVisibleIndex;
-      }
-
-      const endRange = this._getItemIdxByOffset(viewportSize, firstVisibleIndex);
-      newRange.end = Math.max(0, Math.min(dataLength, endRange));
+      ({firstVisibleIndex, scrollOffset, newRange} = this._adjustRangeForReducedDataLength(
+        firstVisibleIndex,
+        scrollOffset,
+        viewportSize,
+        dataLength,
+        newRange,
+      ));
     }
 
     const startBuffer = scrollOffset - this._getOffsetByItemIdx(newRange.start);
-    if (startBuffer < this._minBufferPx && newRange.start !== 0) {
-      const expandStart = this._getItemIdxByOffset(
-        this._maxBufferPx - startBuffer,
-        newRange.start - 1,
-        'down',
-      );
-      newRange.start = Math.max(0, expandStart);
+    const allOffset = scrollOffset + viewportSize;
+    const endBuffer = this._getOffsetByItemIdx(newRange.end) - allOffset;
+
+    if (
+      (startBuffer < this._minBufferPx && newRange.start !== 0) ||
+      (endBuffer < this._minBufferPx && newRange.end !== dataLength)
+    ) {
+      newRange.start = Math.max(0, this._getItemIdxByOffset(scrollOffset - this._maxBufferPx));
       newRange.end = Math.min(
         dataLength,
-        this._getItemIdxByOffset(viewportSize + this._minBufferPx, firstVisibleIndex),
+        this._getItemIdxByOffset(scrollOffset + viewportSize + this._maxBufferPx) + 1,
       );
-    } else {
-      const allOffset = scrollOffset + viewportSize;
-      const endBuffer = this._getOffsetByItemIdx(newRange.end);
-
-      /** Buffer in px after visible viewport */
-      const buffer = endBuffer - allOffset;
-
-      /** If buffer less than minBuffer we should load more items. */
-      if (buffer < this._minBufferPx && newRange.end !== dataLength) {
-        const expandEnd = this._getItemIdxByOffset(this._maxBufferPx - buffer, newRange.end + 1);
-        if (expandEnd > 0) {
-          newRange.end = Math.min(dataLength, expandEnd);
-          newRange.start = Math.max(
-            0,
-            this._getItemIdxByOffset(this._minBufferPx, firstVisibleIndex - 1, 'down'),
-          );
-        }
-      }
     }
 
     if (!this._disableAppending) {
-      newRange = this._expandRenderedRange(newRange);
+      newRange = expandRenderedRange(this.renderedRange, newRange);
     }
 
     this._viewport.setRenderedRange(newRange);
@@ -238,6 +215,37 @@ export class CdkDynamicSizeVirtualScrollStrategy implements VirtualScrollStrateg
 
   private _getAllSizes(sizes: number[]): number {
     return sizes.reduce((acc, value) => acc + value, 0);
+  }
+
+  private _adjustRangeForReducedDataLength(
+    firstVisibleIndex: number,
+    scrollOffset: number,
+    viewportSize: number,
+    dataLength: number,
+    newRange: ListRange,
+  ): {firstVisibleIndex: number; scrollOffset: number; newRange: ListRange} {
+    const lastVisibleIndex = this._getItemIdxByOffset(scrollOffset + viewportSize);
+    // We have to recalculate the first visible index based on new data length and viewport size.
+    const newVisibleIndex = this._getItemIdxByOffset(viewportSize, lastVisibleIndex, 'down');
+
+    // If first visible index changed we must update scroll offset to handle start/end buffers
+    // Current range must also be adjusted to cover the new position (bottom of new list).
+    if (firstVisibleIndex !== newVisibleIndex) {
+      firstVisibleIndex = newVisibleIndex;
+      scrollOffset = this._getOffsetByItemIdx(newVisibleIndex);
+      newRange.start = firstVisibleIndex;
+    }
+
+    const endRange = this._getItemIdxByOffset(scrollOffset + viewportSize) + 1;
+
+    return {
+      firstVisibleIndex,
+      scrollOffset,
+      newRange: {
+        start: newRange.start,
+        end: Math.max(0, Math.min(dataLength, endRange)),
+      },
+    };
   }
 
   private _getOffsetByItemIdx(idx: number): number {
@@ -261,26 +269,9 @@ export class CdkDynamicSizeVirtualScrollStrategy implements VirtualScrollStrateg
     }
 
     if (accumOffset < offset && dir === 'up') {
-      return this._sizes.length;
+      return this._sizes.length - 1;
     }
 
     return 0;
-  }
-
-  private _expandRenderedRange(newRange: ListRange): ListRange {
-    if (this.renderedRange.start === null) {
-      this.renderedRange.start = newRange.start;
-    }
-    this.renderedRange.start = Math.min(this.renderedRange.start, newRange.start);
-
-    if (this.renderedRange.end === null) {
-      this.renderedRange.end = newRange.end;
-    }
-    this.renderedRange.end = Math.max(this.renderedRange.end, newRange.end);
-
-    return {
-      start: this.renderedRange.start,
-      end: this.renderedRange.end,
-    };
   }
 }
