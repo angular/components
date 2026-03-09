@@ -696,7 +696,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
-    _previewChanged({ event, value: cell }: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
+    _previewChanged(input: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
     _previewEnd: i0.WritableSignal<number | null>;
     _previewStart: i0.WritableSignal<number | null>;
     _rangeEnd: i0.WritableSignal<number | null>;

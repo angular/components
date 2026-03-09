@@ -19,7 +19,7 @@ import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
 interface Algorithm_2 {
-    calculate: ({ markers, map }: AlgorithmInput) => AlgorithmOutput;
+    calculate: (input: AlgorithmInput) => AlgorithmOutput;
 }
 export { Algorithm_2 as Algorithm }
 
@@ -834,7 +834,7 @@ export class MapTransitLayer implements OnInit, OnDestroy {
 
 // @public (undocumented)
 export class MarkerClusterer extends google.maps.OverlayView {
-    constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions_2);
+    constructor(input: MarkerClustererOptions_2);
     // (undocumented)
     addMarker(marker: Marker, noDraw?: boolean): void;
     // (undocumented)

@@ -1,4 +1,4 @@
-load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//src/aria:config.bzl", "ARIA_TARGETS")
 load("//tools:defaults.bzl", "ng_examples_db", "ng_package", "ts_project")
