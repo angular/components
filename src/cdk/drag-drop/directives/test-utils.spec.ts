@@ -1,5 +1,5 @@
 import {EnvironmentProviders, Provider, Type, ViewEncapsulation} from '@angular/core';
-import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchMouseEvent, dispatchTouchEvent} from '../../testing/private';
 import {CDK_DRAG_CONFIG, DragDropConfig, DropListOrientation} from './config';
 
@@ -152,6 +152,7 @@ export function makeScrollable(
   veryTallElement.style.width = direction === 'vertical' ? '100%' : '4000px';
   veryTallElement.style.height = direction === 'vertical' ? '2000px' : '5px';
   element.prepend(veryTallElement);
+  scrollTo(0, 0);
 
   return () => {
     scrollTo(0, 0);
@@ -159,7 +160,6 @@ export function makeScrollable(
   };
 }
 
-/** Ticks the specified amount of `requestAnimationFrame`-s. */
-export function tickAnimationFrames(amount: number) {
-  tick(16.6 * amount); // Angular turns rAF calls into 16.6ms timeouts in tests.
+export function wait(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

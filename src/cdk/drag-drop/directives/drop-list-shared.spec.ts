@@ -13,7 +13,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {Platform, _supportsShadowDom} from '../../platform';
 import {CdkScrollable, ViewportRuler} from '../../scrolling';
 import {
@@ -47,7 +47,7 @@ import {
   startDraggingViaMouse,
   startDraggingViaTouch,
   stopDraggingViaTouch,
-  tickAnimationFrames,
+  wait,
 } from './test-utils.spec';
 
 export const ITEM_HEIGHT = 25;
@@ -162,7 +162,7 @@ export function defineCommonDropListTests(config: {
       );
     });
 
-    it('should be able to overwrite the drop zone id', fakeAsync(() => {
+    it('should be able to overwrite the drop zone id', () => {
       const fixture = createComponent(DraggableInDropZone);
 
       fixture.componentInstance.dropZoneId = 'custom-id';
@@ -172,9 +172,9 @@ export function defineCommonDropListTests(config: {
 
       expect(drop.id).toBe('custom-id');
       expect(drop.element.nativeElement.getAttribute('id')).toBe('custom-id');
-    }));
+    });
 
-    it('should toggle a class when the user starts dragging an item', fakeAsync(() => {
+    it('should toggle a class when the user starts dragging an item', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -188,13 +188,13 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
-    }));
+    });
 
-    it('should toggle the drop dragging classes if there is nothing to trigger change detection', fakeAsync(() => {
+    it('should toggle the drop dragging classes if there is nothing to trigger change detection', async () => {
       const fixture = createComponent(DraggableInDropZoneWithoutEvents);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -210,14 +210,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
       expect(item.classList).not.toContain('cdk-drag-dragging');
-    }));
+    });
 
-    it('should toggle a class when the user starts dragging an item with OnPush change detection', fakeAsync(() => {
+    it('should toggle a class when the user starts dragging an item with OnPush change detection', async () => {
       const fixture = createComponent(DraggableInOnPushDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -231,13 +231,13 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
-    }));
+    });
 
-    it('should not toggle dragging class if the element was not dragged more than the threshold', fakeAsync(() => {
+    it('should not toggle dragging class if the element was not dragged more than the threshold', () => {
       const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -248,9 +248,9 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
 
       expect(dropZone.element.nativeElement.classList).not.toContain('cdk-drop-dragging');
-    }));
+    });
 
-    it('should dispatch the `dropped` event when an item has been dropped', fakeAsync(() => {
+    it('should dispatch the `dropped` event when an item has been dropped', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -271,7 +271,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -298,9 +298,9 @@ export function defineCommonDropListTests(config: {
         'Zero',
         'Three',
       ]);
-    }));
+    });
 
-    it('should expose whether an item was dropped over a container', fakeAsync(() => {
+    it('should expose whether an item was dropped over a container', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -313,7 +313,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -322,16 +322,16 @@ export function defineCommonDropListTests(config: {
         fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
       expect(event.isPointerOverContainer).toBe(true);
-    }));
+    });
 
-    it('should expose the drag distance when an item is dropped', fakeAsync(() => {
+    it('should expose the drag distance when an item is dropped', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
       const firstItem = dragItems.first;
 
       dragElementViaMouse(fixture, firstItem.element.nativeElement, 50, 60);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -341,9 +341,9 @@ export function defineCommonDropListTests(config: {
 
       expect(event.distance).toEqual({x: 50, y: 60});
       expect(event.dropPoint).toEqual({x: 50, y: 60});
-    }));
+    });
 
-    it('should expose whether an item was dropped outside of a container', fakeAsync(() => {
+    it('should expose whether an item was dropped outside of a container', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -357,7 +357,7 @@ export function defineCommonDropListTests(config: {
         containerRect.right + 10,
         containerRect.bottom + 10,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -366,9 +366,9 @@ export function defineCommonDropListTests(config: {
         fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
       expect(event.isPointerOverContainer).toBe(false);
-    }));
+    });
 
-    it('should dispatch the `sorted` event as an item is being sorted', fakeAsync(() => {
+    it('should dispatch the `sorted` event as an item is being sorted', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -395,10 +395,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should not dispatch the `sorted` event when an item is dragged inside a single-item list', fakeAsync(() => {
+    it('should not dispatch the `sorted` event when an item is dragged inside a single-item list', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.items = [fixture.componentInstance.items[0]];
       fixture.detectChanges();
@@ -417,10 +417,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should not move items in a vertical list if the pointer is too far away', fakeAsync(() => {
+    it('should not move items in a vertical list if the pointer is too far away', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -442,7 +442,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.right + 1000,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -469,9 +469,9 @@ export function defineCommonDropListTests(config: {
         'Two',
         'Three',
       ]);
-    }));
+    });
 
-    it('should not move the original element from its initial DOM position', fakeAsync(() => {
+    it('should not move the original element from its initial DOM position', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const root = fixture.nativeElement as HTMLElement;
@@ -491,14 +491,14 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       dragElements = Array.from(root.querySelectorAll('.cdk-drag'));
       expect(dragElements.map(el => el.textContent)).toEqual(['Zero', 'One', 'Two', 'Three']);
-    }));
+    });
 
-    it('should dispatch the `dropped` event in a horizontal drop zone', fakeAsync(() => {
+    it('should dispatch the `dropped` event in a horizontal drop zone', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -519,7 +519,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -546,9 +546,9 @@ export function defineCommonDropListTests(config: {
         'Zero',
         'Three',
       ]);
-    }));
+    });
 
-    it('should dispatch the correct `dropped` event in RTL horizontal drop zone', fakeAsync(() => {
+    it('should dispatch the correct `dropped` event in RTL horizontal drop zone', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone, {
         providers: [provideFakeDirectionality('rtl')],
       });
@@ -573,7 +573,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.right - 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -600,9 +600,9 @@ export function defineCommonDropListTests(config: {
         'Zero',
         'Three',
       ]);
-    }));
+    });
 
-    it('should not move items in a horizontal list if pointer is too far away', fakeAsync(() => {
+    it('should not move items in a horizontal list if pointer is too far away', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -624,7 +624,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.bottom + 1000,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -651,9 +651,9 @@ export function defineCommonDropListTests(config: {
         'Two',
         'Three',
       ]);
-    }));
+    });
 
-    it('should calculate the index if the list is scrolled while dragging', fakeAsync(() => {
+    it('should calculate the index if the list is scrolled while dragging', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -673,7 +673,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -693,9 +693,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should calculate the index if the list is scrolled while dragging inside the shadow DOM', fakeAsync(() => {
+    it('should calculate the index if the list is scrolled while dragging inside the shadow DOM', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -722,7 +722,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -742,9 +742,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should calculate the index if the viewport is scrolled while dragging', fakeAsync(() => {
+    it('should calculate the index if the viewport is scrolled while dragging', async () => {
       const fixture = createComponent(DraggableInDropZone);
 
       for (let i = 0; i < 200; i++) {
@@ -773,7 +773,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -795,9 +795,9 @@ export function defineCommonDropListTests(config: {
       });
 
       scrollTo(0, 0);
-    }));
+    });
 
-    it('should remove the anchor node once dragging stops', fakeAsync(() => {
+    it('should remove the anchor node once dragging stops', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -812,12 +812,12 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(anchor!.parentNode).toBeFalsy();
-    }));
+    });
 
-    it('should create a preview element while the item is dragged', fakeAsync(() => {
+    it('should create a preview element while the item is dragged', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -878,7 +878,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(item.parentNode)
         .withContext('Expected element to be moved back into its old parent')
@@ -892,9 +892,9 @@ export function defineCommonDropListTests(config: {
       expect(preview.parentNode)
         .withContext('Expected preview to be removed from the DOM')
         .toBeFalsy();
-    }));
+    });
 
-    it('should be able to configure the preview z-index', fakeAsync(() => {
+    it('should be able to configure the preview z-index', async () => {
       const fixture = createComponent(DraggableInDropZone, {
         providers: [
           {
@@ -912,9 +912,9 @@ export function defineCommonDropListTests(config: {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       expect(preview.style.zIndex).toBe('3000');
-    }));
+    });
 
-    it('should be able to constrain the preview position', fakeAsync(() => {
+    it('should be able to constrain the preview position', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
       fixture.detectChanges();
@@ -927,7 +927,7 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
       fixture.detectChanges();
 
@@ -935,9 +935,9 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
       expect(Math.floor(previewRect.right)).toBe(Math.floor(listRect.right));
-    }));
+    });
 
-    it('should update the boundary if the page is scrolled while dragging', fakeAsync(() => {
+    it('should update the boundary if the page is scrolled while dragging', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
       fixture.detectChanges();
@@ -950,7 +950,7 @@ export function defineCommonDropListTests(config: {
 
       startDraggingViaMouse(fixture, item);
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
       fixture.detectChanges();
 
@@ -968,9 +968,9 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
       cleanup();
-    }));
+    });
 
-    it('should update the boundary if a parent is scrolled while dragging', fakeAsync(() => {
+    it('should update the boundary if a parent is scrolled while dragging', async () => {
       const fixture = createComponent(DraggableInScrollableParentContainer);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
       fixture.detectChanges();
@@ -984,7 +984,7 @@ export function defineCommonDropListTests(config: {
 
       startDraggingViaMouse(fixture, item);
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
       fixture.detectChanges();
 
@@ -1005,9 +1005,9 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.abs(previewRect.bottom - listRect.bottom)).toBeLessThan(2);
       cleanup();
-    }));
+    });
 
-    it('should update the boundary if a parent is scrolled while dragging inside the shadow DOM', fakeAsync(() => {
+    it('should update the boundary if a parent is scrolled while dragging inside the shadow DOM', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -1031,7 +1031,7 @@ export function defineCommonDropListTests(config: {
 
       startDraggingViaMouse(fixture, item);
       startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
       fixture.detectChanges();
 
@@ -1054,9 +1054,9 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.abs(previewRect.bottom - listRect.bottom)).toBeLessThan(2);
       cleanup();
-    }));
+    });
 
-    it('should clear the id from the preview', fakeAsync(() => {
+    it('should clear the id from the preview', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1067,9 +1067,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.getAttribute('id')).toBeFalsy();
-    }));
+    });
 
-    it('should clone the content of descendant canvas elements', fakeAsync(() => {
+    it('should clone the content of descendant canvas elements', async () => {
       const fixture = createComponent(DraggableWithCanvasInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1094,8 +1094,9 @@ export function defineCommonDropListTests(config: {
       expect(previewCanvas.toDataURL())
         .withContext('Expected cloned canvas to have the same content as the source.')
         .toBe(sourceCanvas.toDataURL());
-    }));
+    });
 
+    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
     it('should not throw when cloning an invalid canvas', fakeAsync(() => {
       const fixture = createComponent(DraggableWithInvalidCanvasInDropZone);
       fixture.detectChanges();
@@ -1109,7 +1110,7 @@ export function defineCommonDropListTests(config: {
       expect(document.querySelector('.cdk-drag-preview canvas')).toBeTruthy();
     }));
 
-    it('should clone the content of descendant input elements', fakeAsync(() => {
+    it('should clone the content of descendant input elements', () => {
       const fixture = createComponent(DraggableWithInputsInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1132,9 +1133,9 @@ export function defineCommonDropListTests(config: {
       expect(previewInput.value).toBe(value);
       expect(previewTextarea.value).toBe(value);
       expect(previewSelect.value).toBe(value);
-    }));
+    });
 
-    it('should preserve checked state for radio inputs in the content', fakeAsync(() => {
+    it('should preserve checked state for radio inputs in the content', async () => {
       const fixture = createComponent(DraggableWithRadioInputsInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[2].element.nativeElement;
@@ -1160,14 +1161,14 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
       // Important to tick with 0 since we don't want to flush any pending timeouts.
       // It also makes sure that all clones have been removed from the DOM.
-      tick(0);
+      await fixture.whenStable();
 
       expect(sourceRadioInput.checked)
         .withContext('Expected original radio input has preserved its original checked state')
         .toBeTruthy();
-    }));
+    });
 
-    it('should clear the ids from descendants of the preview', fakeAsync(() => {
+    it('should clear the ids from descendants of the preview', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1180,9 +1181,9 @@ export function defineCommonDropListTests(config: {
 
       expect(document.querySelectorAll('.preview-child').length).toBeGreaterThan(1);
       expect(document.querySelectorAll('[id="child-id"]').length).toBe(1);
-    }));
+    });
 
-    it('should not create a preview if the element was not dragged far enough', fakeAsync(() => {
+    it('should not create a preview if the element was not dragged far enough', async () => {
       const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1190,9 +1191,9 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
 
       expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
-    }));
+    });
 
-    it('should pass the proper direction to the preview in rtl', fakeAsync(() => {
+    it('should pass the proper direction to the preview in rtl', async () => {
       const fixture = createComponent(DraggableInDropZone, {
         providers: [provideFakeDirectionality('rtl')],
       });
@@ -1205,9 +1206,9 @@ export function defineCommonDropListTests(config: {
       expect(document.querySelector('.cdk-drag-preview')!.getAttribute('dir'))
         .withContext('Expected preview to inherit the directionality.')
         .toBe('rtl');
-    }));
+    });
 
-    it('should remove the preview if its `transitionend` event timed out', fakeAsync(() => {
+    it('should remove the preview if its `transitionend` event timed out', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1225,20 +1226,20 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      tick(250);
+      await wait(250);
 
       expect(preview.parentNode)
         .withContext('Expected preview to be in the DOM mid-way through the transition')
         .toBeTruthy();
 
-      tick(500);
+      await wait(500);
 
       expect(preview.parentNode)
         .withContext('Expected preview to be removed from the DOM if the transition timed out')
         .toBeFalsy();
-    }));
+    });
 
-    it('should be able to set a single class on a preview', fakeAsync(() => {
+    it('should be able to set a single class on a preview', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewClass = 'custom-class';
       fixture.detectChanges();
@@ -1248,9 +1249,9 @@ export function defineCommonDropListTests(config: {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       expect(preview.classList).toContain('custom-class');
-    }));
+    });
 
-    it('should be able to set multiple classes on a preview', fakeAsync(() => {
+    it('should be able to set multiple classes on a preview', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewClass = ['custom-class-1', 'custom-class-2'];
       fixture.detectChanges();
@@ -1261,9 +1262,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       expect(preview.classList).toContain('custom-class-1');
       expect(preview.classList).toContain('custom-class-2');
-    }));
+    });
 
-    it('should emit the released event as soon as the item is released', fakeAsync(() => {
+    it('should emit the released event as soon as the item is released', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1];
@@ -1288,16 +1289,16 @@ export function defineCommonDropListTests(config: {
 
       // Expected the released event to fire immediately upon release.
       expect(releasedSpy).toHaveBeenCalled();
-      tick(1000);
+      await wait(1000);
 
       // Expected the ended event to fire once the entire sequence is done.
       expect(endedSpy).toHaveBeenCalled();
 
       endedSubscription.unsubscribe();
       releasedSubscription.unsubscribe();
-    }));
+    });
 
-    it('should reset immediately when failed drag happens after a successful one', fakeAsync(() => {
+    it('should reset immediately when failed drag happens after a successful one', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -1308,7 +1309,7 @@ export function defineCommonDropListTests(config: {
 
       // Do an initial drag and drop sequence.
       dragElementViaMouse(fixture, item, 50, 50);
-      tick(0); // Important to tick with 0 since we don't want to flush any pending timeouts.
+      await fixture.whenStable(); // Important to tick with 0 since we don't want to flush any pending timeouts.
 
       expect(spy).toHaveBeenCalledTimes(1);
 
@@ -1322,14 +1323,14 @@ export function defineCommonDropListTests(config: {
       // Dispatch the mouseup immediately to simulate the user not moving the element.
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      tick(0); // Important to tick with 0 since we don't want to flush any pending timeouts.
+      await fixture.whenStable(); // Important to tick with 0 since we don't want to flush any pending timeouts.
 
       expect(spy).toHaveBeenCalledTimes(2);
 
       subscription.unsubscribe();
-    }));
+    });
 
-    it('should not wait for transition that are not on the `transform` property', fakeAsync(() => {
+    it('should not wait for transition that are not on the `transform` property', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1344,14 +1345,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      tick(0);
+      await fixture.whenStable();
 
       expect(preview.parentNode)
         .withContext('Expected preview to be removed from the DOM immediately')
         .toBeFalsy();
-    }));
+    });
 
-    it('should pick out the `transform` duration if multiple properties are being transitioned', fakeAsync(() => {
+    it('should pick out the `transform` duration if multiple properties are being transitioned', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1366,22 +1367,22 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      tick(500);
+      await wait(500);
 
       expect(preview.parentNode)
         .withContext('Expected preview to be in the DOM at the end of the opacity transition')
         .toBeTruthy();
 
-      tick(1000);
+      await wait(1000);
 
       expect(preview.parentNode)
         .withContext(
           'Expected preview to be removed from the DOM at the end of the transform transition',
         )
         .toBeFalsy();
-    }));
+    });
 
-    it('should create a placeholder element while the item is dragged', fakeAsync(() => {
+    it('should create a placeholder element while the item is dragged', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1404,14 +1405,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(placeholder.parentNode)
         .withContext('Expected placeholder to be removed from the DOM')
         .toBeFalsy();
-    }));
+    });
 
-    it('should insert the preview into the `body` if previewContainer is set to `global`', fakeAsync(() => {
+    it('should insert the preview into the `body` if previewContainer is set to `global`', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewContainer = 'global';
       fixture.changeDetectorRef.markForCheck();
@@ -1421,9 +1422,9 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
       expect(preview.parentNode).toBe(document.body);
-    }));
+    });
 
-    it('should insert the preview into the parent node if previewContainer is set to `parent`', fakeAsync(() => {
+    it('should insert the preview into the parent node if previewContainer is set to `parent`', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.previewContainer = 'parent';
       fixture.changeDetectorRef.markForCheck();
@@ -1435,9 +1436,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
       expect(list).toBeTruthy();
       expect(preview.parentNode).toBe(list);
-    }));
+    });
 
-    it('should insert the preview into a particular element, if specified', fakeAsync(() => {
+    it('should insert the preview into a particular element, if specified', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1451,9 +1452,9 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       const preview = document.querySelector('.cdk-drag-preview') as HTMLElement;
       expect(preview.parentNode).toBe(previewContainer.nativeElement);
-    }));
+    });
 
-    it('should remove the id from the placeholder', fakeAsync(() => {
+    it('should remove the id from the placeholder', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1465,9 +1466,9 @@ export function defineCommonDropListTests(config: {
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
       expect(placeholder.getAttribute('id')).toBeFalsy();
-    }));
+    });
 
-    it('should clear the ids from descendants of the placeholder', fakeAsync(() => {
+    it('should clear the ids from descendants of the placeholder', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1480,9 +1481,9 @@ export function defineCommonDropListTests(config: {
 
       expect(document.querySelectorAll('.placeholder-child').length).toBeGreaterThan(1);
       expect(document.querySelectorAll('[id="child-id"]').length).toBe(1);
-    }));
+    });
 
-    it('should not create placeholder if the element was not dragged far enough', fakeAsync(() => {
+    it('should not create placeholder if the element was not dragged far enough', () => {
       const fixture = createComponent(DraggableInDropZone, {dragDistance: 5});
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1490,83 +1491,83 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
 
       expect(document.querySelector('.cdk-drag-placeholder')).toBeFalsy();
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted down', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertStartToEndSorting(
+      await assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted down on a scrolled page', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted down on a scrolled page', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      assertStartToEndSorting(
+      await assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
       cleanup();
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted up', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertEndToStartSorting(
+      await assertEndToStartSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted up on a scrolled page', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted up on a scrolled page', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const cleanup = makeScrollable();
 
       scrollTo(0, 5000);
-      assertEndToStartSorting(
+      await assertEndToStartSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
       cleanup();
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted to the right', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted to the right', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-      assertStartToEndSorting(
+      await assertStartToEndSorting(
         'horizontal',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
-    }));
+    });
 
-    it('should move the placeholder as an item is being sorted to the left', fakeAsync(() => {
+    it('should move the placeholder as an item is being sorted to the left', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
-      assertEndToStartSorting(
+      await assertEndToStartSorting(
         'horizontal',
         fixture,
         config.getSortedSiblings,
         fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
       );
-    }));
+    });
 
-    it('should lay out the elements correctly, if an element skips multiple positions when sorting vertically', fakeAsync(() => {
+    it('should lay out the elements correctly, if an element skips multiple positions when sorting vertically', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -1592,10 +1593,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should lay out the elements correctly, if an element skips multiple positions when sorting horizontally', fakeAsync(() => {
+    it('should lay out the elements correctly, if an element skips multiple positions when sorting horizontally', async () => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
 
@@ -1618,10 +1619,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should not swap position for tiny pointer movements', fakeAsync(() => {
+    it('should not swap position for tiny pointer movements', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -1663,10 +1664,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should swap position for pointer movements in the opposite direction', fakeAsync(() => {
+    it('should swap position for pointer movements in the opposite direction', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -1708,10 +1709,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('it should allow item swaps in the same drag direction, if the pointer did not overlap with the sibling item after the previous swap', fakeAsync(() => {
+    it('it should allow item swaps in the same drag direction, if the pointer did not overlap with the sibling item after the previous swap', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -1761,10 +1762,10 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+    });
 
-    it('should clean up the preview element if the item is destroyed mid-drag', fakeAsync(() => {
+    it('should clean up the preview element if the item is destroyed mid-drag', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1784,9 +1785,9 @@ export function defineCommonDropListTests(config: {
       expect(item.parentNode)
         .withContext('Expected drag item to be removed from the DOM')
         .toBeFalsy();
-    }));
+    });
 
-    it('should be able to customize the preview element', fakeAsync(() => {
+    it('should be able to customize the preview element', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1798,12 +1799,12 @@ export function defineCommonDropListTests(config: {
       expect(preview).toBeTruthy();
       expect(preview.classList).toContain('custom-preview');
       expect(preview.textContent!.trim()).toContain('Custom preview');
-    }));
+    });
 
-    it('should handle the custom preview being removed', fakeAsync(() => {
+    it('should handle the custom preview being removed', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       fixture.componentInstance.renderCustomPreview = false;
@@ -1816,9 +1817,9 @@ export function defineCommonDropListTests(config: {
       expect(preview).toBeTruthy();
       expect(preview.classList).not.toContain('custom-preview');
       expect(preview.textContent!.trim()).not.toContain('Custom preview');
-    }));
+    });
 
-    it('should be able to constrain the position of a custom preview', fakeAsync(() => {
+    it('should be able to constrain the position of a custom preview', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
       fixture.detectChanges();
@@ -1831,7 +1832,7 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
       fixture.detectChanges();
 
@@ -1839,9 +1840,9 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
       expect(Math.floor(previewRect.right)).toBe(Math.floor(listRect.right));
-    }));
+    });
 
-    it('should be able to constrain the preview position with a custom function', fakeAsync(() => {
+    it('should be able to constrain the preview position with a custom function', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       const spy = jasmine.createSpy('constrain position spy').and.returnValue({
         x: 50,
@@ -1857,7 +1858,7 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       startDraggingViaMouse(fixture, item, 200, 200);
-      flush();
+      await fixture.whenStable();
       dispatchMouseEvent(document, 'mousemove', 200, 200);
       fixture.detectChanges();
 
@@ -1871,9 +1872,9 @@ export function defineCommonDropListTests(config: {
       );
       expect(Math.floor(previewRect.top)).toBe(50);
       expect(Math.floor(previewRect.left)).toBe(50);
-    }));
+    });
 
-    it('should revert the element back to its parent after dragging with a custom preview has stopped', fakeAsync(() => {
+    it('should revert the element back to its parent after dragging with a custom preview has stopped', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
 
@@ -1886,15 +1887,15 @@ export function defineCommonDropListTests(config: {
 
       // The coordinates don't matter.
       dragElementViaMouse(fixture, item, 10, 10);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(dragContainer.contains(item))
         .withContext('Expected item to be returned to container.')
         .toBe(true);
-    }));
+    });
 
-    it('should position custom previews next to the pointer', fakeAsync(() => {
+    it('should position custom previews next to the pointer', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -1904,9 +1905,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
-    }));
+    });
 
-    it('should keep the preview next to the trigger if the page was scrolled', fakeAsync(() => {
+    it('should keep the preview next to the trigger if the page was scrolled', async () => {
       const extractTransform = (element: HTMLElement) => {
         const match = element.style.transform.match(/translate3d\(\d+px, (\d+)px, \d+px\)/);
         return match ? parseInt(match[1]) : 0;
@@ -1942,9 +1943,9 @@ export function defineCommonDropListTests(config: {
       expect(extractTransform(preview)).toBeGreaterThan(1000);
 
       cleanup();
-    }));
+    });
 
-    it('should lock position inside a drop container along the x axis', fakeAsync(() => {
+    it('should lock position inside a drop container along the x axis', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
 
@@ -1962,9 +1963,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.style.transform).toBe('translate3d(100px, 50px, 0px)');
-    }));
+    });
 
-    it('should lock position inside a drop container along the y axis', fakeAsync(() => {
+    it('should lock position inside a drop container along the y axis', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
 
@@ -1982,9 +1983,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.style.transform).toBe('translate3d(50px, 100px, 0px)');
-    }));
+    });
 
-    it('should inherit the position locking from the drop container', fakeAsync(() => {
+    it('should inherit the position locking from the drop container', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
 
@@ -2001,9 +2002,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.style.transform).toBe('translate3d(100px, 50px, 0px)');
-    }));
+    });
 
-    it('should be able to set a class on a custom preview', fakeAsync(() => {
+    it('should be able to set a class on a custom preview', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.previewClass = 'custom-class';
       fixture.detectChanges();
@@ -2014,9 +2015,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       expect(preview.classList).toContain('custom-preview');
       expect(preview.classList).toContain('custom-class');
-    }));
+    });
 
-    it('should be able to apply the size of the dragged element to a custom preview', fakeAsync(() => {
+    it('should be able to apply the size of the dragged element to a custom preview', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.matchPreviewSize = true;
       fixture.detectChanges();
@@ -2030,9 +2031,9 @@ export function defineCommonDropListTests(config: {
       expect(preview).toBeTruthy();
       expect(preview.style.width).toBe(`${itemRect.width}px`);
       expect(preview.style.height).toBe(`${itemRect.height}px`);
-    }));
+    });
 
-    it('should preserve the pickup position if the custom preview inherits the size of the dragged element', fakeAsync(() => {
+    it('should preserve the pickup position if the custom preview inherits the size of the dragged element', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.componentInstance.matchPreviewSize = true;
       fixture.detectChanges();
@@ -2043,9 +2044,9 @@ export function defineCommonDropListTests(config: {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.style.transform).toBe('translate3d(8px, 33px, 0px)');
-    }));
+    });
 
-    it('should not have the size of the inserted preview affect the size applied via matchSize', fakeAsync(() => {
+    it('should not have the size of the inserted preview affect the size applied via matchSize', async () => {
       const fixture = createComponent(DraggableInHorizontalFlexDropZoneWithMatchSizePreview);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2059,39 +2060,35 @@ export function defineCommonDropListTests(config: {
 
       expect(Math.floor(previewRect.width)).toBe(Math.floor(itemRect.width));
       expect(Math.floor(previewRect.height)).toBe(Math.floor(itemRect.height));
-    }));
+    });
 
-    it('should not throw when custom preview only has text', fakeAsync(() => {
+    it('should not throw when custom preview only has text', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomTextOnlyPreview);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
-      expect(() => {
-        startDraggingViaMouse(fixture, item);
-      }).not.toThrow();
+      startDraggingViaMouse(fixture, item);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview).toBeTruthy();
       expect(preview.textContent!.trim()).toContain('Hello One');
-    }));
+    });
 
-    it('should handle custom preview with multiple root nodes', fakeAsync(() => {
+    it('should handle custom preview with multiple root nodes', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePreview);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
-      expect(() => {
-        startDraggingViaMouse(fixture, item);
-      }).not.toThrow();
+      startDraggingViaMouse(fixture, item);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview).toBeTruthy();
       expect(preview.textContent!.trim()).toContain('HelloOne');
-    }));
+    });
 
-    it('should be able to customize the placeholder', fakeAsync(() => {
+    it('should be able to customize the placeholder', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2103,12 +2100,12 @@ export function defineCommonDropListTests(config: {
       expect(placeholder).toBeTruthy();
       expect(placeholder.classList).toContain('custom-placeholder');
       expect(placeholder.textContent!.trim()).toContain('Custom placeholder');
-    }));
+    });
 
-    it('should handle the custom placeholder being removed', fakeAsync(() => {
+    it('should handle the custom placeholder being removed', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
@@ -2123,9 +2120,9 @@ export function defineCommonDropListTests(config: {
       expect(placeholder).toBeTruthy();
       expect(placeholder.classList).not.toContain('custom-placeholder');
       expect(placeholder.textContent!.trim()).not.toContain('Custom placeholder');
-    }));
+    });
 
-    it('should measure the custom placeholder after the first change detection', fakeAsync(() => {
+    it('should measure the custom placeholder after the first change detection', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPlaceholder);
       fixture.componentInstance.extraPlaceholderClass = 'tall-placeholder';
       fixture.detectChanges();
@@ -2142,29 +2139,27 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
       expect(event.currentIndex).toBe(2);
-    }));
+    });
 
-    it('should not throw when custom placeholder only has text', fakeAsync(() => {
+    it('should not throw when custom placeholder only has text', async () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomTextOnlyPlaceholder);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
-      expect(() => {
-        startDraggingViaMouse(fixture, item);
-      }).not.toThrow();
+      startDraggingViaMouse(fixture, item);
 
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
       expect(placeholder).toBeTruthy();
       expect(placeholder.textContent!.trim()).toContain('Hello One');
-    }));
+    });
 
-    it('should handle custom placeholder with multiple root nodes', fakeAsync(() => {
+    it('should handle custom placeholder with multiple root nodes', () => {
       const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePlaceholder);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2177,9 +2172,9 @@ export function defineCommonDropListTests(config: {
 
       expect(placeholder).toBeTruthy();
       expect(placeholder.textContent!.trim()).toContain('HelloOne');
-    }));
+    });
 
-    it('should not move the item if the list is disabled', fakeAsync(() => {
+    it('should not move the item if the list is disabled', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -2207,7 +2202,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.right + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -2218,9 +2213,9 @@ export function defineCommonDropListTests(config: {
         'Two',
         'Three',
       ]);
-    }));
+    });
 
-    it('should not throw if the `touches` array is empty', fakeAsync(() => {
+    it('should not throw if the `touches` array is empty', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2241,9 +2236,9 @@ export function defineCommonDropListTests(config: {
         dispatchEvent(document, endEvent);
         fixture.detectChanges();
       }).not.toThrow();
-    }));
+    });
 
-    it('should not move the item if the group is disabled', fakeAsync(() => {
+    it('should not move the item if the group is disabled', async () => {
       const fixture = createComponent(ConnectedDropZonesViaGroupDirective);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.groupedDragItems[0];
@@ -2268,7 +2263,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.right + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
@@ -2279,9 +2274,9 @@ export function defineCommonDropListTests(config: {
         'Two',
         'Three',
       ]);
-    }));
+    });
 
-    it('should not sort an item if sorting the list is disabled', fakeAsync(() => {
+    it('should not sort an item if sorting the list is disabled', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -2316,7 +2311,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup', targetX, targetY);
       fixture.detectChanges();
 
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2343,8 +2338,9 @@ export function defineCommonDropListTests(config: {
         'Two',
         'Three',
       ]);
-    }));
+    });
 
+    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
     it('should not throw if an item is removed after dragging has started', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
@@ -2368,7 +2364,7 @@ export function defineCommonDropListTests(config: {
       }).not.toThrow();
     }));
 
-    it('should not be able to start a drag sequence while another one is still active', fakeAsync(() => {
+    it('should not be able to start a drag sequence while another one is still active', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const [item, otherItem] = fixture.componentInstance.dragItems.toArray();
@@ -2384,9 +2380,9 @@ export function defineCommonDropListTests(config: {
       expect(document.querySelectorAll('.cdk-drag-dragging').length)
         .withContext('Expected only one item to continue to be dragged.')
         .toBe(1);
-    }));
+    });
 
-    it('should should be able to disable auto-scrolling', fakeAsync(() => {
+    it('should should be able to disable auto-scrolling', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2406,12 +2402,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollTop).toBe(0);
-    }));
+    });
 
-    it('should auto-scroll down if the user holds their pointer at bottom edge', fakeAsync(() => {
+    it('should auto-scroll down if the user holds their pointer at bottom edge', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2428,12 +2424,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollTop).toBeGreaterThan(0);
-    }));
+    });
 
-    it('should auto-scroll up if the user holds their pointer at top edge', fakeAsync(() => {
+    it('should auto-scroll up if the user holds their pointer at top edge', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2444,12 +2440,12 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, listRect.top);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollTop).toBeLessThan(initialScrollDistance);
-    }));
+    });
 
-    it('should auto-scroll right if the user holds their pointer at right edge in ltr', fakeAsync(() => {
+    it('should auto-scroll right if the user holds their pointer at right edge in ltr', async () => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2466,12 +2462,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height / 2,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollLeft).toBeGreaterThan(0);
-    }));
+    });
 
-    it('should auto-scroll left if the user holds their pointer at left edge in ltr', fakeAsync(() => {
+    it('should auto-scroll left if the user holds their pointer at left edge in ltr', async () => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2482,12 +2478,12 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollLeft).toBeLessThan(initialScrollDistance);
-    }));
+    });
 
-    it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
+    it('should auto-scroll right if the user holds their pointer at right edge in rtl', async () => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
         providers: [provideFakeDirectionality('rtl')],
       });
@@ -2506,12 +2502,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height / 2,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollLeft).toBeGreaterThan(initialScrollDistance);
-    }));
+    });
 
-    it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
+    it('should auto-scroll left if the user holds their pointer at left edge in rtl', async () => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
         providers: [provideFakeDirectionality('rtl')],
       });
@@ -2526,12 +2522,12 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left, listRect.top + listRect.height / 2);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollLeft).toBeLessThan(0);
-    }));
+    });
 
-    it('should be able to start auto scrolling with a drag boundary', fakeAsync(() => {
+    it('should be able to start auto scrolling with a drag boundary', async () => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone);
       fixture.componentInstance.boundarySelector = '.drop-list';
       fixture.detectChanges();
@@ -2549,12 +2545,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height / 2,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollLeft).toBeGreaterThan(0);
-    }));
+    });
 
-    it('should stop scrolling if the user moves their pointer away', fakeAsync(() => {
+    it('should stop scrolling if the user moves their pointer away', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2571,7 +2567,7 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       const previousScrollTop = list.scrollTop;
       expect(previousScrollTop).toBeGreaterThan(0);
@@ -2584,12 +2580,12 @@ export function defineCommonDropListTests(config: {
         listRect.bottom + listRect.height / 2,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(list.scrollTop).toBe(previousScrollTop);
-    }));
+    });
 
-    it('should stop scrolling if the user stops dragging', fakeAsync(() => {
+    it('should stop scrolling if the user stops dragging', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2606,21 +2602,21 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       const previousScrollTop = list.scrollTop;
       expect(previousScrollTop).toBeGreaterThan(0);
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      tickAnimationFrames(20);
-      flush();
+      await wait(100);
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(list.scrollTop).toBe(previousScrollTop);
-    }));
+    });
 
-    it('should auto-scroll viewport down if the pointer is close to bottom edge', fakeAsync(() => {
+    it('should auto-scroll viewport down if the pointer is close to bottom edge', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -2634,14 +2630,14 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width / 2, viewportSize.height);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBeGreaterThan(0);
 
       cleanup();
-    }));
+    });
 
-    it('should auto-scroll viewport up if the pointer is close to top edge', fakeAsync(() => {
+    it('should auto-scroll viewport up if the pointer is close to top edge', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -2657,14 +2653,14 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width / 2, 0);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBeLessThan(initialScrollDistance);
 
       cleanup();
-    }));
+    });
 
-    it('should auto-scroll viewport right if the pointer is near right edge', fakeAsync(() => {
+    it('should auto-scroll viewport right if the pointer is near right edge', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -2678,14 +2674,14 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', viewportSize.width, viewportSize.height / 2);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().left).toBeGreaterThan(0);
 
       cleanup();
-    }));
+    });
 
-    it('should auto-scroll viewport left if the pointer is close to left edge', fakeAsync(() => {
+    it('should auto-scroll viewport left if the pointer is close to left edge', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -2701,14 +2697,14 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', 0, viewportSize.height / 2);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().left).toBeLessThan(initialScrollDistance);
 
       cleanup();
-    }));
+    });
 
-    it('should auto-scroll the list, not the viewport, when the pointer is over the edge of both the list and the viewport', fakeAsync(() => {
+    it('should auto-scroll the list, not the viewport, when the pointer is over the edge of both the list and the viewport', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
 
@@ -2737,15 +2733,15 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(10);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBe(initialScrollDistance);
       expect(list.scrollTop).toBeLessThan(50);
 
       cleanup();
-    }));
+    });
 
-    it('should auto-scroll the viewport, when the pointer is over the edge of both the list and the viewport, if the list cannot be scrolled in that direction', fakeAsync(() => {
+    it('should auto-scroll the viewport, when the pointer is over the edge of both the list and the viewport, if the list cannot be scrolled in that direction', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
 
@@ -2774,15 +2770,15 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(10);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBeLessThan(initialScrollDistance);
       expect(list.scrollTop).toBe(0);
 
       cleanup();
-    }));
+    });
 
-    it('should be able to auto-scroll a parent container', fakeAsync(() => {
+    it('should be able to auto-scroll a parent container', async () => {
       const fixture = createComponent(DraggableInScrollableParentContainer);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
@@ -2799,12 +2795,12 @@ export function defineCommonDropListTests(config: {
         containerRect.top + containerRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(20);
+      await wait(100);
 
       expect(container.scrollTop).toBeGreaterThan(0);
-    }));
+    });
 
-    it('should be able to configure the auto-scroll speed', fakeAsync(() => {
+    it('should be able to configure the auto-scroll speed', async () => {
       const fixture = createComponent(DraggableInScrollableVerticalDropZone);
       fixture.detectChanges();
       fixture.componentInstance.dropInstance.autoScrollStep = 20;
@@ -2822,12 +2818,12 @@ export function defineCommonDropListTests(config: {
         listRect.top + listRect.height,
       );
       fixture.detectChanges();
-      tickAnimationFrames(10);
+      await wait(100);
 
       expect(list.scrollTop).toBeGreaterThan(100);
-    }));
+    });
 
-    it('should pick up descendants inside of containers', fakeAsync(() => {
+    it('should pick up descendants inside of containers', async () => {
       const fixture = createComponent(DraggableInDropZoneWithContainer);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -2840,7 +2836,7 @@ export function defineCommonDropListTests(config: {
         thirdItemRect.left + 1,
         thirdItemRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -2860,9 +2856,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should not pick up items from descendant drop lists', fakeAsync(() => {
+    it('should not pick up items from descendant drop lists', async () => {
       const fixture = createComponent(NestedDropZones);
       fixture.detectChanges();
       const {dragItems, innerList, outerList} = fixture.componentInstance;
@@ -2886,13 +2882,13 @@ export function defineCommonDropListTests(config: {
         .withContext('Expected inner list to be dragging.')
         .toContain(draggingClass);
       expect(outerClasses).not.toContain(draggingClass, 'Expected outer list to not be dragging.');
-    }));
+    });
 
-    it('should be able to re-enable a disabled drop list', fakeAsync(() => {
+    it('should be able to re-enable a disabled drop list', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
-      const tryDrag = () => {
+      const tryDrag = async () => {
         const firstItem = dragItems.first;
         const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
         dragElementViaMouse(
@@ -2901,7 +2897,7 @@ export function defineCommonDropListTests(config: {
           thirdItemRect.left + 1,
           thirdItemRect.top + 1,
         );
-        flush();
+        await fixture.whenStable();
         fixture.detectChanges();
       };
 
@@ -2914,7 +2910,7 @@ export function defineCommonDropListTests(config: {
 
       fixture.componentInstance.dropDisabled.set(true);
       fixture.detectChanges();
-      tryDrag();
+      await tryDrag();
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
         'Zero',
@@ -2925,7 +2921,7 @@ export function defineCommonDropListTests(config: {
 
       fixture.componentInstance.dropDisabled.set(false);
       fixture.detectChanges();
-      tryDrag();
+      await tryDrag();
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim())).toEqual([
         'One',
@@ -2933,9 +2929,9 @@ export function defineCommonDropListTests(config: {
         'Zero',
         'Three',
       ]);
-    }));
+    });
 
-    it('should be able to configure the drop input defaults through a provider', fakeAsync(() => {
+    it('should be able to configure the drop input defaults through a provider', async () => {
       const config: DragDropConfig = {
         draggingDisabled: true,
         sortingDisabled: true,
@@ -2959,9 +2955,9 @@ export function defineCommonDropListTests(config: {
       expect(list.autoScrollDisabled).toBe(true);
       expect(list.orientation).toBe('horizontal');
       expect(list.lockAxis).toBe('y');
-    }));
+    });
 
-    it('should disable scroll snapping while the user is dragging', fakeAsync(() => {
+    it('should disable scroll snapping while the user is dragging', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -2980,13 +2976,13 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBeFalsy();
-    }));
+    });
 
-    it('should restore the previous inline scroll snap value', fakeAsync(() => {
+    it('should restore the previous inline scroll snap value', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -3006,13 +3002,13 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('block');
-    }));
+    });
 
-    it('should be able to start dragging again if the dragged item is destroyed', fakeAsync(() => {
+    it('should be able to start dragging again if the dragged item is destroyed', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
@@ -3043,12 +3039,12 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should make the placeholder available in the start event', fakeAsync(() => {
+    it('should make the placeholder available in the start event', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
@@ -3060,9 +3056,9 @@ export function defineCommonDropListTests(config: {
 
       startDraggingViaMouse(fixture, item);
       expect(placeholder).toBeTruthy();
-    }));
+    });
 
-    it('should not move item into position not allowed by the sort predicate', fakeAsync(() => {
+    it('should not move item into position not allowed by the sort predicate', async () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const dragItems = fixture.componentInstance.dragItems;
@@ -3093,7 +3089,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
@@ -3110,9 +3106,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should not call the sort predicate for the same index', fakeAsync(() => {
+    it('should not call the sort predicate for the same index', () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const spy = jasmine.createSpy('sort predicate spy').and.returnValue(true);
@@ -3126,16 +3122,15 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should throw if drop list is attached to an ng-container', fakeAsync(() => {
+    it('should throw if drop list is attached to an ng-container', () => {
       expect(() => {
         createComponent(DropListOnNgContainer).detectChanges();
-        flush();
       }).toThrowError(/^cdkDropList must be attached to an element node/);
-    }));
+    });
 
-    it('should sort correctly if the <html> node has been offset', fakeAsync(() => {
+    it('should sort correctly if the <html> node has been offset', async () => {
       const documentElement = document.documentElement!;
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
@@ -3143,7 +3138,7 @@ export function defineCommonDropListTests(config: {
       documentElement.style.position = 'absolute';
       documentElement.style.top = '100px';
 
-      assertStartToEndSorting(
+      await assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
@@ -3152,11 +3147,11 @@ export function defineCommonDropListTests(config: {
 
       documentElement.style.position = '';
       documentElement.style.top = '';
-    }));
+    });
   });
 
   describe('in a connected drop container', () => {
-    it('should dispatch the `dropped` event when an item has been dropped into a new container', fakeAsync(() => {
+    it('should dispatch the `dropped` event when an item has been dropped into a new container', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3170,7 +3165,7 @@ export function defineCommonDropListTests(config: {
         targetRect.left + 1,
         targetRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -3188,9 +3183,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should be able to move the element over a new container and return it', fakeAsync(() => {
+    it('should be able to move the element over a new container and return it', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3227,9 +3222,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should be able to move the element over a new container and return it to the initial one, even if it no longer matches the enterPredicate', fakeAsync(() => {
+    it('should be able to move the element over a new container and return it to the initial one, even if it no longer matches the enterPredicate', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3269,9 +3264,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
+    it('should transfer the DOM element from one drop zone to another', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3283,7 +3278,7 @@ export function defineCommonDropListTests(config: {
       // Use coordinates of [1] item corresponding to [2] item
       // after dragged item is removed from first container
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3300,9 +3295,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should not be able to transfer an item into a container that is not in `connectedTo`', fakeAsync(() => {
+    it('should not be able to transfer an item into a container that is not in `connectedTo`', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.componentInstance.todoConnectedTo.set([]);
       fixture.componentInstance.doneConnectedTo.set([]);
@@ -3315,7 +3310,7 @@ export function defineCommonDropListTests(config: {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3332,9 +3327,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should not be able to transfer an item that does not match the `enterPredicate`', fakeAsync(() => {
+    it('should not be able to transfer an item that does not match the `enterPredicate`', async () => {
       const fixture = createComponent(ConnectedDropZones);
 
       fixture.detectChanges();
@@ -3347,7 +3342,7 @@ export function defineCommonDropListTests(config: {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3364,9 +3359,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should call the `enterPredicate` with the item and the container it is entering', fakeAsync(() => {
+    it('should call the `enterPredicate` with the item and the container it is entering', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3385,13 +3380,13 @@ export function defineCommonDropListTests(config: {
         targetRect.left + 1,
         targetRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledWith(dragItem, dropInstances[1]);
-    }));
+    });
 
-    it('should be able to start dragging after an item has been transferred', fakeAsync(() => {
+    it('should be able to start dragging after an item has been transferred', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3401,21 +3396,21 @@ export function defineCommonDropListTests(config: {
       const targetRect = dropZone.getBoundingClientRect();
 
       // Drag the element into the drop zone and move it to the top.
-      [1, -1].forEach(offset => {
+      for (const offset of [1, -1]) {
         dragElementViaMouse(fixture, element, targetRect.left + offset, targetRect.top + offset);
-        flush();
+        await fixture.whenStable();
         fixture.detectChanges();
-      });
+      }
 
-      assertStartToEndSorting(
+      await assertStartToEndSorting(
         'vertical',
         fixture,
         config.getSortedSiblings,
         Array.from(dropZone.querySelectorAll('.cdk-drag')),
       );
-    }));
+    });
 
-    it('should be able to return the last item inside its initial container', fakeAsync(() => {
+    it('should be able to return the last item inside its initial container', async () => {
       const fixture = createComponent(ConnectedDropZones);
 
       // Make sure there's only one item in the first list.
@@ -3456,9 +3451,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should update drop zone after element has entered', fakeAsync(() => {
+    it('should update drop zone after element has entered', async () => {
       const fixture = createComponent(ConnectedDropZones);
 
       // Make sure there's only one item in the first list.
@@ -3498,7 +3493,7 @@ export function defineCommonDropListTests(config: {
 
       // Drop and verify item drop positon and coontainer
       dispatchMouseEvent(document, 'mouseup', targetRect.left + 1, targetRect.bottom - 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3515,9 +3510,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should enter as first child if entering from top', fakeAsync(() => {
+    it('should enter as first child if entering from top', async () => {
       const fixture = createComponent(ConnectedDropZones);
 
       // Make sure there's only one item in the first list.
@@ -3551,9 +3546,9 @@ export function defineCommonDropListTests(config: {
         .toBe(true);
 
       dispatchMouseEvent(document, 'mouseup');
-    }));
+    });
 
-    it('should not throw when entering from the top with an intermediate sibling present', fakeAsync(() => {
+    it('should not throw when entering from the top with an intermediate sibling present', async () => {
       const fixture = createComponent(ConnectedDropZonesWithIntermediateSibling);
 
       // Make sure there's only one item in the first list.
@@ -3568,14 +3563,12 @@ export function defineCommonDropListTests(config: {
       dropZones[1].style.paddingTop = '10px';
       const targetRect = dropZones[1].getBoundingClientRect();
 
-      expect(() => {
-        dragElementViaMouse(fixture, item.element.nativeElement, targetRect.left, targetRect.top);
-        flush();
-        fixture.detectChanges();
-      }).not.toThrow();
-    }));
+      dragElementViaMouse(fixture, item.element.nativeElement, targetRect.left, targetRect.top);
+      await fixture.whenStable();
+      fixture.detectChanges();
+    });
 
-    it('should assign a default id on each drop zone', fakeAsync(() => {
+    it('should assign a default id on each drop zone', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3584,9 +3577,9 @@ export function defineCommonDropListTests(config: {
           return !!dropZone.id && !!dropZone.element.nativeElement.getAttribute('id');
         }),
       ).toBe(true);
-    }));
+    });
 
-    it('should be able to connect two drop zones by id', fakeAsync(() => {
+    it('should be able to connect two drop zones by id', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3602,7 +3595,7 @@ export function defineCommonDropListTests(config: {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3619,9 +3612,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should be able to connect two drop zones using the drop list group', fakeAsync(() => {
+    it('should be able to connect two drop zones using the drop list group', async () => {
       const fixture = createComponent(ConnectedDropZonesViaGroupDirective);
       fixture.detectChanges();
 
@@ -3631,7 +3624,7 @@ export function defineCommonDropListTests(config: {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3648,9 +3641,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should be able to pass a single id to `connectedTo`', fakeAsync(() => {
+    it('should be able to pass a single id to `connectedTo`', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3665,7 +3658,7 @@ export function defineCommonDropListTests(config: {
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3682,9 +3675,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should return DOM element to its initial container after it is dropped, in a container with one draggable item', fakeAsync(() => {
+    it('should return DOM element to its initial container after it is dropped, in a container with one draggable item', async () => {
       const fixture = createComponent(ConnectedDropZonesWithSingleItems);
       fixture.detectChanges();
 
@@ -3708,7 +3701,7 @@ export function defineCommonDropListTests(config: {
         targetRect.left + 1,
         targetRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -3733,9 +3726,9 @@ export function defineCommonDropListTests(config: {
       expect(item.dropContainer)
         .withContext('Expected CdkDrag to be returned to first container in memory')
         .toBe(fixture.componentInstance.dropInstances.first);
-    }));
+    });
 
-    it('should be able to return an element to its initial container in the same sequence, even if it is not connected to the current container', fakeAsync(() => {
+    it('should be able to return an element to its initial container in the same sequence, even if it is not connected to the current container', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3781,17 +3774,17 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should not add child drop lists to the same group as their parents', fakeAsync(() => {
+    it('should not add child drop lists to the same group as their parents', async () => {
       const fixture = createComponent(NestedDropListGroups);
       const component = fixture.componentInstance;
       fixture.detectChanges();
 
       expect(Array.from(component.group._items)).toEqual([component.listOne, component.listTwo]);
-    }));
+    });
 
-    it('should not be able to drop an element into a container that is under another element', fakeAsync(() => {
+    it('should not be able to drop an element into a container that is under another element', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3814,7 +3807,7 @@ export function defineCommonDropListTests(config: {
       });
 
       dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -3831,9 +3824,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should set a class when a container can receive an item', fakeAsync(() => {
+    it('should set a class when a container can receive an item', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3855,9 +3848,9 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].classList)
         .withContext('Expected target container to have the receiving class.')
         .toContain('cdk-drop-list-receiving');
-    }));
+    });
 
-    it('should toggle the `receiving` class when the item enters a new list', fakeAsync(() => {
+    it('should toggle the `receiving` class when the item enters a new list', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -3891,9 +3884,9 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].classList)
         .not.withContext('Expected new container not to have the receiving class after exiting.')
         .toContain('cdk-drop-list-receiving');
-    }));
+    });
 
-    it('should not set the receiving class if the item does not match the enter predicate', fakeAsync(() => {
+    it('should not set the receiving class if the item does not match the enter predicate', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
       fixture.componentInstance.dropInstances.toArray()[1].enterPredicate = () => false;
@@ -3911,9 +3904,9 @@ export function defineCommonDropListTests(config: {
       expect(dropZones.every(c => !c.classList.contains('cdk-drop-list-receiving')))
         .withContext('Expected neither of the containers to have the class.')
         .toBe(true);
-    }));
+    });
 
-    it('should set the receiving class on the source container, even if the enter predicate does not match', fakeAsync(() => {
+    it('should set the receiving class on the source container, even if the enter predicate does not match', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
       fixture.componentInstance.dropInstances.toArray()[0].enterPredicate = () => false;
@@ -3948,9 +3941,9 @@ export function defineCommonDropListTests(config: {
         'cdk-drop-list-receiving',
         'Expected new container not to have the receiving class after exiting.',
       );
-    }));
+    });
 
-    it('should set the receiving class when the list is wrapped in an OnPush component', fakeAsync(() => {
+    it('should set the receiving class when the list is wrapped in an OnPush component', async () => {
       const fixture = createComponent(ConnectedDropListsInOnPush);
       fixture.detectChanges();
 
@@ -3973,9 +3966,9 @@ export function defineCommonDropListTests(config: {
       expect(dropZones[1].classList)
         .withContext('Expected target container to have the receiving class.')
         .toContain('cdk-drop-list-receiving');
-    }));
+    });
 
-    it('should be able to move the item over an intermediate container before dropping it into the final one', fakeAsync(() => {
+    it('should be able to move the item over an intermediate container before dropping it into the final one', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4024,7 +4017,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -4043,9 +4036,9 @@ export function defineCommonDropListTests(config: {
           event: jasmine.anything(),
         }),
       );
-    }));
+    });
 
-    it('should not be able to move an item into a drop container that the initial container is not connected to by passing it over an intermediate one that is', fakeAsync(() => {
+    it('should not be able to move an item into a drop container that the initial container is not connected to by passing it over an intermediate one that is', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4094,7 +4087,7 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
@@ -4110,9 +4103,9 @@ export function defineCommonDropListTests(config: {
           isPointerOverContainer: false,
         }),
       );
-    }));
+    });
 
-    it('should return the item to its initial position, if sorting in the source container was disabled', fakeAsync(() => {
+    it('should return the item to its initial position, if sorting in the source container was disabled', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4166,9 +4159,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should enter an item into the correct index when returning to the initial container, if sorting is enabled', fakeAsync(() => {
+    it('should enter an item into the correct index when returning to the initial container, if sorting is enabled', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4213,9 +4206,9 @@ export function defineCommonDropListTests(config: {
       expect(config.getSortedSiblings(placeholder, 'top').indexOf(placeholder))
         .withContext('Expected placeholder to be at the index at which it entered.')
         .toBe(2);
-    }));
+    });
 
-    it('should return the last item to initial position when dragging back into a container with disabled sorting', fakeAsync(() => {
+    it('should return the last item to initial position when dragging back into a container with disabled sorting', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4270,9 +4263,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should toggle a class when dragging an item inside a wrapper component component with OnPush change detection', fakeAsync(() => {
+    it('should toggle a class when dragging an item inside a wrapper component component with OnPush change detection', async () => {
       const fixture = createComponent(ConnectedWrappedDropZones);
       fixture.detectChanges();
 
@@ -4307,9 +4300,9 @@ export function defineCommonDropListTests(config: {
       expect(targetZone.classList)
         .withContext('Expected target to have dragging class once item has been moved over.')
         .toContain('cdk-drop-list-dragging');
-    }));
+    });
 
-    it('should dispatch an event when an item enters a new container', fakeAsync(() => {
+    it('should dispatch an event when an item enters a new container', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4332,9 +4325,9 @@ export function defineCommonDropListTests(config: {
 
       expect(containerEnterEvent).toEqual(expectedEvent);
       expect(itemEnterEvent).toEqual(expectedEvent);
-    }));
+    });
 
-    it('should not throw if dragging was interrupted as a result of the entered event', fakeAsync(() => {
+    it('should not throw if dragging was interrupted as a result of the entered event', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4354,12 +4347,11 @@ export function defineCommonDropListTests(config: {
           targetRect.left + 1,
           targetRect.top + 1,
         );
-        flush();
         fixture.detectChanges();
       }).not.toThrow();
-    }));
+    });
 
-    it('should be able to drop into a new container after scrolling into view', fakeAsync(() => {
+    it('should be able to drop into a new container after scrolling into view', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4368,7 +4360,7 @@ export function defineCommonDropListTests(config: {
       scrollTo(0, 0);
       dispatchFakeEvent(document, 'scroll');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;
@@ -4383,7 +4375,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
       dispatchMouseEvent(document, 'mouseup', targetRect.left + 1, targetRect.top + 1);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -4403,9 +4395,9 @@ export function defineCommonDropListTests(config: {
       });
 
       cleanup();
-    }));
+    });
 
-    it('should be able to drop into a new container inside the Shadow DOM', fakeAsync(() => {
+    it('should be able to drop into a new container inside the Shadow DOM', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -4426,7 +4418,7 @@ export function defineCommonDropListTests(config: {
         targetRect.left + 1,
         targetRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -4444,9 +4436,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should be able to drop into a new container inside the Shadow DOM and ngIf', fakeAsync(() => {
+    it('should be able to drop into a new container inside the Shadow DOM and ngIf', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -4465,7 +4457,7 @@ export function defineCommonDropListTests(config: {
         targetRect.left + 1,
         targetRect.top + 1,
       );
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -4483,9 +4475,9 @@ export function defineCommonDropListTests(config: {
         dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)},
         event: jasmine.anything(),
       });
-    }));
+    });
 
-    it('should prevent selection at the shadow root level', fakeAsync(() => {
+    it('should prevent selection at the shadow root level', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -4508,14 +4500,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       const afterDropSelectStart = dispatchFakeEvent(shadowRoot, 'selectstart');
       fixture.detectChanges();
       expect(afterDropSelectStart.defaultPrevented).toBe(false);
-    }));
+    });
 
-    it('should not throw if its next sibling is removed while dragging', fakeAsync(() => {
+    it('should not throw if its next sibling is removed while dragging', async () => {
       const fixture = createComponent(ConnectedDropZonesWithSingleItems);
       fixture.detectChanges();
 
@@ -4528,23 +4520,20 @@ export function defineCommonDropListTests(config: {
       // Manually insert an element after the node to simulate an external package.
       nextSibling.parentNode!.insertBefore(extraSibling, nextSibling);
 
-      dragElementViaMouse(
-        fixture,
-        item.element.nativeElement,
-        targetRect.left + 1,
-        targetRect.top + 1,
-      );
-
-      // Remove the extra node after the element was dropped, but before the animation is over.
-      extraSibling.remove();
-
       expect(() => {
-        flush();
+        dragElementViaMouse(
+          fixture,
+          item.element.nativeElement,
+          targetRect.left + 1,
+          targetRect.top + 1,
+        );
+        // Remove the extra node after the element was dropped, but before the animation is over.
+        extraSibling.remove();
         fixture.detectChanges();
       }).not.toThrow();
-    }));
+    });
 
-    it('should warn when the connected container ID does not exist', fakeAsync(() => {
+    it('should warn when the connected container ID does not exist', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4556,15 +4545,15 @@ export function defineCommonDropListTests(config: {
 
       spyOn(console, 'warn');
       dragElementViaMouse(fixture, element, 0, 0);
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(console.warn).toHaveBeenCalledWith(
         `CdkDropList could not find connected drop ` + `list with id "does-not-exist"`,
       );
-    }));
+    });
 
-    it('should not be able to start a drag sequence while a connected container is active', fakeAsync(() => {
+    it('should not be able to start a drag sequence while a connected container is active', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
       const item = fixture.componentInstance.groupedDragItems[0][0];
@@ -4581,9 +4570,9 @@ export function defineCommonDropListTests(config: {
       expect(document.querySelectorAll('.cdk-drag-dragging').length)
         .withContext('Expected only one item to continue to be dragged.')
         .toBe(1);
-    }));
+    });
 
-    it('should insert the preview inside the shadow root by default', fakeAsync(() => {
+    it('should insert the preview inside the shadow root by default', async () => {
       // This test is only relevant for Shadow DOM-supporting browsers.
       if (!_supportsShadowDom()) {
         return;
@@ -4601,11 +4590,11 @@ export function defineCommonDropListTests(config: {
       // `querySelector` doesn't descend into the shadow DOM so we can assert that the preview
       // isn't at its default location by searching for it at the `document` level.
       expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
-    }));
+    });
   });
 
   describe('with nested drags', () => {
-    it('should not move draggable container when dragging child (multitouch)', fakeAsync(() => {
+    it('should not move draggable container when dragging child (multitouch)', async () => {
       const fixture = createComponent(NestedDragsComponent, {dragDistance: 10});
       fixture.detectChanges();
 
@@ -4655,9 +4644,9 @@ export function defineCommonDropListTests(config: {
       expect(fixture.componentInstance.containerDragReleasedSpy).toHaveBeenCalledTimes(
         containerDragReleasedCount,
       );
-    }));
+    });
 
-    it('should stop event propagation when dragging a nested item', fakeAsync(() => {
+    it('should stop event propagation when dragging a nested item', () => {
       const fixture = createComponent(NestedDragsComponent);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.item.nativeElement;
@@ -4669,9 +4658,9 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(event.stopPropagation).toHaveBeenCalled();
-    }));
+    });
 
-    it('should stop event propagation when dragging item nested via ng-template', fakeAsync(() => {
+    it('should stop event propagation when dragging item nested via ng-template', () => {
       const fixture = createComponent(NestedDragsThroughTemplate);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.item.nativeElement;
@@ -4683,11 +4672,11 @@ export function defineCommonDropListTests(config: {
       fixture.detectChanges();
 
       expect(event.stopPropagation).toHaveBeenCalled();
-    }));
+    });
   });
 
   describe('with an alternate element container', () => {
-    it('should move the placeholder into the alternate container of an empty list', fakeAsync(() => {
+    it('should move the placeholder into the alternate container of an empty list', () => {
       const fixture = createComponent(ConnectedDropZonesWithAlternateContainer);
       fixture.detectChanges();
 
@@ -4712,8 +4701,9 @@ export function defineCommonDropListTests(config: {
       expect(placeholder.parentNode)
         .withContext('Expected placeholder to be inside second container.')
         .toBe(targetContainer);
-    }));
+    });
 
+    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
     it('should throw if the items are not inside of the alternate container', fakeAsync(() => {
       const fixture = createComponent(DraggableWithInvalidAlternateContainer);
       fixture.detectChanges();
@@ -4727,6 +4717,7 @@ export function defineCommonDropListTests(config: {
       );
     }));
 
+    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
     it('should throw if the alternate container cannot be found', fakeAsync(() => {
       const fixture = createComponent(DraggableWithMissingAlternateContainer);
       fixture.detectChanges();
@@ -4750,7 +4741,7 @@ export function defineCommonDropListTests(config: {
       return container.querySelector('.cdk-drag-placeholder');
     }
 
-    it('should create and manage the anchor element when the item is moved into a new container', fakeAsync(() => {
+    it('should create and manage the anchor element when the item is moved into a new container', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.componentInstance.hasAnchor.set(true);
       fixture.detectChanges();
@@ -4783,14 +4774,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup', x, y);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(getAnchor(fixture.nativeElement)).toBeFalsy();
       expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
-    }));
+    });
 
-    it('should remove the anchor when the item is returned to the initial container', fakeAsync(() => {
+    it('should remove the anchor when the item is returned to the initial container', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.componentInstance.hasAnchor.set(true);
       fixture.detectChanges();
@@ -4828,14 +4819,14 @@ export function defineCommonDropListTests(config: {
 
       dispatchMouseEvent(document, 'mouseup', sourceRect.left + 1, sourceRect.top + 1);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(getAnchor(fixture.nativeElement)).toBeFalsy();
       expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
-    }));
+    });
 
-    it('should keep the anchor inside the initial container as the item is moved between containers', fakeAsync(() => {
+    it('should keep the anchor inside the initial container as the item is moved between containers', async () => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
 
@@ -4893,16 +4884,16 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup', thirdRect.left + 1, thirdRect.top + 1);
       fixture.detectChanges();
 
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(getAnchor(fixture.nativeElement)).toBeFalsy();
       expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
-    }));
+    });
   });
 }
 
-export function assertStartToEndSorting(
+export async function assertStartToEndSorting(
   listOrientation: 'vertical' | 'horizontal',
   fixture: ComponentFixture<any>,
   getSortedSiblings: SortedSiblingsFunction,
@@ -4939,10 +4930,10 @@ export function assertStartToEndSorting(
   dispatchMouseEvent(document, 'mouseup');
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
 }
 
-export function assertEndToStartSorting(
+export async function assertEndToStartSorting(
   listOrientation: 'vertical' | 'horizontal',
   fixture: ComponentFixture<any>,
   getSortedSiblings: SortedSiblingsFunction,
@@ -4978,7 +4969,7 @@ export function assertEndToStartSorting(
   dispatchMouseEvent(document, 'mouseup');
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
 }
 
 /**
