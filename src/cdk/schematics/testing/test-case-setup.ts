@@ -121,7 +121,7 @@ export async function createTestCaseSetup(
 export function findBazelVersionTestCases(basePath: string) {
   const testCasesMap = new Map<string, string[]>();
   const manifestPath = process.env['RUNFILES_MANIFEST_FILE']!;
-  const runfilesDir = process.env['RUNFILES'];
+  const runfilesDir = process.env['JS_BINARY__RUNFILES'];
 
   // In case we are not on Windows where runfiles are symlinked, we just find all
   // test case files by using "glob" and store them in our result map.
