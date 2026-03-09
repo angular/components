@@ -1,5 +1,5 @@
 import {Component, ElementRef, inject} from '@angular/core';
-import {TestBed, fakeAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {DragDrop} from './drag-drop';
 import {DragRef} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
@@ -7,9 +7,9 @@ import {DropListRef} from './drop-list-ref';
 describe('DragDrop', () => {
   let service: DragDrop;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     service = TestBed.inject(DragDrop);
-  }));
+  });
 
   it('should be able to attach a DragRef to a DOM node', () => {
     const fixture = TestBed.createComponent(TestComponent);

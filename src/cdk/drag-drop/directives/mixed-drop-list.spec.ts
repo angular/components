@@ -1,5 +1,5 @@
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {fakeAsync, flush} from '@angular/core/testing';
+
 import {CdkDropList} from './drop-list';
 import {CdkDrag} from './drag';
 import {moveItemInArray} from '../drag-utils';
@@ -20,7 +20,7 @@ describe('mixed drop list', () => {
     getSortedSiblings,
   });
 
-  it('should dispatch the `dropped` event in a wrapping drop zone', fakeAsync(() => {
+  it('should dispatch the `dropped` event in a wrapping drop zone', async () => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
     const dragItems = fixture.componentInstance.dragItems;
@@ -45,7 +45,7 @@ describe('mixed drop list', () => {
       seventhItemRect.left + 1,
       seventhItemRect.top + 1,
     );
-    flush();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -75,29 +75,29 @@ describe('mixed drop list', () => {
       'Zero',
       'Seven',
     ]);
-  }));
+  });
 
-  it('should move the placeholder as an item is being sorted to the right in a wrapping drop zone', fakeAsync(() => {
+  it('should move the placeholder as an item is being sorted to the right in a wrapping drop zone', async () => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
-    assertStartToEndSorting(
+    await assertStartToEndSorting(
       'horizontal',
       fixture,
       getSortedSiblings,
       fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
     );
-  }));
+  });
 
-  it('should move the placeholder as an item is being sorted to the left in a wrapping drop zone', fakeAsync(() => {
+  it('should move the placeholder as an item is being sorted to the left in a wrapping drop zone', async () => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
-    assertEndToStartSorting(
+    await assertEndToStartSorting(
       'horizontal',
       fixture,
       getSortedSiblings,
       fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
     );
-  }));
+  });
 });
 
 function getSortedSiblings(item: Element) {
