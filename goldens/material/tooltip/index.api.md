@@ -127,10 +127,10 @@ export class TooltipComponent implements OnDestroy {
     _cancelPendingAnimations(): void;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
-    _handleAnimationEnd({ animationName }: AnimationEvent): void;
+    _handleAnimationEnd(input: AnimationEvent): void;
     _handleBodyInteraction(): void;
     // (undocumented)
-    _handleMouseLeave({ relatedTarget }: MouseEvent): void;
+    _handleMouseLeave(input: MouseEvent): void;
     hide(delay: number): void;
     // (undocumented)
     _isMultiline: boolean;
