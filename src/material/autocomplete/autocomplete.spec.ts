@@ -1141,7 +1141,7 @@ describe('MatAutocomplete', () => {
       expect(optionEls[0].classList).toContain('mat-mdc-option-active');
     });
 
-    it('should set the active item properly after filtering', fakeAsync(() => {
+    it('should set the active item properly after filtering in fakeAsync', fakeAsync(() => {
       const componentInstance = fixture.componentInstance;
 
       componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);

@@ -85,7 +85,7 @@ describe('CdkTree with TreeControl', () => {
   });
 
   describe('flat tree', () => {
-    describe('should initialize', () => {
+    describe('flat tree should initialize', () => {
       let fixture: ComponentFixture<SimpleCdkTreeApp>;
       let component: SimpleCdkTreeApp;
 
@@ -245,7 +245,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('flat tree with toggle', () => {
       let fixture: ComponentFixture<CdkTreeAppWithToggle>;
       let component: CdkTreeAppWithToggle;
 
@@ -391,7 +391,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with array data source', () => {
+    describe('flat tree with array data source', () => {
       let fixture: ComponentFixture<ArrayDataSourceCdkTreeApp>;
       let component: ArrayDataSourceCdkTreeApp;
 
@@ -437,7 +437,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with observable data source', () => {
+    describe('flat tree with observable data source', () => {
       let fixture: ComponentFixture<ObservableDataSourceCdkTreeApp>;
       let component: ObservableDataSourceCdkTreeApp;
 
@@ -483,7 +483,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with trackBy', () => {
+    describe('flat tree with trackBy', () => {
       let fixture: ComponentFixture<CdkTreeAppWithTrackBy>;
       let component: CdkTreeAppWithTrackBy;
 
@@ -585,7 +585,7 @@ describe('CdkTree with TreeControl', () => {
   });
 
   describe('nested tree', () => {
-    describe('should initialize', () => {
+    describe('nested tree should initialize', () => {
       let fixture: ComponentFixture<NestedCdkTreeApp>;
       let component: NestedCdkTreeApp;
 
@@ -766,7 +766,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('nested tree with toggle', () => {
       let fixture: ComponentFixture<NestedCdkTreeAppWithToggle>;
       let component: NestedCdkTreeAppWithToggle;
 
@@ -911,7 +911,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with array data source', () => {
+    describe('nested tree with array data source', () => {
       let fixture: ComponentFixture<ArrayDataSourceNestedCdkTreeApp>;
       let component: ArrayDataSourceNestedCdkTreeApp;
 
@@ -950,7 +950,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with observable data source', () => {
+    describe('nested tree with observable data source', () => {
       let fixture: ComponentFixture<ObservableDataSourceNestedCdkTreeApp>;
       let component: ObservableDataSourceNestedCdkTreeApp;
 
@@ -989,7 +989,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with trackBy', () => {
+    describe('nested tree with trackBy', () => {
       let fixture: ComponentFixture<NestedCdkTreeAppWithTrackBy>;
       let component: NestedCdkTreeAppWithTrackBy;
 

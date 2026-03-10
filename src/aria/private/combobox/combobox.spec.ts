@@ -285,7 +285,7 @@ describe('Combobox with Listbox Pattern', () => {
       expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
     });
 
-    it('should navigate to the previous item on ArrowUp when open', () => {
+    it('should navigate to the previous item on ArrowUp when open in listbox', () => {
       const {combobox, listbox} = getPatterns();
       combobox.onKeydown(up());
       combobox.onKeydown(up());
@@ -395,14 +395,14 @@ describe('Combobox with Listbox Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in manual mode', () => {
         combobox.onClick(clickOption(listbox.inputs.items(), 0));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.values()).toEqual(['Apple']);
         expect(inputEl.value).toBe('Apple');
       });
 
-      it('should select and commit to input on Enter', () => {
+      it('should select and commit to input on Enter in manual mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
@@ -410,14 +410,14 @@ describe('Combobox with Listbox Pattern', () => {
         expect(inputEl.value).toBe('Apple');
       });
 
-      it('should select on focusout if the input text exactly matches an item', () => {
+      it('should select on focusout if the input text exactly matches an item in manual mode', () => {
         type('Apple');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should deselect on close if the input text does not match any options', () => {
+      it('should deselect on close if the input text does not match any options in manual mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
 
@@ -428,19 +428,19 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual([]);
       });
 
-      it('should not select on navigation', () => {
+      it('should not select on navigation in manual mode', () => {
         combobox.onKeydown(down());
         expect(listbox.getSelectedItems().length).toBe(0);
         expect(listbox.inputs.values()).toEqual([]);
       });
 
-      it('should not select on input', () => {
+      it('should not select on input in manual mode', () => {
         type('A');
         expect(listbox.getSelectedItems().length).toBe(0);
         expect(listbox.inputs.values()).toEqual([]);
       });
 
-      it('should not select on focusout if the input text does not match an item', () => {
+      it('should not select on focusout if the input text does not match an item in manual mode', () => {
         type('Appl');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(listbox.getSelectedItems().length).toBe(0);
@@ -456,14 +456,14 @@ describe('Combobox with Listbox Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in auto-select mode', () => {
         combobox.onClick(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
         expect(listbox.inputs.values()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
       });
 
-      it('should select and commit on Enter', () => {
+      it('should select and commit on Enter in auto-select mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
@@ -473,13 +473,13 @@ describe('Combobox with Listbox Pattern', () => {
         expect(inputEl.value).toBe('Banana');
       });
 
-      it('should select the first item on arrow down when collapsed', () => {
+      it('should select the first item on arrow down when collapsed in auto-select mode', () => {
         combobox.onKeydown(down());
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select the last item on arrow up when collapsed', () => {
+      it('should select the last item on arrow up when collapsed in auto-select mode', () => {
         combobox.onKeydown(up());
         expect(listbox.getSelectedItems()[0]).toBe(
           listbox.inputs.items()[listbox.inputs.items().length - 1],
@@ -487,14 +487,14 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Cranberry']);
       });
 
-      it('should select on navigation', () => {
+      it('should select on navigation in auto-select mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[1]);
         expect(listbox.inputs.values()).toEqual(['Apricot']);
       });
 
-      it('should select the first option on input', () => {
+      it('should select the first option on input in auto-select mode', () => {
         type('A');
         expect(listbox.inputs.values()).toEqual(['Apple']);
 
@@ -502,7 +502,7 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apricot']);
       });
 
-      it('should commit the selected option on focusout', () => {
+      it('should commit the selected option on focusout in auto-select mode', () => {
         combobox.onKeydown(down());
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
@@ -524,14 +524,14 @@ describe('Combobox with Listbox Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in highlight mode', () => {
         combobox.onClick(clickOption(listbox.inputs.items(), 3));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
         expect(listbox.inputs.values()).toEqual(['Blackberry']);
         expect(inputEl.value).toBe('Blackberry');
       });
 
-      it('should select and commit on Enter', () => {
+      it('should select and commit on Enter in highlight mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
@@ -541,13 +541,13 @@ describe('Combobox with Listbox Pattern', () => {
         expect(inputEl.value).toBe('Banana');
       });
 
-      it('should select the first item on arrow down when collapsed', () => {
+      it('should select the first item on arrow down when collapsed in highlight mode', () => {
         combobox.onKeydown(down());
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select the last item on arrow up when collapsed', () => {
+      it('should select the last item on arrow up when collapsed in highlight mode', () => {
         combobox.onKeydown(up());
         expect(listbox.getSelectedItems()[0]).toBe(
           listbox.inputs.items()[listbox.inputs.items().length - 1],
@@ -555,14 +555,14 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Cranberry']);
       });
 
-      it('should select on navigation', () => {
+      it('should select on navigation in highlight mode', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[1]);
         expect(listbox.inputs.values()).toEqual(['Apricot']);
       });
 
-      it('should select the first option on input', () => {
+      it('should select the first option on input in highlight mode', () => {
         type('A');
         expect(listbox.inputs.values()).toEqual(['Apple']);
 
@@ -570,21 +570,21 @@ describe('Combobox with Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apricot']);
       });
 
-      it('should commit the selected option on navigation', () => {
+      it('should commit the selected option on navigation in highlight mode', () => {
         combobox.onKeydown(down());
         expect(inputEl.value).toBe('Apple');
         combobox.onKeydown(down());
         expect(inputEl.value).toBe('Apricot');
       });
 
-      it('should commit the selected option on focusout', () => {
+      it('should commit the selected option on focusout in highlight mode', () => {
         combobox.onKeydown(down());
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');
       });
 
-      it('should insert a highlighted completion string on input', () => {
+      it('should insert a highlighted completion string on input in highlight mode for listbox', () => {
         type('A');
         expect(inputEl.value).toBe('Apple');
         expect(inputEl.selectionStart).toBe(1);
@@ -610,7 +610,7 @@ describe('Combobox with Listbox Pattern', () => {
 
   describe('Readonly mode', () => {
     describe('with single-select', () => {
-      it('should select and close on selection', () => {
+      it('should select and close on selection in single-select readonly mode', () => {
         const {combobox, listbox, inputEl} = getPatterns({readonly: true});
         combobox.onClick(clickOption(listbox.inputs.items(), 2));
         expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[2]);
@@ -619,7 +619,7 @@ describe('Combobox with Listbox Pattern', () => {
         expect(combobox.expanded()).toBe(false);
       });
 
-      it('should close on escape', () => {
+      it('should close on escape in single-select readonly mode', () => {
         const {combobox} = getPatterns({readonly: true});
         combobox.onKeydown(down());
         expect(combobox.expanded()).toBe(true);
@@ -689,7 +689,7 @@ describe('Combobox with Tree Pattern', () => {
       expect(tree.inputs.activeItem()?.searchTerm()).toBe('Vegetables');
     });
 
-    it('should navigate to the previous item on ArrowUp when open', () => {
+    it('should navigate to the previous item on ArrowUp when open in tree', () => {
       const {combobox, tree} = getPatterns();
       combobox.onKeydown(up());
       combobox.onKeydown(up());
@@ -776,13 +776,13 @@ describe('Combobox with Tree Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in manual mode for tree', () => {
         combobox.onClick(clickTreeItem(tree.inputs.items(), 0));
         expect(tree.inputs.values()).toEqual(['Fruit']);
         expect(inputEl.value).toBe('Fruit');
       });
 
-      it('should select and commit to input on Enter', () => {
+      it('should select and commit to input on Enter in manual mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
@@ -790,14 +790,14 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.value).toBe('Fruit');
       });
 
-      it('should select on focusout if the input text exactly matches an item', () => {
+      it('should select on focusout if the input text exactly matches an item in manual mode for tree', () => {
         combobox.onClick(clickInput(inputEl));
         type('Apple');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(tree.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should deselect on close if the input text does not match any options', () => {
+      it('should deselect on close if the input text does not match any options in manual mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(enter());
 
@@ -808,19 +808,19 @@ describe('Combobox with Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should not select on navigation', () => {
+      it('should not select on navigation in manual mode for tree', () => {
         combobox.onKeydown(down());
         expect(tree.getSelectedItems().length).toBe(0);
         expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should not select on input', () => {
+      it('should not select on input in manual mode for tree', () => {
         type('A');
         expect(tree.getSelectedItems().length).toBe(0);
         expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should not select on focusout if the input text does not match an item', () => {
+      it('should not select on focusout if the input text does not match an item in manual mode for tree', () => {
         type('Appl');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(tree.getSelectedItems().length).toBe(0);
@@ -836,7 +836,7 @@ describe('Combobox with Tree Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in auto-select mode for tree', () => {
         // Expand Fruit: Down -> Right
         combobox.onKeydown(down());
         combobox.onKeydown(right());
@@ -846,7 +846,7 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.value).toBe('Banana');
       });
 
-      it('should select and commit on Enter', () => {
+      it('should select and commit on Enter in auto-select mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
@@ -855,25 +855,25 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.value).toBe('Grains');
       });
 
-      it('should select the first item on arrow down when collapsed', () => {
+      it('should select the first item on arrow down when collapsed in auto-select mode for tree', () => {
         combobox.onKeydown(down());
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
         expect(tree.inputs.values()).toEqual(['Fruit']);
       });
 
-      it('should select the last focusable item on arrow up when collapsed', () => {
+      it('should select the last focusable item on arrow up when collapsed in auto-select mode for tree', () => {
         combobox.onKeydown(up());
         expect(tree.inputs.values()).toEqual(['Grains']);
       });
 
-      it('should select on navigation', () => {
+      it('should select on navigation in auto-select mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(right());
         combobox.onKeydown(right());
         expect(tree.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select the first option on input', () => {
+      it('should select the first option on input in auto-select mode for tree', () => {
         type('B');
         expect(tree.inputs.values()).toEqual(['Banana']);
 
@@ -881,7 +881,7 @@ describe('Combobox with Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Broccoli']);
       });
 
-      it('should commit the selected option on focusout', () => {
+      it('should commit the selected option on focusout in auto-select mode for tree', () => {
         combobox.onKeydown(down());
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
@@ -896,7 +896,7 @@ describe('Combobox with Tree Pattern', () => {
         }));
       });
 
-      it('should select and commit on click', () => {
+      it('should select and commit on click in highlight mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(right());
         combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
@@ -905,7 +905,7 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.value).toBe('Banana');
       });
 
-      it('should select and commit on Enter', () => {
+      it('should select and commit on Enter in highlight mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(down());
         combobox.onKeydown(down());
@@ -914,25 +914,25 @@ describe('Combobox with Tree Pattern', () => {
         expect(inputEl.value).toBe('Grains');
       });
 
-      it('should select the first item on arrow down when collapsed', () => {
+      it('should select the first item on arrow down when collapsed in highlight mode for tree', () => {
         combobox.onKeydown(down());
         expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
         expect(tree.inputs.values()).toEqual(['Fruit']);
       });
 
-      it('should select the last focusable item on arrow up when collapsed', () => {
+      it('should select the last focusable item on arrow up when collapsed in highlight mode for tree', () => {
         combobox.onKeydown(up());
         expect(tree.inputs.values()).toEqual(['Grains']);
       });
 
-      it('should select on navigation', () => {
+      it('should select on navigation in highlight mode for tree', () => {
         combobox.onKeydown(down());
         combobox.onKeydown(right());
         combobox.onKeydown(right());
         expect(tree.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select the first option on input', () => {
+      it('should select the first option on input in highlight mode for tree', () => {
         type('B');
         expect(tree.inputs.values()).toEqual(['Banana']);
 
@@ -940,7 +940,7 @@ describe('Combobox with Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Broccoli']);
       });
 
-      it('should commit the selected option on navigation', () => {
+      it('should commit the selected option on navigation in highlight mode for tree', () => {
         combobox.onKeydown(down());
         expect(inputEl.value).toBe('Fruit');
         combobox.onKeydown(right());
@@ -950,13 +950,13 @@ describe('Combobox with Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Banana']);
       });
 
-      it('should commit the selected option on focusout', () => {
+      it('should commit the selected option on focusout in highlight mode for tree', () => {
         type('App');
         combobox.onFocusOut(new FocusEvent('focusout'));
         expect(inputEl.value).toBe('Apple');
       });
 
-      it('should insert a highlighted completion string on input', () => {
+      it('should insert a highlighted completion string on input in highlight mode for tree', () => {
         type('A');
         expect(inputEl.value).toBe('Apple');
         expect(inputEl.selectionStart).toBe(1);
@@ -966,7 +966,7 @@ describe('Combobox with Tree Pattern', () => {
   });
 
   describe('Readonly mode', () => {
-    it('should select and close on selection', () => {
+    it('should select and close on selection in readonly mode for tree', () => {
       const {combobox, tree, inputEl} = getPatterns({readonly: true});
       combobox.onClick(clickInput(inputEl));
       expect(combobox.expanded()).toBe(true);
@@ -976,7 +976,7 @@ describe('Combobox with Tree Pattern', () => {
       expect(combobox.expanded()).toBe(false);
     });
 
-    it('should close on escape', () => {
+    it('should close on escape in readonly mode for tree', () => {
       const {combobox} = getPatterns({readonly: true});
       combobox.onKeydown(down());
       expect(combobox.expanded()).toBe(true);

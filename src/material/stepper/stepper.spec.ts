@@ -386,7 +386,7 @@ describe('MatStepper', () => {
     });
   });
 
-  describe('basic stepper when attempting to set the selected step too early', () => {
+  describe('basic stepper when attempting to get the selected step too early', () => {
     it('should not throw', () => {
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       const stepper: MatStepper = fixture.debugElement.query(
@@ -965,7 +965,7 @@ describe('MatStepper', () => {
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
     });
 
-    it('should be able to disable ripples', () => {
+    it('should be able to focus the step headers', () => {
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       fixture.detectChanges();
 

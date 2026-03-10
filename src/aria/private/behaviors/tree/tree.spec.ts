@@ -140,12 +140,12 @@ describe('Tree Behavior', () => {
   });
 
   describe('with disabled: true and softDisabled is false', () => {
-    it('should report disabled state', () => {
+    it('should report disabled state (softDisabled: false)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       expect(tree.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation', () => {
+    it('should not change active index on navigation (softDisabled: false)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);
       tree.next();
@@ -154,25 +154,25 @@ describe('Tree Behavior', () => {
       expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);
     });
 
-    it('should not select items', () => {
+    it('should not select items (softDisabled: false)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       tree.next({selectOne: true});
       expect(tree.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0', () => {
+    it('should have a tab index of 0 (softDisabled: false)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       expect(tree.tabIndex()).toBe(0);
     });
   });
 
   describe('with disabled: true', () => {
-    it('should report disabled state', () => {
+    it('should report disabled state (softDisabled: true)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true)});
       expect(tree.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation', () => {
+    it('should not change active index on navigation (softDisabled: true)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true)});
       expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);
       tree.next();
@@ -181,13 +181,13 @@ describe('Tree Behavior', () => {
       expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);
     });
 
-    it('should not select items', () => {
+    it('should not select items (softDisabled: true)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true)});
       tree.next({selectOne: true});
       expect(tree.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0', () => {
+    it('should have a tab index of 0 (softDisabled: true)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true)});
       expect(tree.tabIndex()).toBe(0);
     });
@@ -360,7 +360,7 @@ describe('Tree Behavior', () => {
         expect(tree.inputs.activeItem()).toBe(items[0]); // Stays same
       });
 
-      it('should skipping invisible items (subset navigation)', () => {
+      it('should skip invisible items (subset navigation)', () => {
         const {tree, items} = getDefaultPatterns();
         // 0 -> p
         // 1 -> c (invisible)
@@ -378,7 +378,7 @@ describe('Tree Behavior', () => {
 
   describe('Selection', () => {
     describe('single select', () => {
-      it('should not select when navigating', () => {
+      it('should not select when navigating (single select)', () => {
         const {tree} = getDefaultPatterns({values: signal([]), multi: signal(false)});
         tree.next();
         expect(tree.inputs.values()).toEqual([]);
@@ -424,7 +424,7 @@ describe('Tree Behavior', () => {
     });
 
     describe('multi select', () => {
-      it('should not select when navigating', () => {
+      it('should not select when navigating (multi select)', () => {
         const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
         tree.next();
         expect(tree.inputs.values()).toEqual([]);

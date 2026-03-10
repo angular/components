@@ -98,7 +98,7 @@ describe('Material tree schematic', () => {
   });
 
   describe('style option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the style option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         {style: 'scss', ...baseOptions},
@@ -107,7 +107,7 @@ describe('Material tree schematic', () => {
       expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component style option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         baseOptions,
@@ -118,7 +118,7 @@ describe('Material tree schematic', () => {
   });
 
   describe('inlineStyle option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the inlineStyle option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         {inlineStyle: true, ...baseOptions},
@@ -127,7 +127,7 @@ describe('Material tree schematic', () => {
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component inlineStyle option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         baseOptions,
@@ -138,7 +138,7 @@ describe('Material tree schematic', () => {
   });
 
   describe('inlineTemplate option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the inlineTemplate option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         {inlineTemplate: true, ...baseOptions},
@@ -147,7 +147,7 @@ describe('Material tree schematic', () => {
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component inlineTemplate option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         baseOptions,
@@ -158,7 +158,7 @@ describe('Material tree schematic', () => {
   });
 
   describe('skipTests option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the skipTests option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         {skipTests: true, ...baseOptions},
@@ -167,7 +167,7 @@ describe('Material tree schematic', () => {
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component skipTests option value', async () => {
       const tree = await runner.runSchematic(
         'tree',
         baseOptions,

@@ -66,18 +66,6 @@ describe('CdkTextColumn', () => {
     ]);
   });
 
-  it('should allow for custom data accessor', () => {
-    component.dataAccessorA = (data: TestData) => data.propertyA + '!';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-
-    expectTableToMatchContent(tableElement, [
-      ['PropertyA', 'PropertyB', 'PropertyC'],
-      ['a_1!', 'b_1', 'c_1'],
-      ['a_2!', 'b_2', 'c_2'],
-    ]);
-  });
-
   it('should update values when data changes', () => {
     component.data = [
       {propertyA: 'changed-a_1', propertyB: 'b_1', propertyC: 'c_1'},

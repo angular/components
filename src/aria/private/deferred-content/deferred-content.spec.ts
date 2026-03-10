@@ -18,7 +18,7 @@ describe('DeferredContent', () => {
     expect(collapsible.nativeElement.innerText).toBe('');
   });
 
-  it('creates the content when visible.', async () => {
+  it('creates the content when the container becomes visible.', async () => {
     collapsible.injector.get(Collapsible).contentVisible.set(true);
     await fixture.whenStable();
     expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
@@ -38,7 +38,7 @@ describe('DeferredContent', () => {
       expect(collapsible.nativeElement.innerText).toBe('');
     });
 
-    it('creates the content when visible.', async () => {
+    it('creates the content when first visible with preserveContent.', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(true);
       await fixture.whenStable();
       expect(collapsible.nativeElement.innerText).toBe('Lazy Content');

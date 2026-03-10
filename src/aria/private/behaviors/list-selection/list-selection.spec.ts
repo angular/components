@@ -77,7 +77,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([1]);
     });
 
-    it('should not select disabled items', () => {
+    it('should not select disabled items (#select)', () => {
       const selection = getSelection();
       const items = selection.inputs.items() as TestItem[];
       items[0].disabled.set(true);
@@ -85,7 +85,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([]);
     });
 
-    it('should not select non-selectable items', () => {
+    it('should not select non-selectable items (#select)', () => {
       const selection = getSelection();
       const items = selection.inputs.items() as TestItem[];
       items[0].selectable.set(false);
@@ -93,7 +93,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([]);
     });
 
-    it('should do nothing to already selected items', () => {
+    it('should do nothing to already selected items (#select)', () => {
       const selection = getSelection();
       selection.select(); // [0]
       selection.select(); // [0]
@@ -117,7 +117,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([0]);
     });
 
-    it('should not deselect non-selectable items', () => {
+    it('should not deselect non-selectable items (#deselect)', () => {
       const selection = getSelection();
       const items = selection.inputs.items() as TestItem[];
       selection.select(); // [0]
@@ -128,20 +128,20 @@ describe('List Selection', () => {
   });
 
   describe('#toggle', () => {
-    it('should select an unselected item', () => {
+    it('should select an unselected item (#toggle)', () => {
       const selection = getSelection();
       selection.toggle(); // [0]
       expect(selection.inputs.values()).toEqual([0]);
     });
 
-    it('should deselect a selected item', () => {
+    it('should deselect a selected item (#toggle)', () => {
       const selection = getSelection();
       selection.select(); // [0]
       selection.toggle(); // []
       expect(selection.inputs.values().length).toBe(0);
     });
 
-    it('should not toggle non-selectable items', () => {
+    it('should not toggle non-selectable items (#toggle)', () => {
       const selection = getSelection();
       const items = selection.inputs.items() as TestItem[];
       items[0].selectable.set(false);
@@ -151,13 +151,13 @@ describe('List Selection', () => {
   });
 
   describe('#toggleOne', () => {
-    it('should select an unselected item', () => {
+    it('should select an unselected item (#toggleOne)', () => {
       const selection = getSelection({multi: signal(true)});
       selection.toggleOne(); // [0]
       expect(selection.inputs.values()).toEqual([0]);
     });
 
-    it('should deselect a selected item', () => {
+    it('should deselect a selected item (#toggleOne)', () => {
       const selection = getSelection({multi: signal(true)});
       selection.select(); // [0]
       selection.toggleOne(); // []
@@ -173,7 +173,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([1]);
     });
 
-    it('should not toggle non-selectable items', () => {
+    it('should not toggle non-selectable items (#toggleOne)', () => {
       const selection = getSelection();
       const items = selection.inputs.items() as TestItem[];
       items[0].selectable.set(false);
@@ -183,7 +183,7 @@ describe('List Selection', () => {
   });
 
   describe('#selectAll', () => {
-    it('should select all items', () => {
+    it('should select all items (#selectAll)', () => {
       const selection = getSelection({multi: signal(true)});
       selection.selectAll();
       expect(selection.inputs.values()).toEqual([0, 1, 2, 3, 4]);
@@ -195,7 +195,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([]);
     });
 
-    it('should not select non-selectable items', () => {
+    it('should not select non-selectable items (#selectAll)', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
       items[1].selectable.set(false);
@@ -219,7 +219,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values().length).toBe(0);
     });
 
-    it('should not deselect non-selectable items', () => {
+    it('should not deselect non-selectable items (#deselectAll)', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
       selection.selectAll(); // [0, 1, 2, 3, 4]
@@ -230,7 +230,7 @@ describe('List Selection', () => {
   });
 
   describe('#toggleAll', () => {
-    it('should select all items', () => {
+    it('should select all items (#toggleAll)', () => {
       const selection = getSelection({multi: signal(true)});
       selection.toggleAll();
       expect(selection.inputs.values()).toEqual([0, 1, 2, 3, 4]);
@@ -274,7 +274,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([1]);
     });
 
-    it('should not select disabled items', () => {
+    it('should not select disabled items (#selectOne)', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
       items[0].disabled.set(true);
@@ -283,7 +283,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([]);
     });
 
-    it('should not select non-selectable items', () => {
+    it('should not select non-selectable items (#selectOne)', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
       items[0].selectable.set(false);
@@ -291,7 +291,7 @@ describe('List Selection', () => {
       expect(selection.inputs.values()).toEqual([]);
     });
 
-    it('should do nothing to already selected items', () => {
+    it('should do nothing to already selected items (#selectOne)', () => {
       const selection = getSelection({multi: signal(true)});
       selection.selectOne(); // [0]
       selection.selectOne(); // [0]

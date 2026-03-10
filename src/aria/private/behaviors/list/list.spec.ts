@@ -123,11 +123,11 @@ describe('List Behavior', () => {
       list = patterns.list;
     });
 
-    it('should report disabled state', () => {
+    it('should report disabled state (softDisabled: false)', () => {
       expect(list.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation', () => {
+    it('should not change active index on navigation (softDisabled: false)', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
@@ -135,12 +135,12 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
-    it('should not select items', () => {
+    it('should not select items (softDisabled: false)', () => {
       list.next({selectOne: true});
       expect(list.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0', () => {
+    it('should have a tab index of 0 (softDisabled: false)', () => {
       expect(list.tabIndex()).toBe(0);
     });
   });
@@ -153,11 +153,11 @@ describe('List Behavior', () => {
       list = patterns.list;
     });
 
-    it('should report disabled state', () => {
+    it('should report disabled state (softDisabled: true)', () => {
       expect(list.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation', () => {
+    it('should not change active index on navigation (softDisabled: true)', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
@@ -165,12 +165,12 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
-    it('should not select items', () => {
+    it('should not select items (softDisabled: true)', () => {
       list.next({selectOne: true});
       expect(list.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0', () => {
+    it('should have a tab index of 0 (softDisabled: true)', () => {
       expect(list.tabIndex()).toBe(0);
     });
   });
@@ -294,7 +294,7 @@ describe('List Behavior', () => {
         items = patterns.items;
       });
 
-      it('should not select when navigating', () => {
+      it('should not select when navigating (single select)', () => {
         list.next();
         expect(list.inputs.values()).toEqual([]);
       });
@@ -345,7 +345,7 @@ describe('List Behavior', () => {
         items = patterns.items;
       });
 
-      it('should not select when navigating', () => {
+      it('should not select when navigating (multi select)', () => {
         list.next();
         expect(list.inputs.values()).toEqual([]);
       });

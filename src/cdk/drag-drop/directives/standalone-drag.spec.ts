@@ -37,7 +37,7 @@ import {isInsideClientRect, isOverflowingParent} from '../dom/dom-rect';
 
 describe('Standalone CdkDrag', () => {
   describe('mouse dragging', () => {
-    it('should drag an element freely to a particular position', () => {
+    it('should drag an element freely to a particular position (mouse)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -136,7 +136,7 @@ describe('Standalone CdkDrag', () => {
       ).toBeFalse();
     });
 
-    it('should drag an element freely to a particular position when the page is scrolled', () => {
+    it('should drag an element freely to a particular position when the page is scrolled (mouse)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -150,7 +150,7 @@ describe('Standalone CdkDrag', () => {
       cleanup();
     });
 
-    it('should continue dragging the element from where it was left off', () => {
+    it('should continue dragging the element from where it was left off (mouse)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -164,7 +164,7 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
     });
 
-    it('should continue dragging from where it was left off when the page is scrolled', () => {
+    it('should continue dragging from where it was left off when the page is scrolled (mouse)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -333,7 +333,7 @@ describe('Standalone CdkDrag', () => {
   });
 
   describe('touch dragging', () => {
-    it('should drag an element freely to a particular position', () => {
+    it('should drag an element freely to a particular position (touch)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -343,7 +343,7 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
     });
 
-    it('should drag an element freely to a particular position when the page is scrolled', () => {
+    it('should drag an element freely to a particular position when the page is scrolled (touch)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -357,7 +357,7 @@ describe('Standalone CdkDrag', () => {
       cleanup();
     });
 
-    it('should continue dragging the element from where it was left off', () => {
+    it('should continue dragging the element from where it was left off (touch)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -371,7 +371,7 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
     });
 
-    it('should continue dragging from where it was left off when the page is scrolled', () => {
+    it('should continue dragging from where it was left off when the page is scrolled (touch)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
 
@@ -473,7 +473,7 @@ describe('Standalone CdkDrag', () => {
   });
 
   describe('mouse dragging when initial transform is none', () => {
-    it('should drag an element freely to a particular position', () => {
+    it('should drag an element freely to a particular position (mouse, initial transform none)', () => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;

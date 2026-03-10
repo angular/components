@@ -145,7 +145,7 @@ describe('Portals', () => {
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(false);
     });
 
-    it('should throw when trying to load an element without a parent into a DOM portal', () => {
+    it('should throw when trying to load an element without a parent into a DOM portal via a CdkPortalOutlet', () => {
       const testAppComponent = fixture.componentInstance;
       const element = document.createElement('div');
       const domPortal = new DomPortal(element);
@@ -157,7 +157,7 @@ describe('Portals', () => {
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
 
-    it('should not throw when restoring if the outlet element was cleared', () => {
+    it('should not throw when restoring if the CdkPortalOutlet element was cleared', () => {
       const testAppComponent = fixture.componentInstance;
       const parent = fixture.nativeElement.querySelector('.dom-portal-parent');
       const domPortal = new DomPortal(testAppComponent.domPortalContent);
@@ -331,7 +331,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Mangosteen');
     });
 
-    it('should change the attached portal', () => {
+    it('should change the attached portal in a CdkPortalOutlet', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -462,7 +462,7 @@ describe('Portals', () => {
       expect(fixture.nativeElement.textContent).toContain('Projectable node');
     });
 
-    it('should be able to pass bindings to the component', () => {
+    it('should be able to pass bindings to the component via a CdkPortalOutlet', () => {
       let flavor = 'pepperoni';
       const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, [
         inputBinding('flavor', () => flavor),
@@ -597,7 +597,7 @@ describe('Portals', () => {
       expect(someDomElement.innerHTML).toBe('');
     });
 
-    it('should change the attached portal', () => {
+    it('should change the attached portal in a DomPortalOutlet', () => {
       let fixture = TestBed.createComponent(ArbitraryViewContainerRefComponent);
       someViewContainerRef = fixture.componentInstance.viewContainerRef;
 
@@ -691,7 +691,7 @@ describe('Portals', () => {
       expect(someDomElement.textContent!.trim()).toBe('');
     });
 
-    it('should throw when trying to load an element without a parent into a DOM portal', () => {
+    it('should throw when trying to load an element without a parent into a DOM portal via a DomPortalOutlet', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
       const element = document.createElement('div');
@@ -703,7 +703,7 @@ describe('Portals', () => {
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
 
-    it('should not throw when restoring if the outlet element was cleared', () => {
+    it('should not throw when restoring if the DomPortalOutlet element was cleared', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
       const portal = new DomPortal(fixture.componentInstance.domPortalContent);
@@ -739,7 +739,7 @@ describe('Portals', () => {
       expect(host.hasAttached()).toBe(true);
     });
 
-    it('should be able to pass bindings to the component', () => {
+    it('should be able to pass bindings to the component via a DomPortalOutlet', () => {
       const portal = new ComponentPortal(PizzaMsg, null, null, null, [
         inputBinding('flavor', () => 'pepperoni'),
       ]);

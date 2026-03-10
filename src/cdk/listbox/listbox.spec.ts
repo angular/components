@@ -433,7 +433,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
-    it('should not change selection on click of a disabled option', () => {
+    it('should not change selection on keyboard activation of a disabled option', () => {
       const {fixture, testComponent, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       listbox.focus();
       fixture.detectChanges();
