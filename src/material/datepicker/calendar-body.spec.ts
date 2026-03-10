@@ -377,7 +377,7 @@ describe('MatCalendarBody', () => {
       expect(cells[27].classList).toContain(inComparisonClass);
     });
 
-    it('should be able to show a range that ends after the end of the calendar', () => {
+    it('should be able to show a range that ends after the end of the calendar (redundant check)', () => {
       testComponent.startValue = 27;
       testComponent.endValue = 50;
       fixture.changeDetectorRef.markForCheck();

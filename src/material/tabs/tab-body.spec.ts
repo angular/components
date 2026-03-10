@@ -50,7 +50,7 @@ describe('MatTabBody', () => {
       expect(fixture.componentInstance.tabBody._position).toBe('left');
     });
 
-    it('to be center position with zero position', () => {
+    it('to be center position with zero position in LTR', () => {
       fixture.componentInstance.position = 0;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -58,7 +58,7 @@ describe('MatTabBody', () => {
       expect(fixture.componentInstance.tabBody._position).toBe('center');
     });
 
-    it('to be left position with positive position', () => {
+    it('to be right position with positive position in LTR', () => {
       fixture.componentInstance.position = 1;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -84,7 +84,7 @@ describe('MatTabBody', () => {
       expect(fixture.componentInstance.tabBody._position).toBe('right');
     });
 
-    it('to be center position with zero position', () => {
+    it('to be center position with zero position in RTL', () => {
       fixture.componentInstance.position = 0;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -92,7 +92,7 @@ describe('MatTabBody', () => {
       expect(fixture.componentInstance.tabBody._position).toBe('center');
     });
 
-    it('to be left position with positive position', () => {
+    it('to be left position with positive position in RTL', () => {
       fixture.componentInstance.position = 1;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();

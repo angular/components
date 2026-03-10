@@ -101,7 +101,7 @@ describe('MatAutocompleteHarness', () => {
     expect(options.length).toBe(14);
   });
 
-  it('should be able to get the autocomplete panel groups', async () => {
+  it('should be able to get the options from multiple autocompletes', async () => {
     const input = await loader.getHarness(MatAutocompleteHarness.with({selector: '#plain'}));
     await input.focus();
 
@@ -132,7 +132,7 @@ describe('MatAutocompleteHarness', () => {
     expect(await input.isOpen()).toBe(true);
   });
 
-  it('should be able to select option', async () => {
+  it('should get value of input when selecting an option', async () => {
     const input = await loader.getHarness(MatAutocompleteHarness.with({selector: '#plain'}));
     await input.selectOption({text: 'New York'});
     expect(await input.getValue()).toBe('NY');

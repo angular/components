@@ -22,7 +22,7 @@ import {
 type NodeContent = string[];
 type TreeContent = NodeContent[];
 
-describe('MatTree', () => {
+describe('MatTree with TreeControl', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = '';
   let treeElement: HTMLElement;

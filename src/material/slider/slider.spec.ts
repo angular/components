@@ -186,7 +186,7 @@ describe('MatSlider', () => {
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
     }));
 
-    it('should set the default values', () => {
+    it('should set the default values for range slider', () => {
       checkInput(startInput, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
       checkInput(endInput, {min: 0, max: 100, value: 100, step: 1, translateX: 300});
 
@@ -272,7 +272,7 @@ describe('MatSlider', () => {
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
     }));
 
-    it('should have the correct initial values', () => {
+    it('should have the correct initial values (standard slider)', () => {
       checkInput(input, {min: 25, max: 75, value: 25, translateX: 0});
     });
 
@@ -352,13 +352,13 @@ describe('MatSlider', () => {
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
     }));
 
-    it('should have the correct initial values', () => {
+    it('should have the correct initial values (range slider)', () => {
       checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0});
       checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300});
     });
 
     describe('should handle min changes', () => {
-      it('that do not affect values', () => {
+      it('that do not affect values when min changes', () => {
         checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0});
         checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300});
 
@@ -378,7 +378,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 50, max: 75, value: 75, translateX: 300});
       });
 
-      it('that affect both values', () => {
+      it('that affect both values when min changes', () => {
         endInput.value = 50;
         fixture.componentInstance.min = 60;
         fixture.changeDetectorRef.markForCheck();
@@ -387,7 +387,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 60, max: 75, value: 60, translateX: 0});
       });
 
-      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
+      it('where the new start tx is greater than the old end tx when min changes', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.changeDetectorRef.markForCheck();
@@ -407,7 +407,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 10, max: 100, value: 20, translateX: 278});
       }));
 
-      it('where the new end tx is less than the old start tx', fakeAsync(() => {
+      it('where the new end tx is less than the old start tx when min changes', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.changeDetectorRef.markForCheck();
@@ -427,7 +427,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 91, max: 100, value: 92, translateX: 60});
       }));
 
-      it('that make min and max equal', () => {
+      it('that make min and max equal when min changes', () => {
         fixture.componentInstance.min = 75;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -447,7 +447,7 @@ describe('MatSlider', () => {
     });
 
     describe('should handle max changes', () => {
-      it('that do not affect values', () => {
+      it('that do not affect values when max changes', () => {
         checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0});
         checkInput(endInput, {min: 25, max: 75, value: 75, translateX: 300});
 
@@ -467,7 +467,7 @@ describe('MatSlider', () => {
         checkInput(startInput, {min: 25, max: 50, value: 25, translateX: 0});
       });
 
-      it('that affect both values', () => {
+      it('that affect both values when max changes', () => {
         startInput.value = 60;
         fixture.componentInstance.max = 50;
         fixture.changeDetectorRef.markForCheck();
@@ -476,7 +476,7 @@ describe('MatSlider', () => {
         checkInput(startInput, {min: 25, max: 50, value: 50, translateX: 300});
       });
 
-      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
+      it('where the new start tx is greater than the old end tx when max changes', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.changeDetectorRef.markForCheck();
@@ -496,7 +496,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 1, max: 10, value: 2, translateX: 60});
       }));
 
-      it('where the new end tx is less than the old start tx', fakeAsync(() => {
+      it('where the new end tx is less than the old start tx when max changes', fakeAsync(() => {
         fixture.componentInstance.min = 0;
         fixture.componentInstance.max = 100;
         fixture.changeDetectorRef.markForCheck();
@@ -516,7 +516,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 90, max: 1000, value: 95, translateX: 28.5});
       }));
 
-      it('that make min and max equal', () => {
+      it('that make min and max equal when max changes', () => {
         fixture.componentInstance.max = 25;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -595,11 +595,11 @@ describe('MatSlider', () => {
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
     }));
 
-    it('should be disabled', () => {
+    it('should be disabled for range slider', () => {
       expect(slider.disabled).toBeTrue();
     });
 
-    it('should have the disabled class on the root element', () => {
+    it('should have the disabled class on the root element for range slider', () => {
       expect(slider._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
     });
 
@@ -915,7 +915,7 @@ describe('MatSlider', () => {
     }));
 
     describe('should handle step changes', () => {
-      it('where the new start tx is greater than the old end tx', fakeAsync(() => {
+      it('where the new start tx is greater than the old end tx when step changes', fakeAsync(() => {
         fixture.componentInstance.step = 0;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -934,7 +934,7 @@ describe('MatSlider', () => {
         checkInput(endInput, {min: 50, max: 100, value: 50, translateX: 150});
       }));
 
-      it('where the new end tx is less than the old start tx', fakeAsync(() => {
+      it('where the new end tx is less than the old start tx when step changes', fakeAsync(() => {
         fixture.componentInstance.step = 0;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1020,7 +1020,7 @@ describe('MatSlider', () => {
       )!;
     });
 
-    it('should set the aria-valuetext attribute with the given `displayWith` function', fakeAsync(() => {
+    it('should set the aria-valuetext attribute with the given `displayWith` function for range slider', fakeAsync(() => {
       expect(startInput._hostElement.getAttribute('aria-valuetext')).toBe('$1');
       expect(endInput._hostElement.getAttribute('aria-valuetext')).toBe('$200');
       setValueByClick(slider, startInput, 25);
@@ -1183,7 +1183,7 @@ describe('MatSlider', () => {
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
     }));
 
-    it('works in RTL languages', fakeAsync(() => {
+    it('works in RTL languages for range slider', fakeAsync(() => {
       setValueByClick(slider, startInput, 90, true);
       checkInput(startInput, {min: 0, max: 100, value: 10, translateX: 270});
 
@@ -1402,7 +1402,7 @@ describe('MatSlider', () => {
     }));
   });
 
-  describe('slider as a custom form control', () => {
+  describe('range slider as a custom form control', () => {
     let fixture: ComponentFixture<RangeSliderWithFormControl>;
     let slider: MatSlider;
     let startInput: MatSliderThumb;
@@ -1487,7 +1487,7 @@ describe('MatSlider', () => {
       expect(sliderControl.touched).toBe(true);
     }));
 
-    it('should have the correct start input control state initially and after interaction', fakeAsync(() => {
+    it('should have the correct end input control state initially and after interaction', fakeAsync(() => {
       let sliderControl = fixture.componentInstance.endInputControl;
 
       // The control should start off valid, pristine, and untouched.
@@ -1705,7 +1705,7 @@ describe('MatSlider', () => {
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
     }));
 
-    it('should render the correct number of active & inactive ticks', () => {
+    it('should render the correct number of active & inactive ticks for range slider', () => {
       startInput.value = 0;
       endInput.value = 100;
 

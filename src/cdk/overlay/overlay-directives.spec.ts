@@ -521,7 +521,7 @@ describe('Overlay directives', () => {
       expect(Math.floor(overlayRect.left)).toBe(Math.floor(triggerRect.left) + 20);
     });
 
-    it('should take the offset from the position', () => {
+    it('should take the panel class from the position', () => {
       fixture.componentInstance.positionOverrides = [
         {
           originX: 'start',

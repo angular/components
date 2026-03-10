@@ -503,7 +503,7 @@ describe('CdkTable', () => {
       expect(() => fixture.detectChanges()).toThrowError(getTableUnknownDataSourceError().message);
     });
 
-    it('should throw an error if the data source is not valid', () => {
+    it('should render only the header if the data source is undefined', () => {
       component.dataSource = undefined;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();

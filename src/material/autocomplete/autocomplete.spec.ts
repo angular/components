@@ -1149,7 +1149,7 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
     }));
 
-    it('should set the active item properly after filtering', () => {
+    it('should set the active item properly after filtering without fakeAsync', () => {
       const componentInstance = fixture.componentInstance;
 
       typeInElement(input, 'o');
@@ -1621,7 +1621,7 @@ describe('MatAutocomplete', () => {
       UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
     });
 
-    it('should scroll to active options below the fold', waitForAsync(async () => {
+    it('should scroll to active options below the fold in option groups', waitForAsync(async () => {
       const fixture = createComponent(AutocompleteWithGroups);
       fixture.detectChanges();
 
@@ -1651,7 +1651,7 @@ describe('MatAutocomplete', () => {
         .toBe(136);
     }));
 
-    it('should scroll to active options on UP arrow', waitForAsync(async () => {
+    it('should scroll to active options on UP arrow in option groups', waitForAsync(async () => {
       const fixture = createComponent(AutocompleteWithGroups);
       fixture.detectChanges();
 
@@ -1672,7 +1672,7 @@ describe('MatAutocomplete', () => {
       expect(container.scrollTop).withContext('Expected panel to reveal last option.').toBe(472);
     }));
 
-    it('should scroll to active options that are above the panel', fakeAsync(() => {
+    it('should scroll to active options that are above the panel in option groups', fakeAsync(() => {
       const fixture = createComponent(AutocompleteWithGroups);
       fixture.detectChanges();
 
@@ -2933,7 +2933,7 @@ describe('MatAutocomplete', () => {
       expect(closingActionSpy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
     });
 
-    it('should close the panel when pressing escape', () => {
+    it('should close the panel when pressing escape and emit closingAction', () => {
       expect(closingActionSpy).not.toHaveBeenCalled();
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
       expect(closingActionSpy).toHaveBeenCalledWith(null);
@@ -3228,7 +3228,7 @@ describe('MatAutocomplete', () => {
       expect(fixture.componentInstance.selectedValue).toBe(1337);
     });
 
-    it('should not focus the option when DOWN key is pressed', () => {
+    it('should not focus the option when DOWN key is pressed (misc)', () => {
       const fixture = createComponent(SimpleAutocomplete);
       const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
       fixture.detectChanges();

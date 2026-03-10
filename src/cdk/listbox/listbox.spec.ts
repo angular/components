@@ -244,7 +244,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(listbox.value).toEqual(['apple', 'orange', 'banana', 'peach']);
     });
 
-    it('should add to selection in multi-select listbox', () => {
+    it('should toggle the option selection when the user clicks an option in multiple selection mode', () => {
       const {testComponent, fixture, listbox, options, optionEls} =
         setupComponent(ListboxWithOptions);
       testComponent.isMultiselectable = true;
@@ -433,7 +433,7 @@ describe('CdkOption and CdkListbox', () => {
       expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
-    it('should not change selection on click of a disabled option', () => {
+    it('should not change selection on keyboard activation of a disabled option', () => {
       const {fixture, testComponent, listbox, listboxEl} = setupComponent(ListboxWithOptions);
       listbox.focus();
       fixture.detectChanges();

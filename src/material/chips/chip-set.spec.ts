@@ -26,7 +26,7 @@ describe('MatChipSet', () => {
         expect(chipSetNativeElement.classList).toContain('mat-mdc-chip-set');
       });
 
-      it('should toggle the chips disabled state based on whether it is disabled', () => {
+      it('should toggle the chip set disabled state based on whether it is disabled', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipSetInstance.disabled = true;

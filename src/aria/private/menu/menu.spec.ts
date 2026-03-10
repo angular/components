@@ -344,14 +344,6 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(false);
     });
 
-    it('should close submenu on arrow left', () => {
-      menu.onKeydown(right());
-      expect(submenu.visible()).toBe(true);
-
-      submenu.onKeydown(left());
-      expect(submenu.visible()).toBe(false);
-    });
-
     it('should open submenu on mouseover', async () => {
       const menuItem = menu.inputs.items()[0];
       menu.onMouseOver({target: menuItem.element()} as unknown as MouseEvent);

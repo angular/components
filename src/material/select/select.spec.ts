@@ -3885,7 +3885,7 @@ describe('MatSelect', () => {
       expect(Math.floor(paneRect.top)).toBe(Math.floor(formFieldWrapperRect.bottom));
     });
 
-    it('should position the panel under the form field by default', () => {
+    it('should position the panel under the form field by default with OnPush', () => {
       formField.style.position = 'fixed';
       formField.style.left = '10%';
       formField.style.bottom = '0';
