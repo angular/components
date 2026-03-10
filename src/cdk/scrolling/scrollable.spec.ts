@@ -55,7 +55,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo top-left', () => {
+    it('should scrollTo top-left in LTR', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, true);
@@ -71,7 +71,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo bottom-right', () => {
+    it('should scrollTo bottom-right in LTR', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -87,7 +87,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to top-end', () => {
+    it('should scroll to top-end in LTR', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -103,7 +103,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to bottom-start', () => {
+    it('should scroll to bottom-start in LTR', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -144,7 +144,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo top-left', () => {
+    it('should scrollTo top-left in RTL', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -160,7 +160,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scrollTo bottom-right', () => {
+    it('should scrollTo bottom-right in RTL', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -176,7 +176,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scroll to top-end', () => {
+    it('should scroll to top-end in RTL', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -192,7 +192,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to bottom-start', () => {
+    it('should scroll to bottom-start in RTL', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);

@@ -510,13 +510,13 @@ describe('cdkMonitorFocus', () => {
       patchElementFocus(buttonElement);
     });
 
-    it('should initially not be focused', () => {
+    it('should initially not be focused (directive)', () => {
       expect(buttonElement.classList.length)
         .withContext('button should not have focus classes')
         .toBe(0);
     });
 
-    it('should detect focus via keyboard', fakeAsync(() => {
+    it('should detect focus via keyboard (directive)', fakeAsync(() => {
       // Simulate focus via keyboard.
       dispatchKeyboardEvent(document, 'keydown', TAB);
       buttonElement.focus();
@@ -535,7 +535,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('keyboard');
     }));
 
-    it('should detect focus via mouse', fakeAsync(() => {
+    it('should detect focus via mouse (directive)', fakeAsync(() => {
       // Simulate focus via mouse.
       dispatchMouseEvent(buttonElement, 'mousedown');
       buttonElement.focus();
@@ -554,7 +554,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('mouse');
     }));
 
-    it('should detect focus via touch', fakeAsync(() => {
+    it('should detect focus via touch (directive)', fakeAsync(() => {
       // Simulate focus via touch.
       dispatchFakeEvent(buttonElement, 'touchstart');
       buttonElement.focus();
@@ -573,7 +573,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('touch');
     }));
 
-    it('should detect programmatic focus', fakeAsync(() => {
+    it('should detect programmatic focus (directive)', fakeAsync(() => {
       // Programmatically focus.
       buttonElement.focus();
       fixture.detectChanges();
@@ -591,7 +591,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.focusChanged).toHaveBeenCalledWith('program');
     }));
 
-    it('should remove focus classes on blur', fakeAsync(() => {
+    it('should remove focus classes on blur (directive)', fakeAsync(() => {
       buttonElement.focus();
       fixture.detectChanges();
       tick();
@@ -727,13 +727,13 @@ describe('cdkMonitorFocus', () => {
       patchElementFocus(buttonElement);
     });
 
-    it('should initially not be focused', () => {
+    it('should initially not be focused (exported directive)', () => {
       expect(fixture.componentInstance.exportedDirRef.focusOrigin)
         .withContext('initial focus origin should be null')
         .toBeNull();
     });
 
-    it('should detect focus via keyboard', fakeAsync(() => {
+    it('should detect focus via keyboard (exported directive)', fakeAsync(() => {
       // Simulate focus via keyboard.
       dispatchKeyboardEvent(document, 'keydown', TAB);
       buttonElement.focus();
@@ -743,7 +743,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.exportedDirRef.focusOrigin).toEqual('keyboard');
     }));
 
-    it('should detect focus via mouse', fakeAsync(() => {
+    it('should detect focus via mouse (exported directive)', fakeAsync(() => {
       // Simulate focus via mouse.
       dispatchMouseEvent(buttonElement, 'mousedown');
       buttonElement.focus();
@@ -753,7 +753,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.exportedDirRef.focusOrigin).toEqual('mouse');
     }));
 
-    it('should detect focus via touch', fakeAsync(() => {
+    it('should detect focus via touch (exported directive)', fakeAsync(() => {
       // Simulate focus via touch.
       dispatchFakeEvent(buttonElement, 'touchstart');
       buttonElement.focus();
@@ -763,7 +763,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.exportedDirRef.focusOrigin).toEqual('touch');
     }));
 
-    it('should detect programmatic focus', fakeAsync(() => {
+    it('should detect programmatic focus (exported directive)', fakeAsync(() => {
       // Programmatically focus.
       buttonElement.focus();
       fixture.detectChanges();
@@ -772,7 +772,7 @@ describe('cdkMonitorFocus', () => {
       expect(fixture.componentInstance.exportedDirRef.focusOrigin).toEqual('program');
     }));
 
-    it('should remove focus classes on blur', fakeAsync(() => {
+    it('should remove focus classes on blur (exported directive)', fakeAsync(() => {
       buttonElement.focus();
       fixture.detectChanges();
       tick();

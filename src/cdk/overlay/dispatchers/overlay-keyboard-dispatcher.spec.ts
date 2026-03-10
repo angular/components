@@ -17,7 +17,7 @@ describe('OverlayKeyboardDispatcher', () => {
     injector = TestBed.inject(Injector);
   });
 
-  it('should track overlays in order as they are attached and detached', () => {
+  it('should track keyboard overlays in order as they are attached and detached', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -157,7 +157,7 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayOneSpy).toHaveBeenCalled();
   });
 
-  it('should not add the same overlay to the stack multiple times', () => {
+  it('should not add the same keyboard overlay to the stack multiple times', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');

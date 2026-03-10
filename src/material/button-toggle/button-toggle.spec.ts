@@ -1073,7 +1073,7 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
   });
 
-  it('should not throw on init when toggles are repeated and there is an initial value', () => {
+  it('should support a static name on the underlying button', () => {
     const fixture = TestBed.createComponent(ButtonToggleWithStaticName);
     fixture.detectChanges();
 

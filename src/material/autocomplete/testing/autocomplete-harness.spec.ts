@@ -101,7 +101,7 @@ describe('MatAutocompleteHarness', () => {
     expect(options.length).toBe(14);
   });
 
-  it('should be able to get the autocomplete panel groups', async () => {
+  it('should be able to get the autocomplete panel options when multiple autocompletes are open', async () => {
     const input = await loader.getHarness(MatAutocompleteHarness.with({selector: '#plain'}));
     await input.focus();
 

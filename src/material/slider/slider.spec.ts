@@ -1402,7 +1402,7 @@ describe('MatSlider', () => {
     }));
   });
 
-  describe('slider as a custom form control', () => {
+  describe('range slider as a custom form control', () => {
     let fixture: ComponentFixture<RangeSliderWithFormControl>;
     let slider: MatSlider;
     let startInput: MatSliderThumb;
@@ -1487,7 +1487,7 @@ describe('MatSlider', () => {
       expect(sliderControl.touched).toBe(true);
     }));
 
-    it('should have the correct start input control state initially and after interaction', fakeAsync(() => {
+    it('should have the correct end input control state initially and after interaction', fakeAsync(() => {
       let sliderControl = fixture.componentInstance.endInputControl;
 
       // The control should start off valid, pristine, and untouched.

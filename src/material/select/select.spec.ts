@@ -3351,7 +3351,7 @@ describe('MatSelect', () => {
       expect(options[5].classList).not.toContain('mdc-list-item--selected');
     });
 
-    it('should not reset when any other falsy option is selected', () => {
+    it('should not reset when any other falsy option is selected when resetting value', () => {
       options[3].click();
       fixture.detectChanges();
 
@@ -3438,7 +3438,7 @@ describe('MatSelect', () => {
       expect(options[5].classList).toContain('mdc-list-item--selected');
     });
 
-    it('should not reset when any other falsy option is selected', () => {
+    it('should not reset when any other falsy option is selected when allowing nullable options', () => {
       options[3].click();
       fixture.detectChanges();
 
@@ -3609,7 +3609,7 @@ describe('MatSelect', () => {
       expect(fixture.componentInstance.select.value).toBe('pizza-1');
     });
 
-    it('should be able to select multiple values', () => {
+    it('should be able to select multiple values without forms', () => {
       const fixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
 
       fixture.detectChanges();
@@ -3869,7 +3869,7 @@ describe('MatSelect', () => {
       trigger = formFieldWrapper.querySelector('.mat-mdc-select-trigger') as HTMLElement;
     });
 
-    it('should position the panel under the form field by default', () => {
+    it('should position the panel below the form field by default', () => {
       formField.style.position = 'fixed';
       formField.style.left = formField.style.top = '10%';
       trigger.click();
@@ -3885,7 +3885,7 @@ describe('MatSelect', () => {
       expect(Math.floor(paneRect.top)).toBe(Math.floor(formFieldWrapperRect.bottom));
     });
 
-    it('should position the panel under the form field by default', () => {
+    it('should position the panel above the form field if there is no space below', () => {
       formField.style.position = 'fixed';
       formField.style.left = '10%';
       formField.style.bottom = '0';
@@ -3915,7 +3915,7 @@ describe('MatSelect', () => {
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
     });
 
-    it('should be able to select multiple values', () => {
+    it('should be able to select multiple values with multiple selection enabled', () => {
       trigger.click();
       fixture.detectChanges();
 

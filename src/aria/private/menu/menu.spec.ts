@@ -310,7 +310,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(true);
     });
 
-    it('should close submenu on arrow left', () => {
+    it('should close a standalone submenu on arrow left', () => {
       menu.onKeydown(right());
       expect(submenu.visible()).toBe(true);
 
@@ -344,7 +344,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(false);
     });
 
-    it('should close submenu on arrow left', () => {
+    it('should close a standalone submenu on arrow left after opening via arrow key', () => {
       menu.onKeydown(right());
       expect(submenu.visible()).toBe(true);
 
@@ -359,7 +359,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(true);
     });
 
-    it('should close on selecting an item on click', () => {
+    it('should close the standalone menu on selecting an item on click', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
       expect(submenu.visible()).toBe(true);
 
@@ -367,7 +367,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
+    it('should close the standalone menu on selecting an item on enter', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
       expect(submenu.visible()).toBe(true);
 
@@ -375,7 +375,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close the standalone menu on selecting an item on space', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
       expect(submenu.visible()).toBe(true);
 
@@ -383,7 +383,7 @@ describe('Standalone Menu Pattern', () => {
       expect(submenu.visible()).toBe(false);
     });
 
-    it('should close on focus out from the menu', () => {
+    it('should close the standalone menu on focus out', () => {
       menu.onClick(clickMenuItem(menu.inputs.items(), 0));
       expect(submenu.visible()).toBe(true);
 
@@ -462,22 +462,22 @@ describe('Menu Trigger Pattern', () => {
       expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[0]);
     });
 
-    it('should navigate to the first item on arrow down', () => {
+    it('should navigate to the first menu item on arrow down on the trigger', () => {
       trigger.onKeydown(down());
       expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[0]);
     });
 
-    it('should navigate to the last item on arrow up', () => {
+    it('should navigate to the last menu item on arrow up on the trigger', () => {
       trigger.onKeydown(up());
       expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[2]);
     });
 
-    it('should navigate to the first item on enter', () => {
+    it('should navigate to the first menu item on enter on the trigger', () => {
       trigger.onKeydown(enter());
       expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[0]);
     });
 
-    it('should navigate to the first item on space', () => {
+    it('should navigate to the first menu item on space on the trigger', () => {
       trigger.onKeydown(space());
       expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[0]);
     });
@@ -535,7 +535,7 @@ describe('Menu Trigger Pattern', () => {
       expect(submenu?.visible()).toBe(false);
     });
 
-    it('should close on escape', () => {
+    it('should close the triggered menu on escape', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
       expect(menu.visible()).toBe(true);
@@ -545,7 +545,7 @@ describe('Menu Trigger Pattern', () => {
       expect(menu.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on click', () => {
+    it('should close the triggered menu on selecting an item on click', () => {
       trigger.onClick();
       expect(trigger.expanded()).toBe(true);
       expect(menu.visible()).toBe(true);
@@ -562,7 +562,7 @@ describe('Menu Trigger Pattern', () => {
       expect(submenu?.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
+    it('should close the triggered menu on selecting an item on enter', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
       expect(menu.visible()).toBe(true);
@@ -577,7 +577,7 @@ describe('Menu Trigger Pattern', () => {
       expect(submenu?.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close the triggered menu on selecting an item on space', () => {
       trigger.onKeydown(down());
       expect(trigger.expanded()).toBe(true);
       expect(menu.visible()).toBe(true);
@@ -616,7 +616,7 @@ describe('Menu Bar Pattern', () => {
   });
 
   describe('Navigation', () => {
-    it('should navigate to the first item on arrow down', () => {
+    it('should navigate to the first menubar item on arrow down', () => {
       const menubarItems = menubar.inputs.items();
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(down());
@@ -625,7 +625,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
-    it('should navigate to the last item on arrow up', () => {
+    it('should navigate to the last menubar item on arrow up', () => {
       const menubarItems = menubar.inputs.items();
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(up());
@@ -634,7 +634,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[1]);
     });
 
-    it('should navigate to the first item on enter', () => {
+    it('should navigate to the first menubar item on enter', () => {
       const menubarItems = menubar.inputs.items();
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(enter());
@@ -643,7 +643,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
-    it('should navigate to the first item on space', () => {
+    it('should navigate to the first menubar item on space', () => {
       const menubarItems = menubar.inputs.items();
       menubar.inputs.activeItem.set(menubarItems[0]);
       menubar.onKeydown(space());
@@ -765,7 +765,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.visible()).toBe(true);
     });
 
-    it('should close on escape', () => {
+    it('should close the menubar menu on escape', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menubarItems[0].expanded()).toBe(true);
@@ -777,7 +777,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on click', () => {
+    it('should close the menubar menu on selecting an item on click', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menuA.visible()).toBe(true);
@@ -788,7 +788,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
+    it('should close the menubar menu on selecting an item on enter', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menuA.visible()).toBe(true);
@@ -799,7 +799,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.visible()).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close the menubar menu on selecting an item on space', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menuA.visible()).toBe(true);
@@ -810,7 +810,7 @@ describe('Menu Bar Pattern', () => {
       expect(menuA.visible()).toBe(false);
     });
 
-    it('should close on focus out from the menu', () => {
+    it('should close the menubar menu on focus out', () => {
       const menubarItems = menubar.inputs.items();
       menubar.onClick(clickMenuItem(menubarItems, 0));
       expect(menuA.visible()).toBe(true);

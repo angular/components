@@ -596,7 +596,7 @@ describe('Overlay', () => {
       expect(secondStrategy.apply).toHaveBeenCalledTimes(1);
     }));
 
-    it('should not do anything when trying to swap a strategy with itself', fakeAsync(() => {
+    it('should not do anything when trying to swap a positioning strategy with itself', fakeAsync(() => {
       const strategy = new FakePositionStrategy();
 
       spyOn(strategy, 'attach');
@@ -1085,7 +1085,7 @@ describe('Overlay', () => {
       expect(secondStrategy.enable).toHaveBeenCalledTimes(1);
     }));
 
-    it('should not do anything when trying to swap a strategy with itself', fakeAsync(() => {
+    it('should not do anything when trying to swap a scroll strategy with itself', fakeAsync(() => {
       const strategy = new FakeScrollStrategy();
 
       spyOn(strategy, 'attach');

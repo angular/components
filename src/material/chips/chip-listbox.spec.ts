@@ -119,7 +119,7 @@ describe('MatChipListbox', () => {
         expect(chipListboxNativeElement.hasAttribute('aria-required')).toBe(false);
       });
 
-      it('should toggle the chips disabled state based on whether it is disabled', fakeAsync(() => {
+      it('should disable a chip that is individually disabled inside a form', fakeAsync(() => {
         fixture.destroy();
         TestBed.resetTestingModule();
         const disabledFixture = createComponent(IndividuallyDisabledChipInsideForm);

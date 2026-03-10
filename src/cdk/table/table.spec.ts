@@ -503,7 +503,7 @@ describe('CdkTable', () => {
       expect(() => fixture.detectChanges()).toThrowError(getTableUnknownDataSourceError().message);
     });
 
-    it('should throw an error if the data source is not valid', () => {
+    it('should render only the header if the data source is undefined', () => {
       component.dataSource = undefined;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -991,7 +991,7 @@ describe('CdkTable', () => {
         dataRows = getRows(tableElement);
       });
 
-      it('should stick and unstick headers', waitForAsync(async () => {
+      it('should stick and unstick headers in flex layout', waitForAsync(async () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1040,7 +1040,7 @@ describe('CdkTable', () => {
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
       }));
 
-      it('should stick and unstick footers', waitForAsync(async () => {
+      it('should stick and unstick footers in flex layout', waitForAsync(async () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1100,7 +1100,7 @@ describe('CdkTable', () => {
         expectNoStickyStyles([footerRows[0], footerRows[1]]);
       }));
 
-      it('should stick and unstick left columns', waitForAsync(async () => {
+      it('should stick and unstick left columns in flex layout', waitForAsync(async () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1170,7 +1170,7 @@ describe('CdkTable', () => {
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
       }));
 
-      it('should stick and unstick right columns', waitForAsync(async () => {
+      it('should stick and unstick right columns in flex layout', waitForAsync(async () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1284,7 +1284,7 @@ describe('CdkTable', () => {
         expectStickyBorderClass(footerCells[5]);
       }));
 
-      it('should stick and unstick combination of sticky header, footer, and columns', waitForAsync(async () => {
+      it('should stick and unstick combination of sticky header, footer, and columns in flex layout', waitForAsync(async () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
         component.stickyStartColumns = ['column-1'];
@@ -1379,7 +1379,7 @@ describe('CdkTable', () => {
         dataRows = getRows(tableElement);
       });
 
-      it('should stick and unstick headers', waitForAsync(async () => {
+      it('should stick and unstick headers in native layout', waitForAsync(async () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1433,7 +1433,7 @@ describe('CdkTable', () => {
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
       }));
 
-      it('should stick and unstick footers', waitForAsync(async () => {
+      it('should stick and unstick footers in native layout', waitForAsync(async () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1509,7 +1509,7 @@ describe('CdkTable', () => {
         expectNoStickyStyles([tfoot]);
       }));
 
-      it('should stick and unstick left columns', waitForAsync(async () => {
+      it('should stick and unstick left columns in native layout', waitForAsync(async () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1579,7 +1579,7 @@ describe('CdkTable', () => {
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
       }));
 
-      it('should stick and unstick right columns', waitForAsync(async () => {
+      it('should stick and unstick right columns in native layout', waitForAsync(async () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1649,7 +1649,7 @@ describe('CdkTable', () => {
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
       }));
 
-      it('should stick and unstick combination of sticky header, footer, and columns', waitForAsync(async () => {
+      it('should stick and unstick combination of sticky header, footer, and columns in native layout', waitForAsync(async () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
         component.stickyStartColumns = ['column-1'];

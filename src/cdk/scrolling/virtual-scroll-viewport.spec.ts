@@ -902,7 +902,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(testComponent.scrolledToIndex).toBe(2);
     }));
 
-    it('should set total content size', fakeAsync(() => {
+    it('should set total content size in RTL', fakeAsync(() => {
       finishInit(fixture);
 
       viewport.setTotalContentSize(10000);
@@ -912,7 +912,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
     }));
 
-    it('should set total content size in horizontal mode', fakeAsync(() => {
+    it('should set total content size in horizontal mode in RTL', fakeAsync(() => {
       testComponent.orientation = 'horizontal';
       finishInit(fixture);
 
@@ -1024,7 +1024,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(0);
     }));
 
-    it('should set content offset to bottom of content', fakeAsync(() => {
+    it('should set content offset to bottom of content with append only', fakeAsync(() => {
       finishInit(fixture);
       const contentSize = viewport.measureRenderedContentSize();
 
@@ -1036,7 +1036,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getOffsetToRenderedContentStart()).toBe(0);
     }));
 
-    it('should set content offset to top of content', fakeAsync(() => {
+    it('should set content offset to top of content with append only', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedContentOffset(10, 'to-start');
       fixture.detectChanges();
@@ -1080,7 +1080,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(50);
     }));
 
-    it('should measure scroll offset', fakeAsync(() => {
+    it('should measure scroll offset with custom scrolling element', fakeAsync(() => {
       finishInit(fixture);
       triggerScroll(viewport, 100);
       fixture.detectChanges();
@@ -1103,7 +1103,7 @@ describe('CdkVirtualScrollViewport', () => {
       viewport = testComponent.viewport;
     });
 
-    it('should measure scroll offset', fakeAsync(() => {
+    it('should measure scroll offset with scrollable window', fakeAsync(() => {
       finishInit(fixture);
       viewport.scrollToOffset(100 + 8); // the +8 is due to a horizontal scrollbar
       dispatchFakeEvent(window, 'scroll', true);

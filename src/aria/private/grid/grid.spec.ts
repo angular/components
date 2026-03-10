@@ -182,7 +182,7 @@ describe('Grid', () => {
       gridInputs = getDefaultGridInputs();
     });
 
-    it('should have correct initial properties', () => {
+    it('should have correct initial properties for a widget pattern', () => {
       const {grid} = createGrid([{cells: [{widgets: [{id: 'test-id'}]}]}], gridInputs);
       const widget = grid.cells()[0][0].inputs.widgets()[0];
       expect(widget.id()).toBe('test-id');
@@ -317,7 +317,7 @@ describe('Grid', () => {
       gridInputs = getDefaultGridInputs();
     });
 
-    it('should have correct initial properties', () => {
+    it('should have correct initial properties for a cell pattern', () => {
       const {grid} = createGrid([{cells: [{id: 'test-cell'}]}], gridInputs);
       const cell = grid.cells()[0][0];
       expect(cell.id()).toBe('test-cell');
@@ -507,28 +507,28 @@ describe('Grid', () => {
         grid.setDefaultStateEffect();
       });
 
-      it('should navigate up on ArrowUp', () => {
+      it('should navigate focus to the cell above on ArrowUp', () => {
         const cells = grid.cells();
         grid.gridBehavior.focusBehavior.focusCell(cells[1][1]); // Center cell
         grid.onKeydown(up());
         expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[0][1]);
       });
 
-      it('should navigate down on ArrowDown', () => {
+      it('should navigate focus to the cell below on ArrowDown', () => {
         const cells = grid.cells();
         grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
         grid.onKeydown(down());
         expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[2][1]);
       });
 
-      it('should navigate left on ArrowLeft', () => {
+      it('should navigate focus to the cell to the left on ArrowLeft', () => {
         const cells = grid.cells();
         grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
         grid.onKeydown(left());
         expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[1][0]);
       });
 
-      it('should navigate right on ArrowRight', () => {
+      it('should navigate focus to the cell to the right on ArrowRight', () => {
         const cells = grid.cells();
         grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
         grid.onKeydown(right());
@@ -574,7 +574,7 @@ describe('Grid', () => {
           grid.setDefaultStateEffect();
         });
 
-        it('should follow focus in follow mode', () => {
+        it('should update selection to follow focus in follow mode', () => {
           (gridInputs.selectionMode as WritableSignalLike<'follow' | 'explicit'>).set('follow');
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[0][0]);
@@ -582,7 +582,7 @@ describe('Grid', () => {
           expect(cells[1][0].selected()).toBe(true);
         });
 
-        it('should not follow focus in explicit mode', () => {
+        it('should not update selection to follow focus in explicit mode', () => {
           (gridInputs.selectionMode as WritableSignalLike<'follow' | 'explicit'>).set('explicit');
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[0][0]);
@@ -653,7 +653,7 @@ describe('Grid', () => {
           grid.setDefaultStateEffect();
         });
 
-        it('should select range up on Shift+ArrowUp', () => {
+        it('should expand the selection range up on Shift+ArrowUp', () => {
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
           grid.onKeydown(shiftUp());
@@ -661,7 +661,7 @@ describe('Grid', () => {
           expect(cells[0][1].selected()).toBe(true);
         });
 
-        it('should select range down on Shift+ArrowDown', () => {
+        it('should expand the selection range down on Shift+ArrowDown', () => {
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
           grid.onKeydown(shiftDown());
@@ -669,7 +669,7 @@ describe('Grid', () => {
           expect(cells[2][1].selected()).toBe(true);
         });
 
-        it('should select range left on Shift+ArrowLeft', () => {
+        it('should expand the selection range left on Shift+ArrowLeft', () => {
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
           grid.onKeydown(shiftLeft());
@@ -677,7 +677,7 @@ describe('Grid', () => {
           expect(cells[1][0].selected()).toBe(true);
         });
 
-        it('should select range right on Shift+ArrowRight', () => {
+        it('should expand the selection range right on Shift+ArrowRight', () => {
           const cells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
           grid.onKeydown(shiftRight());
@@ -712,7 +712,7 @@ describe('Grid', () => {
       });
 
       describe('Basic Pointer Actions', () => {
-        it('should focus cell on pointerdown', () => {
+        it('should move focus to the clicked cell on pointerdown', () => {
           const cells = grid.cells();
           grid.onPointerdown(createClickEvent(cells[0][1].element()));
           expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[0][1]);
@@ -848,12 +848,12 @@ describe('Grid', () => {
           grid.setDefaultStateEffect();
         });
 
-        it('should set aria-activedescendant on focus', () => {
+        it('should set aria-activedescendant to the focused cell id on focus', () => {
           grid.onFocusIn({target: grid.inputs.element()} as unknown as FocusEvent);
           expect(grid.activeDescendant()).toBe(grid.cells()[0][0].id());
         });
 
-        it('should update aria-activedescendant on navigation', () => {
+        it('should update aria-activedescendant to the new cell id on navigation', () => {
           grid.onFocusIn({target: grid.inputs.element()} as unknown as FocusEvent);
           grid.onKeydown(down());
           expect(grid.activeDescendant()).toBe(grid.cells()[1][0].id());

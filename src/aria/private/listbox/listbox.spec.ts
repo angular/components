@@ -172,7 +172,7 @@ describe('Listbox Pattern', () => {
 
   describe('Keyboard Selection', () => {
     describe('follows focus & single select', () => {
-      it('should select an option on navigation', () => {
+      it('should select an option on navigation (follows focus & single select)', () => {
         const {listbox} = getDefaultPatterns({
           values: signal(['Apple']),
           multi: signal(false),
@@ -199,7 +199,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should not be able to change selection when in readonly mode', () => {
+      it('should not be able to change selection when in readonly mode (follows focus & single select)', () => {
         const {listbox} = getDefaultPatterns({
           values: signal(['Apple']),
           readonly: signal(true),
@@ -227,12 +227,12 @@ describe('Listbox Pattern', () => {
         }).listbox;
       });
 
-      it('should select an option on Space', () => {
+      it('should select an option on Space (explicit focus & single select)', () => {
         listbox.onKeydown(space());
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select an option on Enter', () => {
+      it('should select an option on Enter (explicit focus & single select)', () => {
         listbox.onKeydown(enter());
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
@@ -244,7 +244,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apricot']);
       });
 
-      it('should not be able to change selection when in readonly mode', () => {
+      it('should not be able to change selection when in readonly mode (explicit focus & single select)', () => {
         const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(space());
@@ -270,12 +270,12 @@ describe('Listbox Pattern', () => {
         options = patterns.options;
       });
 
-      it('should select an option on Space', () => {
+      it('should select an option on Space (explicit focus & multi select)', () => {
         listbox.onKeydown(space());
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should select an option on Enter', () => {
+      it('should select an option on Enter (explicit focus & multi select)', () => {
         listbox.onKeydown(enter());
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
@@ -287,7 +287,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple', 'Apricot']);
       });
 
-      it('should select a range of options on Shift + ArrowDown/ArrowUp', () => {
+      it('should select a range of options on Shift + ArrowDown/ArrowUp (explicit focus & multi select)', () => {
         listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
         expect(listbox.inputs.values()).toEqual(['Apple', 'Apricot']);
@@ -299,13 +299,13 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should not allow wrapping while Shift is held down', () => {
+      it('should not allow wrapping while Shift is held down (explicit focus & multi select)', () => {
         listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
         expect(listbox.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of options on Shift + Space (or Enter)', () => {
+      it('should select a range of options on Shift + Space (or Enter) (explicit focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(space()); // Apricot
         listbox.onKeydown(down());
@@ -315,7 +315,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apricot', 'Banana', 'Blackberry']);
       });
 
-      it('should deselect options outside the range on subsequent on Shift + Space (or Enter)', () => {
+      it('should deselect options outside the range on subsequent on Shift + Space (or Enter) (explicit focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         listbox.onKeydown(space());
@@ -336,7 +336,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
 
-      it('should select the focused option and all options up to the first option on Ctrl + Shift + Home', () => {
+      it('should select the focused option and all options up to the first option on Ctrl + Shift + Home (explicit focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         listbox.onKeydown(down());
@@ -345,7 +345,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Blackberry', 'Banana', 'Apricot', 'Apple']);
       });
 
-      it('should select the focused option and all options down to the last option on Ctrl + Shift + End', () => {
+      it('should select the focused option and all options down to the last option on Ctrl + Shift + End (explicit focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         listbox.onKeydown(down());
@@ -361,7 +361,7 @@ describe('Listbox Pattern', () => {
         ]);
       });
 
-      it('should not be able to change selection when in readonly mode', () => {
+      it('should not be able to change selection when in readonly mode (explicit focus & multi select)', () => {
         const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(space());
@@ -437,7 +437,7 @@ describe('Listbox Pattern', () => {
         options = patterns.options;
       });
 
-      it('should select an option on navigation', () => {
+      it('should select an option on navigation (follows focus & multi select)', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
         listbox.onKeydown(down());
         expect(listbox.inputs.values()).toEqual(['Apricot']);
@@ -467,7 +467,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple', 'Banana']);
       });
 
-      it('should select a range of options on Shift + ArrowDown/ArrowUp', () => {
+      it('should select a range of options on Shift + ArrowDown/ArrowUp (follows focus & multi select)', () => {
         listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
         expect(listbox.inputs.values()).toEqual(['Apple', 'Apricot']);
@@ -479,14 +479,14 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should not allow wrapping while Shift is held down', () => {
+      it('should not allow wrapping while Shift is held down (follows focus & multi select)', () => {
         listbox.listBehavior.deselectAll();
         listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
         expect(listbox.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of options on Shift + Space (or Enter)', () => {
+      it('should select a range of options on Shift + Space (or Enter) (follows focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
@@ -495,7 +495,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apricot', 'Banana', 'Blackberry']);
       });
 
-      it('should deselect options outside the range on subsequent on Shift + Space (or Enter)', () => {
+      it('should deselect options outside the range on subsequent on Shift + Space (or Enter) (follows focus & multi select)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         expect(listbox.inputs.values()).toEqual(['Banana']);
@@ -515,7 +515,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
 
-      it('should select the focused option and all options up to the first option on Ctrl + Shift + Home', () => {
+      it('should select the focused option and all options up to the first option on Ctrl + Shift + Home (follows focus & multi select)', () => {
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down());
@@ -524,7 +524,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Blackberry', 'Banana', 'Apricot', 'Apple']);
       });
 
-      it('should select the focused option and all options down to the last option on Ctrl + Shift + End', () => {
+      it('should select the focused option and all options down to the last option on Ctrl + Shift + End (follows focus & multi select)', () => {
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
@@ -540,7 +540,7 @@ describe('Listbox Pattern', () => {
         ]);
       });
 
-      it('should not be able to change selection when in readonly mode', () => {
+      it('should not be able to change selection when in readonly mode (follows focus & multi select)', () => {
         const readonly = listbox.inputs.readonly as WritableSignalLike<boolean>;
         readonly.set(true);
         listbox.onKeydown(down());
@@ -583,7 +583,7 @@ describe('Listbox Pattern', () => {
     }
 
     describe('follows focus & single select', () => {
-      it('should select a single option on click', () => {
+      it('should select a single option on click (follows focus & single select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(false),
           selectionMode: signal('follow'),
@@ -594,7 +594,7 @@ describe('Listbox Pattern', () => {
     });
 
     describe('explicit focus & single select', () => {
-      it('should select an unselected option on click', () => {
+      it('should select an unselected option on click (explicit focus & single select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(false),
           selectionMode: signal('explicit'),
@@ -603,7 +603,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should deselect a selected option on click', () => {
+      it('should deselect a selected option on click (explicit focus & single select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(false),
           values: signal(['Apple']),
@@ -615,7 +615,7 @@ describe('Listbox Pattern', () => {
     });
 
     describe('explicit focus & multi select', () => {
-      it('should select an unselected option on click', () => {
+      it('should select an unselected option on click (explicit focus & multi select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('explicit'),
@@ -624,7 +624,7 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.values()).toEqual(['Apple']);
       });
 
-      it('should deselect a selected option on click', () => {
+      it('should deselect a selected option on click (explicit focus & multi select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           values: signal(['Apple']),
@@ -650,7 +650,7 @@ describe('Listbox Pattern', () => {
         ]);
       });
 
-      it('should deselect options outside the range on subsequent shift + clicks', () => {
+      it('should deselect options outside the range on subsequent shift + clicks (explicit focus & multi select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('explicit'),
@@ -670,7 +670,7 @@ describe('Listbox Pattern', () => {
     });
 
     describe('follows focus & multi select', () => {
-      it('should select a single option on click', () => {
+      it('should select a single option on click (follows focus & multi select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('follow'),
@@ -723,7 +723,7 @@ describe('Listbox Pattern', () => {
         ]);
       });
 
-      it('should deselect options outside the range on subsequent shift + clicks', () => {
+      it('should deselect options outside the range on subsequent shift + clicks (follows focus & multi select)', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('follow'),

@@ -93,7 +93,7 @@ describe('Toolbar', () => {
 
   describe('Navigation', () => {
     describe('with horizontal orientation', () => {
-      it('should navigate on click', () => {
+      it('should navigate on click (horizontal)', () => {
         setupToolbar();
         const item3 = getWidgetEl('item 3')!;
         click(item3);
@@ -117,42 +117,42 @@ describe('Toolbar', () => {
           expect(document.activeElement).toBe(getWidgetEl('item 0'));
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group', () => {
+        it('should not navigate next on ArrowDown when not in a widget group (horizontal, ltr)', () => {
           const item0 = getWidgetEl('item 0')!;
           click(item0);
           down();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, ltr)', () => {
           const item0 = getWidgetEl('item 0')!;
           click(item0);
           up();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should navigate next in a widget group on ArrowDown', () => {
+        it('should navigate next in a widget group on ArrowDown (horizontal, ltr)', () => {
           const item2 = getWidgetEl('item 2')!;
           click(item2);
           down();
           expect(document.activeElement).toBe(getWidgetEl('item 3'));
         });
 
-        it('should navigate prev in a widget group on ArrowUp', () => {
+        it('should navigate prev in a widget group on ArrowUp (horizontal, ltr)', () => {
           const item3 = getWidgetEl('item 3')!;
           click(item3);
           up();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate last to first in a widget group on ArrowDown', () => {
+        it('should navigate last to first in a widget group on ArrowDown (horizontal, ltr)', () => {
           const item4 = getWidgetEl('item 4')!;
           click(item4);
           down();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate first to last in a widget group on ArrowUp', () => {
+        it('should navigate first to last in a widget group on ArrowUp (horizontal, ltr)', () => {
           const item2 = getWidgetEl('item 2')!;
           click(item2);
           up();
@@ -388,7 +388,7 @@ describe('Toolbar', () => {
       describe('with rtl text direction', () => {
         beforeEach(() => setupToolbar({textDirection: 'rtl'}));
 
-        it('should navigate on click', () => {
+        it('should navigate on click (horizontal, rtl)', () => {
           const item3 = getWidgetEl('item 3')!;
           click(item3);
           expect(document.activeElement).toBe(item3);
@@ -407,42 +407,42 @@ describe('Toolbar', () => {
           expect(document.activeElement).toBe(getWidgetEl('item 0'));
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group', () => {
+        it('should not navigate next on ArrowDown when not in a widget group (horizontal, rtl)', () => {
           const item0 = getWidgetEl('item 0')!;
           click(item0);
           down();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, rtl)', () => {
           const item0 = getWidgetEl('item 0')!;
           click(item0);
           up();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should navigate next in a widget group on ArrowDown', () => {
+        it('should navigate next in a widget group on ArrowDown (horizontal, rtl)', () => {
           const item2 = getWidgetEl('item 2')!;
           click(item2);
           down();
           expect(document.activeElement).toBe(getWidgetEl('item 3'));
         });
 
-        it('should navigate prev in a widget group on ArrowUp', () => {
+        it('should navigate prev in a widget group on ArrowUp (horizontal, rtl)', () => {
           const item3 = getWidgetEl('item 3')!;
           click(item3);
           up();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate first to last in a widget group on ArrowUp', () => {
+        it('should navigate first to last in a widget group on ArrowUp (horizontal, rtl)', () => {
           const item2 = getWidgetEl('item 2')!;
           click(item2);
           up();
           expect(document.activeElement).toBe(getWidgetEl('item 4'));
         });
 
-        it('should navigate last to first in a widget group on ArrowDown', () => {
+        it('should navigate last to first in a widget group on ArrowDown (horizontal, rtl)', () => {
           const item4 = getWidgetEl('item 4')!;
           click(item4);
           down();
@@ -546,7 +546,7 @@ describe('Toolbar', () => {
         fixture.detectChanges();
       });
 
-      it('should navigate on click', () => {
+      it('should navigate on click (wrapped)', () => {
         const widgets = fixture.debugElement
           .queryAll(By.css('[toolbar-button]'))
           .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);

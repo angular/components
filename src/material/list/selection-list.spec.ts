@@ -1169,7 +1169,7 @@ describe('MatSelectionList without forms', () => {
     );
   });
 
-  describe('with single selection', () => {
+  describe('with single selection and two-way binding', () => {
     let fixture: ComponentFixture<ListOptionWithTwoWayBinding>;
     let optionElement: HTMLElement;
     let option: MatListOption;
@@ -1381,7 +1381,7 @@ describe('MatSelectionList with forms', () => {
       expect(fixture.componentInstance.modelChangeSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should not dispatch the model change event if nothing changed using selectAll', () => {
+    it('should not dispatch the model change event if nothing changed using deselectAll', () => {
       expect(fixture.componentInstance.modelChangeSpy).not.toHaveBeenCalled();
 
       selectionListDebug.componentInstance.deselectAll();

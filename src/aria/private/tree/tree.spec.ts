@@ -479,7 +479,7 @@ describe('Tree Pattern', () => {
         expect(item0.selected()).toBeUndefined();
       });
 
-      it('should select an item on navigation', () => {
+      it('should select an item on navigation in follows focus & single select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -493,7 +493,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in follows focus & single select mode', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
@@ -525,7 +525,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on Space', () => {
+      it('should select an item on Space in explicit focus & single select mode', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
@@ -542,7 +542,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select an item on Enter', () => {
+      it('should select an item on Enter in explicit focus & single select mode', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
@@ -570,7 +570,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in explicit focus & single select mode', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
@@ -605,14 +605,14 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on Space', () => {
+      it('should select an item on Space in explicit focus & multi select mode', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
         expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select an item on Enter', () => {
+      it('should select an item on Enter in explicit focus & multi select mode', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
@@ -628,7 +628,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0', 'Item 1']);
       });
 
-      it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
+      it('should select a range of visible items on Shift + ArrowDown/ArrowUp in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
@@ -644,7 +644,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0']);
       });
 
-      it('should not allow wrapping while Shift is held down', () => {
+      it('should not allow wrapping while Shift is held down in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
 
@@ -654,7 +654,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of visible items on Shift + Space (or Enter)', () => {
+      it('should select a range of visible items on Shift + Space (or Enter) in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
@@ -670,7 +670,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1']);
       });
 
-      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
+      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -682,7 +682,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
       });
 
-      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
+      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item0_0 = getItemByValue(items(), 'Item 0-0');
@@ -694,7 +694,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in explicit focus & multi select mode', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
@@ -787,7 +787,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on navigation', () => {
+      it('should select an item on navigation in follows focus & multi select mode', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(down());
@@ -816,7 +816,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
+      it('should select a range of visible items on Shift + ArrowDown/ArrowUp in follows focus & multi select mode', () => {
         treeInputs.values.set(['Item 0']);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
@@ -829,7 +829,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
       });
 
-      it('should not allow wrapping while Shift is held down', () => {
+      it('should not allow wrapping while Shift is held down in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         tree.treeBehavior.goto(item0);
@@ -840,7 +840,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of visible items on Shift + Space (or Enter)', () => {
+      it('should select a range of visible items on Shift + Space (or Enter) in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
@@ -853,7 +853,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
       });
 
-      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
+      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -865,7 +865,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
       });
 
-      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
+      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item0_0 = getItemByValue(items(), 'Item 0-0');
@@ -877,7 +877,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in follows focus & multi select mode', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
@@ -960,7 +960,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and select a single item on click', () => {
+      it('should navigate and select a single item on click in follows focus & single select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
@@ -969,7 +969,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in follows focus & single select mode (mouse)', () => {
         treeInputs.disabled.set(true);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
@@ -1002,7 +1002,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and toggle selection on click', () => {
+      it('should navigate and toggle selection on click in explicit focus & single select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
@@ -1024,7 +1024,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled', () => {
+      it('should not change selection when the tree is disabled in explicit focus & single select mode (mouse)', () => {
         treeInputs.disabled.set(true);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
@@ -1057,7 +1057,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and toggle selection on click', () => {
+      it('should navigate and toggle selection on click in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -1072,7 +1072,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should navigate and select range from anchor on shift + click', () => {
+      it('should navigate and select range from anchor on shift + click in explicit focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -1107,7 +1107,7 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and select a single item on click', () => {
+      it('should navigate and select a single item on click in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -1130,7 +1130,7 @@ describe('Tree Pattern', () => {
         expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should navigate and select range from anchor on shift + click', () => {
+      it('should navigate and select range from anchor on shift + click in follows focus & multi select mode', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item2 = getItemByValue(items(), 'Item 2');

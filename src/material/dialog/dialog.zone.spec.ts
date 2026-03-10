@@ -16,7 +16,7 @@ import {MatDialog, MatDialogRef} from '../dialog';
 import {Subject} from 'rxjs';
 import {MATERIAL_ANIMATIONS} from '../core';
 
-describe('MatDialog', () => {
+describe('MatDialog with Zone', () => {
   let dialog: MatDialog;
   let zone: NgZone;
   let scrolledSubject = new Subject();
