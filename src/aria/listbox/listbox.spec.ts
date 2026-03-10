@@ -691,7 +691,7 @@ describe('Listbox', () => {
       });
     });
 
-    describe('typeahead functionality', () => {
+    describe(`typeahead functionality (${focusMode})`, () => {
       const getOptions = () => [
         {value: 0, label: 'Apple', disabled: false},
         {value: 1, label: 'Apricot', disabled: false},

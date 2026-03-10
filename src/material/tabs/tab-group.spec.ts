@@ -1102,7 +1102,7 @@ describe('MatTabGroup with ink bar fit to content', () => {
   });
 });
 
-describe('MatTabNavBar with a default config', () => {
+describe('MatTabGroup with a default config', () => {
   let fixture: ComponentFixture<SimpleTabsTestApp>;
 
   beforeEach(fakeAsync(() => {

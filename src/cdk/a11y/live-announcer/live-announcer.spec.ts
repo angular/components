@@ -271,7 +271,7 @@ describe('LiveAnnouncer', () => {
       expect(ariaLiveElement.getAttribute('aria-live')).toBe('assertive');
     }));
 
-    it('should pick up the default politeness from the injection token', fakeAsync(() => {
+    it('should pick up the default duration from the injection token', fakeAsync(() => {
       announcer.announce('Hello');
 
       tick(100);

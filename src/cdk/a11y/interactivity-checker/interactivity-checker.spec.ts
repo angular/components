@@ -331,7 +331,7 @@ describe('InteractivityChecker', () => {
         });
       });
 
-      it('should return true for div and span with tabindex == 0', () => {
+      it('isFocusable: should return true for div and span with tabindex == 0', () => {
         if (shouldSkip) {
           return;
         }
@@ -365,7 +365,7 @@ describe('InteractivityChecker', () => {
         });
       });
 
-      it('should return true for div and span with tabindex == 0', () => {
+      it('isTabbable: should return true for div and span with tabindex == 0', () => {
         if (shouldSkip) {
           return;
         }

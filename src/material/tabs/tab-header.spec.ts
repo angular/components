@@ -356,7 +356,7 @@ describe('MatTabHeader', () => {
         fixture.detectChanges();
       });
 
-      it('should scroll to show the focused tab label', () => {
+      it('should scroll to show the focused tab label in RTL', () => {
         appComponent.addTabsForScrolling();
         fixture.detectChanges();
         expect(appComponent.tabHeader.scrollDistance).toBe(0);

@@ -77,7 +77,7 @@ describe('MatChipGrid', () => {
         expect(chipGridNativeElement.classList).toContain('mat-mdc-chip-set');
       });
 
-      it('should toggle the chips disabled state based on whether it is disabled', () => {
+      it('should toggle the chip grid disabled state based on whether it is disabled', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipGridInstance.disabled = true;
