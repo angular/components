@@ -8,7 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
-import {Component, computed, signal, viewChild} from '@angular/core';
+import {Component, afterRenderEffect, computed, signal, viewChild} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
@@ -43,8 +43,16 @@ export class SimpleComboboxTreeExample {
 
   readonly dataSource = signal(FOOD_DATA);
 
+  constructor() {
+    afterRenderEffect(() => {
+      if (this.popupExpanded()) {
+        this.tree()?.scrollActiveItemIntoView();
+      }
+    });
+  }
+
   filteredGroups = computed(() => {
-    const search = this.searchString().toLowerCase();
+    const search = this.searchString().trim().toLowerCase();
     const data = this.dataSource();
 
     if (!search) {
@@ -61,7 +69,7 @@ export class SimpleComboboxTreeExample {
         return {
           ...node,
           children,
-          expanded: children && children.length > 0,
+          expanded: children && children.length > 0 ? true : node.expanded,
         };
       }
 
