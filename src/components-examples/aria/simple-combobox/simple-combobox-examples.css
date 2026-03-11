@@ -166,6 +166,12 @@
   align-items: center;
   gap: 1rem;
   padding: 0.3rem 1rem;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-tree-item[data-active='true'] {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  outline: 2px solid var(--mat-sys-primary);
 }
 
 li[aria-expanded='false']+ul[role='group'] {
