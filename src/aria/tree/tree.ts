@@ -184,7 +184,7 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
+      if (!this._hasFocused() && !this._pattern.treeBehavior.inputs.activeItem()) {
         this._pattern.setDefaultState();
       }
     });

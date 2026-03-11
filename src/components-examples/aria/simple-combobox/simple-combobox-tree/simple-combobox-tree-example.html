@@ -13,7 +13,7 @@
 
   <ng-template
     [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
-    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlayOpen]="popupExpanded()"
     [cdkConnectedOverlayDisableClose]="true"
   >
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
