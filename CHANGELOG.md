@@ -1,3 +1,12 @@
+<a name="21.2.2"></a>
+# 21.2.2 "plastic-goose" (2026-03-11)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [345c543dcb](https://github.com/angular/components/commit/345c543dcb8cf5869930ffdec37a3101483eddd8) | fix | **grid:** unit tests and small fixes for grid directives ([#32841](https://github.com/angular/components/pull/32841)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.1"></a>
 # 21.2.1 "leather heels" (2026-03-04)
 ### aria
