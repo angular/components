@@ -48,3 +48,6 @@ export interface DateRangeInputHarnessFilters extends MatFormFieldControlHarness
   /** Filters based on the value of the input. */
   value?: string | RegExp;
 }
+
+/** A set of criteria that can be used to filter a list of datepicker actions instances. */
+export interface DatepickerActionsHarnessFilters extends BaseHarnessFilters {}
