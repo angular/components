@@ -11,7 +11,7 @@ import {
   provideZoneChangeDetection,
   inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '../dialog';
 import {Subject} from 'rxjs';
 import {MATERIAL_ANIMATIONS} from '../core';
@@ -24,7 +24,7 @@ describe('MatDialog Zone', () => {
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideZoneChangeDetection(),
@@ -46,9 +46,9 @@ describe('MatDialog Zone', () => {
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  }));
+  });
 
-  it('should invoke the afterClosed callback inside the NgZone', fakeAsync(() => {
+  it('should invoke the afterClosed callback inside the NgZone', async () => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
     const afterCloseCallback = jasmine.createSpy('afterClose callback');
 
@@ -58,11 +58,11 @@ describe('MatDialog Zone', () => {
     zone.run(() => {
       dialogRef.close();
       viewContainerFixture.detectChanges();
-      flush();
     });
+    await viewContainerFixture.whenStable();
 
     expect(afterCloseCallback).toHaveBeenCalledWith(true);
-  }));
+  });
 });
 
 @Directive({
