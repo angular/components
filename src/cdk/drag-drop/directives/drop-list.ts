@@ -363,6 +363,10 @@ export class CdkDropList<T = any> implements OnDestroy {
 
   /** Handles events from the underlying DropListRef. */
   private _handleEvents(ref: DropListRef<CdkDropList>) {
+    merge(ref.receivingStarted, ref.receivingStopped)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+
     ref.beforeStarted.subscribe(() => {
       this._syncItemsWithRef(this.getSortedItems().map(item => item._dragRef));
       this._changeDetectorRef.markForCheck();
