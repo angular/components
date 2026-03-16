@@ -60,7 +60,8 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   .mdc-tab-indicator__content {
-    transition: var(--mat-tab-animation-duration, 250ms) transform cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--mat-tab-header-animation-duration, 250ms)
+      transform cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: left;
     opacity: 0;
   }
