@@ -18,9 +18,6 @@ export interface ListFocusItem {
 
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
-
-  /** The index of the item in the list. */
-  index: SignalLike<number>;
 }
 
 /** Represents the required inputs for a collection that contains focusable items. */
