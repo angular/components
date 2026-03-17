@@ -9,7 +9,7 @@ import {
   dispatchEvent,
   createTouchEvent,
 } from '../../testing/private';
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {
   InputModality,
   InputModalityDetector,
@@ -194,17 +194,17 @@ describe('InputModalityDetector', () => {
     expect(detector.mostRecentModality).toBe(null);
   });
 
-  it('should ignore mouse events that occur too closely after a touch event', fakeAsync(() => {
+  it('should ignore mouse events that occur too closely after a touch event', async () => {
     setupTest();
 
     dispatchTouchEvent(document, 'touchstart');
     dispatchMouseEvent(document, 'mousedown');
     expect(detector.mostRecentModality).toBe('touch');
 
-    tick(TOUCH_BUFFER_MS);
+    await new Promise(resolve => setTimeout(resolve, TOUCH_BUFFER_MS));
     dispatchMouseEvent(document, 'mousedown');
     expect(detector.mostRecentModality).toBe('mouse');
-  }));
+  });
 
   it('should complete the various observables on destroy', () => {
     setupTest();
