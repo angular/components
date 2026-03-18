@@ -1,3 +1,16 @@
+<a name="21.2.3"></a>
+# 21.2.3 "21-2-3" (2026-03-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [688deda58](https://github.com/angular/components/commit/688deda580c9141e2a7e36164dbba860d060e5df) | fix | **drag-drop:** item returned to wrong index in initial container ([#32944](https://github.com/angular/components/pull/32944)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [917526511](https://github.com/angular/components/commit/917526511e1d52bb2d9fa665e10f087e62aa2229) | fix | **datepicker:** add harness for datepicker actions ([#32925](https://github.com/angular/components/pull/32925)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-next.0"></a>
 # 22.0.0-next.0 "plastic-bear" (2026-03-11)
 ### material
