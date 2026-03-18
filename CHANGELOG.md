@@ -1,3 +1,17 @@
+<a name="22.0.0-next.1"></a>
+# 22.0.0-next.1 "22-0-0" (2026-03-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0767a3cb4](https://github.com/angular/components/commit/0767a3cb4fe9f6fd3496cea991592855cf885b3a) | fix | **drag-drop:** item returned to wrong index in initial container ([#32944](https://github.com/angular/components/pull/32944)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [46b67d150](https://github.com/angular/components/commit/46b67d15053ce31b4742b809f1777b32eb2f1863) | fix | **datepicker:** add harness for datepicker actions ([#32925](https://github.com/angular/components/pull/32925)) |
+| [6ed6218c4](https://github.com/angular/components/commit/6ed6218c474bfe4578b17d2391d8677fe92671cc) | fix | **tabs:** incorrect animation variable name ([#32941](https://github.com/angular/components/pull/32941)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.3"></a>
 # 21.2.3 "21-2-3" (2026-03-18)
 ### cdk
