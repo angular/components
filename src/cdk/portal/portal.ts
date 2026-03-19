@@ -7,24 +7,30 @@
  */
 
 import {
-  TemplateRef,
-  ViewContainerRef,
-  ElementRef,
+  Binding,
   ComponentRef,
+  ElementRef,
   EmbeddedViewRef,
   Injector,
-  Binding,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
 import {
-  throwNullPortalOutletError,
-  throwPortalAlreadyAttachedError,
   throwNoPortalAttachedError,
   throwNullPortalError,
+  throwNullPortalOutletError,
+  throwPortalAlreadyAttachedError,
   throwPortalOutletAlreadyDisposedError,
   throwUnknownPortalTypeError,
 } from './portal-errors';
 
-/** Interface that can be used to generically type a class. */
+/**
+ * Interface that can be used to generically type a class.
+ *
+ * @deprecated Use `Type<T>` from `@angular/core` instead.
+ *
+ * @breaking-change 22.0.0
+ */
 export interface ComponentType<T> {
   new (...args: any[]): T;
 }
