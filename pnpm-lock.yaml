@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.3
       firebase-tools:
-        specifier: 15.8.0
-        version: 15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc)
+        specifier: 15.11.0
+        version: 15.11.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.3
@@ -288,8 +288,8 @@ importers:
         specifier: ^4.52.3
         version: 4.59.0
       rollup-plugin-dts:
-        specifier: 6.3.0
-        version: 6.3.0(rollup@4.59.0)(typescript@6.0.1-rc)
+        specifier: 6.4.0
+        version: 6.4.0(rollup@4.59.0)(typescript@6.0.1-rc)
       rollup-plugin-sourcemaps2:
         specifier: 0.5.6
         version: 0.5.6(@types/node@22.19.13)(rollup@4.59.0)
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.8.0
-        version: 15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc)
+        specifier: 15.11.0
+        version: 15.11.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.1.0
@@ -487,8 +487,8 @@ importers:
         specifier: ^24.6.1
         version: 24.37.5(bufferutil@4.1.0)
       sass:
-        specifier: 1.97.3
-        version: 1.97.3
+        specifier: 1.98.0
+        version: 1.98.0
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -5556,8 +5556,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.8.0:
-    resolution: {integrity: sha512-X989aD39b/K3nEunUaCYlhJ6CUrEKVcOJPIYfEvp3aJ8plCfe839ImZHZsRB7zAluAxUlJzzvWtsml15BGhimQ==}
+  firebase-tools@15.11.0:
+    resolution: {integrity: sha512-Ky2sBl9puYShitmwQWdADOMNUod89G2mghnp5vF41Vl1U0+iDL72jm0fN4tAoaH+8Z8w8wpqkELZtIV8wthW3w==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -6144,6 +6144,9 @@ packages:
 
   immutable@5.1.4:
     resolution: {integrity: sha512-p6u1bG3YSnINT5RQmx/yRZBpenIl30kVxkTLDyHLIMk0gict704Q9n+thfDI7lTRm9vXdDYutVzXhzcThxTnXA==}
+
+  immutable@5.1.5:
+    resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -8332,8 +8335,8 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  rollup-plugin-dts@6.3.0:
-    resolution: {integrity: sha512-d0UrqxYd8KyZ6i3M2Nx7WOMy708qsV/7fTHMHxCMCBOAe3V/U7OMPu5GkX8hC+cmkHhzGnfeYongl1IgiooddA==}
+  rollup-plugin-dts@6.4.0:
+    resolution: {integrity: sha512-2i00A5UoPCoDecLEs13Eu105QegSGfrbp1sDeUj/54LKGmv6XFHDxWKC6Wsb4BobGUWYVCWWjmjAc8bXXbXH/Q==}
     engines: {node: '>=16'}
     peerDependencies:
       rollup: ^3.29.4 || ^4
@@ -8433,6 +8436,11 @@ packages:
 
   sass@1.97.3:
     resolution: {integrity: sha512-fDz1zJpd5GycprAbu4Q2PV/RprsRtKC/0z82z0JLgdytmcq0+ujJbJ/09bPGDxCLkKY3Np5cRAOcWiVkLXJURg==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  sass@1.98.0:
+    resolution: {integrity: sha512-+4N/u9dZ4PrgzGgPlKnaaRQx64RO0JBKs9sDhQ2pLgN6JQZ25uPQZKQYaBJU48Kd5BxgXoJ4e09Dq7nMcOUW3A==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -15579,7 +15587,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.8.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc):
+  firebase-tools@15.11.0(@types/node@22.19.13)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.1-rc):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.13)(typescript@6.0.1-rc)
       '@apphosting/common': 0.0.8
@@ -16400,6 +16408,8 @@ snapshots:
   immediate@3.0.6: {}
 
   immutable@5.1.4: {}
+
+  immutable@5.1.5: {}
 
   import-fresh@3.3.1:
     dependencies:
@@ -18797,8 +18807,11 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.6
       '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.6
 
-  rollup-plugin-dts@6.3.0(rollup@4.59.0)(typescript@6.0.1-rc):
+  rollup-plugin-dts@6.4.0(rollup@4.59.0)(typescript@6.0.1-rc):
     dependencies:
+      '@jridgewell/remapping': 2.3.5
+      '@jridgewell/sourcemap-codec': 1.5.5
+      convert-source-map: 2.0.0
       magic-string: 0.30.21
       rollup: 4.59.0
       typescript: 6.0.1-rc
@@ -18934,6 +18947,14 @@ snapshots:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.4
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.6
+
+  sass@1.98.0:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.5
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.6
