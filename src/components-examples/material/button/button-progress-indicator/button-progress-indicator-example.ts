@@ -1,6 +1,5 @@
 import {Component, signal} from '@angular/core';
 import {MatButton} from '@angular/material/button';
-import {MatCheckbox} from '@angular/material/checkbox';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 /**
@@ -9,7 +8,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 @Component({
   selector: 'button-progress-indicator-example',
   templateUrl: 'button-progress-indicator-example.html',
-  imports: [MatButton, MatCheckbox, MatProgressSpinner],
+  imports: [MatButton, MatProgressSpinner],
 })
 export class ButtonProgressIndicatorExample {
   protected readonly showProgress = signal(false);
