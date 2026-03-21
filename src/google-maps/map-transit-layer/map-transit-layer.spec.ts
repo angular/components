@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
@@ -23,17 +23,16 @@ describe('MapTransitLayer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Transit Layer', fakeAsync(() => {
+  it('initializes a Google Map Transit Layer', () => {
     const transitLayerSpy = createTransitLayerSpy();
     const transitLayerConstructorSpy = createTransitLayerConstructorSpy(transitLayerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(transitLayerConstructorSpy).toHaveBeenCalled();
     expect(transitLayerSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 });
 
 @Component({

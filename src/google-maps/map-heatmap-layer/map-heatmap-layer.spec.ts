@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 
@@ -28,32 +28,30 @@ describe('MapHeatmapLayer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map heatmap layer', fakeAsync(() => {
+  it('initializes a Google Map heatmap layer', () => {
     const heatmapSpy = createHeatmapLayerSpy();
     const heatmapConstructorSpy = createHeatmapLayerConstructorSpy(heatmapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(heatmapConstructorSpy).toHaveBeenCalledWith({
       data: [],
       map: mapSpy,
     });
-  }));
+  });
 
-  it('should throw if the `visualization` library has not been loaded', fakeAsync(() => {
+  it('should throw if the `visualization` library has not been loaded', () => {
     createHeatmapLayerConstructorSpy(createHeatmapLayerSpy());
     delete (window.google.maps as any).visualization;
 
     expect(() => {
       const fixture = TestBed.createComponent(TestApp);
       fixture.detectChanges();
-      flush();
     }).toThrowError(/Namespace `google.maps.visualization` not found, cannot construct heatmap/);
-  }));
+  });
 
-  it('sets heatmap inputs', fakeAsync(() => {
+  it('sets heatmap inputs', () => {
     const options: google.maps.visualization.HeatmapLayerOptions = {
       map: mapSpy,
       data: [
@@ -69,12 +67,11 @@ describe('MapHeatmapLayer', () => {
     fixture.componentInstance.data = options.data!;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(heatmapConstructorSpy).toHaveBeenCalledWith(options);
-  }));
+  });
 
-  it('sets heatmap options, ignoring map', fakeAsync(() => {
+  it('sets heatmap options, ignoring map', () => {
     const options: Partial<google.maps.visualization.HeatmapLayerOptions> = {
       radius: 5,
       dissipating: true,
@@ -92,25 +89,24 @@ describe('MapHeatmapLayer', () => {
     fixture.componentInstance.options = options;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(heatmapConstructorSpy).toHaveBeenCalledWith({...options, map: mapSpy, data});
-  }));
+  });
 
-  it('exposes methods that provide information about the heatmap', fakeAsync(() => {
+  it('exposes methods that provide information about the heatmap', () => {
     const heatmapSpy = createHeatmapLayerSpy();
     createHeatmapLayerConstructorSpy(heatmapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
+
     const heatmap = fixture.componentInstance.heatmap;
 
     heatmapSpy.getData.and.returnValue([] as any);
     expect(heatmap.getData()).toEqual([]);
-  }));
+  });
 
-  it('should update the heatmap data when the input changes', fakeAsync(() => {
+  it('should update the heatmap data when the input changes', () => {
     const heatmapSpy = createHeatmapLayerSpy();
     const heatmapConstructorSpy = createHeatmapLayerConstructorSpy(heatmapSpy);
     let data = [
@@ -123,7 +119,6 @@ describe('MapHeatmapLayer', () => {
     fixture.componentInstance.data = data;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(heatmapConstructorSpy).toHaveBeenCalledWith(jasmine.objectContaining({data}));
     data = [
@@ -136,9 +131,9 @@ describe('MapHeatmapLayer', () => {
     fixture.detectChanges();
 
     expect(heatmapSpy.setData).toHaveBeenCalledWith(data);
-  }));
+  });
 
-  it('should create a LatLng object if a LatLngLiteral is passed in', fakeAsync(() => {
+  it('should create a LatLng object if a LatLngLiteral is passed in', () => {
     const latLngConstructor = createLatLngConstructorSpy(latLngSpy);
     createHeatmapLayerConstructorSpy(createHeatmapLayerSpy());
     const fixture = TestBed.createComponent(TestApp);
@@ -148,12 +143,11 @@ describe('MapHeatmapLayer', () => {
     ];
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(latLngConstructor).toHaveBeenCalledWith(1, 2);
     expect(latLngConstructor).toHaveBeenCalledWith(3, 4);
     expect(latLngConstructor).toHaveBeenCalledTimes(2);
-  }));
+  });
 });
 
 @Component({
