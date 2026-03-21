@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MapDirectionsRenderer} from './map-directions-renderer';
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -28,7 +28,7 @@ describe('MapDirectionsRenderer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Maps DirectionsRenderer', fakeAsync(() => {
+  it('initializes a Google Maps DirectionsRenderer', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({directions: DEFAULT_DIRECTIONS});
     const directionsRendererConstructorSpy =
       createDirectionsRendererConstructorSpy(directionsRendererSpy);
@@ -36,16 +36,15 @@ describe('MapDirectionsRenderer', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = {directions: DEFAULT_DIRECTIONS};
     fixture.detectChanges();
-    flush();
 
     expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
       directions: DEFAULT_DIRECTIONS,
       map: jasmine.any(Object),
     });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('sets directions from directions input', fakeAsync(() => {
+  it('sets directions from directions input', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({directions: DEFAULT_DIRECTIONS});
     const directionsRendererConstructorSpy =
       createDirectionsRendererConstructorSpy(directionsRendererSpy);
@@ -53,16 +52,15 @@ describe('MapDirectionsRenderer', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.directions = DEFAULT_DIRECTIONS;
     fixture.detectChanges();
-    flush();
 
     expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
       directions: DEFAULT_DIRECTIONS,
       map: jasmine.any(Object),
     });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('gives precedence to directions over options', fakeAsync(() => {
+  it('gives precedence to directions over options', () => {
     const updatedDirections: google.maps.DirectionsResult = {
       geocoded_waypoints: [{partial_match: false, place_id: 'test', types: []}],
       request: {
@@ -80,16 +78,15 @@ describe('MapDirectionsRenderer', () => {
     fixture.componentInstance.options = {directions: DEFAULT_DIRECTIONS};
     fixture.componentInstance.directions = updatedDirections;
     fixture.detectChanges();
-    flush();
 
     expect(directionsRendererConstructorSpy).toHaveBeenCalledWith({
       directions: updatedDirections,
       map: jasmine.any(Object),
     });
     expect(directionsRendererSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('exposes methods that provide information from the DirectionsRenderer', fakeAsync(() => {
+  it('exposes methods that provide information from the DirectionsRenderer', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({});
     createDirectionsRendererConstructorSpy(directionsRendererSpy);
 
@@ -99,7 +96,6 @@ describe('MapDirectionsRenderer', () => {
       .query(By.directive(MapDirectionsRenderer))!
       .injector.get<MapDirectionsRenderer>(MapDirectionsRenderer);
     fixture.detectChanges();
-    flush();
 
     directionsRendererSpy.getDirections.and.returnValue(DEFAULT_DIRECTIONS);
     expect(directionsRendererComponent.getDirections()).toBe(DEFAULT_DIRECTIONS);
@@ -109,21 +105,20 @@ describe('MapDirectionsRenderer', () => {
 
     directionsRendererSpy.getRouteIndex.and.returnValue(10);
     expect(directionsRendererComponent.getRouteIndex()).toBe(10);
-  }));
+  });
 
-  it('initializes DirectionsRenderer event handlers', fakeAsync(() => {
+  it('initializes DirectionsRenderer event handlers', () => {
     const directionsRendererSpy = createDirectionsRendererSpy({});
     createDirectionsRendererConstructorSpy(directionsRendererSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(directionsRendererSpy.addListener).toHaveBeenCalledWith(
       'directions_changed',
       jasmine.any(Function),
     );
-  }));
+  });
 });
 
 @Component({

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
@@ -23,16 +23,15 @@ describe('MapBicyclingLayer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Bicycling Layer', fakeAsync(() => {
+  it('initializes a Google Map Bicycling Layer', () => {
     const bicyclingLayerSpy = createBicyclingLayerSpy();
     const bicyclingLayerConstructorSpy = createBicyclingLayerConstructorSpy(bicyclingLayerSpy);
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(bicyclingLayerConstructorSpy).toHaveBeenCalled();
     expect(bicyclingLayerSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 });
 
 @Component({
