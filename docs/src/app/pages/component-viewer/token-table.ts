@@ -24,6 +24,7 @@ export interface Token {
   prefix: string;
   type: TokenType;
   derivedFrom?: string;
+  value: string | number | null;
 }
 
 @Component({
@@ -51,24 +52,24 @@ export class TokenTable {
 
   protected readonly nameFilter = signal('');
   protected readonly typeFilter = signal<TokenType | null>(null);
-  protected readonly systemTokenFilter = signal('');
+  protected readonly defaultValueFilter = signal('');
   protected readonly types: TokenType[] = ['base', 'color', 'typography', 'density'];
   protected readonly filteredTokens = computed(() => {
     const name = this.nameFilter().trim().toLowerCase();
     const typeFilter = this.typeFilter();
-    const systemTokenFilter = this.systemTokenFilter();
+    const defaultValueFilter = this.defaultValueFilter();
 
     return this.tokens().filter(
       token =>
         (!name || token.overridesName.toLowerCase().includes(name)) &&
         (!typeFilter || token.type === typeFilter) &&
-        (!systemTokenFilter || token.derivedFrom?.toLowerCase().includes(systemTokenFilter)),
+        (!defaultValueFilter || token.value?.toString().toLowerCase().includes(defaultValueFilter)),
     );
   });
 
   protected reset() {
     this.nameFilter.set('');
     this.typeFilter.set(null);
-    this.systemTokenFilter.set('');
+    this.defaultValueFilter.set('');
   }
 }
