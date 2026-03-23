@@ -166,7 +166,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   isFocused = signal(false);
 
   /** Whether the combobox has ever been focused. */
-  hasBeenFocused = signal(false);
+  hasBeenInteracted = signal(false);
 
   /** The key used to navigate to the previous item in the list. */
   expandKey = computed(() => (this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight'));
@@ -367,13 +367,13 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
   /** Handles focus in events for the combobox. */
   onFocusIn() {
-    if (this.inputs.alwaysExpanded() && !this.hasBeenFocused()) {
+    if (this.inputs.alwaysExpanded() && !this.hasBeenInteracted()) {
       const firstSelectedItem = this.listControls()?.getSelectedItems()[0];
       firstSelectedItem ? this.listControls()?.focus(firstSelectedItem) : this.first();
     }
 
     this.isFocused.set(true);
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles focus out events for the combobox. */

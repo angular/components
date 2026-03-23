@@ -200,6 +200,43 @@ describe('Tabs Pattern', () => {
         tabListPattern.setDefaultState();
         expect(tabListInputs.activeItem()).toBe(tabPatterns[0]);
       });
+
+      describe('#setDefaultStateEffect', () => {
+        it('should set default state if not interacted', () => {
+          tabListPattern.selectedTab.set(tabPatterns[2]);
+          tabListPattern.setDefaultStateEffect();
+          expect(tabListInputs.activeItem()).toBe(tabPatterns[2]); // Should reset to selected tab3
+        });
+
+        it('should NOT set default state if keyboard interacted', () => {
+          tabListInputs.activeItem.set(tabPatterns[0]);
+          tabListPattern.onKeydown(right()); // Interaction (ArrowRight moves to tab2)
+
+          tabListPattern.selectedTab.set(tabPatterns[2]);
+          tabListPattern.setDefaultStateEffect();
+          expect(tabListInputs.activeItem()).toBe(tabPatterns[1]); // Should stay on tab2
+        });
+
+        it('should NOT set default state if focus-in occurred', () => {
+          tabListInputs.activeItem.set(tabPatterns[0]);
+          tabListPattern.onFocusIn(); // Interaction
+
+          tabListPattern.selectedTab.set(tabPatterns[2]);
+          tabListPattern.setDefaultStateEffect();
+          expect(tabListInputs.activeItem()).toBe(tabPatterns[0]); // Should stay on tab1
+        });
+
+        it('should NOT set default state if pointer interacted', () => {
+          tabListInputs.activeItem.set(tabPatterns[0]);
+          tabListPattern.onPointerdown({
+            target: tabPatterns[1].element(),
+          } as unknown as PointerEvent); // Interaction
+
+          tabListPattern.selectedTab.set(tabPatterns[2]);
+          tabListPattern.setDefaultStateEffect();
+          expect(tabListInputs.activeItem()).toBe(tabPatterns[1]); // Should stay on tab2
+        });
+      });
     });
 
     describe('Keyboard Navigation', () => {

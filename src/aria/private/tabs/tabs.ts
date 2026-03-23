@@ -144,6 +144,9 @@ export class TabListPattern {
   /** Controls expansion for the tablist. */
   readonly expansionBehavior: ListExpansion;
 
+  /** Whether the tablist has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
+
   /** The currently active tab. */
   readonly activeTab: SignalLike<TabPattern | undefined> = () => this.inputs.activeItem();
 
@@ -249,9 +252,17 @@ export class TabListPattern {
     }
   }
 
+  /** Sets the default active state of the tablist before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
+  }
+
   /** Handles keydown events for the tablist. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
@@ -259,8 +270,14 @@ export class TabListPattern {
   /** The pointerdown event manager for the tablist. */
   onPointerdown(event: PointerEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.pointerdown().handle(event);
     }
+  }
+
+  /** Handles focusin events for the tablist. */
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Opens the tab by given value. */

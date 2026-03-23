@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {SignalLike, computed, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  SignalLike,
+  computed,
+  WritableSignalLike,
+  signal,
+} from '../behaviors/signal-like/signal-like';
 import {Tree, TreeItem, TreeInputs as TreeBehaviorInputs} from '../behaviors/tree/tree';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
@@ -145,6 +150,9 @@ export interface TreeInputs<V> extends Omit<
 export class TreePattern<V> implements TreeInputs<V> {
   /** The tree behavior for the tree. */
   readonly treeBehavior: Tree<TreeItemPattern<V>, V>;
+
+  /** Whether the tree has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
 
   /** The root level is 0. */
   readonly level = () => 0;
@@ -406,9 +414,17 @@ export class TreePattern<V> implements TreeInputs<V> {
     }
   }
 
+  /** Sets the default active state of the tree before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
+  }
+
   /** Handles keydown events on the tree. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
@@ -416,8 +432,14 @@ export class TreePattern<V> implements TreeInputs<V> {
   /** Handles pointerdown events on the tree. */
   onPointerdown(event: PointerEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.pointerdown().handle(event);
     }
+  }
+
+  /** Handles focusin events on the tree. */
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Navigates to the given tree item in the tree. */

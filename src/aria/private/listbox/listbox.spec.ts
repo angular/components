@@ -831,5 +831,42 @@ describe('Listbox Pattern', () => {
       listbox.setDefaultState();
       expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
+
+    describe('#setDefaultStateEffect', () => {
+      it('should set default state if not interacted', () => {
+        const {listbox, options} = getDefaultPatterns();
+        listbox.inputs.value.set(['Banana']); // Banana is options[2]
+        listbox.setDefaultStateEffect();
+        expect(listbox.inputs.activeItem()).toBe(options[2]); // Should reset to selected Banana
+      });
+
+      it('should NOT set default state if keyboard interacted', () => {
+        const {listbox, options} = getDefaultPatterns();
+        listbox.onKeydown(down()); // Interaction (ArrowDown moves to Apricot, options[1])
+
+        listbox.inputs.value.set(['Banana']); // Banana is options[2]
+        listbox.setDefaultStateEffect();
+        expect(listbox.inputs.activeItem()).toBe(options[1]); // Should stay on Apricot
+      });
+
+      it('should NOT set default state if pointer interacted', () => {
+        const {listbox, options} = getDefaultPatterns();
+        const clickEvent = {target: options[1].element()} as any as PointerEvent;
+        listbox.onPointerdown(clickEvent); // Interaction
+
+        listbox.inputs.value.set(['Banana']); // Banana is options[2]
+        listbox.setDefaultStateEffect();
+        expect(listbox.inputs.activeItem()).toBe(options[1]); // Should stay on Apricot
+      });
+
+      it('should NOT set default state if focus-in interacted', () => {
+        const {listbox, options} = getDefaultPatterns();
+        listbox.onFocusIn(); // Interaction
+
+        listbox.inputs.value.set(['Banana']); // Banana is options[2]
+        listbox.setDefaultStateEffect();
+        expect(listbox.inputs.activeItem()).toBe(options[0]); // Should stay on Apple
+      });
+    });
   });
 });

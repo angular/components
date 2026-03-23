@@ -64,7 +64,7 @@ import {LISTBOX} from './tokens';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],
   providers: [{provide: LISTBOX, useExisting: Listbox}],
@@ -139,9 +139,6 @@ export class Listbox<V> {
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
 
-  /** Whether the listbox has received focus yet. */
-  private _hasFocused = signal(false);
-
   constructor() {
     const inputs = {
       ...this,
@@ -171,9 +168,7 @@ export class Listbox<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
 
     // Ensure that if the active item is removed from
@@ -196,10 +191,6 @@ export class Listbox<V> {
         this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
-  }
-
-  _onFocus() {
-    this._hasFocused.set(true);
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
