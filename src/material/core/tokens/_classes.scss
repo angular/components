@@ -1,3 +1,5 @@
+@use '../theming/typography';
+
 // Utility classes that can be used to style elements with the most commonly used system tokens in
 // Material Design. Includes color, typography, elevation, state, and shape.
 @mixin system-classes() {
@@ -195,107 +197,92 @@
   // Sets the font to the body small typeface. Use for small body text, such as captions. In Angular
   // Material, this is used for the subscript text in a form field and the text in a paginator.
   .mat-font-body-sm {
-    font: var(--mat-sys-body-small);
-    letter-spacing: var(--mat-sys-body-small-tracking);
+    @include typography.body-small();
   }
 
   // Sets the font to the body medium typeface. Use for medium body text, this is the default
   // body font. In Angular Material, this is used for the text in a table row and the supporting
   // text in a dialog.
   .mat-font-body-md {
-    font: var(--mat-sys-body-medium);
-    letter-spacing: var(--mat-sys-body-medium-tracking);
+    @include typography.body-medium();
   }
 
   // Sets the font to the body large typeface. Use for large body text, such as an introductory
   // paragraph. In Angular Material, this is used for the text in a list item and the text in a
   // select trigger.
   .mat-font-body-lg {
-    font: var(--mat-sys-body-large);
-    letter-spacing: var(--mat-sys-body-large-tracking);
+    @include typography.body-large();
   }
 
   // Sets the font to the display small typeface. Use for small display text, such as a date.
   .mat-font-display-sm {
-    font: var(--mat-sys-display-small);
-    letter-spacing: var(--mat-sys-display-small-tracking);
+    @include typography.display-small();
   }
 
   // Sets the font to the display medium typeface. Use for medium display text, such as a hero
   // title.
   .mat-font-display-md {
-    font: var(--mat-sys-display-medium);
-    letter-spacing: var(--mat-sys-display-medium-tracking);
+    @include typography.display-medium();
   }
 
   // Sets the font to the display large typeface. Use for large display text, such as a hero title.
   .mat-font-display-lg {
-    font: var(--mat-sys-display-large);
-    letter-spacing: var(--mat-sys-display-large-tracking);
+    @include typography.display-large();
   }
 
   // Sets the font to the headline small typeface. Use for small headlines, such as a page title. In
   // Angular Material, this is used for the headline in a dialog.
   .mat-font-headline-sm {
-    font: var(--mat-sys-headline-small);
-    letter-spacing: var(--mat-sys-headline-small-tracking);
+    @include typography.headline-small();
   }
 
   // Sets the font to the headline medium typeface. Use for medium headlines, such as a section
   // title.
   .mat-font-headline-md {
-    font: var(--mat-sys-headline-medium);
-    letter-spacing: var(--mat-sys-headline-medium-tracking);
+    @include typography.headline-medium();
   }
 
   // Sets the font to the headline large typeface. Use for large headlines, such as a page title on
   // a large screen.
   .mat-font-headline-lg {
-    font: var(--mat-sys-headline-large);
-    letter-spacing: var(--mat-sys-headline-large-tracking);
+    @include typography.headline-large();
   }
 
   // Sets the font to the label small typeface. Use for small labels, such as text in a badge.
   .mat-font-label-sm {
-    font: var(--mat-sys-label-small);
-    letter-spacing: var(--mat-sys-label-small-tracking);
+    @include typography.label-small();
   }
 
   // Sets the font to the label medium typeface. Use for medium labels. In Angular Material, this
   // is used for the slider label.
   .mat-font-label-md {
-    font: var(--mat-sys-label-medium);
-    letter-spacing: var(--mat-sys-label-medium-tracking);
+    @include typography.label-medium();
   }
 
   // Sets the font to the label large typeface. Use for large labels. In Angular Material, this is
   // used for buttons, chips, and menu labels.
   .mat-font-label-lg {
-    font: var(--mat-sys-label-large);
-    letter-spacing: var(--mat-sys-label-large-tracking);
+    @include typography.label-large();
   }
 
   // Sets the font to the title small typeface. Use for small titles, such as a card title. In
   // Angular Material, this is used for the header of a table and the label of an option group.
   .mat-font-title-sm {
-    font: var(--mat-sys-title-small);
-    letter-spacing: var(--mat-sys-title-small-tracking);
+    @include typography.title-small();
   }
 
   // Sets the font to the title medium typeface. Use for medium titles, such as a dialog title
   // or the primary text in a list item. In Angular Material, this is used for the subtitle
   // of a card and the header of an expansion panel.
   .mat-font-title-md {
-    font: var(--mat-sys-title-medium);
-    letter-spacing: var(--mat-sys-title-medium-tracking);
+    @include typography.title-medium();
   }
 
   // Sets the font to the title large typeface. Use for large titles, such as a page title on a
   // small screen. In Angular Material, this is used for the title of a card and the title of a
   // toolbar.
   .mat-font-title-lg {
-    font: var(--mat-sys-title-large);
-    letter-spacing: var(--mat-sys-title-large-tracking);
+    @include typography.title-large();
   }
 
 
