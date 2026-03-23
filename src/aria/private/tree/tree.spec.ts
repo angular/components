@@ -1544,5 +1544,44 @@ describe('Tree Pattern', () => {
       tree.setDefaultState();
       expect(treeInputs.activeItem()).toBe(item0);
     });
+    describe('#setDefaultStateEffect', () => {
+      it('should set default state if not interacted', () => {
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item2 = getItemByValue(items(), 'Item 2');
+        treeInputs.value.set(['Item 2']);
+        tree.setDefaultStateEffect();
+        expect(treeInputs.activeItem()).toBe(item2); // Should reset to selected Item 2
+      });
+
+      it('should NOT set default state if keyboard interacted', () => {
+        const {tree, items} = createTree(treeExample, treeInputs);
+        tree.onKeydown(down()); // Interaction (ArrowDown moves to item1)
+
+        const item1 = getItemByValue(items(), 'Item 1');
+        treeInputs.value.set(['Item 2']);
+        tree.setDefaultStateEffect();
+        expect(treeInputs.activeItem()).toBe(item1); // Should stay on item1
+      });
+
+      it('should NOT set default state if pointer interacted', () => {
+        const {tree, items} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(items(), 'Item 0');
+        tree.onPointerdown(createClickEvent(item0.element()!)); // Interaction
+
+        treeInputs.value.set(['Item 2']);
+        tree.setDefaultStateEffect();
+        expect(treeInputs.activeItem()).toBe(item0); // Should stay on item0
+      });
+
+      it('should NOT set default state if focus-in occurred', () => {
+        const {tree, items} = createTree(treeExample, treeInputs);
+        tree.onFocusIn(); // Interaction
+
+        const item0 = getItemByValue(items(), 'Item 0');
+        treeInputs.value.set(['Item 2']);
+        tree.setDefaultStateEffect();
+        expect(treeInputs.activeItem()).toBe(item0); // Should stay on item0
+      });
+    });
   });
 });

@@ -87,8 +87,8 @@ export class MenuPattern<V> {
   /** Whether the menu or any of its child elements are currently focused. */
   isFocused = signal(false);
 
-  /** Whether the menu has received focus. */
-  hasBeenFocused = signal(false);
+  /** Whether the menu has received interaction. */
+  hasBeenInteracted = signal(false);
 
   /** Whether the menu trigger has been hovered. */
   hasBeenHovered = signal(false);
@@ -181,12 +181,25 @@ export class MenuPattern<V> {
   /** Sets the default state for the menu. */
   setDefaultState() {
     if (!this.inputs.parent()) {
-      this.listBehavior.goto(this.inputs.items()[0], {focusElement: false});
+      const firstFocusable = this.listBehavior.navigationBehavior.peekFirst();
+      if (firstFocusable) {
+        this.listBehavior.goto(firstFocusable, {focusElement: false});
+      }
+    }
+  }
+
+  /** Sets the default active state of the menu before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted() || this.hasBeenHovered()) return;
+
+    if (this.inputs.items().length > 0) {
+      this.setDefaultState();
     }
   }
 
   /** Handles keyboard events for the menu. */
   onKeydown(event: KeyboardEvent) {
+    this.hasBeenInteracted.set(true);
     this.keydownManager().handle(event);
   }
 
@@ -290,7 +303,7 @@ export class MenuPattern<V> {
   /** Handles focusin events for the menu. */
   onFocusIn() {
     this.isFocused.set(true);
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles the focusout event for the menu. */
@@ -471,8 +484,8 @@ export class MenuBarPattern<V> {
   /** Whether the menubar or any of its children are currently focused. */
   isFocused = signal(false);
 
-  /** Whether the menubar has been focused. */
-  hasBeenFocused = signal(false);
+  /** Whether the menubar has been interacted with. */
+  hasBeenInteracted = signal(false);
 
   /** Whether the menubar is disabled. */
   disabled = () => this.inputs.disabled();
@@ -497,11 +510,24 @@ export class MenuBarPattern<V> {
 
   /** Sets the default state for the menubar. */
   setDefaultState() {
-    this.inputs.activeItem.set(this.inputs.items()[0]);
+    const firstFocusable = this.listBehavior.navigationBehavior.peekFirst();
+    if (firstFocusable) {
+      this.inputs.activeItem.set(firstFocusable);
+    }
+  }
+
+  /** Sets the default active state of the menubar before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    if (this.inputs.items().length > 0) {
+      this.setDefaultState();
+    }
   }
 
   /** Handles keyboard events for the menu. */
   onKeydown(event: KeyboardEvent) {
+    this.hasBeenInteracted.set(true);
     this.keydownManager().handle(event);
   }
 
@@ -529,7 +555,7 @@ export class MenuBarPattern<V> {
   /** Handles focusin events for the menu bar. */
   onFocusIn() {
     this.isFocused.set(true);
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles focusout events for the menu bar. */
@@ -590,11 +616,11 @@ export class MenuBarPattern<V> {
 
 /** The menu trigger ui pattern class. */
 export class MenuTriggerPattern<V> {
-  /** Whether the menu is expanded. */
+  /** Whether the menu trigger is expanded. */
   expanded = signal(false);
 
-  /** Whether the menu trigger has received focus. */
-  hasBeenFocused = signal(false);
+  /** Whether the menu trigger has received interaction. */
+  hasBeenInteracted = signal(false);
 
   /** The role of the menu trigger. */
   role = () => 'button';
@@ -628,6 +654,7 @@ export class MenuTriggerPattern<V> {
   /** Handles keyboard events for the menu trigger. */
   onKeydown(event: KeyboardEvent) {
     if (!this.inputs.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydownManager().handle(event);
     }
   }
@@ -641,7 +668,7 @@ export class MenuTriggerPattern<V> {
 
   /** Handles focusin events for the menu trigger. */
   onFocusIn() {
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles focusout events for the menu trigger. */
@@ -709,8 +736,8 @@ export class MenuItemPattern<V> implements ListItem<V> {
   /** Whether the menu item is active. */
   active = computed(() => this.inputs.parent()?.inputs.activeItem() === this);
 
-  /** Whether the menu item has received focus. */
-  hasBeenFocused = signal(false);
+  /** Whether the menu item has received interaction. */
+  hasBeenInteracted = signal(false);
 
   /** The tab index of the menu item. */
   tabIndex = computed(() => {
@@ -795,6 +822,6 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   /** Handles focusin events for the menu item. */
   onFocusIn() {
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
   }
 }

@@ -80,8 +80,8 @@ export class GridPattern {
   /** Whether the focus is in the grid. */
   readonly isFocused = signal(false);
 
-  /** Whether the grid has been focused once. */
-  readonly hasBeenFocused = signal(false);
+  /** Whether the grid has received focus once. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the user is currently dragging to select a range of cells. */
   readonly dragging = signal(false);
@@ -252,6 +252,7 @@ export class GridPattern {
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
 
+    this.hasBeenInteracted.set(true);
     this.activeCell()?.onKeydown(event);
     this.keydown().handle(event);
   }
@@ -260,6 +261,7 @@ export class GridPattern {
   onPointerdown(event: PointerEvent) {
     if (this.disabled()) return;
 
+    this.hasBeenInteracted.set(true);
     this.pointerdown().handle(event);
   }
 
@@ -285,7 +287,7 @@ export class GridPattern {
   /** Handles focusin events on the grid. */
   onFocusIn(event: FocusEvent) {
     this.isFocused.set(true);
-    this.hasBeenFocused.set(true);
+    this.hasBeenInteracted.set(true);
 
     // Skip if in the middle of range selection.
     if (this.dragging()) return;
@@ -328,7 +330,7 @@ export class GridPattern {
 
   /** Sets the default active state of the grid before receiving focus the first time. */
   setDefaultStateEffect(): void {
-    if (this.hasBeenFocused()) return;
+    if (this.hasBeenInteracted()) return;
 
     this.gridBehavior.setDefaultState();
   }
