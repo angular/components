@@ -1,6 +1,6 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {ChangeDetectionStrategy, Component, DebugElement} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, flushMicrotasks} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
@@ -36,7 +36,7 @@ describe('MatCheckbox', () => {
       checkboxElement = <HTMLLabelElement>checkboxNativeElement.querySelector('.mdc-checkbox');
     });
 
-    it('should add and remove the checked state', fakeAsync(() => {
+    it('should add and remove the checked state', () => {
       expect(checkboxInstance.checked).toBe(false);
       expect(inputElement.checked).toBe(false);
 
@@ -56,14 +56,14 @@ describe('MatCheckbox', () => {
 
       expect(checkboxInstance.checked).toBe(false);
       expect(inputElement.checked).toBe(false);
-    }));
+    });
 
     it('should hide the decorative element', () => {
       const background = checkboxNativeElement.querySelector('.mdc-checkbox__background')!;
       expect(background.getAttribute('aria-hidden')).toBe('true');
     });
 
-    it('should toggle checkbox ripple disabledness correctly', fakeAsync(() => {
+    it('should toggle checkbox ripple disabledness correctly', () => {
       const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
 
       testComponent.isDisabled = true;
@@ -74,7 +74,6 @@ describe('MatCheckbox', () => {
       checkboxElement.click();
       expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-      flush();
       testComponent.isDisabled = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -82,18 +81,15 @@ describe('MatCheckbox', () => {
       dispatchFakeEvent(checkboxElement, 'mouseup');
       checkboxElement.click();
       expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
+    });
 
-      flush();
-    }));
-
-    it('should add and remove indeterminate state', fakeAsync(() => {
+    it('should add and remove indeterminate state', () => {
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(false);
 
       testComponent.isIndeterminate = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(true);
@@ -101,13 +97,12 @@ describe('MatCheckbox', () => {
       testComponent.isIndeterminate = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(false);
       expect(inputElement.indeterminate).toBe(false);
-    }));
+    });
 
-    it('should set indeterminate to false when input clicked', fakeAsync(() => {
+    it('should set indeterminate to false when input clicked', async () => {
       testComponent.isIndeterminate = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -120,7 +115,7 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       // Flush the microtasks because the forms module updates the model state asynchronously.
-      flush();
+      await fixture.whenStable();
 
       // The checked property has been updated from the model and now the view needs
       // to reflect the state change.
@@ -144,7 +139,7 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       // Flush the microtasks because the forms module updates the model state asynchronously.
-      flush();
+      await fixture.whenStable();
 
       // The checked property has been updated from the model and now the view needs
       // to reflect the state change.
@@ -154,13 +149,12 @@ describe('MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(false);
       expect(inputElement.checked).toBe(false);
       expect(testComponent.isIndeterminate).toBe(false);
-    }));
+    });
 
-    it('should not set indeterminate to false when checked is set programmatically', fakeAsync(() => {
+    it('should not set indeterminate to false when checked is set programmatically', () => {
       testComponent.isIndeterminate = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.indeterminate).toBe(true);
       expect(inputElement.indeterminate).toBe(true);
@@ -183,7 +177,7 @@ describe('MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(true);
       expect(inputElement.checked).toBe(false);
       expect(testComponent.isIndeterminate).toBe(true);
-    }));
+    });
 
     it('should change native element checked when check programmatically', () => {
       expect(inputElement.checked).toBe(false);
@@ -194,23 +188,21 @@ describe('MatCheckbox', () => {
       expect(inputElement.checked).toBe(true);
     });
 
-    it('should toggle checked state on click', fakeAsync(() => {
+    it('should toggle checked state on click', () => {
       expect(checkboxInstance.checked).toBe(false);
 
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(true);
 
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(false);
-    }));
+    });
 
-    it('should change from indeterminate to checked on click', fakeAsync(() => {
+    it('should change from indeterminate to checked on click', async () => {
       testComponent.isChecked = false;
       testComponent.isIndeterminate = true;
       fixture.changeDetectorRef.markForCheck();
@@ -221,20 +213,20 @@ describe('MatCheckbox', () => {
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(checkboxInstance.checked).toBe(true);
       expect(checkboxInstance.indeterminate).toBe(false);
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(checkboxInstance.checked).toBe(false);
       expect(checkboxInstance.indeterminate).toBe(false);
-    }));
+    });
 
-    it('should add and remove disabled state', fakeAsync(() => {
+    it('should add and remove disabled state', () => {
       expect(checkboxInstance.disabled).toBe(false);
       expect(inputElement.tabIndex).toBe(0);
       expect(inputElement.disabled).toBe(false);
@@ -253,7 +245,7 @@ describe('MatCheckbox', () => {
       expect(checkboxInstance.disabled).toBe(false);
       expect(inputElement.tabIndex).toBe(0);
       expect(inputElement.disabled).toBe(false);
-    }));
+    });
 
     it('should not toggle `checked` state upon interation while disabled', () => {
       testComponent.isDisabled = true;
@@ -264,7 +256,7 @@ describe('MatCheckbox', () => {
       expect(checkboxInstance.checked).toBe(false);
     });
 
-    it('should overwrite indeterminate state when clicked', fakeAsync(() => {
+    it('should overwrite indeterminate state when clicked', async () => {
       testComponent.isIndeterminate = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -273,36 +265,36 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       // Flush the microtasks because the indeterminate state will be updated in the next tick.
-      flush();
+      await fixture.whenStable();
 
       expect(checkboxInstance.checked).toBe(true);
       expect(checkboxInstance.indeterminate).toBe(false);
-    }));
+    });
 
-    it('should preserve the user-provided id', fakeAsync(() => {
+    it('should preserve the user-provided id', () => {
       expect(checkboxNativeElement.id).toBe('simple-check');
       expect(inputElement.id).toBe('simple-check-input');
-    }));
+    });
 
-    it('should generate a unique id for the checkbox input if no id is set', fakeAsync(() => {
+    it('should generate a unique id for the checkbox input if no id is set', () => {
       testComponent.checkboxId = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\w+\d+/);
       expect(inputElement.id).toBe(checkboxInstance.inputId);
-    }));
+    });
 
-    it('should project the checkbox content into the label element', fakeAsync(() => {
+    it('should project the checkbox content into the label element', () => {
       let label = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
       expect(label.textContent!.trim()).toBe('Simple checkbox');
-    }));
+    });
 
-    it('should make the host element a tab stop', fakeAsync(() => {
+    it('should make the host element a tab stop', () => {
       expect(inputElement.tabIndex).toBe(0);
-    }));
+    });
 
-    it('should add a css class to position the label before the checkbox', fakeAsync(() => {
+    it('should add a css class to position the label before the checkbox', () => {
       testComponent.labelPos = 'before';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -310,22 +302,21 @@ describe('MatCheckbox', () => {
       expect(checkboxNativeElement.querySelector('.mdc-form-field')!.classList).toContain(
         'mdc-form-field--align-end',
       );
-    }));
+    });
 
-    it('should trigger the click once when clicking on the <input/>', fakeAsync(() => {
+    it('should trigger the click once when clicking on the <input/>', () => {
       spyOn(testComponent, 'onCheckboxClick');
 
       expect(inputElement.checked).toBe(false);
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(true);
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should trigger the click event once when clicking on the label', fakeAsync(() => {
+    it('should trigger the click event once when clicking on the label', () => {
       // By default, when clicking on a label element, a generated click will be dispatched
       // on the associated input element.
       // Since we're using a label element and a visual hidden input, this behavior can led
@@ -337,26 +328,24 @@ describe('MatCheckbox', () => {
 
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(true);
       expect(testComponent.onCheckboxClick).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should trigger a change event when the native input does', fakeAsync(() => {
+    it('should trigger a change event when the native input does', () => {
       spyOn(testComponent, 'onCheckboxChange');
 
       expect(inputElement.checked).toBe(false);
 
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(true);
       expect(testComponent.onCheckboxChange).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should not trigger the change event by changing the native value', fakeAsync(() => {
+    it('should not trigger the change event by changing the native value', () => {
       spyOn(testComponent, 'onCheckboxChange');
 
       expect(inputElement.checked).toBe(false);
@@ -364,25 +353,23 @@ describe('MatCheckbox', () => {
       testComponent.isChecked = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(true);
       expect(testComponent.onCheckboxChange).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should keep the view in sync if the `checked` value changes inside the `change` listener', fakeAsync(() => {
+    it('should keep the view in sync if the `checked` value changes inside the `change` listener', () => {
       spyOn(testComponent, 'onCheckboxChange').and.callFake(() => {
         checkboxInstance.checked = false;
       });
 
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(inputElement.checked).toBe(false);
-    }));
+    });
 
-    it('should forward the required attribute', fakeAsync(() => {
+    it('should forward the required attribute', () => {
       testComponent.isRequired = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -394,18 +381,18 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       expect(inputElement.required).toBe(false);
-    }));
+    });
 
-    it('should focus on underlying input element when focus() is called', fakeAsync(() => {
+    it('should focus on underlying input element when focus() is called', () => {
       expect(document.activeElement).not.toBe(inputElement);
 
       checkboxInstance.focus();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(inputElement);
-    }));
+    });
 
-    it('should focus underlying input element when the touch target is clicked', fakeAsync(() => {
+    it('should focus underlying input element when the touch target is clicked', () => {
       const touchTarget = checkboxElement.querySelector(
         '.mat-mdc-checkbox-touch-target',
       ) as HTMLElement;
@@ -414,24 +401,23 @@ describe('MatCheckbox', () => {
 
       touchTarget.click();
       fixture.detectChanges();
-      flush();
 
       expect(document.activeElement).toBe(inputElement);
-    }));
+    });
 
-    it('should forward the value to input element', fakeAsync(() => {
+    it('should forward the value to input element', () => {
       testComponent.checkboxValue = 'basic_checkbox';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputElement.value).toBe('basic_checkbox');
-    }));
+    });
 
-    it('should remove the SVG checkmark from the tab order', fakeAsync(() => {
+    it('should remove the SVG checkmark from the tab order', () => {
       expect(checkboxNativeElement.querySelector('svg')!.getAttribute('focusable')).toBe('false');
-    }));
+    });
 
-    it('should be able to mark a checkbox as disabled while keeping it interactive', fakeAsync(() => {
+    it('should be able to mark a checkbox as disabled while keeping it interactive', () => {
       testComponent.isDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -451,9 +437,9 @@ describe('MatCheckbox', () => {
       expect(inputElement.getAttribute('aria-disabled')).toBe('true');
       expect(inputElement.tabIndex).toBe(0);
       expect(inputElement.disabled).toBe(false);
-    }));
+    });
 
-    it('should not change the checked state if disabled and interactive', fakeAsync(() => {
+    it('should not change the checked state if disabled and interactive', () => {
       testComponent.isDisabled = testComponent.disabledInteractive = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -464,10 +450,10 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       expect(inputElement.checked).toBe(false);
-    }));
+    });
 
     describe('ripple elements', () => {
-      it('should show ripples on label mousedown', fakeAsync(() => {
+      it('should show ripples on label mousedown', () => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
 
         expect(checkboxNativeElement.querySelector(rippleSelector)).toBeFalsy();
@@ -477,11 +463,9 @@ describe('MatCheckbox', () => {
         checkboxElement.click();
 
         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
+      });
 
-        flush();
-      }));
-
-      it('should not show ripples when disabled', fakeAsync(() => {
+      it('should not show ripples when disabled', () => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.isDisabled = true;
         fixture.changeDetectorRef.markForCheck();
@@ -493,7 +477,6 @@ describe('MatCheckbox', () => {
 
         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-        flush();
         testComponent.isDisabled = false;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -503,11 +486,9 @@ describe('MatCheckbox', () => {
         checkboxElement.click();
 
         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
+      });
 
-        flush();
-      }));
-
-      it('should remove ripple if matRippleDisabled input is set', fakeAsync(() => {
+      it('should remove ripple if matRippleDisabled input is set', () => {
         const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.disableRipple = true;
         fixture.changeDetectorRef.markForCheck();
@@ -519,7 +500,6 @@ describe('MatCheckbox', () => {
 
         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-        flush();
         testComponent.disableRipple = false;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -529,13 +509,11 @@ describe('MatCheckbox', () => {
         checkboxElement.click();
 
         expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
-
-        flush();
-      }));
+      });
     });
 
     describe('color behaviour', () => {
-      it('should apply class based on color attribute', fakeAsync(() => {
+      it('should apply class based on color attribute', () => {
         testComponent.checkboxColor = 'primary';
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -545,9 +523,9 @@ describe('MatCheckbox', () => {
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList.contains('mat-accent')).toBe(true);
-      }));
+      });
 
-      it('should not clear previous defined classes', fakeAsync(() => {
+      it('should not clear previous defined classes', () => {
         checkboxNativeElement.classList.add('custom-class');
 
         testComponent.checkboxColor = 'primary';
@@ -564,14 +542,14 @@ describe('MatCheckbox', () => {
         expect(checkboxNativeElement.classList.contains('mat-primary')).toBe(false);
         expect(checkboxNativeElement.classList.contains('mat-accent')).toBe(true);
         expect(checkboxNativeElement.classList.contains('custom-class')).toBe(true);
-      }));
+      });
 
-      it('should default to accent if no color is passed in', fakeAsync(() => {
+      it('should default to accent if no color is passed in', () => {
         testComponent.checkboxColor = undefined;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList).toContain('mat-accent');
-      }));
+      });
     });
 
     describe(`when MAT_CHECKBOX_CLICK_ACTION is 'check'`, () => {
@@ -593,16 +571,15 @@ describe('MatCheckbox', () => {
         labelElement = checkboxNativeElement.querySelector('label') as HTMLLabelElement;
       });
 
-      it('should not set `indeterminate` to false on click if check is set', fakeAsync(() => {
+      it('should not set `indeterminate` to false on click if check is set', () => {
         testComponent.isIndeterminate = true;
         fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
-        flush();
 
         expect(inputElement.checked).toBe(true);
         expect(inputElement.indeterminate).toBe(true);
-      }));
+      });
     });
 
     describe(`when MAT_CHECKBOX_CLICK_ACTION is 'noop'`, () => {
@@ -623,24 +600,22 @@ describe('MatCheckbox', () => {
         labelElement = checkboxNativeElement.querySelector('label') as HTMLLabelElement;
       });
 
-      it('should not change `indeterminate` on click if noop is set', fakeAsync(() => {
+      it('should not change `indeterminate` on click if noop is set', () => {
         testComponent.isIndeterminate = true;
         fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
-        flush();
 
         expect(inputElement.checked).toBe(false);
         expect(inputElement.indeterminate).toBe(true);
-      }));
+      });
 
-      it(`should not change 'checked' or 'indeterminate' on click if noop is set`, fakeAsync(() => {
+      it(`should not change 'checked' or 'indeterminate' on click if noop is set`, () => {
         testComponent.isChecked = true;
         testComponent.isIndeterminate = true;
         fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
-        flush();
 
         expect(inputElement.checked).toBe(true);
         expect(inputElement.indeterminate).toBe(true);
@@ -649,13 +624,12 @@ describe('MatCheckbox', () => {
         fixture.changeDetectorRef.markForCheck();
         inputElement.click();
         fixture.detectChanges();
-        flush();
 
         expect(inputElement.checked).toBe(false);
         expect(inputElement.indeterminate)
           .withContext('indeterminate should not change')
           .toBe(true);
-      }));
+      });
     });
 
     it('should have a focus indicator', () => {
@@ -687,7 +661,7 @@ describe('MatCheckbox', () => {
       labelElement = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
     });
 
-    it('should emit the event to the change observable', fakeAsync(() => {
+    it('should emit the event to the change observable', () => {
       let changeSpy = jasmine.createSpy('onChangeObservable');
 
       checkboxInstance.change.subscribe(changeSpy);
@@ -700,12 +674,11 @@ describe('MatCheckbox', () => {
       // element.
       labelElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(changeSpy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should not emit a DOM event to the change output', fakeAsync(() => {
+    it('should not emit a DOM event to the change output', () => {
       fixture.detectChanges();
       expect(testComponent.lastEvent).toBeUndefined();
 
@@ -713,17 +686,16 @@ describe('MatCheckbox', () => {
       // emit a DOM event to the change output.
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       // We're checking the arguments type / emitted value to be a boolean, because sometimes the
       // emitted value can be a DOM Event, which is not valid.
       // See angular/angular#4059
       expect(testComponent.lastEvent?.checked).toBe(true);
-    }));
+    });
   });
 
   describe('aria handling', () => {
-    it('should use the provided aria-label', fakeAsync(() => {
+    it('should use the provided aria-label', () => {
       fixture = TestBed.createComponent(CheckboxWithAriaLabel);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
@@ -731,16 +703,16 @@ describe('MatCheckbox', () => {
 
       fixture.detectChanges();
       expect(inputElement.getAttribute('aria-label')).toBe('Super effective');
-    }));
+    });
 
-    it('should not set the aria-label attribute if no value is provided', fakeAsync(() => {
+    it('should not set the aria-label attribute if no value is provided', () => {
       fixture = TestBed.createComponent(SingleCheckbox);
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelector('input').hasAttribute('aria-label')).toBe(false);
-    }));
+    });
 
-    it('should use the provided aria-labelledby', fakeAsync(() => {
+    it('should use the provided aria-labelledby', () => {
       fixture = TestBed.createComponent(CheckboxWithAriaLabelledby);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
@@ -748,9 +720,9 @@ describe('MatCheckbox', () => {
 
       fixture.detectChanges();
       expect(inputElement.getAttribute('aria-labelledby')).toBe('some-id');
-    }));
+    });
 
-    it('should not assign aria-labelledby if none is provided', fakeAsync(() => {
+    it('should not assign aria-labelledby if none is provided', () => {
       fixture = TestBed.createComponent(SingleCheckbox);
       const checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       const checkboxNativeElement = checkboxDebugElement.nativeElement;
@@ -758,7 +730,7 @@ describe('MatCheckbox', () => {
 
       fixture.detectChanges();
       expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
-    }));
+    });
 
     it('should clear the static aria attributes from the host node', () => {
       fixture = TestBed.createComponent(CheckboxWithStaticAriaAttributes);
@@ -900,11 +872,11 @@ describe('MatCheckbox', () => {
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
     });
 
-    it('should preserve any given tabIndex', fakeAsync(() => {
+    it('should preserve any given tabIndex', () => {
       expect(inputElement.tabIndex).toBe(7);
-    }));
+    });
 
-    it('should preserve given tabIndex when the checkbox is disabled then enabled', fakeAsync(() => {
+    it('should preserve given tabIndex when the checkbox is disabled then enabled', () => {
       testComponent.isDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -918,11 +890,11 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       expect(inputElement.tabIndex).toBe(13);
-    }));
+    });
   });
 
   describe('with native tabindex attribute', () => {
-    it('should properly detect native tabindex attribute', fakeAsync(() => {
+    it('should properly detect native tabindex attribute', () => {
       fixture = TestBed.createComponent(CheckboxWithTabindexAttr);
       fixture.detectChanges();
 
@@ -932,15 +904,15 @@ describe('MatCheckbox', () => {
       expect(checkbox.tabIndex)
         .withContext('Expected tabIndex property to have been set based on the native attribute')
         .toBe(5);
-    }));
+    });
 
-    it('should clear the tabindex attribute from the host element', fakeAsync(() => {
+    it('should clear the tabindex attribute from the host element', () => {
       fixture = TestBed.createComponent(CheckboxWithTabindexAttr);
       fixture.detectChanges();
 
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox))!.nativeElement;
       expect(checkbox.getAttribute('tabindex')).toBeFalsy();
-    }));
+    });
   });
 
   describe('with multiple checkboxes', () => {
@@ -949,7 +921,7 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
     });
 
-    it('should assign a unique id to each checkbox', fakeAsync(() => {
+    it('should assign a unique id to each checkbox', () => {
       let [firstId, secondId] = fixture.debugElement
         .queryAll(By.directive(MatCheckbox))
         .map(debugElement => debugElement.nativeElement.querySelector('input').id);
@@ -957,7 +929,7 @@ describe('MatCheckbox', () => {
       expect(firstId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
       expect(secondId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
       expect(firstId).not.toEqual(secondId);
-    }));
+    });
   });
 
   describe('with ngModel', () => {
@@ -980,19 +952,19 @@ describe('MatCheckbox', () => {
       ngModel = checkboxDebugElement.injector.get<NgModel>(NgModel);
     });
 
-    it('should be pristine, untouched, and valid initially', fakeAsync(() => {
+    it('should be pristine, untouched, and valid initially', () => {
       expect(ngModel.valid).toBe(true);
       expect(ngModel.pristine).toBe(true);
       expect(ngModel.touched).toBe(false);
-    }));
+    });
 
-    it('should have correct control states after interaction', fakeAsync(() => {
+    it('should have correct control states after interaction', async () => {
       inputElement.click();
       fixture.detectChanges();
 
       // Flush the timeout that is being created whenever a `click` event has been fired by
       // the underlying input.
-      flush();
+      await fixture.whenStable();
 
       // After the value change through interaction, the control should be dirty, but remain
       // untouched as long as the focus is still on the underlying input.
@@ -1003,13 +975,13 @@ describe('MatCheckbox', () => {
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       expect(ngModel.pristine).toBe(false);
       expect(ngModel.touched).toBe(true);
-    }));
+    });
 
-    it('should mark the element as touched on blur when inside an OnPush parent', fakeAsync(() => {
+    it('should mark the element as touched on blur when inside an OnPush parent', async () => {
       fixture.destroy();
       TestBed.resetTestingModule();
       fixture = TestBed.createComponent(CheckboxWithNgModelAndOnPush);
@@ -1023,66 +995,58 @@ describe('MatCheckbox', () => {
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxNativeElement.classList).not.toContain('ng-touched');
 
       dispatchFakeEvent(inputElement, 'blur');
       fixture.detectChanges();
-      flushMicrotasks();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(checkboxNativeElement.classList).toContain('ng-touched');
-    }));
+    });
 
-    it('should not throw an error when disabling while focused', fakeAsync(() => {
+    it('should not throw an error when disabling while focused', () => {
       expect(() => {
         // Focus the input element because after disabling, the `blur` event should automatically
         // fire and not result in a changed after checked exception. Related: #12323
         inputElement.focus();
-
         fixture.componentInstance.isDisabled = true;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-
-        flush();
       }).not.toThrow();
-    }));
+    });
 
-    it('should toggle checked state on click', fakeAsync(() => {
+    it('should toggle checked state on click', () => {
       expect(checkboxInstance.checked).toBe(false);
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(true);
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(false);
-    }));
+    });
 
-    it('should validate with RequiredTrue validator', fakeAsync(() => {
+    it('should validate with RequiredTrue validator', () => {
       fixture.componentInstance.isRequired = true;
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(true);
       expect(ngModel.valid).toBe(true);
 
       inputElement.click();
       fixture.detectChanges();
-      flush();
 
       expect(checkboxInstance.checked).toBe(false);
       expect(ngModel.valid).toBe(false);
-    }));
+    });
 
-    it('should update the ngModel value when using the `toggle` method', fakeAsync(() => {
+    it('should update the ngModel value when using the `toggle` method', () => {
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox)).componentInstance;
 
       expect(fixture.componentInstance.isGood).toBe(false);
@@ -1091,7 +1055,7 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.isGood).toBe(true);
-    }));
+    });
   });
 
   describe('with name attribute', () => {
@@ -1100,12 +1064,12 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
     });
 
-    it('should forward name value to input element', fakeAsync(() => {
+    it('should forward name value to input element', () => {
       let checkboxElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       let inputElement = <HTMLInputElement>checkboxElement.nativeElement.querySelector('input');
 
       expect(inputElement.getAttribute('name')).toBe('test-name');
-    }));
+    });
   });
 
   describe('with form control', () => {
@@ -1124,7 +1088,7 @@ describe('MatCheckbox', () => {
       inputElement = <HTMLInputElement>checkboxDebugElement.nativeElement.querySelector('input');
     });
 
-    it('should toggle the disabled state', fakeAsync(() => {
+    it('should toggle the disabled state', () => {
       expect(checkboxInstance.disabled).toBe(false);
 
       testComponent.formControl.disable();
@@ -1138,7 +1102,7 @@ describe('MatCheckbox', () => {
 
       expect(checkboxInstance.disabled).toBe(false);
       expect(inputElement.disabled).toBe(false);
-    }));
+    });
   });
 
   describe('without label', () => {
@@ -1150,15 +1114,15 @@ describe('MatCheckbox', () => {
       checkboxInnerContainer = checkboxDebugEl.query(By.css('.mdc-form-field'))!.nativeElement;
     });
 
-    it('should not add the "name" attribute if it is not passed in', fakeAsync(() => {
+    it('should not add the "name" attribute if it is not passed in', () => {
       fixture.detectChanges();
       expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('name')).toBe(false);
-    }));
+    });
 
-    it('should not add the "value" attribute if it is not passed in', fakeAsync(() => {
+    it('should not add the "value" attribute if it is not passed in', () => {
       fixture.detectChanges();
       expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
-    }));
+    });
   });
 });
 
