@@ -1214,6 +1214,29 @@ describe('MatTooltip', () => {
         .withContext('Expected tooltip hidden when scrolled out of view, after throttle limit')
         .toBe(false);
     }));
+
+    it('should not hide tooltip when message is updated inside a scrollable container', fakeAsync(() => {
+      assertTooltipInstance(tooltipDirective, false);
+
+      // Show the tooltip and tick for the show delay (default is 0)
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+
+      expect(tooltipDirective._isTooltipVisible())
+        .withContext('Expected tooltip to be initially visible')
+        .toBe(true);
+
+      // Update the tooltip message while visible
+      fixture.componentInstance.message = 'updated message';
+      fixture.detectChanges();
+      tick(0);
+
+      // The tooltip should remain visible after the message update
+      expect(tooltipDirective._isTooltipVisible())
+        .withContext('Expected tooltip to remain visible after message update')
+        .toBe(true);
+    }));
   });
 
   describe('with OnPush', () => {

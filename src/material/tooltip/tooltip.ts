@@ -221,6 +221,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private readonly _tooltipComponent = TooltipComponent;
   private _viewportMargin = 8;
   private _currentPosition!: TooltipPosition;
+  private _isRepositioningForMessage = false;
   private readonly _cssClassPrefix: string = 'mat-mdc';
   private _ariaDescriptionPending = false;
   private _dirSubscribed = false;
@@ -529,7 +530,11 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       this._updateCurrentPositionClass(change.connectionPair);
 
       if (this._tooltipInstance) {
-        if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
+        if (
+          change.scrollableViewProperties.isOverlayClipped &&
+          this._tooltipInstance.isVisible() &&
+          !this._isRepositioningForMessage
+        ) {
           // After position changes occur and the overlay is clipped by
           // a parent scrollable then close the tooltip.
           this._ngZone.run(() => this.hide(0));
@@ -703,7 +708,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       afterNextRender(
         () => {
           if (this._tooltipInstance) {
+            this._isRepositioningForMessage = true;
             this._overlayRef!.updatePosition();
+            this._isRepositioningForMessage = false;
           }
         },
         {
