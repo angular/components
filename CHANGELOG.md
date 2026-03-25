@@ -1,3 +1,13 @@
+<a name="22.0.0-next.2"></a>
+# 22.0.0-next.2 "hassium-helicopter" (2026-03-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a46b0a1d4](https://github.com/angular/components/commit/a46b0a1d4200bf74b036c25ee477d22025f444c8) | feat | **core:** add mixins for Material Design typography ([#32959](https://github.com/angular/components/pull/32959)) |
+| [ff7d697ec](https://github.com/angular/components/commit/ff7d697ec5ed280d3e28029571bc86d7c0c2c3a8) | fix | **tooltip:** wrong type for shape token ([#32968](https://github.com/angular/components/pull/32968)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-next.1"></a>
 # 22.0.0-next.1 "22-0-0" (2026-03-18)
 ### cdk
