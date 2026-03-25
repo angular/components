@@ -1,3 +1,12 @@
+<a name="21.2.4"></a>
+# 21.2.4 "hassium-halfpipe" (2026-03-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [87aa6d977](https://github.com/angular/components/commit/87aa6d977166d09b0f321eed6300663bfe57b8aa) | fix | **tooltip:** wrong type for shape token ([#32968](https://github.com/angular/components/pull/32968)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-next.2"></a>
 # 22.0.0-next.2 "hassium-helicopter" (2026-03-25)
 ### material
