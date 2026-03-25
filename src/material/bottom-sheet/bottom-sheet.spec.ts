@@ -13,7 +13,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {
   Component,
   ComponentRef,
-  createNgModuleRef,
+  createNgModule,
   Directive,
   Injectable,
   Injector,
@@ -1098,7 +1098,7 @@ class ModuleBoundBottomSheetParentComponent {
   private _bottomSheet = inject(MatBottomSheet);
 
   openBottomSheet(): void {
-    const ngModuleRef = createNgModuleRef(
+    const ngModuleRef = createNgModule(
       ModuleBoundBottomSheetModule,
       /* parentInjector */ this._injector,
     );
