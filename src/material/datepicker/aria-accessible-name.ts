@@ -70,7 +70,7 @@ function ssrSafeIsElement(node: Node): node is Element {
 }
 
 /**
- * Determine if argument node is an HTMLInputElement based on `nodeName` property. This funciton is
+ * Determine if argument node is an HTMLInputElement based on `nodeName` property. This function is
  * safe to use with server-side rendering.
  */
 function ssrSafeIsHTMLInputElement(node: Node): node is HTMLInputElement {
