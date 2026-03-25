@@ -97,11 +97,9 @@ The `FullscreenOverlayContainer` is an alternative to `OverlayContainer` that su
 displaying of overlay elements in
 [fullscreen mode](https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullScreen).
 
-`FullscreenOverlayContainer` can be enabled by providing it in your `NgModule`:
+`FullscreenOverlayContainer` can be enabled by providing it in your app config:
 ```ts
-@NgModule({
-  providers: [{provide: OverlayContainer, useClass: FullscreenOverlayContainer}],
-  // ...
-})
-export class MyModule { }
+bootstrapApplication(MyApp, {
+  providers: [{provide: OverlayContainer, useClass: FullscreenOverlayContainer}]
+});
 ```
