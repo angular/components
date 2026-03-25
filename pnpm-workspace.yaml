@@ -18,23 +18,23 @@ packages:
   - src/youtube-player
 
 catalog:
-  '@angular-devkit/build-angular': 22.0.0-next.0
-  '@angular-devkit/core': 22.0.0-next.0
-  '@angular-devkit/schematics': 22.0.0-next.0
-  '@angular/build': 22.0.0-next.0
-  '@angular/cli': 22.0.0-next.0
-  '@angular/common': 22.0.0-next.0
-  '@angular/compiler-cli': 22.0.0-next.0
-  '@angular/compiler': 22.0.0-next.0
-  '@angular/core': 22.0.0-next.0
-  '@angular/ssr': 22.0.0-next.0
-  '@angular/forms': 22.0.0-next.0
-  '@angular/localize': 22.0.0-next.0
-  '@angular/platform-browser': 22.0.0-next.0
-  '@angular/platform-browser-dynamic': 22.0.0-next.0
-  '@angular/platform-server': 22.0.0-next.0
-  '@angular/router': 22.0.0-next.0
-  '@schematics/angular': 22.0.0-next.0
+  '@angular-devkit/build-angular': 22.0.0-next.2
+  '@angular-devkit/core': 22.0.0-next.2
+  '@angular-devkit/schematics': 22.0.0-next.2
+  '@angular/build': 22.0.0-next.2
+  '@angular/cli': 22.0.0-next.2
+  '@angular/common': 22.0.0-next.4
+  '@angular/compiler-cli': 22.0.0-next.4
+  '@angular/compiler': 22.0.0-next.4
+  '@angular/core': 22.0.0-next.4
+  '@angular/ssr': 22.0.0-next.2
+  '@angular/forms': 22.0.0-next.4
+  '@angular/localize': 22.0.0-next.4
+  '@angular/platform-browser': 22.0.0-next.4
+  '@angular/platform-browser-dynamic': 22.0.0-next.4
+  '@angular/platform-server': 22.0.0-next.4
+  '@angular/router': 22.0.0-next.4
+  '@schematics/angular': 22.0.0-next.2
   'rxjs': ^6.6.7
 
 # The minimum age of a release to be considered for dependency installation.
