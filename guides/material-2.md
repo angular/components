@@ -1090,9 +1090,24 @@ for how to read values from an M3 theme).
 
 ### Pass a new M3 theme in your global theme styles
 
-Create a new M3 theme object using `define-theme` and pass it everywhere you were previously passing
-your M2 theme. All Angular Material mixins that take an M2 theme are compatible with M3 themes as
-well.
+Replace your M2 theme with an M3 theme. For v19 and later, use the `mat.theme`
+mixin as described in the [theming guide][theming]:
+
+```scss
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+```
+
+Alternatively, you can create a theme object with `mat.define-theme` and pass it
+to individual component theme mixins. This approach is needed for backwards
+compatibility helpers such as `color-variants-backwards-compatibility`.
 
 ### Update usages of APIs that are not supported for Material 3 themes
 
