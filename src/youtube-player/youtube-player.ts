@@ -38,12 +38,9 @@ import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPatte
 import {takeUntil, switchMap} from 'rxjs/operators';
 import {PlaceholderImageQuality, YouTubePlayerPlaceholder} from './youtube-player-placeholder';
 
-declare global {
-  interface Window {
-    YT: typeof YT | undefined;
-    onYouTubeIframeAPIReady: (() => void) | undefined;
-  }
-}
+type YoutubeWindow = {
+  onYouTubeIframeAPIReady?: (() => void) | undefined;
+};
 
 /** Injection token used to configure the `YouTubePlayer`. */
 export const YOUTUBE_PLAYER_CONFIG = new InjectionToken<YouTubePlayerConfig>(
@@ -292,7 +289,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
     if (this._player) {
       this._player.destroy();
-      window.onYouTubeIframeAPIReady = this._existingApiReadyCallback;
+      (window as YoutubeWindow).onYouTubeIframeAPIReady = this._existingApiReadyCallback;
     }
 
     this._playerChanges.complete();
@@ -513,9 +510,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         );
       }
 
-      this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
+      this._existingApiReadyCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
 
-      window.onYouTubeIframeAPIReady = () => {
+      (window as YoutubeWindow).onYouTubeIframeAPIReady = () => {
         this._existingApiReadyCallback?.();
         this._ngZone.run(() => this._createPlayer(playVideo));
       };
