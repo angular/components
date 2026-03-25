@@ -1,17 +1,19 @@
 ### MediaMatcher
- 
-When including the CDK's `LayoutModule`, components can inject `MediaMatcher` to access the 
-matchMedia method, if available on the platform.
+
+`MediaMatcher` is an injectable service that provides access to the `matchMedia` method, if
+available on the platform.
 
 #### Example
 ```ts
-@Component({ ... }) 
-export class MyWidget {  
-  constructor(mm: MediaMatcher) {
-    mm.matchMedia('(orientation: landscape)').matches ? 
+@Component({ ... })
+export class MyWidget {
+  private mediaMatcher = inject(MediaMatcher);
+
+  checkOrientation() {
+    this.mediaMatcher.matchMedia('(orientation: landscape)').matches ?
       this.setLandscapeMode() :
       this.setPortraitMode();
   }
-}  
+}
 ```
 
