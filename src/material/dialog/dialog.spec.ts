@@ -16,7 +16,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
   Component,
-  createNgModuleRef,
+  createNgModule,
   Directive,
   Injectable,
   Injector,
@@ -2445,7 +2445,7 @@ class ModuleBoundDialogParentComponent {
   private _dialog = inject(MatDialog);
 
   openDialog(): void {
-    const ngModuleRef = createNgModuleRef(
+    const ngModuleRef = createNgModule(
       ModuleBoundDialogModule,
       /* parentInjector */ this._injector,
     );
