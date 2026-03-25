@@ -5,7 +5,7 @@ be used to create accessible experience for components like
 [modal dialogs](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), where focus must be
 constrained.
 
-This directive is declared in `A11yModule`.
+Import `CdkTrapFocus` in your component to use this directive.
 
 #### Example
 
