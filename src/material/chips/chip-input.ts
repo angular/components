@@ -58,7 +58,7 @@ export interface MatChipInputEvent {
     '(input)': '_onInput()',
     '[id]': 'id',
     '[attr.disabled]': 'disabled && !disabledInteractive ? "" : null',
-    '[attr.placeholder]': 'placeholder || null',
+    '[attr.placeholder]': '!disabled ? (placeholder || null) : null',
     '[attr.aria-invalid]': '_chipGrid && _chipGrid.ngControl ? _chipGrid.ngControl.invalid : null',
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
     '[attr.aria-disabled]': 'disabled && disabledInteractive ? "true" : null',
