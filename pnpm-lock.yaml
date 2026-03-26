@@ -61,7 +61,7 @@ catalogs:
 overrides:
   typescript: 6.0.2
 
-packageExtensionsChecksum: sha256-aKJQSfkoOl79hd5DYaabzHnSDIJkX/dIHNav8Qv+Vb8=
+packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
 
 importers:
 
@@ -2872,8 +2872,8 @@ packages:
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
-  '@nginfra/angular-linking@1.0.9':
-    resolution: {integrity: sha512-25cph8loaVTzSxD6Ll5vjUhm/xxbr1OHLaH/kh464yOMaiK2eKYpNdnIPpfsTFStrwh5/3wKTWTNSCFvjgeTiQ==}
+  '@nginfra/angular-linking@1.0.11':
+    resolution: {integrity: sha512-X0fFp9cDIzyS53dstFalPM6nSPtQz/XoBsPFMOmxE66jBIfJGW8W2wQWlk1T+t018eXEC8RgPdKluo6Aw5dm+g==}
     peerDependencies:
       '@angular/compiler-cli': '*'
 
@@ -8207,7 +8207,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   q@1.5.1:
@@ -8215,7 +8214,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qjobs@1.2.0:
@@ -10276,7 +10274,7 @@ snapshots:
   '@angular/common@22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)':
     dependencies:
       '@angular/core': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1)
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -10316,7 +10314,7 @@ snapshots:
       '@angular/common': 22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 22.0.0-next.4(@angular/common@22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       '@standard-schema/spec': 1.1.0
       rxjs: 6.6.7
       tslib: 2.8.1
@@ -10329,7 +10327,7 @@ snapshots:
       '@angular/compiler': 22.0.0-next.4
       '@angular/compiler-cli': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2)
       '@babel/core': 7.29.0
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       '@types/babel__core': 7.20.5
       tinyglobby: 0.2.15
       yargs: 18.0.0
@@ -10408,7 +10406,7 @@ snapshots:
     dependencies:
       '@angular/common': 22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1)
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
@@ -10420,7 +10418,7 @@ snapshots:
       '@angular/compiler': 22.0.0-next.4
       '@angular/core': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 22.0.0-next.4(@angular/common@22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       rxjs: 6.6.7
       tslib: 2.8.1
       xhr2: 0.2.1
@@ -10433,7 +10431,7 @@ snapshots:
       '@angular/common': 22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 22.0.0-next.4(@angular/common@22.0.0-next.4(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))(@angular/core@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -12577,7 +12575,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nginfra/angular-linking@1.0.9(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))':
+  '@nginfra/angular-linking@1.0.11(@angular/compiler-cli@22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2))':
     dependencies:
       '@angular/compiler-cli': 22.0.0-next.4(@angular/compiler@22.0.0-next.4)(typescript@6.0.2)
       '@babel/core': 7.26.10
