@@ -14,5 +14,6 @@ ts_project(
         "//src/aria/private/behaviors/expansion",
         "//src/aria/private/behaviors/list",
         "//src/aria/private/behaviors/signal-like",
+        "//src/aria/private/combobox",
     ],
 )

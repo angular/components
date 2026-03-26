@@ -8,32 +8,22 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  Component,
-  computed,
-  signal,
-  viewChild,
-  untracked,
-  linkedSignal,
-} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild, untracked} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title */
+/** @title Simple Combobox Disabled */
 @Component({
-  selector: 'simple-combobox-listbox-inline-example',
-  templateUrl: 'simple-combobox-listbox-inline-example.html',
+  selector: 'simple-combobox-disabled-example',
+  templateUrl: 'simple-combobox-disabled-example.html',
   styleUrl: '../simple-combobox-examples.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-export class SimpleComboboxListboxInlineExample {
+export class SimpleComboboxDisabledExample {
   readonly listbox = viewChild(Listbox);
 
   popupExpanded = signal(false);
   searchString = signal('');
-  selectedOption = linkedSignal<string[]>(() =>
-    this.options().length > 0 ? [this.options()[0]] : [],
-  );
+  selectedOption = signal<string[]>([]);
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -45,7 +35,6 @@ export class SimpleComboboxListboxInlineExample {
     });
 
     afterRenderEffect(() => {
-      this.searchString(); // Make effect run when search text changes
       if (this.popupExpanded()) {
         untracked(() => setTimeout(() => this.listbox()?.gotoFirst()));
       }

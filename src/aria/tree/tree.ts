@@ -184,8 +184,34 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused() && !this._pattern.treeBehavior.inputs.activeItem()) {
-        this._pattern.setDefaultState();
+      const isExpanded = this._popup?.combobox?.expanded() ?? true;
+      const nav = this._popup?.pendingNavigation();
+
+      if (!this._hasFocused() && isExpanded) {
+        const items = inputs.items();
+        const activeItem = untracked(() => inputs.activeItem());
+        const selectedItem = items.find(i => i.selected());
+
+        if (items.length === 0) return;
+
+        if (nav) {
+          if (nav.first) {
+            if (activeItem !== items[0]) {
+              this._pattern.treeBehavior.first();
+            }
+          } else if (nav.last) {
+            const lastItem = items[items.length - 1];
+            if (activeItem !== lastItem) {
+              this._pattern.treeBehavior.last();
+            }
+          } else if (nav.selected) {
+            this._pattern.setDefaultState();
+          }
+
+          untracked(() => this._popup?.pendingNavigation.set(undefined));
+        } else if (!activeItem || (selectedItem && activeItem !== selectedItem)) {
+          this._pattern.setDefaultState();
+        }
       }
     });
 
@@ -226,5 +252,10 @@ export class Tree<V> {
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
     this._pattern.inputs.activeItem()?.element()?.scrollIntoView(options);
+  }
+
+  /** Navigates to the first item in the tree. */
+  gotoFirst() {
+    this._pattern.treeBehavior.first();
   }
 }

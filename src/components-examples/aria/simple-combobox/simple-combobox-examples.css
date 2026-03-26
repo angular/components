@@ -38,7 +38,9 @@
 .example-icon {
   width: 24px;
   height: 24px;
-  font-size: 20px;
+  font-size: 24px;
+    color: var(--mat-sys-on-surface-variant);
+    user-select: none;
   display: grid;
   place-items: center;
   pointer-events: none;
@@ -102,9 +104,6 @@
   cursor: pointer;
   padding: 0.3rem 1rem;
   border-radius: var(--mat-sys-corner-extra-small);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
   display: flex;
   overflow: hidden;
   flex-shrink: 0;
@@ -149,13 +148,15 @@
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
 }
 
-.example-combobox-container:focus-within [data-active='true']:not(button) {
+.example-combobox-container:focus-within [data-active='true'] {
   outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 80%, transparent);
 }
 
 .example-tree {
   padding: 10px;
   overflow-x: scroll;
+  width: 100%;
+    box-sizing: border-box;
 }
 
 .example-tree-item {
@@ -166,12 +167,6 @@
   align-items: center;
   gap: 1rem;
   padding: 0.3rem 1rem;
-  border-radius: var(--mat-sys-corner-extra-small);
-}
-
-.example-tree-item[data-active='true'] {
-  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
-  outline: 2px solid var(--mat-sys-primary);
 }
 
 li[aria-expanded='false']+ul[role='group'] {

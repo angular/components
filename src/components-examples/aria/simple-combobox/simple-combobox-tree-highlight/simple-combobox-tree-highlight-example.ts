@@ -8,7 +8,15 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
-import {Component, afterRenderEffect, computed, signal, viewChild, untracked} from '@angular/core';
+import {
+  Component,
+  afterRenderEffect,
+  computed,
+  signal,
+  viewChild,
+  untracked,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
@@ -18,10 +26,10 @@ interface FoodNode {
   expanded?: boolean;
 }
 
-/** @title */
+/** @title Combobox with tree popup and highlight filtering. */
 @Component({
-  selector: 'simple-combobox-tree-example',
-  templateUrl: 'simple-combobox-tree-example.html',
+  selector: 'simple-combobox-tree-highlight-example',
+  templateUrl: 'simple-combobox-tree-highlight-example.html',
   styleUrl: '../simple-combobox-examples.css',
   imports: [
     Combobox,
@@ -33,8 +41,9 @@ interface FoodNode {
     TreeItemGroup,
     OverlayModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimpleComboboxTreeExample {
+export class SimpleComboboxTreeHighlightExample {
   readonly tree = viewChild(Tree);
 
   popupExpanded = signal(false);
@@ -44,6 +53,17 @@ export class SimpleComboboxTreeExample {
   readonly dataSource = signal(FOOD_DATA);
 
   constructor() {
+    afterRenderEffect(() => {
+      if (this.popupExpanded()) {
+        untracked(() => setTimeout(() => this.tree()?.gotoFirst()));
+      }
+    });
+
+    // Highlight mode focus update
+    afterRenderEffect(() => {
+      this.filteredGroups();
+    });
+
     afterRenderEffect(() => {
       const active = this.tree()?._pattern.inputs.activeItem();
       if (active) {
@@ -85,8 +105,7 @@ export class SimpleComboboxTreeExample {
   onCommit() {
     const selected = this.selectedValues();
     if (selected.length > 0) {
-      const value = selected[0];
-      this.searchString.set(value);
+      this.searchString.set(selected[0]);
       this.popupExpanded.set(false);
     }
   }

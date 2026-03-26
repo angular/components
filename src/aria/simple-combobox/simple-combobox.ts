@@ -25,7 +25,10 @@ import {
   DeferredContentAware,
   SimpleComboboxPattern,
   SimpleComboboxPopupPattern,
+  ComboboxNavigation,
 } from '@angular/aria/private';
+
+import {COMBOBOX_WIDGET} from '../listbox/tokens';
 
 /**
  * The container element that wraps a combobox input and popup, and orchestrates its behavior.
@@ -75,6 +78,9 @@ export class Combobox extends DeferredContentAware {
   /** The popup associated with the combobox. */
   readonly _popup = signal<ComboboxPopup | undefined>(undefined);
 
+  /** The active value of the popup. */
+  readonly activeValue = computed(() => this._popup()?.activeValue());
+
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
@@ -86,6 +92,9 @@ export class Combobox extends DeferredContentAware {
 
   /** An inline suggestion to be displayed in the input. */
   readonly inlineSuggestion = input<string | undefined>(undefined);
+
+  /** The filtering mode for the combobox. */
+  readonly filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
 
   /** The combobox ui pattern. */
   readonly _pattern = new SimpleComboboxPattern({
@@ -151,7 +160,15 @@ export class ComboboxPopup implements OnInit, OnDestroy {
   readonly combobox = input.required<Combobox>();
 
   /** The widget contained within the popup. */
-  readonly _widget = signal<ComboboxWidget | undefined>(undefined);
+  readonly _widget = signal<ComboboxWidget<any> | undefined>(undefined);
+
+  /** The navigation state to apply when the popup expands. */
+  readonly pendingNavigation = signal<ComboboxNavigation | undefined>(undefined);
+
+  /** Sets the navigation state to be applied when the popup is ready. */
+  focusOnReady(nav: ComboboxNavigation) {
+    this.pendingNavigation.set(nav);
+  }
 
   /** The element that serves as the control target for the popup. */
   readonly controlTarget = computed(() => this._widget()?.element);
@@ -162,12 +179,31 @@ export class ComboboxPopup implements OnInit, OnDestroy {
   /** The ID of the active descendant in the popup. */
   readonly activeDescendant = computed(() => this._widget()?.activeDescendant());
 
+  /** The active value of the popup widget. */
+  readonly activeValue = computed(() => this._widget()?.activeValue());
+
   /** The type of the popup (e.g., listbox, tree, grid, dialog). */
   readonly popupType = input<'listbox' | 'tree' | 'grid' | 'dialog'>('listbox');
+
+  /** Navigates to the first item in the popup. */
+  first() {
+    this._widget()?.gotoFirst();
+  }
+
+  /** Navigates to the last item in the popup. */
+  last() {
+    this._widget()?.gotoLast();
+  }
+
+  /** Focuses the currently selected item in the popup. */
+  focusSelected() {
+    this._widget()?.focusSelected();
+  }
 
   /** The popup pattern. */
   readonly _pattern = new SimpleComboboxPopupPattern({
     ...this,
+    focusOnReady: nav => this.focusOnReady(nav),
   });
 
   ngOnInit() {
@@ -180,7 +216,7 @@ export class ComboboxPopup implements OnInit, OnDestroy {
   }
 
   /** Registers a widget with the popup. */
-  _registerWidget(widget: ComboboxWidget) {
+  _registerWidget(widget: ComboboxWidget<any>) {
     this._widget.set(widget);
   }
 
@@ -204,8 +240,9 @@ export class ComboboxPopup implements OnInit, OnDestroy {
     '(focusin)': 'onFocusin()',
     '(focusout)': 'onFocusout($event)',
   },
+  providers: [{provide: COMBOBOX_WIDGET, useExisting: ComboboxWidget}],
 })
-export class ComboboxWidget implements OnInit, OnDestroy {
+export class ComboboxWidget<V> implements OnInit, OnDestroy {
   /** The element that the popup widget is attached to. */
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _popup = inject(ComboboxPopup);
@@ -221,11 +258,22 @@ export class ComboboxWidget implements OnInit, OnDestroy {
   /** The ID of the active descendant in the widget. */
   readonly activeDescendant = signal<string | undefined>(undefined);
 
+  /**
+   * The active value of the option.
+   * This acts as the bridge to pass the currently highlighted option value back to
+   * the headless directive for automated commits on blur!
+   */
+  readonly activeValue = signal<V | undefined>(undefined);
+
+  /** The filter mode of the combobox. */
+  readonly filterMode = computed(() => this._popup.combobox().filterMode());
+
   constructor() {
     afterRenderEffect(() => {
       const controlTarget = this.element;
 
       this.popupId.set(controlTarget.id);
+      this.activeDescendant.set(controlTarget.getAttribute('aria-activedescendant') ?? undefined);
 
       this._observer?.disconnect();
       this._observer = new MutationObserver((mutationsList: MutationRecord[]) => {
@@ -270,5 +318,23 @@ export class ComboboxWidget implements OnInit, OnDestroy {
   /** Handles focus out events for the widget. */
   onFocusout(event: FocusEvent) {
     this._popup._pattern.onFocusout(event);
+  }
+
+  /** Navigates to the first item in the widget. */
+  gotoFirst() {
+    const target = this._popup.controlTarget() as any;
+    if (target?.gotoFirst) {
+      target.gotoFirst();
+    }
+  }
+
+  /** Navigates to the last item in the widget. */
+  gotoLast() {
+    // TODO: implement this in Tree and Listbox if needed, or use behaviors directly.
+  }
+
+  /** Focuses the currently selected item in the widget. */
+  focusSelected() {
+    // The widget handles initial focus via afterRenderEffect in Tree/Listbox.
   }
 }

@@ -9,10 +9,11 @@
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {computed, signal, untracked} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {ComboboxLike, ComboboxNavigation} from '../combobox/combobox';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
 
 /** Represents the required inputs for a simple combobox. */
-export interface SimpleComboboxInputs extends ExpansionItem {
+export interface SimpleComboboxInputs<V> extends ExpansionItem {
   /** The value of the combobox. */
   value: WritableSignalLike<string>;
 
@@ -25,17 +26,26 @@ export interface SimpleComboboxInputs extends ExpansionItem {
   /** An inline suggestion to be displayed in the input. */
   inlineSuggestion: SignalLike<string | undefined>;
 
+  /** The active value in the popup (the option's value). */
+  activeValue: SignalLike<V | undefined>;
+
   /** Whether the combobox is disabled. */
   disabled: SignalLike<boolean>;
+
+  /** The filtering mode for the combobox. */
+  filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
 }
 
 /** Controls the state of a simple combobox. */
-export class SimpleComboboxPattern {
+export class SimpleComboboxPattern<V> {
   /** Whether the combobox is expanded. */
   readonly expanded: WritableSignalLike<boolean>;
 
   /** The value of the combobox. */
   readonly value: WritableSignalLike<string>;
+
+  /** The ID of the currently highlighted item in the popup. */
+  readonly highlightedItem = signal<string | undefined>(undefined);
 
   /** The element that the combobox is attached to. */
   readonly element = () => this.inputs.element();
@@ -147,7 +157,7 @@ export class SimpleComboboxPattern {
     return manager;
   });
 
-  constructor(readonly inputs: SimpleComboboxInputs) {
+  constructor(readonly inputs: SimpleComboboxInputs<V>) {
     this.expanded = inputs.expanded;
     this.value = inputs.value;
   }
@@ -227,6 +237,13 @@ export class SimpleComboboxPattern {
     const comboboxFocused = this.isFocused();
     const popupFocused = !!this.inputs.popup()?.isFocused();
     if (expanded && !comboboxFocused && !popupFocused) {
+      const activeValue = untracked(() => this.inputs.activeValue?.());
+
+      // Auto-commit highlighted item on blur for non-manual modes (auto-select and highlight).
+      // The Listbox pushes its highlighted value here, letting the headless directive sync it.
+      if (activeValue && this.inputs.filterMode() !== 'manual') {
+        this.value.set(activeValue as any); // Type assertion if needed
+      }
       this.expanded.set(false);
     }
   }
@@ -245,6 +262,18 @@ export interface SimpleComboboxPopupInputs {
 
   /** The ID of the popup. */
   popupId: SignalLike<string | undefined>;
+
+  /** Navigates to the first item in the popup. */
+  first: () => void;
+
+  /** Navigates to the last item in the popup. */
+  last: () => void;
+
+  /** Focuses the currently selected item in the popup. */
+  focusSelected: () => void;
+
+  /** Focuses the popup with the given navigation instruction when ready. */
+  focusOnReady: (nav: ComboboxNavigation) => void;
 }
 
 /** Controls the state of a simple combobox popup. */
@@ -263,6 +292,29 @@ export class SimpleComboboxPopupPattern {
 
   /** Whether the popup is focused. */
   readonly isFocused = signal(false);
+
+  /** Navigates to the first item in the popup. */
+  first() {
+    this.inputs.first();
+  }
+
+  /** Navigates to the last item in the popup. */
+  last() {
+    this.inputs.last();
+  }
+
+  /** Focuses the currently selected item in the popup. */
+  focusSelected() {
+    this.inputs.focusSelected();
+  }
+
+  /**
+   * Focuses the popup with the given navigation instruction when ready.
+   * This is used for lazy rendering (when the popup isn't in the DOM yet synchronously).
+   */
+  focusOnReady(nav: ComboboxNavigation) {
+    this.inputs.focusOnReady(nav);
+  }
 
   constructor(readonly inputs: SimpleComboboxPopupInputs) {}
 

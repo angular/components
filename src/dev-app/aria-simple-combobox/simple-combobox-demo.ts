@@ -14,6 +14,14 @@ import {
   SimpleComboboxSelectExample,
   SimpleComboboxGridExample,
   SimpleComboboxDatepickerExample,
+  SimpleComboboxAutoSelectExample,
+  SimpleComboboxHighlightExample,
+  SimpleComboboxDisabledExample,
+  SimpleComboboxReadonlyDisabledExample,
+  SimpleComboboxReadonlyMultiselectExample,
+  SimpleComboboxDialogExample,
+  SimpleComboboxTreeAutoSelectExample,
+  SimpleComboboxTreeHighlightExample,
 } from '@angular/components-examples/aria/simple-combobox';
 
 @Component({
@@ -26,6 +34,14 @@ import {
     SimpleComboboxSelectExample,
     SimpleComboboxGridExample,
     SimpleComboboxDatepickerExample,
+    SimpleComboboxAutoSelectExample,
+    SimpleComboboxHighlightExample,
+    SimpleComboboxDisabledExample,
+    SimpleComboboxReadonlyDisabledExample,
+    SimpleComboboxReadonlyMultiselectExample,
+    SimpleComboboxDialogExample,
+    SimpleComboboxTreeAutoSelectExample,
+    SimpleComboboxTreeHighlightExample,
   ],
 })
 export class ComboboxDemo {}

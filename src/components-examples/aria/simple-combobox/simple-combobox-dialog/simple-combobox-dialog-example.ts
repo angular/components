@@ -10,54 +10,57 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-comb
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
+  ChangeDetectionStrategy,
   Component,
   computed,
   signal,
   viewChild,
   untracked,
-  linkedSignal,
 } from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {FormsModule} from '@angular/forms';
 
-/** @title */
+/** @title Combobox with a dialog popup. */
 @Component({
-  selector: 'simple-combobox-listbox-inline-example',
-  templateUrl: 'simple-combobox-listbox-inline-example.html',
+  selector: 'simple-combobox-dialog-example',
+  templateUrl: 'simple-combobox-dialog-example.html',
   styleUrl: '../simple-combobox-examples.css',
-  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimpleComboboxListboxInlineExample {
-  readonly listbox = viewChild(Listbox);
+export class SimpleComboboxDialogExample {
+  listbox = viewChild<Listbox<string>>(Listbox);
+  combobox = viewChild(Combobox);
 
-  popupExpanded = signal(false);
+  value = signal('');
   searchString = signal('');
-  selectedOption = linkedSignal<string[]>(() =>
-    this.options().length > 0 ? [this.options()[0]] : [],
-  );
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
   );
 
+  selectedStates = signal<string[]>([]);
+  popupExpanded = signal(false);
+
   constructor() {
     afterRenderEffect(() => {
-      this.listbox()?.scrollActiveItemIntoView();
+      if (this.popupExpanded()) {
+        untracked(() => setTimeout(() => this.listbox()?.gotoFirst()));
+      }
     });
 
     afterRenderEffect(() => {
-      this.searchString(); // Make effect run when search text changes
-      if (this.popupExpanded()) {
-        untracked(() => setTimeout(() => this.listbox()?.gotoFirst()));
+      const selected = this.selectedStates();
+      if (selected.length > 0) {
+        this.value.set(selected[0]);
+        this.searchString.set('');
+        this.popupExpanded.set(false);
       }
     });
   }
 
   onCommit() {
-    const selectedOption = this.selectedOption();
-    if (selectedOption.length > 0) {
-      this.searchString.set(selectedOption[0]);
-      this.popupExpanded.set(false);
-    }
+    // Triggered on list item click/enter
   }
 }
 
@@ -113,3 +116,4 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ];
+// Force watcher update

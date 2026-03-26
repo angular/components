@@ -18,6 +18,9 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 
   /** Whether the listbox is readonly. */
   readonly: SignalLike<boolean>;
+
+  /** Whether the listbox is in a popup or widget context. */
+  hasPopup?: SignalLike<boolean>;
 };
 
 /** Controls the state of a listbox. */
@@ -135,8 +138,12 @@ export class ListboxPattern<V> {
     }
 
     if (!this.followFocus() && !this.inputs.multi()) {
-      manager.on(this.dynamicSpaceKey, () => this.listBehavior.toggleOne());
-      manager.on('Enter', () => this.listBehavior.toggleOne());
+      manager.on(this.dynamicSpaceKey, () =>
+        this.inputs.hasPopup?.() ? this.listBehavior.selectOne() : this.listBehavior.toggleOne(),
+      );
+      manager.on('Enter', () =>
+        this.inputs.hasPopup?.() ? this.listBehavior.selectOne() : this.listBehavior.toggleOne(),
+      );
     }
 
     if (this.inputs.multi() && this.followFocus()) {
