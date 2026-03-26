@@ -1402,18 +1402,22 @@ describe('MatTooltip', () => {
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       fixture.detectChanges();
 
-      const inputStyle = fixture.componentInstance.input.nativeElement.style;
-      const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
+      const inputStyle = fixture.componentInstance.input.nativeElement.style as unknown as Record<
+        string,
+        string
+      >;
+      const textareaStyle = fixture.componentInstance.textarea.nativeElement
+        .style as unknown as Record<string, string>;
 
-      expect(inputStyle.userSelect).toBeFalsy();
-      expect(inputStyle.webkitUserSelect).toBeFalsy();
-      expect(inputStyle.msUserSelect).toBeFalsy();
-      expect(inputStyle.MozUserSelect).toBeFalsy();
+      expect(inputStyle['userSelect']).toBeFalsy();
+      expect(inputStyle['webkitUserSelect']).toBeFalsy();
+      expect(inputStyle['msUserSelect']).toBeFalsy();
+      expect(inputStyle['MozUserSelect']).toBeFalsy();
 
-      expect(textareaStyle.userSelect).toBeFalsy();
-      expect(textareaStyle.webkitUserSelect).toBeFalsy();
-      expect(textareaStyle.msUserSelect).toBeFalsy();
-      expect(textareaStyle.MozUserSelect).toBeFalsy();
+      expect(textareaStyle['userSelect']).toBeFalsy();
+      expect(textareaStyle['webkitUserSelect']).toBeFalsy();
+      expect(textareaStyle['msUserSelect']).toBeFalsy();
+      expect(textareaStyle['MozUserSelect']).toBeFalsy();
     });
 
     it('should disable text selection on inputs when gestures are set to on', () => {
@@ -1421,18 +1425,22 @@ describe('MatTooltip', () => {
       fixture.componentInstance.touchGestures = 'on';
       fixture.detectChanges();
 
-      const inputStyle = fixture.componentInstance.input.nativeElement.style;
+      const inputStyle = fixture.componentInstance.input.nativeElement.style as unknown as Record<
+        string,
+        string
+      >;
       const inputUserSelect =
-        inputStyle.userSelect ||
-        inputStyle.webkitUserSelect ||
-        inputStyle.msUserSelect ||
-        inputStyle.MozUserSelect;
-      const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
+        inputStyle['userSelect'] ||
+        inputStyle['webkitUserSelect'] ||
+        inputStyle['msUserSelect'] ||
+        inputStyle['MozUserSelect'];
+      const textareaStyle = fixture.componentInstance.textarea.nativeElement
+        .style as unknown as Record<string, string>;
       const textareaUserSelect =
-        textareaStyle.userSelect ||
-        textareaStyle.webkitUserSelect ||
-        textareaStyle.msUserSelect ||
-        textareaStyle.MozUserSelect;
+        textareaStyle['userSelect'] ||
+        textareaStyle['webkitUserSelect'] ||
+        textareaStyle['msUserSelect'] ||
+        textareaStyle['MozUserSelect'];
 
       expect(inputUserSelect).toBe('none');
       expect(textareaUserSelect).toBe('none');

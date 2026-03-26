@@ -11,16 +11,6 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {formatErrorEventForAnalytics} from './format-error';
 
-/** Extension of `Window` with potential Google Analytics fields. */
-declare global {
-  interface Window {
-    dataLayer?: any[];
-    gtag?(...args: any[]): void;
-    /** Legacy Universal Analytics `analytics.js` field. */
-    ga?(...args: any[]): void;
-  }
-}
-
 /**
  * Google Analytics Service - captures app behaviors and sends them to Google Analytics.
  *
@@ -34,6 +24,13 @@ declare global {
 @Injectable({providedIn: 'root'})
 export class AnalyticsService {
   private _previousUrl: string | undefined;
+  private _gaWindow = window as Window &
+    typeof globalThis & {
+      dataLayer?: any[];
+      gtag?(...args: any[]): void;
+      /** Legacy Universal Analytics `analytics.js` field. */
+      ga?(...args: any[]): void;
+    };
 
   constructor() {
     this._installGlobalSiteTag();
@@ -71,34 +68,31 @@ export class AnalyticsService {
   }
 
   private _legacyGa(...args: any[]) {
-    if (window.ga) {
-      window.ga(...args);
-    }
+    this._gaWindow.ga?.(...args);
   }
 
   private _gtag(...args: any[]) {
-    if (window.gtag) {
-      window.gtag(...args);
-    }
+    this._gaWindow.gtag?.(...args);
   }
 
   private _installGlobalSiteTag() {
+    const gaWindow = this._gaWindow;
     const url = `https://www.googletagmanager.com/gtag/js?id=${environment.googleAnalyticsMaterialId}`;
 
     // Note: This cannot be an arrow function as `gtag.js` expects an actual `Arguments`
     // instance with e.g. `callee` to be set. Do not attempt to change this and keep this
     // as much as possible in sync with the tracking code snippet suggested by the Google
     // Analytics 4 web UI under `Data Streams`.
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () {
-      window.dataLayer?.push(arguments);
+    gaWindow.dataLayer = gaWindow.dataLayer || [];
+    gaWindow.gtag = function () {
+      gaWindow.dataLayer?.push(arguments);
     };
-    window.gtag('js', new Date());
+    gaWindow.gtag('js', new Date());
 
     // Configure properties before loading the script. This is necessary to avoid
     // loading multiple instances of the gtag JS scripts.
-    window.gtag('config', environment.googleAnalyticsOverallDomainId);
-    window.gtag('config', environment.googleAnalyticsMaterialId);
+    gaWindow.gtag('config', environment.googleAnalyticsOverallDomainId);
+    gaWindow.gtag('config', environment.googleAnalyticsMaterialId);
 
     // skip `gtag` for Protractor e2e tests.
     if (window.name.includes('NG_DEFER_BOOTSTRAP')) {

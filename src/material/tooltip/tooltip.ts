@@ -56,15 +56,6 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {Observable, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
 
-declare global {
-  interface CSSStyleDeclaration {
-    msUserSelect: string;
-    MozUserSelect: string;
-    webkitUserDrag: string;
-    webkitTapHighlightColor: string;
-  }
-}
-
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -884,26 +875,26 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     if (gestures !== 'off') {
       const element = this._elementRef.nativeElement;
-      const style = element.style;
+      const style = element.style as unknown as Record<string, string>;
 
       // If gestures are set to `auto`, we don't disable text selection on inputs and
       // textareas, because it prevents the user from typing into them on iOS Safari.
       if (gestures === 'on' || (element.nodeName !== 'INPUT' && element.nodeName !== 'TEXTAREA')) {
-        style.userSelect =
-          style.msUserSelect =
-          style.webkitUserSelect =
-          style.MozUserSelect =
+        style['userSelect'] =
+          style['msUserSelect'] =
+          style['webkitUserSelect'] =
+          style['MozUserSelect'] =
             'none';
       }
 
       // If we have `auto` gestures and the element uses native HTML dragging,
       // we don't set `-webkit-user-drag` because it prevents the native behavior.
       if (gestures === 'on' || !element.draggable) {
-        style.webkitUserDrag = 'none';
+        style['webkitUserDrag'] = 'none';
       }
 
-      style.touchAction = 'none';
-      style.webkitTapHighlightColor = 'transparent';
+      style['touchAction'] = 'none';
+      style['webkitTapHighlightColor'] = 'transparent';
     }
   }
 
