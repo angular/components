@@ -175,32 +175,32 @@
       },
       "@angular/common": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       },
       "@angular/forms": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       },
       "@angular/platform-browser": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       },
       "@angular/router": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       },
       "@angular/localize": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       },
       "@angular/platform-server": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.9"
+          "@nginfra/angular-linking": "1.0.11"
         }
       }
     }

@@ -61,7 +61,7 @@ catalogs:
 overrides:
   typescript: 5.9.2
 
-packageExtensionsChecksum: sha256-aKJQSfkoOl79hd5DYaabzHnSDIJkX/dIHNav8Qv+Vb8=
+packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
 
 importers:
 
@@ -2910,8 +2910,8 @@ packages:
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
-  '@nginfra/angular-linking@1.0.9':
-    resolution: {integrity: sha512-25cph8loaVTzSxD6Ll5vjUhm/xxbr1OHLaH/kh464yOMaiK2eKYpNdnIPpfsTFStrwh5/3wKTWTNSCFvjgeTiQ==}
+  '@nginfra/angular-linking@1.0.11':
+    resolution: {integrity: sha512-X0fFp9cDIzyS53dstFalPM6nSPtQz/XoBsPFMOmxE66jBIfJGW8W2wQWlk1T+t018eXEC8RgPdKluo6Aw5dm+g==}
     peerDependencies:
       '@angular/compiler-cli': '*'
 
@@ -8259,7 +8259,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   q@1.5.1:
@@ -8267,7 +8266,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qjobs@1.2.0:
@@ -10347,7 +10345,7 @@ snapshots:
   '@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)':
     dependencies:
       '@angular/core': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1)
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -10387,7 +10385,7 @@ snapshots:
       '@angular/common': 21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 21.2.0-rc.0(@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       '@standard-schema/spec': 1.1.0
       rxjs: 6.6.7
       tslib: 2.8.1
@@ -10400,7 +10398,7 @@ snapshots:
       '@angular/compiler': 21.2.0-rc.0
       '@angular/compiler-cli': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2)
       '@babel/core': 7.29.0
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       '@types/babel__core': 7.20.5
       tinyglobby: 0.2.15
       yargs: 18.0.0
@@ -10480,7 +10478,7 @@ snapshots:
     dependencies:
       '@angular/common': 21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1)
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
@@ -10492,7 +10490,7 @@ snapshots:
       '@angular/compiler': 21.2.0-rc.0
       '@angular/core': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 21.2.0-rc.0(@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       rxjs: 6.6.7
       tslib: 2.8.1
       xhr2: 0.2.1
@@ -10505,7 +10503,7 @@ snapshots:
       '@angular/common': 21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7)
       '@angular/core': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1)
       '@angular/platform-browser': 21.2.0-rc.0(@angular/common@21.2.0-rc.0(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))(@angular/core@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(rxjs@6.6.7)(zone.js@0.16.1))
-      '@nginfra/angular-linking': 1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
+      '@nginfra/angular-linking': 1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -12564,7 +12562,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nginfra/angular-linking@1.0.9(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))':
+  '@nginfra/angular-linking@1.0.11(@angular/compiler-cli@21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2))':
     dependencies:
       '@angular/compiler-cli': 21.2.0-rc.0(@angular/compiler@21.2.0-rc.0)(typescript@5.9.2)
       '@babel/core': 7.26.10
@@ -14280,9 +14278,9 @@ snapshots:
       domhandler: 5.0.3
       htmlparser2: 10.1.0
       picocolors: 1.1.1
-      postcss: 8.5.6
+      postcss: 8.5.8
       postcss-media-query-parser: 0.2.3
-      postcss-safe-parser: 7.0.1(postcss@8.5.6)
+      postcss-safe-parser: 7.0.1(postcss@8.5.8)
 
   before-after-hook@4.0.0: {}
 
@@ -14910,12 +14908,12 @@ snapshots:
 
   css-loader@7.1.3(webpack@5.105.2(esbuild@0.27.3)):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
-      postcss-modules-extract-imports: 3.1.0(postcss@8.5.6)
-      postcss-modules-local-by-default: 4.2.0(postcss@8.5.6)
-      postcss-modules-scope: 3.2.1(postcss@8.5.6)
-      postcss-modules-values: 4.0.0(postcss@8.5.6)
+      icss-utils: 5.1.0(postcss@8.5.8)
+      postcss: 8.5.8
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.8)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.8)
+      postcss-modules-scope: 3.2.1(postcss@8.5.8)
+      postcss-modules-values: 4.0.0(postcss@8.5.8)
       postcss-value-parser: 4.2.0
       semver: 7.7.4
     optionalDependencies:
@@ -16577,9 +16575,9 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  icss-utils@5.1.0(postcss@8.5.6):
+  icss-utils@5.1.0(postcss@8.5.8):
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.8
 
   idb@7.1.1: {}
 
@@ -18446,26 +18444,26 @@ snapshots:
 
   postcss-media-query-parser@0.2.3: {}
 
-  postcss-modules-extract-imports@3.1.0(postcss@8.5.6):
+  postcss-modules-extract-imports@3.1.0(postcss@8.5.8):
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.8
 
-  postcss-modules-local-by-default@4.2.0(postcss@8.5.6):
+  postcss-modules-local-by-default@4.2.0(postcss@8.5.8):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
+      icss-utils: 5.1.0(postcss@8.5.8)
+      postcss: 8.5.8
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
 
-  postcss-modules-scope@3.2.1(postcss@8.5.6):
+  postcss-modules-scope@3.2.1(postcss@8.5.8):
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.8
       postcss-selector-parser: 7.1.1
 
-  postcss-modules-values@4.0.0(postcss@8.5.6):
+  postcss-modules-values@4.0.0(postcss@8.5.8):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.5.6)
-      postcss: 8.5.6
+      icss-utils: 5.1.0(postcss@8.5.8)
+      postcss: 8.5.8
 
   postcss-resolve-nested-selector@0.1.6: {}
 
@@ -18473,9 +18471,9 @@ snapshots:
     dependencies:
       postcss: 8.5.8
 
-  postcss-safe-parser@7.0.1(postcss@8.5.6):
+  postcss-safe-parser@7.0.1(postcss@8.5.8):
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.8
 
   postcss-scss@4.0.9(postcss@8.5.8):
     dependencies:
@@ -18926,7 +18924,7 @@ snapshots:
       adjust-sourcemap-loader: 4.0.0
       convert-source-map: 1.9.0
       loader-utils: 2.0.4
-      postcss: 8.5.6
+      postcss: 8.5.8
       source-map: 0.6.1
 
   resolve@1.1.7: {}
@@ -20358,7 +20356,7 @@ snapshots:
       esbuild: 0.27.3
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-      postcss: 8.5.6
+      postcss: 8.5.8
       rollup: 4.59.0
       tinyglobby: 0.2.15
     optionalDependencies:
