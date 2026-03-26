@@ -3,12 +3,6 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {Component, ViewChild} from '@angular/core';
 
-declare global {
-  interface Window {
-    ngDevMode?: object | null;
-  }
-}
-
 describe('MatTableDataSource', () => {
   describe('sort', () => {
     let dataSource: MatTableDataSource<{'prop': string | number}>;
@@ -95,7 +89,7 @@ describe('MatTableDataSource', () => {
 
     it('does not warn in non-dev mode when filtering non-object data', fakeAsync(() => {
       const warnSpy = spyOn(console, 'warn');
-      window.ngDevMode = null;
+      (window as any).ngDevMode = null;
       dataSource.data = [1, 2, 3, 4, 5] as unknown as {'prop': number}[];
 
       dataSource.filter = '1';
@@ -107,7 +101,7 @@ describe('MatTableDataSource', () => {
 
     it('displays the warning in dev mode when filtering non-object data', fakeAsync(() => {
       const warnSpy = spyOn(console, 'warn');
-      window.ngDevMode = {};
+      (window as any).ngDevMode = {};
       dataSource.data = [1, 2, 3, 4, 5] as unknown as {'prop': number}[];
 
       dataSource.filter = '1';
