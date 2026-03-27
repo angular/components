@@ -27,7 +27,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
-        "//src/material/core",
         "//src/material/core/option",
     ],
 )

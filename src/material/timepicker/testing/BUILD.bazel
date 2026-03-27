@@ -12,7 +12,6 @@ ts_project(
         "//src/cdk/coercion",
         "//src/cdk/testing",
         "//src/material/core/testing",
-        "//src/material/timepicker",
     ],
 )
 
@@ -30,7 +29,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
-        "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
         "//src/material/core",
         "//src/material/timepicker",

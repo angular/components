@@ -25,7 +25,6 @@ ng_project(
         "//src/material/input",
         "//src/material/select",
         "//src/material/tooltip",
-        "//src/material/tooltip/testing",
     ],
 )
 

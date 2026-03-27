@@ -22,7 +22,6 @@ ng_project(
         "//src/cdk/testing/testbed",
         "//src/material/icon",
         "//src/material/list",
-        "//src/material/list/testing",
     ],
 )
 

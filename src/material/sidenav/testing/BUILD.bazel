@@ -9,7 +9,6 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk/coercion",
         "//src/cdk/testing",
     ],
 )

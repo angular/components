@@ -21,7 +21,6 @@ ng_project(
         "//src/material/button",
         "//src/material/datepicker",
         "//src/material/expansion",
-        "//src/material/expansion/testing",
         "//src/material/icon",
         "//src/material/input",
     ],

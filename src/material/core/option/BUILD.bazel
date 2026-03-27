@@ -67,9 +67,7 @@ ng_project(
         "//src/cdk/keycodes",
         "//src/cdk/private",
         "//src/material/core:ripple",
-        "//src/material/core/common-behaviors",
         "//src/material/core/focus-indicators:internal",
-        "//src/material/core/selection",
         "//src/material/core/selection/pseudo-checkbox",
     ],
 )

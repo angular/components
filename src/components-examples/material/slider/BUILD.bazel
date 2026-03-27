@@ -23,7 +23,6 @@ ng_project(
         "//src/material/checkbox",
         "//src/material/input",
         "//src/material/slider",
-        "//src/material/slider/testing",
     ],
 )
 

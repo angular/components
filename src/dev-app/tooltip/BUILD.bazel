@@ -9,6 +9,5 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/components-examples/material/tooltip",
-        "//src/dev-app/example",
     ],
 )

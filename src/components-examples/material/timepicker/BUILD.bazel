@@ -26,7 +26,6 @@ ng_project(
         "//src/material/icon",
         "//src/material/input",
         "//src/material/timepicker",
-        "//src/material/timepicker/testing",
     ],
 )
 
