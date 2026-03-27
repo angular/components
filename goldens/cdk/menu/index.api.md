@@ -38,6 +38,9 @@ import { ViewContainerRef } from '@angular/core';
 export const CDK_MENU: InjectionToken<Menu>;
 
 // @public
+export const CDK_MENU_DEFAULT_OPTIONS: InjectionToken<CdkMenuDefaultOptions>;
+
+// @public
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
     constructor();
     close(): void;
@@ -46,6 +49,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     static ngAcceptInputType_disabled: unknown;
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
+    readonly _overlayPanelClass: string[];
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "transformOriginSelector": { "alias": "cdkContextMenuTriggerTransformOriginOn"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
     // (undocumented)
@@ -114,6 +118,13 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["_allItems"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuBase, never>;
+}
+
+// @public
+export interface CdkMenuDefaultOptions {
+    backdropClass?: string;
+    hasBackdrop?: boolean;
+    overlayPanelClass?: string | string[];
 }
 
 // @public
@@ -221,6 +232,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;
+    readonly _overlayPanelClass: string[];
     _setHasFocus(hasFocus: boolean): void;
     toggle(): void;
     _toggleOnKeydown(event: KeyboardEvent): void;
