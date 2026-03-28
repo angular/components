@@ -201,7 +201,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** The percentage of the slider that coincides with the value. */
   get percentage(): number {
     if (this._slider.min >= this._slider.max) {
-      return this._slider._isRtl ? 1 : 0;
+      return this._slider._isRtl() ? 1 : 0;
     }
     return (this.value - this._slider.min) / (this._slider.max - this._slider.min);
   }
@@ -209,7 +209,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /** @docs-private */
   get fillPercentage(): number {
     if (!this._slider._cachedWidth) {
-      return this._slider._isRtl ? 1 : 0;
+      return this._slider._isRtl() ? 1 : 0;
     }
     if (this._translateX === 0) {
       return 0;
@@ -446,7 +446,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     const width = this._slider._cachedWidth;
     const step = this._slider.step === 0 ? 1 : this._slider.step;
     const numSteps = Math.floor((this._slider.max - this._slider.min) / step);
-    const percentage = this._slider._isRtl ? 1 - xPos / width : xPos / width;
+    const percentage = this._slider._isRtl() ? 1 - xPos / width : xPos / width;
 
     // To ensure the percentage is rounded to the necessary number of decimals.
     const fixedPercentage = Math.round(percentage * numSteps) / numSteps;
@@ -507,7 +507,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   }
 
   _calcTranslateXByValue(): number {
-    if (this._slider._isRtl) {
+    if (this._slider._isRtl()) {
       return (
         (1 - this.percentage) * (this._slider._cachedWidth - this._tickMarkOffset * 2) +
         this._tickMarkOffset
@@ -652,7 +652,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   _setIsLeftThumb(): void {
     this._isLeftThumb =
-      (this._isEndThumb && this._slider._isRtl) || (!this._isEndThumb && !this._slider._isRtl);
+      (this._isEndThumb && this._slider._isRtl()) || (!this._isEndThumb && !this._slider._isRtl());
   }
 
   /** Whether this slider corresponds to the input on the left hand side. */
