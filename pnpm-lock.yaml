@@ -213,8 +213,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.4
       firebase-tools:
-        specifier: 15.11.0
-        version: 15.11.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
+        specifier: 15.12.0
+        version: 15.12.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.4
@@ -288,8 +288,8 @@ importers:
         specifier: ^4.52.3
         version: 4.59.0
       rollup-plugin-dts:
-        specifier: 6.4.0
-        version: 6.4.0(rollup@4.59.0)(typescript@6.0.2)
+        specifier: 6.4.1
+        version: 6.4.1(rollup@4.59.0)(typescript@6.0.2)
       rollup-plugin-sourcemaps2:
         specifier: 0.5.6
         version: 0.5.6(@types/node@22.19.15)(rollup@4.59.0)
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.11.0
-        version: 15.11.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
+        specifier: 15.12.0
+        version: 15.12.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.1.0
@@ -5727,8 +5727,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.11.0:
-    resolution: {integrity: sha512-Ky2sBl9puYShitmwQWdADOMNUod89G2mghnp5vF41Vl1U0+iDL72jm0fN4tAoaH+8Z8w8wpqkELZtIV8wthW3w==}
+  firebase-tools@15.12.0:
+    resolution: {integrity: sha512-/7zGgP+RovsIfzXIMRvv9K9q5/50GAkR2uwkbNYQqUcM/qCRRPvdtSKSf143c9NGQ/pQlSHqOoPco1b9ls1aRQ==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8207,6 +8207,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   q@1.5.1:
@@ -8214,6 +8215,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qjobs@1.2.0:
@@ -8461,9 +8463,9 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  rollup-plugin-dts@6.4.0:
-    resolution: {integrity: sha512-2i00A5UoPCoDecLEs13Eu105QegSGfrbp1sDeUj/54LKGmv6XFHDxWKC6Wsb4BobGUWYVCWWjmjAc8bXXbXH/Q==}
-    engines: {node: '>=16'}
+  rollup-plugin-dts@6.4.1:
+    resolution: {integrity: sha512-l//F3Zf7ID5GoOfLfD8kroBjQKEKpy1qfhtAdnpibFZMffPaylrg1CoDC2vGkPeTeyxUe4bVFCln2EFuL7IGGg==}
+    engines: {node: '>=20'}
     peerDependencies:
       rollup: ^3.29.4 || ^4
       typescript: 6.0.2
@@ -15789,7 +15791,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.11.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2):
+  firebase-tools@15.12.0(@types/node@22.19.15)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.15)(typescript@6.0.2)
       '@apphosting/common': 0.0.8
@@ -15854,6 +15856,7 @@ snapshots:
       stream-chain: 2.2.5
       stream-json: 1.9.1
       superstatic: 10.0.0(encoding@0.1.13)
+      tar: 7.5.11
       tcp-port-used: 1.0.2
       tmp: 0.2.5
       triple-beam: 1.4.1
@@ -18964,7 +18967,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.9
       '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.9
 
-  rollup-plugin-dts@6.4.0(rollup@4.59.0)(typescript@6.0.2):
+  rollup-plugin-dts@6.4.1(rollup@4.59.0)(typescript@6.0.2):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.5.5
