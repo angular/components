@@ -341,7 +341,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _sortedHeaders = new QueryList<CdkStepHeader>();
 
   /** Whether the validity of previous steps should be checked or not. */
-  @Input({transform: booleanAttribute}) linear: boolean = false;
+  @Input({transform: booleanAttribute})
+  get linear(): boolean {
+    return this._linear();
+  }
+  set linear(value: boolean) {
+    this._linear.set(value);
+  }
+  private _linear = signal(false);
 
   /** The index of the selected step. */
   @Input({transform: numberAttribute})
