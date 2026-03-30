@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken, ChangeDetectorRef, WritableSignal} from '@angular/core';
+import {InjectionToken, ChangeDetectorRef, WritableSignal, Signal} from '@angular/core';
 import {MatRipple, RippleGlobalOptions} from '../core';
 
 /**
@@ -107,7 +107,7 @@ export interface _MatSlider {
   _isRange: boolean;
 
   /** Whether the slider is rtl. */
-  _isRtl: boolean;
+  _isRtl: Signal<boolean>;
 
   /** The stored width of the host element's bounding client rect. */
   _cachedWidth: number;
