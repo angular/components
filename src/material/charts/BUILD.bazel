@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_project",
     "ng_web_test_suite",
@@ -12,6 +13,7 @@ sass_library(
     name = "m3",
     srcs = ["_m3-chart.scss"],
     deps = [
+        "//src/material/core/style:sass_utils",
         "//src/material/core/tokens:m3_utils",
     ],
 )
@@ -79,6 +81,11 @@ ng_web_test_suite(
 markdown_to_html(
     name = "overview",
     srcs = [":charts.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":theme"],
 )
 
 filegroup(

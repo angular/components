@@ -50,6 +50,14 @@
   @include token-utils.values($tokens);
 }
 
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @each $token, $value in $tokens {
+    --mat-chart-#{$token}: #{$value};
+  }
+}
+
 /// Outputs all theme styles for the mat-chart.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {String} $color-variant The color variant to use.
