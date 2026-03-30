@@ -1,4 +1,5 @@
 import {runfiles} from '@bazel/runfiles';
+import * as fs from 'fs';
 import * as path from 'path';
 import {compileString} from 'sass';
 
@@ -25,27 +26,25 @@ function transpile(content: string) {
 }
 
 describe('CSS cascade layers', () => {
-  it('wraps mat.theme in @layer when third argument is set', () => {
+  it('wraps mat.theme with mat.theme-layer', () => {
     const css = transpile(`
-      html {
-        @include mat.theme(
-          (
+      @include mat.theme-layer {
+        html {
+          @include mat.theme((
             color: (
               theme-type: light,
               primary: mat.$violet-palette,
             ),
             typography: Roboto,
             density: 0,
-          ),
-          (),
-          mat.$default-cascade-layer-name
-        );
+          ));
+        }
       }
     `);
     expect(css).toContain('@layer angular-material');
   });
 
-  it('does not emit @layer when third argument is omitted', () => {
+  it('does not emit @layer when theme-layer is omitted', () => {
     const css = transpile(`
       html {
         @include mat.theme((
@@ -58,24 +57,23 @@ describe('CSS cascade layers', () => {
         ));
       }
     `);
-    expect(css).not.toContain('@layer');
+    expect(css).not.toContain('@layer angular-material');
   });
 
-  it('wraps output for with-cascade-layer', () => {
-    const css = transpile(`
-      html {
-        @include mat.with-cascade-layer(custom-layer) {
-          @include mat.theme((
-            color: (
-              theme-type: light,
-              primary: mat.$violet-palette,
-            ),
-            typography: Roboto,
-            density: 0,
-          ));
-        }
-      }
-    `);
-    expect(css).toContain('@layer custom-layer');
+  it('wraps compiled component CSS in the angular-material layer', () => {
+    const css = fs.readFileSync(
+      runfiles.resolveWorkspaceRelative('src/material/button/button.css'),
+      'utf8',
+    );
+    expect(css).toMatch(/^@layer angular-material \{/);
+    expect(css).toContain('.mat-mdc-button-base');
+  });
+
+  it('wraps prebuilt theme CSS in the angular-material layer', () => {
+    const css = fs.readFileSync(
+      runfiles.resolveWorkspaceRelative('src/material/prebuilt-themes/azure-blue.css'),
+      'utf8',
+    );
+    expect(css).toMatch(/^@layer angular-material \{/);
   });
 });

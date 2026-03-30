@@ -2,17 +2,15 @@
 
 $theme: mat.define-theme();
 
-html {
-  @include mat.theme(
-    (
+@include mat.theme-layer {
+  html {
+    @include mat.theme((
       color: (
         theme-type: light,
         primary: mat.$violet-palette,
       ),
       typography: Roboto,
       density: 0,
-    ),
-    (),
-    mat.$default-cascade-layer-name
-  );
+    ));
+  }
 }

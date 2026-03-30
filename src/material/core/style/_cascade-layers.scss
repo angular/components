@@ -1,21 +1,14 @@
-// Cascade layers for Angular Material (CSS Cascade Module Level 5).
-// Compose with app-authored @layer ordering. CDK also uses layers in published CSS
-// (`cdk-overlay` for overlay structural styles, `cdk-resets` for drag-drop); declare
-// layer order once, e.g. @layer reset, cdk-resets, cdk-overlay, angular-material,
-// overrides;
+// Angular Material uses a fixed layer name so shipped component CSS and Sass-emitted theme
+// output can participate in the same app-authored @layer ordering.
+$private-layer-name: angular-material;
 
-/// Default layer name for Material theme output when using cascade-layer helpers.
-$default-cascade-layer-name: angular-material !default;
-
-/// Wraps emitted CSS in a named cascade [@layer](https://www.w3.org/TR/css-cascade-5/#layering).
+/// Wraps emitted CSS in Angular Material's cascade layer.
 ///
-/// Unlayered author styles sort after explicit layers in the cascade, so they can override
-/// rules inside this layer without higher specificity. For overrides in named layers, declare
-/// those layers after `angular-material` (or your chosen name) in a prelude `@layer` rule.
-///
-/// @param {String} $name Layer name (may use nested syntax such as `app.material`).
-@mixin with-cascade-layer($name: $default-cascade-layer-name) {
-  @layer #{$name} {
+/// Use this around Angular Material theme mixins such as `mat.theme`,
+/// `mat.all-component-themes`, or individual component theme mixins when you want their
+/// output to align with the layer used by Angular Material's shipped component CSS.
+@mixin theme-layer {
+  @layer #{$private-layer-name} {
     @content;
   }
 }

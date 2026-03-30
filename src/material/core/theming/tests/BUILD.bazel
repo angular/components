@@ -91,6 +91,8 @@ jasmine_test(
         ":unit_test_lib",
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
+        "//src/material/button:css",
+        "//src/material/prebuilt-themes:azure-blue",
     ],
     no_copy_to_bin = [
         "//src/material:sass_lib",
