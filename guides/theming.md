@@ -48,6 +48,61 @@ html {
 }
 ```
 
+### CSS cascade layers
+
+You can place `mat.theme` output in a
+[CSS cascade layer](https://www.w3.org/TR/css-cascade-5/#layering) so normalization,
+Angular CDK/Material, and app overrides stay predictable. For background, see
+[MDN: Cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
+
+**Layer order.** Declare the order of named layers (including
+[from CDK](https://github.com/angular/components/blob/main/src/cdk/overlay/_index.scss)
+`cdk-overlay` and `cdk-resets` when you use those packages) before other rules, for example:
+
+```scss
+@layer reset, cdk-resets, cdk-overlay, angular-material, overrides;
+```
+
+**Default is unlayered.** `mat.theme` does not use a layer unless you opt in.
+
+Use either the optional third argument:
+
+```scss
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      typography: Roboto,
+      density: 0,
+    ),
+    (),
+    mat.$default-cascade-layer-name
+  );
+}
+```
+
+or wrap the mixin with `with-cascade-layer` and a custom name:
+
+```scss
+@include mat.with-cascade-layer(custom-material) {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+```
+
+**Cascade note.** In the CSS Cascade Level 5 model, unlayered author declarations participate in an
+implicit outer layer with higher priority than explicit named layers. Unlayered rules can therefore
+override layered Material at equal specificity. Overrides that live in named layers must appear after
+your Material layer in the prelude `@layer` list (or use higher specificity / `!important` as usual).
+
+Per-component styles from Angular Material are emitted in separate stylesheets and are not placed
+in this layer by default; this feature applies to the system variables emitted by `mat.theme`.
+
 You can use the following styles to apply the theme’s surface background and
 on-surface text colors as a default across your application:
 

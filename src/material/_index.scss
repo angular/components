@@ -33,6 +33,8 @@
   $private-ease-in-out-curve-function, $private-swift-ease-out-duration, $private-xsmall;
 @forward './core/style/sass-utils' as private-*;
 @forward './core/style/validation' as private-*;
+@forward './core/style/cascade-layers' show $default-cascade-layer-name,
+  with-cascade-layer;
 
 // Structural
 @forward './core/core' show core, app-background, elevation-classes;

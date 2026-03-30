@@ -24,6 +24,7 @@ sass_library(
     srcs = ["_system.scss"],
     deps = [
         ":m3_tokens",
+        "//src/material/core/style:cascade_layers",
         "//src/material/core/style:elevation",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming:_config_validation",

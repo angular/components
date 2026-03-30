@@ -2,6 +2,9 @@
 
 // We don't emit the layer internally, because all the breaking changes
 // have been resolved already and the `@layer` seems to break some targets.
+// Published CSS still uses `@layer cdk-overlay`. Apps combining CDK with
+// Material can prelude layer order alongside `mat.with-cascade-layer` /
+// `mat.theme(..., $cascade-layer: ...)` (see `guides/theming.md`).
 $_is-external-build: true;
 
 @include overlay.private-overlay-structure($_is-external-build);

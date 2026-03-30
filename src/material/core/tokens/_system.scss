@@ -15,6 +15,7 @@
 @use '../../tabs/m3-tabs';
 @use '../../toolbar/m3-toolbar';
 @use '../../tree/m3-tree';
+@use '../style/cascade-layers' as cascade-layers;
 @use '../style/elevation';
 @use '../theming/config-validation';
 @use '../theming/definition';
@@ -54,7 +55,18 @@
 /// e.g. --mat-sys-surface: #E5E5E5
 ///
 /// @param {Map} $config The color configuration with optional keys color, typography, or density.
-@mixin theme($config, $overrides: ()) {
+/// @param {String | null} $cascade-layer When non-null, wraps output in [@layer](https://www.w3.org/TR/css-cascade-5/#layering).
+@mixin theme($config, $overrides: (), $cascade-layer: null) {
+  @if ($cascade-layer == null) {
+    @include _theme-impl($config, $overrides);
+  } @else {
+    @include cascade-layers.with-cascade-layer($cascade-layer) {
+      @include _theme-impl($config, $overrides);
+    }
+  }
+}
+
+@mixin _theme-impl($config, $overrides: ()) {
   $color: map.get($config, color);
   $color-config: null;
   @if ($color) {
