@@ -2223,6 +2223,7 @@ class BooleanDataSource extends DataSource<boolean> {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2255,6 +2256,7 @@ class SimpleCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTableWithDifferentDataInputsApp {
   dataSource: DataSource<TestData> | Observable<TestData[]> | TestData[] | any = null;
@@ -2276,6 +2278,7 @@ class CdkTableWithDifferentDataInputsApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BooleanRowCdkTableApp {
   dataSource = new BooleanDataSource();
@@ -2295,6 +2298,7 @@ class BooleanRowCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NullDataCdkTableApp {
   dataSource = observableOf<any>(null);
@@ -2327,6 +2331,7 @@ class NullDataCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultipleHeaderFooterRowsCdkTableApp {}
 
@@ -2380,6 +2385,7 @@ class MultipleHeaderFooterRowsCdkTableApp {}
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenRowCdkTableApp {
   multiTemplateDataRows = false;
@@ -2456,6 +2462,7 @@ class WhenRowCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CoercedMultiTemplateDataRows extends WhenRowCdkTableApp {}
 
@@ -2493,6 +2500,7 @@ class CoercedMultiTemplateDataRows extends WhenRowCdkTableApp {}
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenRowWithoutDefaultCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2538,6 +2546,7 @@ class WhenRowWithoutDefaultCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenRowMultipleDefaultsCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2560,6 +2569,7 @@ class WhenRowMultipleDefaultsCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DynamicDataSourceCdkTableApp {
   dataSource!: FakeDataSource;
@@ -2586,6 +2596,7 @@ class DynamicDataSourceCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TrackByCdkTableApp {
   trackByStrategy: 'reference' | 'propertyA' | 'index' = 'reference';
@@ -2671,6 +2682,7 @@ class StickyPositioningListenerTest implements StickyPositioningListener {
   `,
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyFlexLayoutCdkTableApp}],
   imports: [CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource = new FakeDataSource();
@@ -2728,6 +2740,7 @@ class StickyFlexLayoutCdkTableApp extends StickyPositioningListenerTest {
   `,
   providers: [{provide: STICKY_POSITIONING_LISTENER, useExisting: StickyNativeLayoutCdkTableApp}],
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {
   dataSource = new FakeDataSource();
@@ -2760,6 +2773,7 @@ class StickyNativeLayoutCdkTableApp extends StickyPositioningListenerTest {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DynamicColumnDefinitionsCdkTableApp {
   dynamicColumns: any[] = [];
@@ -2781,6 +2795,7 @@ class DynamicColumnDefinitionsCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CustomRoleCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2802,6 +2817,7 @@ class CustomRoleCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CrazyColumnNameCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2828,6 +2844,7 @@ class CrazyColumnNameCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DuplicateColumnDefNameCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2846,6 +2863,7 @@ class DuplicateColumnDefNameCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingColumnDefCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2864,6 +2882,7 @@ class MissingColumnDefCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
   dataSource!: FakeDataSource;
@@ -2888,6 +2907,7 @@ class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingAllRowDefsCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2907,6 +2927,7 @@ class MissingAllRowDefsCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingHeaderRowDefCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2926,6 +2947,7 @@ class MissingHeaderRowDefCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingRowDefCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2945,6 +2967,7 @@ class MissingRowDefCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingFooterRowDefCdkTableApp {
   dataSource = new FakeDataSource();
@@ -2963,6 +2986,7 @@ class MissingFooterRowDefCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class UndefinedColumnsCdkTableApp {
   undefinedColumns: string[] | undefined;
@@ -2998,6 +3022,7 @@ class UndefinedColumnsCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RowContextCdkTableApp {
   dataSource = new FakeDataSource();
@@ -3024,6 +3049,7 @@ class RowContextCdkTableApp {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WrapperCdkTableApp<T> implements AfterContentInit {
   @ContentChildren(CdkColumnDef, {descendants: false}) columnDefs!: QueryList<CdkColumnDef>;
@@ -3068,6 +3094,7 @@ class WrapperCdkTableApp<T> implements AfterContentInit {
     </wrapper-table>
   `,
   imports: [CdkTableModule, WrapperCdkTableApp],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class OuterTableApp {
   dataSource = new FakeDataSource();
@@ -3107,6 +3134,7 @@ class OuterTableApp {
     </table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NativeHtmlTableApp {
   dataSource = new FakeDataSource();
@@ -3158,6 +3186,7 @@ class NativeHtmlTableApp {
     </table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedHtmlTableApp {
   dataSource = new FakeDataSource();
@@ -3186,6 +3215,7 @@ class NestedHtmlTableApp {
     </table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NativeTableWithNoHeaderOrFooterRows {
   dataSource = new FakeDataSource();
@@ -3208,6 +3238,7 @@ class NativeTableWithNoHeaderOrFooterRows {
     </table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NativeHtmlTableWithCaptionApp {
   dataSource = new FakeDataSource();
@@ -3237,6 +3268,7 @@ class NativeHtmlTableWithCaptionApp {
     </table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NativeHtmlTableWithColgroupAndCol {
   dataSource = new FakeDataSource();
@@ -3261,6 +3293,7 @@ class NativeHtmlTableWithColgroupAndCol {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TableWithIndirectDescendantDefs {
   dataSource = new FakeDataSource();
@@ -3305,6 +3338,7 @@ class NativeHtmlTableAppOnPush {
     <cdk-table-change-detection-on-push [dataSource]="dataSource"></cdk-table-change-detection-on-push>
   `,
   imports: [NativeHtmlTableAppOnPush],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WrapNativeHtmlTableAppOnPush {
   dataSource = new FakeDataSource();
@@ -3345,6 +3379,7 @@ class WrapNativeHtmlTableAppOnPush {
       overflow: auto;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TableWithVirtualScroll {
   @ViewChild(CdkTable) table!: CdkTable<TestData>;
@@ -3372,6 +3407,7 @@ class TableWithVirtualScroll {
     </cdk-virtual-scroll-viewport>
   `,
   imports: [CdkTableModule, ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TableWithVirtualScrollAndMultipleDefinitions extends TableWithVirtualScroll {
   predicate = () => true;

@@ -1,4 +1,4 @@
-import {Component, DebugElement, QueryList} from '@angular/core';
+import {Component, DebugElement, QueryList, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
@@ -110,6 +110,7 @@ describe('MatChipSet', () => {
       </mat-chip-set>
   `,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicChipSet {
   name: string = 'Test';
@@ -127,5 +128,6 @@ class BasicChipSet {
     </mat-chip-set>
   `,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndirectDescendantsChipSet extends BasicChipSet {}

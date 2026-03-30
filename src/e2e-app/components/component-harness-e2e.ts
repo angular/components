@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {TestMainComponent} from '@angular/cdk/testing/tests';
 
 @Component({
@@ -11,6 +11,7 @@ import {TestMainComponent} from '@angular/cdk/testing/tests';
     }
   `,
   imports: [TestMainComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ComponentHarnessE2e {
   protected isShown = true;

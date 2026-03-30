@@ -1,4 +1,4 @@
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
@@ -989,6 +989,7 @@ describe('Menu Bar Pattern', () => {
 </div>
   `,
   imports: [Menu, MenuItem, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneMenuExample {
   itemSelected(value: string) {}
@@ -1017,6 +1018,7 @@ class StandaloneMenuExample {
 </div>
   `,
   imports: [Menu, MenuItem, MenuTrigger, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuTriggerExample {
   itemSelected(value: string) {}
@@ -1056,5 +1058,6 @@ class MenuTriggerExample {
 </div>
   `,
   imports: [Menu, MenuBar, MenuItem, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarExample {}

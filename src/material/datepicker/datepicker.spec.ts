@@ -30,6 +30,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
@@ -2422,6 +2423,7 @@ const inputFixedWidthStyles = `
   `,
   styles: inputFixedWidthStyles,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardDatepicker {
   opened = false;
@@ -2441,12 +2443,14 @@ class StandardDatepicker {
     <input [matDatepicker]="d"><input [matDatepicker]="d"><mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiInputDatepicker {}
 
 @Component({
   template: `<mat-datepicker #d></mat-datepicker>`,
   imports: [MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NoInputDatepicker {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2458,6 +2462,7 @@ class NoInputDatepicker {
     <mat-datepicker #d [startAt]="startDate"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithStartAt {
   date = new Date(2020, JAN, 1);
@@ -2471,6 +2476,7 @@ class DatepickerWithStartAt {
     <mat-datepicker #d startView="year" (monthSelected)="onYearSelection()"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
@@ -2486,6 +2492,7 @@ class DatepickerWithStartViewYear {
         (yearSelected)="onMultiYearSelection()"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithStartViewMultiYear {
   date = new Date(2020, JAN, 1);
@@ -2500,6 +2507,7 @@ class DatepickerWithStartViewMultiYear {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithNgModel {
   selected: Date | null = null;
@@ -2514,6 +2522,7 @@ class DatepickerWithNgModel {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithFormControl {
   formControl = new FormControl<Date | null>(null);
@@ -2529,6 +2538,7 @@ class DatepickerWithFormControl {
     <mat-datepicker #d [touchUi]="touchUI" [restoreFocus]="restoreFocus"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithToggle {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2546,6 +2556,7 @@ class DatepickerWithToggle {
     <mat-datepicker #d [touchUi]="touchUI" [restoreFocus]="restoreFocus"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
 
@@ -2558,6 +2569,7 @@ class DatepickerWithToggleInShadowDom extends DatepickerWithToggle {}
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithCustomIcon {}
 
@@ -2570,6 +2582,7 @@ class DatepickerWithCustomIcon {}
     </mat-form-field>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FormFieldDatepicker {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2584,6 +2597,7 @@ class FormFieldDatepicker {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithMinAndMaxValidation {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2600,6 +2614,7 @@ class DatepickerWithMinAndMaxValidation {
     <mat-datepicker #d [touchUi]="true"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithFilterAndValidation {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2615,6 +2630,7 @@ class DatepickerWithFilterAndValidation {
     <mat-datepicker #d [touchUi]="true"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithChangeAndInputEvents {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2631,6 +2647,7 @@ class DatepickerWithChangeAndInputEvents {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithi18n {
   date: Date | null = new Date(2010, JAN, 1);
@@ -2644,6 +2661,7 @@ class DatepickerWithi18n {
     <mat-datepicker #d [startAt]="startAt"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithISOStrings {
   value = new Date(2017, JUN, 1).toISOString();
@@ -2660,6 +2678,7 @@ class DatepickerWithISOStrings {
     <mat-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithEvents {
   selected: Date | null = null;
@@ -2674,6 +2693,7 @@ class DatepickerWithEvents {
     <mat-datepicker #d="matDatepicker"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerOpeningOnFocus {
   @ViewChild(MatDatepicker) datepicker!: MatDatepicker<Date>;
@@ -2685,6 +2705,7 @@ class DatepickerOpeningOnFocus {
     <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker!: MatDatepicker<Date>;
@@ -2697,6 +2718,7 @@ class DatepickerWithCustomHeader {
     <mat-calendar-header></mat-calendar-header>
   `,
   imports: [MatCalendarHeader],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CustomHeaderForDatepicker {}
 
@@ -2706,6 +2728,7 @@ class CustomHeaderForDatepicker {}
     <mat-datepicker #d [touchUi]="touch"></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DelayedDatepicker {
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
@@ -2724,6 +2747,7 @@ class DelayedDatepicker {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, MatDatepickerToggle, MatDatepickerToggleIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithTabindexOnToggle {
   disabled = false;
@@ -2732,12 +2756,14 @@ class DatepickerWithTabindexOnToggle {
 @Component({
   template: `<mat-datepicker-toggle/>`,
   imports: [MatDatepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerToggleWithNoDatepicker {}
 
 @Component({
   template: `<input [matDatepicker]="null!">`,
   imports: [MatDatepickerInput],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerInputWithNoDatepicker {}
 
@@ -2761,6 +2787,7 @@ class CustomValidator implements Validator {
     <mat-datepicker #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker, CustomValidator, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerInputWithCustomValidator {
   @ViewChild(CustomValidator) validator!: CustomValidator;
@@ -2775,6 +2802,7 @@ class DatepickerInputWithCustomValidator {
   <mat-datepicker [panelClass]="panelClass" touchUi #d></mat-datepicker>
   `,
   imports: [MatDatepickerInput, MatDatepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelClassDatepicker {
   date = new Date(0);

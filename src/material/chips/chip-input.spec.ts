@@ -5,7 +5,7 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MATERIAL_ANIMATIONS} from '../core';
@@ -355,6 +355,7 @@ describe('MatChipInput', () => {
     </mat-form-field>
   `,
   imports: [MatFormField, MatChipGrid, MatChipRow, MatChipInput],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestChipInput {
   @ViewChild(MatChipGrid) chipGridInstance!: MatChipGrid;

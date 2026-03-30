@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AsyncPipe} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -859,6 +859,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: TreeCont
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -909,6 +910,7 @@ const TREE_DATA: FoodNode[] = [
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTreeWithNullOrUndefinedChild {
   childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
@@ -930,6 +932,7 @@ class MatTreeWithNullOrUndefinedChild {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatNestedTreeWithNullOrUndefinedChild {
   childrenAccessor = (node: FoodNode): FoodNode[] => node.children || [];
@@ -953,6 +956,7 @@ class MatNestedTreeWithNullOrUndefinedChild {
     </mat-tree>
   `,
   imports: [MatTreeModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMatTreeApp {
   childrenAccessor = (node: TestData) => node.observableChildren;
@@ -990,6 +994,7 @@ class NestedMatTreeApp {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenNodeNestedMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;
@@ -1025,6 +1030,7 @@ class WhenNodeNestedMatTreeApp {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1054,6 +1060,7 @@ class MatTreeAppWithToggle {
     </mat-tree>
   `,
   imports: [MatTreeModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1087,6 +1094,7 @@ class NestedMatTreeAppWithToggle {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenNodeMatTreeApp {
   isSpecial = (_: number, node: TestData) => node.isSpecial;

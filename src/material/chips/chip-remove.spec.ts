@@ -1,6 +1,6 @@
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipsModule} from './index';
@@ -111,6 +111,7 @@ describe('Chip Remove', () => {
     </mat-chip-set>
   `,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestChip {
   removable = false;

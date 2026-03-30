@@ -1,4 +1,11 @@
-import {Component, DebugElement, Directive, inject, signal} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  Directive,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
@@ -673,6 +680,7 @@ describe('Toolbar', () => {
     </div>
   `,
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarExample {
   orientation = signal<'vertical' | 'horizontal'>('horizontal');
@@ -713,5 +721,6 @@ export class SimpleToolbarButton {
     </div>
   `,
   imports: [Toolbar, SimpleToolbarButton],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WrappedToolbarExample {}

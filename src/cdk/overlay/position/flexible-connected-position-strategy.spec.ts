@@ -9,6 +9,7 @@ import {
   Renderer2,
   RendererFactory2,
   runInInjectionContext,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
@@ -3073,5 +3074,6 @@ function createOverflowContainerElement() {
       style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
   `,
   imports: [ScrollingModule, OverlayModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestOverlay {}

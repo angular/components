@@ -1,6 +1,11 @@
 import {Platform} from '../../platform';
 import {patchElementFocus} from '../../testing/private';
-import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
+import {
+  Component,
+  NgZone,
+  provideZoneChangeDetection,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {A11yModule} from '../a11y-module';
 import {FocusMonitor} from './focus-monitor';
@@ -38,5 +43,6 @@ describe('FocusMonitor observable stream Zone.js integration', () => {
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PlainButton {}

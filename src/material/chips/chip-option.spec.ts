@@ -4,7 +4,7 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../core';
@@ -403,6 +403,7 @@ describe('Option Chips', () => {
       }
     </mat-chip-listbox>`,
   imports: [MatChipListbox, MatChipOption, MatChipAvatar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleChip {
   @ViewChild(MatChipListbox) chipList!: MatChipListbox;

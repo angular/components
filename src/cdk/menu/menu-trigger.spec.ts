@@ -1,5 +1,12 @@
 import {ENTER, SPACE, TAB} from '../keycodes';
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -537,6 +544,7 @@ describe('MenuTrigger', () => {
     <ng-template #noop><div cdkMenu></div></ng-template>
   `,
   imports: [CdkMenuBar, CdkMenu, CdkMenuItem, CdkMenuTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggerForEmptyMenu {
   @ViewChild(CdkMenuTrigger) trigger!: CdkMenuTrigger;
@@ -562,6 +570,7 @@ class TriggerForEmptyMenu {
     </ng-template>
   `,
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarWithNestedSubMenus {
   @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;
@@ -589,6 +598,7 @@ class MenuBarWithNestedSubMenus {
     </ng-template>
   `,
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggersWithSameMenuDifferentMenuBars {
   @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
@@ -612,6 +622,7 @@ class TriggersWithSameMenuDifferentMenuBars {
     </ng-template>
   `,
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggersWithSameMenuSameMenuBar {
   @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
@@ -631,6 +642,7 @@ class TriggersWithSameMenuSameMenuBar {
     </ng-template>
   `,
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggerOpensItsMenu {
   @ViewChildren(CdkMenuTrigger) triggers!: QueryList<CdkMenuTrigger>;
@@ -656,6 +668,7 @@ class TriggerOpensItsMenu {
     </div>
   `,
   imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneTriggerWithInlineMenu {
   @ViewChild(CdkMenuItem, {read: ElementRef}) nativeTrigger!: ElementRef<HTMLElement>;
@@ -676,6 +689,7 @@ class StandaloneTriggerWithInlineMenu {
     </ng-template>
   `,
   imports: [CdkMenu, CdkMenuTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggerWithData {
   menuData: unknown;
@@ -686,6 +700,7 @@ class TriggerWithData {
     <button [cdkMenuTriggerFor]="null">First</button>
   `,
   imports: [CdkMenuTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TriggerWithNullValue {
   @ViewChild(CdkMenuTrigger, {static: true})

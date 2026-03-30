@@ -1702,6 +1702,7 @@ describe('MatSelectionList with forms', () => {
     }
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithListOptions {
   showLastOption = true;
@@ -1730,6 +1731,7 @@ class SelectionListWithListOptions {
     </mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithCheckboxPositionAfter {}
 
@@ -1750,6 +1752,7 @@ class SelectionListWithCheckboxPositionAfter {}
     </mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithListDisabled {
   disabled: boolean = true;
@@ -1762,6 +1765,7 @@ class SelectionListWithListDisabled {
   </mat-selection-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithDisabledOption {
   disableItem: boolean = false;
@@ -1776,6 +1780,7 @@ class SelectionListWithDisabledOption {
     <mat-list-option>Not selected - Item #4</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithSelectedOption {}
 
@@ -1786,6 +1791,7 @@ class SelectionListWithSelectedOption {}
     <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleSelectionListWithSelectedOption {}
 
@@ -1795,6 +1801,7 @@ class SingleSelectionListWithSelectedOption {}
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
@@ -1811,6 +1818,7 @@ class SelectionListWithSelectedOptionAndValue {
       }
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
@@ -1833,6 +1841,7 @@ class SelectionListWithModel {
     }
   `,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithFormControl {
   formControl = new FormControl([] as string[]);
@@ -1847,6 +1856,7 @@ class SelectionListWithFormControl {
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithPreselectedOption {
   selectedOptions!: string[];
@@ -1859,6 +1869,7 @@ class SelectionListWithPreselectedOption {
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
@@ -1888,6 +1899,7 @@ class SelectionListWithPreselectedFormControlOnPush {
       }
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
@@ -1910,6 +1922,7 @@ class SelectionListWithCustomComparator {
     </mat-selection-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithAvatar {
   togglePosition!: MatListOptionTogglePosition;
@@ -1925,6 +1938,7 @@ class SelectionListWithAvatar {
     </mat-selection-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithIcon {
   togglePosition!: MatListOptionTogglePosition;
@@ -1940,6 +1954,7 @@ class SelectionListWithIcon {
       }
     </mat-selection-list>`,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListWithIndirectChildOptions {
   @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
@@ -1952,6 +1967,7 @@ class SelectionListWithIndirectChildOptions {
   </mat-selection-list>
 `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListOptionWithTwoWayBinding {
   selected = false;

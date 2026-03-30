@@ -4043,6 +4043,7 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
     MatInputModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
@@ -4109,6 +4110,7 @@ class SimpleAutocomplete implements OnDestroy {
     MatInputModule,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
@@ -4136,6 +4138,7 @@ class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
     ReactiveFormsModule,
     AsyncPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NgIfAutocomplete {
   optionCtrl = new FormControl('');
@@ -4174,6 +4177,7 @@ class NgIfAutocomplete {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithoutForms {
   filteredStates!: any[];
@@ -4204,6 +4208,7 @@ class AutocompleteWithoutForms {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithNgModel {
   filteredStates!: any[];
@@ -4236,6 +4241,7 @@ class AutocompleteWithNgModel {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithNumbers {
   selectedNumber!: number;
@@ -4285,6 +4291,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithNativeInput {
   optionCtrl = new FormControl('');
@@ -4309,6 +4316,7 @@ class AutocompleteWithNativeInput {
 @Component({
   template: `<input placeholder="Choose" [matAutocomplete]="null!" [formControl]="control">`,
   imports: [MatAutocompleteTrigger, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithoutPanel {
   @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
@@ -4341,6 +4349,7 @@ class AutocompleteWithoutPanel {
     MatInputModule,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithGroups {
   @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
@@ -4389,6 +4398,7 @@ class AutocompleteWithGroups {
     MatInputModule,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
 
@@ -4407,6 +4417,7 @@ class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithSelectEvent {
   selectedState!: string;
@@ -4423,6 +4434,7 @@ class AutocompleteWithSelectEvent {
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl('');
@@ -4441,6 +4453,7 @@ class PlainAutocompleteInputWithFormControl {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithNumberInputAndNgModel {
   selectedValue!: number;
@@ -4481,6 +4494,7 @@ class AutocompleteWithNumberInputAndNgModel {
     MatInputModule,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
@@ -4496,6 +4510,7 @@ class AutocompleteWithDifferentOrigin {
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithNativeAutocompleteAttribute {
   value!: string;
@@ -4504,6 +4519,7 @@ class AutocompleteWithNativeAutocompleteAttribute {
 @Component({
   template: '<input [matAutocomplete]="null!" matAutocompleteDisabled>',
   imports: [MatAutocompleteTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -4520,6 +4536,7 @@ class InputWithoutAutocompleteAndDisabled {}
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithActivatedEvent {
   states = ['California', 'West Virginia', 'Florida'];
@@ -4556,6 +4573,7 @@ class AutocompleteWithActivatedEvent {
     ReactiveFormsModule,
     OverlayModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteInsideAModal {
   foods = [
@@ -4582,6 +4600,7 @@ class AutocompleteInsideAModal {
     </mat-autocomplete>
   `,
   imports: [MatAutocomplete, MatAutocompleteTrigger, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutocompleteWithoutOptions {
   @ViewChild(MatAutocompleteTrigger, {static: true}) trigger!: MatAutocompleteTrigger;

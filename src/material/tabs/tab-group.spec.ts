@@ -1,7 +1,15 @@
 import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {AsyncPipe} from '@angular/common';
-import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -1265,6 +1273,7 @@ describe('MatTabGroup labels aligned with a config', () => {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleTabsTestApp {
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
@@ -1303,6 +1312,7 @@ class SimpleTabsTestApp {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleDynamicTabsTestApp {
   tabs = [
@@ -1331,6 +1341,7 @@ class SimpleDynamicTabsTestApp {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BindedTabsTestApp {
   tabs = [
@@ -1366,6 +1377,7 @@ class BindedTabsTestApp {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledTabsTestApp {
   @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
@@ -1384,6 +1396,7 @@ class DisabledTabsTestApp {
    </mat-tab-group>
   `,
   imports: [MatTabsModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AsyncTabsTestApp implements OnInit {
   private _tabs = [
@@ -1411,6 +1424,7 @@ class AsyncTabsTestApp implements OnInit {
   </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithSimpleApi {
   preserveContent = false;
@@ -1433,6 +1447,7 @@ class TabGroupWithSimpleApi {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedTabs {
   @ViewChildren(MatTabGroup) groups!: QueryList<MatTabGroup>;
@@ -1452,6 +1467,7 @@ class NestedTabs {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TemplateTabs {}
 
@@ -1462,6 +1478,7 @@ class TemplateTabs {}
   </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithAriaInputs {
   ariaLabel!: string;
@@ -1480,6 +1497,7 @@ class TabGroupWithAriaInputs {
     }
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithIsActiveBinding {}
 
@@ -1491,6 +1509,7 @@ class TabGroupWithIsActiveBinding {}
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithCustomAnimationDuration {}
 
@@ -1502,6 +1521,7 @@ class TabsWithCustomAnimationDuration {}
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithObjectAnimationDuration {}
 
@@ -1515,6 +1535,7 @@ class TabsWithObjectAnimationDuration {}
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithIndirectDescendantTabs {
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
@@ -1528,6 +1549,7 @@ class TabGroupWithIndirectDescendantTabs {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithInkBarFitToContent {
   fitInkBarToContent = true;
@@ -1550,6 +1572,7 @@ class TabGroupWithInkBarFitToContent {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupWithSpaceAbove {
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
@@ -1573,6 +1596,7 @@ class TabGroupWithSpaceAbove {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedTabGroupWithLabel {}
 
@@ -1589,6 +1613,7 @@ class NestedTabGroupWithLabel {}
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithClassesTestApp {
   labelClassList!: string | string[];
@@ -1607,6 +1632,7 @@ class TabsWithClassesTestApp {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithAlignConfig {}
 
@@ -1622,5 +1648,6 @@ class TabsWithAlignConfig {}
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithAlignCenter {}

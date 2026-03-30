@@ -1,6 +1,6 @@
 import {Direction} from '../bidi';
 import {CdkScrollable, ScrollingModule} from '../scrolling';
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
@@ -241,6 +241,7 @@ describe('CdkScrollable', () => {
     }
   `,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollableViewport {
   @Input() dir: Direction = 'ltr';

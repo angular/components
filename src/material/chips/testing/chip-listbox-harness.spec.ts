@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipListboxHarness} from './chip-listbox-harness';
@@ -122,6 +122,7 @@ describe('MatChipListboxHarness', () => {
     </mat-chip-listbox>
   `,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipListboxHarnessTest {
   isMultiple = false;

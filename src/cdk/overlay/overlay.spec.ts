@@ -13,6 +13,7 @@ import {
   WritableSignal,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -1120,6 +1121,7 @@ describe('Overlay', () => {
 @Component({
   selector: 'pizza',
   template: '<p>Pizza</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {}
 
@@ -1127,6 +1129,7 @@ class PizzaMsg {}
 @Component({
   template: `<ng-template cdkPortal>Cake</ng-template>`,
   imports: [CdkPortal],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);

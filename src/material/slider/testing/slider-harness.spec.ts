@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -199,6 +199,7 @@ describe('MatSliderHarness', () => {
     </mat-slider>
   `,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderHarnessTest {
   singleSliderDisabled = signal(false);

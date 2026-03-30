@@ -3,7 +3,14 @@ import {
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import {Component, ErrorHandler, Provider, Type, ViewChild} from '@angular/core';
+import {
+  Component,
+  ErrorHandler,
+  Provider,
+  Type,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {FAKE_SVGS} from './fake-svgs';
@@ -1411,6 +1418,7 @@ describe('MatIcon with default options', () => {
 @Component({
   template: `<mat-icon>{{iconName}}</mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithLigature {
   iconName = '';
@@ -1419,6 +1427,7 @@ class IconWithLigature {
 @Component({
   template: `<mat-icon [fontIcon]="iconName"></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithLigatureByAttribute {
   iconName = '';
@@ -1427,6 +1436,7 @@ class IconWithLigatureByAttribute {
 @Component({
   template: `<mat-icon [color]="iconColor">{{iconName}}</mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithColor {
   iconName = '';
@@ -1436,6 +1446,7 @@ class IconWithColor {
 @Component({
   template: `<mat-icon [fontSet]="fontSet" [fontIcon]="fontIcon"></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithCustomFontCss {
   fontSet = '';
@@ -1445,6 +1456,7 @@ class IconWithCustomFontCss {
 @Component({
   template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconFromSvgName {
   iconName = '';
@@ -1453,12 +1465,14 @@ class IconFromSvgName {
 @Component({
   template: '<mat-icon aria-hidden="false">face</mat-icon>',
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithAriaHiddenFalse {}
 
 @Component({
   template: `@if (showIcon) {<mat-icon [svgIcon]="iconName">{{iconName}}</mat-icon>}`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithBindingAndNgIf {
   iconName = 'fluffy';
@@ -1468,6 +1482,7 @@ class IconWithBindingAndNgIf {
 @Component({
   template: `<mat-icon [inline]="inline"></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InlineIcon {
   inline = false;
@@ -1476,6 +1491,7 @@ class InlineIcon {
 @Component({
   template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SvgIconWithUserContent {
   iconName = '';
@@ -1484,6 +1500,7 @@ class SvgIconWithUserContent {
 @Component({
   template: '<mat-icon [svgIcon]="iconName">house</mat-icon>',
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconWithLigatureAndSvgBinding {
   iconName!: string;
@@ -1492,6 +1509,7 @@ class IconWithLigatureAndSvgBinding {
 @Component({
   template: `<mat-icon></mat-icon>`,
   imports: [MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BlankIcon {
   @ViewChild(MatIcon) icon!: MatIcon;

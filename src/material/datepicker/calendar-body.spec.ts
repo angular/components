@@ -3,7 +3,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
@@ -710,6 +710,7 @@ describe('MatCalendarBody', () => {
           (selectedValueChange)="onSelect($event)">
     </table>`,
   imports: [MatCalendarBody],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardCalendarBody {
   label = 'Jan 2017';
@@ -742,6 +743,7 @@ class StandardCalendarBody {
           >
     </table>`,
   imports: [MatCalendarBody],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);

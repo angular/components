@@ -1872,6 +1872,7 @@ describe('Standalone CdkDrag', () => {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggable {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -1915,6 +1916,7 @@ class StandaloneDraggableWithOnPush {
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -1936,6 +1938,7 @@ class StandaloneDraggableWithHandle {
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithPreDisabledHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -1956,6 +1959,7 @@ class StandaloneDraggableWithPreDisabledHandle {
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithDelayedHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -1970,6 +1974,7 @@ class StandaloneDraggableWithDelayedHandle {
 @Component({
   selector: 'passthrough-component',
   template: '<ng-content></ng-content>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PassthroughComponent {}
 
@@ -1987,6 +1992,7 @@ class PassthroughComponent {}
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle, PassthroughComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithIndirectHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -1997,6 +2003,7 @@ class StandaloneDraggableWithIndirectHandle {
   selector: 'shadow-wrapper',
   template: '<ng-content></ng-content>',
   encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ShadowWrapper {}
 
@@ -2011,6 +2018,7 @@ class ShadowWrapper {}
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle, ShadowWrapper],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithShadowInsideHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -2036,6 +2044,7 @@ class StandaloneDraggableWithShadowInsideHandle {
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithMultipleHandles {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -2053,6 +2062,7 @@ class StandaloneDraggableWithMultipleHandles {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableWithAlternateRoot {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -2066,6 +2076,7 @@ class DraggableWithAlternateRoot {
     <ng-container cdkDrag></ng-container>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableOnNgContainer {}
 
@@ -2076,6 +2087,7 @@ class DraggableOnNgContainer {}
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DragHandleOnNgContainer {}
 
@@ -2091,6 +2103,7 @@ class DragHandleOnNgContainer {}
     </div>
   `,
   imports: [CdkDrag, CdkDragHandle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableWithAlternateRootAndSelfHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -2107,6 +2120,7 @@ class DraggableWithAlternateRootAndSelfHandle {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableNgContainerWithAlternateRoot {
   @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
@@ -2116,6 +2130,7 @@ class DraggableNgContainerWithAlternateRoot {
 @Component({
   template: `<div cdkDrag></div>`,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PlainStandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance!: CdkDrag;
@@ -2133,6 +2148,7 @@ class PlainStandaloneDraggable {
     </ng-template>
   `,
   imports: [CdkDrag, CdkDragHandle, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggableWithExternalTemplateHandle {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -2147,6 +2163,7 @@ class StandaloneDraggableWithExternalTemplateHandle {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DragWithResizeableBoundary {
   @ViewChild('boundaryElement') boundaryElement!: ElementRef<HTMLElement>;

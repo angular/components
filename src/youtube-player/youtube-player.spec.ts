@@ -1,4 +1,10 @@
-import {Component, EnvironmentProviders, Provider, ViewChild} from '@angular/core';
+import {
+  Component,
+  EnvironmentProviders,
+  Provider,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {createFakeYtNamespace} from './fake-youtube-player';
@@ -804,6 +810,7 @@ describe('YoutubePlayer', () => {
         (apiChange)="onApiChange($event)"/>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   videoId: string | undefined = VIDEO_ID;
@@ -832,6 +839,7 @@ class TestApp {
   template: `
     <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"/>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticStartEndSecondsApp {
   videoId = VIDEO_ID;
@@ -840,6 +848,7 @@ class StaticStartEndSecondsApp {
 @Component({
   imports: [YouTubePlayer],
   template: `<youtube-player [videoId]="videoId"/>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NoEventsApp {
   @ViewChild(YouTubePlayer) player!: YouTubePlayer;

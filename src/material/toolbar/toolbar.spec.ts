@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatToolbarModule} from './index';
@@ -77,6 +77,7 @@ describe('MatToolbar', () => {
     </mat-toolbar>
   `,
   imports: [MatToolbarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarSingleRow {
   toolbarColor = signal('');
@@ -90,6 +91,7 @@ class ToolbarSingleRow {
     </mat-toolbar>
   `,
   imports: [MatToolbarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarMultipleRows {}
 
@@ -103,6 +105,7 @@ class ToolbarMultipleRows {}
     </mat-toolbar>
   `,
   imports: [MatToolbarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarMixedRowModes {
   showToolbarRow = signal(true);
@@ -121,5 +124,6 @@ class ToolbarMixedRowModes {
     </mat-toolbar>
   `,
   imports: [MatToolbarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarMultipleIndirectRows {}

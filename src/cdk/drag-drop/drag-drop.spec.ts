@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject} from '@angular/core';
+import {Component, ElementRef, inject, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {DragDrop} from './drag-drop';
 import {DragRef} from './drag-ref';
@@ -30,6 +30,7 @@ describe('DragDrop', () => {
 
 @Component({
   template: '<div></div>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

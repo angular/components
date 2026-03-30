@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Grid} from './grid';
@@ -1056,6 +1056,7 @@ describe('Grid directives', () => {
     </table>
   `,
   imports: [Grid, GridRow, GridCell, GridCellWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridTestComponent {
   readonly disabled = signal(false);

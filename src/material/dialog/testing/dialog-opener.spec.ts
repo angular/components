@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '../../dialog';
 import {MatTestDialogOpener} from './dialog-opener';
@@ -55,6 +55,7 @@ interface ExampleDialogResult {
     Data: {{data}}
     <button id="close-btn" (click)="close()">Close</button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ExampleComponent {
   dialogRef = inject<MatDialogRef<ExampleComponent, ExampleDialogResult>>(MatDialogRef);

@@ -1,4 +1,10 @@
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import {CdkDropList} from './drop-list';
 import {CdkDrag} from './drag';
@@ -132,6 +138,7 @@ function getSortedSiblings(item: Element) {
     </div>
   `,
   imports: [CdkDropList, CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableInHorizontalWrappingDropZone {
   @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;

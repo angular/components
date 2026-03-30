@@ -7,7 +7,13 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ErrorHandler,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -1194,6 +1200,7 @@ describe('MatDrawerContainer', () => {
       <mat-drawer position="end"></mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerContainerTwoDrawerTestApp {
   @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
@@ -1222,6 +1229,7 @@ class DrawerContainerTwoDrawerTestApp {
       </svg>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicTestApp {
   openCount = 0;
@@ -1267,6 +1275,7 @@ class BasicTestApp {
       </mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerSetToOpenedFalse {}
 
@@ -1278,6 +1287,7 @@ class DrawerSetToOpenedFalse {}
       </mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerSetToOpenedTrue {
   openCallback = jasmine.createSpy('open callback');
@@ -1291,6 +1301,7 @@ class DrawerSetToOpenedTrue {
       </mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerOpenBinding {
   isOpen = false;
@@ -1303,6 +1314,7 @@ class DrawerOpenBinding {
       <mat-drawer #drawer2 [position]="drawer2Position"></mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerDynamicPosition {
   drawer1Position: 'start' | 'end' = 'start';
@@ -1320,6 +1332,7 @@ class DrawerDynamicPosition {
       <input type="text" class="input2"/>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerWithFocusableElements {
   mode: MatDrawerMode = 'over';
@@ -1334,6 +1347,7 @@ class DrawerWithFocusableElements {
       </mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerWithoutFocusableElements {}
 
@@ -1346,6 +1360,7 @@ class DrawerWithoutFocusableElements {}
     </mat-drawer-container>
   `,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerDelayed {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
@@ -1360,6 +1375,7 @@ class DrawerDelayed {
       }
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerContainerStateChangesTestApp {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
@@ -1379,6 +1395,7 @@ class DrawerContainerStateChangesTestApp {
       </mat-drawer>
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutosizeDrawer {
   @ViewChild(MatDrawer) drawer!: MatDrawer;
@@ -1394,6 +1411,7 @@ class AutosizeDrawer {
     </mat-drawer-container>
   `,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerContainerWithContent {
   @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
@@ -1409,6 +1427,7 @@ class DrawerContainerWithContent {
       }
     </mat-drawer-container>`,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndirectDescendantDrawer {
   @ViewChild('container') container!: MatDrawerContainer;
@@ -1427,6 +1446,7 @@ class IndirectDescendantDrawer {
     </mat-drawer-container>
   `,
   imports: [MatSidenavModule, A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedDrawerContainers {
   @ViewChild('outerContainer') outerContainer!: MatDrawerContainer;
@@ -1445,5 +1465,6 @@ class NestedDrawerContainers {
     </mat-sidenav-container>
   `,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerWithSideAndHiddenBackdrop {}

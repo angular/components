@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -152,6 +152,7 @@ describe('MapPolygon', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapPolygon],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapPolygon) polygon!: MapPolygon;

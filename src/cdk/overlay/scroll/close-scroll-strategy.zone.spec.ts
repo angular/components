@@ -1,5 +1,11 @@
 import {ComponentPortal, PortalModule} from '../../portal';
-import {Component, Injector, NgZone, provideZoneChangeDetection} from '@angular/core';
+import {
+  Component,
+  Injector,
+  NgZone,
+  provideZoneChangeDetection,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {TestBed, fakeAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {OverlayConfig} from '../overlay-config';
@@ -70,5 +76,6 @@ describe('CloseScrollStrategy Zone.js integration', () => {
 @Component({
   template: '<p>Mozarella</p>',
   imports: [OverlayModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MozarellaMsg {}

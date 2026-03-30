@@ -1,5 +1,5 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatRippleModule} from '.';
 import {MatRipple} from './ripple';
@@ -47,6 +47,7 @@ describe('MatRipple Zone.js integration', () => {
       </div>
     `,
   imports: [MatRippleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicRippleContainer {
   @ViewChild('ripple') ripple!: MatRipple;

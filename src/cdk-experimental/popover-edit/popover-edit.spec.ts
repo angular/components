@@ -10,6 +10,7 @@ import {
   ElementRef,
   ViewChild,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
@@ -858,6 +859,7 @@ abstract class BaseTestComponent {
   </table>
   `,
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VanillaTableOutOfCell extends BaseTestComponent {
   elements!: ChemicalElement[];
@@ -919,6 +921,7 @@ class VanillaTableOutOfCell extends BaseTestComponent {
   </table>
   `,
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VanillaTableInCell extends BaseTestComponent {
   elements!: ChemicalElement[];
@@ -1004,6 +1007,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
   </div>
   `,
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -1078,6 +1082,7 @@ class CdkFlexTableInCell extends BaseTestComponent {
   <div>
   `,
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -1159,6 +1164,7 @@ class CdkTableInCell extends BaseTestComponent {
   <div>
   `,
   imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTableWithSkipRows extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];

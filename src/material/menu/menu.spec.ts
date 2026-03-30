@@ -2484,6 +2484,7 @@ const SIMPLE_MENU_TEMPLATE = `
 @Component({
   selector: 'mat-icon',
   template: '<ng-content/>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FakeIcon {}
 
@@ -2491,6 +2492,7 @@ class FakeIcon {}
   template: SIMPLE_MENU_TEMPLATE,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
   selector: 'simple-menu',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2524,6 +2526,7 @@ class SimpleMenuOnPush extends SimpleMenu {}
     </mat-menu>
   `,
   imports: [MatButton, MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledMenu {
   @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
@@ -2537,6 +2540,7 @@ class DisabledMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PositionedMenu {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2557,6 +2561,7 @@ interface TestableMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class OverlapMenu implements TestableMenu {
   @Input() overlapTrigger: boolean = false;
@@ -2573,6 +2578,7 @@ class OverlapMenu implements TestableMenu {
     </ng-template>
   `,
   exportAs: 'matCustomMenu',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CustomMenuPanel implements MatMenuPanel {
   direction!: Direction;
@@ -2596,6 +2602,7 @@ class CustomMenuPanel implements MatMenuPanel {
     </custom-menu>
   `,
   imports: [MatMenuTrigger, MatMenuItem, CustomMenuPanel],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CustomMenu {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2649,6 +2656,7 @@ class CustomMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMenu {
   @ViewChild('root') rootMenu!: MatMenu;
@@ -2691,6 +2699,7 @@ class NestedMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMenuRepeater {
   @ViewChild('rootTriggerEl') rootTriggerEl!: ElementRef<HTMLElement>;
@@ -2712,6 +2721,7 @@ class NestedMenuRepeater {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SubmenuDeclaredInsideParentMenu {
   @ViewChild('rootTriggerEl') rootTriggerEl!: ElementRef;
@@ -2741,6 +2751,7 @@ class DestroyChecker implements OnDestroy {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent, DestroyChecker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleLazyMenu {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2768,6 +2779,7 @@ class SimpleLazyMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LazyMenuWithContext {
   @ViewChild('triggerOne') triggerOne!: MatMenuTrigger;
@@ -2786,6 +2798,7 @@ class LazyMenuWithContext {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DynamicPanelMenu {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2803,6 +2816,7 @@ class DynamicPanelMenu {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithCheckboxItems {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2818,6 +2832,7 @@ class MenuWithCheckboxItems {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMenuWithRepeater {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2841,6 +2856,7 @@ class SimpleMenuWithRepeater {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMenuWithRepeaterInLazyContent {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -2882,24 +2898,28 @@ class LazyMenuWithOnPush {
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InvalidRecursiveMenu {}
 
 @Component({
   template: '<mat-menu aria-label="label"></mat-menu>',
   imports: [MatMenu],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticAriaLabelMenu {}
 
 @Component({
   template: '<mat-menu aria-labelledby="some-element"></mat-menu>',
   imports: [MatMenu],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticAriaLabelledByMenu {}
 
 @Component({
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
   imports: [MatMenu],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticAriaDescribedbyMenu {}
 
@@ -2913,6 +2933,7 @@ class StaticAriaDescribedbyMenu {}
     </mat-menu>
   `,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithRepeatedItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger!: MatMenuTrigger;

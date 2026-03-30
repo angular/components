@@ -1726,6 +1726,7 @@ describe('MatFormField without label', () => {
       <input matNativeControl id="test-id" placeholder="test">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithId {
   floatLabel: 'always' | 'auto' = 'auto';
@@ -1738,6 +1739,7 @@ class MatInputWithId {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithDisabled {
   disabled = false;
@@ -1747,6 +1749,7 @@ class MatInputWithDisabled {
 @Component({
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithRequired {
   required = false;
@@ -1755,6 +1758,7 @@ class MatInputWithRequired {
 @Component({
   template: `<mat-form-field><input matInput [type]="type"></mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithType {
   type!: string;
@@ -1767,6 +1771,7 @@ class MatInputWithType {
       <input matInput required [disabled]="disabled">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputLabelRequiredTestComponent {
   hideRequiredMarker: boolean = false;
@@ -1779,6 +1784,7 @@ class MatInputLabelRequiredTestComponent {
       <input matInput placeholder="Hello" [formControl]="formControl">
     </mat-form-field>`,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithFormControl {
   formControl = new FormControl('');
@@ -1787,6 +1793,7 @@ class MatInputWithFormControl {
 @Component({
   template: `<mat-form-field><input matInput><mat-hint>{{label}}</mat-hint></mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputHintLabel2TestController {
   label: string = '';
@@ -1798,6 +1805,7 @@ class MatInputHintLabel2TestController {
       <input matInput aria-describedby="initial">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputHintLabelTestController {
   label: string = '';
@@ -1812,6 +1820,7 @@ class MatInputHintLabelTestController {
       }
     </mat-form-field>`,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithSubscriptAndAriaDescribedBy {
   label: string = '';
@@ -1823,6 +1832,7 @@ class MatInputWithSubscriptAndAriaDescribedBy {
 @Component({
   template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputInvalidTypeTestController {
   t = 'file';
@@ -1835,6 +1845,7 @@ class MatInputInvalidTypeTestController {
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputInvalidHint2TestController {}
 
@@ -1846,6 +1857,7 @@ class MatInputInvalidHint2TestController {}
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputInvalidHintTestController {}
 
@@ -1857,6 +1869,7 @@ class MatInputInvalidHintTestController {}
       <mat-hint align="end" [id]="endId">World</mat-hint>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputMultipleHintTestController {
   startId!: string;
@@ -1870,6 +1883,7 @@ class MatInputMultipleHintTestController {
       <mat-hint align="end">World</mat-hint>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputMultipleHintMixedTestController {}
 
@@ -1879,6 +1893,7 @@ class MatInputMultipleHintMixedTestController {}
       <input matInput type="date" placeholder="Placeholder">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputDateTestController {}
 
@@ -1894,6 +1909,7 @@ class MatInputDateTestController {}
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputTextTestController {
   disabled = false;
@@ -1906,6 +1922,7 @@ class MatInputTextTestController {
       <input matInput type="password" placeholder="Placeholder">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputPasswordTestController {}
 
@@ -1915,6 +1932,7 @@ class MatInputPasswordTestController {}
       <input matInput type="number" placeholder="Placeholder">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputNumberTestController {}
 
@@ -1924,6 +1942,7 @@ class MatInputNumberTestController {}
       <input matInput type="number" placeholder="Placeholder" [(ngModel)]="value">
     </mat-form-field>`,
   imports: [MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputZeroTestController {
   value = 0;
@@ -1935,6 +1954,7 @@ class MatInputZeroTestController {
       <input matInput placeholder="Label" [value]="value">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithValueBinding {
   value: string = 'Initial';
@@ -1947,6 +1967,7 @@ class MatInputWithValueBinding {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithStaticLabel {}
 
@@ -1961,6 +1982,7 @@ class MatInputWithStaticLabel {}
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithDynamicLabel {
   shouldFloat: 'always' | 'auto' = 'always';
@@ -1975,6 +1997,7 @@ class MatInputWithDynamicLabel {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithoutDefinedLabel {}
 
@@ -1987,6 +2010,7 @@ class MatInputWithoutDefinedLabel {}
       <input matInput>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithCondictionalLabel {
   hasLabel = true;
@@ -1999,6 +2023,7 @@ class MatInputWithCondictionalLabel {
       </textarea>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputTextareaWithBindings {
   rows: number = 4;
@@ -2009,6 +2034,7 @@ class MatInputTextareaWithBindings {
 @Component({
   template: `<mat-form-field><input></mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputMissingMatInputTestController {}
 
@@ -2025,6 +2051,7 @@ class MatInputMissingMatInputTestController {}
     </form>
   `,
   imports: [MatInputModule, ReactiveFormsModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithFormErrorMessages {
   @ViewChild('form') form!: NgForm;
@@ -2048,6 +2075,7 @@ class MatInputWithFormErrorMessages {
     </form>
   `,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputInFormGroup {
   formGroup = new FormGroup({
@@ -2072,6 +2100,7 @@ class InputInFormGroup {
     </form>
   `,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithFormGroupErrorMessages {
   @ViewChild(FormGroupDirective) formGroupDirective!: FormGroupDirective;
@@ -2091,6 +2120,7 @@ class MatInputWithFormGroupErrorMessages {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithPrefixAndSuffix {}
 
@@ -2103,6 +2133,7 @@ class MatInputWithPrefixAndSuffix {}
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithNgIf {
   renderInput = true;
@@ -2130,6 +2161,7 @@ class MatInputOnPush {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithLabel {}
 
@@ -2141,6 +2173,7 @@ class MatInputWithLabel {}
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel!: FloatLabelType;
@@ -2155,6 +2188,7 @@ class MatInputWithLabelAndPlaceholder {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField!: MatFormField;
@@ -2169,6 +2203,7 @@ class MatInputWithAppearance {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithSubscriptSizing {
   @ViewChild(MatFormField) formField!: MatFormField;
@@ -2182,6 +2217,7 @@ class MatInputWithSubscriptSizing {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithoutPlaceholder {}
 
@@ -2197,6 +2233,7 @@ class MatInputWithoutPlaceholder {}
       </select>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSelect {
   disabled: boolean = false;
@@ -2215,6 +2252,7 @@ class MatInputSelect {
       </select>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSelectWithNoLabelNoValue {}
 
@@ -2230,6 +2268,7 @@ class MatInputSelectWithNoLabelNoValue {}
       </select>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSelectWithLabel {}
 
@@ -2245,6 +2284,7 @@ class MatInputSelectWithLabel {}
       </select>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSelectWithInnerHtml {}
 
@@ -2272,6 +2312,7 @@ class CustomMatInputAccessor {
       <input matInput customInputAccessor placeholder="Placeholder">
     </mat-form-field>`,
   imports: [MatInputModule, CustomMatInputAccessor],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithCustomAccessor {}
 
@@ -2282,6 +2323,7 @@ class MatInputWithCustomAccessor {}
       </select>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSelectWithoutOptions {}
 
@@ -2291,6 +2333,7 @@ class MatInputSelectWithoutOptions {}
       <input matNativeControl>
     </mat-form-field>`,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithColor {
   color!: ThemePalette;
@@ -2305,6 +2348,7 @@ class MatInputWithColor {
     <input class="outside" matNativeControl>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputInsideOutsideFormField {}
 
@@ -2315,6 +2359,7 @@ class MatInputInsideOutsideFormField {}
       <input matInput [formControl]="formControl">
     </mat-form-field>`,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithRequiredFormControl {
   formControl = new FormControl('', [Validators.required]);
@@ -2327,6 +2372,7 @@ class MatInputWithRequiredFormControl {
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSimple {}
 
@@ -2341,6 +2387,7 @@ class MatInputSimple {}
     </mat-form-field>
   `,
   imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputWithNgContainerPrefixAndSuffix {}
 
@@ -2351,6 +2398,7 @@ class InputWithNgContainerPrefixAndSuffix {}
       <input matInput [formControl]="formControl">
     </mat-form-field>`,
   imports: [MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputWithRequiredAssignableFormControl {
   formControl = new FormControl('', [Validators.required]);

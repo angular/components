@@ -1,4 +1,4 @@
-import {Component, ApplicationRef, Injector} from '@angular/core';
+import {Component, ApplicationRef, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {PortalModule, ComponentPortal} from '../../portal';
 import {
@@ -475,5 +475,6 @@ describe('GlobalPositonStrategy', () => {
 @Component({
   template: '',
   imports: [OverlayModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BlankPortal {}

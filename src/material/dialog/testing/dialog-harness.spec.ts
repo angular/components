@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -123,6 +123,7 @@ describe('MatDialogHarness', () => {
   </ng-template>
   `,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DialogHarnessTest {
   readonly dialog = inject(MatDialog);

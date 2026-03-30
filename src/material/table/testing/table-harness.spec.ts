@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -228,6 +228,7 @@ describe('MatTableHarness', () => {
     </table>
   `,
   imports: [MatTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TableHarnessTest {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
