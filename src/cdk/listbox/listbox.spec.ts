@@ -1,5 +1,5 @@
 import {A, B, DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '../keycodes';
-import {Component, Type, signal} from '@angular/core';
+import {Component, Type, signal, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -983,6 +983,7 @@ describe('CdkOption and CdkListbox', () => {
     </div>
   `,
   imports: [CdkListbox, CdkOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithOptions {
   changedOption: CdkOption<string> | null = null;
@@ -1009,6 +1010,7 @@ class ListboxWithOptions {
 @Component({
   template: `<div cdkListbox></div>`,
   imports: [CdkListbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithNoOptions {}
 
@@ -1025,6 +1027,7 @@ class ListboxWithNoOptions {}
     </div>
   `,
   imports: [CdkListbox, CdkOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithFormControl {
   formControl = new FormControl();
@@ -1041,6 +1044,7 @@ class ListboxWithFormControl {
     </div>
   `,
   imports: [CdkListbox, CdkOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1056,6 +1060,7 @@ class ListboxWithPreselectedFormControl {
     </div>
   `,
   imports: [CdkListbox, CdkOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithInvalidPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1072,6 +1077,7 @@ class ListboxWithInvalidPreselectedFormControl {
     </ul>
   `,
   imports: [CdkListbox, CdkOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithCustomTypeahead {}
 
@@ -1086,6 +1092,7 @@ class ListboxWithCustomTypeahead {}
     </div>
   `,
   imports: [CdkListbox, CdkOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithBoundValue {
   value = ['banana'];
@@ -1103,6 +1110,7 @@ class ListboxWithBoundValue {
     </div>
   `,
   imports: [CdkListbox, CdkOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithMultipleBoundValues {
   value = ['apple', 'banana'];
@@ -1117,6 +1125,7 @@ class ListboxWithMultipleBoundValues {
     </div>
   `,
   imports: [CdkListbox, CdkOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxWithObjectValues {
   fruits = [{name: 'Apple'}, {name: 'Orange'}, {name: 'Banana'}, {name: 'Peach'}];

@@ -1,7 +1,7 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -854,6 +854,7 @@ describe('MatSlideToggle with forms', () => {
       <span>Test Slide Toggle</span>
     </mat-slide-toggle>`,
   imports: [MatSlideToggleModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleBasic {
   isDisabled = false;
@@ -888,6 +889,7 @@ class SlideToggleBasic {
       <button type="submit"></button>
     </form>`,
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithForm {
   isSubmitted: boolean = false;
@@ -898,6 +900,7 @@ class SlideToggleWithForm {
   template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"
                                [checked]="isChecked"></mat-slide-toggle>`,
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithModel {
   modelValue = false;
@@ -908,6 +911,7 @@ class SlideToggleWithModel {
 @Component({
   template: `<mat-slide-toggle checked disabled>Label</mat-slide-toggle>`,
   imports: [MatSlideToggleModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleCheckedAndDisabledAttr {}
 
@@ -917,6 +921,7 @@ class SlideToggleCheckedAndDisabledAttr {}
       <span>Test Slide Toggle</span>
     </mat-slide-toggle>`,
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithFormControl {
   formControl = new FormControl(false);
@@ -925,6 +930,7 @@ class SlideToggleWithFormControl {
 @Component({
   template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`,
   imports: [MatSlideToggleModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithTabindexAttr {
   disabled = false;
@@ -933,6 +939,7 @@ class SlideToggleWithTabindexAttr {
 @Component({
   template: `<mat-slide-toggle [(ngModel)]="checked" (change)="onChange()"></mat-slide-toggle>`,
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithModelAndChangeEvent {
   checked = false;
@@ -944,5 +951,6 @@ class SlideToggleWithModelAndChangeEvent {
     <mat-slide-toggle aria-label="Slide toggle" aria-labelledby="something"></mat-slide-toggle>
   `,
   imports: [MatSlideToggleModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithStaticAriaAttributes {}

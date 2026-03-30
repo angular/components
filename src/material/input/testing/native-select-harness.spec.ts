@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -223,6 +223,7 @@ describe('MatNativeSelectHarness', () => {
     </mat-form-field>
   `,
   imports: [MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectHarnessTest {
   favoriteFood!: string;

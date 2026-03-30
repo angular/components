@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {Listbox} from './listbox';
 import {Option} from './option';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -799,6 +799,7 @@ interface TestOption {
     </ul>
   `,
   imports: [Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListboxExample {
   options = signal<TestOption[]>([
@@ -830,5 +831,6 @@ class ListboxExample {
     </ul>
   `,
   imports: [Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DefaultListboxExample {}

@@ -20,7 +20,7 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, signal, WritableSignal} from '@angular/core';
+import {Component, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_DATE_FORMATS, provideNativeDateAdapter} from '../core';
@@ -846,6 +846,7 @@ describe('MatMonthView', () => {
       [activeDrag]="activeDrag"></mat-month-view>
       `,
   imports: [MatMonthView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
@@ -877,6 +878,7 @@ class StandardMonthView {
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-month-view>`,
   imports: [MatMonthView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MonthViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -890,6 +892,7 @@ class MonthViewWithDateFilter {
 @Component({
   template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`,
   imports: [MatMonthView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MonthViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

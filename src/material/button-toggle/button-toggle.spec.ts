@@ -1,6 +1,13 @@
 import {createKeyboardEvent, dispatchEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -1166,6 +1173,7 @@ describe('MatButtonToggle without forms', () => {
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonTogglesInsideButtonToggleGroup {
   isGroupDisabled: boolean = false;
@@ -1190,6 +1198,7 @@ class ButtonTogglesInsideButtonToggleGroup {
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithNgModel {
   groupName = 'group-name';
@@ -1212,6 +1221,7 @@ class ButtonToggleGroupWithNgModel {
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonTogglesInsideButtonToggleGroupMultiple {
   isGroupDisabled: boolean = false;
@@ -1228,6 +1238,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   value: ('' | number | null | undefined | boolean)[] = [0];
@@ -1239,6 +1250,7 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   <mat-button-toggle>Yes</mat-button-toggle>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneButtonToggle {}
 
@@ -1250,6 +1262,7 @@ class StandaloneButtonToggle {}
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithInitialValue {
   lastEvent!: MatButtonToggleChange;
@@ -1264,6 +1277,7 @@ class ButtonToggleGroupWithInitialValue {
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithFormControl {
   control = new FormControl('');
@@ -1281,6 +1295,7 @@ class ButtonToggleGroupWithFormControl {
     </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithIndirectDescendantToggles {
   control = new FormControl('');
@@ -1290,6 +1305,7 @@ class ButtonToggleGroupWithIndirectDescendantToggles {
 @Component({
   template: `<mat-button-toggle aria-label="Super effective"></mat-button-toggle>`,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithAriaLabel {}
 
@@ -1297,6 +1313,7 @@ class ButtonToggleWithAriaLabel {}
 @Component({
   template: `<mat-button-toggle aria-labelledby="some-id"></mat-button-toggle>`,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithAriaLabelledby {}
 
@@ -1309,6 +1326,7 @@ class ButtonToggleWithAriaLabelledby {}
     </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RepeatedButtonTogglesWithPreselectedValue {
   @ViewChild(MatButtonToggleGroup) toggleGroup!: MatButtonToggleGroup;
@@ -1321,12 +1339,14 @@ class RepeatedButtonTogglesWithPreselectedValue {
 @Component({
   template: `<mat-button-toggle tabindex="3"></mat-button-toggle>`,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithTabindex {}
 
 @Component({
   template: `<mat-button-toggle name="custom-name"></mat-button-toggle>`,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithStaticName {}
 
@@ -1338,6 +1358,7 @@ class ButtonToggleWithStaticName {}
     </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithStaticChecked {
   @ViewChild(MatButtonToggleGroup) group!: MatButtonToggleGroup;
@@ -1349,6 +1370,7 @@ class ButtonToggleWithStaticChecked {
     <mat-button-toggle aria-label="Toggle me" aria-labelledby="something"></mat-button-toggle>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleWithStaticAriaAttributes {}
 
@@ -1361,6 +1383,7 @@ class ButtonToggleWithStaticAriaAttributes {}
   </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithFormControlAndDynamicButtons {
   @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
@@ -1377,6 +1400,7 @@ class ButtonToggleGroupWithFormControlAndDynamicButtons {
     </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupWithNgModelAndStaticOptions {
   value = '';

@@ -13,7 +13,15 @@ import {
   dispatchPointerEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  Provider,
+  QueryList,
+  Type,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -1724,6 +1732,7 @@ const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardSlider {}
 
@@ -1736,6 +1745,7 @@ class StandardSlider {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardRangeSlider {}
 
@@ -1747,6 +1757,7 @@ class StandardRangeSlider {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledSlider {}
 
@@ -1759,6 +1770,7 @@ class DisabledSlider {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledRangeSlider {}
 
@@ -1770,6 +1782,7 @@ class DisabledRangeSlider {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithMinAndMax {
   min = 25;
@@ -1785,6 +1798,7 @@ class SliderWithMinAndMax {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithMinAndMax {
   min = 25;
@@ -1799,6 +1813,7 @@ class RangeSliderWithMinAndMax {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithValue {}
 
@@ -1811,6 +1826,7 @@ class SliderWithValue {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithValue {}
 
@@ -1822,6 +1838,7 @@ class RangeSliderWithValue {}
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithStep {
   step = 25;
@@ -1836,6 +1853,7 @@ class SliderWithStep {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithStep {
   step = 25;
@@ -1849,6 +1867,7 @@ class RangeSliderWithStep {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1865,6 +1884,7 @@ class DiscreteSliderWithDisplayWith {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1880,6 +1900,7 @@ class DiscreteRangeSliderWithDisplayWith {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithOneWayBinding {
   value = 50;
@@ -1894,6 +1915,7 @@ class SliderWithOneWayBinding {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithOneWayBinding {
   startValue = 25;
@@ -1908,6 +1930,7 @@ class RangeSliderWithOneWayBinding {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -1923,6 +1946,7 @@ class SliderWithNgModel {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -1940,6 +1964,7 @@ class RangeSliderWithNgModel {
 `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithNgModelEdgeCase {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -1954,6 +1979,7 @@ class RangeSliderWithNgModelEdgeCase {
   </mat-slider>`,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithFormControl {
   control = new FormControl(0);
@@ -1967,6 +1993,7 @@ class SliderWithFormControl {
   </mat-slider>`,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithFormControl {
   startInputControl = new FormControl(0);
@@ -1981,6 +2008,7 @@ class RangeSliderWithFormControl {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithTwoWayBinding {
   value = 0;
@@ -1995,6 +2023,7 @@ class SliderWithTwoWayBinding {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -2011,6 +2040,7 @@ class RangeSliderWithTwoWayBinding {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithTickMarks {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -2025,6 +2055,7 @@ class SliderWithTickMarks {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeSliderWithTickMarks {
   @ViewChild(MatSlider) slider!: MatSlider;
@@ -2041,6 +2072,7 @@ class RangeSliderWithTickMarks {
   `,
   styles: SLIDER_STYLES,
   imports: [MatSliderModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SliderWithFormGroup {
   readonly MIN = 0;

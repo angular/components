@@ -7,7 +7,13 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ElementRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -530,6 +536,7 @@ describe('Row Chips', () => {
       }
     </mat-chip-grid>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleChip {
   @ViewChild(MatChipGrid) chipList!: MatChipGrid;

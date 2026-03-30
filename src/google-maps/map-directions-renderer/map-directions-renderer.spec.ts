@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MapDirectionsRenderer} from './map-directions-renderer';
@@ -132,6 +132,7 @@ describe('MapDirectionsRenderer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapDirectionsRenderer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapDirectionsRenderer) directionsRenderer!: MapDirectionsRenderer;

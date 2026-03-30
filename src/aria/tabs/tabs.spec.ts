@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
@@ -733,6 +733,7 @@ describe('Tabs', () => {
     </div>
   `,
   imports: [Tabs, TabList, Tab, TabPanel, TabContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestTabsComponent {
   tabsData = signal<TestTabDefinition[]>([

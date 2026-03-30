@@ -1,6 +1,6 @@
 import {MutationObserverFactory} from '../../observers';
 import {ComponentPortal} from '../../portal';
-import {Component, inject, Injector} from '@angular/core';
+import {Component, inject, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By, DomSanitizer} from '@angular/platform-browser';
 import {A11yModule} from '../index';
@@ -397,6 +397,7 @@ function getLiveElement(): Element {
 @Component({
   template: `<button (click)="announce('Test')">Announce</button>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   live = inject(LiveAnnouncer);
@@ -410,6 +411,7 @@ class TestApp {
   template: '',
   host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'},
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestModal {
   ariaOwns: string | null = null;
@@ -421,6 +423,7 @@ class TestModal {
       [cdkAriaLive]="politeness"
       [cdkAriaLiveDuration]="duration">{{content}}</div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DivWithCdkAriaLive {
   politeness: AriaLivePoliteness = 'polite';

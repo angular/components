@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -146,6 +146,7 @@ describe('MapRectangle', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapRectangle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapRectangle) rectangle!: MapRectangle;

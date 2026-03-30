@@ -1,5 +1,5 @@
 import {TestBed, fakeAsync, ComponentFixture, tick} from '@angular/core/testing';
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {Component, ViewChild, ElementRef, ChangeDetectionStrategy} from '@angular/core';
 import {CdkScrollable, ScrollDispatcher, ScrollingModule} from './public-api';
 import {dispatchFakeEvent} from '../testing/private';
 
@@ -259,6 +259,7 @@ describe('ScrollDispatcher', () => {
 @Component({
   template: `<div #scrollingElement cdkScrollable style="height: 9999px"></div>`,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollingComponent {
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
@@ -277,6 +278,7 @@ class ScrollingComponent {
     <div id="scrollable-2" cdkScrollable></div>
   `,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedScrollingComponent {
   @ViewChild('interestingElement') interestingElement!: ElementRef<HTMLElement>;

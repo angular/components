@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -388,6 +388,7 @@ const textareaStyleReset = `
         #autosize="cdkTextareaAutosize" [placeholder]="placeholder">{{content}}</textarea>`,
   styles: textareaStyleReset,
   imports: [FormsModule, TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutosizeTextAreaWithContent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
@@ -401,6 +402,7 @@ class AutosizeTextAreaWithContent {
   template: `<textarea cdkTextareaAutosize [(ngModel)]="model"></textarea>`,
   styles: textareaStyleReset,
   imports: [FormsModule, TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutosizeTextareaWithNgModel {
   model = '';
@@ -410,6 +412,7 @@ class AutosizeTextareaWithNgModel {
   template: `<textarea [cdkTextareaAutosize]="false">{{content}}</textarea>`,
   styles: textareaStyleReset,
   imports: [FormsModule, TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutosizeTextareaWithoutAutosize {
   content: string = '';

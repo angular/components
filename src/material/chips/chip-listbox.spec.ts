@@ -15,6 +15,7 @@ import {
   ViewChild,
   ViewChildren,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
@@ -961,6 +962,7 @@ describe('MatChipListbox', () => {
       }
     </mat-chip-listbox>`,
   imports: [MatChipListbox, MatChipOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardChipListbox {
   name: string = 'Test';
@@ -984,6 +986,7 @@ class StandardChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicChipListbox {
   foods: any[] = [
@@ -1018,6 +1021,7 @@ class BasicChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiSelectionChipListbox {
   foods: any[] = [
@@ -1048,6 +1052,7 @@ class MultiSelectionChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption, AsyncPipe, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AsyncMultiSelectionChipListbox {
   private _chipsSubject = new BehaviorSubject(['tutorial-1', 'tutorial-2', 'tutorial-3']);
@@ -1070,6 +1075,7 @@ class AsyncMultiSelectionChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FalsyValueChipListbox {
   foods: any[] = [
@@ -1091,6 +1097,7 @@ class FalsyValueChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectedChipListbox {
   foods: any[] = [
@@ -1113,6 +1120,7 @@ class SelectedChipListbox {
     </mat-chip-listbox>
   `,
   imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FalsyBasicChipListbox {
   foods: any[] = [
@@ -1144,6 +1152,7 @@ class FalsyBasicChipListbox {
     </form>
   `,
   imports: [MatChipListbox, MatChipOption, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndividuallyDisabledChipInsideForm {
   @ViewChild(MatChipOption) chip!: MatChipOption;

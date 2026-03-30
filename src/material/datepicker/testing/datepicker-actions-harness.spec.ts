@@ -8,7 +8,7 @@
 
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '../../button';
 import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
@@ -71,6 +71,7 @@ describe('MatDatepickerActionsHarness', () => {
     </mat-datepicker>
   `,
   imports: [MatDatepickerModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerActionsHarnessTest {
   applied = signal(false);

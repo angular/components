@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -149,6 +149,7 @@ describe('MapKmlLayer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapKmlLayer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapKmlLayer) kmlLayer!: MapKmlLayer;

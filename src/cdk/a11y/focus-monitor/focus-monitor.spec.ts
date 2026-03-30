@@ -1,6 +1,6 @@
 import {TAB} from '../../keycodes';
 import {Platform} from '../../platform';
-import {Component, ViewChild, DOCUMENT} from '@angular/core';
+import {Component, ViewChild, DOCUMENT, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -875,12 +875,14 @@ describe('FocusMonitor input label detection', () => {
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PlainButton {}
 
 @Component({
   template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonWithFocusClasses {
   focusChanged(_origin: FocusOrigin) {}
@@ -889,24 +891,28 @@ class ButtonWithFocusClasses {
 @Component({
   template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComplexComponentWithMonitorElementFocus {}
 
 @Component({
   template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComplexComponentWithMonitorSubtreeFocus {}
 
 @Component({
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
 
 @Component({
   template: `<ng-container cdkMonitorElementFocus></ng-container>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusMonitorOnCommentNode {}
 
@@ -916,12 +922,14 @@ class FocusMonitorOnCommentNode {}
     <input id="test-checkbox" type="checkbox">
   `,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithLabel {}
 
 @Component({
   template: `<button cdkMonitorElementFocus #exportedDir="cdkMonitorFocus"></button>`,
   imports: [A11yModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ExportedFocusMonitor {
   @ViewChild('exportedDir') exportedDirRef!: CdkMonitorFocus;

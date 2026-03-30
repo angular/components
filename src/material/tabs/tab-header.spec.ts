@@ -9,7 +9,13 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {ChangeDetectorRef, Component, ViewChild, inject} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -739,6 +745,7 @@ interface Tab {
     }
   `,
   imports: [Dir, MatTabHeader, MatTabLabelWrapper],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleTabHeaderApp {
   disableRipple: boolean = false;

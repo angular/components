@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
 import {
@@ -247,6 +247,7 @@ interface ExampleFlatNode {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TreeHarnessTest {
   private _transformer = (node: Node, level: number) => {

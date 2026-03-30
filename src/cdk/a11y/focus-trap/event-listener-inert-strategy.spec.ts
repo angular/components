@@ -6,6 +6,7 @@ import {
   Type,
   ViewChild,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {patchElementFocus} from '../../testing/private';
@@ -82,6 +83,7 @@ function createComponent<T>(
       <button #secondFocusable>SAVE</button>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleFocusTrap implements AfterViewInit {
   private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);

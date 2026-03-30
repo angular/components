@@ -1,6 +1,6 @@
 import {ESCAPE} from '../../keycodes';
 import {ComponentPortal} from '../../portal';
-import {ApplicationRef, Component, Injector} from '@angular/core';
+import {ApplicationRef, Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
 import {createOverlayRef} from '../index';
@@ -209,5 +209,5 @@ describe('OverlayKeyboardDispatcher', () => {
   });
 });
 
-@Component({template: 'Hello'})
+@Component({template: 'Hello', changeDetection: ChangeDetectionStrategy.Eager})
 class TestComponent {}

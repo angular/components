@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkAccordionModule, CdkAccordionItem} from './public-api';
 
@@ -226,6 +226,7 @@ describe('CdkAccordionItem', () => {
 @Component({
   template: `<cdk-accordion-item #item1></cdk-accordion-item>`,
   imports: [CdkAccordionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleItem {}
 
@@ -235,6 +236,7 @@ class SingleItem {}
     <cdk-accordion-item #item2></cdk-accordion-item>
   `,
   imports: [CdkAccordionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ItemGroupWithoutAccordion {}
 
@@ -246,5 +248,6 @@ class ItemGroupWithoutAccordion {}
     </cdk-accordion>
   `,
   imports: [CdkAccordionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ItemGroupWithAccordion {}

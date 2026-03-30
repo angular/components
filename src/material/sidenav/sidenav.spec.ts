@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
@@ -89,6 +89,7 @@ describe('MatSidenav', () => {
       </mat-sidenav-content>
     </mat-sidenav-container>`,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SidenavWithFixedPosition {
   fixed = true;
@@ -107,6 +108,7 @@ class SidenavWithFixedPosition {
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndirectDescendantSidenav {
   @ViewChild('container') container!: MatSidenavContainer;
@@ -125,6 +127,7 @@ class IndirectDescendantSidenav {
     </mat-sidenav-container>
   `,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedSidenavContainers {
   @ViewChild('outerContainer') outerContainer!: MatSidenavContainer;

@@ -1,4 +1,4 @@
-import {ApplicationRef, Component, Injector} from '@angular/core';
+import {ApplicationRef, Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {filter, take} from 'rxjs/operators';
 import {ComponentPortal} from '../../portal';
@@ -407,7 +407,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 
     it('should run change detection if the click was made outside the overlay and there are `outsidePointerEvents` observers', async () => {
       let renders = 0;
-      @Component({template: '{{increment()}}'})
+      @Component({template: '{{increment()}}', changeDetection: ChangeDetectionStrategy.Eager})
       class Counter {
         increment() {
           renders++;
@@ -448,5 +448,5 @@ describe('OverlayOutsideClickDispatcher', () => {
   });
 });
 
-@Component({template: 'Hello'})
+@Component({template: 'Hello', changeDetection: ChangeDetectionStrategy.Eager})
 class TestComponent {}

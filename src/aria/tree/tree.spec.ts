@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -1579,6 +1579,7 @@ interface TestTreeNode<V = string> {
     </ng-template>
   `,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestTreeComponent {
   nodes = signal<TestTreeNode[]>([

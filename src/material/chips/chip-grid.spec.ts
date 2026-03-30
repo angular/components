@@ -32,6 +32,7 @@ import {
   WritableSignal,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
@@ -1129,6 +1130,7 @@ describe('MatChipGrid', () => {
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
   imports: [MatChipGrid, MatChipRow, MatChipInput],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardChipGrid {
   name: string = 'Test';
@@ -1151,6 +1153,7 @@ class StandardChipGrid {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FormFieldChipGrid {
   chips = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1183,6 +1186,7 @@ class FormFieldChipGrid {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputChipGrid {
   foods: any[] = [
@@ -1252,6 +1256,7 @@ class InputChipGrid {
     ReactiveFormsModule,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithFormErrorMessages {
   foods: any[] = [
@@ -1288,6 +1293,7 @@ class ChipGridWithFormErrorMessages {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatChipRemove],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithRemove {
   chips = [0, 1, 2, 3, 4];
@@ -1310,6 +1316,7 @@ class ChipGridWithRemove {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatFormField, MatLabel, MatHint],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithoutInput {
   chips = ['Pizza', 'Pasta', 'Tacos'];

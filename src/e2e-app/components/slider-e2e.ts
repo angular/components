@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
@@ -27,5 +27,6 @@ import {MatSliderModule} from '@angular/material/slider';
     `,
   styles: '.mat-mdc-slider { width: 148px; }',
   imports: [MatSliderModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class SliderE2e {}

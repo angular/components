@@ -1,4 +1,4 @@
-import {Component, computed, DebugElement, signal} from '@angular/core';
+import {Component, computed, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
@@ -1126,6 +1126,7 @@ describe('Combobox', () => {
 </div>
   `,
   imports: [Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer, Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxListboxExample {
   readonly = signal(false);
@@ -1196,6 +1197,7 @@ class ComboboxListboxExample {
     TreeItemGroup,
     NgTemplateOutlet,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxTreeExample {
   readonly = signal(false);

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {
@@ -149,6 +149,7 @@ interface TestData {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicTextColumnApp {
   displayedColumns = ['propertyA', 'propertyB', 'propertyC'];
@@ -168,6 +169,7 @@ class BasicTextColumnApp {
     <cdk-text-column name="column-a"></cdk-text-column>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingTableApp {}
 
@@ -181,5 +183,6 @@ class MissingTableApp {}
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {}

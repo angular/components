@@ -7,7 +7,15 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, QueryList, signal, ViewChild, ViewChildren, WritableSignal} from '@angular/core';
+import {
+  Component,
+  QueryList,
+  signal,
+  ViewChild,
+  ViewChildren,
+  WritableSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -552,6 +560,7 @@ describe('MatTabNavBar with enabled animations', () => {
     <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleTabNavBarTestApp {
   @ViewChild(MatTabNav) tabNavBar!: MatTabNav;
@@ -577,6 +586,7 @@ class SimpleTabNavBarTestApp {
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabLinkWithNgIf {
   isDestroyed = false;
@@ -592,6 +602,7 @@ class TabLinkWithNgIf {
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabBarWithInactiveTabsOnInit {
   tabs = [0, 1, 2];
@@ -607,6 +618,7 @@ class TabBarWithInactiveTabsOnInit {
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithCustomAnimationDuration {
   links = ['First', 'Second', 'Third'];
@@ -620,5 +632,6 @@ class TabsWithCustomAnimationDuration {
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabBarWithDisabledTabOnInit {}

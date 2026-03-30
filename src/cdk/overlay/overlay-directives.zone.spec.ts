@@ -1,4 +1,11 @@
-import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  ViewChild,
+  provideZoneChangeDetection,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkConnectedOverlay, CdkOverlayOrigin} from './overlay-directives';
 import {OverlayModule} from './overlay-module';
@@ -75,6 +82,7 @@ describe('Overlay directives Zone.js integration', () => {
       <p>Menu content</p>
     </ng-template>`,
   imports: [OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ConnectedOverlayDirectiveTest {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;

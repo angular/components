@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {Component, ElementRef, inject, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {SharedResizeObserver} from './shared-resize-observer';
 
 describe('SharedResizeObserver', () => {
@@ -135,6 +135,7 @@ describe('SharedResizeObserver', () => {
     <div #el1></div>
     <div #el2></div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class TestComponent {
   @ViewChild('el1') el1!: ElementRef<Element>;

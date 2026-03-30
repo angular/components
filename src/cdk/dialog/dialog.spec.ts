@@ -1412,6 +1412,7 @@ class ComponentWithOnPushViewContainer {
   selector: 'arbitrary-component',
   template: `<dir-with-view-container></dir-with-view-container>`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
@@ -1426,6 +1427,7 @@ class ComponentWithChildViewContainer {
   template: `<ng-template let-data let-dialogRef="dialogRef">
       Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
   imports: [DialogModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithTemplateRef {
   localValue = '';
@@ -1443,6 +1445,7 @@ class ComponentWithTemplateRef {
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
   imports: [DialogModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   dialogRef = inject<DialogRef<PizzaMsg>>(DialogRef);
@@ -1459,6 +1462,7 @@ class PizzaMsg {
     // Avoids conflicting ID warning
     'id': 'content-element-dialog',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContentElementDialog {
   closeButtonAriaLabel = '';
@@ -1468,6 +1472,7 @@ class ContentElementDialog {
   template: '',
   providers: [Dialog],
   imports: [DialogModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentThatProvidesMatDialog {
   dialog = inject(Dialog);
@@ -1477,6 +1482,7 @@ class ComponentThatProvidesMatDialog {
 @Component({
   template: '',
   imports: [DialogModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DialogWithInjectedData {
   data = inject(DIALOG_DATA);
@@ -1489,12 +1495,14 @@ class DialogWithInjectedData {
     // Avoids conflicting ID warning
     'id': 'dialog-without-focusable',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DialogWithoutFocusableElements {}
 
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ShadowDomComponent {}
 
@@ -1519,6 +1527,7 @@ class TemplateInjectorInnerDirective {
     },
   ],
   imports: [TemplateInjectorInnerDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TemplateInjectorParentComponent {
   @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;

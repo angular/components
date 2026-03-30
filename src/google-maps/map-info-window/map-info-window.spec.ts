@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -249,6 +249,7 @@ describe('MapInfoWindow', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapInfoWindow],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;

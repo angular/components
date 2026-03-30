@@ -6,7 +6,15 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, Directive, ElementRef, Provider, Type, ViewChild} from '@angular/core';
+import {
+  Component,
+  Directive,
+  ElementRef,
+  Provider,
+  Type,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   FormControl,
@@ -1149,6 +1157,7 @@ describe('MatDateRangeInput', () => {
     MatDateRangePicker,
     ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardRangePicker {
   @ViewChild('start') start!: ElementRef<HTMLInputElement>;
@@ -1183,6 +1192,7 @@ class StandardRangePicker {
     </mat-form-field>
   `,
   imports: [MatDateRangeInput, MatEndDate, MatFormField, MatDateRangePicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerNoStart {}
 
@@ -1197,6 +1207,7 @@ class RangePickerNoStart {}
     </mat-form-field>
   `,
   imports: [MatDateRangeInput, MatStartDate, MatFormField, MatDateRangePicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerNoEnd {}
 
@@ -1219,6 +1230,7 @@ class RangePickerNoEnd {}
     MatDateRangePicker,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerNgModel {
   @ViewChild(MatStartDate, {read: NgModel}) startModel!: NgModel;
@@ -1258,6 +1270,7 @@ class RangePickerNgModel {
     </mat-form-field>
   `,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerNoLabel {
   @ViewChild('start') start!: ElementRef<HTMLInputElement>;
@@ -1298,6 +1311,7 @@ class CustomValidator implements Validator {
     CustomValidator,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerWithCustomValidator {
   @ViewChild(CustomValidator) validator!: CustomValidator;
@@ -1319,6 +1333,7 @@ class RangePickerWithCustomValidator {
     </mat-form-field>
   `,
   imports: [MatDateRangeInput, MatStartDate, MatEndDate, MatFormField, MatDateRangePicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangePickerErrorStateMatcher {
   @ViewChild(MatStartDate) startInput!: MatStartDate<Date>;

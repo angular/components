@@ -1,7 +1,7 @@
 import {MatTableDataSource} from './table-data-source';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 
 describe('MatTableDataSource', () => {
   describe('sort', () => {
@@ -118,6 +118,7 @@ describe('MatTableDataSource', () => {
 @Component({
   template: `<div matSort matSortDirection="asc"></div>`,
   imports: [MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortApp {
   @ViewChild(MatSort, {static: true}) sort!: MatSort;

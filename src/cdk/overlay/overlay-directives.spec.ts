@@ -1,4 +1,12 @@
-import {Component, ElementRef, Injector, signal, ViewChild, WritableSignal} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  signal,
+  ViewChild,
+  WritableSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {Direction} from '../bidi';
@@ -789,6 +797,7 @@ describe('Overlay directives', () => {
     <p>Menu content</p>
   </ng-template>`,
   imports: [OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ConnectedOverlayDirectiveTest {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
@@ -832,6 +841,7 @@ class ConnectedOverlayDirectiveTest {
     <ng-template cdk-connected-overlay>Menu content</ng-template>
   `,
   imports: [OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ConnectedOverlayPropertyInitOrder {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;

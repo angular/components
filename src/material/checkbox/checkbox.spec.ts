@@ -1186,6 +1186,7 @@ describe('MatCheckboxDefaultOptions', () => {
     </mat-checkbox>
   </div>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleCheckbox {
   labelPos: 'before' | 'after' = 'after';
@@ -1210,6 +1211,7 @@ class SingleCheckbox {
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
                            [disabled]="isDisabled">Be good</mat-checkbox>`,
   imports: [MatCheckbox, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithNgModel {
   isGood = false;
@@ -1231,6 +1233,7 @@ class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
     <mat-checkbox>Option 2</mat-checkbox>
   `,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultipleCheckboxes {}
 
@@ -1242,6 +1245,7 @@ class MultipleCheckboxes {}
         [disabled]="isDisabled">
     </mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithTabIndex {
   customTabIndex: number = 7;
@@ -1252,6 +1256,7 @@ class CheckboxWithTabIndex {
 @Component({
   template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithAriaLabel {}
 
@@ -1259,6 +1264,7 @@ class CheckboxWithAriaLabel {}
 @Component({
   template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithAriaLabelledby {}
 
@@ -1266,6 +1272,7 @@ class CheckboxWithAriaLabelledby {}
 @Component({
   template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithAriaDescribedby {}
 
@@ -1273,6 +1280,7 @@ class CheckboxWithAriaDescribedby {}
 @Component({
   template: `<mat-checkbox aria-expanded="true"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithPositiveAriaExpanded {}
 
@@ -1280,6 +1288,7 @@ class CheckboxWithPositiveAriaExpanded {}
 @Component({
   template: `<mat-checkbox aria-expanded="false"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithNegativeAriaExpanded {}
 
@@ -1287,6 +1296,7 @@ class CheckboxWithNegativeAriaExpanded {}
 @Component({
   template: `<mat-checkbox aria-controls="some-id"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithAriaControls {}
 
@@ -1294,6 +1304,7 @@ class CheckboxWithAriaControls {}
 @Component({
   template: `<mat-checkbox aria-owns="some-id"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithAriaOwns {}
 
@@ -1301,6 +1312,7 @@ class CheckboxWithAriaOwns {}
 @Component({
   template: `<mat-checkbox name="test-name"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithNameAttribute {}
 
@@ -1308,6 +1320,7 @@ class CheckboxWithNameAttribute {}
 @Component({
   template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithChangeEvent {
   lastEvent: MatCheckboxChange | undefined;
@@ -1317,6 +1330,7 @@ class CheckboxWithChangeEvent {
 @Component({
   template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`,
   imports: [MatCheckbox, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithFormControl {
   formControl = new FormControl(false);
@@ -1326,6 +1340,7 @@ class CheckboxWithFormControl {
 @Component({
   template: `<mat-checkbox>{{ label }}</mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithoutLabel {
   label = '';
@@ -1335,11 +1350,13 @@ class CheckboxWithoutLabel {
 @Component({
   template: `<mat-checkbox tabindex="5"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithTabindexAttr {}
 
 @Component({
   template: `<mat-checkbox aria-label="Checkbox" aria-labelledby="something"></mat-checkbox>`,
   imports: [MatCheckbox],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithStaticAriaAttributes {}

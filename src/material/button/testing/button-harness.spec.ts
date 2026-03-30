@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
@@ -273,6 +273,7 @@ describe('MatButtonHarness', () => {
     </a>
   `,
   imports: [MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonHarnessTest {
   clicked = signal(false);

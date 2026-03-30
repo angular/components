@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   afterNextRender,
   provideZoneChangeDetection,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {animationFrameScheduler} from 'rxjs';
@@ -99,6 +100,7 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
     `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;

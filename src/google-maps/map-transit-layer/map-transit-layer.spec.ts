@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -43,5 +43,6 @@ describe('MapTransitLayer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapTransitLayer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {}

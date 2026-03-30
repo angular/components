@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '../../icon';
 import {MatIconHarness} from '../../icon/testing';
@@ -91,6 +91,7 @@ describe('MatChipHarness', () => {
     <mat-chip-row (removed)="removeChip()">Chip Row</mat-chip-row>
   `,
   imports: [MatChipsModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipHarnessTest {
   removeChip() {}

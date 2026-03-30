@@ -6,6 +6,7 @@ import {
   NgZone,
   ViewChild,
   provideZoneChangeDetection,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -66,6 +67,7 @@ describe('MatTooltip Zone.js integration', () => {
         }
       </div>`,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollableTooltipDemo {
   position: TooltipPosition = 'below';

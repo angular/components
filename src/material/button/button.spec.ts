@@ -1,5 +1,5 @@
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
-import {ApplicationRef, Component} from '@angular/core';
+import {ApplicationRef, Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
@@ -400,6 +400,7 @@ describe('MatButton', () => {
     @Component({
       template: `<button mat-button>Click me</button>`,
       imports: [MatButtonModule],
+      changeDetection: ChangeDetectionStrategy.Eager,
     })
     class ConfigTestApp {}
 
@@ -541,6 +542,7 @@ describe('MatFabDefaultOptions', () => {
     <button class="default-appearance" matButton>Dynamic button</button>
   `,
   imports: [MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   clickCount = 0;
