@@ -512,7 +512,7 @@ export class MenuBarPattern<V> {
 }
 
 // @public
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'values'> {
+export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value'> {
     expansionDelay: SignalLike<number>;
     id: SignalLike<string>;
     items: SignalLike<MenuItemPattern<V>[]>;
@@ -902,7 +902,7 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly typeaheadDelay: SignalLike<number>;
     readonly typeaheadRegexp: RegExp;
     validate(): string[];
-    readonly values: WritableSignalLike<V[]>;
+    readonly value: WritableSignalLike<V[]>;
     readonly visible: () => boolean;
     readonly wrap: SignalLike<boolean>;
 }
