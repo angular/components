@@ -1,0 +1,113 @@
+.mat-chart {
+  display: block;
+  position: relative;
+  width: 100%;
+  font-family: var(--mat-sys-body-medium-font, inherit);
+}
+
+.mat-chart-label {
+  font-size: var(--mat-chart-label-text-size, 14px);
+  font-weight: var(--mat-chart-label-text-weight, 500);
+  color: var(--mat-chart-label-text-color, var(--mat-sys-on-surface, #1c1b1f));
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.mat-chart-svg {
+  display: block;
+  overflow: visible;
+  width: 100%;
+}
+
+// ── Axes ──────────────────────────────────────────────────────────────────
+
+.mat-chart-axis-line {
+  stroke: var(--mat-chart-axis-color, var(--mat-sys-outline, #79747e));
+  stroke-width: 1;
+}
+
+.mat-chart-axis-label {
+  fill: var(--mat-chart-axis-label-color, var(--mat-sys-on-surface-variant, #49454f));
+  font-size: var(--mat-chart-axis-label-size, 11px);
+}
+
+.mat-chart-grid-line {
+  stroke: var(--mat-chart-grid-color, var(--mat-sys-outline-variant, #cac4d0));
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+// ── Bar chart ─────────────────────────────────────────────────────────────
+
+.mat-chart-bar-rect {
+  transition: opacity 150ms ease;
+
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}
+
+// ── Line chart ────────────────────────────────────────────────────────────
+
+.mat-chart-line-path {
+  transition: opacity 150ms ease;
+}
+
+.mat-chart-dot {
+  transition: r 150ms ease;
+
+  &:hover {
+    r: 6;
+    cursor: pointer;
+  }
+}
+
+// ── Pie chart ─────────────────────────────────────────────────────────────
+
+.mat-chart-pie-slice {
+  transition: opacity 150ms ease;
+
+  &:hover {
+    opacity: 0.85;
+    cursor: pointer;
+  }
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────
+
+.mat-chart-tooltip-bg {
+  fill: var(--mat-chart-tooltip-background, var(--mat-sys-inverse-surface, #313033));
+}
+
+.mat-chart-tooltip-text {
+  fill: var(--mat-chart-tooltip-text-color, var(--mat-sys-inverse-on-surface, #f4eff4));
+  font-size: 12px;
+  dominant-baseline: middle;
+}
+
+// ── Legend ────────────────────────────────────────────────────────────────
+
+.mat-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.mat-chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--mat-chart-legend-text-size, 12px);
+  color: var(--mat-chart-legend-text-color, var(--mat-sys-on-surface-variant, #49454f));
+}
+
+.mat-chart-legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}

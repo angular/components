@@ -1,0 +1,180 @@
+<!--
+  @license
+  Copyright Google LLC All Rights Reserved.
+
+  Use of this source code is governed by an MIT-style license that can be
+  found in the LICENSE file at https://angular.dev/license
+-->
+
+@if (label) {
+  <div class="mat-chart-label">{{ label }}</div>
+}
+
+<svg
+  #svgEl
+  class="mat-chart-svg"
+  [attr.width]="_svgWidth || '100%'"
+  [attr.height]="_svgHeight"
+  [attr.viewBox]="'0 0 ' + (_svgWidth || 400) + ' ' + _svgHeight"
+  aria-hidden="true">
+
+  <!-- ── Bar chart ─────────────────────────────────────────────────────── -->
+  @if (type === 'bar') {
+    <g [attr.transform]="_plotTransform">
+
+      <!-- Y-axis grid lines and labels -->
+      @for (tick of _yTicks; track tick.y) {
+        <line
+          class="mat-chart-grid-line"
+          [attr.x1]="0"
+          [attr.y1]="tick.y"
+          [attr.x2]="_plotWidth"
+          [attr.y2]="tick.y" />
+        <text
+          class="mat-chart-axis-label"
+          [attr.x]="-8"
+          [attr.y]="tick.y"
+          text-anchor="end"
+          dominant-baseline="middle">{{ tick.label }}</text>
+      }
+
+      <!-- Bars -->
+      @for (group of _barGroups; track group.label; let gi = $index) {
+        <g [attr.transform]="barGroupTransform(gi)">
+          @for (bar of group.bars; track bar.label; let bi = $index) {
+            <rect
+              class="mat-chart-bar-rect"
+              [attr.x]="barX(bi)"
+              [attr.y]="bar.y"
+              [attr.width]="barWidth()"
+              [attr.height]="bar.height"
+              [attr.fill]="bar.color"
+              [attr.aria-label]="bar.label + ': ' + group.label"
+              (mouseenter)="showTooltipAt($event, bar.label + ' – ' + group.label + ': ' + valueFor(datasets[bi].data, group.label))"
+              (mouseleave)="hideTooltip()" />
+          }
+        </g>
+      }
+
+      <!-- X-axis labels -->
+      @for (lbl of _allLabels; track lbl; let i = $index) {
+        <text
+          class="mat-chart-axis-label"
+          [attr.x]="xLabelX(i)"
+          [attr.y]="_plotHeight + 20"
+          text-anchor="middle">{{ lbl }}</text>
+      }
+
+      <!-- X-axis line -->
+      <line
+        class="mat-chart-axis-line"
+        [attr.x1]="0"
+        [attr.y1]="_plotHeight"
+        [attr.x2]="_plotWidth"
+        [attr.y2]="_plotHeight" />
+    </g>
+  }
+
+  <!-- ── Line chart ────────────────────────────────────────────────────── -->
+  @if (type === 'line') {
+    <g [attr.transform]="_plotTransform">
+
+      <!-- Y-axis grid lines and labels -->
+      @for (tick of _yTicks; track tick.y) {
+        <line
+          class="mat-chart-grid-line"
+          [attr.x1]="0"
+          [attr.y1]="tick.y"
+          [attr.x2]="_plotWidth"
+          [attr.y2]="tick.y" />
+        <text
+          class="mat-chart-axis-label"
+          [attr.x]="-8"
+          [attr.y]="tick.y"
+          text-anchor="end"
+          dominant-baseline="middle">{{ tick.label }}</text>
+      }
+
+      <!-- Lines and dots per dataset -->
+      @for (ds of datasets; track ds.label; let di = $index) {
+        <path
+          class="mat-chart-line-path"
+          [attr.d]="linePath(ds)"
+          [attr.stroke]="ds.color || _defaultColor(di)"
+          fill="none"
+          stroke-width="2"
+          stroke-linejoin="round"
+          stroke-linecap="round" />
+
+        @for (lbl of _allLabels; track lbl; let li = $index) {
+          <circle
+            class="mat-chart-dot"
+            [attr.cx]="dotCx(li)"
+            [attr.cy]="dotCy(ds, lbl)"
+            r="4"
+            [attr.fill]="ds.color || _defaultColor(di)"
+            (mouseenter)="showTooltipAt($event, ds.label + ' – ' + lbl + ': ' + valueFor(ds.data, lbl))"
+            (mouseleave)="hideTooltip()" />
+        }
+      }
+
+      <!-- X-axis labels -->
+      @for (lbl of _allLabels; track lbl; let i = $index) {
+        <text
+          class="mat-chart-axis-label"
+          [attr.x]="xLabelX(i)"
+          [attr.y]="_plotHeight + 20"
+          text-anchor="middle">{{ lbl }}</text>
+      }
+
+      <!-- X-axis line -->
+      <line
+        class="mat-chart-axis-line"
+        [attr.x1]="0"
+        [attr.y1]="_plotHeight"
+        [attr.x2]="_plotWidth"
+        [attr.y2]="_plotHeight" />
+    </g>
+  }
+
+  <!-- ── Pie chart ─────────────────────────────────────────────────────── -->
+  @if (type === 'pie') {
+    @for (slice of _pieSlices; track slice.label) {
+      <path
+        class="mat-chart-pie-slice"
+        [attr.d]="slice.path"
+        [attr.fill]="slice.color"
+        (mouseenter)="showTooltipAt($event, slice.label + ': ' + slice.value)"
+        (mouseleave)="hideTooltip()" />
+    }
+  }
+
+  <!-- ── Tooltip ───────────────────────────────────────────────────────── -->
+  @if (_tooltip && showTooltip) {
+    <g class="mat-chart-tooltip-group">
+      <rect
+        class="mat-chart-tooltip-bg"
+        [attr.x]="_tooltip.x - 4"
+        [attr.y]="_tooltip.y - 16"
+        [attr.width]="_tooltip.text.length * 7 + 8"
+        height="22"
+        rx="4" />
+      <text
+        class="mat-chart-tooltip-text"
+        [attr.x]="_tooltip.x"
+        [attr.y]="_tooltip.y">{{ _tooltip.text }}</text>
+    </g>
+  }
+</svg>
+
+<!-- ── Legend ──────────────────────────────────────────────────────────── -->
+@if (showLegend && _legendItems.length) {
+  <div class="mat-chart-legend" role="list">
+    @for (item of _legendItems; track item.label) {
+      <div class="mat-chart-legend-item" role="listitem">
+        <span class="mat-chart-legend-swatch" [style.background]="item.color"></span>
+        <span class="mat-chart-legend-label">{{ item.label }}</span>
+      </div>
+    }
+  </div>
+}

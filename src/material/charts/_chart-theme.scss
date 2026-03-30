@@ -1,0 +1,74 @@
+@use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use './m2-chart';
+@use './m3-chart';
+@use 'sass:map';
+
+/// Outputs base theme styles for the mat-chart.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  $tokens: map.get(m2-chart.get-tokens($theme), base);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-chart.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs color theme styles for the mat-chart.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {String} $color-variant The color variant to use.
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-chart.get-tokens($theme), color);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-chart.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs typography theme styles for the mat-chart.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  $tokens: map.get(m2-chart.get-tokens($theme), typography);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-chart.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs density theme styles for the mat-chart.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  $tokens: map.get(m2-chart.get-tokens($theme), density);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-chart.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs all theme styles for the mat-chart.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {String} $color-variant The color variant to use.
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}
