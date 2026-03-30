@@ -132,7 +132,7 @@ export class Tree<V> {
   readonly typeaheadDelay = input(500);
 
   /** The values of the currently selected items. */
-  readonly values = model<V[]>([]);
+  readonly value = model<V[]>([]);
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -202,10 +202,10 @@ export class Tree<V> {
       if (!(this._pattern instanceof ComboboxTreePattern)) return;
 
       const items = inputs.items();
-      const values = untracked(() => this.values());
+      const value = untracked(() => this.value());
 
-      if (items && values.some(v => !items.some(i => i.value() === v))) {
-        this.values.set(values.filter(v => items.some(i => i.value() === v)));
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
   }

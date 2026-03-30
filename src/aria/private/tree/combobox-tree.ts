@@ -94,7 +94,7 @@ export class ComboboxTreePattern<V>
   getSelectedItems = () => this.inputs.items().filter(item => item.selected());
 
   /** Sets the value of the combobox tree. */
-  setValue = (value: V | undefined) => this.inputs.values.set(value ? [value] : []);
+  setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
 
   /** Expands the currently focused item if it is expandable, or navigates to the first child. */
   expandItem = () => this._expandOrFirstChild();

@@ -134,7 +134,7 @@ export class Listbox<V> {
   readonly = input(false, {transform: booleanAttribute});
 
   /** The values of the currently selected items. */
-  values = model<V[]>([]);
+  value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
@@ -187,13 +187,13 @@ export class Listbox<V> {
       }
     });
 
-    // Ensure that the values are always in sync with the available options.
+    // Ensure that the value is always in sync with the available options.
     afterRenderEffect(() => {
       const items = inputs.items();
-      const values = untracked(() => this.values());
+      const value = untracked(() => this.value());
 
-      if (items && values.some(v => !items.some(i => i.value() === v))) {
-        this.values.set(values.filter(v => items.some(i => i.value() === v)));
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
   }

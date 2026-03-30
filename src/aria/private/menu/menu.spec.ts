@@ -59,7 +59,7 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
     textDirection: signal(opts?.textDirection || 'ltr'),
     multi: signal(false),
     selectionMode: signal('explicit'),
-    values: signal([]),
+    value: signal([]),
     wrap: signal(true),
     typeaheadDelay: signal(500),
     softDisabled: signal(true),

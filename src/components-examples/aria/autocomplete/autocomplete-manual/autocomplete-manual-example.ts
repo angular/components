@@ -76,7 +76,7 @@ export class AutocompleteManualExample {
   /** Clears the query and the listbox value. */
   clear(): void {
     this.comboboxInput()?.value.set('');
-    this.listbox?.()?.values.set([]);
+    this.listbox?.()?.value.set([]);
   }
 
   /** Handles keydown events on the clear button. */
