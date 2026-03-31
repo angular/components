@@ -252,6 +252,7 @@ export class GridPattern {
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
 
+    this.hasBeenFocused.set(true);
     this.activeCell()?.onKeydown(event);
     this.keydown().handle(event);
   }
@@ -328,7 +329,10 @@ export class GridPattern {
 
   /** Sets the default active state of the grid before receiving focus the first time. */
   setDefaultStateEffect(): void {
-    if (this.hasBeenFocused()) return;
+    if (this.hasBeenFocused() || !this.gridBehavior.focusBehavior.stateEmpty()) {
+      this.hasBeenFocused.set(true);
+      return;
+    }
 
     this.gridBehavior.setDefaultState();
   }

@@ -139,7 +139,7 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V> extends Combobox
 }
 
 /** Controls the state of a combobox. */
-export class ComboboxPattern<T extends ListItem<V>, V> {
+export class ComboboxPattern<T extends ListItem<V>, V> implements ComboboxLike<T> {
   /** Whether the combobox is expanded. */
   expanded = signal(false);
 
@@ -570,7 +570,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   /** Opens the combobox. */
-  open(nav?: {first?: boolean; last?: boolean; selected?: boolean}) {
+  open(nav?: ComboboxNavigation) {
     this.expanded.set(true);
     const popupControls = this.inputs.popupControls();
 
@@ -736,4 +736,16 @@ export class ComboboxDialogPattern {
       this.inputs.combobox.close();
     }
   }
+}
+
+export interface ComboboxNavigation {
+  first?: boolean;
+  last?: boolean;
+  selected?: boolean;
+}
+
+export interface ComboboxLike<T> {
+  expanded: WritableSignalLike<boolean>;
+  highlightedItem: WritableSignalLike<T | undefined>;
+  open(nav?: ComboboxNavigation): void;
 }

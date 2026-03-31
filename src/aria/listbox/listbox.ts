@@ -24,7 +24,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../private';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
-import {LISTBOX} from './tokens';
+import {COMBOBOX_WIDGET, LISTBOX} from './tokens';
 
 /**
  * Represents a container used to display a list of items for a user to select from.
@@ -77,6 +77,8 @@ export class Listbox<V> {
   private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
     optional: true,
   });
+
+  private readonly _widget = inject<any>(COMBOBOX_WIDGET, {optional: true});
 
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
@@ -151,6 +153,7 @@ export class Listbox<V> {
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?._pattern,
+      hasPopup: () => !!this._popup?.combobox || !!this._widget,
     };
 
     this._pattern = this._popup?.combobox
@@ -171,8 +174,14 @@ export class Listbox<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
+      const active = this._pattern.inputs.activeItem();
+
+      if (!this._widget || (this._widget as any).filterMode() !== 'manual') {
+        untracked(() => this._pattern.listBehavior.select());
+      }
+
+      if (this._widget) {
+        untracked(() => (this._widget as any).activeValue.set(active?.value()));
       }
     });
 
@@ -192,7 +201,12 @@ export class Listbox<V> {
       const items = inputs.items();
       const values = untracked(() => this.values());
 
-      if (items && values.some(v => !items.some(i => i.value() === v))) {
+      // If using simple combobx, the combobox should handle the value.
+      if (this._popup?.combobox || this._widget) {
+        return;
+      }
+
+      if (items.length > 0 && values.some(v => !items.some(i => i.value() === v))) {
         this.values.set(values.filter(v => items.some(i => i.value() === v)));
       }
     });

@@ -10,3 +10,5 @@ import {InjectionToken} from '@angular/core';
 import type {Listbox} from './listbox';
 
 export const LISTBOX = new InjectionToken<Listbox<any>>('LISTBOX');
+
+export const COMBOBOX_WIDGET = new InjectionToken<any>('COMBOBOX_WIDGET');

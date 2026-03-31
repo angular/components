@@ -56,9 +56,6 @@ export class ComboboxTreePattern<V>
   /** Noop. The combobox handles pointerdown events. */
   override onPointerdown(_: PointerEvent): void {}
 
-  /** Noop. The combobox controls the open state. */
-  override setDefaultState(): void {}
-
   /** Navigates to the specified item in the tree. */
   focus = (item: TreeItemPattern<V>) => this.treeBehavior.goto(item);
 
@@ -75,7 +72,9 @@ export class ComboboxTreePattern<V>
   first = () => this.treeBehavior.first();
 
   /** Unfocuses the currently focused item in the tree. */
-  unfocus = () => this.treeBehavior.unfocus();
+  unfocus = () => {
+    this.treeBehavior.unfocus();
+  };
 
   // TODO: handle non-selectable parent nodes.
   /** Selects the specified item in the tree or the current active item if not provided. */

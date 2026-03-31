@@ -1,0 +1,52 @@
+<div class="example-combobox-container">
+  <div #origin class="example-combobox-input-container">
+    <input
+      ngCombobox
+      #combobox="ngCombobox"
+      class="example-combobox-input"
+      placeholder="Select a label..."
+      [value]="displayValue()"
+      [(expanded)]="popupExpanded"
+      [disabled]="true"
+      [readonly]="true"
+    />
+    <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="popupExpanded()"
+    [cdkConnectedOverlayDisableClose]="true"
+  >
+    <ng-template ngComboboxPopup [combobox]="combobox">
+      <div class="example-popover">
+        <div
+          ngListbox
+          ngComboboxWidget
+          class="example-listbox"
+          focusMode="activedescendant"
+          [(values)]="selectedStates"
+          (click)="onCommit()"
+          (keydown.enter)="onCommit()"
+        >
+          @for (label of labels; track label.value) {
+            <div
+              class="example-option example-selectable example-stateful"
+              ngOption
+              [value]="label.value"
+              [label]="label.value"
+            >
+              <span class="material-symbols-outlined example-icon">{{label.icon}}</span>
+              <span>{{label.value}}</span>
+              <span
+                aria-hidden="true"
+                class="material-symbols-outlined example-icon example-selected-icon"
+                >check</span
+              >
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

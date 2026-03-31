@@ -7,7 +7,12 @@
  */
 
 import {Directive, inject, signal} from '@angular/core';
-import {ComboboxListboxControls, ComboboxTreeControls, ComboboxDialogPattern} from '../private';
+import {
+  ComboboxListboxControls,
+  ComboboxTreeControls,
+  ComboboxDialogPattern,
+  ComboboxNavigation,
+} from '../private';
 import type {Combobox} from './combobox';
 import {COMBOBOX} from './combobox-tokens';
 
@@ -41,4 +46,12 @@ export class ComboboxPopup<V> {
     | ComboboxDialogPattern
     | undefined
   >(undefined);
+
+  /** The navigation state to apply when the popup expands. */
+  readonly pendingNavigation = signal<ComboboxNavigation | undefined>(undefined);
+
+  /** Sets the navigation state to be applied when the popup is ready. */
+  focusOnReady(nav: ComboboxNavigation) {
+    this.pendingNavigation.set(nav);
+  }
 }
