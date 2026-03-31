@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
 import {TestMainComponent} from '@angular/cdk/testing/tests';
 
 @Component({
@@ -6,7 +6,7 @@ import {TestMainComponent} from '@angular/cdk/testing/tests';
   template: `
     <button id="reset-state" (click)="reset()">Reset state</button>
 
-    @if (isShown) {
+    @if (isShown()) {
       <test-main></test-main>
     }
   `,
@@ -14,14 +14,14 @@ import {TestMainComponent} from '@angular/cdk/testing/tests';
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ComponentHarnessE2e {
-  protected isShown = true;
+  protected isShown = signal(true);
 
   /**
    * Resets the test component state without the need to refresh the page.
    * Used by Webdriver integration tests.
    */
   protected reset(): void {
-    this.isShown = false;
-    setTimeout(() => (this.isShown = true), 100);
+    this.isShown.set(false);
+    setTimeout(() => this.isShown.set(true), 100);
   }
 }

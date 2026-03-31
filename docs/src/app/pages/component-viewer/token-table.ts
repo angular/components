@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, computed, input, signal} from '@angular/core';
+import {Component, computed, input, signal} from '@angular/core';
 import {TitleCasePipe} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
@@ -31,7 +31,6 @@ export interface Token {
   selector: 'token-table',
   templateUrl: './token-table.html',
   styleUrl: './token-table.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatButton,
     MatIconButton,
