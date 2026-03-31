@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewEncapsulation, ChangeDetectionStrategy, signal} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {RouterLink, RouterOutlet} from '@angular/router';
 
@@ -10,7 +10,7 @@ import {RouterLink, RouterOutlet} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class E2eApp {
-  showLinks = false;
+  readonly showLinks = signal(false);
 
   navLinks = [
     {path: 'block-scroll-strategy', title: 'Block Scroll Strategy'},

@@ -31,6 +31,7 @@ import {
   input,
   inject,
   Type,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -66,6 +67,7 @@ class DocFetcher {
     }
   `,
   imports: [CdkPortalOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class DocViewer implements OnDestroy {
   private _appRef = inject(ApplicationRef);

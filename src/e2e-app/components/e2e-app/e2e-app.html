@@ -1,8 +1,8 @@
-<button (click)="showLinks = !showLinks">Toggle Navigation Links</button>
+<button (click)="showLinks.set(!showLinks())">Toggle Navigation Links</button>
 
 <main>
-  @if (showLinks) {
-    <mat-nav-list (click)="showLinks = false">
+  @if (showLinks()) {
+    <mat-nav-list (click)="showLinks.set(false)">
       @for (link of navLinks; track link) {
         <a mat-list-item [routerLink]="[link.path]">{{link.title}}</a>
       }
