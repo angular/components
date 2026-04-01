@@ -5,6 +5,7 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { untracked } from '@angular/core/primitives/signals';
 
@@ -292,6 +293,9 @@ export class DeferredContentAware {
 }
 
 // @public
+export type ElementResolver<T = HTMLElement> = ElementRef<T> | T | undefined | null | ((context: HTMLElement) => T | null | undefined);
+
+// @public
 export interface GridCellInputs extends GridCell {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
@@ -334,7 +338,7 @@ export interface GridCellWidgetInputs {
     cell: SignalLike<GridCellPattern>;
     disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement>;
-    focusTarget: SignalLike<HTMLElement | undefined>;
+    focusTarget: SignalLike<ElementResolver<HTMLElement>>;
     widgetType: SignalLike<'simple' | 'complex' | 'editable'>;
 }
 
@@ -649,6 +653,9 @@ export class OptionPattern<V> {
     readonly tabIndex: SignalLike<0 | -1 | undefined>;
     readonly value: SignalLike<V>;
 }
+
+// @public
+export function resolveElement<T = HTMLElement>(resolver: ElementResolver<T>, context: HTMLElement): T | undefined;
 
 // @public (undocumented)
 export function signal<T>(initialValue: T): WritableSignalLike<T>;

@@ -922,6 +922,7 @@ describe('Grid directives', () => {
         fixture.detectChanges();
 
         expect(widgetDirective.isActivated()).toBeTrue();
+        expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
       it('should lose active state when deactivate() is called programmatically', () => {

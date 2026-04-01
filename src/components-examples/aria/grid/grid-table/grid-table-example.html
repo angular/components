@@ -1,7 +1,7 @@
 <table ngGrid class="example-table">
   <thead>
     <tr ngGridRow class="example-header-row">
-      <th ngGridCell class="example-cell example-cell-checkbox">
+      <th ngGridCell role="columnheader" class="example-cell example-cell-checkbox">
         <mat-checkbox
           ngGridCellWidget
           [focusTarget]="cb._inputElement"
@@ -12,9 +12,11 @@
           #cb="matCheckbox"
         ></mat-checkbox>
       </th>
-      <th ngGridCell class="example-cell">Summary</th>
-      <th ngGridCell class="example-cell">Assignee</th>
-      <th ngGridCell class="example-cell">Tags</th>
+      <th ngGridCell role="columnheader" class="example-cell">Summary</th>
+      <th ngGridCell role="columnheader" class="example-cell">Assignee</th>
+      <th ngGridCell role="columnheader" class="example-cell">Tags</th>
+      <th ngGridCell role="columnheader" class="example-cell">Actions</th>
+      <th ngGridCell role="columnheader" class="example-cell">More</th>
     </tr>
   </thead>
   <tbody>
@@ -34,24 +36,26 @@
             role="button"
             ngGridCellWidget
             widgetType="editable"
-            (activated)="startEdit($event, task, summaryInput)"
+            [focusTarget]="findSummaryInput"
+            (activated)="startEdit($event, task)"
             (deactivated)="completeEdit($event, task)"
-            (click)="onClickEdit(widget, task, summaryInput)"
             #widget="ngGridCellWidget"
           >
-            <span [class.example-hidden]="widget.isActivated()">{{task.summary()}}</span>
-            <span
-              aria-hidden="true"
-              class="material-symbols-outlined example-edit-icon"
-              [class.example-hidden]="widget.isActivated()"
-              >edit</span
-            >
-            <mat-form-field
-              [class.example-hidden]="!widget.isActivated()"
-              subscriptSizing="dynamic"
-            >
-              <input matInput [(ngModel)]="tempInput" #summaryInput />
-            </mat-form-field>
+            @if (!widget.isActivated()) {
+              <span>{{task.summary()}}</span>
+              <span
+                aria-hidden="true"
+                class="material-symbols-outlined example-edit-icon"
+                (click)="widget.activate()"
+                >edit</span
+              >
+            } @else {
+              <mat-form-field
+                subscriptSizing="dynamic"
+              >
+                <input matInput class="summary-input" [(ngModel)]="tempInput" />
+              </mat-form-field>
+            }
           </div>
         </td>
         <td ngGridCell class="example-cell example-cell-assignee">
@@ -81,6 +85,24 @@
           >
             <grid-chips [(values)]="task.tags" [tabindex]="-1" #chips />
           </div>
+        </td>
+        <td ngGridCell class="example-cell">
+          <button mat-button ngGridCellWidget (click)="viewDetails(task)">View</button>
+        </td>
+        <td ngGridCell class="example-cell">
+          <button
+            mat-icon-button
+            ngGridCellWidget
+            widgetType="complex"
+            [matMenuTriggerFor]="menu"
+            (activated)="menuTrigger.openMenu()"
+            #menuTrigger="matMenuTrigger"
+          >
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="deleteTask(task)">Delete</button>
+          </mat-menu>
         </td>
       </tr>
     }

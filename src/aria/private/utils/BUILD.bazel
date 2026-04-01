@@ -4,5 +4,21 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "utils",
-    srcs = ["element.ts"],
+    srcs = [
+        "element.ts",
+        "element-resolver.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = ["element-resolver.spec.ts"],
+    deps = [
+        ":utils",
+        "//:node_modules/@angular/core",
+    ],
 )

@@ -14,6 +14,7 @@ import {
   WritableSignalLike,
 } from '../behaviors/signal-like/signal-like';
 import type {GridCellPattern} from './cell';
+import {ElementResolver, resolveElement} from '../utils/element-resolver';
 
 /** The inputs for the `GridCellWidgetPattern`. */
 export interface GridCellWidgetInputs {
@@ -30,7 +31,7 @@ export interface GridCellWidgetInputs {
   widgetType: SignalLike<'simple' | 'complex' | 'editable'>;
 
   /** The element that will receive focus when the widget is activated. */
-  focusTarget: SignalLike<HTMLElement | undefined>;
+  focusTarget: SignalLike<ElementResolver<HTMLElement>>;
 }
 
 /** The UI pattern for a widget inside a grid cell. */
@@ -39,9 +40,8 @@ export class GridCellWidgetPattern {
   readonly element: SignalLike<HTMLElement> = () => this.inputs.element();
 
   /** The element that should receive focus. */
-  readonly widgetHost: SignalLike<HTMLElement> = computed(
-    () => this.inputs.focusTarget() ?? this.element(),
-  );
+  readonly widgetHost: SignalLike<HTMLElement> = () =>
+    resolveElement(this.inputs.focusTarget(), this.element()) ?? this.element();
 
   /** Whether the widget is disabled. */
   readonly disabled: SignalLike<boolean> = computed(
