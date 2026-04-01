@@ -1,3 +1,27 @@
+<a name="22.0.0-next.3"></a>
+# 22.0.0-next.3 "rubber-wombat" (2026-04-01)
+## Breaking Changes
+### multiple
+- Renames the values input/model to value in Combobox, Listbox, Tree, Menu, Toolbar, and Select. Users must update their templates to use the value property instead of values.
+  
+  * refactor(multiple): update api goldens
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ac3911071](https://github.com/angular/components/commit/ac3911071810ac7c54ba3382125bf53094bce80b) | fix | **sidenav:** not resetting margin if transition does not start ([#33001](https://github.com/angular/components/pull/33001)) |
+| [a7d556180](https://github.com/angular/components/commit/a7d5561803e2f365843cb763a4763ed51cb0ae03) | fix | **slider:** not picking up static direction ([#33006](https://github.com/angular/components/pull/33006)) |
+| [236762fbc](https://github.com/angular/components/commit/236762fbc5d63bb6000a52c7d20612c0b14c3d8b) | fix | **tooltip:** allow hover detection logic to be customized ([#33018](https://github.com/angular/components/pull/33018)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a7fe128c3](https://github.com/angular/components/commit/a7fe128c353aec9065e942b63167e9019dc53350) | fix | **stepper:** linear updates not reflected in the DOM ([#33007](https://github.com/angular/components/pull/33007)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [94a50a25f](https://github.com/angular/components/commit/94a50a25f95c0e28d661b957a0a17501cc9998f9) | refactor | rename values to value for signal forms compatibility ([#33012](https://github.com/angular/components/pull/33012)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.5"></a>
 # 21.2.5 "steel-wombat" (2026-04-01)
 ### cdk
