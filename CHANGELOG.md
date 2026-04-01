@@ -1,3 +1,18 @@
+<a name="21.2.5"></a>
+# 21.2.5 "steel-wombat" (2026-04-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [42e10553c](https://github.com/angular/components/commit/42e10553cfcf205fea44522ae631fe23f90b03ea) | fix | **stepper:** linear updates not reflected in the DOM ([#33007](https://github.com/angular/components/pull/33007)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [895908a12](https://github.com/angular/components/commit/895908a12dd81d889f95961da59e80823faf8889) | fix | **sidenav:** not resetting margin if transition does not start ([#33001](https://github.com/angular/components/pull/33001)) |
+| [475a8aabb](https://github.com/angular/components/commit/475a8aabb30044c4cdca1bdb0b1de832db6e5936) | fix | **slider:** not picking up static direction ([#33006](https://github.com/angular/components/pull/33006)) |
+| [8a5ed09e5](https://github.com/angular/components/commit/8a5ed09e59e312f82b969b19ae4d077e4574bd12) | fix | **tooltip:** allow hover detection logic to be customized ([#33018](https://github.com/angular/components/pull/33018)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.4"></a>
 # 21.2.4 "hassium-halfpipe" (2026-03-25)
 ### material
