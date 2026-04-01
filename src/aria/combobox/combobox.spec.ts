@@ -280,7 +280,7 @@ describe('Combobox', () => {
           click(options[0]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['Alabama']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
           expect(inputElement.value).toBe('Alabama');
         });
 
@@ -289,7 +289,7 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Alabama']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
           expect(inputElement.value).toBe('Alabama');
         });
 
@@ -297,7 +297,7 @@ describe('Combobox', () => {
           down();
           down();
 
-          expect(fixture.componentInstance.values()).toEqual([]);
+          expect(fixture.componentInstance.value()).toEqual([]);
         });
 
         it('should select on focusout if the input text exactly matches an item', () => {
@@ -305,7 +305,7 @@ describe('Combobox', () => {
           input('Alabama');
           blur();
 
-          expect(fixture.componentInstance.values()).toEqual(['Alabama']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
         });
 
         it('should not select on focusout if the input text does not match an item', () => {
@@ -313,7 +313,7 @@ describe('Combobox', () => {
           input('Appl');
           blur();
 
-          expect(fixture.componentInstance.values()).toEqual([]);
+          expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
@@ -327,7 +327,7 @@ describe('Combobox', () => {
           click(options[1]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['Alaska']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
           expect(inputElement.value).toBe('Alaska');
         });
 
@@ -336,26 +336,26 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Alaska']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
           expect(inputElement.value).toBe('Alaska');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Alabama']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Alaska']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
 
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Arizona']);
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
         });
 
         it('should select the first option on input', () => {
           focus();
           input('W');
 
-          expect(fixture.componentInstance.values()).toEqual(['Washington']);
+          expect(fixture.componentInstance.value()).toEqual(['Washington']);
         });
 
         it('should commit the selected option on focusout', () => {
@@ -364,7 +364,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('Georgia');
-          expect(fixture.componentInstance.values()).toEqual(['Georgia']);
+          expect(fixture.componentInstance.value()).toEqual(['Georgia']);
         });
       });
 
@@ -377,7 +377,7 @@ describe('Combobox', () => {
           click(options[2]);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['Arizona']);
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
           expect(inputElement.value).toBe('Arizona');
         });
 
@@ -387,16 +387,16 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Arizona']);
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
           expect(inputElement.value).toBe('Arizona');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Alabama']);
+          expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Alaska']);
+          expect(fixture.componentInstance.value()).toEqual(['Alaska']);
         });
 
         it('should update input value on navigation', () => {
@@ -411,7 +411,7 @@ describe('Combobox', () => {
           focus();
           input('Cali');
 
-          expect(fixture.componentInstance.values()).toEqual(['California']);
+          expect(fixture.componentInstance.value()).toEqual(['California']);
         });
 
         it('should insert a highlighted completion string on input', () => {
@@ -448,7 +448,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('California');
-          expect(fixture.componentInstance.values()).toEqual(['California']);
+          expect(fixture.componentInstance.value()).toEqual(['California']);
         });
       });
     });
@@ -548,7 +548,7 @@ describe('Combobox', () => {
     //     focus();
     //     fixture.componentInstance.value.set(['Banana']);
     //     fixture.detectChanges();
-    //     expect(fixture.componentInstance.values()).toEqual(['Banana']);
+    //     expect(fixture.componentInstance.value()).toEqual(['Banana']);
     //     const bananaOption = getOption('Banana')!;
     //     expect(bananaOption.getAttribute('aria-selected')).toBe('true');
     //   });
@@ -791,7 +791,7 @@ describe('Combobox', () => {
           click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['April']);
+          expect(fixture.componentInstance.value()).toEqual(['April']);
           expect(inputElement.value).toBe('April');
         });
 
@@ -799,7 +799,7 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Winter']);
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
           expect(inputElement.value).toBe('Winter');
         });
 
@@ -808,14 +808,14 @@ describe('Combobox', () => {
           input('November');
           blur();
 
-          expect(fixture.componentInstance.values()).toEqual(['November']);
+          expect(fixture.componentInstance.value()).toEqual(['November']);
         });
 
         it('should not select on navigation', () => {
           down();
           down();
 
-          expect(fixture.componentInstance.values()).toEqual([]);
+          expect(fixture.componentInstance.value()).toEqual([]);
         });
 
         it('should not select on focusout if the input text does not match an item', () => {
@@ -823,7 +823,7 @@ describe('Combobox', () => {
           input('Appl');
           blur();
 
-          expect(fixture.componentInstance.values()).toEqual([]);
+          expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
@@ -839,7 +839,7 @@ describe('Combobox', () => {
           click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['February']);
+          expect(fixture.componentInstance.value()).toEqual(['February']);
           expect(inputElement.value).toBe('February');
         });
 
@@ -848,22 +848,22 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Spring']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
           expect(inputElement.value).toBe('Spring');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Winter']);
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
 
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Spring']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
         });
 
         it('should select the first option on input', () => {
           focus();
           input('Dec');
-          expect(fixture.componentInstance.values()).toEqual(['December']);
+          expect(fixture.componentInstance.value()).toEqual(['December']);
         });
 
         it('should commit the selected option on focusout', () => {
@@ -872,7 +872,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('June');
-          expect(fixture.componentInstance.values()).toEqual(['June']);
+          expect(fixture.componentInstance.value()).toEqual(['June']);
         });
       });
 
@@ -887,7 +887,7 @@ describe('Combobox', () => {
           click(item);
           fixture.detectChanges();
 
-          expect(fixture.componentInstance.values()).toEqual(['February']);
+          expect(fixture.componentInstance.value()).toEqual(['February']);
           expect(inputElement.value).toBe('February');
         });
 
@@ -896,16 +896,16 @@ describe('Combobox', () => {
           down();
           enter();
 
-          expect(fixture.componentInstance.values()).toEqual(['Spring']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
           expect(inputElement.value).toBe('Spring');
         });
 
         it('should select on navigation', () => {
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Winter']);
+          expect(fixture.componentInstance.value()).toEqual(['Winter']);
 
           down();
-          expect(fixture.componentInstance.values()).toEqual(['Spring']);
+          expect(fixture.componentInstance.value()).toEqual(['Spring']);
         });
 
         it('should update input value on navigation', () => {
@@ -920,7 +920,7 @@ describe('Combobox', () => {
           focus();
           input('Sept');
 
-          expect(fixture.componentInstance.values()).toEqual(['September']);
+          expect(fixture.componentInstance.value()).toEqual(['September']);
         });
 
         it('should insert a highlighted completion string on input', () => {
@@ -938,7 +938,7 @@ describe('Combobox', () => {
           blur();
 
           expect(inputElement.value).toBe('January');
-          expect(fixture.componentInstance.values()).toEqual(['January']);
+          expect(fixture.componentInstance.value()).toEqual(['January']);
         });
       });
     });
@@ -1065,9 +1065,9 @@ describe('Combobox', () => {
       it('should update the selected item when the value is set programmatically', () => {
         setupCombobox();
         focus();
-        fixture.componentInstance.values.set(['August']);
+        fixture.componentInstance.value.set(['August']);
         fixture.detectChanges();
-        expect(fixture.componentInstance.values()).toEqual(['August']);
+        expect(fixture.componentInstance.value()).toEqual(['August']);
         expect(getTreeItem('August')!.getAttribute('aria-selected')).toBe('true');
       });
     });
@@ -1111,7 +1111,7 @@ describe('Combobox', () => {
   />
 
   <ng-template ngComboboxPopupContainer>
-    <div ngListbox [(values)]="values">
+    <div ngListbox [(value)]="value">
       @for (option of options(); track option) {
         <div
           ngOption
@@ -1131,7 +1131,7 @@ describe('Combobox', () => {
 class ComboboxListboxExample {
   readonly = signal(false);
   searchString = signal('');
-  values = signal<string[]>([]);
+  value = signal<string[]>([]);
   filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
 
   options = computed(() =>
@@ -1155,7 +1155,7 @@ class ComboboxListboxExample {
   />
 
   <ng-template ngComboboxPopupContainer>
-    <ul ngTree #tree="ngTree" [(values)]="values">
+    <ul ngTree #tree="ngTree" [(value)]="value">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1202,7 +1202,7 @@ class ComboboxListboxExample {
 class ComboboxTreeExample {
   readonly = signal(false);
   searchString = signal('');
-  values = signal<string[]>([]);
+  value = signal<string[]>([]);
   nodes = computed(() => this.filterTreeNodes(TREE_NODES));
   filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
 

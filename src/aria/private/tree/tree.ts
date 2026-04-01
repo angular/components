@@ -96,7 +96,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().values().includes(this.value());
+    return this.tree().value().includes(this.value());
   });
 
   /** The current type of this item. */
@@ -107,7 +107,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().values().includes(this.value()) ? this.tree().currentType() : undefined;
+    return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
   });
 
   constructor(readonly inputs: TreeItemInputs<V>) {
@@ -352,11 +352,11 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly typeaheadDelay: SignalLike<number> = () => this.inputs.typeaheadDelay();
 
   /** The current selected items of the tree. */
-  readonly values: WritableSignalLike<V[]>;
+  readonly value: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
     this.activeItem = inputs.activeItem;
-    this.values = inputs.values;
+    this.value = inputs.value;
 
     this.treeBehavior = new Tree<TreeItemPattern<V>, V>({
       ...inputs,
@@ -369,9 +369,9 @@ export class TreePattern<V> implements TreeInputs<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+    if (!this.inputs.multi() && this.inputs.value().length > 1) {
       violations.push(
-        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
       );
     }
 

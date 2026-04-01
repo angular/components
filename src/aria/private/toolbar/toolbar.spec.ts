@@ -79,7 +79,7 @@ function getToolbarPattern(
     element,
     items,
     activeItem,
-    values: signal([]),
+    value: signal([]),
     wrap: signal(inputs.wrap ?? true),
     disabled: signal(inputs.disabled ?? false),
     softDisabled: signal(inputs.softDisabled ?? true),

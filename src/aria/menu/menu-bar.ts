@@ -92,7 +92,7 @@ export class MenuBar<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The values of the currently selected menu items. */
-  readonly values = model<V[]>([]);
+  readonly value = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input(true, {transform: booleanAttribute});

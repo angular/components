@@ -92,7 +92,7 @@ export class Toolbar<V> {
   readonly wrap = input(true, {transform: booleanAttribute});
 
   /** The values of the selected widgets within the toolbar. */
-  readonly values = model<V[]>([]);
+  readonly value = model<V[]>([]);
 
   /** The toolbar UIPattern. */
   readonly _pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
@@ -102,7 +102,7 @@ export class Toolbar<V> {
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
     getItem: e => this._getItem(e),
-    values: this.values,
+    value: this.value,
   });
 
   /** Whether the toolbar has received focus yet. */

@@ -47,7 +47,7 @@ export class SelectExample {
   listbox = viewChild<Listbox<{label: string; icon: string}>>(Listbox);
 
   /** The current value of the select. */
-  value = computed(() => this.listbox()?.values()[0] ?? this.items[1]);
+  value = computed(() => this.listbox()?.value()[0] ?? this.items[1]);
 
   /** The items available for selection. */
   items = [

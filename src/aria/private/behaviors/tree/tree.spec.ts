@@ -43,7 +43,7 @@ describe('Tree Behavior', () => {
 
     return new Tree<TestItem<V>, V>({
       ...focusInputs,
-      values: signal([]),
+      value: signal([]),
       multi: signal(false),
       multiExpandable: signal(true),
       selectionMode: signal('follow'),
@@ -157,7 +157,7 @@ describe('Tree Behavior', () => {
     it('should not select items (softDisabled: false)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true), softDisabled: signal(false)});
       tree.next({selectOne: true});
-      expect(tree.inputs.values()).toEqual([]);
+      expect(tree.inputs.value()).toEqual([]);
     });
 
     it('should have a tab index of 0 (softDisabled: false)', () => {
@@ -184,7 +184,7 @@ describe('Tree Behavior', () => {
     it('should not select items (softDisabled: true)', () => {
       const {tree} = getDefaultPatterns({disabled: signal(true)});
       tree.next({selectOne: true});
-      expect(tree.inputs.values()).toEqual([]);
+      expect(tree.inputs.value()).toEqual([]);
     });
 
     it('should have a tab index of 0 (softDisabled: true)', () => {
@@ -379,112 +379,112 @@ describe('Tree Behavior', () => {
   describe('Selection', () => {
     describe('single select', () => {
       it('should not select when navigating (single select)', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(false)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(false)});
         tree.next();
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should select an item when navigating with selectOne:true', () => {
-        const {tree} = getTreeAndItems([0, 1], {values: signal([]), multi: signal(false)});
+        const {tree} = getTreeAndItems([0, 1], {value: signal([]), multi: signal(false)});
 
         tree.next({selectOne: true});
-        expect(tree.inputs.values()).toEqual([1]);
+        expect(tree.inputs.value()).toEqual([1]);
       });
 
       it('should not select a non-selectable item when navigating with selectOne:true', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(false)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(false)});
         items[1].selectable.set(false);
         tree.next({selectOne: true});
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should toggle an item when navigating with toggle:true', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(false)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(false)});
         tree.goto(items[1], {selectOne: true});
-        expect(tree.inputs.values()).toEqual([1]);
+        expect(tree.inputs.value()).toEqual([1]);
 
         tree.goto(items[1], {toggle: true});
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should not toggle a non-selectable item when navigating with toggle:true', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(false)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(false)});
         items[1].selectable.set(false);
         tree.goto(items[1], {toggle: true});
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should only allow one selected item', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(false)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(false)});
         tree.next({selectOne: true});
-        expect(tree.inputs.values()).toEqual([1]);
+        expect(tree.inputs.value()).toEqual([1]);
         tree.next({selectOne: true});
-        expect(tree.inputs.values()).toEqual([2]);
+        expect(tree.inputs.value()).toEqual([2]);
       });
     });
 
     describe('multi select', () => {
       it('should not select when navigating (multi select)', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         tree.next();
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should select an item with toggle:true', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         tree.next({toggle: true});
-        expect(tree.inputs.values()).toEqual([1]);
+        expect(tree.inputs.value()).toEqual([1]);
       });
 
       it('should not select a non-selectable item with toggle:true', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         items[1].selectable.set(false);
         tree.next({toggle: true});
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should allow multiple selected items', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         tree.next({toggle: true});
         tree.next({toggle: true});
-        expect(tree.inputs.values()).toEqual([1, 2]);
+        expect(tree.inputs.value()).toEqual([1, 2]);
       });
 
       it('should select a range of items with selectRange:true', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         tree.anchor(0);
         tree.next({selectRange: true});
-        expect(tree.inputs.values()).toEqual([0, 1]); // Apple (0), Apricot (1)
+        expect(tree.inputs.value()).toEqual([0, 1]); // Apple (0), Apricot (1)
         tree.next({selectRange: true});
-        expect(tree.inputs.values()).toEqual([0, 1, 2]);
+        expect(tree.inputs.value()).toEqual([0, 1, 2]);
         tree.prev({selectRange: true});
-        expect(tree.inputs.values()).toEqual([0, 1]);
+        expect(tree.inputs.value()).toEqual([0, 1]);
         tree.prev({selectRange: true});
-        expect(tree.inputs.values()).toEqual([0]);
+        expect(tree.inputs.value()).toEqual([0]);
       });
 
       it('should not wrap when range selecting', () => {
-        const {tree} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         tree.anchor(0);
         tree.prev({selectRange: true});
         expect(tree.inputs.activeItem()).toBe(tree.inputs.items()[0]);
-        expect(tree.inputs.values()).toEqual([]);
+        expect(tree.inputs.value()).toEqual([]);
       });
 
       it('should not select disabled items in a range', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         items[1].disabled.set(true);
         tree.anchor(0);
         tree.goto(items[3], {selectRange: true});
-        expect(tree.inputs.values()).toEqual([0, 2, 3]); // Skips 1
+        expect(tree.inputs.value()).toEqual([0, 2, 3]); // Skips 1
       });
 
       it('should not select non-selectable items in a range', () => {
-        const {tree, items} = getDefaultPatterns({values: signal([]), multi: signal(true)});
+        const {tree, items} = getDefaultPatterns({value: signal([]), multi: signal(true)});
         items[1].selectable.set(false);
         tree.anchor(0);
         tree.goto(items[3], {selectRange: true});
-        expect(tree.inputs.values()).toEqual([0, 2, 3]); // Skips 1
+        expect(tree.inputs.value()).toEqual([0, 2, 3]); // Skips 1
       });
     });
   });
@@ -534,14 +534,14 @@ describe('Tree Behavior', () => {
     it('should select an item via typeahead', () => {
       const {tree} = getTreeAndItems(['Apple', 'Banana'], {multi: signal(false)});
       tree.search('b', {selectOne: true});
-      expect(tree.inputs.values()).toEqual(['Banana']);
+      expect(tree.inputs.value()).toEqual(['Banana']);
     });
 
     it('should not select a non-selectable item via typeahead', () => {
       const {tree, items} = getTreeAndItems(['Apple', 'Banana'], {multi: signal(false)});
       items[1].selectable.set(false);
       tree.search('b', {selectOne: true});
-      expect(tree.inputs.values()).toEqual([]);
+      expect(tree.inputs.value()).toEqual([]);
     });
   });
 });

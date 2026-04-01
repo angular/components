@@ -67,8 +67,8 @@ export class ComboboxReadonlyExample {
   constructor() {
     // Updates the display value when the listbox values change.
     afterRenderEffect(() => {
-      const values = this.listbox()?.values() || [];
-      const displayValue = values.length ? values[0] : 'Select a label';
+      const value = this.listbox()?.value() || [];
+      const displayValue = value.length ? value[0] : 'Select a label';
       this.displayValue.set(displayValue);
     });
 
