@@ -1,0 +1,58 @@
+<fieldset class="example-fieldset">
+  <legend class="example-legend">Guests</legend>
+  <div class="example-spinner-fields">
+    <div class="example-spinner-field">
+      <label class="example-label" for="adults-input">Adults</label>
+      <div class="example-spinner" ngSpinButton #adultsSpinner="ngSpinButton" [(value)]="adults" [min]="1" [max]="8">
+        <button class="example-spinner-button" ngSpinButtonDecrement type="button" title="Remove adult" aria-label="Remove adult">−</button>
+        <input
+          class="example-spinner-input"
+          ngSpinButtonInput
+          id="adults-input"
+          type="text"
+          [attr.aria-errormessage]="adultsSpinner._pattern.invalid() ? 'error-adults' : null"
+          (blur)="onBlur(adultsSpinner, 1)"
+        />
+        <button class="example-spinner-button" ngSpinButtonIncrement type="button" title="Add adult" aria-label="Add adult">+</button>
+      </div>
+      <small id="error-adults" [class.example-error]="adultsSpinner._pattern.invalid()" [class.example-hidden]="!adultsSpinner._pattern.invalid()">Must be between 1 and 8</small>
+      <small [class.example-hidden]="adultsSpinner._pattern.invalid()">1 to 8</small>
+    </div>
+
+    <div class="example-spinner-field">
+      <label class="example-label" for="kids-input">Kids</label>
+      <div class="example-spinner" ngSpinButton #kidsSpinner="ngSpinButton" [(value)]="kids" [min]="0" [max]="8">
+        <button class="example-spinner-button" ngSpinButtonDecrement type="button" title="Remove kid" aria-label="Remove kid">−</button>
+        <input
+          class="example-spinner-input"
+          ngSpinButtonInput
+          id="kids-input"
+          type="text"
+          [attr.aria-errormessage]="kidsSpinner._pattern.invalid() ? 'error-kids' : null"
+          (blur)="onBlur(kidsSpinner, 0)"
+        />
+        <button class="example-spinner-button" ngSpinButtonIncrement type="button" title="Add kid" aria-label="Add kid">+</button>
+      </div>
+      <small id="error-kids" [class.example-error]="kidsSpinner._pattern.invalid()" [class.example-hidden]="!kidsSpinner._pattern.invalid()">Must be between 0 and 8</small>
+      <small [class.example-hidden]="kidsSpinner._pattern.invalid()">0 to 8</small>
+    </div>
+
+    <div class="example-spinner-field">
+      <label class="example-label" for="animals-input">Animals</label>
+      <div class="example-spinner" ngSpinButton #animalsSpinner="ngSpinButton" [(value)]="animals" [min]="0" [max]="12">
+        <button class="example-spinner-button" ngSpinButtonDecrement type="button" title="Remove animal" aria-label="Remove animal">−</button>
+        <input
+          class="example-spinner-input"
+          ngSpinButtonInput
+          id="animals-input"
+          type="text"
+          [attr.aria-errormessage]="animalsSpinner._pattern.invalid() ? 'error-animals' : null"
+          (blur)="onBlur(animalsSpinner, 0)"
+        />
+        <button class="example-spinner-button" ngSpinButtonIncrement type="button" title="Add animal" aria-label="Add animal">+</button>
+      </div>
+      <small id="error-animals" [class.example-error]="animalsSpinner._pattern.invalid()" [class.example-hidden]="!animalsSpinner._pattern.invalid()">Must be between 0 and 12</small>
+      <small [class.example-hidden]="animalsSpinner._pattern.invalid()">0 to 12</small>
+    </div>
+  </div>
+</fieldset>

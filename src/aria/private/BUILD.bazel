@@ -17,6 +17,7 @@ ts_project(
         "//src/aria/private/grid",
         "//src/aria/private/listbox",
         "//src/aria/private/menu",
+        "//src/aria/private/spinbutton",
         "//src/aria/private/tabs",
         "//src/aria/private/toolbar",
         "//src/aria/private/tree",
