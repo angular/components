@@ -13,13 +13,3 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
 export const TOOLBAR_WIDGET_GROUP = new InjectionToken<ToolbarWidgetGroup<unknown>>(
   'TOOLBAR_WIDGET_GROUP',
 );
-
-interface HasElement {
-  element: HTMLElement;
-}
-
-export function sortDirectives(a: HasElement, b: HasElement) {
-  return (a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_PRECEDING) > 0
-    ? 1
-    : -1;
-}

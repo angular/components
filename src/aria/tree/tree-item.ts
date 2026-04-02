@@ -22,10 +22,9 @@ import {
   afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware} from '../private';
+import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware, HasElement} from '../private';
 import {Tree} from './tree';
 import {TreeItemGroup} from './tree-item-group';
-import {HasElement} from './utils';
 
 /**
  * A selectable and expandable item in an `ngTree`.
