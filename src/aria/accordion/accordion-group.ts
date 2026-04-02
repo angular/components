@@ -11,13 +11,12 @@ import {
   ElementRef,
   booleanAttribute,
   computed,
-  contentChildren,
   inject,
   input,
   signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern} from '../private';
+import {AccordionGroupPattern, sortDirectives} from '../private';
 import {AccordionTrigger} from './accordion-trigger';
 import {ACCORDION_GROUP} from './accordion-tokens';
 
@@ -75,10 +74,12 @@ export class AccordionGroup {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The AccordionTriggers nested inside this group. */
-  private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
+  private readonly _triggers = signal(new Set<AccordionTrigger>());
 
   /** The corresponding patterns for the accordion triggers. */
-  private readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
+  private readonly _triggerPatterns = computed(() =>
+    [...this._triggers()].sort(sortDirectives).map(t => t._pattern),
+  );
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -116,5 +117,17 @@ export class AccordionGroup {
   /** Collapses all accordion panels. */
   collapseAll() {
     this._pattern.collapseAll();
+  }
+
+  /** Internal method to register each trigger as we can not use contentChildren. */
+  _registerTrigger(trigger: AccordionTrigger) {
+    this._triggers().add(trigger);
+    this._triggers.set(new Set(this._triggers()));
+  }
+
+  /** Internal method to unregister each trigger as we can not use contentChildren. */
+  _unregisterTrigger(trigger: AccordionTrigger) {
+    this._triggers().delete(trigger);
+    this._triggers.set(new Set(this._triggers()));
   }
 }
