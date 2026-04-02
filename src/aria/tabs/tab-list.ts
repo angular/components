@@ -20,8 +20,8 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabListPattern, TabPattern} from '../private';
-import {sortDirectives, TABS} from './utils';
+import {TabListPattern, TabPattern, sortDirectives} from '../private';
+import {TABS} from './tab-tokens';
 import type {Tab} from './tab';
 
 /**

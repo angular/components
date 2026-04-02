@@ -24,7 +24,7 @@ import {
 } from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Toolbar} from './toolbar';
-import {TOOLBAR_WIDGET_GROUP} from './utils';
+import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
 import type {ToolbarWidgetGroup} from './toolbar-widget-group';
 
 /**

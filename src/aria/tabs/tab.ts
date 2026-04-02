@@ -18,9 +18,9 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabPattern} from '../private';
+import {TabPattern, HasElement} from '../private';
 import {TabList} from './tab-list';
-import {HasElement, TABS} from './utils';
+import {TABS} from './tab-tokens';
 
 /**
  * A selectable tab in a TabList.

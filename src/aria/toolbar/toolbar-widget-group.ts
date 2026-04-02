@@ -18,7 +18,7 @@ import {
 import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
-import {TOOLBAR_WIDGET_GROUP} from './utils';
+import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
 
 /**
  * A directive that groups toolbar widgets, used for more complex widgets like radio groups
