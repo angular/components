@@ -49,8 +49,17 @@ describe('Tabs', () => {
     defineTestVariables();
   };
 
-  const pointerDown = (target: HTMLElement, eventInit?: PointerEventInit) => {
-    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, ...eventInit}));
+  const click = (target: HTMLElement, eventInit?: PointerEventInit) => {
+    target.dispatchEvent(
+      new PointerEvent('click', {
+        bubbles: true,
+        detail: 1,
+        pointerType: 'mouse',
+        clientX: 1,
+        clientY: 1,
+        ...eventInit,
+      }),
+    );
     fixture.detectChanges();
     defineTestVariables();
   };
@@ -532,7 +541,7 @@ describe('Tabs', () => {
       it('should select tab on click', () => {
         updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
-        pointerDown(tabElements[1]);
+        click(tabElements[1]);
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
@@ -599,7 +608,7 @@ describe('Tabs', () => {
       it('should select tab on click', () => {
         updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
-        pointerDown(tabElements[1]);
+        click(tabElements[1]);
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
@@ -618,7 +627,7 @@ describe('Tabs', () => {
       enter();
       expect(testComponent.selectedTab()).toBe('tab3');
 
-      pointerDown(tabElements[0]);
+      click(tabElements[0]);
       expect(testComponent.selectedTab()).toBe('tab1');
     });
 
@@ -645,7 +654,7 @@ describe('Tabs', () => {
         selectedTab: 'tab1',
       });
       expect(testComponent.selectedTab()).toBe('tab1');
-      pointerDown(tabElements[1]);
+      click(tabElements[1]);
       expect(testComponent.selectedTab()).toBe('tab1');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
@@ -672,7 +681,7 @@ describe('Tabs', () => {
     it('should not change selection if tablist is disabled', () => {
       updateTabs({selectedTab: 'tab1', disabled: true});
       expect(testComponent.selectedTab()).toBe('tab1');
-      pointerDown(tabElements[1]);
+      click(tabElements[1]);
       expect(testComponent.selectedTab()).toBe('tab1');
       right();
       expect(testComponent.selectedTab()).toBe('tab1');

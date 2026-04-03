@@ -34,7 +34,14 @@ describe('Listbox', () => {
 
   const click = (index: number, eventInit?: PointerEventInit, targets?: HTMLElement[]) => {
     (targets || optionElements)[index].dispatchEvent(
-      new PointerEvent('pointerdown', {bubbles: true, ...eventInit}),
+      new PointerEvent('click', {
+        bubbles: true,
+        detail: 1,
+        pointerType: 'mouse',
+        clientX: 1,
+        clientY: 1,
+        ...eventInit,
+      }),
     );
     fixture.detectChanges();
   };
