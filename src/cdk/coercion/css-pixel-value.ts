@@ -7,10 +7,10 @@
  */
 
 /** Coerces a value to a CSS pixel value. */
-export function coerceCssPixelValue(value: any): string {
+export function coerceCssPixelValue(value: unknown): string {
   if (value == null) {
     return '';
   }
 
-  return typeof value === 'string' ? value : `${value}px`;
+  return typeof value === 'string' ? value : `${String(value)}px`;
 }
