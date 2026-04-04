@@ -72,6 +72,7 @@ entryPoints = [
     "tooltip/testing",
     "tree",
     "tree/testing",
+    "charts",
 ]
 
 # List of all non-testing entry-points of the Angular Material package.

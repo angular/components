@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use '../core/theming/inspection';
+
+/// Generates custom tokens for the mat-chart (M2 theme).
+@function get-tokens($theme) {
+  $foreground: inspection.get-theme-color($theme, foreground);
+  $background: inspection.get-theme-color($theme, background);
+
+  @return (
+    base: (
+      chart-axis-color: map.get($foreground, divider),
+      chart-grid-color: map.get($foreground, divider),
+    ),
+    color: (
+      chart-label-text-color: map.get($foreground, text),
+      chart-axis-label-color: map.get($foreground, secondary-text),
+      chart-tooltip-background: map.get($foreground, text),
+      chart-tooltip-text-color: map.get($background, card),
+      chart-legend-text-color: map.get($foreground, secondary-text),
+    ),
+    typography: (
+      chart-label-text-size: 14px,
+      chart-label-text-weight: 500,
+      chart-axis-label-size: 11px,
+      chart-legend-text-size: 12px,
+    ),
+    density: (),
+  );
+}

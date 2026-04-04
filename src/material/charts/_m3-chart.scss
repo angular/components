@@ -1,0 +1,34 @@
+@use 'sass:map';
+@use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-chart.
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  $tokens: (
+    base: (
+      chart-axis-color: map.get($system, outline),
+      chart-grid-color: map.get($system, outline-variant),
+    ),
+    color: (
+      chart-label-text-color: map.get($system, on-surface),
+      chart-axis-label-color: map.get($system, on-surface-variant),
+      chart-tooltip-background: map.get($system, inverse-surface),
+      chart-tooltip-text-color: map.get($system, inverse-on-surface),
+      chart-legend-text-color: map.get($system, on-surface-variant),
+    ),
+    typography: (
+      chart-label-text-size: map.get($system, title-small-size),
+      chart-label-text-weight: map.get($system, title-small-weight),
+      chart-axis-label-size: map.get($system, label-small-size),
+      chart-legend-text-size: map.get($system, label-small-size),
+    ),
+    density: (),
+  );
+
+  @return $tokens;
+}
