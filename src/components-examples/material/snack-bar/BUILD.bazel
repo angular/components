@@ -23,7 +23,6 @@ ng_project(
         "//src/material/input",
         "//src/material/select",
         "//src/material/snack-bar",
-        "//src/material/snack-bar/testing",
     ],
 )
 

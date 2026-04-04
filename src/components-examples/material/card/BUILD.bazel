@@ -19,11 +19,8 @@ ng_project(
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",
-        "//src/material/button/testing",
         "//src/material/card",
-        "//src/material/card/testing",
         "//src/material/chips",
-        "//src/material/divider",
         "//src/material/progress-bar",
     ],
 )

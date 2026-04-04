@@ -111,7 +111,6 @@ ng_project(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":core",
         ":ripple",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
@@ -119,7 +118,6 @@ ng_project(
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core/animation",
-        "//src/material/testing",
     ],
 )
 
@@ -224,10 +222,10 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk/a11y",
+        "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/platform",
         "//src/cdk/private",
         "//src/material/core/animation",
-        "//src/material/core/common-behaviors",
     ],
 )

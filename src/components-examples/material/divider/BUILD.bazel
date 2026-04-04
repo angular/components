@@ -16,7 +16,6 @@ ng_project(
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/divider",
-        "//src/material/divider/testing",
         "//src/material/list",
     ],
 )

@@ -46,11 +46,11 @@ ts_project(
     srcs = glob(["**/*.spec.ts"]),
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":ng_update_lib",
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/parse5",
+        "//:node_modules/typescript",
         "//src/cdk/schematics/testing",
         "//src/material/schematics:node_modules/@angular/cdk/schematics",
         "//src/material/schematics:paths",

@@ -23,7 +23,6 @@ ng_project(
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/autocomplete",
-        "//src/material/autocomplete/testing",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/slide-toggle",

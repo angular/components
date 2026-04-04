@@ -63,7 +63,6 @@ ng_project(
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/form-field",
-        "//src/material/icon",
     ],
 )
 

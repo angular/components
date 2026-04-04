@@ -75,7 +75,7 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material/core",
+        "//src/cdk/bidi",
     ],
 )
 

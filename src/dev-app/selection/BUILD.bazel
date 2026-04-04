@@ -10,6 +10,5 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//src/components-examples/cdk-experimental/selection",
         "//src/components-examples/material-experimental/selection",
-        "//src/dev-app/example",
     ],
 )
