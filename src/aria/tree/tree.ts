@@ -74,7 +74,7 @@ import {sortDirectives} from './utils';
     '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],
 })
@@ -151,9 +151,6 @@ export class Tree<V> {
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;
 
-  /** Whether the tree has received focus since it was rendered. */
-  private _hasFocused = signal(false);
-
   constructor() {
     const inputs = {
       ...this,
@@ -184,9 +181,7 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
 
     afterRenderEffect(() => {
@@ -208,10 +203,6 @@ export class Tree<V> {
         this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
-  }
-
-  _onFocus() {
-    this._hasFocused.set(true);
   }
 
   _register(child: TreeItem<V>) {

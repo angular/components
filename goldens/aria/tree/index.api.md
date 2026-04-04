@@ -20,8 +20,6 @@ export class Tree<V> {
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly nav: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    _onFocus(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: TreePattern<V>;
     // (undocumented)

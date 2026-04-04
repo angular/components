@@ -51,6 +51,7 @@ function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
     target: item.element(),
     shiftKey: mods?.shift,
     ctrlKey: mods?.control,
+    preventDefault: () => {}, // Added to prevent TypeError
   } as unknown as PointerEvent;
 }
 
@@ -1369,6 +1370,42 @@ describe('Toolbar Pattern', () => {
       toolbar.onKeydown(enter());
       expect(toolbar.activeItem()?.value()).toBe('item 3');
       expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
+    });
+  }); // Close preceding section
+
+  describe('#setDefaultStateEffect', () => {
+    it('should set default state if not interacted', () => {
+      const {toolbar, items} = getPatterns();
+      toolbar.inputs.activeItem.set(items[1]); // Set to item 1
+      toolbar.setDefaultStateEffect();
+      expect(toolbar.activeItem()?.value()).toBe('item 0'); // Should reset to item 0
+    });
+
+    it('should NOT set default state if keyboard interacted', () => {
+      const {toolbar, items} = getPatterns();
+      toolbar.inputs.activeItem.set(items[0]);
+      toolbar.onKeydown(right()); // Interaction (ArrowRight moves to item 1)
+
+      toolbar.setDefaultStateEffect();
+      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1 (interacted)
+    });
+
+    it('should NOT set default state if pointer interacted', () => {
+      const {toolbar, items} = getPatterns();
+      toolbar.inputs.activeItem.set(items[1]);
+      toolbar.onPointerdown(clickItem(items[1])); // Interaction
+
+      toolbar.setDefaultStateEffect();
+      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
+    });
+
+    it('should NOT set default state if focus-in occurred', () => {
+      const {toolbar, items} = getPatterns();
+      toolbar.inputs.activeItem.set(items[1]);
+      toolbar.onFocusIn(); // Interaction
+
+      toolbar.setDefaultStateEffect();
+      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
     });
   });
 });

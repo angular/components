@@ -128,9 +128,7 @@ export class MenuBar<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._pattern.hasBeenFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
   }
 

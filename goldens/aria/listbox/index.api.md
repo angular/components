@@ -17,8 +17,6 @@ export class Listbox<V> {
     readonly id: _angular_core.InputSignal<string>;
     protected items: _angular_core.Signal<OptionPattern<V>[]>;
     multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    _onFocus(): void;
     orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ListboxPattern<V>;
     readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;

@@ -55,7 +55,7 @@ import {sortDirectives} from './utils';
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(focusin)': '_pattern.onFocusIn()',
   },
 })
 export class Toolbar<V> {
@@ -105,19 +105,10 @@ export class Toolbar<V> {
     value: this.value,
   });
 
-  /** Whether the toolbar has received focus yet. */
-  private _hasBeenFocused = signal(false);
-
   constructor() {
     afterRenderEffect(() => {
-      if (!this._hasBeenFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
-  }
-
-  _onFocus() {
-    this._hasBeenFocused.set(true);
   }
 
   _register(widget: ToolbarWidget<V>) {
