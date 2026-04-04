@@ -8,6 +8,12 @@
 
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '../a11y';
 import {Direction} from '../bidi';
+interface DocumentWithFullscreen extends Document {
+  webkitFullscreenElement?: Element;
+  mozFullScreenElement?: Element;
+  msFullscreenElement?: Element;
+}
+
 import {coerceElement} from '../coercion';
 import {_getEventTarget, _getShadowRoot} from '../platform';
 import {ViewportRuler} from '../scrolling';
@@ -1578,19 +1584,17 @@ export class DragRef<T = any> {
     }
 
     if (previewContainer === 'global') {
-      const documentRef = this._document;
+      const documentRef = this._document as DocumentWithFullscreen;
 
       // We can't use the body if the user is in fullscreen mode,
       // because the preview will render under the fullscreen element.
       // TODO(crisbeto): dedupe this with the `FullscreenOverlayContainer` eventually.
-      return (
-        shadowRoot ||
+      return (shadowRoot ||
         documentRef.fullscreenElement ||
-        (documentRef as any).webkitFullscreenElement ||
-        (documentRef as any).mozFullScreenElement ||
-        (documentRef as any).msFullscreenElement ||
-        documentRef.body
-      );
+        documentRef.webkitFullscreenElement ||
+        documentRef.mozFullScreenElement ||
+        documentRef.msFullscreenElement ||
+        documentRef.body) as HTMLElement;
     }
 
     return coerceElement(previewContainer);

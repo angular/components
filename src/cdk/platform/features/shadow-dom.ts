@@ -8,11 +8,18 @@
 
 let shadowDomIsSupported: boolean;
 
+interface DocumentHeadWithCreateShadowRoot extends HTMLElement {
+  createShadowRoot?: Function;
+}
+
 /** Checks whether the user's browser support Shadow DOM. */
 export function _supportsShadowDom(): boolean {
   if (shadowDomIsSupported == null) {
     const head = typeof document !== 'undefined' ? document.head : null;
-    shadowDomIsSupported = !!(head && ((head as any).createShadowRoot || head.attachShadow));
+    shadowDomIsSupported = !!(
+      head &&
+      ((head as DocumentHeadWithCreateShadowRoot).createShadowRoot || head.attachShadow)
+    );
   }
 
   return shadowDomIsSupported;

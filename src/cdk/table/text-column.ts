@@ -126,7 +126,8 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
 
     if (!this.dataAccessor) {
       this.dataAccessor =
-        this._options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
+        this._options.defaultDataAccessor ||
+        ((data: T, name: string) => data[name as keyof T] as string);
     }
 
     if (this._table) {
