@@ -93,6 +93,14 @@ export class AccordionTrigger implements OnInit {
     });
 
     this.panel()._pattern = this._pattern;
+
+    this._accordionGroup._registerTrigger(this);
+  }
+
+  ngOnDestroy() {
+    this.panel()._pattern = undefined;
+
+    this._accordionGroup._unregisterTrigger(this);
   }
 
   /** Expands this item. */

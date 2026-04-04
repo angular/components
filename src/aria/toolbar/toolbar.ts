@@ -17,10 +17,9 @@ import {
   signal,
   model,
 } from '@angular/core';
-import {ToolbarPattern, ToolbarWidgetPattern} from '../private';
+import {ToolbarPattern, ToolbarWidgetPattern, sortDirectives} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {ToolbarWidget} from './toolbar-widget';
-import {sortDirectives} from './utils';
 
 /**
  * A toolbar widget container for a group of interactive widgets, such as
