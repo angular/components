@@ -206,7 +206,7 @@ export class CloseScrollStrategy implements ScrollStrategy {
     enable(): void;
 }
 
-// @public
+// @public @deprecated
 export interface ComponentType<T> {
     // (undocumented)
     new (...args: any[]): T;

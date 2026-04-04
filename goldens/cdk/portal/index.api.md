@@ -81,7 +81,7 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
     viewContainerRef?: ViewContainerRef | null;
 }
 
-// @public
+// @public @deprecated
 export interface ComponentType<T> {
     // (undocumented)
     new (...args: any[]): T;
