@@ -30,7 +30,7 @@ export enum _MatTickMark {
  * Used primarily to avoid circular imports.
  * @docs-private
  */
-export const MAT_SLIDER = new InjectionToken<{}>('_MatSlider');
+export const MAT_SLIDER = new InjectionToken<_MatSlider>('_MatSlider');
 
 /**
  * Injection token that can be used to query for a `MatSliderThumb`.
