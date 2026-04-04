@@ -1,12 +1,12 @@
 import {afterRenderEffect, Component, viewChildren} from '@angular/core';
-import {Tab, Tabs, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
+import {Tab, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
 
 /** @title Selection Follows Focus */
 @Component({
   selector: 'tabs-selection-follows-focus-example',
   templateUrl: 'tabs-selection-follows-focus-example.html',
   styleUrls: ['../tabs-common.css'],
-  imports: [TabList, Tab, Tabs, TabPanel, TabContent],
+  imports: [TabList, Tab, TabPanel, TabContent],
 })
 export class TabsSelectionFollowsFocusExample {
   tabs = viewChildren(Tab);
