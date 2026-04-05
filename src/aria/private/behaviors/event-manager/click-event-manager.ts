@@ -27,6 +27,14 @@ export function isFakeClick(event: PointerEvent): boolean {
 }
 
 /**
+ * Gets whether an event is a programmatic click (e.g. triggered by .click() or .dispatchEvent()).
+ * Programmatic events are untrusted.
+ */
+export function isProgrammaticClick(event: Event): boolean {
+  return !event.isTrusted;
+}
+
+/**
  * An event manager that is specialized for handling click events.
  *
  * This manager should ONLY be used to handle click events. It explicitly
@@ -78,6 +86,7 @@ export class ClickEventManager<T extends PointerEvent> extends EventManager<T> {
   }
 
   _isMatch(event: T, modifiers: ModifierInputs) {
-    return !isFakeClick(event) && hasModifiers(event, modifiers);
+    const isAllowed = isProgrammaticClick(event) || !isFakeClick(event);
+    return isAllowed && hasModifiers(event, modifiers);
   }
 }
