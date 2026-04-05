@@ -11,10 +11,11 @@
     base: (
       datepicker-calendar-container-shape: 4px,
       datepicker-calendar-container-touch-shape: 4px,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       datepicker-calendar-container-elevation-shadow: elevation.get-box-shadow(4),
       datepicker-calendar-container-touch-elevation-shadow: elevation.get-box-shadow(24),
-    ),
-    color: private-get-color-palette-color-tokens($theme, primary),
+    )),
     typography: (
       // TODO(crisbeto): the typography tokens for other components set every typography dimension
       // of an element (e.g. size, weight, line height, letter spacing). These tokens only set the
