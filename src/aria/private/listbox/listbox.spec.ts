@@ -569,6 +569,10 @@ describe('Listbox Pattern', () => {
         target: options[index].element(),
         shiftKey: mods?.shift,
         ctrlKey: mods?.control,
+        detail: 1,
+        pointerType: 'mouse',
+        clientX: 1,
+        clientY: 1,
       } as unknown as PointerEvent;
     }
 
@@ -578,7 +582,7 @@ describe('Listbox Pattern', () => {
           multi: signal(false),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
@@ -589,7 +593,7 @@ describe('Listbox Pattern', () => {
           multi: signal(false),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
@@ -599,7 +603,7 @@ describe('Listbox Pattern', () => {
           value: signal(['Apple']),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual([]);
       });
     });
@@ -610,7 +614,7 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
@@ -620,7 +624,7 @@ describe('Listbox Pattern', () => {
           value: signal(['Apple']),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual([]);
       });
 
@@ -629,9 +633,9 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         listbox.onKeydown(shift());
-        listbox.onPointerdown(click(options, 5, {shift: true}));
+        listbox.onClick(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
       });
 
@@ -640,11 +644,11 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('explicit'),
         });
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         listbox.onKeydown(shift());
-        listbox.onPointerdown(click(options, 5, {shift: true}));
+        listbox.onClick(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
-        listbox.onPointerdown(click(options, 0, {shift: true}));
+        listbox.onClick(click(options, 0, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
     });
@@ -655,11 +659,11 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
-        listbox.onPointerdown(click(options, 1));
+        listbox.onClick(click(options, 1));
         expect(listbox.inputs.value()).toEqual(['Apricot']);
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         expect(listbox.inputs.value()).toEqual(['Banana']);
       });
 
@@ -668,11 +672,11 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
-        listbox.onPointerdown(click(options, 1, {control: true}));
+        listbox.onClick(click(options, 1, {control: true}));
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
-        listbox.onPointerdown(click(options, 2, {control: true}));
+        listbox.onClick(click(options, 2, {control: true}));
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana']);
       });
 
@@ -681,9 +685,9 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
-        listbox.onPointerdown(click(options, 0, {control: true}));
+        listbox.onClick(click(options, 0, {control: true}));
         expect(listbox.inputs.value()).toEqual([]);
       });
 
@@ -692,9 +696,9 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         listbox.onKeydown(shift());
-        listbox.onPointerdown(click(options, 5, {shift: true}));
+        listbox.onClick(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
       });
 
@@ -703,11 +707,11 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
           selectionMode: signal('follow'),
         });
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         listbox.onKeydown(shift());
-        listbox.onPointerdown(click(options, 5, {shift: true}));
+        listbox.onClick(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
-        listbox.onPointerdown(click(options, 0, {shift: true}));
+        listbox.onClick(click(options, 0, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
 
@@ -718,11 +722,11 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('follow'),
         });
         options[2].disabled.set(true);
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
         listbox.onKeydown(shift());
-        listbox.onPointerdown(click(options, 2, {shift: true}));
+        listbox.onClick(click(options, 2, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
         expect(listbox.inputs.activeItem()).toEqual(options[2]);
       });
@@ -734,11 +738,11 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('follow'),
         });
         options[2].disabled.set(true);
-        listbox.onPointerdown(click(options, 0));
+        listbox.onClick(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
         listbox.onKeydown(down({control: true}));
         expect(listbox.inputs.value()).toEqual(['Apple']);
-        listbox.onPointerdown(click(options, 2));
+        listbox.onClick(click(options, 2));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
@@ -748,11 +752,11 @@ describe('Listbox Pattern', () => {
         readonly: signal(true),
         selectionMode: signal('follow'),
       });
-      listbox.onPointerdown(click(options, 0));
+      listbox.onClick(click(options, 0));
       expect(listbox.inputs.value()).toEqual([]);
-      listbox.onPointerdown(click(options, 1));
+      listbox.onClick(click(options, 1));
       expect(listbox.inputs.value()).toEqual([]);
-      listbox.onPointerdown(click(options, 2));
+      listbox.onClick(click(options, 2));
       expect(listbox.inputs.value()).toEqual([]);
     });
 
@@ -761,14 +765,14 @@ describe('Listbox Pattern', () => {
         multi: signal(true),
         selectionMode: signal('follow'),
       });
-      listbox.onPointerdown(click(options, 2));
+      listbox.onClick(click(options, 2));
       listbox.onKeydown(down({control: true}));
       listbox.onKeydown(down({control: true}));
 
       listbox.onKeydown(shift());
       listbox.onKeydown(space({shift: true}));
       expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry']);
-      listbox.onPointerdown(click(options, 0, {shift: true}));
+      listbox.onClick(click(options, 0, {shift: true}));
       expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
     });
 
@@ -777,12 +781,12 @@ describe('Listbox Pattern', () => {
         multi: signal(true),
         selectionMode: signal('follow'),
       });
-      listbox.onPointerdown(click(options, 0));
+      listbox.onClick(click(options, 0));
       expect(listbox.inputs.value()).toEqual(['Apple']);
       listbox.onKeydown(down({control: true}));
       listbox.onKeydown(down({control: true}));
       listbox.onKeydown(shift());
-      listbox.onPointerdown(click(options, 4, {shift: true}));
+      listbox.onClick(click(options, 4, {shift: true}));
       expect(listbox.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry', 'Blueberry']);
     });
   });

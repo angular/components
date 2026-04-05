@@ -63,7 +63,7 @@ import {LISTBOX} from './tokens';
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_onFocus()',
   },
   hostDirectives: [ComboboxPopup],

@@ -17,6 +17,7 @@ import {
   TabsDisabledFocusableExample,
   TabsDisabledSkippedExample,
   TabsDisabledExample,
+  TabsScrollableExample,
 } from '@angular/components-examples/aria/tabs';
 
 @Component({
@@ -33,6 +34,7 @@ import {
     TabsDisabledFocusableExample,
     TabsDisabledSkippedExample,
     TabsDisabledExample,
+    TabsScrollableExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
