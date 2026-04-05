@@ -46,7 +46,7 @@
   (click)="_control.onContainerClick($event)"
 >
   @if (!_hasOutline() && !_control.disabled) {
-    <div class="mat-mdc-form-field-focus-overlay"></div>
+    <div class="mat-mdc-form-field-focus-overlay" aria-hidden="true"></div>
   }
   <div class="mat-mdc-form-field-flex">
     @if (_hasOutline()) {
@@ -114,7 +114,7 @@
           <mat-hint [id]="_hintLabelId">{{hintLabel}}</mat-hint>
         }
         <ng-content select="mat-hint:not([align='end'])"></ng-content>
-        <div class="mat-mdc-form-field-hint-spacer"></div>
+        <div class="mat-mdc-form-field-hint-spacer" aria-hidden="true"></div>
         <ng-content select="mat-hint[align='end']"></ng-content>
       </div>
     }
