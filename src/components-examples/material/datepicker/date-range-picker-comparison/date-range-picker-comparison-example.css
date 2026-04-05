@@ -2,7 +2,6 @@
   margin: 0 8px 16px 0;
 }
 
-/* Selected range (user selection) */
 date-range-picker-comparison-example .mat-calendar-body-in-range:not(.mat-calendar-body-comparison) {
   background-color: #3f51b5;
   color: white;
