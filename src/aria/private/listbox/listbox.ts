@@ -7,7 +7,8 @@
  */
 
 import {OptionPattern} from './option';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
+import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 
@@ -160,9 +161,9 @@ export class ListboxPattern<V> {
     return manager;
   });
 
-  /** The pointerdown event manager for the listbox. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the listbox. */
+  clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.readonly()) {
       return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
@@ -222,9 +223,9 @@ export class ListboxPattern<V> {
     }
   }
 
-  onPointerdown(event: PointerEvent) {
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.clickManager().handle(event);
     }
   }
 

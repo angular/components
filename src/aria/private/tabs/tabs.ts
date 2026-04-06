@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager} from '../behaviors/event-manager';
+import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
 import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
 import {
   SignalLike,
@@ -200,9 +201,9 @@ export class TabListPattern {
       .on('Enter', () => this.open());
   });
 
-  /** The pointerdown event manager for the tablist. */
-  readonly pointerdown = computed(() => {
-    return new PointerEventManager().on(e =>
+  /** The click event manager for the tablist. */
+  readonly clickManager = computed(() => {
+    return new ClickEventManager<PointerEvent>().on(e =>
       this._navigate(() => this.navigationBehavior.goto(this._getItem(e)!), true),
     );
   });
@@ -256,10 +257,10 @@ export class TabListPattern {
     }
   }
 
-  /** The pointerdown event manager for the tablist. */
-  onPointerdown(event: PointerEvent) {
+  /** The click event manager for the tablist. */
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.clickManager().handle(event);
     }
   }
 

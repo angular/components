@@ -144,8 +144,8 @@ export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements Comb
     last: () => void;
     multi: SignalLike<boolean>;
     next: () => void;
+    onClick(_: PointerEvent): void;
     onKeydown(_: KeyboardEvent): void;
-    onPointerdown(_: PointerEvent): void;
     prev: () => void;
     role: SignalLike<"listbox">;
     select: (item?: OptionPattern<V>) => void;
@@ -450,6 +450,7 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 export class ListboxPattern<V> {
     constructor(inputs: ListboxInputs<V>);
     activeDescendant: SignalLike<string | undefined>;
+    clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     disabled: SignalLike<boolean>;
     dynamicSpaceKey: SignalLike<"" | " ">;
     followFocus: SignalLike<boolean>;
@@ -462,11 +463,10 @@ export class ListboxPattern<V> {
     listBehavior: List<OptionPattern<V>, V>;
     multi: SignalLike<boolean>;
     nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    onKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    onPointerdown(event: PointerEvent): void;
+    onClick(event: PointerEvent): void;
+    onKeydown(event: KeyboardEvent): void;
     orientation: SignalLike<'vertical' | 'horizontal'>;
-    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly: SignalLike<boolean>;
     setDefaultState(): void;
@@ -680,6 +680,7 @@ export class TabListPattern {
     constructor(inputs: TabListInputs);
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeTab: SignalLike<TabPattern | undefined>;
+    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly disabled: SignalLike<boolean>;
     readonly expansionBehavior: ListExpansion;
     readonly focusBehavior: ListFocus<TabPattern>;
@@ -689,12 +690,11 @@ export class TabListPattern {
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<TabPattern>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    onClick(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    onPointerdown(event: PointerEvent): void;
     open(value: string): boolean;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly selectedTab: WritableSignalLike<TabPattern | undefined>;
     setDefaultState(): void;

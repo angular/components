@@ -53,7 +53,7 @@ export class ComboboxListboxPattern<V>
   override onKeydown(_: KeyboardEvent): void {}
 
   /** Noop. The combobox handles pointerdown events. */
-  override onPointerdown(_: PointerEvent): void {}
+  override onClick(_: PointerEvent): void {}
 
   /** Noop. The combobox controls the open state. */
   override setDefaultState(): void {}
