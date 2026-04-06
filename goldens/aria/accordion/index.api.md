@@ -38,6 +38,7 @@ export class AccordionGroup {
 export class AccordionPanel {
     constructor();
     collapse(): void;
+    readonly element: HTMLElement;
     expand(): void;
     readonly id: _angular_core.InputSignal<string>;
     _pattern?: AccordionTriggerPattern;
