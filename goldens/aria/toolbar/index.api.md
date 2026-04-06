@@ -15,8 +15,6 @@ export class Toolbar<V> {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern<V>[]>;
-    // (undocumented)
-    _onFocus(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ToolbarPattern<V>;
     // (undocumented)

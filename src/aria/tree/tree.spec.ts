@@ -1016,6 +1016,7 @@ describe('Tree', () => {
             right(); // Expands fruits
             updateTreeItemByValue('banana', {disabled: true});
             updateTree({value: ['apple'], softDisabled: true});
+            down(); // Focus moves to apple
             expect(getFocusedTreeItemValue()).toBe('apple');
 
             keydown('Shift');

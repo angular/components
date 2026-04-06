@@ -25,6 +25,9 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 export class ListboxPattern<V> {
   listBehavior: List<OptionPattern<V>, V>;
 
+  /** Whether the listbox has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
+
   /** Whether the list is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
 
@@ -219,14 +222,20 @@ export class ListboxPattern<V> {
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
   onClick(event: PointerEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.clickManager().handle(event);
     }
+  }
+
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /**
@@ -257,6 +266,15 @@ export class ListboxPattern<V> {
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
     }
+  }
+
+  /**
+   * Sets the default active state of the listbox before receiving interaction for the first time.
+   */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
   }
 
   protected _getItem(e: PointerEvent) {
