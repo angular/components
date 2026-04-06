@@ -539,6 +539,7 @@ describe('AccordionGroup', () => {
         <div>
           <button
             ngAccordionTrigger
+            [index]="$index"
             [panel]="panel"
             [disabled]="item.disabled()"
             [(expanded)]="item.expanded"
