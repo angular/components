@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager} from '../behaviors/event-manager';
-import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
+import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
 import {
   SignalLike,

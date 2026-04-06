@@ -7,8 +7,7 @@
  */
 
 import {OptionPattern} from './option';
-import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
-import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
+import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 

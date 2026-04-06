@@ -62,7 +62,7 @@ import {ACCORDION_GROUP} from './accordion-tokens';
   exportAs: 'ngAccordionGroup',
   host: {
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocus($event)',
   },
   providers: [{provide: ACCORDION_GROUP, useExisting: AccordionGroup}],

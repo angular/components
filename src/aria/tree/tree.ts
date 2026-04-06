@@ -73,7 +73,7 @@ import {sortDirectives} from './utils';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],

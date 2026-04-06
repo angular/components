@@ -36,10 +36,6 @@ describe('Listbox', () => {
     (targets || optionElements)[index].dispatchEvent(
       new PointerEvent('click', {
         bubbles: true,
-        detail: 1,
-        pointerType: 'mouse',
-        clientX: 1,
-        clientY: 1,
         ...eventInit,
       }),
     );
