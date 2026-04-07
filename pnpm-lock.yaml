@@ -294,8 +294,8 @@ importers:
         specifier: 0.5.6
         version: 0.5.6(@types/node@22.19.15)(rollup@4.60.1)
       sass:
-        specifier: ^1.97.2
-        version: 1.98.0
+        specifier: ^1.99.0
+        version: 1.99.0
       selenium-webdriver:
         specifier: ^3.6.0
         version: 3.6.0
@@ -8562,6 +8562,11 @@ packages:
 
   sass@1.98.0:
     resolution: {integrity: sha512-+4N/u9dZ4PrgzGgPlKnaaRQx64RO0JBKs9sDhQ2pLgN6JQZ25uPQZKQYaBJU48Kd5BxgXoJ4e09Dq7nMcOUW3A==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
+  sass@1.99.0:
+    resolution: {integrity: sha512-kgW13M54DUB7IsIRM5LvJkNlpH+WhMpooUcaWGFARkF1Tc82v9mIWkCbCYf+MBvpIUBSeSOTilpZjEPr2VYE6Q==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -19109,6 +19114,14 @@ snapshots:
       webpack: 5.105.4(esbuild@0.27.3)
 
   sass@1.98.0:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.5
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.6
+
+  sass@1.99.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.5
