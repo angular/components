@@ -29,6 +29,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   EnvironmentInjector,
   InjectionToken,
   Injector,
@@ -112,7 +113,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
-    '(blur)': '_onTouched()',
+    '(blur)': '_handleBlur()',
     '(input)': '_handleInput($event)',
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick()',
@@ -188,6 +189,12 @@ export class MatAutocompleteTrigger
    * but which hasn't been propagated to the model value yet.
    */
   private _pendingAutoselectedOption: MatOption | null = null;
+
+  /** Embedded view rendered by the custom `mat-autocomplete-trigger` template, if any. */
+  private _customTriggerView: EmbeddedViewRef<unknown> | null = null;
+  private _customTriggerWrapper: HTMLElement | null = null;
+  /** The last value passed to _syncCustomTrigger so it can be restored after a no-op blur. */
+  private _customTriggerValue: any = null;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -273,6 +280,7 @@ export class MatAutocompleteTrigger
     this._destroyPanel();
     this._closeKeyEventStream.complete();
     this._clearFromModal();
+    this._clearCustomTrigger();
   }
 
   /** Whether or not the autocomplete panel is open. */
@@ -434,7 +442,14 @@ export class MatAutocompleteTrigger
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
-    Promise.resolve(null).then(() => this._assignOptionValue(value));
+    Promise.resolve(null).then(() => {
+      if (this._componentDestroyed) {
+        return;
+      }
+
+      this._assignOptionValue(value);
+      this._syncCustomTrigger(value);
+    });
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -513,6 +528,7 @@ export class MatAutocompleteTrigger
     if (this._previousValue !== value) {
       this._previousValue = value;
       this._pendingAutoselectedOption = null;
+      this._clearCustomTrigger();
 
       // If selection is required we don't write to the CVA while the user is typing.
       // At the end of the selection either the user will have picked something
@@ -522,6 +538,7 @@ export class MatAutocompleteTrigger
       }
 
       if (!value) {
+        this._customTriggerValue = null;
         this._clearPreviousSelectedOption(null, false);
       } else if (this.panelOpen && !this.autocomplete.requireSelection) {
         // Note that we don't reset this when `requireSelection` is enabled,
@@ -551,6 +568,10 @@ export class MatAutocompleteTrigger
   }
 
   _handleFocus(): void {
+    // Always clear the custom trigger on focus so the user can edit the value,
+    // regardless of whether the panel is about to open. _clearCustomTrigger is a no-op
+    // when no custom trigger is active, so this is safe to call unconditionally.
+    this._clearCustomTrigger();
     if (!this._canOpenOnNextFocus) {
       this._canOpenOnNextFocus = true;
     } else if (this._canOpen()) {
@@ -560,7 +581,31 @@ export class MatAutocompleteTrigger
     }
   }
 
+  _handleBlur(): void {
+    this._onTouched();
+    // If the user focused and blurred without making a new selection, restore the custom trigger.
+    // Defer so any pending option-selection events (mousedown → click on option) run first:
+    // if a new value was selected, _syncCustomTrigger will have already set _customTriggerWrapper
+    // before this callback runs, and we skip the restore.
+    if (this._customTriggerValue != null && this._customTriggerValue !== '') {
+      Promise.resolve().then(() => {
+        if (!this._componentDestroyed && !this._customTriggerWrapper) {
+          // Only restore the trigger if the input still shows the selected value's display text.
+          // If the user typed something different and blurred, don't restore.
+          const currentInput = this._element.nativeElement.value;
+          const displayValue = String(this._getDisplayValue(this._customTriggerValue) ?? '');
+          if (currentInput === displayValue) {
+            this._syncCustomTrigger(this._customTriggerValue);
+          }
+        }
+      });
+    }
+  }
+
   _handleClick(): void {
+    // Clear the custom trigger on click so the user can immediately start editing,
+    // even when the input is already focused (focusin would not fire in that case).
+    this._clearCustomTrigger();
     if (this._canOpen() && !this.panelOpen) {
       this._openPanelInternal();
     }
@@ -689,6 +734,62 @@ export class MatAutocompleteTrigger
     return autocomplete && autocomplete.displayWith ? autocomplete.displayWith(value) : value;
   }
 
+  /**
+   * Renders the custom trigger template as an overlay over the input when a value is selected.
+   * All template root nodes are wrapped in a single library-created div so that:
+   * - Templates with multiple root nodes (e.g. `<img>` + text) are handled correctly.
+   * - `display: flex; align-items: center` works regardless of root node types.
+   * The input text is hidden via inline `color: transparent` which has higher specificity
+   * than any MDC class selector. Hides the overlay and restores the input when value is null.
+   */
+  private _syncCustomTrigger(value: any): void {
+    const customTrigger = this.autocomplete?.customTrigger;
+    if (!customTrigger) return;
+
+    // Only show the custom trigger for a real selected value — not for null or empty string,
+    // which both represent "no selection" (e.g. initial FormControl('') or after clearing).
+    if (value != null && value !== '') {
+      this._customTriggerValue = value;
+      this._clearCustomTrigger();
+      this._customTriggerView = this._viewContainerRef.createEmbeddedView(
+        customTrigger.templateRef,
+        {$implicit: value},
+      );
+      this._customTriggerView.detectChanges();
+
+      // Wrap all root nodes in a single div so positioning and flex layout work correctly
+      // regardless of how many root nodes the template has or what types they are.
+      this._customTriggerWrapper = this._renderer.createElement('div') as HTMLElement;
+      this._renderer.addClass(this._customTriggerWrapper, 'mat-autocomplete-selected-trigger');
+      for (const node of this._customTriggerView.rootNodes) {
+        this._renderer.appendChild(this._customTriggerWrapper, node);
+      }
+
+      const input = this._element.nativeElement;
+      const parent = input.parentNode;
+      if (parent) {
+        this._renderer.insertBefore(parent, this._customTriggerWrapper, input.nextSibling);
+        // Use inline styles to override MDC's higher-specificity color rules.
+        this._renderer.setStyle(input, 'color', 'transparent');
+        this._renderer.setStyle(input, 'caret-color', 'transparent');
+      }
+    } else {
+      this._customTriggerValue = null;
+      this._clearCustomTrigger();
+    }
+  }
+
+  /** Destroys the custom trigger overlay and restores normal input text rendering. */
+  private _clearCustomTrigger(): void {
+    this._customTriggerView?.destroy();
+    this._customTriggerView = null;
+    this._customTriggerWrapper?.remove();
+    this._customTriggerWrapper = null;
+    const input = this._element.nativeElement;
+    this._renderer.removeStyle(input, 'color');
+    this._renderer.removeStyle(input, 'caret-color');
+  }
+
   private _assignOptionValue(value: any): void {
     const toDisplay = this._getDisplayValue(value);
 
@@ -721,6 +822,7 @@ export class MatAutocompleteTrigger
   private _setValueAndClose(event: MatOptionSelectionChange | null): void {
     const panel = this.autocomplete;
     const toSelect = event ? event.source : this._pendingAutoselectedOption;
+    let didChange = false;
 
     if (toSelect) {
       this._clearPreviousSelectedOption(toSelect);
@@ -731,6 +833,7 @@ export class MatAutocompleteTrigger
       this._onChange(toSelect.value);
       panel._emitSelectEvent(toSelect);
       this._element.nativeElement.focus();
+      didChange = true;
     } else if (
       panel.requireSelection &&
       this._element.nativeElement.value !== this._valueOnAttach
@@ -738,9 +841,15 @@ export class MatAutocompleteTrigger
       this._clearPreviousSelectedOption(null);
       this._assignOptionValue(null);
       this._onChange(null);
+      didChange = true;
     }
 
     this.closePanel();
+
+    // After the panel closes, sync the custom trigger overlay if the value changed.
+    if (didChange) {
+      this._syncCustomTrigger(toSelect ? toSelect.value : null);
+    }
   }
 
   /**

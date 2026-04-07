@@ -57,6 +57,7 @@ import {
   MatAutocompleteDefaultOptions,
   MatAutocompleteOrigin,
   MatAutocompleteSelectedEvent,
+  MatAutocompleteSelectedTrigger,
   MatAutocompleteTrigger,
   getMatAutocompleteMissingPanelError,
 } from './index';
@@ -3998,6 +3999,183 @@ describe('MatAutocomplete', () => {
         .toContain(panelId);
     });
   });
+
+  describe('custom selected-value trigger (mat-autocomplete-trigger)', () => {
+    let fixture: ComponentFixture<AutocompleteWithCustomTrigger>;
+    let input: HTMLInputElement;
+
+    beforeEach(() => {
+      fixture = createComponent(AutocompleteWithCustomTrigger);
+      fixture.detectChanges();
+      input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    });
+
+    it('should render the custom trigger template after an option is selected', waitForAsync(async () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      const customTrigger = fixture.nativeElement.querySelector('.custom-trigger-display');
+      expect(customTrigger).toBeTruthy('Expected custom trigger element to be in the DOM.');
+    }));
+
+    it('should expose the selected value as $implicit template context', waitForAsync(async () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      const customTrigger = fixture.nativeElement.querySelector('.custom-trigger-display');
+      expect(customTrigger.textContent.trim()).toBe('Alabama');
+    }));
+
+    it('should hide the custom trigger overlay when the user starts typing', waitForAsync(async () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display')).toBeTruthy();
+
+      typeInElement(input, 'A');
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display'))
+        .withContext('Expected custom trigger to be removed after typing.')
+        .toBeFalsy();
+    }));
+
+    it('should set color: transparent on the input when the custom trigger is active', waitForAsync(async () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      expect(input.style.color).toBe('transparent');
+    }));
+
+    it('should restore input color when typing after a selection', waitForAsync(async () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      typeInElement(input, 'A');
+      fixture.detectChanges();
+
+      expect(input.style.color).not.toBe('transparent');
+    }));
+
+    it('should show the custom trigger when value is set programmatically via writeValue', fakeAsync(() => {
+      fixture.componentInstance.trigger.writeValue('Alabama');
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display')).toBeTruthy();
+      expect(input.style.color).toBe('transparent');
+    }));
+
+    it('should clear the custom trigger when value is set to null programmatically', fakeAsync(() => {
+      fixture.componentInstance.trigger.writeValue('Alabama');
+      tick();
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.writeValue(null);
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display')).toBeFalsy();
+      expect(input.style.color).not.toBe('transparent');
+    }));
+
+    it('should not show the custom trigger while the panel is still open during navigation', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      flush();
+
+      // Keyboard navigate to first option; with autoSelectActiveOption this calls _assignOptionValue.
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      // Panel is still open — custom trigger must not be visible yet.
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display'))
+        .withContext('Expected custom trigger to stay hidden while panel is open.')
+        .toBeFalsy();
+    }));
+
+    it('should restore the custom trigger on blur when input still shows the selected display value', waitForAsync(async () => {
+      // Select an option so the custom trigger appears.
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      const options = fixture.debugElement.queryAll(By.css('mat-option'));
+      options[0].nativeElement.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(input.style.color).toBe('transparent');
+
+      // Click input to clear the custom trigger for editing.
+      input.click();
+      fixture.detectChanges();
+
+      expect(input.style.color).not.toBe('transparent');
+
+      // Blur without typing (input still holds the selected option's display text).
+      input.dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(input.style.color)
+        .withContext(
+          'Expected custom trigger to be restored after blur with matching display value.',
+        )
+        .toBe('transparent');
+    }));
+
+    it('should clean up the custom trigger wrapper when the component is destroyed', waitForAsync(async () => {
+      // Select an option so a wrapper div is inserted into the DOM.
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      const options = fixture.debugElement.queryAll(By.css('mat-option'));
+      options[0].nativeElement.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(fixture.nativeElement.querySelector('.custom-trigger-display')).toBeTruthy();
+
+      // Destroying the fixture must not throw and must remove the wrapper from the DOM.
+      expect(() => fixture.destroy()).not.toThrow();
+      expect(document.querySelector('.custom-trigger-display'))
+        .withContext('Expected wrapper to be removed from DOM after destroy.')
+        .toBeFalsy();
+    }));
+  });
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
@@ -4604,4 +4782,33 @@ class AutocompleteInsideAModal {
 })
 class AutocompleteWithoutOptions {
   @ViewChild(MatAutocompleteTrigger, {static: true}) trigger!: MatAutocompleteTrigger;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput [matAutocomplete]="auto">
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <ng-template matAutocompleteSelectedTrigger let-val>
+        <span class="custom-trigger-display">{{ val }}</span>
+      </ng-template>
+      @for (state of states; track state) {
+        <mat-option [value]="state">{{ state }}</mat-option>
+      }
+    </mat-autocomplete>
+  `,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatAutocompleteSelectedTrigger,
+    MatInputModule,
+    MatOption,
+  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AutocompleteWithCustomTrigger {
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger!: MatAutocompleteTrigger;
+  states = ['Alabama', 'California', 'Florida'];
 }

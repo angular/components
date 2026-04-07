@@ -1,0 +1,23 @@
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-option-img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.example-trigger-flag {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.mat-autocomplete-selected-trigger {
+  top: 15px;
+}

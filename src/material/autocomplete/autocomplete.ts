@@ -11,6 +11,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
@@ -25,6 +26,9 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
+import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
+import {Subscription} from 'rxjs';
 import {
   _animationsDisabled,
   MAT_OPTGROUP,
@@ -33,9 +37,10 @@ import {
   MatOption,
   ThemePalette,
 } from '../core';
-import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
-import {Subscription} from 'rxjs';
+import {
+  MAT_AUTOCOMPLETE_SELECTED_TRIGGER,
+  MatAutocompleteSelectedTrigger,
+} from './autocomplete-selected-trigger';
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
@@ -156,6 +161,10 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
 
   /** Reference to all option groups within the autocomplete. */
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups!: QueryList<MatOptgroup>;
+
+  /** Custom template for rendering the selected option in the trigger area. */
+  @ContentChild(MAT_AUTOCOMPLETE_SELECTED_TRIGGER)
+  customTrigger: MatAutocompleteSelectedTrigger | undefined;
 
   /** Aria label of the autocomplete. */
   @Input('aria-label') ariaLabel!: string;

@@ -67,6 +67,7 @@ ng_project(
         "autocomplete.ts",
         "autocomplete-module.ts",
         "autocomplete-origin.ts",
+        "autocomplete-selected-trigger.ts",
         "autocomplete-trigger.ts",
         "index.ts",
         "public-api.ts",

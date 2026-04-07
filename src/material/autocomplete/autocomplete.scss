@@ -74,3 +74,24 @@ div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-hidden,
 mat-autocomplete {
   display: none;
 }
+
+// Applied to the library-created wrapper div that holds the `mat-autocomplete-trigger` template
+// content when an option is selected. Positions it absolutely within the form-field infix
+// (which has `position: relative`) so it overlays the input whose text is hidden via inline
+// `color: transparent`.
+.mat-autocomplete-selected-trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  // Allow clicks to fall through to the underlying input so the user can re-focus and retype.
+  pointer-events: none;
+
+  // Mirror the disabled appearance of the underlying input.
+  input:disabled + & {
+    opacity: 0.38; // the canonical Material Design disabled-state opacity
+  }
+}

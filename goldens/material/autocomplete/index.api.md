@@ -39,6 +39,9 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS: InjectionToken<MatAutocompleteDef
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
+export const MAT_AUTOCOMPLETE_SELECTED_TRIGGER: InjectionToken<MatAutocompleteSelectedTrigger>;
+
+// @public
 export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // @public
@@ -55,6 +58,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     _classList: string | string[];
     readonly closed: EventEmitter<void>;
     protected _color: ThemePalette;
+    customTrigger: MatAutocompleteSelectedTrigger | undefined;
     // (undocumented)
     protected _defaults: MatAutocompleteDefaultOptions;
     disableRipple: boolean;
@@ -102,7 +106,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     _syncParentProperties(): void;
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["customTrigger", "options", "optionGroups"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocomplete, never>;
 }
@@ -131,7 +135,7 @@ export class MatAutocompleteModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatAutocomplete, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin], [typeof i1.CdkScrollableModule, typeof MatAutocomplete, typeof MatOptionModule, typeof i2$1.BidiModule, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i2.OverlayModule, typeof MatOptionModule, typeof MatAutocomplete, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin, typeof MatAutocompleteSelectedTrigger], [typeof i1.CdkScrollableModule, typeof MatAutocomplete, typeof MatOptionModule, typeof i2$1.BidiModule, typeof MatAutocompleteTrigger, typeof MatAutocompleteOrigin, typeof MatAutocompleteSelectedTrigger]>;
 }
 
 // @public
@@ -155,6 +159,16 @@ export class MatAutocompleteSelectedEvent {
 }
 
 // @public
+export class MatAutocompleteSelectedTrigger {
+    // (undocumented)
+    readonly templateRef: TemplateRef<any>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatAutocompleteSelectedTrigger, "ng-template[matAutocompleteSelectedTrigger]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteSelectedTrigger, never>;
+}
+
+// @public
 export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     get activeOption(): MatOption | null;
@@ -163,6 +177,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     autocompleteDisabled: boolean;
     closePanel(): void;
     connectedTo: MatAutocompleteOrigin;
+    // (undocumented)
+    _handleBlur(): void;
     // (undocumented)
     _handleClick(): void;
     // (undocumented)

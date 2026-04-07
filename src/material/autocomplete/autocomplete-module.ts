@@ -12,6 +12,7 @@ import {BidiModule} from '@angular/cdk/bidi';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatAutocomplete} from './autocomplete';
+import {MatAutocompleteSelectedTrigger} from './autocomplete-selected-trigger';
 import {MatAutocompleteTrigger} from './autocomplete-trigger';
 import {MatAutocompleteOrigin} from './autocomplete-origin';
 
@@ -22,6 +23,7 @@ import {MatAutocompleteOrigin} from './autocomplete-origin';
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatAutocompleteOrigin,
+    MatAutocompleteSelectedTrigger,
   ],
   exports: [
     CdkScrollableModule,
@@ -30,6 +32,7 @@ import {MatAutocompleteOrigin} from './autocomplete-origin';
     BidiModule,
     MatAutocompleteTrigger,
     MatAutocompleteOrigin,
+    MatAutocompleteSelectedTrigger,
   ],
 })
 export class MatAutocompleteModule {}

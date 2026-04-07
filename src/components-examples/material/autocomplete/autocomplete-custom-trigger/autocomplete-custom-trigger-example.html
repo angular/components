@@ -1,0 +1,36 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>State</mat-label>
+    <input
+      matInput
+      aria-label="State"
+      [matAutocomplete]="auto"
+      [formControl]="stateCtrl" />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <!--
+        matAutocompleteSelectedTrigger replaces the plain text with a custom HTML template
+        after an option is selected. The let-state binding exposes the raw selected value.
+        Click the field or start typing to clear the display and re-open the panel.
+      -->
+      <ng-template matAutocompleteSelectedTrigger let-state>
+        <img class="example-trigger-flag" [src]="state?.flag" [alt]="state?.name" height="20" />
+        {{ state?.name }}
+      </ng-template>
+      @for (state of filteredStates | async; track state.name) {
+        <mat-option [value]="state">
+          <img alt="" class="example-option-img" [src]="state.flag" height="25" />
+          <span>{{ state.name }}</span> |
+          <small>Population: {{ state.population }}</small>
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <br />
+
+  <mat-slide-toggle
+    [checked]="stateCtrl.disabled"
+    (change)="stateCtrl.disabled ? stateCtrl.enable() : stateCtrl.disable()">
+    Disable Input?
+  </mat-slide-toggle>
+</form>
