@@ -26,6 +26,7 @@ const DEACTIVATING_CLASS = 'mdc-line-ripple--deactivating';
   selector: 'div[matFormFieldLineRipple]',
   host: {
     'class': 'mdc-line-ripple',
+    'aria-hidden': 'true',
   },
 })
 export class MatFormFieldLineRipple implements OnDestroy {
