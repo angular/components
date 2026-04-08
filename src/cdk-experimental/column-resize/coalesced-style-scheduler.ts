@@ -33,9 +33,6 @@ export class _CoalescedStyleScheduler {
   private _currentSchedule: _Schedule | null = null;
   private _ngZone = inject(NgZone);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Schedules the specified task to run at the end of the current VM turn.
    */

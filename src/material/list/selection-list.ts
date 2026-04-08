@@ -161,8 +161,6 @@ export class MatSelectionList
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._isNonInteractive = false;

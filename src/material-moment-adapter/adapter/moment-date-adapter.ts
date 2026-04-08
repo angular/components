@@ -75,8 +75,6 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     narrowDaysOfWeek: string[];
   };
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     const dateLocale = inject<string>(MAT_DATE_LOCALE, {optional: true});

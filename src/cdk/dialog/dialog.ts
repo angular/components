@@ -86,10 +86,6 @@ export class Dialog implements OnDestroy {
       : this._getAfterAllClosed().pipe(startWith(undefined)),
   );
 
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   /**
    * Opens a modal dialog containing the given component.
    * @param component Type of the component to load into the dialog.

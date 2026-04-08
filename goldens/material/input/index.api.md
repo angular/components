@@ -41,7 +41,6 @@ export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
 
 // @public
 export class MatError {
-    constructor(...args: unknown[]);
     // (undocumented)
     id: string;
     // (undocumented)
@@ -52,7 +51,7 @@ export class MatError {
 
 // @public
 export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _animateAndLockLabel(): void;
     // (undocumented)
     protected readonly _animationsDisabled: boolean;
@@ -149,7 +148,7 @@ export class MatHint {
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl_2<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
-    constructor(...args: unknown[]);
+    constructor();
     autofilled: boolean;
     controlType: string;
     get describedByIds(): string[];

@@ -219,8 +219,6 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** The names of the weekdays. */
   _weekdays = signal<{long: string; narrow: string; id: number}[]>([]);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {

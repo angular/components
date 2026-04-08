@@ -23,7 +23,7 @@ export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly apiChange: Observable<YT.PlayerEvent>;
     disableCookies: boolean;
     disablePlaceholder: boolean;

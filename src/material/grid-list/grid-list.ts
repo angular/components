@@ -84,9 +84,6 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MatGridTile, {descendants: true}) _tiles!: QueryList<MatGridTile>;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Amount of columns in the grid list. */
   @Input()
   get cols(): number {

@@ -56,8 +56,6 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
     return MatTestDialogOpener as ComponentType<MatTestDialogOpener<T, R>>;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (!MatTestDialogOpener.component) {
       throw new Error(`MatTestDialogOpener does not have a component provided.`);

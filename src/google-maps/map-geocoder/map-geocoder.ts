@@ -23,9 +23,6 @@ export class MapGeocoder {
   private readonly _ngZone = inject(NgZone);
   private _geocoder: google.maps.Geocoder | undefined;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode
    */

@@ -137,7 +137,6 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    */
   isActive = false;
 
-  constructor(...args: unknown[]);
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
   }

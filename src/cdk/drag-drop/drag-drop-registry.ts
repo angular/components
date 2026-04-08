@@ -102,9 +102,6 @@ export class DragDropRegistry implements OnDestroy {
    */
   readonly pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Adds a drop container to the registry. */
   registerDropContainer(drop: DropListRef) {
     if (!this._dropInstances.has(drop)) {

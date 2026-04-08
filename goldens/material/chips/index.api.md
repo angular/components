@@ -53,7 +53,7 @@ export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _allEditIcons: QueryList<MatChipEdit>;
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
@@ -163,7 +163,6 @@ export interface MatChipEditedEvent extends MatChipEvent {
 
 // @public
 export class MatChipEditInput {
-    constructor(...args: unknown[]);
     // (undocumented)
     getNativeElement(): HTMLElement;
     // (undocumented)
@@ -185,7 +184,7 @@ export interface MatChipEvent {
 
 // @public
 export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _allowFocusEscape(): void;
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
@@ -264,7 +263,7 @@ export class MatChipGridChange {
 
 // @public
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
@@ -436,7 +435,7 @@ export class MatChipRemove extends MatChipAction {
 
 // @public
 export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected basicChipAttrName: string;
     contentEditInput?: MatChipEditInput;
@@ -491,7 +490,6 @@ export class MatChipSelectionChange {
 
 // @public
 export class MatChipSet implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     protected _allowFocusEscape(): void;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;

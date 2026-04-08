@@ -14,7 +14,7 @@ export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpi
 
 // @public (undocumented)
 export class MatProgressSpinner {
-    constructor(...args: unknown[]);
+    constructor();
     _circleRadius(): number;
     _circleStrokeWidth(): number;
     get color(): string | null | undefined;

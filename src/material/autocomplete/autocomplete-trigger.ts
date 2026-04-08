@@ -243,9 +243,6 @@ export class MatAutocompleteTrigger
   @Input({alias: 'matAutocompleteDisabled', transform: booleanAttribute})
   autocompleteDisabled: boolean = false;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Class to apply to the panel when it's above the input. */
   private _aboveClass = 'mat-mdc-autocomplete-panel-above';
 

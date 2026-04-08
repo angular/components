@@ -23,10 +23,6 @@ export abstract class BaseOverlayDispatcher implements OnDestroy {
   protected _document = inject(DOCUMENT);
   protected _isAttached = false;
 
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   ngOnDestroy(): void {
     this.detach();
   }

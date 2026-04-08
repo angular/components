@@ -55,9 +55,6 @@ export class AutofillMonitor implements OnDestroy {
   private _styleLoader = inject(_CdkPrivateStyleLoader);
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Monitor for changes in the autofill state of the given input element.
    * @param element The element to monitor.
@@ -158,9 +155,6 @@ export class CdkAutofill implements OnDestroy, OnInit {
 
   /** Emits when the autofill state of the element changes. */
   @Output() readonly cdkAutofill = new EventEmitter<AutofillEvent>();
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngOnInit() {
     this._autofillMonitor

@@ -79,9 +79,6 @@ export class ContentObserver implements OnDestroy {
 
   private _ngZone = inject(NgZone);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnDestroy() {
     this._observedElements.forEach((_, element) => this._cleanupObserver(element));
   }
@@ -212,9 +209,6 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   private _debounce: number | undefined;
 
   private _currentSubscription: Subscription | null = null;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterContentInit() {
     if (!this._currentSubscription && !this.disabled) {

@@ -146,9 +146,6 @@ export class MapRectangle implements OnInit, OnDestroy {
   @Output() readonly rectangleInitialized: EventEmitter<google.maps.Rectangle> =
     new EventEmitter<google.maps.Rectangle>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()

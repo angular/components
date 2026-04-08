@@ -120,8 +120,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   /** Unique ID of the aria-live element. */
   readonly _liveElementId = inject(_IdGenerator).getId('mat-snack-bar-container-live-');
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     const config = this.snackBarConfig;

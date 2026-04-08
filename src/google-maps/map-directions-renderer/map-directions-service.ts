@@ -25,9 +25,6 @@ export class MapDirectionsService {
   private readonly _ngZone = inject(NgZone);
   private _directionsService: google.maps.DirectionsService | undefined;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * See
    * developers.google.com/maps/documentation/javascript/reference/directions

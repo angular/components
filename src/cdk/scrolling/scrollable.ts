@@ -50,9 +50,6 @@ export class CdkScrollable implements OnInit, OnDestroy {
   private _cleanupScroll: (() => void) | undefined;
   private _elementScrolled = new Subject<Event>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     this._cleanupScroll = this.ngZone.runOutsideAngular(() =>
       this._renderer.listen(this._scrollElement, 'scroll', event =>

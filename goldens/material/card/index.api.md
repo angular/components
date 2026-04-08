@@ -13,7 +13,7 @@ export const MAT_CARD_CONFIG: InjectionToken<MatCardConfig>;
 
 // @public
 export class MatCard {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     appearance: MatCardAppearance;
     // (undocumented)

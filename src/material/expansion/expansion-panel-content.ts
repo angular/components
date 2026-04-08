@@ -19,7 +19,4 @@ import {MAT_EXPANSION_PANEL, MatExpansionPanelBase} from './expansion-panel-base
 export class MatExpansionPanelContent {
   _template = inject<TemplateRef<any>>(TemplateRef);
   _expansionPanel = inject<MatExpansionPanelBase>(MAT_EXPANSION_PANEL, {optional: true});
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

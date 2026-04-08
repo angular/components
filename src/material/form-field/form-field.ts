@@ -343,8 +343,6 @@ export class MatFormField
   private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
   protected readonly _animationsDisabled = _animationsDisabled();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaults = this._defaults;
     const dir = inject(Directionality);

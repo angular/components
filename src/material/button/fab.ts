@@ -73,8 +73,6 @@ export class MatFabButton extends MatButtonBase {
 
   @Input({transform: booleanAttribute}) extended: boolean = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._options = this._options || defaults;
@@ -102,8 +100,6 @@ export class MatMiniFabButton extends MatButtonBase {
   private _options = inject<MatFabDefaultOptions>(MAT_FAB_DEFAULT_OPTIONS, {optional: true});
 
   override _isFab = true;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

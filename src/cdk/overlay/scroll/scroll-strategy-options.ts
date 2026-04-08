@@ -25,9 +25,6 @@ import {
 export class ScrollStrategyOptions {
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Do nothing on scroll. */
   noop = () => new NoopScrollStrategy();
 

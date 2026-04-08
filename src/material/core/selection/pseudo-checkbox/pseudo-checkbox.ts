@@ -58,7 +58,4 @@ export class MatPseudoCheckbox {
    * indicator inside a square box. 'minimal' appearance only renders the checkmark/mixedmark.
    */
   @Input() appearance: 'minimal' | 'full' = 'full';
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

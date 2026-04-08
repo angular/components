@@ -47,7 +47,7 @@ export const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
 
 // @public
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get color(): string | null | undefined;
     set color(value: string | null | undefined);
     // (undocumented)

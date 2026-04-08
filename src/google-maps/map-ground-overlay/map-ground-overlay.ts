@@ -93,9 +93,6 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   @Output() readonly groundOverlayInitialized: EventEmitter<google.maps.GroundOverlay> =
     new EventEmitter<google.maps.GroundOverlay>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       // The ground overlay setup is slightly different from the other Google Maps objects in that

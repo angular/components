@@ -59,8 +59,6 @@ export class GridTableExample {
 
   readonly tasks: WritableSignal<TaskRow[]> = signal(this._createRows());
 
-  constructor() {}
-
   startEdit(
     event: KeyboardEvent | FocusEvent | undefined,
     task: TaskRow,

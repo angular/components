@@ -250,8 +250,6 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('youtubeContainer', {static: true})
   youtubeContainer!: ElementRef<HTMLElement>;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const platformId = inject<Object>(PLATFORM_ID);
     const config = inject(YOUTUBE_PLAYER_CONFIG, {optional: true});

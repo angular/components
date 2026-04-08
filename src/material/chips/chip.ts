@@ -255,8 +255,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   protected _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_StructuralStylesLoader);

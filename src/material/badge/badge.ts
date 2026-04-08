@@ -149,8 +149,6 @@ export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
 
   private _document = inject(DOCUMENT);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_MatBadgeStyleLoader);

@@ -110,8 +110,6 @@ export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
 
   _isEditing = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

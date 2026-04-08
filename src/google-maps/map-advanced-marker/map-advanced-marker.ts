@@ -194,9 +194,6 @@ export class MapAdvancedMarker
    */
   advancedMarker!: google.maps.marker.AdvancedMarkerElement;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
       return;

@@ -150,8 +150,6 @@ export class MatExpansionPanel
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId: string = inject(_IdGenerator).getId('mat-expansion-panel-header-');
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

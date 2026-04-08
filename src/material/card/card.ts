@@ -51,8 +51,6 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
 export class MatCard {
   @Input() appearance: MatCardAppearance;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const config = inject<MatCardConfig>(MAT_CARD_CONFIG, {optional: true});
     this.appearance = config?.appearance || 'raised';

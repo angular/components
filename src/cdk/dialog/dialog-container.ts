@@ -114,8 +114,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   private _isDestroyed = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

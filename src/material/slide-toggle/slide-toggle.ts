@@ -204,8 +204,6 @@ export class MatSlideToggle
     return `${this.id || this._uniqueId}-input`;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});

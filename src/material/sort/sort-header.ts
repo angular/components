@@ -143,8 +143,6 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   @Input({transform: booleanAttribute})
   disableClear!: boolean;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const defaultOptions = inject<MatSortDefaultOptions>(MAT_SORT_DEFAULT_OPTIONS, {

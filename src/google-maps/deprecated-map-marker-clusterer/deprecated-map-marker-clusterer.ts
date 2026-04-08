@@ -216,9 +216,6 @@ export class DeprecatedMapMarkerClusterer
   @Output() readonly markerClustererInitialized: EventEmitter<MarkerClustererInstance> =
     new EventEmitter<MarkerClustererInstance>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._canInitialize) {
       this._ngZone.runOutsideAngular(() => {

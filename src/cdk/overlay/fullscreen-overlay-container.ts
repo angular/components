@@ -22,12 +22,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   private _fullScreenEventName: string | undefined;
   private _cleanupFullScreenListener: (() => void) | undefined;
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super();
-  }
-
   override ngOnDestroy() {
     super.ngOnDestroy();
     this._cleanupFullScreenListener?.();

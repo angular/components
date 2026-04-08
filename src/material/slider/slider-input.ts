@@ -281,8 +281,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
    */
   protected _isControlInitialized = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const renderer = inject(Renderer2);
 
@@ -660,8 +658,6 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   /** Whether this slider corresponds to the input with greater value. */
   _isEndThumb = false;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

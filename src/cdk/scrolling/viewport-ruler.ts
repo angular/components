@@ -38,8 +38,6 @@ export class ViewportRuler implements OnDestroy {
   /** Used to reference correct document/window */
   protected _document = inject(DOCUMENT);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const ngZone = inject(NgZone);
     const renderer = inject(RendererFactory2).createRenderer(null, null);
