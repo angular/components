@@ -38,7 +38,9 @@
 .example-icon {
   width: 24px;
   height: 24px;
-  font-size: 20px;
+  font-size: 24px;
+    color: var(--mat-sys-on-surface-variant);
+    user-select: none;
   display: grid;
   place-items: center;
   pointer-events: none;
@@ -96,15 +98,14 @@
   max-height: 10rem;
   padding: 0.5rem;
   gap: 4px;
+  outline: none;
 }
 
+/* --- 2. LISTBOX & OPTIONS --- */
 .example-option {
   cursor: pointer;
   padding: 0.3rem 1rem;
   border-radius: var(--mat-sys-corner-extra-small);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
   display: flex;
   overflow: hidden;
   flex-shrink: 0;
@@ -149,13 +150,23 @@
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
 }
 
-.example-combobox-container:focus-within [data-active='true']:not(button) {
+.example-combobox-container:not(.no-active-outline):focus-within [data-active='true']:not(.no-active-outline) {
   outline: 2px solid color-mix(in srgb, var(--mat-sys-primary) 80%, transparent);
+  outline-offset: -2px;
 }
+
+.example-dialog .example-combobox-input-container {
+  border-bottom: 1px solid var(--mat-sys-outline);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 
 .example-tree {
   padding: 10px;
   overflow-x: scroll;
+  width: 100%;
+    box-sizing: border-box;
 }
 
 .example-tree-item {
@@ -166,12 +177,6 @@
   align-items: center;
   gap: 1rem;
   padding: 0.3rem 1rem;
-  border-radius: var(--mat-sys-corner-extra-small);
-}
-
-.example-tree-item[data-active='true'] {
-  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
-  outline: 2px solid var(--mat-sys-primary);
 }
 
 li[aria-expanded='false']+ul[role='group'] {
@@ -205,7 +210,7 @@ ul[role='group'] {
   visibility: visible;
 }
 
-.example-combobox-container:has([aria-disabled='true']) {
+.example-combobox-container:has(.example-combobox-input[aria-disabled='true']) {
   opacity: 0.4;
   cursor: default;
 }
@@ -213,8 +218,6 @@ ul[role='group'] {
 .example-grid-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 4px 8px;
   border-radius: var(--mat-sys-corner-extra-small);
   transition: background-color 0.2s ease;
 }
@@ -234,6 +237,11 @@ ul[role='group'] {
 .example-grid-row[data-active='true'] {
   background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
   outline: 2px solid var(--mat-sys-primary);
+}
+
+.example-grid-row[aria-selected='true'] {
+  color: var(--mat-sys-primary);
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
 }
 
 .example-grid-header-row {
@@ -260,10 +268,12 @@ ul[role='group'] {
 }
 
 .example-cell-label {
+  border-radius: var(--mat-sys-corner-extra-small);
   flex: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: 0 12px;
 }
 
 .example-cell-checkbox,
@@ -303,7 +313,6 @@ ul[role='group'] {
   opacity: 1;
   color: var(--mat-sys-primary);
   outline: none;
-  transform: scale(1.15);
 }
 
 .example-button:active {
@@ -318,4 +327,26 @@ ul[role='group'] {
 .example-button[aria-disabled='true'] {
   cursor: default;
   opacity: 0.45;
+}
+
+.example-label-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.example-popup .example-button[data-active='true'] {
+  color: inherit;
+}
+
+.example-grid-row[aria-selected='true'] .example-selected-icon {
+  visibility: visible;
 }

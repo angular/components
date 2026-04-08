@@ -22,6 +22,12 @@
   outline: 2px solid var(--mat-sys-primary);
 }
 
+.example-select[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
 .example-combobox-text {
   width: 9rem;
 }
@@ -69,6 +75,8 @@
 
 [ngOption][data-active='true'] {
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  outline: 2px solid var(--mat-sys-on-surface);
+  outline-offset: -2px;
 }
 
 [ngOption][aria-selected='true'] {

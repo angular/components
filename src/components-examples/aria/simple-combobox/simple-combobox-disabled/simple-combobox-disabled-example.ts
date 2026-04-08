@@ -11,14 +11,14 @@ import {Listbox, Option} from '@angular/aria/listbox';
 import {afterRenderEffect, Component, computed, signal, viewChild, untracked} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title */
+/** @title Simple Combobox Disabled */
 @Component({
-  selector: 'simple-combobox-listbox-example',
-  templateUrl: 'simple-combobox-listbox-example.html',
+  selector: 'simple-combobox-disabled-example',
+  templateUrl: 'simple-combobox-disabled-example.html',
   styleUrl: '../simple-combobox-examples.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-export class SimpleComboboxListboxExample {
+export class SimpleComboboxDisabledExample {
   readonly listbox = viewChild(Listbox);
 
   popupExpanded = signal(false);
@@ -33,14 +33,20 @@ export class SimpleComboboxListboxExample {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
     });
+
+    afterRenderEffect(() => {
+      if (this.popupExpanded()) {
+        untracked(() => setTimeout(() => this.listbox()?.gotoFirst()));
+      }
+    });
   }
 
   onCommit() {
     const selectedOption = this.selectedOption();
     if (selectedOption.length > 0) {
       this.searchString.set(selectedOption[0]);
+      this.popupExpanded.set(false);
     }
-    this.popupExpanded.set(false);
   }
 }
 

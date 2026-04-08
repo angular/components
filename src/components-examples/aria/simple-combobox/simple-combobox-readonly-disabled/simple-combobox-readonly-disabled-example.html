@@ -3,6 +3,7 @@
   ngCombobox
   #combobox="ngCombobox"
   tabindex="0"
+  [disabled]="true"
   [(expanded)]="popupExpanded"
 >
   <span class="example-combobox-text">{{value()}}</span>
@@ -18,6 +19,7 @@
     <div class="example-popup-container">
       <div
         ngListbox
+        tabIndex="-1"
         ngComboboxWidget
         focusMode="activedescendant"
         selectionMode="explicit"

@@ -7,12 +7,15 @@
  */
 
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {computed, signal, untracked} from '@angular/core';
+import {afterRenderEffect, computed, signal, untracked} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
 
 /** Represents the required inputs for a simple combobox. */
 export interface SimpleComboboxInputs extends ExpansionItem {
+  /** Whether the combobox should always remain expanded. */
+  alwaysExpanded: SignalLike<boolean>;
+
   /** The value of the combobox. */
   value: WritableSignalLike<string>;
 
@@ -123,7 +126,11 @@ export class SimpleComboboxPattern {
       .on('Enter', e => this.keyboardEventRelay.set(e))
       .on('PageUp', e => this.keyboardEventRelay.set(e))
       .on('PageDown', e => this.keyboardEventRelay.set(e))
-      .on('Escape', () => this.expanded.set(false));
+      .on('Escape', () => {
+        if (!this.inputs.alwaysExpanded()) {
+          this.expanded.set(false);
+        }
+      });
 
     if (!this.isEditable()) {
       manager
@@ -150,6 +157,12 @@ export class SimpleComboboxPattern {
   constructor(readonly inputs: SimpleComboboxInputs) {
     this.expanded = inputs.expanded;
     this.value = inputs.value;
+
+    afterRenderEffect(() => {
+      if (this.inputs.alwaysExpanded()) {
+        this.expanded.set(true);
+      }
+    });
   }
 
   /** Handles keydown events for the combobox. */
@@ -226,7 +239,7 @@ export class SimpleComboboxPattern {
     const expanded = this.expanded();
     const comboboxFocused = this.isFocused();
     const popupFocused = !!this.inputs.popup()?.isFocused();
-    if (expanded && !comboboxFocused && !popupFocused) {
+    if (expanded && !this.inputs.alwaysExpanded() && !comboboxFocused && !popupFocused) {
       this.expanded.set(false);
     }
   }
