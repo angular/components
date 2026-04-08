@@ -46,7 +46,7 @@ export function addAriaReferencedId(el: Element, attr: `aria-${string}`, id: str
 
 // @public
 export class AriaDescriber implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     describe(hostElement: Element, message: string, role?: string): void;
     describe(hostElement: Element, message: HTMLElement): void;
     ngOnDestroy(): void;
@@ -69,7 +69,7 @@ export const CDK_DESCRIBEDBY_ID_PREFIX = "cdk-describedby-message";
 
 // @public
 export class CdkAriaLive implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     duration: number;
     // (undocumented)
     ngOnDestroy(): void;
@@ -83,7 +83,6 @@ export class CdkAriaLive implements OnDestroy {
 
 // @public
 export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly cdkFocusChange: EventEmitter<FocusOrigin>;
     // (undocumented)
@@ -100,7 +99,7 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
 
 // @public
 export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
-    constructor(...args: unknown[]);
+    constructor();
     autoCapture: boolean;
     get enabled(): boolean;
     set enabled(value: boolean);
@@ -140,7 +139,7 @@ export interface ConfigurableFocusTrapConfig {
 
 // @public
 export class ConfigurableFocusTrapFactory {
-    constructor(...args: unknown[]);
+    constructor();
     create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): ConfigurableFocusTrap;
     // @deprecated (undocumented)
     create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
@@ -177,7 +176,7 @@ export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
 
 // @public
 export class FocusMonitor implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _document: Document;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions_2): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions_2): void;
@@ -248,7 +247,7 @@ export class FocusTrap {
 
 // @public
 export class FocusTrapFactory {
-    constructor(...args: unknown[]);
+    constructor();
     create(element: HTMLElement, deferCaptureElements?: boolean): FocusTrap;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FocusTrapFactory, never>;
@@ -277,7 +276,7 @@ export enum HighContrastMode {
 
 // @public
 export class HighContrastModeDetector implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _applyBodyHighContrastModeCssClasses(): void;
     getHighContrastMode(): HighContrastMode;
     // (undocumented)
@@ -314,7 +313,7 @@ export type InputModality = 'keyboard' | 'mouse' | 'touch' | null;
 
 // @public
 export class InputModalityDetector implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly modalityChanged: Observable<InputModality>;
     readonly modalityDetected: Observable<InputModality>;
     get mostRecentModality(): InputModality;
@@ -334,7 +333,6 @@ export interface InputModalityDetectorOptions {
 
 // @public
 export class InteractivityChecker {
-    constructor(...args: unknown[]);
     isDisabled(element: HTMLElement): boolean;
     isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean;
     isTabbable(element: HTMLElement): boolean;
@@ -404,7 +402,7 @@ export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 
 // @public (undocumented)
 export class LiveAnnouncer implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     announce(message: LiveAnnouncerMessage): Promise<void>;
     announce(message: LiveAnnouncerMessage, politeness?: AriaLivePoliteness): Promise<void>;
     announce(message: LiveAnnouncerMessage, duration?: number): Promise<void>;

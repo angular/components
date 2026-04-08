@@ -279,8 +279,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
   private _hideMultipleSelectionIndicator: boolean;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultOptions = inject<MatButtonToggleDefaultOptions>(
       MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS,
@@ -676,8 +674,6 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   /** Event emitted when the group value changes. */
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

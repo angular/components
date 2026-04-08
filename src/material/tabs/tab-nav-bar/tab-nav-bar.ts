@@ -163,8 +163,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
   _inkBar!: MatInkBar;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
 
@@ -340,8 +338,6 @@ export class MatTabLink
 
   /** Unique id for the tab. */
   @Input() id: string = inject(_IdGenerator).getId('mat-tab-link-');
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

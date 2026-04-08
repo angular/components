@@ -25,9 +25,6 @@ export class MatChipEditInput {
   private readonly _elementRef = inject(ElementRef);
   private readonly _document = inject(DOCUMENT);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   initialize(initialValue: string) {
     this.getNativeElement().focus();
     this.setValue(initialValue);

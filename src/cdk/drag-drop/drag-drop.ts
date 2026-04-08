@@ -20,9 +20,6 @@ import {createDropListRef, DropListRef} from './drop-list-ref';
 export class DragDrop {
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Turns an element into a draggable item.
    * @param element Element to which to attach the dragging functionality.

@@ -13,7 +13,7 @@ import { OnInit } from '@angular/core';
 
 // @public
 export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get color(): ThemePalette;
     set color(value: ThemePalette);
     get content(): string | number | undefined | null;

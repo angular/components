@@ -105,9 +105,6 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
 
   private _platform = inject(Platform);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngAfterViewInit() {
     const sliderInput = this._slider._getInput(this.thumbPosition);
 

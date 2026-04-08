@@ -200,8 +200,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   private _isDestroyed = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     const viewportRuler = inject(ViewportRuler);

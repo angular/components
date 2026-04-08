@@ -23,7 +23,7 @@ export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOpti
 
 // @public (undocumented)
 export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
-    constructor(...args: unknown[]);
+    constructor();
     protected _animationClasses: {
         uncheckedToChecked: string;
         uncheckedToIndeterminate: string;

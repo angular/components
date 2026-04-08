@@ -61,7 +61,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatDialog implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly afterAllClosed: Observable<void>;
     get afterOpened(): Subject<MatDialogRef<any>>;
     closeAll(): void;
@@ -98,7 +98,6 @@ export class MatDialogActions extends MatDialogLayoutSection {
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
-    constructor(...args: unknown[]);
     ariaLabel: string;
     // (undocumented)
     dialogRef: MatDialogRef<any, any>;

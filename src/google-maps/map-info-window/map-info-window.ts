@@ -104,9 +104,6 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   @Output() readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow> =
     new EventEmitter<google.maps.InfoWindow>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       this._combineOptions()

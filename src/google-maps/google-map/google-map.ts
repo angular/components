@@ -247,8 +247,6 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   @Output() readonly zoomChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('zoom_changed');
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const platformId = inject<Object>(PLATFORM_ID);
     this._isBrowser = isPlatformBrowser(platformId);

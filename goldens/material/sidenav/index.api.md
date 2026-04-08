@@ -27,7 +27,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 
 // @public
 export class MatDrawer implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly _animationEnd: Subject<unknown>;
     readonly _animationStarted: Subject<unknown>;
     get autoFocus(): AutoFocusTarget | string | boolean;
@@ -68,7 +68,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
 // @public
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _allDrawers: QueryList<MatDrawer>;
     get autosize(): boolean;
     set autosize(value: BooleanInput);
@@ -119,7 +119,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
 
 // @public (undocumented)
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     _container: MatDrawerContainer;
     // (undocumented)

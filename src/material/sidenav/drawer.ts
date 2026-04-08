@@ -16,7 +16,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
 
 import {
   AfterContentInit,
@@ -102,16 +102,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   _container = inject(MatDrawerContainer);
-
-  constructor(...args: unknown[]);
-
-  constructor() {
-    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    const scrollDispatcher = inject(ScrollDispatcher);
-    const ngZone = inject(NgZone);
-
-    super(elementRef, scrollDispatcher, ngZone);
-  }
 
   ngAfterContentInit() {
     this._container._contentMarginChanges.subscribe(() => {
@@ -332,8 +322,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
   private _injector = inject(Injector);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
@@ -787,8 +775,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   }
 
   private _injector = inject(Injector);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const platform = inject(Platform);

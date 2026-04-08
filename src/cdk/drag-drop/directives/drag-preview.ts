@@ -43,8 +43,6 @@ export class CdkDragPreview<T = any> implements OnDestroy {
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._drag?._setPreviewTemplate(this);
   }

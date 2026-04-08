@@ -378,8 +378,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Whether ngOnDestroyed has been called. */
   private _isDestroyed = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultOptions = this._defaultOptions;
 
@@ -1019,10 +1017,6 @@ export class TooltipComponent implements OnDestroy {
 
   /** Name of the hide animation and the class that toggles it. */
   private readonly _hideAnimation = 'mat-mdc-tooltip-hide';
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin

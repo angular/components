@@ -134,9 +134,6 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
   /** Flat list of all the actions contained within the chips. */
   _chipActions = new QueryList<MatChipAction>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngAfterViewInit() {
     this._setUpFocusManagement();
     this._trackChipSetChanges();

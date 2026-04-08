@@ -77,7 +77,7 @@ export interface MatSortDefaultOptions {
 
 // @public
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected _animationsDisabled: boolean;
     arrowPosition: SortHeaderArrowPosition;

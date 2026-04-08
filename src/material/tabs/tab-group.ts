@@ -288,8 +288,6 @@ export class MatTabGroup
   /** Whether the tab group is rendered on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
 

@@ -138,7 +138,6 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
 
-  constructor(...args: unknown[]);
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_StructuralStylesLoader);

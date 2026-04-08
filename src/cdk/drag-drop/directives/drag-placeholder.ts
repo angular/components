@@ -32,8 +32,6 @@ export class CdkDragPlaceholder<T = any> implements OnDestroy {
   /** Context data to be added to the placeholder template instance. */
   @Input() data!: T;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._drag?._setPlaceholderTemplate(this);
   }

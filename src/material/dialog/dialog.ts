@@ -98,8 +98,6 @@ export class MatDialog implements OnDestroy {
       : this._getAfterAllClosed().pipe(startWith(undefined)),
   ) as Observable<any>;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._dialogRefConstructor = MatDialogRef;
     this._dialogContainerType = MatDialogContainer;

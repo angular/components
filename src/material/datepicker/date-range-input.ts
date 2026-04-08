@@ -263,8 +263,6 @@ export class MatDateRangeInput<D>
    */
   readonly disableAutomaticLabeling = true;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');

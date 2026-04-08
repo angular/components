@@ -23,8 +23,6 @@ export class MediaMatcher {
   /** The internal matchMedia method to return back a MediaQueryList like object. */
   private _matchMedia: (query: string) => MediaQueryList;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._matchMedia =
       this._platform.isBrowser && window.matchMedia

@@ -30,9 +30,6 @@ export class CdkTreeNodeToggle<T, K = T> {
   @Input({alias: 'cdkTreeNodeToggleRecursive', transform: booleanAttribute})
   recursive: boolean = false;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   // Toggle the expanded or collapsed state of this node.
   //
   // Focus this node with expanding or collapsing it. This ensures that the active node will always

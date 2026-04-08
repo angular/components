@@ -26,8 +26,6 @@ import {MatButtonBase} from './button-base';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconButton extends MatButtonBase {
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._rippleLoader.configureRipple(this._elementRef.nativeElement, {centered: true});

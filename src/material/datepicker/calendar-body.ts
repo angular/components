@@ -224,8 +224,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
    */
   _trackRow = (row: MatCalendarCell[]) => row;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const renderer = inject(Renderer2);
     const idGenerator = inject(_IdGenerator);

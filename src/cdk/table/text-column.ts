@@ -111,8 +111,6 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    */
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell!: CdkHeaderCellDef;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._options = this._options || {};
   }

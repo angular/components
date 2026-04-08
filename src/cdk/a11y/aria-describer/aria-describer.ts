@@ -66,8 +66,6 @@ export class AriaDescriber implements OnDestroy {
   /** Unique ID for the service. */
   private readonly _id = `${nextId++}`;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     this._id = inject(APP_ID) + '-' + nextId++;

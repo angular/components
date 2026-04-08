@@ -47,8 +47,6 @@ export class LiveAnnouncer implements OnDestroy {
   private _currentPromise: Promise<void> | undefined;
   private _currentResolve: (() => void) | undefined;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const elementToken = inject(LIVE_ANNOUNCER_ELEMENT_TOKEN, {optional: true});
     this._liveElement = elementToken || this._createLiveElement();
@@ -275,8 +273,6 @@ export class CdkAriaLive implements OnDestroy {
 
   private _previousAnnouncedText?: string;
   private _subscription: Subscription | undefined;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);

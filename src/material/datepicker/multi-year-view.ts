@@ -159,8 +159,6 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   /** The year of the selected date. Null if the selected date is null. */
   _selectedYear = signal<number | null>(null);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');

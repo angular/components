@@ -115,8 +115,6 @@ export class MatProgressSpinner {
   /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle!: ElementRef<HTMLElement>;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaults = inject<MatProgressSpinnerDefaultOptions>(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS);
     const animationsState = _getAnimationsState();

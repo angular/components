@@ -183,8 +183,6 @@ export class InputModalityDetector implements OnDestroy {
     this._mostRecentTarget = _getEventTarget(event);
   };
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const ngZone = inject(NgZone);
     const document = inject<Document>(DOCUMENT);

@@ -44,9 +44,6 @@ export class MatGridTile {
   _rowspan: number = 1;
   _colspan: number = 1;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Amount of rows that the grid tile takes up. */
   @Input()
   get rowspan(): number {
@@ -84,9 +81,6 @@ export class MatGridTileText implements AfterContentInit {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterContentInit() {
     setLines(this._lines, this._element);

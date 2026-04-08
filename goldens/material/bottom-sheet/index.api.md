@@ -34,7 +34,6 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConf
 
 // @public
 export class MatBottomSheet implements OnDestroy {
-    constructor(...args: unknown[]);
     dismiss<R = any>(result?: R): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -71,7 +70,7 @@ export class MatBottomSheetConfig<D = any> {
 
 // @public
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected _animationsDisabled: boolean;
     _animationState: 'void' | 'visible' | 'hidden';

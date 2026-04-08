@@ -200,8 +200,6 @@ export class MatPaginator implements OnInit, OnDestroy {
   initialized: Observable<void> = this._initializedStream;
 
   /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
   constructor() {
     const _intl = this._intl;
     const defaults = inject<MatPaginatorDefaultOptions>(MAT_PAGINATOR_DEFAULT_OPTIONS, {

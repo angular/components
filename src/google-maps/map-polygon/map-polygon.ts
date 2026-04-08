@@ -139,9 +139,6 @@ export class MapPolygon implements OnInit, OnDestroy {
   @Output() readonly polygonInitialized: EventEmitter<google.maps.Polygon> =
     new EventEmitter<google.maps.Polygon>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()

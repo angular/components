@@ -51,7 +51,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
 // @public
 export class MatStepContent<C = unknown> {
-    constructor(...args: unknown[]);
     // (undocumented)
     _template: TemplateRef<C>;
     // (undocumented)
@@ -62,7 +61,7 @@ export class MatStepContent<C = unknown> {
 
 // @public (undocumented)
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     active: boolean;
     color: ThemePalette;
     disableRipple: boolean;
@@ -109,7 +108,7 @@ export class MatStepLabel extends CdkStepLabel {
 
 // @public (undocumented)
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _animatedContainers: QueryList<ElementRef>;
     readonly animationDone: EventEmitter<void>;
     get animationDuration(): string;
@@ -143,7 +142,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
 
 // @public
 export class MatStepperIcon {
-    constructor(...args: unknown[]);
     name: StepState;
     // (undocumented)
     templateRef: TemplateRef<MatStepperIconContext>;

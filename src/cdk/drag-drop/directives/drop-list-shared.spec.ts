@@ -5035,10 +5035,6 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
       moveItemInArray(this.items, event.previousIndex, event.currentIndex);
     });
 
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit() {
       // Firefox preserves the `scrollLeft` value from previous similar containers. This
       // could throw off test assertions and result in flaky results.

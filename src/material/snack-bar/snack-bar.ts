@@ -84,9 +84,6 @@ export class MatSnackBar implements OnDestroy {
     }
   }
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Creates and dispatches a snack bar with a custom component for the content, removing any
    * currently opened snack bars.

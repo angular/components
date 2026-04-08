@@ -72,9 +72,6 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   @Output() readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer> =
     new EventEmitter<google.maps.visualization.HeatmapLayer>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       if (

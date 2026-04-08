@@ -19,9 +19,6 @@ import {createGlobalPositionStrategy, GlobalPositionStrategy} from './global-pos
 export class OverlayPositionBuilder {
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Creates a global position strategy.
    */

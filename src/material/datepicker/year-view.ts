@@ -154,8 +154,6 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
    */
   _selectedMonth = signal<number | null>(null);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {

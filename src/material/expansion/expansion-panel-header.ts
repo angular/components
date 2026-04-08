@@ -66,8 +66,6 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
 
   private _parentChangeSubscription = Subscription.EMPTY;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const panel = this.panel;

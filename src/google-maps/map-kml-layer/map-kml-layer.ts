@@ -81,9 +81,6 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   @Output() readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer> =
     new EventEmitter<google.maps.KmlLayer>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()

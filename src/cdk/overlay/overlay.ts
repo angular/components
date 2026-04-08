@@ -128,9 +128,6 @@ export class Overlay {
   private _positionBuilder = inject(OverlayPositionBuilder);
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Creates an overlay.
    * @param config Configuration applied to the overlay.

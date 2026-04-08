@@ -415,8 +415,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _platform = inject(Platform);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
 

@@ -258,8 +258,6 @@ export class CdkStep implements OnChanges {
     return this.interacted && !!this.stepControl?.invalid;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const stepperOptions = inject<StepperOptions>(STEPPER_GLOBAL_OPTIONS, {optional: true});
     this._stepperOptions = stepperOptions ? stepperOptions : {};
@@ -410,9 +408,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     }
   }
   private _orientation: StepperOrientation = 'horizontal';
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterContentInit() {
     this._steps.changes

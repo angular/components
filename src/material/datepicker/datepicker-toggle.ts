@@ -93,8 +93,6 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   /** Underlying button element. */
   @ViewChild('button') _button!: MatButton;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     const parsedTabIndex = Number(defaultTabIndex);
