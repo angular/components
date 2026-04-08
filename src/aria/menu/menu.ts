@@ -176,11 +176,13 @@ export class Menu<V> {
     // Focuses an active menu item when the menu becomes visible. This is needed to
     // properly restore focus to the active item when returning to a menu, and to
     // focus the first item when navigating into a submenu with hover.
-    afterRenderEffect(() => {
-      if (this._pattern.visible()) {
-        const activeItem = untracked(() => this._pattern.inputs.activeItem());
-        this._pattern.listBehavior.goto(activeItem!);
-      }
+    afterRenderEffect({
+      write: () => {
+        if (this.visible()) {
+          const activeItem = untracked(() => this._pattern.inputs.activeItem());
+          this._pattern.listBehavior.goto(activeItem!);
+        }
+      },
     });
 
     afterRenderEffect(() => {

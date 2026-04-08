@@ -104,7 +104,7 @@ export class MenuBar<V> {
   readonly _pattern: MenuBarPattern<V>;
 
   /** The menu items as a writable signal. */
-  private readonly _itemPatterns = signal<any[]>([]);
+  private readonly _itemPatterns = computed(() => this._items().map(i => i._pattern));
 
   /** A callback function triggered when a menu item is selected. */
   readonly itemSelected = output<V>();
@@ -121,10 +121,6 @@ export class MenuBar<V> {
       itemSelected: (value: V) => this.itemSelected.emit(value),
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-    });
-
-    afterRenderEffect(() => {
-      this._itemPatterns.set(this._items().map(i => i._pattern));
     });
 
     afterRenderEffect(() => {
