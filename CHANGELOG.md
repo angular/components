@@ -1,3 +1,12 @@
+<a name="21.2.6"></a>
+# 21.2.6 "steel bottle" (2026-04-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5b4bbe9c4f](https://github.com/angular/components/commit/5b4bbe9c4f8c902d6923b139e7a925822c899bc1) | fix | **select:** wrong transform origin when opening upwards inside another overlay ([#33032](https://github.com/angular/components/pull/33032)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.5"></a>
 # 21.2.5 "steel-wombat" (2026-04-01)
 ### cdk
