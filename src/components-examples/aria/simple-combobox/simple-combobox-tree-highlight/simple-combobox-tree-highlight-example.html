@@ -8,31 +8,34 @@
       placeholder="Search..."
       [(value)]="searchString"
       [(expanded)]="popupExpanded"
+      [inlineSuggestion]="selectedValues()[0] || firstMatchingOption()"
     />
   </div>
 
   <ng-template
     [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
-    [cdkConnectedOverlayOpen]="popupExpanded()"
+    [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true"
   >
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
-      <ul
-        ngTree
-        ngComboboxWidget
-        class="example-tree example-popup"
-        focusMode="activedescendant"
-        selectionMode="explicit"
-        [(value)]="selectedValues"
-        (click)="onCommit()"
-        (keydown.enter)="onCommit()"
-        #tree="ngTree"
-      >
-        <ng-template
-          [ngTemplateOutlet]="treeNodes"
-          [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}"
-        />
-      </ul>
+      <div class="example-popover">
+        <ul
+          ngTree
+          ngComboboxWidget
+          class="example-tree"
+          focusMode="activedescendant"
+          selectionMode="explicit"
+          [(value)]="selectedValues"
+          (click)="onCommit()"
+          (keydown.enter)="onCommit()"
+          #tree="ngTree"
+        >
+          <ng-template
+            [ngTemplateOutlet]="treeNodes"
+            [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}"
+          />
+        </ul>
+      </div>
     </ng-template>
   </ng-template>
 </div>
@@ -49,10 +52,15 @@
       #treeItem="ngTreeItem"
       class="example-tree-item example-selectable example-stateful"
     >
-      <span aria-hidden="true" class="material-symbols-outlined example-parent-icon example-icon">{{node.children ?
-        'chevron_right' : ''}}</span>
+      <span
+        aria-hidden="true"
+        class="material-symbols-outlined example-parent-icon example-icon"
+        >{{node.children ? 'chevron_right' : ''}}</span
+      >
       {{ node.name }}
-      <span aria-hidden="true" class="material-symbols-outlined example-selected-icon example-icon">check</span>
+      <span aria-hidden="true" class="material-symbols-outlined example-selected-icon example-icon"
+        >check</span
+      >
     </li>
     @if (node.children) {
       <ul role="group">

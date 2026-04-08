@@ -34,6 +34,7 @@ export class SimpleComboboxGridExample {
 
   popupExpanded = signal(true);
   searchString = signal('');
+  readonly selectedItem = signal<{label: string} | null>(null);
 
   constructor() {
     afterRenderEffect(() => {
@@ -78,5 +79,21 @@ export class SimpleComboboxGridExample {
 
   removeItem(itemToRemove: {label: string}) {
     this.items.update(items => items.filter(item => item !== itemToRemove));
+  }
+
+  selectItem(item: {label: string}) {
+    this.selectedItem.set(item);
+    this.searchString.set(item.label);
+    this.popupExpanded.set(false);
+  }
+
+  onBlur() {
+    const selectedItem = this.selectedItem();
+    if (
+      this.searchString() === '' ||
+      (selectedItem !== null && this.searchString() === selectedItem.label)
+    ) {
+      this.selectedItem.set(null);
+    }
   }
 }

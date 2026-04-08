@@ -2,7 +2,7 @@
   <div #origin class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Search..."
-      [(value)]="searchString" [(expanded)]="popupExpanded" />
+      [(value)]="searchString" [(expanded)]="popupExpanded" (blur)="onBlur()" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
@@ -11,14 +11,17 @@
       <div ngComboboxWidget ngGrid focusMode="activedescendant" [tabIndex]="-1" class="example-popup"
         colWrap="continuous" #grid="ngGrid">
         @for (item of filteredItems(); track item.label; let i = $index) {
-        <div ngGridRow class="example-grid-row">
+        <div ngGridRow class="example-grid-row" [attr.aria-selected]="item === selectedItem()">
           <div ngGridCell [id]="item.label + '-label'" [rowIndex]="i" [colIndex]="0"
             class="example-cell-label example-cell">
-            {{item.label}}
+            <button ngGridCellWidget class="example-label-button no-active-outline" (click)="selectItem(item)">
+              {{item.label}}
+            </button>
+            <mat-icon class="example-selected-icon">check</mat-icon>
           </div>
           <div ngGridCell [id]="item.label + '-delete'" [rowIndex]="i" [colIndex]="1"
             class="example-cell-button example-cell ">
-            <button ngGridCellWidget class="example-button" (click)="removeItem(item)"
+            <button ngGridCellWidget class="example-button no-active-outline" (click)="removeItem(item)"
               (pointerdown)="$event.preventDefault()">
               <mat-icon>close</mat-icon>
             </button>

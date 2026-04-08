@@ -78,6 +78,9 @@ export class Combobox extends DeferredContentAware {
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the combobox should always remain expanded. */
+  readonly alwaysExpanded = input(false, {transform: booleanAttribute});
+
   /** Whether the combobox is expanded. */
   readonly expanded = model<boolean>(false);
 

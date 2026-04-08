@@ -15,6 +15,7 @@ import {
   computed,
   untracked,
   viewChild,
+  ElementRef,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
@@ -52,11 +53,11 @@ export class SimpleComboboxDatepickerExample<D> {
   private readonly _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private readonly _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
 
-  /** The grid instance used in the popup. */
   readonly grid = viewChild(Grid);
+  readonly gridTable = viewChild<ElementRef<HTMLElement>>('gridTable');
 
   readonly selection = signal('');
-  readonly popupExpanded = signal(true);
+  readonly popupExpanded = signal(false);
 
   private readonly _firstWeekOffset: Signal<number> = computed(() => {
     const firstOfMonth = this._dateAdapter.createDate(
@@ -113,26 +114,50 @@ export class SimpleComboboxDatepickerExample<D> {
     this.viewMonth.set(this._dateAdapter.addCalendarMonths(this.viewMonth(), -1));
   }
 
+  readonly comboboxInput = viewChild<ElementRef<HTMLInputElement>>('comboboxInput');
+
   selectDate(cell: CalendarCell<D>): void {
     const formatted = this._dateAdapter.format(cell.date, this._dateFormats.display.dateInput);
     this.selection.set(formatted);
     this._activeDate.set(cell.date);
     this.popupExpanded.set(false);
+    this.comboboxInput()?.nativeElement.focus();
+  }
+
+  onInputKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      const value = this.selection();
+      const parsedDate = this._dateAdapter.parse(value, this._dateFormats.display.dateInput);
+      if (parsedDate && this._dateAdapter.isValid(parsedDate)) {
+        this._activeDate.set(parsedDate);
+        this.viewMonth.set(parsedDate);
+        this.popupExpanded.set(false);
+        event.stopPropagation();
+      }
+    } else if (event.key === 'ArrowDown' && this.popupExpanded()) {
+      setTimeout(() => {
+        const tableEl = this.gridTable()?.nativeElement;
+        if (tableEl) {
+          const tabbable = tableEl.querySelector('[tabindex="0"]') as HTMLElement;
+          (tabbable || tableEl).focus();
+        }
+      });
+    }
   }
 
   /** Handles keydown events on the widget container. */
   handleWidgetKeydown(event: KeyboardEvent) {
-    // Only forward to the grid if the event targets the container itself
-    // (e.g. events relayed from the combobox input).
+    if (event.key === 'Escape') {
+      this.popupExpanded.set(false);
+      this.comboboxInput()?.nativeElement.focus();
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     if (event.target === event.currentTarget) {
       this.grid()?._pattern.onKeydown(event);
     }
-  }
-
-  /** Handles keydown events on navigation buttons. */
-  handleButtonKeydown(event: KeyboardEvent) {
-    // Prevent button keydowns from bubbling to the grid pattern.
-    event.stopPropagation();
   }
 
   private _createWeekCells(viewMonth: D): CalendarCell[][] {

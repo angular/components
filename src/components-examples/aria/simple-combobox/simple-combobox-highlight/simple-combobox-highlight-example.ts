@@ -11,14 +11,14 @@ import {Listbox, Option} from '@angular/aria/listbox';
 import {afterRenderEffect, Component, computed, signal, viewChild, untracked} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title */
+/** @title Simple Combobox Highlight */
 @Component({
-  selector: 'simple-combobox-listbox-example',
-  templateUrl: 'simple-combobox-listbox-example.html',
+  selector: 'simple-combobox-highlight-example',
+  templateUrl: 'simple-combobox-highlight-example.html',
   styleUrl: '../simple-combobox-examples.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-export class SimpleComboboxListboxExample {
+export class SimpleComboboxHighlightExample {
   readonly listbox = viewChild(Listbox);
 
   popupExpanded = signal(false);
@@ -39,6 +39,8 @@ export class SimpleComboboxListboxExample {
     const selectedOption = this.selectedOption();
     if (selectedOption.length > 0) {
       this.searchString.set(selectedOption[0]);
+    } else {
+      this.searchString.set('');
     }
     this.popupExpanded.set(false);
   }
