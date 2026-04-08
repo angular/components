@@ -10,6 +10,7 @@ import {
   ViewContainerRef,
   provideZoneChangeDetection,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '../dialog';
@@ -76,6 +77,7 @@ class DirectiveWithViewContainer {
   selector: 'arbitrary-component',
   template: `@if (showChildView) {<dir-with-view-container></dir-with-view-container>}`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildViewContainer {
   showChildView = true;
@@ -90,6 +92,7 @@ class ComponentWithChildViewContainer {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);

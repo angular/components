@@ -47,10 +47,10 @@ export class MenuBar<V> {
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
-    readonly values: _angular_core.ModelSignal<V[]>;
+    readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuBar<any>, "[ngMenuBar]", ["ngMenuBar"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "values": { "alias": "values"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; }, { "values": "valuesChange"; "itemSelected": "itemSelected"; }, ["_allItems"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuBar<any>, "[ngMenuBar]", ["ngMenuBar"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "itemSelected": "itemSelected"; }, ["_allItems"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuBar<any>, never>;
 }

@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/setup@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@ad935905ff554e020ca790a085e835f3308fff45
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Build
@@ -35,17 +35,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/setup@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@ad935905ff554e020ca790a085e835f3308fff45
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Tests
         run: pnpm bazel test --test_tag_filters=-e2e,-audit //docs/...
       - name: Store Test Logs
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: test-logs
@@ -56,17 +56,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/setup@ad935905ff554e020ca790a085e835f3308fff45
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e006a332028a4c3cb24e9d92437fac7ae99e2ed5
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@ad935905ff554e020ca790a085e835f3308fff45
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Lighthouse Audit
         run: pnpm -s bazel test --test_tag_filters=audit //docs/...
       - name: Store Audit Logs
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         if: always()
         with:
           name: lighthouse-logs

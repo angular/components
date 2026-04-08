@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -343,6 +343,7 @@ describe('DeprecatedMapMarkerClusterer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapMarker, DeprecatedMapMarkerClusterer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(DeprecatedMapMarkerClusterer) markerClusterer!: DeprecatedMapMarkerClusterer;

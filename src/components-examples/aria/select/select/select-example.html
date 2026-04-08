@@ -14,7 +14,7 @@
   >
     <ng-template ngComboboxPopupContainer>
       <div class="example-popup">
-        <div ngListbox [values]="[value()]">
+        <div ngListbox [value]="[value()]">
           @for (item of items; track item.label) {
             <div ngOption [value]="item" [label]="item.label">
               <span

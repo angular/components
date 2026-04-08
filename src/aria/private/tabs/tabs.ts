@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager} from '../behaviors/event-manager';
+import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
 import {ExpansionItem, ListExpansionInputs, ListExpansion} from '../behaviors/expansion/expansion';
 import {
   SignalLike,
@@ -144,6 +145,9 @@ export class TabListPattern {
   /** Controls expansion for the tablist. */
   readonly expansionBehavior: ListExpansion;
 
+  /** Whether the tablist has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
+
   /** The currently active tab. */
   readonly activeTab: SignalLike<TabPattern | undefined> = () => this.inputs.activeItem();
 
@@ -200,9 +204,9 @@ export class TabListPattern {
       .on('Enter', () => this.open());
   });
 
-  /** The pointerdown event manager for the tablist. */
-  readonly pointerdown = computed(() => {
-    return new PointerEventManager().on(e =>
+  /** The click event manager for the tablist. */
+  readonly clickManager = computed(() => {
+    return new ClickEventManager<PointerEvent>().on(e =>
       this._navigate(() => this.navigationBehavior.goto(this._getItem(e)!), true),
     );
   });
@@ -249,18 +253,32 @@ export class TabListPattern {
     }
   }
 
+  /** Sets the default active state of the tablist before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
+  }
+
   /** Handles keydown events for the tablist. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
-  /** The pointerdown event manager for the tablist. */
-  onPointerdown(event: PointerEvent) {
+  /** The click event manager for the tablist. */
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.hasBeenInteracted.set(true);
+      this.clickManager().handle(event);
     }
+  }
+
+  /** Handles focusin events for the tablist. */
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Opens the tab by given value. */

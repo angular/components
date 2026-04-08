@@ -106,7 +106,8 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     _getFocusIndex(): number | null;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
-    linear: boolean;
+    get linear(): boolean;
+    set linear(value: boolean);
     next(): void;
     // (undocumented)
     static ngAcceptInputType_linear: unknown;

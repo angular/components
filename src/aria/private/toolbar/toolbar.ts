@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, SignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {List, ListInputs} from '../behaviors/list/list';
 import {ToolbarWidgetPattern} from './toolbar-widget';
@@ -24,6 +24,9 @@ export type ToolbarInputs<V> = Omit<
 export class ToolbarPattern<V> {
   /** The list behavior for the toolbar. */
   readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
+
+  /** Whether the toolbar has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -170,11 +173,17 @@ export class ToolbarPattern<V> {
   /** Handles keydown events for the toolbar. */
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
+    this.hasBeenInteracted.set(true);
     this._keydown().handle(event);
   }
 
   onPointerdown(event: PointerEvent) {
+    this.hasBeenInteracted.set(true);
     event.preventDefault();
+  }
+
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles click events for the toolbar. */
@@ -196,6 +205,15 @@ export class ToolbarPattern<V> {
 
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
+    }
+  }
+
+  /** Sets the default active state of the toolbar before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    if (this.inputs.items().length > 0) {
+      this.setDefaultState();
     }
   }
 }

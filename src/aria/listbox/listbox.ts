@@ -63,8 +63,8 @@ import {LISTBOX} from './tokens';
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(click)': '_pattern.onClick($event)',
+    '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],
   providers: [{provide: LISTBOX, useExisting: Listbox}],
@@ -134,13 +134,10 @@ export class Listbox<V> {
   readonly = input(false, {transform: booleanAttribute});
 
   /** The values of the currently selected items. */
-  values = model<V[]>([]);
+  value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
-
-  /** Whether the listbox has received focus yet. */
-  private _hasFocused = signal(false);
 
   constructor() {
     const inputs = {
@@ -171,9 +168,7 @@ export class Listbox<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
 
     // Ensure that if the active item is removed from
@@ -187,19 +182,15 @@ export class Listbox<V> {
       }
     });
 
-    // Ensure that the values are always in sync with the available options.
+    // Ensure that the value is always in sync with the available options.
     afterRenderEffect(() => {
       const items = inputs.items();
-      const values = untracked(() => this.values());
+      const value = untracked(() => this.value());
 
-      if (items && values.some(v => !items.some(i => i.value() === v))) {
-        this.values.set(values.filter(v => items.some(i => i.value() === v)));
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
-  }
-
-  _onFocus() {
-    this._hasFocused.set(true);
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {

@@ -5,6 +5,7 @@ import {
   Type,
   ViewChild,
   provideZoneChangeDetection,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {Point} from '../drag-ref';
 import {CdkDrag} from './drag';
@@ -52,6 +53,7 @@ describe('Standalone CdkDrag Zone.js integration', () => {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggable {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;

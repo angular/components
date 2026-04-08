@@ -1,5 +1,5 @@
 import {waitForAsync, fakeAsync, TestBed, flush} from '@angular/core/testing';
-import {Component, ViewChild, signal, inject} from '@angular/core';
+import {Component, ViewChild, signal, inject, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
 
@@ -156,6 +156,7 @@ describe('Directionality', () => {
   selector: 'injects-directionality',
   template: `<div></div>`,
   imports: [BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InjectsDirectionality {
   dir = inject(Directionality);
@@ -168,6 +169,7 @@ class InjectsDirectionality {
     </div>
   `,
   imports: [Dir, InjectsDirectionality],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ElementWithDir {
   @ViewChild(Dir) dir!: Dir;
@@ -178,6 +180,7 @@ class ElementWithDir {
 @Component({
   template: '<div dir="auto"></div>',
   imports: [Dir],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ElementWithPredefinedAutoDir {
   @ViewChild(Dir) dir!: Dir;
@@ -186,6 +189,7 @@ class ElementWithPredefinedAutoDir {
 @Component({
   template: '<div [dir]="$any(`RTL`)"></div>',
   imports: [Dir],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ElementWithPredefinedUppercaseDir {
   @ViewChild(Dir) dir!: Dir;

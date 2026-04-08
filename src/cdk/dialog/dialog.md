@@ -50,9 +50,11 @@ in which they are contained. When closing, an optional result value can be provi
 value is forwarded as the result of the `closed` Observable.
 
 ```ts
+import {inject} from '@angular/core';
+
 @Component({/* ... */})
 export class YourDialog {
-  constructor(public dialogRef: DialogRef<string>) {}
+  dialogRef = inject<DialogRef<string>>(DialogRef);
 
   closeDialog() {
     this.dialogRef.close('Pizza!');
@@ -117,15 +119,27 @@ class MyDialogContainer extends CdkDialogContainer {}
 
 ### Specifying global configuration defaults
 Default dialog options can be specified by providing an instance of `DialogConfig` for
-`DEFAULT_DIALOG_CONFIG` in your application's root module.
+`DEFAULT_DIALOG_CONFIG` in your app config.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: DEFAULT_DIALOG_CONFIG, useValue: {hasBackdrop: false}}
   ]
-})
+});
 ```
+
+> **Note:** The value provided for `DEFAULT_DIALOG_CONFIG` **replaces** the built-in defaults
+> entirely rather than merging with them. For example, providing `{disableClose: true}` means that
+> all other defaults (such as `hasBackdrop`) will be `undefined`. If you only want to override
+> specific properties, spread the defaults first:
+>
+> ```ts
+> {provide: DEFAULT_DIALOG_CONFIG, useValue: {...new DialogConfig(), disableClose: true}}
+> ```
+>
+> When you call `dialog.open()` with a config, that config is merged on top of these defaults, so
+> per-dialog options always take precedence.
 
 ### Sharing data with the Dialog component.
 You can use the `data` option to pass information to the dialog component.
@@ -139,7 +153,7 @@ const dialogRef = dialog.open(YourDialog, {
 Access the data in your dialog component with the `DIALOG_DATA` injection token:
 
 ```ts
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
 
 @Component({
@@ -147,7 +161,7 @@ import {DIALOG_DATA} from '@angular/cdk/dialog';
   template: 'passed in {{ data.name }}',
 })
 export class YourDialog {
-  constructor(@Inject(DIALOG_DATA) public data: {name: string}) { }
+  data = inject<{name: string}>(DIALOG_DATA);
 }
 ```
 

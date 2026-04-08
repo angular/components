@@ -41,7 +41,7 @@ export class MatChipContent {
     _handlePrimaryActionInteraction(): void;
     remove(): void;
     disabled: boolean;
-    _edit(): void;
+    _edit(event: Event): void;
     _isEditing?: boolean;
   }>(MAT_CHIP);
 

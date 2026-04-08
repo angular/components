@@ -16,6 +16,7 @@ import {
   contentChildren,
   viewChild,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
@@ -45,6 +46,7 @@ export class CarouselItem implements FocusableOption {
   styleUrls: ['./carousel.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class Carousel implements AfterContentInit {
   readonly ariaLabel = input<string | undefined>(undefined, {alias: 'aria-label'});

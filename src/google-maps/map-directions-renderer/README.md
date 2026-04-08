@@ -21,28 +21,26 @@ Using the `MapDirectionsService` requires the Directions API to be enabled in Go
 
 ```typescript
 // google-maps-demo.component.ts
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {GoogleMap, MapDirectionsRenderer, MapDirectionsService} from '@angular/google-maps';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-    imports: [GoogleMap, MapDirectionsRenderer],
+  imports: [GoogleMap, MapDirectionsRenderer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   zoom = 4;
 
-  readonly directionsResults$: Observable<google.maps.DirectionsResult|undefined>;
+  private mapDirectionsService = inject(MapDirectionsService);
 
-  constructor(mapDirectionsService: MapDirectionsService) {
-    const request: google.maps.DirectionsRequest = {
-      destination: {lat: 12, lng: 4},
-      origin: {lat: 14, lng: 8},
-      travelMode: google.maps.TravelMode.DRIVING
-    };
-    this.directionsResults$ = mapDirectionsService.route(request).pipe(map(response => response.result));
-  }
+  readonly directionsResults$ = this.mapDirectionsService.route({
+    destination: {lat: 12, lng: 4},
+    origin: {lat: 14, lng: 8},
+    travelMode: google.maps.TravelMode.DRIVING,
+  }).pipe(map(response => response.result));
 }
 ```
 

@@ -74,7 +74,7 @@ import {sortDirectives} from './utils';
     '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],
 })
@@ -132,7 +132,7 @@ export class Tree<V> {
   readonly typeaheadDelay = input(500);
 
   /** The values of the currently selected items. */
-  readonly values = model<V[]>([]);
+  readonly value = model<V[]>([]);
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -150,9 +150,6 @@ export class Tree<V> {
 
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;
-
-  /** Whether the tree has received focus since it was rendered. */
-  private _hasFocused = signal(false);
 
   constructor() {
     const inputs = {
@@ -184,9 +181,7 @@ export class Tree<V> {
     });
 
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
 
     afterRenderEffect(() => {
@@ -202,16 +197,12 @@ export class Tree<V> {
       if (!(this._pattern instanceof ComboboxTreePattern)) return;
 
       const items = inputs.items();
-      const values = untracked(() => this.values());
+      const value = untracked(() => this.value());
 
-      if (items && values.some(v => !items.some(i => i.value() === v))) {
-        this.values.set(values.filter(v => items.some(i => i.value() === v)));
+      if (items && value.some(v => !items.some(i => i.value() === v))) {
+        this.value.set(value.filter(v => items.some(i => i.value() === v)));
       }
     });
-  }
-
-  _onFocus() {
-    this._hasFocused.set(true);
   }
 
   _register(child: TreeItem<V>) {

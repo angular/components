@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, OnInit, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, inject, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
@@ -21,6 +21,7 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   templateUrl: './guide-viewer.html',
   styleUrls: ['./guide-viewer.scss'],
   imports: [DocViewer, NavigationFocus, TableOfContents, Footer],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     'class': 'docs-main-content',
   },

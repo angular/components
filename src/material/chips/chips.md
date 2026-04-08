@@ -111,8 +111,8 @@ By default, chips are displayed horizontally. To stack chips vertically, apply t
 
 Use the `MAT_CHIPS_DEFAULT_OPTIONS` token to specify default options for the chips module.
 
-```html
-@NgModule({
+```ts
+bootstrapApplication(MyApp, {
   providers: [
     {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
@@ -121,7 +121,7 @@ Use the `MAT_CHIPS_DEFAULT_OPTIONS` token to specify default options for the chi
       }
     }
   ]
-})
+});
 ```
 
 ### Interaction Patterns

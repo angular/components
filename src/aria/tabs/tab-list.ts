@@ -52,8 +52,8 @@ import type {Tab} from './tab';
     '[attr.aria-orientation]': '_pattern.orientation()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_onFocus()',
+    '(click)': '_pattern.onClick($event)',
+    '(focusin)': '_pattern.onFocusIn()',
   },
 })
 export class TabList implements OnInit, OnDestroy {
@@ -117,14 +117,9 @@ export class TabList implements OnInit, OnDestroy {
     element: () => this._elementRef.nativeElement,
   });
 
-  /** Whether the tree has received focus yet. */
-  private _hasFocused = signal(false);
-
   constructor() {
     afterRenderEffect(() => {
-      if (!this._hasFocused()) {
-        this._pattern.setDefaultState();
-      }
+      this._pattern.setDefaultStateEffect();
     });
 
     afterRenderEffect(() => {
@@ -143,10 +138,6 @@ export class TabList implements OnInit, OnDestroy {
         tab?.expanded.set(true);
       }
     });
-  }
-
-  _onFocus() {
-    this._hasFocused.set(true);
   }
 
   ngOnInit() {

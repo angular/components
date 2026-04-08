@@ -16,7 +16,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {
   ChangeDetectionStrategy,
   Component,
-  createNgModuleRef,
+  createNgModule,
   Directive,
   Injectable,
   Injector,
@@ -1757,6 +1757,7 @@ describe('MatDialog', () => {
       @Component({
         imports: [MatDialogTitle],
         template: `@if (showTitle()) { <h2 mat-dialog-title>This is the first title</h2> }`,
+        changeDetection: ChangeDetectionStrategy.Eager,
       })
       class DialogCmp {
         showTitle = signal(true);
@@ -1765,6 +1766,7 @@ describe('MatDialog', () => {
       @Component({
         template: '',
         selector: 'child',
+        changeDetection: ChangeDetectionStrategy.Eager,
       })
       class Child {
         readonly viewContainerRef = inject(ViewContainerRef);
@@ -2302,6 +2304,7 @@ class ComponentWithOnPushViewContainer {
   selector: 'arbitrary-component',
   template: `@if (showChildView) {<dir-with-view-container></dir-with-view-container>}`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildViewContainer {
   showChildView = true;
@@ -2317,6 +2320,7 @@ class ComponentWithChildViewContainer {
   selector: 'arbitrary-component-with-template-ref',
   template: `<ng-template let-data let-dialogRef="dialogRef">
     Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithTemplateRef {
   localValue!: string;
@@ -2333,6 +2337,7 @@ class ComponentWithTemplateRef {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
@@ -2364,6 +2369,7 @@ class PizzaMsg {
     </mat-dialog-actions>
   `,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContentElementDialog {
   shownTitle: 'first' | 'second' | 'third' | 'all' = 'first';
@@ -2399,6 +2405,7 @@ class ContentElementDialog {
     </ng-template>
   `,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithContentElementTemplateRef {
   @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
@@ -2413,6 +2420,7 @@ class ComponentWithContentElementTemplateRef {
 @Component({
   template: '',
   providers: [MatDialog],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentThatProvidesMatDialog {
   dialog = inject(MatDialog);
@@ -2421,6 +2429,7 @@ class ComponentThatProvidesMatDialog {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DialogWithInjectedData {
   data = inject(MAT_DIALOG_DATA);
@@ -2428,24 +2437,27 @@ class DialogWithInjectedData {
 
 @Component({
   template: '<p>Pasta</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DialogWithoutFocusableElements {}
 
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ShadowDomComponent {}
 
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundDialogParentComponent {
   private _injector = inject(Injector);
   private _dialog = inject(MatDialog);
 
   openDialog(): void {
-    const ngModuleRef = createNgModuleRef(
+    const ngModuleRef = createNgModule(
       ModuleBoundDialogModule,
       /* parentInjector */ this._injector,
     );
@@ -2462,12 +2474,14 @@ class ModuleBoundDialogService {
 @Component({
   template: '<module-bound-dialog-child-component></module-bound-dialog-child-component>',
   imports: [forwardRef(() => ModuleBoundDialogChildComponent)],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundDialogComponent {}
 
 @Component({
   selector: 'module-bound-dialog-child-component',
   template: '<p>{{service.name}}</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundDialogChildComponent {
   service = inject(ModuleBoundDialogService);

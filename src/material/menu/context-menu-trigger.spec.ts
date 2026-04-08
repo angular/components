@@ -1,4 +1,4 @@
-import {Component, signal, ViewChild} from '@angular/core';
+import {Component, signal, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {MatContextMenuTrigger} from './context-menu-trigger';
 import {MatMenu} from './menu';
@@ -202,6 +202,7 @@ describe('context menu trigger', () => {
       outline: solid 1px;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContextMenuTest {
   @ViewChild(MatMenu) menuInstance!: MatMenu;

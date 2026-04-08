@@ -3,7 +3,6 @@ import {QueryList} from '@angular/core';
 import {TreeKeyManager} from './tree-key-manager';
 import {TreeKeyManagerItem} from './tree-key-manager-strategy';
 import {Observable, of as observableOf, Subscription} from 'rxjs';
-import {fakeAsync, tick} from '@angular/core/testing';
 
 class FakeBaseTreeKeyManagerItem implements TreeKeyManagerItem {
   _isExpanded = false;
@@ -99,6 +98,10 @@ describe('TreeKeyManager', () => {
       unsupported: createKeyboardEvent('keydown', undefined, '~'),
     };
   });
+
+  function wait(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   const itemParameters: ItemConstructorTestContext[] = [
     {description: 'Observable children', constructor: FakeObservableTreeKeyManagerItem},
@@ -694,87 +697,87 @@ describe('TreeKeyManager', () => {
           ).toThrowError(/must implement/);
         });
 
-        it('should debounce the input key presses', fakeAsync(() => {
+        it('should debounce the input key presses', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
-          tick(1);
+          await wait(1);
           keyManager.onKeydown(createKeyboardEvent('keydown', 78, 'n')); // types "n"
-          tick(1);
+          await wait(1);
           keyManager.onKeydown(createKeyboardEvent('keydown', 69, 'e')); // types "e"
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, before debounce interval')
             .not.toBe(0);
 
-          tick(debounceInterval - 1);
+          await wait(debounceInterval - 1);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, after partial debounce interval')
             .not.toBe(0);
 
-          tick(1);
+          await wait(100);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, after full debounce interval')
             .toBe(0);
-        }));
+        });
 
-        it('uses a default debounce interval', fakeAsync(() => {
+        it('uses a default debounce interval', async () => {
           const defaultInterval = 200;
           keyManager = new TreeKeyManager(itemList, {
             typeAheadDebounceInterval: true,
           });
 
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
-          tick(1);
+          await wait(1);
           keyManager.onKeydown(createKeyboardEvent('keydown', 78, 'n')); // types "n"
-          tick(1);
+          await wait(1);
           keyManager.onKeydown(createKeyboardEvent('keydown', 69, 'e')); // types "e"
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, before debounce interval')
             .not.toBe(0);
 
-          tick(defaultInterval - 1);
+          await wait(defaultInterval - 1);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, after partial debounce interval')
             .not.toBe(0);
 
-          tick(1);
+          await wait(100);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, after full debounce interval')
             .toBe(0);
-        }));
+        });
 
-        it('should focus the first item that starts with a letter', fakeAsync(() => {
+        it('should focus the first item that starts with a letter', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 84, 't')); // types "t"
 
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
-        }));
+        });
 
-        it('should focus the first item that starts with sequence of letters', fakeAsync(() => {
+        it('should focus the first item that starts with sequence of letters', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 84, 't')); // types "t"
           keyManager.onKeydown(createKeyboardEvent('keydown', 72, 'h')); // types "h"
 
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
-        }));
+        });
 
-        it('should cancel any pending timers if a navigation key is pressed', fakeAsync(() => {
+        it('should cancel any pending timers if a navigation key is pressed', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 84, 't')); // types "t"
           keyManager.onKeydown(createKeyboardEvent('keydown', 72, 'h')); // types "h"
           keyManager.onKeydown(fakeKeyEvents.downArrow);
 
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        }));
+        });
 
-        it('should handle non-English input', fakeAsync(() => {
+        it('should handle non-English input', async () => {
           itemList.reset([
             new itemParam.constructor('едно'),
             new itemParam.constructor('две'),
@@ -785,12 +788,12 @@ describe('TreeKeyManager', () => {
           const keyboardEvent = createKeyboardEvent('keydown', 68, 'д');
 
           keyManager.onKeydown(keyboardEvent); // types "д"
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
-        }));
+        });
 
-        it('should handle non-letter characters', fakeAsync(() => {
+        it('should handle non-letter characters', async () => {
           itemList.reset([
             new itemParam.constructor('[]'),
             new itemParam.constructor('321'),
@@ -799,30 +802,30 @@ describe('TreeKeyManager', () => {
           itemList.notifyOnChanges();
 
           keyManager.onKeydown(createKeyboardEvent('keydown', 192, '`')); // types "`"
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(2);
 
           keyManager.onKeydown(createKeyboardEvent('keydown', 51, '3')); // types "3"
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(1);
 
           keyManager.onKeydown(createKeyboardEvent('keydown', 219, '[')); // types "["
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        }));
+        });
 
-        it('should allow focus to disabled items', fakeAsync(() => {
+        it('should allow focus to disabled items', async () => {
           expect(keyManager.getActiveItemIndex()).withContext('initial active item index').toBe(-1);
 
           parentItem.isDisabled = true;
 
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('initial active item index').toBe(0);
-        }));
+        });
 
-        it('should start looking for matches after the active item', fakeAsync(() => {
+        it('should start looking for matches after the active item', async () => {
           const frodo = new itemParam.constructor('Frodo');
           itemList.reset([
             new itemParam.constructor('Bilbo'),
@@ -835,12 +838,12 @@ describe('TreeKeyManager', () => {
 
           keyManager.focusItem(frodo);
           keyManager.onKeydown(createKeyboardEvent('keydown', 66, 'b'));
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(3);
-        }));
+        });
 
-        it('should wrap back around if there were no matches after the active item', fakeAsync(() => {
+        it('should wrap back around if there were no matches after the active item', async () => {
           const boromir = new itemParam.constructor('Boromir');
           itemList.reset([
             new itemParam.constructor('Bilbo'),
@@ -853,32 +856,32 @@ describe('TreeKeyManager', () => {
 
           keyManager.focusItem(boromir);
           keyManager.onKeydown(createKeyboardEvent('keydown', 66, 'b'));
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        }));
+        });
 
-        it('should wrap back around if the last item is active', fakeAsync(() => {
+        it('should wrap back around if the last item is active', async () => {
           keyManager.focusItem(lastItem);
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o'));
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        }));
+        });
 
-        it('should be able to select the first item', fakeAsync(() => {
+        it('should be able to select the first item', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o'));
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(0);
-        }));
+        });
 
-        it('should not do anything if there is no match', fakeAsync(() => {
+        it('should not do anything if there is no match', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 87, 'w'));
-          tick(debounceInterval);
+          await wait(debounceInterval + 100);
 
           expect(keyManager.getActiveItemIndex()).withContext('active item index').toBe(-1);
-        }));
+        });
       });
 
       describe('focusItem', () => {

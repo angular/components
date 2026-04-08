@@ -1402,18 +1402,22 @@ describe('MatTooltip', () => {
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       fixture.detectChanges();
 
-      const inputStyle = fixture.componentInstance.input.nativeElement.style;
-      const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
+      const inputStyle = fixture.componentInstance.input.nativeElement.style as unknown as Record<
+        string,
+        string
+      >;
+      const textareaStyle = fixture.componentInstance.textarea.nativeElement
+        .style as unknown as Record<string, string>;
 
-      expect(inputStyle.userSelect).toBeFalsy();
-      expect(inputStyle.webkitUserSelect).toBeFalsy();
-      expect(inputStyle.msUserSelect).toBeFalsy();
-      expect(inputStyle.MozUserSelect).toBeFalsy();
+      expect(inputStyle['userSelect']).toBeFalsy();
+      expect(inputStyle['webkitUserSelect']).toBeFalsy();
+      expect(inputStyle['msUserSelect']).toBeFalsy();
+      expect(inputStyle['MozUserSelect']).toBeFalsy();
 
-      expect(textareaStyle.userSelect).toBeFalsy();
-      expect(textareaStyle.webkitUserSelect).toBeFalsy();
-      expect(textareaStyle.msUserSelect).toBeFalsy();
-      expect(textareaStyle.MozUserSelect).toBeFalsy();
+      expect(textareaStyle['userSelect']).toBeFalsy();
+      expect(textareaStyle['webkitUserSelect']).toBeFalsy();
+      expect(textareaStyle['msUserSelect']).toBeFalsy();
+      expect(textareaStyle['MozUserSelect']).toBeFalsy();
     });
 
     it('should disable text selection on inputs when gestures are set to on', () => {
@@ -1421,18 +1425,22 @@ describe('MatTooltip', () => {
       fixture.componentInstance.touchGestures = 'on';
       fixture.detectChanges();
 
-      const inputStyle = fixture.componentInstance.input.nativeElement.style;
+      const inputStyle = fixture.componentInstance.input.nativeElement.style as unknown as Record<
+        string,
+        string
+      >;
       const inputUserSelect =
-        inputStyle.userSelect ||
-        inputStyle.webkitUserSelect ||
-        inputStyle.msUserSelect ||
-        inputStyle.MozUserSelect;
-      const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
+        inputStyle['userSelect'] ||
+        inputStyle['webkitUserSelect'] ||
+        inputStyle['msUserSelect'] ||
+        inputStyle['MozUserSelect'];
+      const textareaStyle = fixture.componentInstance.textarea.nativeElement
+        .style as unknown as Record<string, string>;
       const textareaUserSelect =
-        textareaStyle.userSelect ||
-        textareaStyle.webkitUserSelect ||
-        textareaStyle.msUserSelect ||
-        textareaStyle.MozUserSelect;
+        textareaStyle['userSelect'] ||
+        textareaStyle['webkitUserSelect'] ||
+        textareaStyle['msUserSelect'] ||
+        textareaStyle['MozUserSelect'];
 
       expect(inputUserSelect).toBe('none');
       expect(textareaUserSelect).toBe('none');
@@ -1567,6 +1575,7 @@ describe('MatTooltip', () => {
         [matTooltipDisabled]="tooltipDisabled">Button</button>
     }`,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicTooltipDemo {
   position: TooltipPosition = 'below';
@@ -1590,6 +1599,7 @@ class BasicTooltipDemo {
       }
     </div>`,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollableTooltipDemo {
   position: TooltipPosition = 'below';
@@ -1630,6 +1640,7 @@ class OnPushTooltipDemo {
     }
   `,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DynamicTooltipsDemo {
   tooltips: string[] = [];
@@ -1638,6 +1649,7 @@ class DynamicTooltipsDemo {
 @Component({
   template: `<button [matTooltip]="message" [attr.aria-label]="message">Click me</button>`,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DataBoundAriaLabelTooltip {
   message = 'Hello there';
@@ -1656,6 +1668,7 @@ class DataBoundAriaLabelTooltip {
       [matTooltipTouchGestures]="touchGestures"></textarea>
   `,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipOnTextFields {
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
@@ -1672,6 +1685,7 @@ class TooltipOnTextFields {
       [matTooltipTouchGestures]="touchGestures"></button>
   `,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipOnDraggableElement {
   @ViewChild('button') button!: ElementRef;
@@ -1681,6 +1695,7 @@ class TooltipOnDraggableElement {
 @Component({
   template: `<button #button [matTooltip]="message">Button</button>`,
   imports: [MatTooltip],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipDemoWithoutPositionBinding {
   message: string = initialTooltipMessage;
@@ -1691,6 +1706,7 @@ class TooltipDemoWithoutPositionBinding {
 @Component({
   template: `<button #button [matTooltip]="message">Button</button>`,
   imports: [MatTooltip],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipDemoWithoutTooltipClassBinding {
   message = initialTooltipMessage;
@@ -1703,6 +1719,7 @@ class TooltipDemoWithoutTooltipClassBinding {
     <button #button matTooltipClass="fixed-tooltip-class" [matTooltip]="message">Button</button>
   `,
   imports: [MatTooltip],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipDemoWithTooltipClassBinding {
   message: string = initialTooltipMessage;
@@ -1714,6 +1731,7 @@ class TooltipDemoWithTooltipClassBinding {
   styles: `button { width: 500px; height: 500px; }`,
   template: `<button #button [matTooltip]="message">Button</button>`,
   imports: [MatTooltip],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WideTooltipDemo {
   message = 'Test';

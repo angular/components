@@ -16,6 +16,7 @@ import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
@@ -56,7 +57,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect): boolean;
     // (undocumented)
     _isRange: boolean;
-    _isRtl: boolean;
+    _isRtl: i0.Signal<boolean>;
     _knobRadius: number;
     get max(): number;
     set max(v: number);

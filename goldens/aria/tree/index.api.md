@@ -20,8 +20,6 @@ export class Tree<V> {
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly nav: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    _onFocus(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: TreePattern<V>;
     // (undocumented)
@@ -34,10 +32,10 @@ export class Tree<V> {
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     // (undocumented)
     _unregister(child: TreeItem<V>): void;
-    readonly values: _angular_core.ModelSignal<V[]>;
+    readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Tree<any>, "[ngTree]", ["ngTree"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "values": { "alias": "values"; "required": false; "isSignal": true; }; "nav": { "alias": "nav"; "required": false; "isSignal": true; }; "currentType": { "alias": "currentType"; "required": false; "isSignal": true; }; }, { "values": "valuesChange"; }, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Tree<any>, "[ngTree]", ["ngTree"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "nav": { "alias": "nav"; "required": false; "isSignal": true; }; "currentType": { "alias": "currentType"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Tree<any>, never>;
 }

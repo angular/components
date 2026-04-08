@@ -48,17 +48,17 @@ export class SelectMultiExample {
 
   /** The visible label displayed to the user. */
   displayValue = computed(() => {
-    const values = this.listbox()?.values();
+    const value = this.listbox()?.value();
 
-    if (!values?.length) {
+    if (!value?.length) {
       return 'Select a day';
     }
 
-    if (values.length <= 2) {
-      return values.join(', ');
+    if (value.length <= 2) {
+      return value.join(', ');
     }
 
-    return `${values[0]} + ${values.length - 1} more`;
+    return `${value[0]} + ${value.length - 1} more`;
   });
 
   /** The items available for selection. */

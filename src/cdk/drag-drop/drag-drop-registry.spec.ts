@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {
   createMouseEvent,
@@ -261,6 +261,7 @@ describe('DragDropRegistry', () => {
   @Component({
     template: ``,
     imports: [DragDropModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
   })
   class BlankComponent {}
 });

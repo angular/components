@@ -1,4 +1,10 @@
-import {Component, EnvironmentProviders, Provider, ViewChild} from '@angular/core';
+import {
+  Component,
+  EnvironmentProviders,
+  Provider,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {createFakeYtNamespace} from './fake-youtube-player';
@@ -25,6 +31,11 @@ const TEST_PROVIDERS: (Provider | EnvironmentProviders)[] = [
 ];
 
 describe('YoutubePlayer', () => {
+  const ytWindow = window as Window &
+    typeof globalThis & {
+      YT?: typeof YT | undefined;
+      onYouTubeIframeAPIReady?: (() => void) | undefined;
+    };
   let playerCtorSpy: jasmine.Spy;
   let playerSpy: jasmine.SpyObj<YT.Player>;
   let fixture: ComponentFixture<TestApp>;
@@ -35,7 +46,7 @@ describe('YoutubePlayer', () => {
     const fake = createFakeYtNamespace();
     playerCtorSpy = fake.playerCtorSpy;
     playerSpy = fake.playerSpy;
-    window.YT = fake.namespace;
+    ytWindow.YT = fake.namespace;
     events = fake.events;
   }));
 
@@ -58,8 +69,8 @@ describe('YoutubePlayer', () => {
     });
 
     afterEach(() => {
-      window.YT = undefined;
-      window.onYouTubeIframeAPIReady = undefined;
+      ytWindow.YT = undefined!;
+      ytWindow.onYouTubeIframeAPIReady = undefined;
     });
 
     it('initializes a youtube player when the placeholder is clicked', () => {
@@ -215,7 +226,7 @@ describe('YoutubePlayer', () => {
 
       expect(playerSpy.cueVideoById).not.toHaveBeenCalled();
 
-      playerSpy.getPlayerState.and.returnValue(window.YT!.PlayerState.CUED);
+      playerSpy.getPlayerState.and.returnValue(ytWindow.YT!.PlayerState.CUED);
       events.onReady({target: playerSpy});
 
       expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -542,17 +553,17 @@ describe('YoutubePlayer', () => {
     let api: typeof YT;
 
     beforeEach(() => {
-      api = window.YT!;
-      window.YT = undefined;
+      api = ytWindow.YT!;
+      ytWindow.YT = undefined!;
     });
 
     afterEach(() => {
-      window.YT = undefined;
-      window.onYouTubeIframeAPIReady = undefined;
+      ytWindow.YT = undefined!;
+      ytWindow.onYouTubeIframeAPIReady = undefined;
     });
 
     it('waits until the api is ready before initializing', () => {
-      window.YT = YT_LOADING_STATE_MOCK;
+      ytWindow.YT = YT_LOADING_STATE_MOCK;
       TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
@@ -562,8 +573,8 @@ describe('YoutubePlayer', () => {
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
 
-      window.YT = api;
-      window.onYouTubeIframeAPIReady!();
+      ytWindow.YT = api;
+      ytWindow.onYouTubeIframeAPIReady!();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
         getVideoHost(fixture),
@@ -577,7 +588,7 @@ describe('YoutubePlayer', () => {
 
     it('should not override any pre-existing API loaded callbacks', () => {
       const spy = jasmine.createSpy('other API loaded spy');
-      window.onYouTubeIframeAPIReady = spy;
+      ytWindow.onYouTubeIframeAPIReady = spy;
       TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
@@ -587,8 +598,8 @@ describe('YoutubePlayer', () => {
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
 
-      window.YT = api;
-      window.onYouTubeIframeAPIReady!();
+      ytWindow.YT = api;
+      ytWindow.onYouTubeIframeAPIReady!();
 
       expect(spy).toHaveBeenCalled();
     });
@@ -603,7 +614,7 @@ describe('YoutubePlayer', () => {
     });
 
     afterEach(() => {
-      fixture = testComponent = window.YT = window.onYouTubeIframeAPIReady = undefined!;
+      fixture = testComponent = ytWindow.YT = ytWindow.onYouTubeIframeAPIReady = undefined!;
     });
 
     it('should show a placeholder', () => {
@@ -687,7 +698,7 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       // Simulate player state being PLAYING (autoplay has started the video)
-      playerSpy.getPlayerState.and.returnValue(window.YT!.PlayerState.PLAYING);
+      playerSpy.getPlayerState.and.returnValue(ytWindow.YT!.PlayerState.PLAYING);
       events.onReady({target: playerSpy});
 
       // Should use seekTo instead of cueVideoById when player is already playing
@@ -724,7 +735,7 @@ describe('YoutubePlayer', () => {
     getPlaceholder(staticSecondsApp).click();
     staticSecondsApp.detectChanges();
 
-    playerSpy.getPlayerState.and.returnValue(window.YT!.PlayerState.CUED);
+    playerSpy.getPlayerState.and.returnValue(ytWindow.YT!.PlayerState.CUED);
     events.onReady({target: playerSpy});
 
     expect(playerSpy.cueVideoById).toHaveBeenCalledWith(
@@ -799,6 +810,7 @@ describe('YoutubePlayer', () => {
         (apiChange)="onApiChange($event)"/>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   videoId: string | undefined = VIDEO_ID;
@@ -827,6 +839,7 @@ class TestApp {
   template: `
     <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"/>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticStartEndSecondsApp {
   videoId = VIDEO_ID;
@@ -835,6 +848,7 @@ class StaticStartEndSecondsApp {
 @Component({
   imports: [YouTubePlayer],
   template: `<youtube-player [videoId]="videoId"/>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NoEventsApp {
   @ViewChild(YouTubePlayer) player!: YouTubePlayer;

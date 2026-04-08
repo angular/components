@@ -1,4 +1,4 @@
-import {Component, ElementRef, Type, ViewChild} from '@angular/core';
+import {Component, ElementRef, Type, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
@@ -268,6 +268,7 @@ describe('MatDatepickerActions', () => {
     </mat-form-field>
   `,
   imports: [MatDatepickerModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerWithActions {
   @ViewChild(MatDatepicker) datepicker!: MatDatepicker<Date>;

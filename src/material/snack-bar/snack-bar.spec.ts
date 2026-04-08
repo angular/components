@@ -995,6 +995,7 @@ class ComponentWithChildViewContainer {
       Fries {{localValue}} {{data?.value}}
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithTemplateRef {
   @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
@@ -1004,6 +1005,7 @@ class ComponentWithTemplateRef {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Burritos are on the way.</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BurritosNotification {
   snackBarRef = inject<MatSnackBarRef<BurritosNotification>>(MatSnackBarRef);
@@ -1013,6 +1015,7 @@ class BurritosNotification {
 @Component({
   template: '',
   providers: [MatSnackBar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentThatProvidesMatSnackBar {
   snackBar = inject(MatSnackBar);

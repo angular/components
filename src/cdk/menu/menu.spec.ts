@@ -1,5 +1,12 @@
 import {TAB} from '../keycodes';
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -528,6 +535,7 @@ describe('Menu', () => {
     </ng-template>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuCheckboxGroup {
   @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
@@ -541,6 +549,7 @@ class MenuCheckboxGroup {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InlineMenu {}
 
@@ -594,6 +603,7 @@ class InlineMenu {}
     </ng-template>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WithComplexNestedMenus {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger!: ElementRef<HTMLElement>;
@@ -654,6 +664,7 @@ class WithComplexNestedMenus {
     </ng-template>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WithComplexNestedMenusOnBottom {
   @ViewChild('file_trigger', {read: ElementRef}) nativeFileTrigger!: ElementRef<HTMLElement>;
@@ -673,6 +684,7 @@ class WithComplexNestedMenusOnBottom {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithActiveItem {
   @ViewChild(CdkMenu) menu!: CdkMenu;
@@ -692,6 +704,7 @@ class MenuWithActiveItem {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMenuDefinition {
   @ViewChild('root', {read: CdkMenu}) root!: CdkMenu;

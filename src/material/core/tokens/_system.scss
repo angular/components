@@ -152,7 +152,7 @@
       $density-tokens: get-density-tokens($scale);
       @each $tokens in $density-tokens {
         @each $token-name, $token-value in $tokens {
-          --mat-#{$token-name}: #{$token-value};
+          @include _output-token('mat', $token-name, $token-value);
         }
       }
     }
@@ -204,7 +204,7 @@
   @include sass-utils.current-selector-or-root {
     @each $name, $value in $overrides {
       @if (map.has-key($sys-names, $name)) {
-        --#{$prefix}-#{$name}: #{map.get($overrides, $name)};
+        @include _output-token($prefix, $name, map.get($overrides, $name));
       }
     }
   }
@@ -229,7 +229,7 @@
 
   @include sass-utils.current-selector-or-root {
     @each $name, $value in $sys-colors {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      @include _output-token($prefix, $name, map.get($overrides, $name) or $value);
     }
   }
 }
@@ -268,7 +268,7 @@
 
   @include sass-utils.current-selector-or-root {
     @each $name, $value in m3.md-sys-typescale-values($font-definition) {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      @include _output-token($prefix, $name, map.get($overrides, $name) or $value);
     }
   }
 }
@@ -281,7 +281,7 @@
     @each $name, $value in m3.md-sys-elevation-values() {
       $level: map.get($overrides, $name) or $value;
       $value: elevation.get-box-shadow($level, $shadow-color);
-      --#{$prefix}-#{$name}: #{$value};
+      @include _output-token($prefix, $name, $value);
     }
   }
 }
@@ -289,7 +289,7 @@
 @mixin system-level-shape($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   @include sass-utils.current-selector-or-root {
     @each $name, $value in m3.md-sys-shape-values() {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      @include _output-token($prefix, $name, map.get($overrides, $name) or $value);
     }
   }
 }
@@ -297,7 +297,7 @@
 @mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   @include sass-utils.current-selector-or-root {
     @each $name, $value in m3.md-sys-state-values() {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      @include _output-token($prefix, $name, map.get($overrides, $name) or $value);
     }
   }
 }
@@ -389,10 +389,16 @@
   }
 }
 
+@mixin _output-token($prefix, $name, $value) {
+  // The strings silence some Sass compiler warnings.
+  --#{'' + $prefix}-#{'' + $name}: #{$value};
+}
+
 @mixin _define-m2-system-vars($vars, $overrides) {
   @include sass-utils.current-selector-or-root {
     @each $name, $value in $vars {
-      --#{definition.$system-fallback-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      @include _output-token(
+        definition.$system-fallback-prefix, $name, map.get($overrides, $name) or $value);
     }
   }
 }

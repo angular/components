@@ -1,4 +1,12 @@
-import {Component, DebugElement, Directive, effect, inject, signal} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  Directive,
+  effect,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DeferredContent, DeferredContentAware} from './deferred-content';
 import {By} from '@angular/platform-browser';
@@ -83,6 +91,7 @@ class CollapsibleContent {}
     </div>
     `,
   imports: [Collapsible, CollapsibleContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
   preserveContent = signal(false);

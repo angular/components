@@ -24,7 +24,7 @@ export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> extends 
   multi: SignalLike<boolean>;
 
   /** The current value of the list selection. */
-  values: WritableSignalLike<V[]>;
+  value: WritableSignalLike<V[]>;
 
   /** The selection strategy used by the list. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
@@ -40,7 +40,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** The currently selected items. */
   selectedItems = computed(() =>
-    this.inputs.items().filter(item => this.inputs.values().includes(item.value())),
+    this.inputs.items().filter(item => this.inputs.value().includes(item.value())),
   );
 
   constructor(readonly inputs: ListSelectionInputs<T, V> & {focusManager: ListFocus<T>}) {}
@@ -54,7 +54,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       item.disabled() ||
       !item.selectable() ||
       !this.inputs.focusManager.isFocusable(item as T) ||
-      this.inputs.values().includes(item.value())
+      this.inputs.value().includes(item.value())
     ) {
       return;
     }
@@ -67,7 +67,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
     if (opts.anchor) {
       this.beginRangeSelection(index);
     }
-    this.inputs.values.update(values => values.concat(item.value()));
+    this.inputs.value.update(values => values.concat(item.value()));
   }
 
   /** Deselects the item at the current active index. */
@@ -75,7 +75,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
     item = item ?? this.inputs.focusManager.inputs.activeItem();
 
     if (item && !item.disabled() && item.selectable()) {
-      this.inputs.values.update(values => values.filter(value => value !== item.value()));
+      this.inputs.value.update(values => values.filter(value => value !== item.value()));
     }
   }
 
@@ -83,7 +83,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   toggle(item?: ListSelectionItem<V>) {
     item = item ?? this.inputs.focusManager.inputs.activeItem();
     if (item) {
-      this.inputs.values().includes(item.value()) ? this.deselect(item) : this.select(item);
+      this.inputs.value().includes(item.value()) ? this.deselect(item) : this.select(item);
     }
   }
 
@@ -91,7 +91,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   toggleOne() {
     const item = this.inputs.focusManager.inputs.activeItem();
     if (item) {
-      this.inputs.values().includes(item.value()) ? this.deselect() : this.selectOne();
+      this.inputs.value().includes(item.value()) ? this.deselect() : this.selectOne();
     }
   }
 
@@ -123,12 +123,12 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
     // inverse (and more common) effect of keeping enabled items selected when they aren't in the
     // list.
 
-    for (const value of this.inputs.values()) {
+    for (const value of this.inputs.value()) {
       const item = this.inputs.items().find(i => i.value() === value);
 
       item
         ? this.deselect(item)
-        : this.inputs.values.update(values => values.filter(v => v !== value));
+        : this.inputs.value.update(values => values.filter(v => v !== value));
     }
   }
 
@@ -142,7 +142,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       .filter(i => !i.disabled() && i.selectable() && this.inputs.focusManager.isFocusable(i))
       .map(i => i.value());
 
-    selectableValues.every(i => this.inputs.values().includes(i))
+    selectableValues.every(i => this.inputs.value().includes(i))
       ? this.deselectAll()
       : this.selectAll();
   }
@@ -156,7 +156,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
     this.deselectAll();
 
-    if (this.inputs.values().length > 0 && !this.inputs.multi()) {
+    if (this.inputs.value().length > 0 && !this.inputs.multi()) {
       return;
     }
 

@@ -13,7 +13,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {
   Component,
   ComponentRef,
-  createNgModuleRef,
+  createNgModule,
   Directive,
   Injectable,
   Injector,
@@ -24,6 +24,7 @@ import {
   ViewEncapsulation,
   forwardRef,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -1020,6 +1021,7 @@ class DirectiveWithViewContainer {
 @Component({
   template: `<dir-with-view-container></dir-with-view-container>`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
@@ -1033,6 +1035,7 @@ class ComponentWithChildViewContainer {
   selector: 'arbitrary-component-with-template-ref',
   template: `<ng-template let-data let-bottomSheetRef="bottomSheetRef">
       Cheese {{localValue}} {{data?.value}}{{setRef(bottomSheetRef)}}</ng-template>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithTemplateRef {
   localValue!: string;
@@ -1048,6 +1051,7 @@ class ComponentWithTemplateRef {
 
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   bottomSheetRef = inject<MatBottomSheetRef<PizzaMsg>>(MatBottomSheetRef);
@@ -1057,6 +1061,7 @@ class PizzaMsg {
 
 @Component({
   template: '<p>Taco</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TacoMsg {}
 
@@ -1065,6 +1070,7 @@ class TacoMsg {}
     <h1>This is the title</h1>
     <p>This is the paragraph</p>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContentElementDialog {}
 
@@ -1072,6 +1078,7 @@ class ContentElementDialog {}
   template: '',
   providers: [MatBottomSheet],
   imports: [MatBottomSheetModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentThatProvidesMatBottomSheet {
   bottomSheet = inject(MatBottomSheet);
@@ -1079,6 +1086,7 @@ class ComponentThatProvidesMatBottomSheet {
 
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BottomSheetWithInjectedData {
   data = inject(MAT_BOTTOM_SHEET_DATA);
@@ -1087,18 +1095,20 @@ class BottomSheetWithInjectedData {
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ShadowDomComponent {}
 
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundBottomSheetParentComponent {
   private _injector = inject(Injector);
   private _bottomSheet = inject(MatBottomSheet);
 
   openBottomSheet(): void {
-    const ngModuleRef = createNgModuleRef(
+    const ngModuleRef = createNgModule(
       ModuleBoundBottomSheetModule,
       /* parentInjector */ this._injector,
     );
@@ -1116,12 +1126,14 @@ class ModuleBoundBottomSheetService {
   template:
     '<module-bound-bottom-sheet-child-component></module-bound-bottom-sheet-child-component>',
   imports: [forwardRef(() => ModuleBoundBottomSheetChildComponent)],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundBottomSheetComponent {}
 
 @Component({
   selector: 'module-bound-bottom-sheet-child-component',
   template: '<p>{{service.name}}</p>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ModuleBoundBottomSheetChildComponent {
   service = inject(ModuleBoundBottomSheetService);

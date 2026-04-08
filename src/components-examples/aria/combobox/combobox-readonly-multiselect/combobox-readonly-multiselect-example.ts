@@ -67,13 +67,13 @@ export class ComboboxReadonlyMultiselectExample {
   constructor() {
     // Updates the display value when the listbox values change.
     afterRenderEffect(() => {
-      const values = this.listbox()?.values() || [];
-      if (values.length === 0) {
+      const value = this.listbox()?.value() || [];
+      if (value.length === 0) {
         this.displayValue.set('Select a label');
-      } else if (values.length === 1) {
-        this.displayValue.set(values[0]);
+      } else if (value.length === 1) {
+        this.displayValue.set(value[0]);
       } else {
-        this.displayValue.set(`${values[0]} + ${values.length - 1} more`);
+        this.displayValue.set(`${value[0]} + ${value.length - 1} more`);
       }
     });
 

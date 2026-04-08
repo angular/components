@@ -1,5 +1,11 @@
 import {TestBed} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkAccordion} from './accordion';
 import {CdkAccordionItem} from './accordion-item';
@@ -109,6 +115,7 @@ describe('CdkAccordion', () => {
     <cdk-accordion-item></cdk-accordion-item>
   </cdk-accordion>`,
   imports: [CdkAccordionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SetOfItems {
   @ViewChild(CdkAccordion) accordion!: CdkAccordion;
@@ -124,6 +131,7 @@ class SetOfItems {
     </cdk-accordion-item>
   </cdk-accordion>`,
   imports: [CdkAccordionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedItems {
   @ViewChild('outerItem') outerItem!: CdkAccordionItem;

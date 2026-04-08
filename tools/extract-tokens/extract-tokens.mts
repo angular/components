@@ -13,7 +13,7 @@ interface ExtractedToken {
   /** Type of the token (color, typography etc.) */
   type: 'color' | 'typography' | 'density' | 'base';
   /** Value of the token. */
-  value: string | number;
+  value: string | number | null;
   /** Name under which the token can be referred to inside the `overrides` mixin. */
   overridesName: string;
 }
@@ -142,6 +142,7 @@ function extractTokens(themePath: string): Token[] {
       overridesName: token.overridesName,
       // Set to `undefined` so the key gets dropped from the JSON if there's no value.
       derivedFrom: derivedFrom || undefined,
+      value: token.value,
     };
   });
 }

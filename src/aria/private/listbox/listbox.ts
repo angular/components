@@ -7,7 +7,8 @@
  */
 
 import {OptionPattern} from './option';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
+import {ClickEventManager} from '../behaviors/event-manager/click-event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 
@@ -23,6 +24,9 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 /** Controls the state of a listbox. */
 export class ListboxPattern<V> {
   listBehavior: List<OptionPattern<V>, V>;
+
+  /** Whether the listbox has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -160,9 +164,9 @@ export class ListboxPattern<V> {
     return manager;
   });
 
-  /** The pointerdown event manager for the listbox. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the listbox. */
+  clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.readonly()) {
       return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
@@ -206,9 +210,9 @@ export class ListboxPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+    if (!this.inputs.multi() && this.inputs.value().length > 1) {
       violations.push(
-        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
       );
     }
 
@@ -218,14 +222,20 @@ export class ListboxPattern<V> {
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
-  onPointerdown(event: PointerEvent) {
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.hasBeenInteracted.set(true);
+      this.clickManager().handle(event);
     }
+  }
+
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /**
@@ -256,6 +266,15 @@ export class ListboxPattern<V> {
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
     }
+  }
+
+  /**
+   * Sets the default active state of the listbox before receiving interaction for the first time.
+   */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
   }
 
   protected _getItem(e: PointerEvent) {

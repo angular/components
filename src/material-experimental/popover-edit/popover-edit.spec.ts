@@ -1,6 +1,6 @@
 import {DataSource} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {Component, Directive, ElementRef, ViewChild} from '@angular/core';
+import {Component, Directive, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
 import {MatTableModule} from '@angular/material/table';
@@ -230,6 +230,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
     }
   `,
   imports: [MatTableModule, MatPopoverEditModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -282,6 +283,7 @@ class MatFlexTableInCell extends BaseTestComponent {
     }
   `,
   imports: [MatTableModule, MatPopoverEditModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];

@@ -1,0 +1,78 @@
+// Mixins that apply typography styles including font and letter-spacing for each of
+// Material Design's typography levels.
+// See https://m3.material.io/styles/typography/applying-type for guidance.
+
+@mixin body-small {
+  font: var(--mat-sys-body-small);
+  letter-spacing: var(--mat-sys-body-small-tracking);
+}
+
+@mixin body-medium {
+  font: var(--mat-sys-body-medium);
+  letter-spacing: var(--mat-sys-body-medium-tracking);
+}
+
+@mixin body-large {
+  font: var(--mat-sys-body-large);
+  letter-spacing: var(--mat-sys-body-large-tracking);
+}
+
+@mixin display-small {
+  font: var(--mat-sys-display-small);
+  letter-spacing: var(--mat-sys-display-small-tracking);
+}
+
+@mixin display-medium {
+  font: var(--mat-sys-display-medium);
+  letter-spacing: var(--mat-sys-display-medium-tracking);
+}
+
+@mixin display-large {
+  font: var(--mat-sys-display-large);
+  letter-spacing: var(--mat-sys-display-large-tracking);
+}
+
+@mixin headline-small {
+  font: var(--mat-sys-headline-small);
+  letter-spacing: var(--mat-sys-headline-small-tracking);
+}
+
+@mixin headline-medium {
+  font: var(--mat-sys-headline-medium);
+  letter-spacing: var(--mat-sys-headline-medium-tracking);
+}
+
+@mixin headline-large {
+  font: var(--mat-sys-headline-large);
+  letter-spacing: var(--mat-sys-headline-large-tracking);
+}
+
+@mixin label-small {
+  font: var(--mat-sys-label-small);
+  letter-spacing: var(--mat-sys-label-small-tracking);
+}
+
+@mixin label-medium {
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+}
+
+@mixin label-large {
+  font: var(--mat-sys-label-large);
+  letter-spacing: var(--mat-sys-label-large-tracking);
+}
+
+@mixin title-small {
+  font: var(--mat-sys-title-small);
+  letter-spacing: var(--mat-sys-title-small-tracking);
+}
+
+@mixin title-medium {
+  font: var(--mat-sys-title-medium);
+  letter-spacing: var(--mat-sys-title-medium-tracking);
+}
+
+@mixin title-large {
+  font: var(--mat-sys-title-large);
+  letter-spacing: var(--mat-sys-title-large-tracking);
+}

@@ -6,40 +6,40 @@ module(
 
 bazel_dep(name = "yq.bzl", version = "0.3.5")
 bazel_dep(name = "rules_nodejs", version = "6.7.3")
-bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+bazel_dep(name = "aspect_rules_js", version = "3.0.3")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
-bazel_dep(name = "tar.bzl", version = "0.9.0")
+bazel_dep(name = "tar.bzl", version = "0.10.1")
 bazel_dep(name = "bazel_lib", version = "3.2.2")
-bazel_dep(name = "aspect_rules_esbuild", version = "0.25.0")
+bazel_dep(name = "aspect_rules_esbuild", version = "0.25.1")
 bazel_dep(name = "aspect_rules_jasmine", version = "2.0.4")
 bazel_dep(name = "platforms", version = "1.0.0")
-bazel_dep(name = "aspect_rules_ts", version = "3.8.6")
+bazel_dep(name = "aspect_rules_ts", version = "3.8.8")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "7043f918640169063a6281ab4afb61389a0aad6d",
+    commit = "652b57c41218be318f33fc92032696f53d3aa0ef",
     remote = "https://github.com/angular/rules_browsers.git",
 )
 
 bazel_dep(name = "rules_sass")
 git_override(
     module_name = "rules_sass",
-    commit = "9135eeae8b8f31d432d44cc46bfa5a8edfa04c47",
+    commit = "48a5a0e04e4af77729d06b42c5691fbb1bc8dfb5",
     remote = "https://github.com/angular/rules_sass.git",
 )
 
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "2fe6d3b563c12fbdc32bb30fb21e9c8ca86fdcd2",
+    commit = "6c36180c2efebc6526ef0e6a55a6d738c7de6909",
     remote = "https://github.com/angular/rules_angular.git",
 )
 
 bazel_dep(name = "devinfra")
 git_override(
     module_name = "devinfra",
-    commit = "491fa7fc1803683748875b2b89d85700aca2b1f4",
+    commit = "ad935905ff554e020ca790a085e835f3308fff45",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
@@ -49,32 +49,32 @@ use_repo(yq, "yq_toolchains")
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
 rules_ts_ext.deps(
     name = "components_npm_typescript",
-    # Obtained by: curl --silent https://registry.npmjs.org/typescript/6.0.1-rc | jq -r '.dist.integrity'
-    ts_integrity = "sha512-7XlzYb+p/7YxX6qSOzwB4mxVFRdAgWWkj1PgAZ+jzldeuFV6Z77vwFbNxHsUXAL/bhlWY2jCT8shLwDJR8337g==",
-    ts_version = "6.0.1-rc",
+    # Obtained by: curl --silent https://registry.npmjs.org/typescript/6.0.2 | jq -r '.dist.integrity'
+    ts_integrity = "sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==",
+    ts_version = "6.0.2",
 )
 use_repo(rules_ts_ext, **{"npm_typescript": "components_npm_typescript"})
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(
     node_repositories = {
-        "22.22.0-darwin_arm64": ("node-v22.22.0-darwin-arm64.tar.gz", "node-v22.22.0-darwin-arm64", "5ed4db0fcf1eaf84d91ad12462631d73bf4576c1377e192d222e48026a902640"),
-        "22.22.0-darwin_amd64": ("node-v22.22.0-darwin-x64.tar.gz", "node-v22.22.0-darwin-x64", "5ea50c9d6dea3dfa3abb66b2656f7a4e1c8cef23432b558d45fb538c7b5dedce"),
-        "22.22.0-linux_arm64": ("node-v22.22.0-linux-arm64.tar.xz", "node-v22.22.0-linux-arm64", "1bf1eb9ee63ffc4e5d324c0b9b62cf4a289f44332dfef9607cea1a0d9596ba6f"),
-        "22.22.0-linux_ppc64le": ("node-v22.22.0-linux-ppc64le.tar.xz", "node-v22.22.0-linux-ppc64le", "d83b9957431cc18e1fc143a4b99f89cde7b8a18f53ef392231b4336afd058865"),
-        "22.22.0-linux_s390x": ("node-v22.22.0-linux-s390x.tar.xz", "node-v22.22.0-linux-s390x", "5aa0e520689448c4233e8d73f284e8e0634fdcd32b479735698494be5641f3e4"),
-        "22.22.0-linux_amd64": ("node-v22.22.0-linux-x64.tar.xz", "node-v22.22.0-linux-x64", "9aa8e9d2298ab68c600bd6fb86a6c13bce11a4eca1ba9b39d79fa021755d7c37"),
-        "22.22.0-windows_amd64": ("node-v22.22.0-win-x64.zip", "node-v22.22.0-win-x64", "c97fa376d2becdc8863fcd3ca2dd9a83a9f3468ee7ccf7a6d076ec66a645c77a"),
+        "22.22.2-darwin_arm64": ("node-v22.22.2-darwin-arm64.tar.gz", "node-v22.22.2-darwin-arm64", "db4b275b83736df67533529a18cc55de2549a8329ace6c7bcc68f8d22d3c9000"),
+        "22.22.2-darwin_amd64": ("node-v22.22.2-darwin-x64.tar.gz", "node-v22.22.2-darwin-x64", "12a6abb9c2902cf48a21120da13f87fde1ed1b71a13330712949e8db818708ba"),
+        "22.22.2-linux_arm64": ("node-v22.22.2-linux-arm64.tar.xz", "node-v22.22.2-linux-arm64", "e9e1930fd321a470e29bb68f30318bf58e3ecb4acb4f1533fb19c58328a091fe"),
+        "22.22.2-linux_ppc64le": ("node-v22.22.2-linux-ppc64le.tar.xz", "node-v22.22.2-linux-ppc64le", "14045b5a5030d35ca0030fb7e870bd11a651eb9b57323ebc0021e8d78ac6bac9"),
+        "22.22.2-linux_s390x": ("node-v22.22.2-linux-s390x.tar.xz", "node-v22.22.2-linux-s390x", "9e4a07c291b8949289c6ea8ee61b1d14666a4810feae776a8d1eb1f57e03a2fb"),
+        "22.22.2-linux_amd64": ("node-v22.22.2-linux-x64.tar.xz", "node-v22.22.2-linux-x64", "88fd1ce767091fd8d4a99fdb2356e98c819f93f3b1f8663853a2dee9b438068a"),
+        "22.22.2-windows_amd64": ("node-v22.22.2-win-x64.zip", "node-v22.22.2-win-x64", "7c93e9d92bf68c07182b471aa187e35ee6cd08ef0f24ab060dfff605fcc1c57c"),
     },
-    node_version = "22.22.0",
+    node_version = "22.22.2",
 )
 use_repo(node, "nodejs_toolchains")
 
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
     name = "pnpm",
-    pnpm_version = "10.30.3",
-    pnpm_version_integrity = "sha512-yWHR4KLY41TsqlFmuCJRZmi39Ey1vZUSLVkN2Bki9gb1RzttI+xKW+Bef80Y6EiNR9l4u+mBhy8RRdBumnQAFw==",
+    pnpm_version = "10.33.0",
+    pnpm_version_integrity = "sha512-EFaLtKavtYyes2MNqQzJUWQXq+vT+rvmc58K55VyjaFJHp21pUTHatjrdXD1xLs9bGN7LLQb/c20f6gjyGSTGQ==",
 )
 use_repo(pnpm, "pnpm")
 

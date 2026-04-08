@@ -59,7 +59,7 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
     textDirection: signal(opts?.textDirection || 'ltr'),
     multi: signal(false),
     selectionMode: signal('explicit'),
-    values: signal([]),
+    value: signal([]),
     wrap: signal(true),
     typeaheadDelay: signal(500),
     softDisabled: signal(true),
@@ -441,6 +441,50 @@ describe('Standalone Menu Pattern', () => {
 
       submenu.onKeydown(right());
       expect(submenu.visible()).toBe(false);
+    });
+  });
+
+  describe('#setDefaultStateEffect', () => {
+    it('should set default state if not interacted', () => {
+      const items = menu.inputs.items() as TestMenuItem[];
+      menu.inputs.activeItem.set(undefined);
+      items[0].inputs.disabled.set(true);
+      items[1].inputs.disabled.set(true);
+      menu.setDefaultStateEffect();
+      expect(menu.inputs.activeItem()?.id()).toBe(items[0].id()); // Should reset to item0 because softDisabled is true
+    });
+
+    it('should NOT set default state if keyboard interacted', () => {
+      const items = menu.inputs.items() as TestMenuItem[];
+      menu.inputs.activeItem.set(undefined);
+      menu.onKeydown(down()); // Interaction (ArrowDown moves to item0)
+
+      items[0].inputs.disabled.set(true);
+      items[1].inputs.disabled.set(true);
+      menu.setDefaultStateEffect();
+      expect(menu.inputs.activeItem()).toBe(items[0]); // Should stay on item0
+    });
+
+    it('should NOT set default state if pointer interacted', () => {
+      const items = menu.inputs.items() as TestMenuItem[];
+      menu.inputs.activeItem.set(undefined);
+      menu.onMouseOver({target: items[0].element()} as unknown as MouseEvent); // Interaction
+
+      items[0].inputs.disabled.set(true);
+      items[1].inputs.disabled.set(true);
+      menu.setDefaultStateEffect();
+      expect(menu.inputs.activeItem()).toBe(items[0]); // Should stay on item0
+    });
+
+    it('should NOT set default state if focus-in occurred', () => {
+      const items = menu.inputs.items() as TestMenuItem[];
+      menu.inputs.activeItem.set(undefined);
+      menu.onFocusIn(); // Interaction
+
+      items[0].inputs.disabled.set(true);
+      items[1].inputs.disabled.set(true);
+      menu.setDefaultStateEffect();
+      expect(menu.inputs.activeItem()).toBeUndefined(); // Should stay undefined
     });
   });
 });
@@ -916,6 +960,39 @@ describe('Menu Bar Pattern', () => {
         expect(menuA.visible()).toBe(true);
         expect(menubarItems[0].expanded()).toBe(true);
         expect(menubar.inputs.activeItem()).toBe(menubarItems[0]);
+      });
+    });
+
+    describe('#setDefaultStateEffect', () => {
+      it('should set default state if not interacted', () => {
+        const items = menubar.inputs.items() as TestMenuItem[];
+        menubar.inputs.activeItem.set(undefined);
+        items[0].inputs.disabled.set(true);
+        items[1].inputs.disabled.set(true);
+        menubar.setDefaultStateEffect();
+        expect(menubar.inputs.activeItem()?.id()).toBe(items[0].id()); // Should reset to item0 because softDisabled is true
+      });
+
+      it('should NOT set default state if keyboard interacted', () => {
+        const items = menubar.inputs.items() as TestMenuItem[];
+        menubar.inputs.activeItem.set(undefined);
+        menubar.onKeydown(down()); // Interaction (ArrowDown moves to item1)
+
+        items[0].inputs.disabled.set(true);
+        items[1].inputs.disabled.set(true);
+        menubar.setDefaultStateEffect();
+        expect(menubar.inputs.activeItem()).toBeUndefined(); // Should stay undefined
+      });
+
+      it('should NOT set default state if focus-in occurred', () => {
+        const items = menubar.inputs.items() as TestMenuItem[];
+        menubar.inputs.activeItem.set(undefined);
+        menubar.onFocusIn(); // Interaction (stays on item0)
+
+        items[0].inputs.disabled.set(true);
+        items[1].inputs.disabled.set(true);
+        menubar.setDefaultStateEffect();
+        expect(menubar.inputs.activeItem()).toBeUndefined(); // Should stay undefined
       });
     });
   });

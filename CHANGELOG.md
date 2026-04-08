@@ -1,3 +1,88 @@
+<a name="22.0.0-next.3"></a>
+# 22.0.0-next.3 "rubber-wombat" (2026-04-01)
+## Breaking Changes
+### multiple
+- Renames the values input/model to value in Combobox, Listbox, Tree, Menu, Toolbar, and Select. Users must update their templates to use the value property instead of values.
+  
+  * refactor(multiple): update api goldens
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ac3911071](https://github.com/angular/components/commit/ac3911071810ac7c54ba3382125bf53094bce80b) | fix | **sidenav:** not resetting margin if transition does not start ([#33001](https://github.com/angular/components/pull/33001)) |
+| [a7d556180](https://github.com/angular/components/commit/a7d5561803e2f365843cb763a4763ed51cb0ae03) | fix | **slider:** not picking up static direction ([#33006](https://github.com/angular/components/pull/33006)) |
+| [236762fbc](https://github.com/angular/components/commit/236762fbc5d63bb6000a52c7d20612c0b14c3d8b) | fix | **tooltip:** allow hover detection logic to be customized ([#33018](https://github.com/angular/components/pull/33018)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a7fe128c3](https://github.com/angular/components/commit/a7fe128c353aec9065e942b63167e9019dc53350) | fix | **stepper:** linear updates not reflected in the DOM ([#33007](https://github.com/angular/components/pull/33007)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [94a50a25f](https://github.com/angular/components/commit/94a50a25f95c0e28d661b957a0a17501cc9998f9) | refactor | rename values to value for signal forms compatibility ([#33012](https://github.com/angular/components/pull/33012)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.2.5"></a>
+# 21.2.5 "steel-wombat" (2026-04-01)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [42e10553c](https://github.com/angular/components/commit/42e10553cfcf205fea44522ae631fe23f90b03ea) | fix | **stepper:** linear updates not reflected in the DOM ([#33007](https://github.com/angular/components/pull/33007)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [895908a12](https://github.com/angular/components/commit/895908a12dd81d889f95961da59e80823faf8889) | fix | **sidenav:** not resetting margin if transition does not start ([#33001](https://github.com/angular/components/pull/33001)) |
+| [475a8aabb](https://github.com/angular/components/commit/475a8aabb30044c4cdca1bdb0b1de832db6e5936) | fix | **slider:** not picking up static direction ([#33006](https://github.com/angular/components/pull/33006)) |
+| [8a5ed09e5](https://github.com/angular/components/commit/8a5ed09e59e312f82b969b19ae4d077e4574bd12) | fix | **tooltip:** allow hover detection logic to be customized ([#33018](https://github.com/angular/components/pull/33018)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.2.4"></a>
+# 21.2.4 "hassium-halfpipe" (2026-03-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [87aa6d977](https://github.com/angular/components/commit/87aa6d977166d09b0f321eed6300663bfe57b8aa) | fix | **tooltip:** wrong type for shape token ([#32968](https://github.com/angular/components/pull/32968)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="22.0.0-next.2"></a>
+# 22.0.0-next.2 "hassium-helicopter" (2026-03-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a46b0a1d4](https://github.com/angular/components/commit/a46b0a1d4200bf74b036c25ee477d22025f444c8) | feat | **core:** add mixins for Material Design typography ([#32959](https://github.com/angular/components/pull/32959)) |
+| [ff7d697ec](https://github.com/angular/components/commit/ff7d697ec5ed280d3e28029571bc86d7c0c2c3a8) | fix | **tooltip:** wrong type for shape token ([#32968](https://github.com/angular/components/pull/32968)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="22.0.0-next.1"></a>
+# 22.0.0-next.1 "22-0-0" (2026-03-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0767a3cb4](https://github.com/angular/components/commit/0767a3cb4fe9f6fd3496cea991592855cf885b3a) | fix | **drag-drop:** item returned to wrong index in initial container ([#32944](https://github.com/angular/components/pull/32944)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [46b67d150](https://github.com/angular/components/commit/46b67d15053ce31b4742b809f1777b32eb2f1863) | fix | **datepicker:** add harness for datepicker actions ([#32925](https://github.com/angular/components/pull/32925)) |
+| [6ed6218c4](https://github.com/angular/components/commit/6ed6218c474bfe4578b17d2391d8677fe92671cc) | fix | **tabs:** incorrect animation variable name ([#32941](https://github.com/angular/components/pull/32941)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.2.3"></a>
+# 21.2.3 "21-2-3" (2026-03-18)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [688deda58](https://github.com/angular/components/commit/688deda580c9141e2a7e36164dbba860d060e5df) | fix | **drag-drop:** item returned to wrong index in initial container ([#32944](https://github.com/angular/components/pull/32944)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [917526511](https://github.com/angular/components/commit/917526511e1d52bb2d9fa665e10f087e62aa2229) | fix | **datepicker:** add harness for datepicker actions ([#32925](https://github.com/angular/components/pull/32925)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-next.0"></a>
 # 22.0.0-next.0 "plastic-bear" (2026-03-11)
 ### material

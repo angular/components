@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
@@ -445,6 +445,7 @@ describe('GoogleMap', () => {
       (mapInitialized)="mapInitializedSpy($event)" />
   `,
   imports: [GoogleMap],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(GoogleMap) map!: GoogleMap;

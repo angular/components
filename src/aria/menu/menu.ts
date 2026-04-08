@@ -160,7 +160,7 @@ export class Menu<V> {
         this._deferredContentAware?.contentVisible.set(true);
       } else {
         this._deferredContentAware?.contentVisible.set(
-          this._pattern.visible() || !!this.parent()?._pattern.hasBeenFocused(),
+          this._pattern.visible() || !!this.parent()?._pattern.hasBeenInteracted(),
         );
       }
     });
@@ -177,13 +177,7 @@ export class Menu<V> {
     });
 
     afterRenderEffect(() => {
-      if (
-        !this._pattern.hasBeenFocused() &&
-        !this._pattern.hasBeenHovered() &&
-        this._items().length
-      ) {
-        untracked(() => this._pattern.setDefaultState());
-      }
+      this._pattern.setDefaultStateEffect();
     });
   }
 

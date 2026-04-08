@@ -861,4 +861,53 @@ describe('Grid', () => {
       });
     });
   });
+
+  describe('#setDefaultStateEffect', () => {
+    it('should set default state if not interacted', () => {
+      const gridInputs = getDefaultGridInputs();
+      const data = [{cells: [{}, {}]}, {cells: [{}, {}]}];
+      const {grid} = createGrid(data, gridInputs);
+      const cells = grid.cells();
+      cells[0][1].inputs.selected.set(true); // default state will pick this since it's selected
+      grid.setDefaultStateEffect();
+      expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[0][1]); // Should set to selected cell
+    });
+
+    it('should NOT set default state if keyboard interacted', () => {
+      const gridInputs = getDefaultGridInputs();
+      const data = [{cells: [{}, {}]}, {cells: [{}, {}]}];
+      const {grid} = createGrid(data, gridInputs);
+      grid.onKeydown(down()); // Interaction
+
+      const cells = grid.cells();
+      cells[0][1].inputs.selected.set(true);
+      grid.setDefaultStateEffect();
+      expect(grid.gridBehavior.focusBehavior.activeCell()).toBeUndefined(); // Should stay undefined, meaning default state was skipped
+    });
+
+    it('should NOT set default state if pointer interacted', () => {
+      const gridInputs = getDefaultGridInputs();
+      const data = [{cells: [{}, {}]}, {cells: [{}, {}]}];
+      const {grid} = createGrid(data, gridInputs);
+      const cells = grid.cells();
+      grid.onPointerdown({target: cells[0][0].element()} as unknown as PointerEvent); // Interaction
+
+      cells[0][1].inputs.selected.set(true);
+      grid.setDefaultStateEffect();
+      expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[0][0]); // Should stay on interacted cell
+    });
+
+    it('should NOT set default state if focus-in occurred', () => {
+      const gridInputs = getDefaultGridInputs();
+      const data = [{cells: [{}, {}]}, {cells: [{}, {}]}];
+      const {grid} = createGrid(data, gridInputs);
+
+      grid.onFocusIn({} as FocusEvent); // Interaction
+
+      const cells = grid.cells();
+      cells[0][1].inputs.selected.set(true);
+      grid.setDefaultStateEffect();
+      expect(grid.gridBehavior.focusBehavior.activeCell()).toBeUndefined(); // Should stay undefined due to early return
+    });
+  });
 });

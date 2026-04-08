@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
@@ -387,13 +387,13 @@ describe('AccordionGroup', () => {
         <div class="item-container">
           <button
             ngAccordionTrigger
-            [panelId]="item.panelId"
+            [panel]="panel"
             [disabled]="item.disabled"
             [(expanded)]="item.expanded"
           >{{ item.header }}</button>
           <div
             ngAccordionPanel
-            [panelId]="item.panelId"
+            #panel="ngAccordionPanel"
           >
             <ng-template ngAccordionContent>
               {{ item.content }}
@@ -404,6 +404,7 @@ describe('AccordionGroup', () => {
     </div>
   `,
   imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionGroupExample {
   items = signal([

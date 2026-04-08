@@ -17,6 +17,7 @@ import {
   createEnvironmentInjector,
   inject,
   inputBinding,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
@@ -650,7 +651,7 @@ describe('Portals', () => {
         'Child environment',
       );
 
-      @Component({template: ''})
+      @Component({template: '', changeDetection: ChangeDetectionStrategy.Eager})
       class ChildComponent {}
 
       const component = createComponent(ChildComponent, {
@@ -773,6 +774,7 @@ class ChocolateInjector {
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
   imports: [PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   snack = inject(Chocolate, {optional: true});
@@ -808,6 +810,7 @@ class SaveParentNodeOnInit implements AfterViewInit {
     </ng-template>
   `,
   imports: [SaveParentNodeOnInit],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ArbitraryViewContainerRefComponent {
   viewContainerRef = inject(ViewContainerRef);
@@ -849,6 +852,7 @@ class ArbitraryViewContainerRefComponent {
   </div>
   `,
   imports: [CdkPortal, CdkPortalOutlet, PizzaMsg],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PortalTestApp {
   viewContainerRef = inject(ViewContainerRef);
@@ -891,6 +895,7 @@ class PortalTestApp {
     </div>
   `,
   imports: [CdkPortalOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class UnboundPortalTestApp {
   @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;

@@ -14,6 +14,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -1190,6 +1191,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1255,6 +1257,7 @@ class FixedSizeVirtualScroll {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FixedSizeVirtualScrollWithRtlDirection {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1299,6 +1302,7 @@ class FixedSizeVirtualScrollWithRtlDirection {
     }
   `,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollWithNoStrategy {
   items = [];
@@ -1338,6 +1342,7 @@ class InjectsViewContainer {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [InjectsViewContainer, ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollWithItemInjectingViewContainer {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1376,6 +1381,7 @@ class VirtualScrollWithItemInjectingViewContainer {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DelayedInitializationVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1414,6 +1420,7 @@ class DelayedInitializationVirtualScroll {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollWithAppendOnly {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1456,6 +1463,7 @@ class VirtualScrollWithAppendOnly {
     `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollWithCustomScrollingElement {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1497,6 +1505,7 @@ class VirtualScrollWithCustomScrollingElement {
     `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollWithScrollableWindow {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;
@@ -1509,6 +1518,7 @@ class VirtualScrollWithScrollableWindow {
 @Component({
   template: '<cdk-virtual-scroll-viewport itemSize="50"></cdk-virtual-scroll-viewport>',
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VirtualScrollableQuery {
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;

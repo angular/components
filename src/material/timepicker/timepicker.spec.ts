@@ -1,4 +1,12 @@
-import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Injector,
+  Provider,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
@@ -1435,6 +1443,7 @@ describe('MatTimepicker', () => {
       [tabIndex]="toggleTabIndex()"/>
   `,
   imports: [MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneTimepicker {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1475,6 +1484,7 @@ class StandaloneTimepicker {
     MatFormField,
     MatSuffix,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerInFormField {
   @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
@@ -1487,6 +1497,7 @@ class TimepickerInFormField {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerTwoWayBinding {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1503,6 +1514,7 @@ class TimepickerTwoWayBinding {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithForms {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1519,12 +1531,14 @@ class TimepickerWithForms {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithMultipleInputs {}
 
 @Component({
   template: '<mat-timepicker/>',
   imports: [MatTimepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithoutInput {
   @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
@@ -1537,5 +1551,6 @@ class TimepickerWithoutInput {
   `,
   imports: [MatTimepicker, MatTimepickerInput],
   encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerInShadowDom {}
