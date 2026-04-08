@@ -3,7 +3,6 @@
   <mat-checkbox [formControl]="softDisabled">Soft Disabled</mat-checkbox>
   <mat-checkbox [formControl]="enableSelection">Enable Selection</mat-checkbox>
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
-  <mat-checkbox [formControl]="enableRangeSelection">Range Selection</mat-checkbox>
 
   <mat-form-field
     class="example-controls-select"
@@ -65,7 +64,6 @@
     [enableSelection]="enableSelection.value"
     [selectionMode]="selectionMode"
     [multi]="multi.value"
-    [enableRangeSelection]="enableRangeSelection.value"
     #grid="ngGrid"
   >
     @for (row of gridData; track row) {
@@ -117,15 +115,10 @@
         @if (this.selectionMode === 'follow') {
           <li>Selection change on navigation (follow focus)</li>
         }
-        @if (multi.value && enableRangeSelection.value) {
-          <li>Shift + Arrow: expand selection</li>
+        @if (multi.value) {
           <li>Ctrl + A: select all or deselect all (if all selected)</li>
           <li>Shift + Space: select a row</li>
           <li>Ctrl + Space: select a col</li>
-          <li>Shift + Home: range select from first cell in the row</li>
-          <li>Shift + End: range select to last cell in the row</li>
-          <li>Shift + Ctrl + Home: range select from very first cell</li>
-          <li>Shift + Ctrl + End: range select to very last cell</li>
         }
       </ul>
 
@@ -139,16 +132,6 @@
           @if (multi.value) {
             <li>Ctrl + Click: add/remove a cell</li>
           }
-        }
-        @if (multi.value && enableRangeSelection.value) {
-          @if (this.selectionMode === 'explicit') {
-            <li>Drag: add a new range selection (explicit)</li>
-          }
-          @if (this.selectionMode === 'follow') {
-            <li>Drag: start a new range selection (follow focus)</li>
-          }
-          <li>Shift + Drag: update the current range selection</li>
-          <li>Ctrl + Drag: add a new range selection</li>
         }
       </ul>
     }

@@ -63,16 +63,6 @@ describe('Grid directives', () => {
     fixture.detectChanges();
   };
 
-  const pointerMove = (target: HTMLElement | Window, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(new PointerEvent('pointermove', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
-  };
-
-  const pointerUp = (target: HTMLElement | Window, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
-  };
-
   const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
   const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
   const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
@@ -105,7 +95,6 @@ describe('Grid directives', () => {
     softDisabled?: boolean;
     enableSelection?: boolean;
     selectionMode?: 'follow' | 'explicit';
-    enableRangeSelection?: boolean;
     gridData?: RowConfig[];
   }) {
     TestBed.resetTestingModule();
@@ -122,8 +111,6 @@ describe('Grid directives', () => {
     if (opts?.enableSelection !== undefined)
       testComponent.enableSelection.set(opts.enableSelection);
     if (opts?.selectionMode !== undefined) testComponent.selectionMode.set(opts.selectionMode);
-    if (opts?.enableRangeSelection !== undefined)
-      testComponent.enableRangeSelection.set(opts.enableRangeSelection);
 
     if (opts?.gridData !== undefined) {
       testComponent.gridData.set(opts.gridData);
@@ -388,7 +375,6 @@ describe('Grid directives', () => {
               enableSelection: true,
               selectionMode: 'explicit',
               multi: true,
-              enableRangeSelection: true,
             });
             gridInstance._pattern.setDefaultStateEffect();
             fixture.detectChanges();
@@ -488,7 +474,6 @@ describe('Grid directives', () => {
           enableSelection: true,
           selectionMode: 'explicit',
           multi: true,
-          enableRangeSelection: true,
         });
         gridInstance._pattern.setDefaultStateEffect();
         fixture.detectChanges();
@@ -502,41 +487,6 @@ describe('Grid directives', () => {
 
         expect(cell.getAttribute('aria-selected')).toBe('true');
         expect(getActiveCellId()).toBe('c1-1');
-      });
-
-      it('should expand selection on pointermove while dragging without changing active cell', () => {
-        const startCell = gridElement.querySelector('#c0-0') as HTMLElement;
-        const dragCell = gridElement.querySelector('#c1-1') as HTMLElement;
-
-        pointerDown(startCell);
-        pointerMove(dragCell);
-
-        expect(getActiveCellId()).toBe('c0-0');
-        // Dragging expands selection
-        expect(startCell.getAttribute('aria-selected')).toBe('true');
-        expect(dragCell.getAttribute('aria-selected')).toBe('true');
-      });
-
-      it('should stop dragging on pointerup', () => {
-        const startCell = gridElement.querySelector('#c0-0') as HTMLElement;
-        const endCell = gridElement.querySelector('#c1-1') as HTMLElement;
-
-        pointerDown(startCell);
-        pointerUp(gridElement);
-        pointerMove(endCell);
-
-        // Active cell should still be c0-0 because dragging stopped before moving to c1-1
-        expect(getActiveCellId()).toBe('c0-0');
-        expect(endCell.getAttribute('aria-selected')).toBe('false');
-      });
-
-      it('should not change active cell on pointermove outside of the grid cells', () => {
-        const startCell = gridElement.querySelector('#c0-0') as HTMLElement;
-
-        pointerDown(startCell);
-        pointerMove(gridElement);
-
-        expect(getActiveCellId()).toBe('c0-0');
       });
     });
 
@@ -1009,8 +959,7 @@ describe('Grid directives', () => {
       [focusMode]="focusMode()"
       [softDisabled]="softDisabled()"
       [enableSelection]="enableSelection()"
-      [selectionMode]="selectionMode()"
-      [enableRangeSelection]="enableRangeSelection()">
+      [selectionMode]="selectionMode()">
       @for (row of gridData(); track $index; let rIndex = $index) {
         <tr ngGridRow [rowIndex]="row.rowIndex">
           @for (cell of row.cells; track $index; let cIndex = $index) {
@@ -1067,7 +1016,6 @@ class GridTestComponent {
   readonly softDisabled = signal(true);
   readonly enableSelection = signal(false);
   readonly selectionMode = signal<'follow' | 'explicit'>('follow');
-  readonly enableRangeSelection = signal(false);
   readonly gridData = signal<RowConfig[]>(createGridData());
 
   onActivated = jasmine.createSpy('activated');
