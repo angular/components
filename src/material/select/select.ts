@@ -6,13 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  _IdGenerator,
-  ActiveDescendantKeyManager,
-  addAriaReferencedId,
-  LiveAnnouncer,
-  removeAriaReferencedId,
-} from '@angular/cdk/a11y';
+import {_IdGenerator, ActiveDescendantKeyManager, LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
@@ -720,7 +714,6 @@ export class MatSelect
     this._destroy.next();
     this._destroy.complete();
     this.stateChanges.complete();
-    this._clearFromModal();
   }
 
   /** Toggles the overlay panel open or closed. */
@@ -743,7 +736,6 @@ export class MatSelect
 
     this._cleanupDetach?.();
     this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
-    this._applyModalPanelOwnership();
     this._panelOpen = true;
     this._overlayDir.positionChange.pipe(take(1)).subscribe(() => {
       this._changeDetectorRef.detectChanges();
@@ -759,71 +751,6 @@ export class MatSelect
 
     // Simulate the animation event before we moved away from `@angular/animations`.
     Promise.resolve().then(() => this.openedChange.emit(true));
-  }
-
-  /**
-   * Track which modal we have modified the `aria-owns` attribute of. When the combobox trigger is
-   * inside an aria-modal, we apply aria-owns to the parent modal with the `id` of the options
-   * panel. Track the modal we have changed so we can undo the changes on destroy.
-   */
-  private _trackedModal: Element | null = null;
-
-  /**
-   * If the autocomplete trigger is inside of an `aria-modal` element, connect
-   * that modal to the options panel with `aria-owns`.
-   *
-   * For some browser + screen reader combinations, when navigation is inside
-   * of an `aria-modal` element, the screen reader treats everything outside
-   * of that modal as hidden or invisible.
-   *
-   * This causes a problem when the combobox trigger is _inside_ of a modal, because the
-   * options panel is rendered _outside_ of that modal, preventing screen reader navigation
-   * from reaching the panel.
-   *
-   * We can work around this issue by applying `aria-owns` to the modal with the `id` of
-   * the options panel. This effectively communicates to assistive technology that the
-   * options panel is part of the same interaction as the modal.
-   *
-   * At time of this writing, this issue is present in VoiceOver.
-   * See https://github.com/angular/components/issues/20694
-   */
-  private _applyModalPanelOwnership() {
-    // TODO(http://github.com/angular/components/issues/26853): consider de-duplicating this with
-    // the `LiveAnnouncer` and any other usages.
-    //
-    // Note that the selector here is limited to CDK overlays at the moment in order to reduce the
-    // section of the DOM we need to look through. This should cover all the cases we support, but
-    // the selector can be expanded if it turns out to be too narrow.
-    const modal = this._elementRef.nativeElement.closest(
-      'body > .cdk-overlay-container [aria-modal="true"]',
-    );
-
-    if (!modal) {
-      // Most commonly, the autocomplete trigger is not inside a modal.
-      return;
-    }
-
-    const panelId = `${this.id}-panel`;
-
-    if (this._trackedModal) {
-      removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
-    }
-
-    addAriaReferencedId(modal, 'aria-owns', panelId);
-    this._trackedModal = modal;
-  }
-
-  /** Clears the reference to the listbox overlay element from the modal it was added to. */
-  private _clearFromModal() {
-    if (!this._trackedModal) {
-      // Most commonly, the autocomplete trigger is not used inside a modal.
-      return;
-    }
-
-    const panelId = `${this.id}-panel`;
-
-    removeAriaReferencedId(this._trackedModal, 'aria-owns', panelId);
-    this._trackedModal = null;
   }
 
   /** Closes the overlay panel and focuses the host element. */
