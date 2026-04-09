@@ -128,10 +128,12 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       }
     });
     // Connect the group's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this.tree()._pattern instanceof ComboboxTreePattern
-        ? this.contentVisible.set(true)
-        : this.contentVisible.set(this._pattern.expanded());
+    afterRenderEffect({
+      write: () => {
+        this.tree()._pattern instanceof ComboboxTreePattern
+          ? this.contentVisible.set(true)
+          : this.contentVisible.set(this._pattern.expanded());
+      },
     });
   }
 

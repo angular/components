@@ -162,15 +162,17 @@ export class Menu<V> {
       itemSelected: (value: V) => this.itemSelected.emit(value),
     });
 
-    afterRenderEffect(() => {
-      const parent = this.parent();
-      if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
-        this._deferredContentAware?.contentVisible.set(true);
-      } else {
-        this._deferredContentAware?.contentVisible.set(
-          this._pattern.visible() || !!this.parent()?._pattern.hasBeenInteracted(),
-        );
-      }
+    afterRenderEffect({
+      write: () => {
+        const parent = this.parent();
+        if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
+          this._deferredContentAware?.contentVisible.set(true);
+        } else {
+          this._deferredContentAware?.contentVisible.set(
+            this._pattern.visible() || !!this.parent()?._pattern.hasBeenInteracted(),
+          );
+        }
+      },
     });
 
     // Focuses an active menu item when the menu becomes visible. This is needed to
