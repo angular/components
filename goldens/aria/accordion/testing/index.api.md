@@ -4,14 +4,16 @@
 
 ```ts
 
+import * as _angular_cdk_testing from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
 export class AccordionGroupHarness extends ComponentHarness {
-    getPanels(filters?: AccordionPanelHarnessFilters): Promise<AccordionPanelHarness[]>;
-    getTriggers(filters?: AccordionTriggerHarnessFilters): Promise<AccordionTriggerHarness[]>;
+    getAccordions(filters?: AccordionHarnessFilters): Promise<AccordionHarness[]>;
+    // (undocumented)
     static hostSelector: string;
     static with(options?: AccordionGroupHarnessFilters): HarnessPredicate<AccordionGroupHarness>;
 }
@@ -21,36 +23,35 @@ export interface AccordionGroupHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export class AccordionPanelHarness extends ComponentHarness {
-    getText(): Promise<string>;
-    static hostSelector: string;
-    isExpanded(): Promise<boolean>;
-    static with(options?: AccordionPanelHarnessFilters): HarnessPredicate<AccordionPanelHarness>;
-}
-
-// @public
-export interface AccordionPanelHarnessFilters extends BaseHarnessFilters {
-    trigger?: AccordionTriggerHarness;
-}
-
-// @public
-export class AccordionTriggerHarness extends ComponentHarness {
+export class AccordionHarness extends ContentContainerComponentHarness<AccordionSection> {
     blur(): Promise<void>;
-    click(): Promise<void>;
+    collapse(): Promise<void>;
+    expand(): Promise<void>;
     focus(): Promise<void>;
-    getText(): Promise<string>;
+    protected getRootHarnessLoader(): Promise<_angular_cdk_testing.HarnessLoader>;
+    getTitle(): Promise<string>;
+    // (undocumented)
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isExpanded(): Promise<boolean>;
     isFocused(): Promise<boolean>;
-    static with(options?: AccordionTriggerHarnessFilters): HarnessPredicate<AccordionTriggerHarness>;
+    toggle(): Promise<void>;
+    static with(options?: AccordionHarnessFilters): HarnessPredicate<AccordionHarness>;
 }
 
 // @public
-export interface AccordionTriggerHarnessFilters extends BaseHarnessFilters {
+export interface AccordionHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
     expanded?: boolean;
-    text?: string | RegExp;
+    title?: string | RegExp;
+}
+
+// @public
+export enum AccordionSection {
+    // (undocumented)
+    PANEL = "[ngAccordionPanel]",
+    // (undocumented)
+    TRIGGER = "[ngAccordionTrigger]"
 }
 
 // (No @packageDocumentation comment for this package)
