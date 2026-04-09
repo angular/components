@@ -50,6 +50,7 @@ export class ButtonDemo {
   showProgress = false;
   clickCounter = 0;
   toggleDisable = false;
+  extendFABExpanded = true;
   tooltipText = 'This is a button tooltip!';
   disabledInteractive = false;
   appearances: MatButtonAppearance[] = ['text', 'elevated', 'outlined', 'filled', 'tonal'];

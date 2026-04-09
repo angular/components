@@ -16,6 +16,10 @@
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
     </button>
+    <button matFab extended [expanded]="false">
+      <mat-icon>search</mat-icon>
+      Collapsed
+    </button>
   </section>
   <section>
     @for (appearance of appearances; track $index) {
@@ -134,6 +138,10 @@
       <mat-icon>check</mat-icon>
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
+    </a>
+    <a href="//www.google.com" matFab extended [expanded]="false">
+      <mat-icon>search</mat-icon>
+      Collapsed
     </a>
   </section>
   <section>
@@ -337,6 +345,21 @@
         tabindex=""
       />
       <mat-icon>home</mat-icon>
+    </button>
+  </section>
+
+  <h4 class="demo-section-header">Extended FABs</h4>
+  <section>
+       <p>
+        <mat-checkbox [(ngModel)]="extendFABExpanded">Expanded</mat-checkbox>
+      </p>
+    <button matFab extended [expanded]="extendFABExpanded">
+      <mat-icon>edit</mat-icon>
+      Compose
+    </button>
+    <button matFab extended [expanded]="extendFABExpanded" color="primary">
+      <mat-icon>edit</mat-icon>
+      long long long text
     </button>
   </section>
 

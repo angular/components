@@ -61,6 +61,7 @@ const defaults: MatFabDefaultOptions = {
     'class': 'mdc-fab mat-mdc-fab-base mat-mdc-fab',
     '[class.mdc-fab--extended]': 'extended',
     '[class.mat-mdc-extended-fab]': 'extended',
+    '[class.mat-mdc-extended-fab-collapsed]': 'extended && !expanded',
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
@@ -72,6 +73,9 @@ export class MatFabButton extends MatButtonBase {
   override _isFab = true;
 
   @Input({transform: booleanAttribute}) extended: boolean = false;
+
+  /** Whether the extended-FAB is currently expanded. Has no effect on non-extended FABs. */
+  @Input({transform: booleanAttribute}) expanded: boolean = true;
 
   constructor(...args: unknown[]);
 

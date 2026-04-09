@@ -1,9 +1,22 @@
+@use 'sass:map';
 @use './button-base';
 @use '../core/tokens/token-utils';
 @use '../core/style/private' as style-private;
 @use '../core/style/vendor-prefixes';
 @use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m3/md-sys-motion' as m3-motion;
 @use './m3-fab';
+
+$m3-motion-tokens: m3-motion.md-sys-motion-values();
+$easing-emphasized: map.get($m3-motion-tokens, easing-emphasized);
+$easing-emphasized-decelerate: map.get($m3-motion-tokens, easing-emphasized-decelerate);
+$easing-emphasized-accelerate: map.get($m3-motion-tokens, easing-emphasized-accelerate);
+$easing-standard: map.get($m3-motion-tokens, easing-standard);
+$easing-standard-decelerate: map.get($m3-motion-tokens, easing-standard-decelerate);
+$easing-standard-accelerate: map.get($m3-motion-tokens, easing-standard-accelerate);
+$easing-legacy: map.get($m3-motion-tokens, easing-legacy);
+$easing-legacy-decelerate: map.get($m3-motion-tokens, easing-legacy-decelerate);
+$easing-legacy-accelerate: map.get($m3-motion-tokens, easing-legacy-accelerate);
 
 $fallbacks: m3-fab.get-tokens();
 
@@ -24,8 +37,8 @@ $fallbacks: m3-fab.get-tokens();
   -moz-appearance: none;
   -webkit-appearance: none;
   overflow: visible;
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms,
-    transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
+  transition: box-shadow 280ms $easing-legacy, opacity 15ms linear 30ms,
+    transform 270ms 0ms $easing-legacy-decelerate;
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
   // Due to the shape of the FAB, inheriting the shape looks off. Disable it explicitly.
@@ -75,7 +88,7 @@ $fallbacks: m3-fab.get-tokens();
   // mixin will style the icons appropriately.
   // stylelint-disable-next-line selector-class-pattern
   .mat-icon, .material-icons {
-    transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 180ms 90ms $easing-legacy-decelerate;
     fill: currentColor;
     will-change: transform;
   }
@@ -167,11 +180,8 @@ $fallbacks: m3-fab.get-tokens();
   // tokens it doesn't. We add it since it can cause tiny differences in
   // screenshot tests and it generally looks better.
   @include vendor-prefixes.smooth-font();
-  padding-left: 20px;
-  padding-right: 20px;
+
   width: auto;
-  max-width: 100%;
-  line-height: normal;
   box-shadow: token-utils.slot(fab-extended-container-elevation-shadow, $fallbacks);
   height: token-utils.slot(fab-extended-container-height, $fallbacks);
   border-radius: token-utils.slot(fab-extended-container-shape, $fallbacks);
@@ -179,6 +189,20 @@ $fallbacks: m3-fab.get-tokens();
   font-size: token-utils.slot(fab-extended-label-text-size, $fallbacks);
   font-weight: token-utils.slot(fab-extended-label-text-weight, $fallbacks);
   letter-spacing: token-utils.slot(fab-extended-label-text-tracking, $fallbacks);
+
+    // Outer container padding: expanded state (asymmetrical layout)
+    // LTR: 16px at start (close to icon), 20px at end (close to text)
+    padding-left: 16px;
+    padding-right: 20px;
+    transition: padding 270ms $easing-standard,
+                margin 270ms $easing-standard,
+                border-radius 270ms $easing-standard;
+
+    // RTL: start moves to right (16px), end moves to left (20px)
+  [dir='rtl'] & {
+    padding-left: 20px;
+    padding-right: 16px;
+  }
 
   @media (hover: hover) {
     &:hover {
@@ -203,22 +227,74 @@ $fallbacks: m3-fab.get-tokens();
 
   // stylelint-disable selector-class-pattern
   // For Extended FAB with text label followed by icon.
-  // We are checking for the a button class because white this is a FAB it
+  // We are checking for the a button class because while this is a FAB it
   // uses the same template as button.
-  [dir='rtl'] & .mdc-button__label + .mat-icon,
-  [dir='rtl'] & .mdc-button__label + .material-icons,
-  > .mat-icon,
-  > .material-icons {
-    margin-left: -8px;
-    margin-right: 12px;
-  }
+  .mdc-button__label {
+    white-space: nowrap;
+    opacity: 1;
+    display: inline-grid;
+    // Explicitly break the auto constraint, allowing tracks to be squeezed to 0
+    // to achieve "label width" set to 0.
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
 
-  .mdc-button__label + .mat-icon,
-  .mdc-button__label + .material-icons,
-  [dir='rtl'] & > .mat-icon,
-  [dir='rtl'] & > .material-icons {
+    transition: opacity 150ms 100ms linear,
+          grid-template-columns 270ms $easing-standard;
+    }
+
+    // Icon visually positioned on the LEFT (first icon in LTR, or last icon in RTL)
+    // No margin on the left, rely on parent container padding to create space.
+    // Use 12px margin on the right to push text.
+    [dir='rtl'] & .mdc-button__label + .mat-icon,
+    [dir='rtl'] & .mdc-button__label + .material-icons,
+    > .mat-icon,
+    > .material-icons {
+    margin-left: 0;
+    margin-right: 12px;
+    transition: margin 270ms $easing-standard;
+    }
+
+    // Icon visually positioned on the RIGHT (last icon in LTR, or first icon in RTL)
+    // 12px margin on the left to push text; no margin on the right,
+    // rely on parent container padding.
+    .mdc-button__label + .mat-icon,
+    .mdc-button__label + .material-icons,
+    [dir='rtl'] & > .mat-icon,
+    [dir='rtl'] & > .material-icons {
     margin-left: 12px;
-    margin-right: -8px;
+    margin-right: 0;
+    transition: margin 270ms $easing-standard;
+    }
+
+    &.mat-mdc-extended-fab-collapsed {
+    // Force symmetric 16px padding.
+    // 16px (spacing) + 24px (icon) + 16px (spacing) = 56px perfect circle.
+    padding-left: 16px;
+    padding-right: 16px;
+
+    [dir='rtl'] & {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    // Collapse text and make it transparent when collapsed
+    .mdc-button__label {
+      grid-template-columns: minmax(0, 0fr);
+
+      opacity: 0;
+      transition: grid-template-columns 270ms $easing-standard,
+            opacity 100ms 0ms linear;
+    }
+
+    // When collapsed, remove all extra icon margins to allow flexbox to center it perfectly
+    > .mat-icon,
+    > .material-icons,
+    .mdc-button__label + .mat-icon,
+    .mdc-button__label + .material-icons {
+      margin-left: 0;
+      margin-right: 0;
+      transition: margin 270ms $easing-standard;
+    }
   }
   // stylelint-enable selector-class-pattern
 

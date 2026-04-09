@@ -43,6 +43,15 @@ the `extended` attribute, mini FABs do not.
 </button>
 ```
 
+You can dynamically expand or collapse the extended FAB using the `expanded` input. When `expanded` is set to `false`, the text label is hidden and the extended FAB transitions visually to a circular shape, maintaining the current component structure but occupying less screen estate. By default, `expanded` is unconditionally `true` for all extended FABs.
+
+```html
+<button matFab extended [expanded]="isFabExpanded">
+  <mat-icon>edit</mat-icon>
+  Compose
+</button>
+```
+
 ### Icon positioning
 
 Buttons can contain icons alongside text. By default, icons (`mat-icon`, `.material-icons`, or

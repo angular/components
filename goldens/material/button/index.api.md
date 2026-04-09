@@ -67,14 +67,17 @@ export type MatFabAnchor = MatFabButton;
 // @public
 export class MatFabButton extends MatButtonBase {
     constructor(...args: unknown[]);
+    expanded: boolean;
     // (undocumented)
     extended: boolean;
     // (undocumented)
     _isFab: boolean;
     // (undocumented)
+    static ngAcceptInputType_expanded: unknown;
+    // (undocumented)
     static ngAcceptInputType_extended: unknown;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFabButton, "button[mat-fab], a[mat-fab], button[matFab], a[matFab]", ["matButton", "matAnchor"], { "extended": { "alias": "extended"; "required": false; }; }, {}, never, [".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])", "*", ".material-icons[iconPositionEnd], mat-icon[iconPositionEnd], [matButtonIcon][iconPositionEnd]", "[progressIndicator]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFabButton, "button[mat-fab], a[mat-fab], button[matFab], a[matFab]", ["matButton", "matAnchor"], { "extended": { "alias": "extended"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, never, [".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])", "*", ".material-icons[iconPositionEnd], mat-icon[iconPositionEnd], [matButtonIcon][iconPositionEnd]", "[progressIndicator]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFabButton, never>;
 }
