@@ -9,12 +9,18 @@
 import {Component} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {
-  AccordionTriggerHarness,
-  AccordionPanelHarness,
-  AccordionGroupHarness,
-} from './accordion-harness';
+import {ComponentHarness} from '@angular/cdk/testing';
+import {AccordionHarness, AccordionGroupHarness} from './accordion-harness';
 import {AccordionGroup, AccordionPanel, AccordionTrigger} from '../index';
+
+/** Lightweight test harness to test querying inside the accordion body panel. */
+class TestButtonHarness extends ComponentHarness {
+  static hostSelector = 'button.test-button';
+
+  async getText(): Promise<string> {
+    return (await this.host()).text();
+  }
+}
 
 describe('Accordion Harnesses', () => {
   let fixture: any;
@@ -24,7 +30,9 @@ describe('Accordion Harnesses', () => {
     imports: [AccordionGroup, AccordionPanel, AccordionTrigger],
     template: `
       <div ngAccordionGroup>
-        <div #panel1="ngAccordionPanel" ngAccordionPanel>Content 1</div>
+        <div #panel1="ngAccordionPanel" ngAccordionPanel>
+          <button class="test-button">Inside Content 1</button>
+        </div>
         <button ngAccordionTrigger [panel]="panel1">Section 1</button>
 
         <div #panel2="ngAccordionPanel" ngAccordionPanel>Content 2</div>
@@ -43,82 +51,100 @@ describe('Accordion Harnesses', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should find all accordion triggers', async () => {
-    const triggers = await loader.getAllHarnesses(AccordionTriggerHarness);
-    expect(triggers.length).toBe(2);
+  it('should find accordion group and list all scoped accordions using getAccordions', async () => {
+    const group = await loader.getHarness(AccordionGroupHarness);
+    const accordions = await group.getAccordions();
+
+    expect(accordions.length).toBe(2);
+    expect(await accordions[0].getTitle()).toBe('Section 1');
+    expect(await accordions[1].getTitle()).toBe('Section 2');
+  });
+
+  it('should find all individual accordions via standard root loader', async () => {
+    const accordions = await loader.getAllHarnesses(AccordionHarness);
+    expect(accordions.length).toBe(2);
+  });
+
+  it('should filter accordions by title', async () => {
+    const accordions = await loader.getAllHarnesses(AccordionHarness.with({title: 'Section 1'}));
+    expect(accordions.length).toBe(1);
+    expect(await accordions[0].getTitle()).toBe('Section 1');
+  });
+
+  it('should filter accordions by expanded state', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    await accordion.expand();
+
+    const expandedAccordions = await loader.getAllHarnesses(
+      AccordionHarness.with({expanded: true}),
+    );
+    expect(expandedAccordions.length).toBe(1);
+    expect(await expandedAccordions[0].getTitle()).toBe('Section 1');
+  });
+
+  it('should filter accordions by disabled state', async () => {
+    const disabledAccordions = await loader.getAllHarnesses(
+      AccordionHarness.with({disabled: true}),
+    );
+    expect(disabledAccordions.length).toBe(1);
+    expect(await disabledAccordions[0].getTitle()).toBe('Section 2');
+  });
+
+  it('should get the title of the accordion', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    expect(await accordion.getTitle()).toBe('Section 1');
+  });
+
+  it('should correctly report the expanded state of an accordion', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    expect(await accordion.isExpanded()).toBeFalse();
+  });
+
+  it('should correctly report the disabled state of an accordion', async () => {
+    const activeAccordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    const disabledAccordion = await loader.getHarness(AccordionHarness.with({title: 'Section 2'}));
+
+    expect(await activeAccordion.isDisabled()).toBeFalse();
+    expect(await disabledAccordion.isDisabled()).toBeTrue();
+  });
+
+  it('expands a collapsed accordion using the expand method', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+
+    await accordion.expand();
+
+    expect(await accordion.isExpanded()).toBeTrue();
+  });
+
+  it('collapses an expanded accordion using the collapse method', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    await accordion.expand();
+
+    await accordion.collapse();
+
+    expect(await accordion.isExpanded()).toBeFalse();
+  });
+
+  it('toggles the expanded state of an accordion using the toggle method', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+
+    await accordion.toggle();
+
+    expect(await accordion.isExpanded()).toBeTrue();
   });
 
   it('should support focusing and blurring accordion triggers', async () => {
-    const trigger = await loader.getHarness(AccordionTriggerHarness.with({text: 'Section 1'}));
-    await trigger.focus();
-    expect(await trigger.isFocused()).toBeTrue();
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    await accordion.focus();
+    expect(await accordion.isFocused()).toBeTrue();
 
-    await trigger.blur();
-    expect(await trigger.isFocused()).toBeFalse();
+    await accordion.blur();
+    expect(await accordion.isFocused()).toBeFalse();
   });
 
-  it('should correctly report the disabled state of a trigger', async () => {
-    const activeTrigger = await loader.getHarness(
-      AccordionTriggerHarness.with({text: 'Section 1'}),
-    );
-    const disabledTrigger = await loader.getHarness(
-      AccordionTriggerHarness.with({text: 'Section 2'}),
-    );
-
-    expect(await activeTrigger.isDisabled()).toBeFalse();
-    expect(await disabledTrigger.isDisabled()).toBeTrue();
-  });
-
-  it('should correctly report the expanded state of a trigger', async () => {
-    const trigger = await loader.getHarness(AccordionTriggerHarness.with({text: 'Section 1'}));
-    expect(await trigger.isExpanded()).toBeFalse();
-
-    await trigger.click();
-    expect(await trigger.isExpanded()).toBeTrue();
-  });
-
-  it('should filter triggers by disabled state', async () => {
-    const disabledTriggers = await loader.getAllHarnesses(
-      AccordionTriggerHarness.with({disabled: true}),
-    );
-    expect(disabledTriggers.length).toBe(1);
-    expect(await disabledTriggers[0].getText()).toBe('Section 2');
-  });
-
-  it('should filter triggers by expanded state', async () => {
-    const trigger = await loader.getHarness(AccordionTriggerHarness.with({text: 'Section 1'}));
-    await trigger.click();
-
-    const expandedTriggers = await loader.getAllHarnesses(
-      AccordionTriggerHarness.with({expanded: true}),
-    );
-    expect(expandedTriggers.length).toBe(1);
-    expect(await expandedTriggers[0].getText()).toBe('Section 1');
-  });
-
-  it('should find the panel associated with a specific trigger', async () => {
-    const trigger = await loader.getHarness(AccordionTriggerHarness.with({text: 'Section 1'}));
-    const panel = await loader.getHarness(AccordionPanelHarness.with({trigger}));
-
-    expect(await panel.getText()).toBe('Content 1');
-  });
-
-  it('should correctly report the expanded state of an accordion panel', async () => {
-    const trigger = await loader.getHarness(AccordionTriggerHarness.with({text: 'Section 1'}));
-    const panel = await loader.getHarness(AccordionPanelHarness.with({trigger}));
-
-    expect(await panel.isExpanded()).toBeFalse();
-
-    await trigger.click();
-    expect(await panel.isExpanded()).toBeTrue();
-  });
-
-  it('should find accordion group and list scoped triggers and panels', async () => {
-    const group = await loader.getHarness(AccordionGroupHarness);
-    const triggers = await group.getTriggers();
-    const panels = await group.getPanels();
-
-    expect(triggers.length).toBe(2);
-    expect(panels.length).toBe(2);
+  it('should query components inside the accordion panel using ContentContainerComponentHarness', async () => {
+    const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
+    const button = await accordion.getHarness(TestButtonHarness);
+    expect(await button.getText()).toBe('Inside Content 1');
   });
 });
