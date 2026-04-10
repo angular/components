@@ -1,0 +1,30 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {BaseHarnessFilters} from '@angular/cdk/testing';
+
+/** A set of criteria that can be used to filter a list of tree harness instances */
+export interface TreeHarnessFilters extends BaseHarnessFilters {}
+
+/** A set of criteria that can be used to filter a list of tree item harness instances. */
+export interface TreeItemHarnessFilters extends BaseHarnessFilters {
+  /** Only find instances whose text matches the given value. */
+  text?: string | RegExp;
+
+  /** Only find instances whose disabled state matches the given value. */
+  disabled?: boolean;
+
+  /** Only find instances whose expansion state matches the given value. */
+  expanded?: boolean;
+
+  /** Only find instances whose selection state matches the given value. */
+  selected?: boolean;
+
+  /** Only find instances whose level matches the given value. */
+  level?: number;
+}
