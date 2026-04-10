@@ -184,7 +184,6 @@ $fallbacks: m3-fab.get-tokens();
   font-weight: token-utils.slot(fab-extended-label-text-weight, $fallbacks);
   letter-spacing: token-utils.slot(fab-extended-label-text-tracking, $fallbacks);
 
-    // Outer container padding: expanded state (asymmetrical layout)
     // LTR: 16px at start (close to icon), 20px at end (close to text)
     padding-left: 16px;
     padding-right: 20px;

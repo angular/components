@@ -16,7 +16,7 @@
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
     </button>
-    <button matFab extended [expanded]="false">
+    <button matFab extended [collapsed]="true">
       <mat-icon>search</mat-icon>
       Collapsed
     </button>
@@ -139,7 +139,7 @@
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
     </a>
-    <a href="//www.google.com" matFab extended [expanded]="false">
+    <a href="//www.google.com" matFab extended [collapsed]="true">
       <mat-icon>search</mat-icon>
       Collapsed
     </a>
@@ -351,13 +351,13 @@
   <h4 class="demo-section-header">Extended FABs</h4>
   <section>
        <p>
-        <mat-checkbox [(ngModel)]="extendFABExpanded">Expanded</mat-checkbox>
+        <mat-checkbox [(ngModel)]="extendFABCollapsed">Collapsed</mat-checkbox>
       </p>
-    <button matFab extended [expanded]="extendFABExpanded">
+    <button matFab extended [collapsed]="extendFABCollapsed">
       <mat-icon>edit</mat-icon>
       Compose
     </button>
-    <button matFab extended [expanded]="extendFABExpanded" color="primary">
+    <button matFab extended [collapsed]="extendFABCollapsed" color="primary">
       <mat-icon>edit</mat-icon>
       long long long text
     </button>

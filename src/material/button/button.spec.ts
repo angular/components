@@ -198,7 +198,7 @@ describe('MatButton', () => {
       expect(extendedFabButtonDebugEl.nativeElement.classList).toContain('mat-mdc-extended-fab');
     });
 
-    it('should default expanded to true', () => {
+    it('should default collapsed to false', () => {
       const fixture = TestBed.createComponent(TestApp);
       fixture.detectChanges();
       const extendedFabButtonDebugEl = fixture.debugElement.query(By.css('.extended-fab-test'))!;
@@ -207,29 +207,23 @@ describe('MatButton', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(extendedFabButtonDebugEl.nativeElement.classList).toContain(
-        'mat-mdc-extended-fab-expanded',
-      );
       expect(extendedFabButtonDebugEl.nativeElement.classList).not.toContain(
         'mat-mdc-extended-fab-collapsed',
       );
     });
 
-    it('should add mat-mdc-extended-fab-collapsed class when expanded is false', () => {
+    it('should add mat-mdc-extended-fab-collapsed class when collapsed is true', () => {
       const fixture = TestBed.createComponent(TestApp);
       fixture.detectChanges();
       const extendedFabButtonDebugEl = fixture.debugElement.query(By.css('.extended-fab-test'))!;
 
       fixture.componentInstance.extended = true;
-      fixture.componentInstance.expanded = false;
+      fixture.componentInstance.collapsed = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(extendedFabButtonDebugEl.nativeElement.classList).toContain(
         'mat-mdc-extended-fab-collapsed',
-      );
-      expect(extendedFabButtonDebugEl.nativeElement.classList).not.toContain(
-        'mat-mdc-extended-fab-expanded',
       );
     });
   });
@@ -568,7 +562,7 @@ describe('MatFabDefaultOptions', () => {
       Fab Button
       <span progressIndicator>Progress...</span>
     </button>
-    <button mat-fab [extended]="extended" [expanded]="expanded" class="extended-fab-test">Extended</button>
+    <button mat-fab [extended]="extended" [collapsed]="collapsed" class="extended-fab-test">Extended</button>
     <button mat-mini-fab [showProgress]="showProgress">
       Mini Fab Button
       <span progressIndicator>Progress...</span>
@@ -586,7 +580,7 @@ class TestApp {
   buttonColor!: ThemePalette;
   tabIndex!: number;
   extended = false;
-  expanded = true;
+  collapsed = false;
   disabledInteractive = false;
   appearance: MatButtonAppearance = 'text';
   showProgress = false;
