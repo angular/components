@@ -158,36 +158,44 @@ export class Listbox<V> {
       this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);
     }
 
-    afterRenderEffect(() => {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this._pattern.validate();
-        for (const violation of violations) {
-          console.error(violation);
+    // Check for any violationns after the DOM has been updated.
+    afterRenderEffect({
+      read: () => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          const violations = this._pattern.validate();
+          for (const violation of violations) {
+            console.error(violation);
+          }
         }
-      }
+      },
     });
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
     // Ensure that if the active item is removed from
     // the list, the listbox updates it's focus state.
-    afterRenderEffect(() => {
-      const items = inputs.items();
-      const activeItem = untracked(() => inputs.activeItem());
+    afterRenderEffect({
+      write: () => {
+        const items = inputs.items();
+        const activeItem = untracked(() => inputs.activeItem());
 
-      if (!items.some(i => i === activeItem) && activeItem) {
-        this._pattern.listBehavior.unfocus();
-      }
+        if (!items.some(i => i === activeItem) && activeItem) {
+          this._pattern.listBehavior.unfocus();
+        }
+      },
     });
 
     // Ensure that the value is always in sync with the available options.
-    afterRenderEffect(() => {
-      const items = inputs.items();
-      const value = untracked(() => this.value());
+    // This needs to be after the render for the value to always be available.
+    afterRenderEffect({
+      write: () => {
+        const items = inputs.items();
+        const value = untracked(() => this.value());
 
-      if (items && value.some(v => !items.some(i => i.value() === v))) {
-        this.value.set(value.filter(v => items.some(i => i.value() === v)));
-      }
+        if (items && value.some(v => !items.some(i => i.value() === v))) {
+          this.value.set(value.filter(v => items.some(i => i.value() === v)));
+        }
+      },
     });
   }
 
