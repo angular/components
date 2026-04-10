@@ -10,27 +10,14 @@ import {
   ComponentHarness,
   ContentContainerComponentHarness,
   HarnessPredicate,
-  BaseHarnessFilters,
 } from '@angular/cdk/testing';
+import {AccordionHarnessFilters, AccordionGroupHarnessFilters} from './accordion-harness-filters';
 
 /** Selectors for the sections that may contain user content. */
 export enum AccordionSection {
   TRIGGER = '[ngAccordionTrigger]',
   PANEL = '[ngAccordionPanel]',
 }
-
-/** Filters for locating an `AccordionHarness`. */
-export interface AccordionHarnessFilters extends BaseHarnessFilters {
-  /** Only find instances whose title text matches the given value. */
-  title?: string | RegExp;
-  /** Only find instances whose expanded state matches the given value. */
-  expanded?: boolean;
-  /** Only find instances whose disabled state matches the given value. */
-  disabled?: boolean;
-}
-
-/** Filters for locating an `AccordionGroupHarness`. */
-export interface AccordionGroupHarnessFilters extends BaseHarnessFilters {}
 
 /** Harness for interacting with a standard ngAccordion item in tests. */
 export class AccordionHarness extends ContentContainerComponentHarness<AccordionSection> {

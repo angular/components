@@ -7,3 +7,4 @@
  */
 
 export * from './accordion-harness';
+export * from './accordion-harness-filters';
