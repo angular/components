@@ -123,9 +123,7 @@ export class MenuBar<V> {
       element: computed(() => this._elementRef.nativeElement),
     });
 
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
-    });
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
   }
 
   /** Closes the menubar. */

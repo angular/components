@@ -187,9 +187,7 @@ export class Menu<V> {
       },
     });
 
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
-    });
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
   }
 
   /** Closes the menu. */

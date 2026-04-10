@@ -179,9 +179,8 @@ export class Tree<V> {
       }
     });
 
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
-    });
+    // Resets default focus based on selection state until interacted.
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
     afterRenderEffect(() => {
       const items = inputs.items();

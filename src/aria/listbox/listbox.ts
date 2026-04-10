@@ -167,9 +167,7 @@ export class Listbox<V> {
       }
     });
 
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
-    });
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
     // Ensure that if the active item is removed from
     // the list, the listbox updates it's focus state.

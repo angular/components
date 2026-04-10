@@ -105,9 +105,7 @@ export class Toolbar<V> {
   });
 
   constructor() {
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
-    });
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
   }
 
   _register(widget: ToolbarWidget<V>) {
