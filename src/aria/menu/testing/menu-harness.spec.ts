@@ -7,7 +7,8 @@
  */
 
 import {Component} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Menu} from '../menu';
 import {MenuContent} from '../menu-content';
@@ -17,22 +18,19 @@ import {MenuBar} from '../menu-bar';
 import {MenuItemHarness, MenuHarness} from './menu-harness';
 
 describe('Aria Menu Harness', () => {
-  let fixture: any;
-  let loader: any;
+  let fixture: ComponentFixture<MenuTestApp>;
+  let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [Menu, MenuItem, MenuTrigger, MenuBar, MenuContent, MenuTestApp],
-    });
-
     fixture = TestBed.createComponent(MenuTestApp);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should locate the menu harness', async () => {
-    const menu = await loader.getHarness(MenuHarness.with({triggerText: 'Open Menu'}));
-    expect(menu).toBeTruthy();
+    await expectAsync(
+      loader.getHarness(MenuHarness.with({triggerText: 'Open Menu'})),
+    ).toBeResolved();
   });
 
   it('should verify that the menu is initially closed', async () => {
@@ -88,7 +86,6 @@ describe('Aria Menu Harness', () => {
     fixture.detectChanges();
 
     const submenu = await subItem.getSubmenu();
-    expect(submenu).toBeTruthy();
     expect(await submenu!.isOpen()).toBe(true);
   });
 
@@ -109,7 +106,6 @@ describe('Aria Menu Harness', () => {
 
   it('should confirm persistent horizontal menu bars are always open', async () => {
     const menubar = await loader.getHarness(MenuHarness.with({selector: '[ngMenuBar]'}));
-    expect(menubar).toBeTruthy();
     expect(await menubar.isOpen()).toBe(true);
   });
 
