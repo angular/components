@@ -5,6 +5,7 @@ ARIA_ENTRYPOINTS = [
     "grid",
     "listbox",
     "menu",
+    "menu/testing",
     "tabs",
     "toolbar",
     "tree",
