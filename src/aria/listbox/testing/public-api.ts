@@ -7,3 +7,4 @@
  */
 
 export * from './listbox-harness';
+export * from './listbox-harness-filters';

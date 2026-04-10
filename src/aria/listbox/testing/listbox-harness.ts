@@ -6,22 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate, BaseHarnessFilters} from '@angular/cdk/testing';
-
-/** Selectors for the listbox sections. */
-export enum ListboxSection {
-  OPTION = '[ngOption]',
-}
-
-/** Filters for locating a `ListboxOptionHarness`. */
-export interface ListboxOptionHarnessFilters extends BaseHarnessFilters {
-  /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
-  /** Only find instances whose selected state matches the given value. */
-  selected?: boolean;
-  /** Only find instances whose disabled state matches the given value. */
-  disabled?: boolean;
-}
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {ListboxHarnessFilters, ListboxOptionHarnessFilters} from './listbox-harness-filters';
 
 export class ListboxOptionHarness extends ComponentHarness {
   static hostSelector = '[ngOption]';
@@ -65,10 +51,6 @@ export class ListboxOptionHarness extends ComponentHarness {
     const host = await this.host();
     return host.click();
   }
-}
-
-export interface ListboxHarnessFilters extends BaseHarnessFilters {
-  disabled?: boolean;
 }
 
 export class ListboxHarness extends ComponentHarness {

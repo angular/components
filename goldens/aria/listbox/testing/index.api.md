@@ -27,9 +27,8 @@ export class ListboxHarness extends ComponentHarness {
     static with(options?: ListboxHarnessFilters): HarnessPredicate<ListboxHarness>;
 }
 
-// @public (undocumented)
+// @public
 export interface ListboxHarnessFilters extends BaseHarnessFilters {
-    // (undocumented)
     disabled?: boolean;
 }
 
@@ -54,12 +53,6 @@ export interface ListboxOptionHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
     selected?: boolean;
     text?: string | RegExp;
-}
-
-// @public
-export enum ListboxSection {
-    // (undocumented)
-    OPTION = "[ngOption]"
 }
 
 // (No @packageDocumentation comment for this package)
