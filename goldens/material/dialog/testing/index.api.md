@@ -66,7 +66,7 @@ export enum MatDialogSection {
 
 // @public
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     closedResult: R | undefined;
     protected static component: ComponentType<unknown> | undefined;
     protected static config: MatDialogConfig | undefined;

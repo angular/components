@@ -26,8 +26,6 @@ export class ConfigurableFocusTrapFactory {
 
   private readonly _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const inertStrategy = inject(FOCUS_TRAP_INERT_STRATEGY, {optional: true});
 

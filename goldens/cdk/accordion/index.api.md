@@ -38,7 +38,6 @@ export class CdkAccordion implements OnDestroy, OnChanges {
 
 // @public
 export class CdkAccordionItem implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     accordion: CdkAccordion;
     close(): void;

@@ -207,8 +207,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   /** Whether the stepper is rendering on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

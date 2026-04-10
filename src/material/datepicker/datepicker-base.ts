@@ -187,8 +187,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Id of the label for the `role="dialog"` element. */
   _dialogLabelId: string | null = null;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     this._closeButtonText = inject(MatDatepickerIntl).closeCalendarLabel;
@@ -550,8 +548,6 @@ export abstract class MatDatepickerBase<
   readonly stateChanges = new Subject<void>();
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {

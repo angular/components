@@ -30,7 +30,4 @@ export class MatStepperIcon {
 
   /** Name of the icon to be overridden. */
   @Input('matStepperIcon') name!: StepState;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

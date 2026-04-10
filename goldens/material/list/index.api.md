@@ -103,7 +103,6 @@ export class MatListItemAvatar extends _MatListItemGraphicBase {
 
 // @public
 export class _MatListItemGraphicBase {
-    constructor(...args: unknown[]);
     // (undocumented)
     _isAlignedAtStart(): boolean;
     // (undocumented)
@@ -124,7 +123,6 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 
 // @public
 export class MatListItemLine {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -143,7 +141,6 @@ export class MatListItemMeta {
 
 // @public
 export class MatListItemTitle {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -234,7 +231,7 @@ export class MatNavList extends MatListBase {
 
 // @public (undocumented)
 export class MatSelectionList extends MatListBase implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     color: ThemePalette;
     compareWith: (o1: any, o2: any) => boolean;
     deselectAll(): MatListOption[];

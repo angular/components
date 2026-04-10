@@ -53,8 +53,6 @@ export class MatButton extends MatButtonBase {
   }
   private _appearance: MatButtonAppearance | null = null;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     const inferredAppearance = _inferAppearance(this._elementRef.nativeElement);

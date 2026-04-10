@@ -76,8 +76,6 @@ export class MatOptgroup {
   /** Whether the group is in inert a11y mode. */
   _inert: boolean;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});
     this._inert = parent?.inertGroups ?? false;

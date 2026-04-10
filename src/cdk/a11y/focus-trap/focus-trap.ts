@@ -379,7 +379,6 @@ export class FocusTrapFactory {
   private _document = inject(DOCUMENT);
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
   }
@@ -435,8 +434,6 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
    */
   @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute})
   autoCapture: boolean = false;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const platform = inject(Platform);

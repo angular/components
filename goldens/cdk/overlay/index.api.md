@@ -44,7 +44,7 @@ export const CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG: InjectionToken<CdkConnectedOv
 
 // @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     readonly attach: EventEmitter<void>;
     attachOverlay(): void;
     backdropClass: string | string[];
@@ -158,7 +158,6 @@ export interface CdkConnectedOverlayConfig {
 
 // @public
 export class CdkOverlayOrigin {
-    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<any>;
     // (undocumented)
@@ -169,7 +168,6 @@ export class CdkOverlayOrigin {
 
 // @public
 export class CdkScrollable implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
@@ -322,7 +320,6 @@ export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     protected _createContainer(): void;
     getFullscreenElement(): Element;
@@ -374,7 +371,6 @@ export interface OriginConnectionPosition {
 
 // @public
 export class Overlay {
-    constructor(...args: unknown[]);
     create(config?: OverlayConfig): OverlayRef;
     position(): OverlayPositionBuilder;
     // (undocumented)
@@ -419,7 +415,6 @@ export interface OverlayConnectionPosition {
 
 // @public
 export class OverlayContainer implements OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     protected _containerElement: HTMLElement | undefined;
     protected _createContainer(): void;
@@ -477,7 +472,6 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
 
 // @public
 export class OverlayPositionBuilder {
-    constructor(...args: unknown[]);
     flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
     global(): GlobalPositionStrategy;
     // (undocumented)
@@ -567,7 +561,6 @@ export interface RepositionScrollStrategyConfig {
 
 // @public
 export class ScrollDispatcher implements OnDestroy {
-    constructor(...args: unknown[]);
     ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
     deregister(scrollable: CdkScrollable): void;
     getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
@@ -604,7 +597,6 @@ export interface ScrollStrategy {
 
 // @public
 export class ScrollStrategyOptions {
-    constructor(...args: unknown[]);
     block: () => BlockScrollStrategy;
     close: (config?: CloseScrollStrategyConfig) => CloseScrollStrategy;
     noop: () => NoopScrollStrategy;
@@ -640,7 +632,7 @@ export type ViewportMargin = number | {
 
 // @public
 export class ViewportRuler implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     change(throttleTime?: number): Observable<Event>;
     protected _document: Document;
     getViewportRect(): {

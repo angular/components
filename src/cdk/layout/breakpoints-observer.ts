@@ -49,9 +49,6 @@ export class BreakpointObserver implements OnDestroy {
   /** A subject for all other observables to takeUntil based on. */
   private readonly _destroySubject = new Subject<void>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {
     this._destroySubject.next();

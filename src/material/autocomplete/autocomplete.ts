@@ -246,8 +246,6 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
    */
   readonly inertGroups: boolean;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const platform = inject(Platform);
 

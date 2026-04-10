@@ -29,7 +29,6 @@ export function normalizePassiveListenerOptions(options: AddEventListenerOptions
 
 // @public
 export class Platform {
-    constructor(..._args: unknown[]);
     ANDROID: boolean;
     BLINK: boolean;
     EDGE: boolean;

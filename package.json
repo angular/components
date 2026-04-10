@@ -53,7 +53,7 @@
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
     "prepare": "husky"
   },
-  "version": "22.0.0-next.3",
+  "version": "22.0.0-next.4",
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
@@ -76,7 +76,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#6ad9d06fa01e41fdf5262093ddd37667fffbf17b",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#1c95e84f330960eea28b5e3ed9b7a6a21b2c605b",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
@@ -121,7 +121,7 @@
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
     "magic-string": "0.30.21",
-    "marked": "^17.0.0",
+    "marked": "^18.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",
     "postcss": "^8.4.17",
@@ -132,7 +132,7 @@
     "rollup": "^4.52.3",
     "rollup-plugin-dts": "6.4.1",
     "rollup-plugin-sourcemaps2": "0.5.6",
-    "sass": "^1.97.2",
+    "sass": "^1.99.0",
     "selenium-webdriver": "^3.6.0",
     "semver": "^7.3.5",
     "shelljs": "^0.10.0",

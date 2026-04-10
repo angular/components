@@ -12,7 +12,6 @@ import { QueryList } from '@angular/core';
 
 // @public (undocumented)
 export class MatToolbar implements AfterViewInit {
-    constructor(...args: unknown[]);
     color?: string | null;
     // (undocumented)
     protected _elementRef: ElementRef<any>;

@@ -61,9 +61,6 @@ export class MatToolbar implements AfterViewInit {
   /** Reference to all toolbar row elements that have been projected. */
   @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows!: QueryList<MatToolbarRow>;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
       this._checkToolbarMixedModes();

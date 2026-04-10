@@ -85,9 +85,4 @@ export class Platform {
   // Safari browser should also use Webkit as its layout engine.
   /** Whether the current browser is Safari. */
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
-
-  /** Backwards-compatible constructor. */
-  constructor(..._args: unknown[]);
-
-  constructor() {}
 }

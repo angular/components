@@ -84,8 +84,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
    */
   @Input() color!: ThemePalette;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

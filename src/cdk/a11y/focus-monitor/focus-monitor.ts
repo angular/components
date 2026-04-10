@@ -147,8 +147,6 @@ export class FocusMonitor implements OnDestroy {
   /** Subject for stopping our InputModalityDetector subscription. */
   private readonly _stopInputModalityDetector = new Subject<void>();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const options = inject<FocusMonitorOptions | null>(FOCUS_MONITOR_DEFAULT_OPTIONS, {
       optional: true,
@@ -621,9 +619,6 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
   private _focusOrigin: FocusOrigin = null;
 
   @Output() readonly cdkFocusChange = new EventEmitter<FocusOrigin>();
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   get focusOrigin(): FocusOrigin {
     return this._focusOrigin;

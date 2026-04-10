@@ -40,7 +40,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
 
 // @public
 export class CdkPortal extends TemplatePortal {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortal, "[cdkPortal]", ["cdkPortal"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -49,7 +49,6 @@ export class CdkPortal extends TemplatePortal {
 
 // @public
 export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;

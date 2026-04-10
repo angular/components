@@ -45,8 +45,6 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   /** The injected locale. */
   private readonly _matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

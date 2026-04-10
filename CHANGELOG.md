@@ -1,3 +1,29 @@
+<a name="22.0.0-next.4"></a>
+# 22.0.0-next.4 "paper cup" (2026-04-08)
+## Breaking Changes
+### multiple
+- * A bunch of constructors that with rest arguments have been removed. If you were extending Material/CDK components, you may have to update your `super` calls accordingly.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [07c2d002de](https://github.com/angular/components/commit/07c2d002de52de1691410543a83ffffd7a0b373b) | fix | **core:** address sass compiler warnings ([#33040](https://github.com/angular/components/pull/33040)) |
+| [ab21f78b12](https://github.com/angular/components/commit/ab21f78b122e3478970ba1c5204469a7cb95f45e) | fix | **select:** wrong transform origin when opening upwards inside another overlay ([#33032](https://github.com/angular/components/pull/33032)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ce4c2c0a11](https://github.com/angular/components/commit/ce4c2c0a119e44bbeee0f4e4664a4a5e40820863) | fix | remove empty constructors ([#33048](https://github.com/angular/components/pull/33048)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
+<a name="21.2.6"></a>
+# 21.2.6 "steel bottle" (2026-04-08)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5b4bbe9c4f](https://github.com/angular/components/commit/5b4bbe9c4f8c902d6923b139e7a925822c899bc1) | fix | **select:** wrong transform origin when opening upwards inside another overlay ([#33032](https://github.com/angular/components/pull/33032)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-next.3"></a>
 # 22.0.0-next.3 "rubber-wombat" (2026-04-01)
 ## Breaking Changes

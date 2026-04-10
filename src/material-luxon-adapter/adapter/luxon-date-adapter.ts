@@ -64,8 +64,6 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   private _firstDayOfWeek: number | undefined;
   private _defaultOutputCalendar: LuxonCalendarSystem;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

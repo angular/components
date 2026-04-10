@@ -103,9 +103,6 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
   /** Unregister function for _expansionDispatcher. */
   private _removeUniqueSelectionListener: () => void = () => {};
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     this._removeUniqueSelectionListener = this._expansionDispatcher.listen(
       (id: string, accordionId: string) => {

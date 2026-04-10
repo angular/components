@@ -27,9 +27,6 @@ export class ScrollDispatcher implements OnDestroy {
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _cleanupGlobalListener: (() => void) | undefined;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   private readonly _scrolled = new Subject<CdkScrollable | void>();
 

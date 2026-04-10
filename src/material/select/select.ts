@@ -597,8 +597,6 @@ export class MatSelect
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultErrorStateMatcher = inject(ErrorStateMatcher);
     const parentForm = inject(NgForm, {optional: true});

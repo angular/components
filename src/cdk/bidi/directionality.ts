@@ -45,8 +45,6 @@ export class Directionality implements OnDestroy {
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const _document = inject(DIR_DOCUMENT, {optional: true});
 

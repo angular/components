@@ -68,8 +68,6 @@ export class CdkCopyToClipboard implements OnDestroy {
   /** Timeout for the current copy attempt. */
   private _currentTimeout: any;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const config = inject(CDK_COPY_TO_CLIPBOARD_CONFIG, {optional: true});
 

@@ -49,9 +49,6 @@ export class MatBottomSheet implements OnDestroy {
     }
   }
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Opens a bottom sheet containing the given component.
    * @param component Type of the component to load into the bottom sheet.

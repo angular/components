@@ -105,8 +105,6 @@ export class MatMiniFabButton extends MatButtonBase {
 
   override _isFab = true;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._options = this._options || defaults;

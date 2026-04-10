@@ -124,8 +124,6 @@ export class DataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._rowOutlet = this;
@@ -143,8 +141,6 @@ export class DataRowOutlet implements RowOutlet {
 export class HeaderRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
@@ -164,8 +160,6 @@ export class FooterRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._footerRowOutlet = this;
@@ -184,8 +178,6 @@ export class FooterRowOutlet implements RowOutlet {
 export class NoDataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
@@ -641,8 +633,6 @@ export class CdkTable<T>
 
   /** Row definition that will only be rendered if there's no data in the table. */
   @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const role = inject(new HostAttributeToken('role'), {optional: true});

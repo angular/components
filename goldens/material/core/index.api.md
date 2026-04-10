@@ -193,7 +193,7 @@ export class MatNativeDateModule {
 
 // @public
 export class MatOptgroup {
-    constructor(...args: unknown[]);
+    constructor();
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -208,7 +208,7 @@ export class MatOptgroup {
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
@@ -281,7 +281,6 @@ export class MatOptionSelectionChange<T = any> {
 
 // @public
 export class MatPseudoCheckbox {
-    constructor(...args: unknown[]);
     // (undocumented)
     _animationsDisabled: boolean;
     appearance: 'minimal' | 'full';
@@ -308,7 +307,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 // @public (undocumented)
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-    constructor(...args: unknown[]);
+    constructor();
     animation: RippleAnimationConfig;
     centered: boolean;
     color: string;
@@ -366,7 +365,7 @@ export class MatRippleModule {
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     addCalendarDays(date: Date, days: number): Date;
     // (undocumented)

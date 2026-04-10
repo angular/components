@@ -239,8 +239,6 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   /** Subscription to the current in-progress SVG icon request. */
   private _currentIconFetch = Subscription.EMPTY;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const ariaHidden = inject(new HostAttributeToken('aria-hidden'), {optional: true});
     const defaults = inject<MatIconDefaultOptions>(MAT_ICON_DEFAULT_OPTIONS, {optional: true});

@@ -16,9 +16,6 @@ import {PendingCopy} from './pending-copy';
 export class Clipboard {
   private readonly _document = inject(DOCUMENT);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Copies the provided text into the user's clipboard.
    *

@@ -65,7 +65,7 @@ export interface _MatInkBarPositioner {
 
 // @public
 export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _alignInkBarToSelectedTab(): void;
     // (undocumented)
     _animationsDisabled: boolean;
@@ -143,7 +143,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
 // @public (undocumented)
 export class MatTab implements OnInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     ariaLabel: string;
     ariaLabelledby: string;
     bodyClass: string | string[];
@@ -177,7 +177,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
 
 // @public
 export class MatTabBody implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly _afterLeavingCenter: EventEmitter<void>;
     animationDuration: string;
     readonly _beforeCentering: EventEmitter<boolean>;
@@ -208,7 +208,6 @@ export type MatTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -228,7 +227,6 @@ export class MatTabChangeEvent {
 
 // @public
 export class MatTabContent {
-    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -239,7 +237,7 @@ export class MatTabContent {
 
 // @public
 export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     alignTabs: string | null;
     _allTabs: QueryList<MatTab>;
     readonly animationDone: EventEmitter<void>;
@@ -398,7 +396,7 @@ export class MatTabLabelWrapper extends InkBarItem {
 
 // @public
 export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption {
-    constructor(...args: unknown[]);
+    constructor();
     get active(): boolean;
     set active(value: boolean);
     disabled: boolean;
@@ -447,7 +445,7 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
 
 // @public
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get animationDuration(): string;
     set animationDuration(value: string | number);

@@ -272,8 +272,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   readonly panelId: string = inject(_IdGenerator).getId('mat-menu-panel-');
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultOptions = inject<MatMenuDefaultOptions>(MAT_MENU_DEFAULT_OPTIONS);
     this.overlayPanelClass = defaultOptions.overlayPanelClass || '';

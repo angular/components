@@ -36,9 +36,6 @@ export class OverlayContainer implements OnDestroy {
   protected _document = inject(DOCUMENT);
   protected _styleLoader = inject(_CdkPrivateStyleLoader);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnDestroy() {
     this._containerElement?.remove();
   }

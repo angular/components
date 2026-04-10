@@ -75,7 +75,7 @@ export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestr
 
 // @public (undocumented)
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     addItem(_item: MatMenuItem): void;
     _allItems: QueryList<MatMenuItem>;
@@ -145,7 +145,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
 // @public
 export class MatMenuContent implements OnDestroy {
-    constructor(...args: unknown[]);
     attach(context?: any): void;
     readonly _attached: Subject<void>;
     detach(): void;
@@ -169,7 +168,7 @@ export interface MatMenuDefaultOptions {
 
 // @public
 export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _checkDisabled(event: Event): void;
     disabled: boolean;
     disableRipple: boolean;
@@ -257,7 +256,7 @@ export interface MatMenuPanel<T = any> {
 
 // @public
 export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     closeMenu(): void;
     // @deprecated (undocumented)
     get _deprecatedMatMenuTriggerFor(): MatMenuPanel | null;

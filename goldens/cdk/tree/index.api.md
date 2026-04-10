@@ -50,7 +50,6 @@ export const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
 // @public
 export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
     protected _children: T[];
     protected _clear(): void;
     // (undocumented)
@@ -71,7 +70,6 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements Af
 
 // @public
 export class CdkTree<T, K = T> implements AfterContentChecked, AfterContentInit, AfterViewInit, CollectionViewer, OnDestroy, OnInit {
-    constructor(...args: unknown[]);
     childrenAccessor?: (dataNode: T) => T[] | Observable<T[]>;
     collapse(dataNode: T): void;
     collapseAll(): void;
@@ -142,7 +140,7 @@ export class CdkTreeModule {
 
 // @public
 export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerItem {
-    constructor(...args: unknown[]);
+    constructor();
     activate(): void;
     readonly activation: EventEmitter<T>;
     collapse(): void;
@@ -212,7 +210,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
 // @public
 export class CdkTreeNodeDef<T> {
-    constructor(...args: unknown[]);
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
@@ -223,7 +220,6 @@ export class CdkTreeNodeDef<T> {
 
 // @public
 export class CdkTreeNodeOutlet {
-    constructor(...args: unknown[]);
     // (undocumented)
     _node?: {} | null | undefined;
     // (undocumented)
@@ -245,7 +241,7 @@ export class CdkTreeNodeOutletContext<T> {
 
 // @public
 export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get indent(): number | string;
     set indent(indent: number | string);
     // (undocumented)
@@ -272,7 +268,6 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
 
 // @public
 export class CdkTreeNodeToggle<T, K = T> {
-    constructor(...args: unknown[]);
     // (undocumented)
     static ngAcceptInputType_recursive: unknown;
     recursive: boolean;

@@ -263,10 +263,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   }
   private _disabledInteractive = false;
 
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   /**
    * Initialize properties once content children are available.
    * This allows us to propagate relevant attributes to associated buttons.
@@ -599,8 +595,6 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   _noopAnimations = _animationsDisabled();
 
   private _injector = inject(Injector);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

@@ -31,9 +31,6 @@ export class IsFocusableConfig {
 export class InteractivityChecker {
   private _platform = inject(Platform);
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   /**
    * Gets whether an element is disabled.
    *

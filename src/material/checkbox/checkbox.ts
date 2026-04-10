@@ -240,8 +240,6 @@ export class MatCheckbox
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
   private _validatorChangeFn = () => {};
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});

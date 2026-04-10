@@ -114,8 +114,6 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   private _renderer = inject(Renderer2);
   private _cleanupTransitionEnd: (() => void) | undefined;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const animationsState = _getAnimationsState();
 

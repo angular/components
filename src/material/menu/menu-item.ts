@@ -76,8 +76,6 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   /** Whether the menu item acts as a trigger for a sub-menu. */
   _triggersSubmenu: boolean = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     this._parentMenu?.addItem?.(this);

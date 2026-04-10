@@ -50,9 +50,6 @@ export class MatDialogClose implements OnInit, OnChanges {
 
   @Input('matDialogClose') _matDialogClose: any;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (!this.dialogRef) {
       // When this directive is included in a dialog via TemplateRef (rather than being
@@ -90,10 +87,6 @@ export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
   protected _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _dialog = inject(MatDialog);
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   protected abstract _onAdd(): void;
   protected abstract _onRemove(): void;

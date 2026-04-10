@@ -51,8 +51,6 @@ export class HighContrastModeDetector implements OnDestroy {
   private _document = inject(DOCUMENT);
   private _breakpointSubscription: Subscription;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._breakpointSubscription = inject(BreakpointObserver)
       .observe('(forced-colors: active)')
