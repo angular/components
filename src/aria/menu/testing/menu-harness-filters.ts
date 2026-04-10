@@ -8,14 +8,11 @@
 
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
-/** Filters for locating a `MenuTriggerHarness`. */
-export interface MenuTriggerHarnessFilters extends BaseHarnessFilters {
-  /** Only find instances whose text matches the given value. */
-  text?: string | RegExp;
-}
-
 /** Filters for locating a `MenuHarness`. */
-export interface MenuHarnessFilters extends BaseHarnessFilters {}
+export interface MenuHarnessFilters extends BaseHarnessFilters {
+  /** Only find instances whose trigger text matches the given value. */
+  triggerText?: string | RegExp;
+}
 
 /** Filters for locating a `MenuItemHarness`. */
 export interface MenuItemHarnessFilters extends BaseHarnessFilters {

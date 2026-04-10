@@ -7,36 +7,34 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { TestElement } from '@angular/cdk/testing';
 
 // @public
 export class MenuHarness extends ComponentHarness {
-    // (undocumented)
+    close(): Promise<void>;
     getItems(filters?: MenuItemHarnessFilters): Promise<MenuItemHarness[]>;
+    _getTrigger(): Promise<TestElement | null>;
     // (undocumented)
     static hostSelector: string;
+    isOpen(): Promise<boolean>;
+    open(): Promise<void>;
     // (undocumented)
     static with(options?: MenuHarnessFilters): HarnessPredicate<MenuHarness>;
 }
 
 // @public
 export interface MenuHarnessFilters extends BaseHarnessFilters {
+    triggerText?: string | RegExp;
 }
 
 // @public
 export class MenuItemHarness extends ComponentHarness {
-    // (undocumented)
     click(): Promise<void>;
-    // (undocumented)
     getSubmenu(): Promise<MenuHarness | null>;
-    // (undocumented)
     getText(): Promise<string>;
     // (undocumented)
-    hasSubmenu(): Promise<boolean>;
-    // (undocumented)
     static hostSelector: string;
-    // (undocumented)
     isDisabled(): Promise<boolean>;
-    // (undocumented)
     isExpanded(): Promise<boolean>;
     // (undocumented)
     static with(options?: MenuItemHarnessFilters): HarnessPredicate<MenuItemHarness>;
@@ -46,25 +44,6 @@ export class MenuItemHarness extends ComponentHarness {
 export interface MenuItemHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
     expanded?: boolean;
-    text?: string | RegExp;
-}
-
-// @public
-export class MenuTriggerHarness extends ComponentHarness {
-    // (undocumented)
-    click(): Promise<void>;
-    // (undocumented)
-    getMenu(filters?: MenuHarnessFilters): Promise<MenuHarness>;
-    // (undocumented)
-    getText(): Promise<string>;
-    // (undocumented)
-    static hostSelector: string;
-    // (undocumented)
-    static with(options?: MenuTriggerHarnessFilters): HarnessPredicate<MenuTriggerHarness>;
-}
-
-// @public
-export interface MenuTriggerHarnessFilters extends BaseHarnessFilters {
     text?: string | RegExp;
 }
 
