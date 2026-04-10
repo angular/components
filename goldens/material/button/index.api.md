@@ -66,7 +66,7 @@ export type MatFabAnchor = MatFabButton;
 
 // @public
 export class MatFabButton extends MatButtonBase {
-    constructor(...args: unknown[]);
+    constructor();
     expanded: boolean;
     // (undocumented)
     extended: boolean;

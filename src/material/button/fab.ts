@@ -77,8 +77,6 @@ export class MatFabButton extends MatButtonBase {
   /** Whether the extended-FAB is currently expanded. Has no effect on non-extended FABs. */
   @Input({transform: booleanAttribute}) expanded: boolean = true;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._options = this._options || defaults;

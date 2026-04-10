@@ -8,15 +8,9 @@
 @use './m3-fab';
 
 $m3-motion-tokens: m3-motion.md-sys-motion-values();
-$easing-emphasized: map.get($m3-motion-tokens, easing-emphasized);
-$easing-emphasized-decelerate: map.get($m3-motion-tokens, easing-emphasized-decelerate);
-$easing-emphasized-accelerate: map.get($m3-motion-tokens, easing-emphasized-accelerate);
 $easing-standard: map.get($m3-motion-tokens, easing-standard);
-$easing-standard-decelerate: map.get($m3-motion-tokens, easing-standard-decelerate);
-$easing-standard-accelerate: map.get($m3-motion-tokens, easing-standard-accelerate);
 $easing-legacy: map.get($m3-motion-tokens, easing-legacy);
 $easing-legacy-decelerate: map.get($m3-motion-tokens, easing-legacy-decelerate);
-$easing-legacy-accelerate: map.get($m3-motion-tokens, easing-legacy-accelerate);
 
 $fallbacks: m3-fab.get-tokens();
 
