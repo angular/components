@@ -170,36 +170,43 @@ export class Tree<V> {
       this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
     }
 
-    afterRenderEffect(() => {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        const violations = this._pattern.validate();
-        for (const violation of violations) {
-          console.error(violation);
+    // Check for any violationns after the DOM has been updated.
+    afterRenderEffect({
+      read: () => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          const violations = this._pattern.validate();
+          for (const violation of violations) {
+            console.error(violation);
+          }
         }
-      }
+      },
     });
 
     // Resets default focus based on selection state until interacted.
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
-    afterRenderEffect(() => {
-      const items = inputs.items();
-      const activeItem = untracked(() => inputs.activeItem());
+    afterRenderEffect({
+      write: () => {
+        const items = inputs.items();
+        const activeItem = untracked(() => inputs.activeItem());
 
-      if (!items.some(i => i === activeItem) && activeItem) {
-        this._pattern.treeBehavior.unfocus();
-      }
+        if (!items.some(i => i === activeItem) && activeItem) {
+          this._pattern.treeBehavior.unfocus();
+        }
+      },
     });
 
-    afterRenderEffect(() => {
-      if (!(this._pattern instanceof ComboboxTreePattern)) return;
+    afterRenderEffect({
+      write: () => {
+        if (!(this._pattern instanceof ComboboxTreePattern)) return;
 
-      const items = inputs.items();
-      const value = untracked(() => this.value());
+        const items = inputs.items();
+        const value = untracked(() => this.value());
 
-      if (items && value.some(v => !items.some(i => i.value() === v))) {
-        this.value.set(value.filter(v => items.some(i => i.value() === v)));
-      }
+        if (items && value.some(v => !items.some(i => i.value() === v))) {
+          this.value.set(value.filter(v => items.some(i => i.value() === v)));
+        }
+      },
     });
   }
 
