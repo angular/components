@@ -48,6 +48,8 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
   selector: '[ngToolbarWidget]',
   exportAs: 'ngToolbarWidget',
   host: {
+    // Ensure the attribute is applied even when used as a host directive.
+    'ngToolbarWidget': '',
     '[attr.data-active]': 'active()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
