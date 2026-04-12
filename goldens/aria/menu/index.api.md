@@ -93,9 +93,9 @@ export class MenuTrigger<V> {
     readonly element: HTMLElement;
     readonly expanded: _angular_core.Signal<boolean>;
     readonly hasPopup: _angular_core.Signal<boolean>;
-    menu: _angular_core.InputSignal<Menu<V> | undefined>;
+    readonly menu: _angular_core.InputSignal<Menu<V> | undefined>;
     open(): void;
-    _pattern: MenuTriggerPattern<V>;
+    readonly _pattern: MenuTriggerPattern<V>;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)

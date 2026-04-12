@@ -21,16 +21,16 @@ export class ComboboxListboxPattern<V>
   implements ComboboxListboxControls<OptionPattern<V>, V>
 {
   /** A unique identifier for the popup. */
-  id = computed(() => this.inputs.id());
+  readonly id = computed(() => this.inputs.id());
 
   /** The ARIA role for the listbox. */
-  role = computed(() => 'listbox' as const);
+  readonly role = computed(() => 'listbox' as const);
 
   /** The id of the active (focused) item in the listbox. */
-  activeId = computed(() => this.listBehavior.activeDescendant());
+  readonly activeId = computed(() => this.listBehavior.activeDescendant());
 
   /** The list of options in the listbox. */
-  items: SignalLike<OptionPattern<V>[]> = computed(() => this.inputs.items());
+  readonly items: SignalLike<OptionPattern<V>[]> = computed(() => this.inputs.items());
 
   /** The tab index for the listbox. Always -1 because the combobox handles focus. */
   override tabIndex: SignalLike<-1 | 0> = () => -1;
@@ -59,42 +59,42 @@ export class ComboboxListboxPattern<V>
   override setDefaultState(): void {}
 
   /** Navigates to the specified item in the listbox. */
-  focus = (item: OptionPattern<V>, opts?: {focusElement?: boolean}) => {
+  readonly focus = (item: OptionPattern<V>, opts?: {focusElement?: boolean}) => {
     this.listBehavior.goto(item, opts);
   };
 
   /** Navigates to the previous focusable item in the listbox. */
-  getActiveItem = () => this.inputs.activeItem();
+  readonly getActiveItem = () => this.inputs.activeItem();
 
   /** Navigates to the next focusable item in the listbox. */
-  next = () => this.listBehavior.next();
+  readonly next = () => this.listBehavior.next();
 
   /** Navigates to the previous focusable item in the listbox. */
-  prev = () => this.listBehavior.prev();
+  readonly prev = () => this.listBehavior.prev();
 
   /** Navigates to the last focusable item in the listbox. */
-  last = () => this.listBehavior.last();
+  readonly last = () => this.listBehavior.last();
 
   /** Navigates to the first focusable item in the listbox. */
-  first = () => this.listBehavior.first();
+  readonly first = () => this.listBehavior.first();
 
   /** Unfocuses the currently focused item in the listbox. */
-  unfocus = () => this.listBehavior.unfocus();
+  readonly unfocus = () => this.listBehavior.unfocus();
 
   /** Selects the specified item in the listbox. */
-  select = (item?: OptionPattern<V>) => this.listBehavior.select(item);
+  readonly select = (item?: OptionPattern<V>) => this.listBehavior.select(item);
 
   /** Toggles the selection state of the given item in the listbox. */
-  toggle = (item?: OptionPattern<V>) => this.listBehavior.toggle(item);
+  readonly toggle = (item?: OptionPattern<V>) => this.listBehavior.toggle(item);
 
   /** Clears the selection in the listbox. */
-  clearSelection = () => this.listBehavior.deselectAll();
+  readonly clearSelection = () => this.listBehavior.deselectAll();
 
   /** Retrieves the OptionPattern associated with a pointer event. */
-  getItem = (e: PointerEvent) => this._getItem(e);
+  readonly getItem = (e: PointerEvent) => this._getItem(e);
 
   /** Retrieves the currently selected items in the listbox. */
-  getSelectedItems = () => {
+  readonly getSelectedItems = () => {
     // NOTE: We need to do this funky for loop to preserve the order of the selected values.
     const items = [];
     for (const value of this.inputs.value()) {
@@ -107,5 +107,5 @@ export class ComboboxListboxPattern<V>
   };
 
   /** Sets the value of the combobox listbox. */
-  setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
+  readonly setValue = (value: V | undefined) => this.inputs.value.set(value ? [value] : []);
 }

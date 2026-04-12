@@ -67,7 +67,7 @@ export class MenuTrigger<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The menu associated with the trigger. */
-  menu = input<Menu<V> | undefined>(undefined);
+  readonly menu = input<Menu<V> | undefined>(undefined);
 
   /** Whether the menu is expanded. */
   readonly expanded = computed(() => this._pattern.expanded());
@@ -82,7 +82,7 @@ export class MenuTrigger<V> {
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The menu trigger ui pattern instance. */
-  _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
+  readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     textDirection: this.textDirection,
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),

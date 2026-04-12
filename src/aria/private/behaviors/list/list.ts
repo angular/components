@@ -50,28 +50,28 @@ export type ListInputs<T extends ListItem<V>, V> = ListFocusInputs<T> &
 /** Controls the state of a list. */
 export class List<T extends ListItem<V>, V> {
   /** Controls navigation for the list. */
-  navigationBehavior: ListNavigation<T>;
+  readonly navigationBehavior: ListNavigation<T>;
 
   /** Controls selection for the list. */
-  selectionBehavior: ListSelection<T, V>;
+  readonly selectionBehavior: ListSelection<T, V>;
 
   /** Controls typeahead for the list. */
-  typeaheadBehavior: ListTypeahead<T>;
+  readonly typeaheadBehavior: ListTypeahead<T>;
 
   /** Controls focus for the list. */
-  focusBehavior: ListFocus<T>;
+  readonly focusBehavior: ListFocus<T>;
 
   /** Whether the list is disabled. */
-  disabled = computed(() => this.focusBehavior.isListDisabled());
+  readonly disabled = computed(() => this.focusBehavior.isListDisabled());
 
   /** The id of the current active item. */
-  activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
+  readonly activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
   /** The tab index of the list. */
-  tabIndex = computed(() => this.focusBehavior.getListTabIndex());
+  readonly tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The index of the currently active item in the list. */
-  activeIndex = computed(() => this.focusBehavior.activeIndex());
+  readonly activeIndex = computed(() => this.focusBehavior.activeIndex());
 
   /**
    * The uncommitted index for selecting a range of options.
@@ -85,10 +85,10 @@ export class List<T extends ListItem<V>, V> {
    * In other words, "rangeStartIndex" is only set when a user commits to starting a range selection
    * while "anchorIndex" is set whenever a user indicates they may be starting a range selection.
    */
-  private _anchorIndex = signal(0);
+  private readonly _anchorIndex = signal(0);
 
   /** Whether the list should wrap. Used to disable wrapping while range selecting. */
-  private _wrap = signal(true);
+  private readonly _wrap = signal(true);
 
   constructor(readonly inputs: ListInputs<T, V>) {
     this.focusBehavior = new ListFocus(inputs);

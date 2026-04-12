@@ -44,15 +44,15 @@ export interface ListFocusInputs<T extends ListFocusItem> {
 /** Controls focus for a list of items. */
 export class ListFocus<T extends ListFocusItem> {
   /** The last item that was active. */
-  prevActiveItem = signal<T | undefined>(undefined);
+  readonly prevActiveItem = signal<T | undefined>(undefined);
 
   /** The index of the last item that was active. */
-  prevActiveIndex = computed(() => {
+  readonly prevActiveIndex = computed(() => {
     return this.prevActiveItem() ? this.inputs.items().indexOf(this.prevActiveItem()!) : -1;
   });
 
   /** The current active index in the list. */
-  activeIndex = computed(() => {
+  readonly activeIndex = computed(() => {
     return this.inputs.activeItem() ? this.inputs.items().indexOf(this.inputs.activeItem()!) : -1;
   });
 
