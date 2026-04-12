@@ -48,7 +48,7 @@ export class Option<V> {
   readonly element = inject(ElementRef).nativeElement as HTMLElement;
 
   /** Whether the option is currently active (focused). */
-  active = computed(() => this._pattern.active());
+  readonly active = computed(() => this._pattern.active());
 
   /** The parent Listbox. */
   private readonly _listbox = inject(LISTBOX);
@@ -59,19 +59,19 @@ export class Option<V> {
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
   /** The text used by the typeahead search. */
-  protected searchTerm = computed(() => this.label() ?? this.element.textContent);
+  protected readonly searchTerm = computed(() => this.label() ?? this.element.textContent);
 
   /** The parent Listbox UIPattern. */
   private readonly _listboxPattern = computed(() => this._listbox._pattern);
 
   /** The value of the option. */
-  value = input.required<V>();
+  readonly value = input.required<V>();
 
   /** Whether an item is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The text used by the typeahead search. */
-  label = input<string>();
+  readonly label = input<string>();
 
   /** Whether the option is selected. */
   readonly selected = computed(() => this._pattern.selected());

@@ -288,7 +288,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   });
 
   /** The pointerdown event manager for the tree. */
-  pointerdown = computed(() => {
+  readonly pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
     if (this.multi()) {

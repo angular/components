@@ -83,7 +83,7 @@ export class Toolbar<V> {
    * Whether to allow disabled items to receive focus. When `true`, disabled items are
    * focusable but not interactive. When `false`, disabled items are skipped during navigation.
    */
-  softDisabled = input(true, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** Whether the toolbar is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});

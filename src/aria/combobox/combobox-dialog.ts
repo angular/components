@@ -56,7 +56,7 @@ export class ComboboxDialog {
     optional: true,
   });
 
-  _pattern: ComboboxDialogPattern;
+  readonly _pattern: ComboboxDialogPattern;
 
   constructor() {
     this._pattern = new ComboboxDialogPattern({

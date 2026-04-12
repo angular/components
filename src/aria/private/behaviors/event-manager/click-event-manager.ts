@@ -43,7 +43,7 @@ export function isProgrammaticClick(event: Event): boolean {
  * when handling keyboard activation explicitly via KeyboardEventManager.
  */
 export class ClickEventManager<T extends PointerEvent> extends EventManager<T> {
-  options: EventHandlerOptions = {
+  readonly options: EventHandlerOptions = {
     preventDefault: false,
     stopPropagation: false,
   };

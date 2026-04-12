@@ -53,7 +53,7 @@ export class AccordionGroupPattern {
   }
 
   /** The key used to navigate to the previous accordion trigger. */
-  prevKey = computed(() => {
+  readonly prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -61,7 +61,7 @@ export class AccordionGroupPattern {
   });
 
   /** The key used to navigate to the next accordion trigger. */
-  nextKey = computed(() => {
+  readonly nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -69,7 +69,7 @@ export class AccordionGroupPattern {
   });
 
   /** The keydown event manager for the accordion trigger. */
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     return new KeyboardEventManager()
       .on(this.prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
       .on(this.nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
@@ -80,7 +80,7 @@ export class AccordionGroupPattern {
   });
 
   /** The pointerdown event manager for the accordion trigger. */
-  pointerdown = computed(() => {
+  readonly pointerdown = computed(() => {
     return new PointerEventManager().on(e => {
       const item = this._findTriggerPattern(e.target as Element);
       if (!item) return;

@@ -53,7 +53,7 @@ export interface ComboboxInputs<T extends ListItem<V>, V> {
 /** An interface that allows combobox popups to expose the necessary controls for the combobox. */
 export interface ComboboxListboxControls<T extends ListItem<V>, V> {
   /** A unique identifier for the popup. */
-  id: () => string;
+  readonly id: () => string;
 
   /** The ARIA role for the popup. */
   role: SignalLike<'listbox' | 'tree' | 'grid'>;
@@ -141,13 +141,13 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V> extends Combobox
 /** Controls the state of a combobox. */
 export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is expanded. */
-  expanded = signal(false);
+  readonly expanded = signal(false);
 
   /** Whether the combobox is disabled. */
-  disabled = () => this.inputs.disabled();
+  readonly disabled = () => this.inputs.disabled();
 
   /** The ID of the active item in the combobox. */
-  activeDescendant = computed(() => {
+  readonly activeDescendant = computed(() => {
     const popupControls = this.inputs.popupControls();
     if (popupControls instanceof ComboboxDialogPattern) {
       return null;
@@ -157,39 +157,43 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   });
 
   /** The currently highlighted item in the combobox. */
-  highlightedItem = signal<T | undefined>(undefined);
+  readonly highlightedItem = signal<T | undefined>(undefined);
 
   /** Whether the most recent input event was a deletion. */
-  isDeleting = false;
+  private _isDeleting = false;
 
   /** Whether the combobox is focused. */
-  isFocused = signal(false);
+  readonly isFocused = signal(false);
 
   /** Whether the combobox has ever been focused. */
-  hasBeenInteracted = signal(false);
+  readonly hasBeenInteracted = signal(false);
 
   /** The key used to navigate to the previous item in the list. */
-  expandKey = computed(() => (this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight'));
+  readonly expandKey = computed(() =>
+    this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight',
+  );
 
   /** The key used to navigate to the next item in the list. */
-  collapseKey = computed(() =>
+  readonly collapseKey = computed(() =>
     this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft',
   );
 
   /** The ID of the popup associated with the combobox. */
-  popupId = computed(() => this.inputs.popupControls()?.id() || null);
+  readonly popupId = computed(() => this.inputs.popupControls()?.id() || null);
 
   /** The autocomplete behavior of the combobox. */
-  autocomplete = computed(() => (this.inputs.filterMode() === 'highlight' ? 'both' : 'list'));
+  readonly autocomplete = computed(() =>
+    this.inputs.filterMode() === 'highlight' ? 'both' : 'list',
+  );
 
   /** The ARIA role of the popup associated with the combobox. */
-  hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
+  readonly hasPopup = computed(() => this.inputs.popupControls()?.role() || null);
 
   /** Whether the combobox is read-only. */
-  readonly = computed(() => this.inputs.readonly() || this.inputs.disabled() || null);
+  readonly readonly = computed(() => this.inputs.readonly() || this.inputs.disabled() || null);
 
   /** Returns the listbox controls for the combobox. */
-  listControls = () => {
+  readonly listControls = () => {
     const popupControls = this.inputs.popupControls();
 
     if (popupControls instanceof ComboboxDialogPattern) {
@@ -200,7 +204,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   };
 
   /** Returns the tree controls for the combobox. */
-  treeControls = () => {
+  readonly treeControls = () => {
     const popupControls = this.inputs.popupControls();
 
     if (popupControls?.role() === 'tree') {
@@ -211,7 +215,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   };
 
   /** The keydown event manager for the combobox. */
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
     const popupControls = this.inputs.popupControls();
 
@@ -289,7 +293,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   });
 
   /** The click event manager for the combobox. */
-  click = computed(() =>
+  readonly click = computed(() =>
     new PointerEventManager().on(e => {
       if (e.target === this.inputs.inputEl()) {
         if (this.readonly()) {
@@ -358,9 +362,9 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 
     this.open();
     this.inputs.inputValue?.set(inputEl.value);
-    this.isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
+    this._isDeleting = event instanceof InputEvent && !!event.inputType.match(/^delete/);
 
-    if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
+    if (this.inputs.filterMode() === 'highlight' && !this._isDeleting) {
       this.highlight();
     }
   }
@@ -420,7 +424,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
   }
 
   /** The first matching item in the combobox. */
-  firstMatch = computed(() => {
+  readonly firstMatch = computed(() => {
     // TODO(wagnermaciel): Consider whether we should not provide this default behavior for the
     // listbox. Instead, we may want to allow users to have no match so that typing does not focus
     // any option.
@@ -449,7 +453,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
     // When the user first interacts with the combobox, the popup will lazily render for the first
     // time. This is a simple way to detect this and avoid auto-focus & selection logic, but this
     // should probably be moved to the component layer instead.
-    const isInitialRender = !this.inputs.inputValue?.().length && !this.isDeleting;
+    const isInitialRender = !this.inputs.inputValue?.().length && !this._isDeleting;
 
     if (isInitialRender) {
       return;
@@ -479,7 +483,7 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
       this.select({item});
     }
 
-    if (this.inputs.filterMode() === 'highlight' && !this.isDeleting) {
+    if (this.inputs.filterMode() === 'highlight' && !this._isDeleting) {
       this.highlight();
     }
   }
@@ -710,11 +714,11 @@ export class ComboboxPattern<T extends ListItem<V>, V> {
 }
 
 export class ComboboxDialogPattern {
-  id = () => this.inputs.id();
+  readonly id = () => this.inputs.id();
 
-  role = () => 'dialog' as const;
+  readonly role = () => 'dialog' as const;
 
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     return new KeyboardEventManager().on('Escape', () => this.inputs.combobox.close());
   });
 

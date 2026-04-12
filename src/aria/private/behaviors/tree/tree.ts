@@ -61,37 +61,37 @@ class TreeListFocus<T extends TreeItem<V, T>, V> extends ListFocus<T> {
 /** Controls the state of a tree. */
 export class Tree<T extends TreeItem<V, T>, V> {
   /** Controls navigation for the tree. */
-  navigationBehavior: ListNavigation<T>;
+  readonly navigationBehavior: ListNavigation<T>;
 
   /** Controls selection for the tree. */
-  selectionBehavior: ListSelection<T, V>;
+  readonly selectionBehavior: ListSelection<T, V>;
 
   /** Controls typeahead for the tree. */
-  typeaheadBehavior: ListTypeahead<T>;
+  readonly typeaheadBehavior: ListTypeahead<T>;
 
   /** Controls focus for the tree. */
-  focusBehavior: ListFocus<T>;
+  readonly focusBehavior: ListFocus<T>;
 
   /** Controls expansion for the tree. */
-  expansionBehavior: ListExpansion;
+  readonly expansionBehavior: ListExpansion;
 
   /** Whether the tree is disabled. */
-  disabled = computed(() => this.focusBehavior.isListDisabled());
+  readonly disabled = computed(() => this.focusBehavior.isListDisabled());
 
   /** The id of the current active item. */
-  activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
+  readonly activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
   /** The tab index of the tree. */
-  tabIndex = computed(() => this.focusBehavior.getListTabIndex());
+  readonly tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The index of the currently active item in the tree (within the flattened list). */
-  activeIndex = computed(() => this.focusBehavior.activeIndex());
+  readonly activeIndex = computed(() => this.focusBehavior.activeIndex());
 
   /** The uncommitted index for selecting a range of options. */
-  private _anchorIndex = signal(0);
+  private readonly _anchorIndex = signal(0);
 
   /** Whether the list should wrap. */
-  private _wrap = signal(true);
+  private readonly _wrap = signal(true);
 
   constructor(readonly inputs: TreeInputs<T, V>) {
     this.focusBehavior = new TreeListFocus<T, V>(inputs);

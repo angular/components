@@ -78,7 +78,7 @@ import {ComboboxPopup} from './combobox-popup';
 })
 export class Combobox<V> {
   /** A signal wrapper for directionality. */
-  protected textDirection = inject(Directionality).valueSignal.asReadonly();
+  protected readonly textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The element that the combobox is attached to. */
   private readonly _elementRef = inject(ElementRef);
@@ -98,7 +98,7 @@ export class Combobox<V> {
    * - `auto-select`: The combobox automatically selects the first matching option.
    * - `highlight`: The combobox highlights matching text in the options without changing selection.
    */
-  filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
+  readonly filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
 
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});

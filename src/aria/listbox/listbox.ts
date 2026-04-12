@@ -88,53 +88,53 @@ export class Listbox<V> {
   private readonly _options = contentChildren(Option, {descendants: true});
 
   /** A signal wrapper for directionality. */
-  protected textDirection = inject(Directionality).valueSignal.asReadonly();
+  protected readonly textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The Option UIPatterns of the child Options. */
-  protected items = computed<OptionPattern<V>[]>(() =>
+  protected readonly items = computed<OptionPattern<V>[]>(() =>
     this._options().map(option => option._pattern),
   );
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('vertical');
+  readonly orientation = input<'vertical' | 'horizontal'>('vertical');
 
   /** Whether multiple items in the list can be selected at once. */
-  multi = input(false, {transform: booleanAttribute});
+  readonly multi = input(false, {transform: booleanAttribute});
 
   /** Whether focus should wrap when navigating. */
-  wrap = input(true, {transform: booleanAttribute});
+  readonly wrap = input(true, {transform: booleanAttribute});
 
   /**
    * Whether to allow disabled items to receive focus. When `true`, disabled items are
    * focusable but not interactive. When `false`, disabled items are skipped during navigation.
    */
-  softDisabled = input(true, {transform: booleanAttribute});
+  readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /**
    * The focus strategy used by the list.
    * - `roving`: Focus is moved to the active item using `tabindex`.
    * - `activedescendant`: Focus remains on the listbox container, and `aria-activedescendant` is used to indicate the active item.
    */
-  focusMode = input<'roving' | 'activedescendant'>('roving');
+  readonly focusMode = input<'roving' | 'activedescendant'>('roving');
 
   /**
    * The selection strategy used by the list.
    * - `follow`: The focused item is automatically selected.
    * - `explicit`: Items are selected explicitly by the user (e.g., via click or spacebar).
    */
-  selectionMode = input<'follow' | 'explicit'>('follow');
+  readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** The amount of time before the typeahead search is reset. */
-  typeaheadDelay = input<number>(500); // Picked arbitrarily.
+  readonly typeaheadDelay = input<number>(500); // Picked arbitrarily.
 
   /** Whether the listbox is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** Whether the listbox is readonly. */
-  readonly = input(false, {transform: booleanAttribute});
+  readonly readonly = input(false, {transform: booleanAttribute});
 
   /** The values of the currently selected items. */
-  value = model<V[]>([]);
+  readonly value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;

@@ -26,7 +26,7 @@ export enum MouseButton {
 
 /** An event manager that is specialized for handling pointer events. */
 export class PointerEventManager<T extends PointerEvent> extends EventManager<T> {
-  options: EventHandlerOptions = {
+  readonly options: EventHandlerOptions = {
     preventDefault: false,
     stopPropagation: false,
   };

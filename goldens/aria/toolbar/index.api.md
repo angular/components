@@ -19,7 +19,7 @@ export class Toolbar<V> {
     readonly _pattern: ToolbarPattern<V>;
     // (undocumented)
     _register(widget: ToolbarWidget<V>): void;
-    softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)
     _unregister(widget: ToolbarWidget<V>): void;

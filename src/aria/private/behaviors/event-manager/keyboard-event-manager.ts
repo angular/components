@@ -29,7 +29,7 @@ type KeyCode = string | SignalLike<string> | RegExp;
  * propagation and prevents default on all events it handles.
  */
 export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<T> {
-  options: EventHandlerOptions = {
+  readonly options: EventHandlerOptions = {
     ignoreRepeat: true,
     preventDefault: true,
     stopPropagation: true,

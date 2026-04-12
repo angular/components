@@ -67,7 +67,7 @@ export class ComboboxInput {
   readonly combobox = inject(Combobox);
 
   /** The value of the input. */
-  value = model<string>('');
+  readonly value = model<string>('');
 
   constructor() {
     (this.combobox._pattern.inputs.inputEl as WritableSignal<HTMLInputElement>).set(

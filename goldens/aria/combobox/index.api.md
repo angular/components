@@ -16,14 +16,14 @@ export class Combobox<V> {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly expanded: _angular_core.Signal<boolean>;
-    filterMode: _angular_core.InputSignal<"manual" | "auto-select" | "highlight">;
+    readonly filterMode: _angular_core.InputSignal<"manual" | "auto-select" | "highlight">;
     readonly firstMatch: _angular_core.InputSignal<V | undefined>;
     readonly inputElement: _angular_core.Signal<HTMLInputElement | undefined>;
     open(): void;
     readonly _pattern: ComboboxPattern<any, V>;
     readonly popup: _angular_core.Signal<ComboboxPopup<V> | undefined>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
+    protected readonly textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox<any>, "[ngCombobox]", ["ngCombobox"], { "filterMode": { "alias": "filterMode"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "firstMatch": { "alias": "firstMatch"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; }, {}, ["popup"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
@@ -38,7 +38,7 @@ export class ComboboxDialog {
     readonly combobox: Combobox<any>;
     readonly element: HTMLElement;
     // (undocumented)
-    _pattern: ComboboxDialogPattern;
+    readonly _pattern: ComboboxDialogPattern;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxDialog, "dialog[ngComboboxDialog]", ["ngComboboxDialog"], {}, {}, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -50,7 +50,7 @@ export class ComboboxInput {
     constructor();
     readonly combobox: Combobox<any>;
     readonly element: HTMLElement;
-    value: _angular_core.ModelSignal<string>;
+    readonly value: _angular_core.ModelSignal<string>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxInput, "input[ngComboboxInput]", ["ngComboboxInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
