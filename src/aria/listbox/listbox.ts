@@ -133,6 +133,9 @@ export class Listbox<V> {
   /** Whether the listbox is readonly. */
   readonly readonly = input(false, {transform: booleanAttribute});
 
+  /** Whether the list is tabbable. */
+  tabbable = input(true, {transform: booleanAttribute});
+
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);
 
@@ -146,6 +149,7 @@ export class Listbox<V> {
       items: this.items,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
+      tabbable: this.tabbable,
       element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?._pattern,
     };
