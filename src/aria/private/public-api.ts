@@ -25,3 +25,4 @@ export * from './grid/row';
 export * from './grid/cell';
 export * from './grid/widget';
 export * from './deferred-content';
+export * from './disclosure/disclosure';
