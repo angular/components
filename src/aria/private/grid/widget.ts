@@ -7,7 +7,6 @@
  */
 
 import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
-import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import {
   SignalLike,
   computed,
@@ -17,7 +16,10 @@ import {
 import type {GridCellPattern} from './cell';
 
 /** The inputs for the `GridCellWidgetPattern`. */
-export interface GridCellWidgetInputs extends Omit<ListNavigationItem, 'index'> {
+export interface GridCellWidgetInputs {
+  /** Whether the widget is disabled. */
+  disabled: SignalLike<boolean>;
+
   /** The `GridCellPattern` that this widget belongs to. */
   cell: SignalLike<GridCellPattern>;
 
@@ -32,21 +34,13 @@ export interface GridCellWidgetInputs extends Omit<ListNavigationItem, 'index'> 
 }
 
 /** The UI pattern for a widget inside a grid cell. */
-export class GridCellWidgetPattern implements ListNavigationItem {
-  /** A unique identifier for the widget. */
-  readonly id: SignalLike<string> = () => this.inputs.id();
-
+export class GridCellWidgetPattern {
   /** The html element that should receive focus. */
   readonly element: SignalLike<HTMLElement> = () => this.inputs.element();
 
   /** The element that should receive focus. */
   readonly widgetHost: SignalLike<HTMLElement> = computed(
     () => this.inputs.focusTarget() ?? this.element(),
-  );
-
-  /** The index of the widget within the cell. */
-  readonly index: SignalLike<number> = computed(() =>
-    this.inputs.cell().inputs.widgets().indexOf(this),
   );
 
   /** Whether the widget is disabled. */
@@ -57,9 +51,9 @@ export class GridCellWidgetPattern implements ListNavigationItem {
   /** The tab index for the widget. */
   readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
 
-  /** Whether the widget is the active item in the widget list. */
+  /** Whether the widget is the active widget in the cell. */
   readonly active: SignalLike<boolean> = computed(
-    () => this.inputs.cell().active() && this.inputs.cell().activeWidget() === this,
+    () => this.inputs.cell().active() && this.inputs.cell().widget() === this,
   );
 
   /** Whether the widget is currently activated. */

@@ -39,7 +39,6 @@ export class GridCell {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly id: _angular_core.InputSignal<string>;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: GridCellPattern;
     readonly role: _angular_core.InputSignal<"gridcell" | "columnheader" | "rowheader">;
     readonly rowIndex: _angular_core.InputSignal<number | undefined>;
@@ -49,9 +48,8 @@ export class GridCell {
     protected readonly _tabIndex: Signal<number>;
     readonly tabindex: _angular_core.InputSignal<number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
-    readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCell, "[ngGridCell]", ["ngGridCell"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "rowSpan": { "alias": "rowSpan"; "required": false; "isSignal": true; }; "colSpan": { "alias": "colSpan"; "required": false; "isSignal": true; }; "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; "colIndex": { "alias": "colIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "selected": "selectedChange"; }, ["_widgets"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCell, "[ngGridCell]", ["ngGridCell"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "rowSpan": { "alias": "rowSpan"; "required": false; "isSignal": true; }; "colSpan": { "alias": "colSpan"; "required": false; "isSignal": true; }; "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; "colIndex": { "alias": "colIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "selected": "selectedChange"; }, ["_widget"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<GridCell, never>;
 }

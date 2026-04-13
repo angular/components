@@ -57,14 +57,13 @@ function createClickEvent(element: HTMLElement, mods?: ModifierKeys): PointerEve
 }
 
 interface TestWidgetData {
-  id?: string;
   widgetType?: 'simple' | 'complex' | 'editable';
   disabled?: boolean;
 }
 
 interface TestCellData {
   id?: string;
-  widgets?: TestWidgetData[];
+  widget?: TestWidgetData;
   selectable?: boolean;
   disabled?: boolean;
   rowSpan?: number;
@@ -95,8 +94,7 @@ function createGridRows(grid: GridPattern, data: TestRowData[]) {
         element: signal(document.createElement('div')),
         grid: signal(grid),
         row: signal(row),
-        widgets: signal([]),
-        wrap: signal(false),
+        widget: signal<GridCellWidgetPattern | undefined>(undefined),
         rowIndex: signal(cellData.rowIndex),
         colIndex: signal(cellData.colIndex),
         selectable: signal(cellData.selectable ?? true),
@@ -104,27 +102,23 @@ function createGridRows(grid: GridPattern, data: TestRowData[]) {
         rowSpan: signal(cellData.rowSpan ?? 1),
         colSpan: signal(cellData.colSpan ?? 1),
         selected: signal(cellData.selected ?? false),
-        orientation: signal('vertical'),
-        textDirection: signal('ltr'),
         getWidget: (el: Element | null) => builtWidgets.find(w => w.element() === el),
       };
       const cell = new GridCellPattern(cellInputs);
 
-      const cellWidgets = (cellData.widgets ?? []).map((widgetData, widgetIndex) => {
+      if (cellData.widget) {
         const widgetInputs: TestGridCellWidgetInputs = {
-          id: signal(widgetData.id ?? `widget-${rowIndex}-${colIndex}-${widgetIndex}`),
           cell: signal(cell),
           element: signal(document.createElement('div')),
-          widgetType: signal(widgetData.widgetType ?? 'simple'),
+          widgetType: signal(cellData.widget.widgetType ?? 'simple'),
           focusTarget: signal(undefined),
-          disabled: signal(widgetData.disabled ?? false),
+          disabled: signal(cellData.widget.disabled ?? false),
         };
         const widget = new GridCellWidgetPattern(widgetInputs);
         builtWidgets.push(widget);
-        return widget;
-      });
+        cellInputs.widget.set(widget);
+      }
 
-      cellInputs.widgets.set(cellWidgets);
       return cell;
     });
 
@@ -183,9 +177,8 @@ describe('Grid', () => {
     });
 
     it('should have correct initial properties for a widget pattern', () => {
-      const {grid} = createGrid([{cells: [{widgets: [{id: 'test-id'}]}]}], gridInputs);
-      const widget = grid.cells()[0][0].inputs.widgets()[0];
-      expect(widget.id()).toBe('test-id');
+      const {grid} = createGrid([{cells: [{widget: {}}]}], gridInputs);
+      const widget = grid.cells()[0][0].inputs.widget()!;
       expect(widget.isActivated()).toBe(false);
       expect(widget.disabled()).toBe(false);
     });
@@ -193,8 +186,8 @@ describe('Grid', () => {
     it('should compute element and widgetHost correctly', () => {
       const element = document.createElement('div');
       const focusTarget = document.createElement('button');
-      const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'simple'}]}]}], gridInputs);
-      const widget = grid.cells()[0][0].inputs.widgets()[0];
+      const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+      const widget = grid.cells()[0][0].inputs.widget()!;
       const widgetInputs = widget.inputs as TestGridCellWidgetInputs;
       widgetInputs.element.set(element);
       widgetInputs.focusTarget.set(focusTarget);
@@ -206,20 +199,10 @@ describe('Grid', () => {
       expect(widget.widgetHost()).toBe(element);
     });
 
-    it('should compute index correctly', () => {
-      const {grid} = createGrid(
-        [{cells: [{widgets: [{id: 'widget-1'}, {id: 'widget-2'}]}]}],
-        gridInputs,
-      );
-      const widgets = grid.cells()[0][0].inputs.widgets();
-      expect(widgets[0].index()).toBe(0);
-      expect(widgets[1].index()).toBe(1);
-    });
-
     it('should be disabled if cell is disabled', () => {
-      const {grid} = createGrid([{cells: [{widgets: [{disabled: false}]}]}], gridInputs);
+      const {grid} = createGrid([{cells: [{widget: {disabled: false}}]}], gridInputs);
       const cell = grid.cells()[0][0];
-      const widget = cell.inputs.widgets()[0];
+      const widget = cell.inputs.widget()!;
       const cellInputs = cell.inputs as TestGridCellInputs;
 
       cellInputs.disabled.set(true);
@@ -228,8 +211,8 @@ describe('Grid', () => {
 
     describe('Activation', () => {
       it('should activate and deactivate manually', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'complex'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.activate();
         expect(widget.isActivated()).toBe(true);
         widget.deactivate();
@@ -237,8 +220,8 @@ describe('Grid', () => {
       });
 
       it('should not activate if widgetType is simple', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'simple'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.activate();
         expect(widget.isActivated()).toBe(false);
       });
@@ -247,8 +230,8 @@ describe('Grid', () => {
         const host = document.createElement('div');
         const inner = document.createElement('button');
         host.appendChild(inner);
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'complex'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         (widget.inputs as TestGridCellWidgetInputs).focusTarget.set(host);
 
         widget.onFocusIn({target: inner} as unknown as FocusEvent);
@@ -257,8 +240,8 @@ describe('Grid', () => {
 
       it('should deactivate on focusout if focus leaves widgetHost', () => {
         const host = document.createElement('div');
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'complex'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         (widget.inputs as TestGridCellWidgetInputs).focusTarget.set(host);
 
         widget.activate();
@@ -269,41 +252,41 @@ describe('Grid', () => {
 
     describe('Keyboard Events', () => {
       it('should activate on Enter for complex widget', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'complex'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.onKeydown(enter());
         expect(widget.isActivated()).toBe(true);
       });
 
       it('should deactivate on Escape when activated', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'complex'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.activate();
         widget.onKeydown(escape());
         expect(widget.isActivated()).toBe(false);
       });
 
       it('should deactivate on Enter for editable widget when activated', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'editable'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'editable'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.activate();
         widget.onKeydown(enter());
         expect(widget.isActivated()).toBe(false);
       });
 
       it('should activate on character key for editable widget', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'editable'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'editable'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.onKeydown(a());
         expect(widget.isActivated()).toBe(true);
       });
 
       it('should not activate if disabled', () => {
         const {grid} = createGrid(
-          [{cells: [{widgets: [{widgetType: 'complex', disabled: true}]}]}],
+          [{cells: [{widget: {widgetType: 'complex', disabled: true}}]}],
           gridInputs,
         );
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const widget = grid.cells()[0][0].inputs.widget()!;
         widget.onKeydown(enter());
         expect(widget.isActivated()).toBe(false);
       });
@@ -370,122 +353,24 @@ describe('Grid', () => {
         expect(cell.tabIndex()).toBe(0);
       });
 
-      it('should be -1 if navigation is activated', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        grid.setDefaultStateEffect();
-        cell.navigationActivated.set(true);
-        expect(cell.tabIndex()).toBe(-1);
-      });
-
-      it('should be -1 if in single widget mode', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}]}]}], gridInputs);
+      it('should be -1 if cell contains a widget', () => {
+        const {grid} = createGrid([{cells: [{widget: {}}]}], gridInputs);
         const cell = grid.cells()[0][0];
         grid.setDefaultStateEffect();
         expect(cell.tabIndex()).toBe(-1);
-      });
-    });
-
-    describe('Widget Modes', () => {
-      it('should detect single widget mode', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        expect(cell.singleWidgetMode()).toBe(true);
-        expect(cell.multiWidgetMode()).toBe(false);
-      });
-
-      it('should detect multi widget mode', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        expect(cell.singleWidgetMode()).toBe(false);
-        expect(cell.multiWidgetMode()).toBe(true);
-      });
-    });
-
-    describe('Navigation', () => {
-      it('should start and stop navigation', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        cell.startNavigation();
-        expect(cell.navigationActivated()).toBe(true);
-        cell.stopNavigation();
-        expect(cell.navigationActivated()).toBe(false);
-      });
-
-      it('should focus element on stop navigation', () => {
-        const element = document.createElement('div');
-        spyOn(element, 'focus');
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        (cell.inputs as TestGridCellInputs).element.set(element);
-
-        cell.startNavigation();
-        cell.stopNavigation();
-        expect(element.focus).toHaveBeenCalled();
       });
     });
 
     describe('Keyboard Events', () => {
-      it('should start navigation on Enter in multi-widget mode', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
+      it('should delegate to widget', () => {
+        const {grid} = createGrid([{cells: [{widget: {}}]}], gridInputs);
         const cell = grid.cells()[0][0];
-        cell.onKeydown(enter());
-        expect(cell.navigationActivated()).toBe(true);
-      });
-
-      it('should stop navigation on Escape', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        cell.startNavigation();
-        cell.onKeydown(escape());
-        expect(cell.navigationActivated()).toBe(false);
-      });
-
-      it('should delegate to active widget in single widget mode', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        const widget = cell.inputs.widgets()[0];
+        const widget = cell.inputs.widget()!;
         spyOn(widget, 'onKeydown');
 
         const event = enter();
         cell.onKeydown(event);
         expect(widget.onKeydown).toHaveBeenCalledWith(event);
-      });
-
-      it('should navigate widgets on arrow keys during navigation', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        const widget = cell.inputs.widgets()[1];
-        spyOn(widget, 'focus');
-
-        grid.gridBehavior.focusBehavior.focusCell(cell);
-        cell.startNavigation();
-        cell.onKeydown(down());
-        expect(cell.activeWidget()).toBe(widget);
-        expect(widget.focus).toHaveBeenCalled();
-      });
-    });
-
-    describe('Focus Events', () => {
-      it('should update active widget and start navigation on focusin', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        const w2 = cell.inputs.widgets()[1];
-        spyOn(w2, 'onFocusIn');
-
-        grid.gridBehavior.focusBehavior.focusCell(cell);
-        cell.onFocusIn({target: w2.element()} as unknown as FocusEvent);
-        expect(cell.activeWidget()).toBe(w2);
-        expect(cell.navigationActivated()).toBe(true);
-        expect(w2.onFocusIn).toHaveBeenCalled();
-      });
-
-      it('should reset navigation state on focusout', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{}, {}]}]}], gridInputs);
-        const cell = grid.cells()[0][0];
-        cell.startNavigation();
-        cell.onFocusOut({target: document.createElement('div')} as unknown as FocusEvent);
-        expect(cell.navigationActivated()).toBe(false);
       });
     });
   });

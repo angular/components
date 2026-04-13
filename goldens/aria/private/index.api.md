@@ -292,20 +292,19 @@ export class DeferredContentAware {
 }
 
 // @public
-export interface GridCellInputs extends GridCell, Omit<ListNavigationInputs<GridCellWidgetPattern>, 'focusMode' | 'items' | 'activeItem' | 'softDisabled' | 'element'> {
+export interface GridCellInputs extends GridCell {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
     grid: SignalLike<GridPattern>;
     row: SignalLike<GridRowPattern>;
     rowIndex: SignalLike<number | undefined>;
-    widgets: SignalLike<GridCellWidgetPattern[]>;
+    widget: SignalLike<GridCellWidgetPattern | undefined>;
 }
 
 // @public
 export class GridCellPattern implements GridCell {
     constructor(inputs: GridCellInputs);
     readonly active: SignalLike<boolean>;
-    readonly activeWidget: WritableSignalLike<GridCellWidgetPattern | undefined>;
     readonly anchor: SignalLike<true | undefined>;
     readonly ariaColIndex: SignalLike<number | undefined>;
     readonly ariaRowIndex: SignalLike<number | undefined>;
@@ -314,43 +313,33 @@ export class GridCellPattern implements GridCell {
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;
-    readonly focusBehavior: ListFocus<GridCellWidgetPattern>;
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: GridCellInputs;
     readonly isActivated: SignalLike<boolean>;
     readonly isFocused: WritableSignalLike<boolean>;
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    readonly multiWidgetMode: SignalLike<boolean>;
-    readonly navigationActivated: WritableSignalLike<boolean>;
-    readonly navigationBehavior: ListNavigation<GridCellWidgetPattern>;
-    readonly navigationDisabled: SignalLike<boolean>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly rowSpan: SignalLike<number>;
     readonly selectable: SignalLike<boolean>;
     readonly selected: WritableSignalLike<boolean>;
-    readonly singleWidgetMode: SignalLike<boolean>;
-    startNavigation(): void;
-    stopNavigation(): void;
     readonly tabIndex: SignalLike<-1 | 0>;
-    readonly widgetActivated: SignalLike<boolean>;
+    readonly widget: SignalLike<GridCellWidgetPattern | undefined>;
     widgetTabIndex(): -1 | 0;
 }
 
 // @public
-export interface GridCellWidgetInputs extends Omit<ListNavigationItem, 'index'> {
+export interface GridCellWidgetInputs {
     cell: SignalLike<GridCellPattern>;
+    disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement>;
     focusTarget: SignalLike<HTMLElement | undefined>;
     widgetType: SignalLike<'simple' | 'complex' | 'editable'>;
 }
 
 // @public
-export class GridCellWidgetPattern implements ListNavigationItem {
+export class GridCellWidgetPattern {
     constructor(inputs: GridCellWidgetInputs);
     activate(event?: KeyboardEvent | FocusEvent): void;
     readonly active: SignalLike<boolean>;
@@ -358,8 +347,6 @@ export class GridCellWidgetPattern implements ListNavigationItem {
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;
-    readonly id: SignalLike<string>;
-    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: GridCellWidgetInputs;
     readonly isActivated: WritableSignalLike<boolean>;
