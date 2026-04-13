@@ -29,12 +29,6 @@ describe('Tree', () => {
     defineTestVariables();
   };
 
-  const pointerDown = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
-    defineTestVariables();
-  };
-
   const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
   const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
   const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
@@ -49,9 +43,19 @@ describe('Tree', () => {
       keydown(char);
     }
   };
-  const click = (target: HTMLElement) => pointerDown(target);
-  const shiftClick = (target: HTMLElement) => pointerDown(target, {shiftKey: true});
-  const ctrlClick = (target: HTMLElement) => pointerDown(target, {ctrlKey: true});
+  const clickHelper = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
+    target.dispatchEvent(
+      new PointerEvent('click', {
+        bubbles: true,
+        ...eventInit,
+      }),
+    );
+    fixture.detectChanges();
+    defineTestVariables();
+  };
+  const click = (target: HTMLElement) => clickHelper(target);
+  const shiftClick = (target: HTMLElement) => clickHelper(target, {shiftKey: true});
+  const ctrlClick = (target: HTMLElement) => clickHelper(target, {ctrlKey: true});
 
   function setupTestTree(textDirection: Direction = 'ltr') {
     TestBed.configureTestingModule({

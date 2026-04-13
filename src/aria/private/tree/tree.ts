@@ -13,7 +13,7 @@ import {
   signal,
 } from '../behaviors/signal-like/signal-like';
 import {Tree, TreeItem, TreeInputs as TreeBehaviorInputs} from '../behaviors/tree/tree';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
 export interface TreeItemInputs<V> extends Omit<
@@ -287,26 +287,26 @@ export class TreePattern<V> implements TreeInputs<V> {
     return manager;
   });
 
-  /** The pointerdown event manager for the tree. */
-  readonly pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the tree. */
+  readonly clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.multi()) {
-      manager.on(Modifier.Shift, e => this.goto(e, {selectRange: true}));
+      manager.on(Modifier.Shift, (e: PointerEvent) => this.goto(e, {selectRange: true}));
     }
 
     if (!this.multi()) {
-      return manager.on(e => this.goto(e, {selectOne: true}));
+      return manager.on((e: PointerEvent) => this.goto(e, {selectOne: true}));
     }
 
     if (this.multi() && this.followFocus()) {
       return manager
-        .on(e => this.goto(e, {selectOne: true}))
-        .on(Modifier.Ctrl, e => this.goto(e, {toggle: true}));
+        .on((e: PointerEvent) => this.goto(e, {selectOne: true}))
+        .on(Modifier.Ctrl, (e: PointerEvent) => this.goto(e, {toggle: true}));
     }
 
     if (this.multi() && !this.followFocus()) {
-      return manager.on(e => this.goto(e, {toggle: true}));
+      return manager.on((e: PointerEvent) => this.goto(e, {toggle: true}));
     }
 
     return manager;
@@ -429,11 +429,11 @@ export class TreePattern<V> implements TreeInputs<V> {
     }
   }
 
-  /** Handles pointerdown events on the tree. */
-  onPointerdown(event: PointerEvent) {
+  /** Handles click events on the tree. */
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
       this.hasBeenInteracted.set(true);
-      this.pointerdown().handle(event);
+      this.clickManager().handle(event);
     }
   }
 

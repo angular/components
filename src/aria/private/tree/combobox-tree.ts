@@ -53,8 +53,8 @@ export class ComboboxTreePattern<V>
   /** Noop. The combobox handles keydown events. */
   override onKeydown(_: KeyboardEvent): void {}
 
-  /** Noop. The combobox handles pointerdown events. */
-  override onPointerdown(_: PointerEvent): void {}
+  /** Noop. The combobox handles click events. */
+  override onClick(_: PointerEvent): void {}
 
   /** Noop. The combobox controls the open state. */
   override setDefaultState(): void {}

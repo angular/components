@@ -21,7 +21,7 @@ describe('AccordionGroup', () => {
   };
 
   const click = (target: HTMLElement) => {
-    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+    target.dispatchEvent(new PointerEvent('click', {bubbles: true}));
     fixture.detectChanges();
   };
 

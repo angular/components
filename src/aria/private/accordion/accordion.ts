@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {
@@ -79,9 +79,9 @@ export class AccordionGroupPattern {
       .on('Enter', () => this.toggle());
   });
 
-  /** The pointerdown event manager for the accordion trigger. */
-  readonly pointerdown = computed(() => {
-    return new PointerEventManager().on(e => {
+  /** The click event manager for the accordion trigger. */
+  readonly click = computed(() => {
+    return new ClickEventManager<PointerEvent>().on((e: PointerEvent) => {
       const item = this._findTriggerPattern(e.target as Element);
       if (!item) return;
 
@@ -95,9 +95,9 @@ export class AccordionGroupPattern {
     this.keydown().handle(event);
   }
 
-  /** Handles pointerdown events on the trigger, delegating to the group if not disabled. */
-  onPointerdown(event: PointerEvent): void {
-    this.pointerdown().handle(event);
+  /** Handles click events on the trigger, delegating to the group if not disabled. */
+  onClick(event: PointerEvent): void {
+    this.click().handle(event);
   }
 
   /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */

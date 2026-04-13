@@ -15,6 +15,7 @@ export interface AccordionGroupInputs extends Omit<ListNavigationInputs<Accordio
 // @public
 export class AccordionGroupPattern {
     constructor(inputs: AccordionGroupInputs);
+    readonly click: SignalLike<ClickEventManager<PointerEvent>>;
     collapseAll(): void;
     expandAll(): void;
     readonly expansionBehavior: ListExpansion;
@@ -24,10 +25,9 @@ export class AccordionGroupPattern {
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<AccordionTriggerPattern>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    onClick(event: PointerEvent): void;
     onFocus(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    onPointerdown(event: PointerEvent): void;
-    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     toggle(): void;
 }
@@ -247,8 +247,8 @@ export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTr
     items: SignalLike<TreeItemPattern<V>[]>;
     readonly last: () => void;
     readonly next: () => void;
+    onClick(_: PointerEvent): void;
     onKeydown(_: KeyboardEvent): void;
-    onPointerdown(_: PointerEvent): void;
     readonly prev: () => void;
     readonly role: () => "tree";
     readonly select: (item?: TreeItemPattern<V>) => void;
@@ -877,6 +877,7 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
+    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly collapseKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     _collapseOrParent(opts?: SelectOptions): void;
     readonly currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
@@ -901,11 +902,10 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly multi: SignalLike<boolean>;
     readonly nav: SignalLike<boolean>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    onClick(event: PointerEvent): void;
     onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
-    onPointerdown(event: PointerEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly selectionMode: SignalLike<'follow' | 'explicit'>;
     setDefaultState(): void;
