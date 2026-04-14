@@ -72,26 +72,14 @@
           </div>
         </td>
         <td ngGridCell class="example-cell">
-          <div class="example-cell-tags">
-            <div
-              role="button"
-              ngGridCellWidget
-              widgetType="complex"
-              (activated)="chips.focus()"
-              #widget="ngGridCellWidget"
-            >
-              <grid-chips [(values)]="task.tags" [tabindex]="-1" #chips />
-            </div>
-            <input
-              name="tag-input"
-              autocomplete="off"
-              class="example-cell-tag-input"
-              ngGridCellWidget
-              widgetType="editable"
-              placeholder="add new tag"
-              (deactivated)="addTag($event, task, tagInput)"
-              #tagInput
-            />
+          <div
+            role="button"
+            ngGridCellWidget
+            widgetType="complex"
+            (activated)="chips.focus()"
+            #widget="ngGridCellWidget"
+          >
+            <grid-chips [(values)]="task.tags" [tabindex]="-1" #chips />
           </div>
         </td>
       </tr>

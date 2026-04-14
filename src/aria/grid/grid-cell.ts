@@ -11,7 +11,7 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
+  contentChild,
   Directive,
   ElementRef,
   inject,
@@ -21,7 +21,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridCellPattern} from '../private';
+import {GridCellPattern, GridCellWidgetPattern} from '../private';
 import {GridCellWidget} from './grid-cell-widget';
 import {GRID_CELL, GRID_ROW} from './grid-tokens';
 
@@ -55,12 +55,12 @@ export class GridCell {
   /** Whether the cell is currently active (focused). */
   readonly active = computed(() => this._pattern.active());
 
-  /** The widgets contained within this cell, if any. */
-  private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
+  /** The widget contained within this cell, if any. */
+  private readonly _widget = contentChild(GridCellWidget, {descendants: true});
 
   /** The UI pattern for the widget in this cell. */
-  private readonly _widgetPatterns: Signal<any[]> = computed(() =>
-    this._widgets().map(w => w._pattern),
+  private readonly _widgetPattern: Signal<GridCellWidgetPattern | undefined> = computed(
+    () => this._widget()?._pattern,
   );
 
   /** The parent row. */
@@ -96,12 +96,6 @@ export class GridCell {
   /** Whether the cell is selectable. */
   readonly selectable = input<boolean>(true);
 
-  /** Orientation of the widgets in the cell. */
-  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
-
-  /** Whether widgets navigation wraps. */
-  readonly wrap = input(true, {transform: booleanAttribute});
-
   /** The tabindex override. */
   readonly tabindex = input<number | undefined>();
 
@@ -118,7 +112,7 @@ export class GridCell {
     ...this,
     grid: this._row._gridPattern,
     row: () => this._row._pattern,
-    widgets: this._widgetPatterns,
+    widget: this._widgetPattern,
     getWidget: e => this._getWidget(e),
     element: () => this.element,
   });
@@ -160,11 +154,13 @@ export class GridCell {
   /** Gets the cell widget pattern for a given element. */
   private _getWidget(element: Element | null | undefined): any | undefined {
     let target = element;
+    const widget = this._widgetPattern();
+
+    if (!widget) return undefined;
 
     while (target) {
-      const pattern = this._widgetPatterns().find(w => w.element() === target);
-      if (pattern) {
-        return pattern;
+      if (widget.element() === target) {
+        return widget;
       }
 
       target = target.parentElement?.closest('[ngGridCellWidget]');

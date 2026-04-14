@@ -95,16 +95,6 @@ export class GridTableExample {
     this.tasks().forEach(t => t.selected.set(checked));
   }
 
-  addTag(event: KeyboardEvent | FocusEvent | undefined, task: TaskRow, inputEl: HTMLInputElement) {
-    if (event instanceof KeyboardEvent && event.key === 'Enter') {
-      const value = inputEl.value;
-      if (value.length > 0) {
-        task.tags.set([...task.tags(), value]);
-      }
-    }
-    inputEl.value = '';
-  }
-
   private _createRows(): TaskRow[] {
     return [
       {
