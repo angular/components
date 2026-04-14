@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import {TabPattern, HasElement} from '../private';
 import {TABS, TAB_LIST} from './tab-tokens';
+import {TabPanel} from './tab-panel';
 
 /**
  * A selectable tab in a TabList.
@@ -65,14 +66,17 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
+  /** Direct reference to panel associated with this tab.  */
+  readonly panelRef = input<TabPanel>(undefined, {alias: 'panel'});
+
   /** The panel associated with this tab. */
-  readonly panel = computed(() => this._tabsWrapper.findTabPanel(this.value()));
+  readonly panel = computed(() => this.panelRef() ?? this._tabsWrapper.findTabPanel(this.value()));
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The remote tabpanel unique identifier. */
-  readonly value = input.required<string>();
+  readonly value = input<string>();
 
   /** Whether the tab is active. */
   readonly active = computed(() => this._pattern.active());

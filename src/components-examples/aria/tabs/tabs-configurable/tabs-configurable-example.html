@@ -29,12 +29,10 @@
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Tab selection</mat-label>
-    <mat-select [(value)]="tabSelection">
-      <mat-option value="tab-1">Tab 1</mat-option>
-      <mat-option value="tab-2">Tab 2</mat-option>
-      <mat-option value="tab-3">Tab 3</mat-option>
-      <mat-option value="tab-4">Tab 4</mat-option>
-      <mat-option value="tab-5">Tab 5</mat-option>
+    <mat-select [(value)]="selectedTab">
+      @for (tabDef of tabsData; track tabDef.value) {
+         <mat-option [value]="tabDef.value">{{ tabDef.label }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </div>
@@ -47,33 +45,17 @@
     [softDisabled]="softDisabled.value"
     [orientation]="orientation"
     [focusMode]="focusMode"
+    [selectedTab]="selectedTab"
     selectionMode="explicit"
-    [selectedTab]="tabSelection"
   >
-    <div ngTab value="tab-1">Tab 1</div>
-    <div ngTab value="tab-2">Tab 2</div>
-    <div ngTab value="tab-3">Tab 3</div>
-    <div ngTab value="tab-4">Tab 4</div>
-    <div ngTab value="tab-5">Tab 5</div>
+    @for (tabDef of tabsData; track tabDef.value) {
+      <div ngTab [value]="tabDef.value">{{ tabDef.label }}</div>
+    }    
   </div>
 
-  <div ngTabPanel value="tab-1">
-    <ng-template ngTabContent>Panel 1</ng-template>
-  </div>
-
-  <div ngTabPanel value="tab-2">
-    <ng-template ngTabContent>Panel 2</ng-template>
-  </div>
-
-  <div ngTabPanel value="tab-3">
-    <ng-template ngTabContent>Panel 3</ng-template>
-  </div>
-
-  <div ngTabPanel value="tab-4">
-    <ng-template ngTabContent>Panel 4</ng-template>
-  </div>
-
-  <div ngTabPanel value="tab-5">
-    <ng-template ngTabContent>Panel 5</ng-template>
-  </div>
+  @for (tabDef of tabsData; track tabDef.value) {
+    <div ngTabPanel [value]="tabDef.value">
+      <ng-template ngTabContent>{{ tabDef.label }}</ng-template>
+    </div>
+  }
 </div>

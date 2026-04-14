@@ -78,7 +78,7 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly _tabPattern: WritableSignal<TabPattern | undefined> = signal(undefined);
 
   /** A local unique identifier for the tabpanel. */
-  readonly value = input.required<string>();
+  readonly value = input<string>();
 
   /** Whether the tab panel is visible. */
   readonly visible = computed(() => !this._pattern.hidden());
