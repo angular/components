@@ -101,4 +101,13 @@ export class TabsHarness extends ComponentHarness {
     const tabs = await this.getTabs({selected: true});
     return tabs.length > 0 ? tabs[0] : null;
   }
+
+  /** Selects a tab matching the given filters. */
+  async selectTab(filters: TabHarnessFilters = {}): Promise<void> {
+    const tabs = await this.getTabs(filters);
+    if (tabs.length === 0) {
+      throw new Error(`Could not find tab matching filters: ${JSON.stringify(filters)}`);
+    }
+    await tabs[0].select();
+  }
 }

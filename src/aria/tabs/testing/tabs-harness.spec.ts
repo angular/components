@@ -71,6 +71,19 @@ describe('TabsHarness', () => {
     expect(await tabItems[1].isSelected()).toBe(true);
   });
 
+  it('should select tab matching filters', async () => {
+    const tabs = await loader.getHarness(TabsHarness);
+    const tabItems = await tabs.getTabs();
+
+    expect(await tabItems[0].isSelected()).toBe(true);
+    expect(await tabItems[1].isSelected()).toBe(false);
+
+    await tabs.selectTab({title: 'Tab 2'});
+
+    expect(await tabItems[0].isSelected()).toBe(false);
+    expect(await tabItems[1].isSelected()).toBe(true);
+  });
+
   it('should check disabled state', async () => {
     const tabs = await loader.getHarness(TabsHarness);
     const tabItems = await tabs.getTabs();

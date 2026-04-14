@@ -37,6 +37,7 @@ export class TabsHarness extends ComponentHarness {
     getTabs(filters?: TabHarnessFilters): Promise<TabHarness[]>;
     // (undocumented)
     static hostSelector: string;
+    selectTab(filters?: TabHarnessFilters): Promise<void>;
     static with(options?: TabsHarnessFilters): HarnessPredicate<TabsHarness>;
 }
 
