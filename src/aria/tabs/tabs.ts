@@ -6,11 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Directive, ElementRef, inject, signal} from '@angular/core';
+import {Directive, ElementRef, computed, effect, inject, signal} from '@angular/core';
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
 import {TABS} from './tab-tokens';
-import {TabPanelPattern, TabPattern} from '../private';
 
 /**
  * A Tabs container.
@@ -55,39 +54,48 @@ export class Tabs {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The TabList nested inside of the container. */
-  private readonly _tablist = signal<TabList | undefined>(undefined);
+  /** The TabList registered for this container. */
+  private readonly _tabList = signal<TabList | undefined>(undefined);
 
-  /** The TabPanels nested inside of the container. */
-  private readonly _unorderedPanels = signal(new Set<TabPanel>());
+  /** The TabPanels registered for this container. */
+  private readonly _tabPanels = signal(new Set<TabPanel>());
 
-  /** The Tab UIPattern of the child Tabs. */
-  readonly _tabPatterns = computed<TabPattern[] | undefined>(() => this._tablist()?._tabPatterns());
+  /** The TabPanels registered for this container. */
+  private readonly _tabPanelsList = computed(() => [...this._tabPanels()]);
 
-  /** The TabPanel UIPattern of the child TabPanels. */
-  readonly _unorderedTabpanelPatterns = computed<TabPanelPattern[]>(() =>
-    [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
-  );
+  constructor() {
+    effect(() => {
+      if (this._tabList()) {
+        for (const tab of this._tabList()!._sortedTabs()) {
+          const panel = this._tabPanelsList().find(panel => panel === tab.panel());
 
-  _register(child: TabList | TabPanel) {
-    if (child instanceof TabList) {
-      this._tablist.set(child);
-    }
-
-    if (child instanceof TabPanel) {
-      this._unorderedPanels().add(child);
-      this._unorderedPanels.set(new Set(this._unorderedPanels()));
-    }
+          if (panel) {
+            panel._tabPattern.set(tab._pattern);
+          }
+        }
+      }
+    });
   }
 
-  _unregister(child: TabList | TabPanel) {
-    if (child instanceof TabList) {
-      this._tablist.set(undefined);
-    }
+  _registerList(list: TabList) {
+    this._tabList.set(list);
+  }
 
-    if (child instanceof TabPanel) {
-      this._unorderedPanels().delete(child);
-      this._unorderedPanels.set(new Set(this._unorderedPanels()));
-    }
+  _unregisterList(list: TabList) {
+    this._tabList.set(undefined);
+  }
+
+  _registerPanel(panel: TabPanel) {
+    this._tabPanels().add(panel);
+    this._tabPanels.set(new Set(this._tabPanels()));
+  }
+
+  _unregisterPanel(panel: TabPanel) {
+    this._tabPanels().delete(panel);
+    this._tabPanels.set(new Set(this._tabPanels()));
+  }
+
+  findTabPanel(value?: string) {
+    return value ? this._tabPanelsList().find(panel => panel.value() === value) : undefined;
   }
 }
