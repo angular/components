@@ -9,6 +9,7 @@ ARIA_ENTRYPOINTS = [
     "menu",
     "menu/testing",
     "tabs",
+    "tabs/testing",
     "toolbar",
     "toolbar/testing",
     "tree",
