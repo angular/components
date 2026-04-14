@@ -660,14 +660,14 @@ export type SignalLike<T> = () => T;
 export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;
 
 // @public
-export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
-    tablist: SignalLike<TabListPattern>;
-    tabpanel: SignalLike<TabPanelPattern | undefined>;
-    value: SignalLike<string>;
+export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable' | 'expanded'> {
+    tabList: SignalLike<TabListPattern>;
+    tabPanel: SignalLike<TabPanelPattern | undefined>;
 }
 
 // @public
 export interface TabListInputs extends Omit<ListNavigationInputs<TabPattern>, 'multi'>, Omit<ListExpansionInputs, 'multiExpandable' | 'items'> {
+    selectedTab: WritableSignalLike<TabPattern | undefined>;
     selectionMode: SignalLike<'follow' | 'explicit'>;
 }
 
@@ -690,7 +690,6 @@ export class TabListPattern {
     onClick(event: PointerEvent): void;
     onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
-    open(value: string): boolean;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
@@ -703,8 +702,7 @@ export class TabListPattern {
 // @public
 export interface TabPanelInputs extends LabelControlOptionalInputs {
     id: SignalLike<string>;
-    tab: SignalLike<TabPattern | undefined>;
-    value: SignalLike<string>;
+    readonly tab: SignalLike<TabPattern | undefined>;
 }
 
 // @public
@@ -717,7 +715,6 @@ export class TabPanelPattern {
     readonly labelledBy: SignalLike<string | undefined>;
     readonly labelManager: LabelControl;
     readonly tabIndex: SignalLike<-1 | 0>;
-    readonly value: SignalLike<string>;
 }
 
 // @public
@@ -728,15 +725,14 @@ export class TabPattern {
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
+    // (undocumented)
     readonly expanded: WritableSignalLike<boolean>;
     readonly id: SignalLike<string>;
-    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: TabInputs;
     open(): boolean;
     readonly selected: SignalLike<boolean>;
     readonly tabIndex: SignalLike<0 | -1>;
-    readonly value: SignalLike<string>;
 }
 
 // @public

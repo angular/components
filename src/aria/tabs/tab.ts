@@ -8,19 +8,17 @@
 
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
-  booleanAttribute,
-  computed,
   Directive,
   ElementRef,
+  OnDestroy,
+  OnInit,
+  booleanAttribute,
+  computed,
   inject,
   input,
-  signal,
-  OnInit,
-  OnDestroy,
 } from '@angular/core';
 import {TabPattern, HasElement} from '../private';
-import {TabList} from './tab-list';
-import {TABS} from './tab-tokens';
+import {TABS, TAB_LIST} from './tab-tokens';
 
 /**
  * A selectable tab in a TabList.
@@ -58,22 +56,17 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The parent Tabs. */
-  private readonly _tabs = inject(TABS);
+  /** The parent Tabs wrapper. */
+  private readonly _tabsWrapper = inject(TABS);
 
   /** The parent TabList. */
-  private readonly _tabList = inject(TabList);
+  private readonly _tabList = inject(TAB_LIST);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
-  /** The parent TabList UIPattern. */
-  private readonly _tablistPattern = computed(() => this._tabList._pattern);
-
-  /** The TabPanel UIPattern associated with the tab */
-  private readonly _tabpanelPattern = computed(() =>
-    this._tabs._unorderedTabpanelPatterns().find(tabpanel => tabpanel.value() === this.value()),
-  );
+  /** The panel associated with this tab. */
+  readonly panel = computed(() => this._tabsWrapper.findTabPanel(this.value()));
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -90,10 +83,9 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** The Tab UIPattern. */
   readonly _pattern: TabPattern = new TabPattern({
     ...this,
-    tablist: this._tablistPattern,
-    tabpanel: this._tabpanelPattern,
-    expanded: signal(false),
     element: () => this.element,
+    tabList: () => this._tabList._pattern,
+    tabPanel: computed(() => this.panel()?._pattern),
   });
 
   /** Opens this tab panel. */
@@ -102,10 +94,10 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabList._register(this);
+    this._tabList._registerTab(this);
   }
 
   ngOnDestroy() {
-    this._tabList._unregister(this);
+    this._tabList._unregisterTab(this);
   }
 }
