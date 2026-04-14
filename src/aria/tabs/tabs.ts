@@ -95,7 +95,7 @@ export class Tabs {
     this._tabPanels.set(new Set(this._tabPanels()));
   }
 
-  findTabPanel(value?: string) {
-    return value ? this._tabPanelsList().find(panel => panel.value() === value) : undefined;
+  findTabPanel(id?: string) {
+    return id ? this._tabPanelsList().find(panel => panel.id() === id) : undefined;
   }
 }

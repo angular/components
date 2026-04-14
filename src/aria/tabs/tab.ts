@@ -66,17 +66,18 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
-  /** Direct reference to panel associated with this tab.  */
-  readonly panelRef = input<TabPanel>(undefined, {alias: 'panel'});
+  /** Direct reference to or id of panel associated with this tab.  */
+  readonly panelRef = input.required<TabPanel | string>({alias: 'panel'});
 
   /** The panel associated with this tab. */
-  readonly panel = computed(() => this.panelRef() ?? this._tabsWrapper.findTabPanel(this.value()));
+  readonly panel = computed(() => {
+    const ref = this.panelRef();
+
+    return ref instanceof TabPanel ? ref : this._tabsWrapper.findTabPanel(ref);
+  });
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** The remote tabpanel unique identifier. */
-  readonly value = input<string>();
 
   /** Whether the tab is active. */
   readonly active = computed(() => this._pattern.active());

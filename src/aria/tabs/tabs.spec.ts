@@ -722,12 +722,12 @@ describe('Tabs', () => {
           [focusMode]="focusMode()"
           [selectionMode]="selectionMode()">
         @for (tabDef of tabsData(); track tabDef.value) {
-          <li ngTab [value]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
+          <li ngTab [panel]="tabDef.value" [disabled]="!!tabDef.disabled">{{ tabDef.label }}</li>
         }
       </ul>
 
       @for (tabDef of tabsData(); track tabDef.value) {
-        <div ngTabPanel [value]="tabDef.value">
+        <div ngTabPanel [id]="tabDef.value">
           <ng-template ngTabContent>{{ tabDef.content }}</ng-template>
       </div>
       }

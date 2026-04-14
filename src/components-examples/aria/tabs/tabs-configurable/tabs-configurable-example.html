@@ -49,12 +49,12 @@
     selectionMode="explicit"
   >
     @for (tabDef of tabsData; track tabDef.value) {
-      <div ngTab [value]="tabDef.value">{{ tabDef.label }}</div>
+      <div ngTab [panel]="tabDef.value">{{ tabDef.label }}</div>
     }    
   </div>
 
   @for (tabDef of tabsData; track tabDef.value) {
-    <div ngTabPanel [value]="tabDef.value">
+    <div ngTabPanel [id]="tabDef.value">
       <ng-template ngTabContent>{{ tabDef.label }}</ng-template>
     </div>
   }

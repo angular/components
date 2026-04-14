@@ -135,7 +135,7 @@ export class TabList implements OnInit, OnDestroy {
       const pattern = this._selectedTabPattern();
       const tab = this._sortedTabs().find(tab => tab._pattern == pattern);
 
-      this.selectedTab.set(tab?.value());
+      this.selectedTab.set(tab?.panel()?.id());
     });
 
     afterRenderEffect(() => {
@@ -161,12 +161,12 @@ export class TabList implements OnInit, OnDestroy {
     this._tabs.set(new Set(this._tabs()));
   }
 
-  /** Opens the tab panel with the specified value. */
-  open(value: string): boolean {
-    return this._pattern.open(this.findTab(value)?._pattern);
+  /** Opens the tab panel with the specified id. */
+  open(panelId: string): boolean {
+    return this._pattern.open(this.findTab(panelId)?._pattern);
   }
 
-  findTab(value?: string) {
-    return value ? this._sortedTabs().find(tab => tab.value() === value) : undefined;
+  findTab(panelId?: string) {
+    return panelId ? this._sortedTabs().find(tab => tab.panel()?.id() === panelId) : undefined;
   }
 }

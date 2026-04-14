@@ -1,5 +1,4 @@
 import {afterRenderEffect, Component, viewChildren} from '@angular/core';
-import {Dir} from '@angular/cdk/bidi';
 import {Tabs, Tab, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
 
 /** * @title RTL */
