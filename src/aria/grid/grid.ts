@@ -15,7 +15,6 @@ import {
   ElementRef,
   inject,
   input,
-  NgZone,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -56,7 +55,6 @@ import {GRID_ROW} from './grid-tokens';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(pointerup)': '_pattern.onPointerup($event)',
     '(focusin)': '_pattern.onFocusIn($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
@@ -122,9 +120,6 @@ export class Grid {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
-  /** Whether enable range selections (with modifier keys or dragging). */
-  readonly enableRangeSelection = input(false, {transform: booleanAttribute});
-
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -134,22 +129,6 @@ export class Grid {
   });
 
   constructor() {
-    const ngZone = inject(NgZone);
-
-    // Since `pointermove` fires on each pixel, we need to
-    // be careful not to hit the zone unless it's necessary.
-    ngZone.runOutsideAngular(() => {
-      this.element.addEventListener(
-        'pointermove',
-        event => {
-          if (this._pattern.acceptsPointerMove()) {
-            ngZone.run(() => this._pattern.onPointermove(event));
-          }
-        },
-        {passive: true},
-      );
-    });
-
     afterRenderEffect(() => this._pattern.setDefaultStateEffect());
     afterRenderEffect(() => this._pattern.resetStateEffect());
     afterRenderEffect(() => this._pattern.resetFocusEffect());

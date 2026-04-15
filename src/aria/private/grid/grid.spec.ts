@@ -37,12 +37,6 @@ const end = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 35, 'End', m
 const space = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 32, ' ', mods);
 const enter = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 13, 'Enter', mods);
 const escape = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 27, 'Escape', mods);
-const shiftUp = () => up({shift: true});
-const shiftDown = () => down({shift: true});
-const shiftLeft = () => left({shift: true});
-const shiftRight = () => right({shift: true});
-const shiftHome = () => home({shift: true});
-const shiftEnd = () => end({shift: true});
 
 function createClickEvent(element: HTMLElement, mods?: ModifierKeys): PointerEvent {
   return {
@@ -135,7 +129,6 @@ function getDefaultGridInputs(): TestGridInputs {
     enableSelection: signal(false),
     multi: signal(false),
     selectionMode: signal('follow'),
-    enableRangeSelection: signal(false),
     getCell: () => undefined,
     focusMode: signal('roving'),
     disabled: signal(false),
@@ -487,7 +480,6 @@ describe('Grid', () => {
 
         it('should select all on Ctrl+A', () => {
           (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
           grid.onKeydown(a({control: true}));
           expect(
             grid
@@ -499,7 +491,6 @@ describe('Grid', () => {
 
         it('should select row on Shift+Space', () => {
           (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
           const gridCells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(gridCells[0][0]);
           grid.onKeydown(space({shift: true}));
@@ -512,7 +503,6 @@ describe('Grid', () => {
 
         it('should select column on Ctrl+Space', () => {
           (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
           const gridCells = grid.cells();
           grid.gridBehavior.focusBehavior.focusCell(gridCells[0][0]);
           grid.onKeydown(space({control: true}));
@@ -521,66 +511,6 @@ describe('Grid', () => {
           expect(gridCells[1][0].selected()).toBe(true);
           expect(gridCells[0][1].selected()).toBe(false);
           expect(gridCells[1][1].selected()).toBe(false);
-        });
-      });
-
-      describe('Range Selection Logic', () => {
-        let grid: GridPattern;
-
-        beforeEach(() => {
-          (gridInputs.enableSelection as WritableSignalLike<boolean>).set(true);
-          (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
-
-          const data = [{cells: [{}, {}, {}]}, {cells: [{}, {}, {}]}, {cells: [{}, {}, {}]}];
-          const result = createGrid(data, gridInputs);
-          grid = result.grid;
-          grid.setDefaultStateEffect();
-        });
-
-        it('should expand the selection range up on Shift+ArrowUp', () => {
-          const cells = grid.cells();
-          grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
-          grid.onKeydown(shiftUp());
-          expect(cells[1][1].selected()).toBe(true);
-          expect(cells[0][1].selected()).toBe(true);
-        });
-
-        it('should expand the selection range down on Shift+ArrowDown', () => {
-          const cells = grid.cells();
-          grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
-          grid.onKeydown(shiftDown());
-          expect(cells[1][1].selected()).toBe(true);
-          expect(cells[2][1].selected()).toBe(true);
-        });
-
-        it('should expand the selection range left on Shift+ArrowLeft', () => {
-          const cells = grid.cells();
-          grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
-          grid.onKeydown(shiftLeft());
-          expect(cells[1][1].selected()).toBe(true);
-          expect(cells[1][0].selected()).toBe(true);
-        });
-
-        it('should expand the selection range right on Shift+ArrowRight', () => {
-          const cells = grid.cells();
-          grid.gridBehavior.focusBehavior.focusCell(cells[1][1]);
-          grid.onKeydown(shiftRight());
-          expect(cells[1][1].selected()).toBe(true);
-          expect(cells[1][2].selected()).toBe(true);
-        });
-
-        it('should support range selection with Shift+Home/End', () => {
-          const cells = grid.cells();
-          grid.gridBehavior.focusBehavior.focusCell(cells[0][1]);
-          grid.onKeydown(shiftHome());
-          expect(cells[0][0].selected()).toBe(true);
-          expect(cells[0][1].selected()).toBe(true);
-
-          grid.onKeydown(shiftEnd());
-          expect(cells[0][0].selected()).toBe(false);
-          expect(cells[0][1].selected()).toBe(true);
-          expect(cells[0][2].selected()).toBe(true);
         });
       });
     });
@@ -629,42 +559,6 @@ describe('Grid', () => {
           grid.onPointerdown(createClickEvent(cells[0][1].element(), {control: true}));
           expect(cells[0][0].selected()).toBe(true);
           expect(cells[0][1].selected()).toBe(true);
-        });
-
-        it('should support range selection with Shift+pointerdown', () => {
-          (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
-          const cells = grid.cells();
-          grid.onPointerdown(createClickEvent(cells[0][0].element()));
-          grid.onPointerdown(createClickEvent(cells[1][1].element(), {shift: true}));
-          expect(cells[0][0].selected()).toBe(true);
-          expect(cells[0][1].selected()).toBe(true);
-          expect(cells[1][0].selected()).toBe(true);
-          expect(cells[1][1].selected()).toBe(true);
-        });
-      });
-
-      describe('Range Selection Dragging', () => {
-        beforeEach(() => {
-          (gridInputs.multi as WritableSignalLike<boolean>).set(true);
-          (gridInputs.enableRangeSelection as WritableSignalLike<boolean>).set(true);
-        });
-
-        it('should select range on pointermove', () => {
-          const cells = grid.cells();
-          grid.onPointerdown(createClickEvent(cells[0][0].element()));
-          grid.onPointermove(createClickEvent(cells[0][1].element()));
-          expect(cells[0][0].selected()).toBe(true);
-          expect(cells[0][1].selected()).toBe(true);
-        });
-
-        it('should stabilize selection on pointerup', () => {
-          const cell = grid.cells()[0][1];
-          grid.onPointerdown(createClickEvent(grid.cells()[0][0].element()));
-          grid.onPointermove(createClickEvent(cell.element()));
-          expect(grid.dragging()).toBe(true);
-          grid.onPointerup(createClickEvent(cell.element()));
-          expect(grid.dragging()).toBe(false);
         });
       });
     });

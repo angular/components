@@ -363,7 +363,6 @@ export class GridCellWidgetPattern {
 // @public
 export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'> {
     element: SignalLike<HTMLElement>;
-    enableRangeSelection: SignalLike<boolean>;
     enableSelection: SignalLike<boolean>;
     getCell: (e: Element | null) => GridCellPattern | undefined;
     multi: SignalLike<boolean>;
@@ -375,7 +374,6 @@ export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'>
 // @public
 export class GridPattern {
     constructor(inputs: GridInputs);
-    readonly acceptsPointerMove: SignalLike<boolean>;
     readonly activeCell: SignalLike<GridCellPattern | undefined>;
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly anchorCell: SignalLike<GridCellPattern | undefined>;
@@ -395,11 +393,8 @@ export class GridPattern {
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
-    onPointermove(event: PointerEvent): void;
-    onPointerup(event: PointerEvent): void;
     readonly pauseNavigation: SignalLike<boolean>;
     readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
-    readonly pointerup: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     resetFocusEffect(): void;
     resetStateEffect(): void;
