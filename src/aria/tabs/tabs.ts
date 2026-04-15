@@ -9,7 +9,7 @@
 import {computed, Directive, ElementRef, inject, signal} from '@angular/core';
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
-import {TABS} from './utils';
+import {TABS} from './tab-tokens';
 import {TabPanelPattern, TabPattern} from '../private';
 
 /**

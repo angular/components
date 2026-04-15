@@ -419,6 +419,12 @@ export class GridRowPattern {
 }
 
 // @public (undocumented)
+export interface HasElement {
+    // (undocumented)
+    element: HTMLElement;
+}
+
+// @public (undocumented)
 export function linkedSignal<T>(sourceFn: () => T): WritableSignalLike<T>;
 
 // @public
@@ -649,6 +655,9 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 
 // @public (undocumented)
 export type SignalLike<T> = () => T;
+
+// @public
+export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;
 
 // @public
 export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {

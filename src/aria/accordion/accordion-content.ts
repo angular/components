@@ -18,7 +18,7 @@ import {DeferredContent} from '../private';
  * by only creating the content when the panel is first expanded.
  *
  * ```html
- * <div ngAccordionPanel panelId="unique-id-1">
+ * <div ngAccordionPanel>
  *   <ng-template ngAccordionContent>
  *     <p>This is the content that will be displayed inside the panel.</p>
  *   </ng-template>

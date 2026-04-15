@@ -18,7 +18,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {TabPanelPattern, DeferredContentAware} from '../private';
-import {TABS} from './utils';
+import {TABS} from './tab-tokens';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.

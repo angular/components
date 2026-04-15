@@ -20,5 +20,6 @@ ts_project(
         "//src/aria/private/tabs",
         "//src/aria/private/toolbar",
         "//src/aria/private/tree",
+        "//src/aria/private/utils",
     ],
 )

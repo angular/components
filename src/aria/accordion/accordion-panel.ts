@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, afterRenderEffect, computed, inject, input} from '@angular/core';
+import {Directive, ElementRef, afterRenderEffect, computed, inject, input} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {DeferredContentAware, AccordionTriggerPattern} from '../private';
 
@@ -48,6 +48,12 @@ import {DeferredContentAware, AccordionTriggerPattern} from '../private';
   },
 })
 export class AccordionPanel {
+  /** A reference to the trigger element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** A reference to the trigger element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
+
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 

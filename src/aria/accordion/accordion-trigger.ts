@@ -9,6 +9,7 @@
 import {
   Directive,
   ElementRef,
+  OnDestroy,
   OnInit,
   booleanAttribute,
   computed,
@@ -53,7 +54,7 @@ import {AccordionPanel} from './accordion-panel';
     '[attr.tabindex]': '_pattern.tabIndex()',
   },
 })
-export class AccordionTrigger implements OnInit {
+export class AccordionTrigger implements OnInit, OnDestroy {
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -69,11 +70,14 @@ export class AccordionTrigger implements OnInit {
   /** The unique identifier for the trigger. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-trigger-', true));
 
-  /** The unique identifier for the correspondingtrigger panel. */
+  /** The unique identifier for the corresponding trigger panel. */
   readonly panelId = computed(() => this.panel().id());
 
   /** Whether the trigger is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** The index of the trigger within the accordion group. */
+  readonly index = input<number>();
 
   /** Whether the corresponding panel is expanded. */
   readonly expanded = model<boolean>(false);
@@ -93,6 +97,14 @@ export class AccordionTrigger implements OnInit {
     });
 
     this.panel()._pattern = this._pattern;
+
+    this._accordionGroup._registerTrigger(this);
+  }
+
+  ngOnDestroy() {
+    this.panel()._pattern = undefined;
+
+    this._accordionGroup._unregisterTrigger(this);
   }
 
   /** Expands this item. */

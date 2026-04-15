@@ -20,10 +20,9 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../private';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern, sortDirectives} from '../private';
 import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
-import {sortDirectives} from './utils';
 
 /**
  * A container that transforms nested lists into an accessible, ARIA-compliant tree structure.
