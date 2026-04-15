@@ -118,6 +118,12 @@
   font-size: 0.9rem;
 }
 
+/* stylelint-disable material/no-prefixes -- Provides all prefixes for ::placeholder */
+input::-webkit-input-placeholder,
+input::-moz-placeholder, /* Firefox 19+ */
+input:-ms-input-placeholder, /* IE 10+ */
+input:-moz-placeholder, /* Firefox 18- */
 input::placeholder {
   color: var(--mat-sys-on-surface-variant);
 }
+/* stylelint-enable material/no-prefixes */
