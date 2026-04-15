@@ -118,6 +118,6 @@
   font-size: 0.9rem;
 }
 
-::placeholder {
+input::placeholder {
   color: var(--mat-sys-on-surface-variant);
 }
