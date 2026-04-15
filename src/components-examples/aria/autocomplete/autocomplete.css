@@ -117,3 +117,7 @@
 .example-check-icon {
   font-size: 0.9rem;
 }
+
+::placeholder {
+  color: var(--mat-sys-on-surface-variant);
+}
