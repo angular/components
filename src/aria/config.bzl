@@ -4,6 +4,7 @@ ARIA_ENTRYPOINTS = [
     "accordion/testing",
     "combobox",
     "grid",
+    "grid/testing",
     "listbox",
     "listbox/testing",
     "menu",
