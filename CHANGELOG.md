@@ -1,3 +1,12 @@
+<a name="21.2.7"></a>
+# 21.2.7 "carbon-jetski" (2026-04-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5954c4594c](https://github.com/angular/components/commit/5954c4594c6df87908bc7849214a29f6897b213e) | fix | **sort:** deprecate MatSortHeaderIntl and hide from docs ([#33089](https://github.com/angular/components/pull/33089)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.6"></a>
 # 21.2.6 "steel bottle" (2026-04-08)
 ### material
