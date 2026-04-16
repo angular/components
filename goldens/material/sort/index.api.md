@@ -114,7 +114,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, never>;
 }
 
-// @public
+// @public @deprecated
 export class MatSortHeaderIntl {
     readonly changes: Subject<void>;
     // (undocumented)
