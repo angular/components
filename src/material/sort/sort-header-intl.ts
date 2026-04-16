@@ -12,6 +12,10 @@ import {Subject} from 'rxjs';
 /**
  * To modify the labels and text displayed, create a new instance of MatSortHeaderIntl and
  * include it in a custom provider.
+ *
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 23.0.0
+ * @docs-private
  */
 @Injectable({providedIn: 'root'})
 export class MatSortHeaderIntl {
