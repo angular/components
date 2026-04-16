@@ -31,7 +31,7 @@ jobs:
         # updates the lock file as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Run Browser tests
         run: pnpm bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
 
@@ -51,7 +51,7 @@ jobs:
         # updates the lock files as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
       - name: Run linker tests using AOT
         run: pnpm test-linker-aot
       - name: Run linker tests using JIT
