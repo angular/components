@@ -1,3 +1,27 @@
+<a name="22.0.0-next.5"></a>
+# 22.0.0-next.5 "carbon-steel" (2026-04-16)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d91f46b4c5](https://github.com/angular/components/commit/d91f46b4c522159e025d3b94b653981f344a4fdf) | feat | **accordion:** introduce accordion harness ([#33046](https://github.com/angular/components/pull/33046)) |
+| [1885d35346](https://github.com/angular/components/commit/1885d35346e05341532aed56ac476f9a9eae179b) | feat | **listbox:** introduce listbox harness ([#33064](https://github.com/angular/components/pull/33064)) |
+| [75fae5275c](https://github.com/angular/components/commit/75fae5275c5702e64477da6a2ac8a14428623c8b) | feat | **menu:** introduce menu harness ([#33067](https://github.com/angular/components/pull/33067)) |
+| [c25e6252ec](https://github.com/angular/components/commit/c25e6252ecf3b5a6472151a8fca4af093b3322e6) | feat | **tabs:** add test harnesses ([#33079](https://github.com/angular/components/pull/33079)) |
+| [a49508bacf](https://github.com/angular/components/commit/a49508bacf419f2e8f0545158de1f951f3ba1c1a) | feat | **toolbar:** add test harnesses ([#33068](https://github.com/angular/components/pull/33068)) |
+| [30f2239728](https://github.com/angular/components/commit/30f223972870c3016e8e14f4bafb913d22117e20) | feat | **tree:** add test harnesses ([#33066](https://github.com/angular/components/pull/33066)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [440cb16064](https://github.com/angular/components/commit/440cb16064a4daf50437e806057403cf80c52bd6) | fix | **autocomplete:** remove modal workaround |
+| [348c3c89d5](https://github.com/angular/components/commit/348c3c89d511ab5f74fda95ef0f0ae7a332527fb) | fix | **select:** remove modal workaround |
+| [1b6052fbea](https://github.com/angular/components/commit/1b6052fbeaab90a245c86762fea18be4c262cb9a) | fix | **sort:** deprecate MatSortHeaderIntl and hide from docs ([#33089](https://github.com/angular/components/pull/33089)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6cb6b5ee19](https://github.com/angular/components/commit/6cb6b5ee1980c18c4ebec9337513e3b6a863661f) | fix | make more public APIs readonly ([#33071](https://github.com/angular/components/pull/33071)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.7"></a>
 # 21.2.7 "carbon-jetski" (2026-04-16)
 ### material
