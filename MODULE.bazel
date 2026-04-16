@@ -4,8 +4,8 @@ module(
     name = "components",
 )
 
-bazel_dep(name = "yq.bzl", version = "0.3.5")
-bazel_dep(name = "rules_nodejs", version = "6.7.3")
+bazel_dep(name = "yq.bzl", version = "0.3.6")
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
 bazel_dep(name = "aspect_rules_js", version = "3.0.3")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
 bazel_dep(name = "tar.bzl", version = "0.10.1")
