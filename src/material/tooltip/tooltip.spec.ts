@@ -23,20 +23,12 @@ import {
   ViewChild,
   WritableSignal,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  TestBed,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MAT_TOOLTIP_DEFAULT_OPTIONS,
   MatTooltip,
   MatTooltipModule,
-  SCROLL_THROTTLE_MS,
   TooltipPosition,
   TooltipTouchGestures,
 } from './index';
@@ -49,7 +41,11 @@ describe('MatTooltip', () => {
   let platform: Platform;
   let focusMonitor: FocusMonitor;
 
-  beforeEach(waitForAsync(() => {
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
+  beforeEach(() => {
     dir = signal('ltr');
 
     TestBed.configureTestingModule({
@@ -59,7 +55,7 @@ describe('MatTooltip', () => {
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     focusMonitor = TestBed.inject(FocusMonitor);
     platform = TestBed.inject(Platform);
-  }));
+  });
 
   describe('basic usage', () => {
     let fixture: ComponentFixture<BasicTooltipDemo>;
@@ -67,20 +63,20 @@ describe('MatTooltip', () => {
     let buttonElement: HTMLButtonElement;
     let tooltipDirective: MatTooltip;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
-      tick();
+      await wait(0);
       buttonDebugElement = fixture.debugElement.query(By.css('button'))!;
       buttonElement = buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
-    }));
+    });
 
-    it('should show and hide the tooltip', fakeAsync(() => {
+    it('should show and hide the tooltip', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.detectChanges();
@@ -98,62 +94,60 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       // After hide is called, a timeout delay is created that will to hide the tooltip.
-      const tooltipDelay = 1000;
+      const tooltipDelay = 10;
       tooltipDirective.hide(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // After the tooltip delay elapses, expect that the tooltip is not visible.
-      tick(tooltipDelay);
+      await wait(tooltipDelay);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       // On animation complete, should expect that the tooltip has been detached.
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       assertTooltipInstance(tooltipDirective, false);
-      flush();
-    }));
+    });
 
-    it('should be able to re-open a tooltip if it was closed by detaching the overlay', fakeAsync(() => {
+    it('should be able to re-open a tooltip if it was closed by detaching the overlay', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       tooltipDirective._overlayRef!.detach();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       finishCurrentTooltipAnimation(overlayContainerElement, true);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-      flush();
-    }));
+    });
 
-    it('should show with delay', fakeAsync(() => {
+    it('should show with delay', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
-      const tooltipDelay = 1000;
+      const tooltipDelay = 10;
       tooltipDirective.show(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       fixture.detectChanges();
       expect(overlayContainerElement.textContent).toContain('');
 
-      tick(tooltipDelay);
+      await wait(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
-    }));
+    });
 
-    it('should be able to override the default show and hide delays', fakeAsync(() => {
+    it('should be able to override the default show and hide delays', async () => {
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-            useValue: {showDelay: 1337, hideDelay: 7331},
+            useValue: {showDelay: 10, hideDelay: 20},
           },
         ],
       });
@@ -166,23 +160,22 @@ describe('MatTooltip', () => {
 
       tooltipDirective.show();
       fixture.detectChanges();
-      tick();
+      await wait(0);
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-      tick(1337);
+      await wait(10);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       tooltipDirective.hide();
       fixture.detectChanges();
-      tick();
+      await wait(0);
 
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-      tick(7331);
+      await wait(20);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-      flush();
-    }));
+    });
 
-    it('should be able to override the default position', fakeAsync(() => {
+    it('should be able to override the default position', async () => {
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
           {
@@ -200,14 +193,14 @@ describe('MatTooltip', () => {
 
       tooltipDirective.show();
       newFixture.detectChanges();
-      tick();
+      await wait(0);
 
       expect(tooltipDirective.position).toBe('right');
       expect(tooltipDirective._getOverlayPosition().main.overlayX).toBe('start');
       expect(tooltipDirective._getOverlayPosition().fallback.overlayX).toBe('end');
-    }));
+    });
 
-    it('should be able to define a default (global) tooltip class', fakeAsync(() => {
+    it('should be able to define a default (global) tooltip class', async () => {
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
           {
@@ -222,7 +215,7 @@ describe('MatTooltip', () => {
       tooltipDirective = fixture.componentInstance.tooltip;
       tooltipDirective.show();
       fixture.detectChanges();
-      tick();
+      await wait(0);
       const overlayRef = tooltipDirective._overlayRef!;
       const tooltipElement = overlayRef.overlayElement.querySelector(
         '.mat-mdc-tooltip',
@@ -230,9 +223,9 @@ describe('MatTooltip', () => {
 
       expect(tooltipDirective.tooltipClass).toBe('my-default-tooltip-class');
       expect(tooltipElement.classList).toContain('my-default-tooltip-class');
-    }));
+    });
 
-    it('should be able to provide tooltip class over the custom default one', fakeAsync(() => {
+    it('should be able to provide tooltip class over the custom default one', async () => {
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
           {
@@ -247,7 +240,7 @@ describe('MatTooltip', () => {
       tooltipDirective = fixture.componentInstance.tooltip;
       tooltipDirective.show();
       fixture.detectChanges();
-      tick();
+      await wait(0);
       const overlayRef = tooltipDirective._overlayRef!;
       const tooltipElement = overlayRef.overlayElement.querySelector(
         '.mat-mdc-tooltip',
@@ -256,9 +249,9 @@ describe('MatTooltip', () => {
       expect(tooltipDirective.tooltipClass).not.toBe('my-default-tooltip-class');
       expect(tooltipElement.classList).not.toContain('my-default-tooltip-class');
       expect(tooltipElement.classList).toContain('fixed-tooltip-class');
-    }));
+    });
 
-    it('should position on the bottom-left by default', fakeAsync(() => {
+    it('should position on the bottom-left by default', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -275,7 +268,7 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(button, 'mouseenter', triggerRect.right - 100, triggerRect.top + 100);
       wideFixture.detectChanges();
-      tick();
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       expect(tooltipDirective._overlayRef!.overlayElement.offsetLeft).toBeLessThan(
@@ -284,7 +277,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBeGreaterThanOrEqual(
         triggerRect.bottom,
       );
-    }));
+    });
 
     it('should be able to override the default positionAtOrigin', async () => {
       // We don't bind mouse events on mobile devices.
@@ -311,7 +304,7 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(button, 'mouseenter', triggerRect.right - 100, triggerRect.top + 100);
       wideFixture.detectChanges();
-      await new Promise<void>(resolve => setTimeout(resolve));
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       const actualOffsetLeft = tooltipDirective._overlayRef!.overlayElement.offsetLeft;
@@ -321,7 +314,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._overlayRef!.overlayElement.offsetTop).toBe(triggerRect.top + 100);
     });
 
-    it('should be able to disable tooltip interactivity', fakeAsync(() => {
+    it('should be able to disable tooltip interactivity', async () => {
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
           {
@@ -339,17 +332,17 @@ describe('MatTooltip', () => {
 
       tooltipDirective.show();
       newFixture.detectChanges();
-      tick();
+      await wait(0);
 
       expect(tooltipDirective._overlayRef?.overlayElement.classList).toContain(
         'mat-mdc-tooltip-panel-non-interactive',
       );
-    }));
+    });
 
-    it('should set a css class on the overlay panel element', fakeAsync(() => {
+    it('should set a css class on the overlay panel element', async () => {
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
 
       const overlayRef = tooltipDirective._overlayRef;
 
@@ -357,15 +350,15 @@ describe('MatTooltip', () => {
       expect(overlayRef!.overlayElement.classList)
         .withContext('Expected the overlay panel element to have the tooltip panel class set.')
         .toContain('mat-mdc-tooltip-panel');
-    }));
+    });
 
-    it('should not show if disabled', fakeAsync(() => {
+    it('should not show if disabled', async () => {
       // Test that disabling the tooltip will not set the tooltip visible
       tooltipDirective.disabled = true;
       fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       // Test to make sure setting disabled to false will show the tooltip
@@ -374,36 +367,36 @@ describe('MatTooltip', () => {
       fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-    }));
+    });
 
-    it('should hide if disabled while visible', fakeAsync(() => {
+    it('should hide if disabled while visible', async () => {
       // Display the tooltip with a timeout before hiding.
-      tooltipDirective.hideDelay = 1000;
+      tooltipDirective.hideDelay = 10;
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // Set tooltip to be disabled and verify that the tooltip hides.
       tooltipDirective.disabled = true;
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-    }));
+    });
 
-    it('should hide if the message is cleared while the tooltip is open', fakeAsync(() => {
+    it('should hide if the message is cleared while the tooltip is open', async () => {
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.componentInstance.message = '';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-    }));
+    });
 
     it('should not show if hide is called before delay finishes', () => {
       assertTooltipInstance(tooltipDirective, false);
@@ -444,42 +437,42 @@ describe('MatTooltip', () => {
       assertTooltipInstance(tooltipDirective, false);
     });
 
-    it('should not follow through with hide if show is called after', fakeAsync(() => {
+    it('should not follow through with hide if show is called after', async () => {
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // After hide called, a timeout delay is created that will to hide the tooltip.
-      const tooltipDelay = 1000;
+      const tooltipDelay = 10;
       tooltipDirective.hide(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // Before delay time has passed, call show which should cancel intent to hide tooltip.
       tooltipDirective.show();
-      tick(tooltipDelay);
+      await wait(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-    }));
+    });
 
-    it('should be able to update the tooltip position while open', fakeAsync(() => {
+    it('should be able to update the tooltip position while open', async () => {
       tooltipDirective.position = 'below';
       tooltipDirective.show();
-      tick();
+      await wait(0);
 
       assertTooltipInstance(tooltipDirective, true);
 
       spyOn(tooltipDirective._overlayRef!, 'updatePosition').and.callThrough();
       tooltipDirective.position = 'above';
       fixture.detectChanges();
-      tick();
+      await wait(0);
 
       assertTooltipInstance(tooltipDirective, true);
       expect(tooltipDirective._overlayRef!.updatePosition).toHaveBeenCalled();
-    }));
+    });
 
-    it('should update the tooltip position when the directionality changes', fakeAsync(() => {
+    it('should update the tooltip position when the directionality changes', async () => {
       tooltipDirective.position = 'right';
       tooltipDirective.show();
-      tick();
+      await wait(0);
 
       assertTooltipInstance(tooltipDirective, true);
       const spy = spyOn(tooltipDirective as any, '_updatePosition').and.callThrough();
@@ -488,31 +481,31 @@ describe('MatTooltip', () => {
 
       assertTooltipInstance(tooltipDirective, true);
       expect(spy).toHaveBeenCalled();
-    }));
+    });
 
-    it('should not throw when updating the position for a closed tooltip', fakeAsync(() => {
+    it('should not throw when updating the position for a closed tooltip', async () => {
       tooltipDirective.position = 'left';
       tooltipDirective.show(0);
       fixture.detectChanges();
-      tick();
+      await wait(0);
 
       tooltipDirective.hide(0);
       fixture.detectChanges();
-      tick();
+      await wait(0);
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       expect(() => {
         tooltipDirective.position = 'right';
         fixture.detectChanges();
-        tick();
       }).not.toThrow();
-    }));
+      await wait(0);
+    });
 
-    it('should be able to modify the tooltip message', fakeAsync(() => {
+    it('should be able to modify the tooltip message', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._tooltipInstance!.isVisible()).toBe(true);
 
       fixture.detectChanges();
@@ -523,13 +516,13 @@ describe('MatTooltip', () => {
 
       fixture.detectChanges();
       expect(overlayContainerElement.textContent).toContain(newMessage);
-    }));
+    });
 
-    it('should allow extra classes to be set on the tooltip', fakeAsync(() => {
+    it('should allow extra classes to be set on the tooltip', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       fixture.detectChanges();
 
       // Make sure classes aren't prematurely added
@@ -556,26 +549,25 @@ describe('MatTooltip', () => {
       expect(tooltipElement.classList)
         .withContext('Expected to have the class after enabling matTooltipClass')
         .toContain('custom-two');
-    }));
+    });
 
-    it('should be removed after parent destroyed', fakeAsync(() => {
+    it('should be removed after parent destroyed', async () => {
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.destroy();
       expect(overlayContainerElement.childNodes.length).toBe(0);
       expect(overlayContainerElement.textContent).toBe('');
-      flush();
-    }));
+    });
 
-    it('should have an aria-describedby element with the tooltip message', fakeAsync(() => {
+    it('should have an aria-describedby element with the tooltip message', async () => {
       const dynamicTooltipsDemoFixture = TestBed.createComponent(DynamicTooltipsDemo);
       const dynamicTooltipsComponent = dynamicTooltipsDemoFixture.componentInstance;
 
       dynamicTooltipsComponent.tooltips = ['Tooltip One', 'Tooltip Two'];
       dynamicTooltipsDemoFixture.detectChanges();
-      tick();
+      await wait(0);
 
       const buttons = dynamicTooltipsDemoFixture.nativeElement.querySelectorAll('button');
       const firstButtonAria = buttons[0].getAttribute('aria-describedby');
@@ -583,48 +575,48 @@ describe('MatTooltip', () => {
 
       const secondButtonAria = buttons[1].getAttribute('aria-describedby');
       expect(document.querySelector(`#${secondButtonAria}`)!.textContent).toBe('Tooltip Two');
-    }));
+    });
 
-    it('should not add an ARIA description for elements that have the same text as a data-bound aria-label', fakeAsync(() => {
+    it('should not add an ARIA description for elements that have the same text as a data-bound aria-label', async () => {
       const ariaLabelFixture = TestBed.createComponent(DataBoundAriaLabelTooltip);
       ariaLabelFixture.detectChanges();
-      tick();
+      await wait(0);
 
       const button = ariaLabelFixture.nativeElement.querySelector('button');
       expect(button.getAttribute('aria-describedby')).toBeFalsy();
-    }));
+    });
 
-    it('should toggle aria-describedby depending on whether the tooltip is disabled', fakeAsync(() => {
+    it('should toggle aria-describedby depending on whether the tooltip is disabled', async () => {
       expect(buttonElement.getAttribute('aria-describedby')).toBeTruthy();
 
       fixture.componentInstance.tooltipDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick();
+      await wait(0);
       expect(buttonElement.hasAttribute('aria-describedby')).toBe(false);
 
       fixture.componentInstance.tooltipDisabled = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick();
+      await wait(0);
       expect(buttonElement.getAttribute('aria-describedby')).toBeTruthy();
-    }));
+    });
 
-    it('should not try to dispose the tooltip when destroyed and done hiding', fakeAsync(() => {
+    it('should not try to dispose the tooltip when destroyed and done hiding', async () => {
       tooltipDirective.show();
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       const tooltipDelay = 1000;
       tooltipDirective.hide();
-      tick(tooltipDelay); // Change the tooltip state to hidden and trigger animation start
+      await wait(tooltipDelay); // Change the tooltip state to hidden and trigger animation stat
 
       fixture.componentInstance.showButton = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-    }));
+    });
 
-    it('should complete the afterHidden stream when tooltip is destroyed', fakeAsync(() => {
+    it('should complete the afterHidden stream when tooltip is destroyed', async () => {
       tooltipDirective.show();
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
@@ -635,12 +627,12 @@ describe('MatTooltip', () => {
         .subscribe({complete: spy});
 
       tooltipDirective.hide(0);
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
-    }));
+    });
 
     it('should consistently position before and after overlay origin in ltr and rtl dir', () => {
       tooltipDirective.position = 'left';
@@ -691,11 +683,11 @@ describe('MatTooltip', () => {
       }).toThrowError('Tooltip position "everywhere" is invalid.');
     });
 
-    it('should pass the layout direction to the tooltip', fakeAsync(() => {
+    it('should pass the layout direction to the tooltip', async () => {
       dir.set('rtl');
 
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
 
       const tooltipWrapper = overlayContainerElement.querySelector(
@@ -706,12 +698,12 @@ describe('MatTooltip', () => {
       expect(tooltipWrapper.getAttribute('dir'))
         .withContext('Expected tooltip to be in RTL mode.')
         .toBe('rtl');
-    }));
+    });
 
-    it('should keep the overlay direction in sync with the trigger direction', fakeAsync(() => {
+    it('should keep the overlay direction in sync with the trigger direction', async () => {
       dir.set('rtl');
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
@@ -723,13 +715,13 @@ describe('MatTooltip', () => {
         .toBe('rtl');
 
       tooltipDirective.hide(0);
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       dir.set('ltr');
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
@@ -739,20 +731,19 @@ describe('MatTooltip', () => {
       expect(tooltipWrapper.getAttribute('dir'))
         .withContext('Expected tooltip to be in LTR.')
         .toBe('ltr');
-      flush();
-    }));
+    });
 
-    it('should be able to set the tooltip message as a number', fakeAsync(() => {
+    it('should be able to set the tooltip message as a number', () => {
       fixture.componentInstance.message = 100;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(tooltipDirective.message).toBe('100');
-    }));
+    });
 
-    it('should hide when clicking away', fakeAsync(() => {
+    it('should hide when clicking away', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
@@ -760,18 +751,18 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       document.body.click();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       fixture.detectChanges();
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       expect(overlayContainerElement.textContent).toBe('');
-    }));
+    });
 
-    it('should hide when clicking away with an auxilliary button', fakeAsync(() => {
+    it('should hide when clicking away with an auxilliary button', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
@@ -779,124 +770,121 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       dispatchFakeEvent(document.body, 'auxclick');
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       fixture.detectChanges();
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       expect(overlayContainerElement.textContent).toBe('');
-    }));
+    });
 
-    it('should not hide immediately if a click fires while animating', fakeAsync(() => {
+    it('should not hide immediately if a click fires while animating', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
 
       document.body.click();
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
-      flush();
-    }));
+    });
 
-    it('should hide when pressing escape', fakeAsync(() => {
+    it('should hide when pressing escape', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
 
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
 
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       expect(overlayContainerElement.textContent).toBe('');
-      flush();
-    }));
+    });
 
-    it('should not throw when pressing ESCAPE', fakeAsync(() => {
+    it('should not throw when pressing ESCAPE', async () => {
       expect(() => {
         dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
         fixture.detectChanges();
       }).not.toThrow();
 
       // Flush due to the additional tick that is necessary for the FocusMonitor.
-      flush();
-    }));
+      await wait(0);
+    });
 
-    it('should preventDefault when pressing ESCAPE', fakeAsync(() => {
+    it('should preventDefault when pressing ESCAPE', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
 
       const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
       fixture.detectChanges();
-      flush();
+      await wait(0);
 
       expect(event.defaultPrevented).toBe(true);
-    }));
+    });
 
-    it('should not preventDefault when pressing ESCAPE with a modifier', fakeAsync(() => {
+    it('should not preventDefault when pressing ESCAPE with a modifier', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
 
       const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
       dispatchEvent(document.body, event);
       fixture.detectChanges();
-      flush();
+      await wait(0);
 
       expect(event.defaultPrevented).toBe(false);
-    }));
+    });
 
-    it('should not show the tooltip on programmatic focus', fakeAsync(() => {
+    it('should not show the tooltip on programmatic focus', async () => {
       patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
       focusMonitor.focusVia(buttonElement, 'program');
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       expect(overlayContainerElement.querySelector('.mat-mdc-tooltip')).toBeNull();
-    }));
+    });
 
-    it('should not show the tooltip on mouse focus', fakeAsync(() => {
+    it('should not show the tooltip on mouse focus', async () => {
       patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
       focusMonitor.focusVia(buttonElement, 'mouse');
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       expect(overlayContainerElement.querySelector('.mat-mdc-tooltip')).toBeNull();
-    }));
+    });
 
-    it('should not show the tooltip on touch focus', fakeAsync(() => {
+    it('should not show the tooltip on touch focus', async () => {
       patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
       focusMonitor.focusVia(buttonElement, 'touch');
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       expect(overlayContainerElement.querySelector('.mat-mdc-tooltip')).toBeNull();
-    }));
+    });
 
-    it('should not hide the tooltip when calling `show` twice in a row', fakeAsync(() => {
+    it('should not hide the tooltip when calling `show` twice in a row', async () => {
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
@@ -906,16 +894,15 @@ describe('MatTooltip', () => {
       spyOn(overlayRef, 'detach').and.callThrough();
 
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
 
       expect(overlayRef.detach).not.toHaveBeenCalled();
-      flush();
-    }));
+    });
 
-    it('should set a class on the overlay panel that reflects the position', fakeAsync(() => {
+    it('should set a class on the overlay panel that reflects the position', async () => {
       // Move the element so that the primary position is always used.
       buttonElement.style.position = 'fixed';
       buttonElement.style.top = buttonElement.style.left = '200px';
@@ -923,37 +910,37 @@ describe('MatTooltip', () => {
       fixture.componentInstance.message = 'hi';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      setPositionAndShow('below');
+      await setPositionAndShow('below');
 
       const classList = tooltipDirective._overlayRef!.overlayElement.classList;
       expect(classList).toContain('mat-mdc-tooltip-panel-below');
 
-      setPositionAndShow('above');
+      await setPositionAndShow('above');
       expect(classList).not.toContain('mat-mdc-tooltip-panel-below');
       expect(classList).toContain('mat-mdc-tooltip-panel-above');
 
-      setPositionAndShow('left');
+      await setPositionAndShow('left');
       expect(classList).not.toContain('mat-mdc-tooltip-panel-above');
       expect(classList).toContain('mat-mdc-tooltip-panel-left');
 
-      setPositionAndShow('right');
+      await setPositionAndShow('right');
       expect(classList).not.toContain('mat-mdc-tooltip-panel-left');
       expect(classList).toContain('mat-mdc-tooltip-panel-right');
 
-      function setPositionAndShow(position: TooltipPosition) {
+      async function setPositionAndShow(position: TooltipPosition) {
         tooltipDirective.hide(0);
         fixture.detectChanges();
-        tick(0);
+        await wait(0);
         tooltipDirective.position = position;
         tooltipDirective.show(0);
         fixture.detectChanges();
-        tick(0);
+        await wait(0);
         fixture.detectChanges();
-        tick(500);
+        await wait(0);
       }
-    }));
+    });
 
-    it('should account for RTL when setting the tooltip position class', fakeAsync(() => {
+    it('should account for RTL when setting the tooltip position class', async () => {
       // Move the element so that the primary position is always used.
       buttonElement.style.position = 'fixed';
       buttonElement.style.top = buttonElement.style.left = '200px';
@@ -966,9 +953,9 @@ describe('MatTooltip', () => {
       fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show(0);
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       const classList = tooltipDirective._overlayRef!.overlayElement.classList;
       expect(classList).not.toContain('mat-mdc-tooltip-panel-after');
@@ -978,21 +965,21 @@ describe('MatTooltip', () => {
 
       tooltipDirective.hide(0);
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       dir.set('rtl');
       tooltipDirective.show(0);
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       expect(classList).not.toContain('mat-mdc-tooltip-panel-after');
       expect(classList).not.toContain('mat-mdc-tooltip-panel-before');
       expect(classList).not.toContain('mat-mdc-tooltip-panel-right');
       expect(classList).toContain('mat-mdc-tooltip-panel-left');
-    }));
+    });
 
-    it('should clear the show timeout on destroy', fakeAsync(() => {
+    it('should clear the show timeout on destroy', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show(1000);
@@ -1001,16 +988,15 @@ describe('MatTooltip', () => {
       // Note that we aren't asserting anything, but `fakeAsync` will
       // throw if we have any timers by the end of the test.
       fixture.destroy();
-      flush();
-    }));
+    });
 
-    it('should clear the hide timeout on destroy', fakeAsync(() => {
+    it('should clear the hide timeout on destroy', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0);
+      await wait(0);
       fixture.detectChanges();
-      tick(500);
+      await wait(0);
 
       tooltipDirective.hide(1000);
       fixture.detectChanges();
@@ -1018,16 +1004,15 @@ describe('MatTooltip', () => {
       // Note that we aren't asserting anything, but `fakeAsync` will
       // throw if we have any timers by the end of the test.
       fixture.destroy();
-      flush();
-    }));
+    });
 
-    it('should set the multiline class on tooltips with messages that overflow', fakeAsync(() => {
+    it('should set the multiline class on tooltips with messages that overflow', async () => {
       fixture.componentInstance.message =
         'This is a very long message that should cause the' +
         'tooltip message body to overflow onto a new line.';
       tooltipDirective.show();
       fixture.detectChanges();
-      tick();
+      await wait(0);
 
       // Need to detect changes again to wait for the multiline class to be applied.
       fixture.detectChanges();
@@ -1038,9 +1023,9 @@ describe('MatTooltip', () => {
 
       expect(tooltipElement.classList).toContain('mdc-tooltip--multiline');
       expect(tooltipDirective._tooltipInstance?._isMultiline).toBeTrue();
-    }));
+    });
 
-    it('should hide on mouseleave on the trigger', fakeAsync(() => {
+    it('should hide on mouseleave on the trigger', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1048,16 +1033,16 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseleave');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-    }));
+    });
 
-    it('should not hide on mouseleave if the pointer goes from the trigger to the tooltip', fakeAsync(() => {
+    it('should not hide on mouseleave if the pointer goes from the trigger to the tooltip', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1065,7 +1050,7 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       const tooltipElement = overlayContainerElement.querySelector(
@@ -1076,11 +1061,11 @@ describe('MatTooltip', () => {
 
       dispatchEvent(fixture.componentInstance.button.nativeElement, event);
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-    }));
+    });
 
-    it('should hide on mouseleave on the tooltip', fakeAsync(() => {
+    it('should hide on mouseleave on the tooltip', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1088,7 +1073,7 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       const tooltipElement = overlayContainerElement.querySelector(
@@ -1096,11 +1081,11 @@ describe('MatTooltip', () => {
       ) as HTMLElement;
       dispatchMouseEvent(tooltipElement, 'mouseleave');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
-    }));
+    });
 
-    it('should not hide on mouseleave if the pointer goes from the tooltip to the trigger', fakeAsync(() => {
+    it('should not hide on mouseleave if the pointer goes from the tooltip to the trigger', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1108,7 +1093,7 @@ describe('MatTooltip', () => {
 
       dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       const tooltipElement = overlayContainerElement.querySelector(
@@ -1121,9 +1106,9 @@ describe('MatTooltip', () => {
 
       dispatchEvent(tooltipElement, event);
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
-    }));
+    });
   });
 
   describe('fallback positions', () => {
@@ -1185,15 +1170,14 @@ describe('MatTooltip', () => {
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
     });
 
-    it('should hide tooltip if clipped after changing positions', fakeAsync(() => {
+    it('should hide tooltip if clipped after changing positions', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       // Show the tooltip and tick for the show delay (default is 0)
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
 
-      // Expect that the tooltip is displayed
       // Expect that the tooltip is displayed
       expect(tooltipDirective._isTooltipVisible())
         .withContext('Expected tooltip to be initially visible')
@@ -1201,19 +1185,19 @@ describe('MatTooltip', () => {
 
       // Scroll the page but tick just before the default throttle should update.
       fixture.componentInstance.scrollDown();
-      tick(SCROLL_THROTTLE_MS - 1);
+      await wait(0);
       expect(tooltipDirective._isTooltipVisible())
         .withContext('Expected tooltip to be visible when scrolling, before throttle limit')
         .toBe(true);
 
       // Finish ticking to the throttle's limit and check that the scroll event notified the
       // tooltip and it was hidden.
-      tick(100);
+      await wait(100);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible())
         .withContext('Expected tooltip hidden when scrolled out of view, after throttle limit')
         .toBe(false);
-    }));
+    });
   });
 
   describe('with OnPush', () => {
@@ -1230,11 +1214,11 @@ describe('MatTooltip', () => {
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
     });
 
-    it('should show and hide the tooltip', fakeAsync(() => {
+    it('should show and hide the tooltip', async () => {
       assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
-      tick(0); // Tick for the show delay (default is 0)
+      await wait(0); // Tick for the show delay (default is 0)
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       fixture.detectChanges();
@@ -1250,22 +1234,21 @@ describe('MatTooltip', () => {
       expect(tooltipElement.classList).toContain('mat-mdc-tooltip-show');
 
       // After hide called, a timeout delay is created that will to hide the tooltip.
-      const tooltipDelay = 1000;
+      const tooltipDelay = 10;
       tooltipDirective.hide(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
 
       // After the tooltip delay elapses, expect that the tooltip is not visible.
-      tick(tooltipDelay);
+      await wait(tooltipDelay);
       fixture.detectChanges();
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
 
       // On animation complete, should expect that the tooltip has been detached.
       finishCurrentTooltipAnimation(overlayContainerElement, false);
       assertTooltipInstance(tooltipDirective, false);
-      flush();
-    }));
+    });
 
-    it('should have rendered the tooltip text on init', fakeAsync(() => {
+    it('should have rendered the tooltip text on init', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1273,13 +1256,13 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(buttonElement, 'mouseenter');
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
 
       const tooltipElement = overlayContainerElement.querySelector(
         '.mat-mdc-tooltip',
       ) as HTMLElement;
       expect(tooltipElement.textContent).toContain('initial tooltip message');
-    }));
+    });
   });
 
   describe('touch gestures', () => {
@@ -1287,26 +1270,25 @@ describe('MatTooltip', () => {
       platform.ANDROID = true;
     });
 
-    it('should have a delay when showing on touchstart', fakeAsync(() => {
+    it('should have a delay when showing on touchstart', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      tick(250); // Halfway through the delay.
+      await wait(250); // Halfway through the dela.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
 
-      tick(500); // Finish the delay.
+      await wait(500); // Finish the dela.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
-      flush();
-    }));
+    });
 
-    it('should be able to disable opening on touch', fakeAsync(() => {
+    it('should be able to disable opening on touch', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.componentInstance.touchGestures = 'off';
       fixture.detectChanges();
@@ -1314,12 +1296,11 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      tick(500); // Finish the delay.
+      await wait(10); // Just wait a bit to ensure no timer firs
       fixture.detectChanges();
-      tick(500); // Finish the animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
-    }));
+    });
 
     it('should not prevent the default action on touchstart', () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
@@ -1527,7 +1508,7 @@ describe('MatTooltip', () => {
       flush();
     }));
 
-    it('should not close if the cursor is over the trigger after a wheel event', fakeAsync(() => {
+    it('should not close if the cursor is over the trigger after a wheel event', async () => {
       // We don't bind wheel events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1539,7 +1520,7 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'mouseenter');
       fixture.detectChanges();
-      tick(500); // Finish the open delay.
+      await wait(500); // Finish the open dela.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
@@ -1554,13 +1535,12 @@ describe('MatTooltip', () => {
 
       dispatchEvent(button, wheelEvent);
       fixture.detectChanges();
-      tick(1500); // Finish the delay.
+      await wait(10); // Just wait a bt
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
-      flush();
-    }));
+    });
   });
 });
 
