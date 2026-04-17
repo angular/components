@@ -7,7 +7,7 @@
  */
 
 import {SignalLike, computed, signal, untracked} from '../behaviors/signal-like/signal-like';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
@@ -139,9 +139,9 @@ export class GridPattern {
     return manager;
   });
 
-  /** The pointerdown event manager for the grid. */
-  readonly pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the grid. */
+  readonly clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     // Navigation without selection.
     if (!this.inputs.enableSelection()) {
@@ -205,12 +205,12 @@ export class GridPattern {
     this.keydown().handle(event);
   }
 
-  /** Handles pointerdown events on the grid. */
-  onPointerdown(event: PointerEvent) {
+  /** Handles click events on the grid. */
+  onClick(event: PointerEvent) {
     if (this.disabled()) return;
 
     this.hasBeenInteracted.set(true);
-    this.pointerdown().handle(event);
+    this.clickManager().handle(event);
   }
 
   /** Handles focusin events on the grid. */

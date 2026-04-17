@@ -378,6 +378,7 @@ export class GridPattern {
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly anchorCell: SignalLike<GridCellPattern | undefined>;
     readonly cells: SignalLike<GridCellPattern[][]>;
+    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly disabled: SignalLike<boolean>;
     readonly dragging: WritableSignalLike<boolean>;
     focusEffect(): void;
@@ -389,12 +390,11 @@ export class GridPattern {
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly multiSelectable: SignalLike<boolean | undefined>;
     readonly nextColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
+    onClick(event: PointerEvent): void;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    onPointerdown(event: PointerEvent): void;
     readonly pauseNavigation: SignalLike<boolean>;
-    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     resetFocusEffect(): void;
     resetStateEffect(): void;
