@@ -14,7 +14,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatChipEditInput,
@@ -248,7 +248,7 @@ describe('Row Chips', () => {
         expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
       });
 
-      it('should begin editing on single click when focused', fakeAsync(() => {
+      it('should begin editing on single click when focused', () => {
         expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
         chipNativeElement.focus();
 
@@ -257,7 +257,7 @@ describe('Row Chips', () => {
         dispatchMouseEvent(chipNativeElement, 'click');
         fixture.detectChanges();
         expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeTruthy();
-      }));
+      });
 
       describe('when disabled', () => {
         beforeEach(() => {
@@ -280,7 +280,7 @@ describe('Row Chips', () => {
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
         });
 
-        it('should not begin editing on single click when focused', fakeAsync(() => {
+        it('should not begin editing on single click when focused', () => {
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
           chipNativeElement.focus();
 
@@ -289,7 +289,7 @@ describe('Row Chips', () => {
           dispatchMouseEvent(chipNativeElement, 'click');
           fixture.detectChanges();
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
-        }));
+        });
       });
 
       describe('when not editable', () => {
@@ -313,7 +313,7 @@ describe('Row Chips', () => {
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
         });
 
-        it('should not begin editing on single click when focused', fakeAsync(() => {
+        it('should not begin editing on single click when focused', () => {
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
           chipNativeElement.focus();
 
@@ -322,7 +322,7 @@ describe('Row Chips', () => {
           dispatchMouseEvent(chipNativeElement, 'click');
           fixture.detectChanges();
           expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
-        }));
+        });
       });
     });
 
@@ -330,19 +330,19 @@ describe('Row Chips', () => {
       let editInputInstance: MatChipEditInput;
       let primaryAction: HTMLElement;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         testComponent.editable = true;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         dispatchFakeEvent(chipNativeElement, 'dblclick');
         fixture.detectChanges();
-        flush();
+        await new Promise(r => setTimeout(r, 0));
 
         spyOn(testComponent, 'chipEdit');
         const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
         editInputInstance = editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
         primaryAction = chipNativeElement.querySelector('.mdc-evolution-chip__action--primary')!;
-      }));
+      });
 
       function keyDownOnPrimaryAction(keyCode: number, key: string) {
         const keyDownEvent = createKeyboardEvent('keydown', keyCode, key);
@@ -375,27 +375,24 @@ describe('Row Chips', () => {
         expect(testComponent.chipDestroy).not.toHaveBeenCalled();
       });
 
-      it('should stop editing on blur', fakeAsync(() => {
+      it('should stop editing on blur', () => {
         chipInstance._onBlur.next();
-        flush();
         expect(testComponent.chipEdit).toHaveBeenCalled();
-      }));
+      });
 
-      it('should stop editing on ENTER', fakeAsync(() => {
+      it('should stop editing on ENTER', () => {
         dispatchKeyboardEvent(getEditInput(), 'keydown', ENTER);
         fixture.detectChanges();
-        flush();
         expect(testComponent.chipEdit).toHaveBeenCalled();
-      }));
+      });
 
-      it('should emit the new chip value when editing completes', fakeAsync(() => {
+      it('should emit the new chip value when editing completes', () => {
         const chipValue = 'chip value';
         editInputInstance.setValue(chipValue);
         dispatchKeyboardEvent(getEditInput(), 'keydown', ENTER);
-        flush();
         const expectedValue = jasmine.objectContaining({value: chipValue});
         expect(testComponent.chipEdit).toHaveBeenCalledWith(expectedValue);
-      }));
+      });
 
       it('should use the projected edit input if provided', () => {
         expect(editInputInstance.getNativeElement()).toHaveClass('projected-edit-input');
@@ -414,31 +411,28 @@ describe('Row Chips', () => {
         expect(editInputNoProject.getNativeElement()).not.toHaveClass('projected-edit-input');
       });
 
-      it('should focus the chip content if the edit input has focus on completion', fakeAsync(() => {
+      it('should focus the chip content if the edit input has focus on completion', () => {
         const chipValue = 'chip value';
         editInputInstance.setValue(chipValue);
         dispatchKeyboardEvent(getEditInput(), 'keydown', ENTER);
         fixture.detectChanges();
-        flush();
         expect(document.activeElement).toBe(primaryAction);
-      }));
+      });
 
-      it('should not change focus if another element has focus on completion', fakeAsync(() => {
+      it('should not change focus if another element has focus on completion', () => {
         const chipValue = 'chip value';
         editInputInstance.setValue(chipValue);
         testComponent.chipInput.nativeElement.focus();
         keyDownOnPrimaryAction(ENTER, 'Enter');
-        flush();
         expect(document.activeElement).not.toBe(primaryAction);
-      }));
+      });
 
-      it('should not prevent SPACE events when editing', fakeAsync(() => {
+      it('should not prevent SPACE events when editing', () => {
         const event = dispatchKeyboardEvent(getEditInput(), 'keydown', SPACE);
         fixture.detectChanges();
-        flush();
 
         expect(event.defaultPrevented).toBe(false);
-      }));
+      });
     });
 
     describe('_hasInteractiveActions', () => {
@@ -466,7 +460,7 @@ describe('Row Chips', () => {
     });
 
     describe('with edit icon', () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         testComponent.showEditIcon = true;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();

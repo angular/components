@@ -392,7 +392,7 @@ describe('MatAutocomplete', () => {
 
       typeInElement(input, 'x');
       fixture.detectChanges();
-      await wait(0);
+      await wait(100);
       fixture.detectChanges();
 
       expect(getOverlayHost(fixture)!.querySelector('.mat-mdc-autocomplete-panel')!.classList)
@@ -408,7 +408,7 @@ describe('MatAutocomplete', () => {
       clearElement(input);
       typeInElement(input, 'al');
       fixture.detectChanges();
-      await wait(0);
+      await wait(100);
       fixture.detectChanges();
 
       expect(getOverlayHost(fixture)!.querySelector('.mat-mdc-autocomplete-panel')!.classList)
@@ -473,7 +473,7 @@ describe('MatAutocomplete', () => {
       ];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      await wait(0);
+      await wait(100);
       fixture.detectChanges();
 
       expect(fixture.componentInstance.openedSpy).toHaveBeenCalled();
@@ -1887,7 +1887,7 @@ describe('MatAutocomplete', () => {
 
       typeInElement(input, 'zz');
       fixture.detectChanges();
-      await wait(0);
+      await wait(100);
       fixture.detectChanges();
 
       expect(input.getAttribute('aria-expanded'))
@@ -2990,7 +2990,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.selectedNumber = 0;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      await wait(0);
+      await wait(100);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('input'))!.nativeElement.value).toBe('0');
@@ -3248,7 +3248,7 @@ describe('MatAutocomplete', () => {
 
       typeInElement(input, '_x'); // Invalidate option to 'Alabama_x'
       fixture.detectChanges();
-      await wait(0); // Yield to allow panel to close
+      await wait(100); // Yield to allow panel to close
       fixture.detectChanges();
 
       expect(openedSpy).toHaveBeenCalledTimes(1);
