@@ -1,5 +1,5 @@
 import {Component, DebugElement, QueryList, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipSet, MatChipsModule} from './index';
 
@@ -42,7 +42,7 @@ describe('MatChipSet', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
       });
 
-      it('should disable a chip that is added after the set became disabled', fakeAsync(() => {
+      it('should disable a chip that is added after the set became disabled', async () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipSetInstance.disabled = true;
@@ -54,11 +54,11 @@ describe('MatChipSet', () => {
         fixture.componentInstance.chips.push(5, 6);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
-      }));
+      });
 
       it('should have role presentation by default', () => {
         expect(chipSetNativeElement.getAttribute('role')).toBe('presentation');
