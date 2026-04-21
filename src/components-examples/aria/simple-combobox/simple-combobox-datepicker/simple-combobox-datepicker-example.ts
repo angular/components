@@ -36,7 +36,7 @@ interface CalendarCell<D = any> {
 @Component({
   selector: 'simple-combobox-datepicker-example',
   templateUrl: 'simple-combobox-datepicker-example.html',
-  styleUrls: ['../simple-combobox-examples.css', 'simple-combobox-datepicker-example.css'],
+  styleUrls: ['../simple-combobox-example.css', 'simple-combobox-datepicker-example.css'],
   imports: [
     Grid,
     GridRow,

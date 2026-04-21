@@ -30,7 +30,7 @@ interface FoodNode {
 @Component({
   selector: 'simple-combobox-tree-auto-select-example',
   templateUrl: 'simple-combobox-tree-auto-select-example.html',
-  styleUrl: '../simple-combobox-examples.css',
+  styleUrl: '../simple-combobox-example.css',
   imports: [
     Combobox,
     ComboboxPopup,

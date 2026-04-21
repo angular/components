@@ -16,7 +16,7 @@ import {MatIconModule} from '@angular/material/icon';
 @Component({
   selector: 'simple-combobox-grid-example',
   templateUrl: 'simple-combobox-grid-example.html',
-  styleUrl: '../simple-combobox-examples.css',
+  styleUrl: '../simple-combobox-example.css',
   imports: [
     Combobox,
     ComboboxPopup,
