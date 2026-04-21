@@ -148,10 +148,10 @@ describe('Listbox', () => {
         expect(listboxElement.getAttribute('aria-multiselectable')).toBe('false');
       });
 
-      it('should set aria-selected to "false" for all options by default', () => {
-        optionElements.forEach(optionElement => {
-          expect(optionElement.getAttribute('aria-selected')).toBe('false');
-        });
+      it('should set aria-selected to "true" for the first option and "false" for others by default', () => {
+        expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
+        expect(optionElements[1].getAttribute('aria-selected')).toBe('false');
+        expect(optionElements[2].getAttribute('aria-selected')).toBe('false');
       });
     });
 

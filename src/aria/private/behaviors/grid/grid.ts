@@ -83,7 +83,7 @@ export class Grid<T extends GridCell> {
   );
 
   /** The tab index for the grid container. */
-  readonly gridTabIndex: SignalLike<-1 | 0 | null> = () => this.focusBehavior.gridTabIndex();
+  readonly gridTabIndex: SignalLike<-1 | 0> = () => this.focusBehavior.gridTabIndex();
 
   /** Whether the grid is in a disabled state. */
   readonly gridDisabled: SignalLike<boolean> = () => this.focusBehavior.gridDisabled();

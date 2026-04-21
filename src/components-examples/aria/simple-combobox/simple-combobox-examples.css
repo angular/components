@@ -39,8 +39,8 @@
   width: 24px;
   height: 24px;
   font-size: 24px;
-    color: var(--mat-sys-on-surface-variant);
-    user-select: none;
+  color: var(--mat-sys-on-surface-variant);
+  user-select: none;
   display: grid;
   place-items: center;
   pointer-events: none;
@@ -114,6 +114,13 @@
   gap: 1rem;
 }
 
+.example-option[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  color: var(--mat-sys-on-surface-variant);
+  pointer-events: none;
+}
+
 .example-option-text {
   flex: 1;
 }
@@ -166,7 +173,7 @@
   padding: 10px;
   overflow-x: scroll;
   width: 100%;
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .example-tree-item {

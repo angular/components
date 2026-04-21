@@ -275,8 +275,8 @@ describe('Grid', () => {
       });
 
       it('should trigger click on Enter for simple widget', () => {
-        const {grid} = createGrid([{cells: [{widgets: [{widgetType: 'simple'}]}]}], gridInputs);
-        const widget = grid.cells()[0][0].inputs.widgets()[0];
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
         const element = widget.element();
         spyOn(element, 'click');
 
