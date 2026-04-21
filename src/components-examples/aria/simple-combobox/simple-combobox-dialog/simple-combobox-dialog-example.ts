@@ -26,7 +26,7 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'simple-combobox-dialog-example',
   templateUrl: 'simple-combobox-dialog-example.html',
-  styleUrls: ['../simple-combobox-examples.css'],
+  styleUrls: ['../simple-combobox-example.css'],
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

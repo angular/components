@@ -23,7 +23,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 @Component({
   selector: 'simple-combobox-highlight-example',
   templateUrl: 'simple-combobox-highlight-example.html',
-  styleUrl: '../simple-combobox-examples.css',
+  styleUrl: '../simple-combobox-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
 export class SimpleComboboxHighlightExample {
