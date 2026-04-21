@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {afterRenderEffect, computed, signal, untracked} from '@angular/core';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
+import {computed, signal, untracked} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
 
@@ -60,12 +60,13 @@ export class SimpleComboboxPattern {
 
   /** The autocomplete behavior of the combobox. */
   readonly autocomplete = computed<'none' | 'inline' | 'list' | 'both'>(() => {
-    const hasPopup = !!this.inputs.popup();
+    const popupType = this.popupType();
+    const hasAutocompletePopup = !!this.inputs.popup() && popupType !== 'dialog';
     const hasInlineSuggestion = !!this.inlineSuggestion();
-    if (hasPopup && hasInlineSuggestion) {
+    if (hasAutocompletePopup && hasInlineSuggestion) {
       return 'both';
     }
-    if (hasPopup) {
+    if (hasAutocompletePopup) {
       return 'list';
     }
     if (hasInlineSuggestion) {
@@ -143,9 +144,9 @@ export class SimpleComboboxPattern {
     return manager;
   });
 
-  /** The pointerdown event manager for the combobox. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the combobox. */
+  click = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.isEditable()) return manager;
 
@@ -157,12 +158,6 @@ export class SimpleComboboxPattern {
   constructor(readonly inputs: SimpleComboboxInputs) {
     this.expanded = inputs.expanded;
     this.value = inputs.value;
-
-    afterRenderEffect(() => {
-      if (this.inputs.alwaysExpanded()) {
-        this.expanded.set(true);
-      }
-    });
   }
 
   /** Handles keydown events for the combobox. */
@@ -172,10 +167,10 @@ export class SimpleComboboxPattern {
     }
   }
 
-  /** Handles pointerdown events for the combobox. */
-  onPointerdown(event: PointerEvent) {
+  /** Handles click events for the combobox. */
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.click().handle(event);
     }
   }
 
@@ -186,9 +181,6 @@ export class SimpleComboboxPattern {
 
   /** Handles focus out events for the combobox. */
   onFocusout(event: FocusEvent) {
-    const focusTarget = event.relatedTarget as Element | null;
-    if (this.element().contains(focusTarget)) return;
-
     this.isFocused.set(false);
   }
 
@@ -209,7 +201,7 @@ export class SimpleComboboxPattern {
 
     const isDeleting = untracked(() => this.isDeleting());
     const isFocused = untracked(() => this.isFocused());
-    const isExpanded = untracked(() => this.expanded());
+    const isExpanded = this.expanded();
 
     if (!inlineSuggestion || !isFocused || !isExpanded || isDeleting) return;
 

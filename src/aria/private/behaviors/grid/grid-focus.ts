@@ -98,7 +98,7 @@ export class GridFocus<T extends GridFocusCell> {
   });
 
   /** The tab index for the grid container. */
-  readonly gridTabIndex = computed<-1 | 0 | null>(() => {
+  readonly gridTabIndex = computed<-1 | 0>(() => {
     const isTabbable = this.inputs.tabbable?.();
     if (isTabbable === false) {
       return -1;

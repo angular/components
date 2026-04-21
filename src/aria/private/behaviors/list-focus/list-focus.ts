@@ -114,6 +114,8 @@ export class ListFocus<T extends ListFocusItem> {
     if (opts?.focusElement || opts?.focusElement === undefined) {
       if (this.inputs.focusMode() === 'roving') {
         item.element()?.focus();
+      } else if (this.inputs.focusMode() === 'activedescendant') {
+        this.inputs.element()?.focus();
       }
     }
 

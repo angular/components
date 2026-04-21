@@ -256,6 +256,7 @@ export class GridPattern {
 
   /** Sets the default active state of the grid before receiving focus the first time. */
   setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
     this.gridBehavior.setDefaultState();
   }
 

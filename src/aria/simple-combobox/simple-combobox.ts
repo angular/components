@@ -59,11 +59,11 @@ import {
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusin)': '_pattern.onFocusin()',
     '(focusout)': '_pattern.onFocusout($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(input)': '_pattern.onInput($event)',
   },
 })
-export class Combobox extends DeferredContentAware {
+export class Combobox extends DeferredContentAware implements OnInit {
   private readonly _renderer = inject(Renderer2);
 
   /** The element that the combobox is attached to. */
@@ -114,6 +114,12 @@ export class Combobox extends DeferredContentAware {
       afterRenderEffect(() => {
         this._pattern.highlightEffect();
       });
+    }
+  }
+
+  ngOnInit() {
+    if (this.alwaysExpanded()) {
+      this.expanded.set(true);
     }
   }
 
