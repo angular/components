@@ -411,13 +411,28 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    * direction, this would be the equivalent of setting a fictional `scrollRight` property.
    * @param offset The offset to scroll to.
    * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
+   * @param relativeTo The start point of the offset. Default is `scrollingContainer`.
    */
-  scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
+  scrollToOffset(
+    offset: number,
+    behavior: ScrollBehavior = 'auto',
+    relativeTo: 'viewport' | 'scrollingContainer' = 'scrollingContainer',
+  ) {
     const options: ExtendedScrollToOptions = {behavior};
     if (this.orientation === 'horizontal') {
-      options.start = offset;
+      if (relativeTo === 'scrollingContainer') {
+        options.start = offset;
+      } else {
+        const viewportOffset = this.measureViewportOffset('start');
+        options.start = viewportOffset + offset;
+      }
     } else {
-      options.top = offset;
+      if (relativeTo === 'scrollingContainer') {
+        options.top = offset;
+      } else {
+        const viewportOffset = this.measureViewportOffset('top');
+        options.top = viewportOffset + offset;
+      }
     }
     this.scrollable.scrollTo(options);
   }
@@ -460,6 +475,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    * @param from The edge to measure from.
    */
   measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end') {
+    if (this.scrollable === this) {
+      return 0;
+    }
+
     let fromRect: 'left' | 'top' | 'right' | 'bottom';
     const LEFT = 'left';
     const RIGHT = 'right';
