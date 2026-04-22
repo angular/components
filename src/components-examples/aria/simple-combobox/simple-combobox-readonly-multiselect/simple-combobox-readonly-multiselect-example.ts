@@ -15,7 +15,6 @@ import {
   computed,
   signal,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 

@@ -4,7 +4,6 @@ import {
   DebugElement,
   signal,
   ChangeDetectionStrategy,
-  effect,
   untracked,
   viewChild,
   afterRenderEffect,
@@ -17,9 +16,44 @@ import {runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';
 import {NgTemplateOutlet} from '@angular/common';
 import {Grid, GridRow, GridCell, GridCellWidget} from '../grid';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 
 describe('Combobox', () => {
-  const waitForMicrotasks = (ms = 10) => new Promise(resolve => setTimeout(resolve, ms));
+  let currentFixture: ComponentFixture<any> | null = null;
+
+  const resetMutationState = () => {
+    // No-op, kept to avoid changing setup helpers
+  };
+
+  const waitForMutation = (ms = 50) => {
+    const factory = TestBed.inject(MutationObserverFactory);
+    return new Promise<void>(resolve => {
+      let resolved = false;
+      const timeoutId = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          observer?.disconnect();
+          currentFixture?.detectChanges();
+          resolve();
+        }
+      }, ms);
+
+      const observer = factory.create(() => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeoutId);
+          observer?.disconnect();
+          currentFixture?.detectChanges();
+          resolve();
+        }
+      });
+      observer?.observe(document.body, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    });
+  };
 
   describe('with Listbox', () => {
     let fixture: ComponentFixture<ComboboxListboxExample>;
@@ -78,6 +112,8 @@ describe('Combobox', () => {
 
       fixture.detectChanges();
       defineTestVariables();
+      currentFixture = fixture;
+      resetMutationState();
     }
 
     function defineTestVariables() {
@@ -149,7 +185,7 @@ describe('Combobox', () => {
         down();
         const option = getOption('Alabama')!;
 
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(option.id);
       });
     });
@@ -161,7 +197,7 @@ describe('Combobox', () => {
         down();
         const options = getOptions();
 
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -170,7 +206,7 @@ describe('Combobox', () => {
         up();
         const options = getOptions();
 
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
@@ -180,7 +216,7 @@ describe('Combobox', () => {
         down(); // Open popup
         down(); // Move to next item
         const options = getOptions();
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
       });
 
@@ -189,7 +225,7 @@ describe('Combobox', () => {
         down(); // Move to next item
         up(); // Move back to first item
         const options = getOptions();
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -198,7 +234,7 @@ describe('Combobox', () => {
         down(); // Move to next item
         keydown('Home');
         const options = getOptions();
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -206,7 +242,7 @@ describe('Combobox', () => {
         down(); // Open
         keydown('End');
         const options = getOptions();
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
@@ -602,6 +638,8 @@ describe('Combobox', () => {
 
       fixture.detectChanges();
       defineTestVariables();
+      currentFixture = fixture;
+      resetMutationState();
     }
 
     function defineTestVariables() {
@@ -661,16 +699,16 @@ describe('Combobox', () => {
 
       it('should toggle aria-expanded on parent nodes', async () => {
         down();
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
         const item = getTreeItem('Winter')!;
         expect(item.getAttribute('aria-expanded')).toBe('false');
 
         right(); // Opens Winter
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
         expect(item.getAttribute('aria-expanded')).toBe('true');
 
         left(); // Closes Winter
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
         expect(item.getAttribute('aria-expanded')).toBe('false');
       });
     });
@@ -680,7 +718,7 @@ describe('Combobox', () => {
 
       it('should navigate to the first focusable item on ArrowDown', async () => {
         down(); // Winter
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -688,7 +726,7 @@ describe('Combobox', () => {
       it('should navigate to the last focusable item on ArrowUp', async () => {
         down(); // Winter
         up(); // Fall
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         const item = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -696,7 +734,7 @@ describe('Combobox', () => {
       it('should navigate to the next focusable item on ArrowDown when open', async () => {
         down(); // Winter
         down(); // Spring
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         const item = getTreeItem('Spring')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -707,7 +745,7 @@ describe('Combobox', () => {
         down(); // Summer
         down(); // Fall
         up(); // Summer
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         const item = getTreeItem('Summer')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -726,7 +764,7 @@ describe('Combobox', () => {
         right(); // December
 
         const item = getTreeItem('December')!;
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
@@ -736,7 +774,7 @@ describe('Combobox', () => {
         expect(getVisibleTreeItems().length).toBe(7);
         left(); // Winter Collapsed
         expect(getVisibleTreeItems().length).toBe(4);
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -745,13 +783,13 @@ describe('Combobox', () => {
         down(); // Winter
         right(); // Expand Winter
         right(); // December
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
 
         const item1 = getTreeItem('December')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item1.id);
 
         left();
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
 
         const item2 = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item2.id);
@@ -761,7 +799,7 @@ describe('Combobox', () => {
         down();
         down();
         keydown('Home');
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
 
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
@@ -771,7 +809,7 @@ describe('Combobox', () => {
         down();
         down();
         keydown('End');
-        await waitForMicrotasks(10);
+        await waitForMutation(10);
 
         const grainsItem = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(grainsItem.id);
@@ -887,7 +925,7 @@ describe('Combobox', () => {
         // Force computed signal to re-evaluate by updating dataSource reference
         fixture.componentInstance.dataSource.set([...fixture.componentInstance.dataSource()]);
         fixture.detectChanges();
-        await waitForMicrotasks();
+        await waitForMutation();
         expect(getTreeItems().length).toBe(16);
       });
 
@@ -979,6 +1017,8 @@ describe('Combobox', () => {
       fixture.detectChanges();
       const inputDebugElement = fixture.debugElement.query(By.directive(Combobox));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
+      currentFixture = fixture;
+      resetMutationState();
     }
 
     beforeEach(() => setupCombobox());
@@ -1011,7 +1051,7 @@ describe('Combobox', () => {
       it('should set aria-activedescendant to the active grid cell id', async () => {
         focus();
         down(); // Open popup
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
         expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
       });
     });
@@ -1021,11 +1061,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       down(); // Navigate down to 'Bird-label'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
 
       up(); // Navigate back up to 'Antelope-label'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1034,11 +1074,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       right(); // Move right to 'Antelope-delete'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
 
       left(); // Move back left to 'Antelope-label'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1047,11 +1087,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       right(); // Move right to 'Antelope-delete'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
 
       home(); // Move back to 'Antelope-label'
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1060,7 +1100,7 @@ describe('Combobox', () => {
       down(); // Open popup
 
       end(); // Move to end of row ('Antelope-delete')
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
     });
 
@@ -1069,17 +1109,17 @@ describe('Combobox', () => {
       down(); // Open popup
 
       down(); // Navigate down
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
 
       // The active item is 'Bird' because we navigated down once more
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
 
       right(); // Move right to delete button
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-delete');
 
       down(); // Move down to next row
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Cat-delete');
     });
 
@@ -1093,7 +1133,7 @@ describe('Combobox', () => {
     it('should filter items and maintain selection', async () => {
       down(); // Antelope
       enter(); // Select active item
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
 
       expect(fixture.componentInstance.searchString()).toBe('Antelope');
 
@@ -1104,7 +1144,7 @@ describe('Combobox', () => {
       expect(fixture.componentInstance.searchString()).toBe('');
 
       down(); // Go to BirdLabel
-      await waitForMicrotasks(20);
+      await waitForMutation(20);
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
     });
 
@@ -1140,7 +1180,7 @@ describe('Combobox', () => {
         const gridCells = fixture.nativeElement.querySelectorAll('[ngGridCellWidget]');
         gridCells[0].dispatchEvent(new PointerEvent('click', {bubbles: true}));
         fixture.detectChanges();
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
 
         expect(fixture.componentInstance.selectedItem()).toBe('Antelope');
         expect(inputElement.value).toBe('Antelope');
@@ -1151,7 +1191,7 @@ describe('Combobox', () => {
         down(); // Open popup
 
         down(); // Move row down
-        await waitForMicrotasks(20);
+        await waitForMutation(20);
 
         expect(fixture.componentInstance.selectedItem()).toBeNull();
       });
@@ -1265,7 +1305,7 @@ function getTreeNodes(): TreeNode[] {
     [disabled]="readonly()"
     (focusout)="onBlur()"
   />
- 
+
   <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
     <ul ngComboboxWidget ngTree #tree="ngTree" focusMode="activedescendant" [tabbable]="false" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()">
       <ng-template
