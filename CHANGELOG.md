@@ -1,3 +1,12 @@
+<a name="22.0.0-next.6"></a>
+# 22.0.0-next.6 "v22-0-0-next-6" (2026-04-22)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [91a4932f6](https://github.com/angular/components/commit/91a4932f65e02ce7087cb38cc0198b6f1f993242) | fix | **combobox:** increases autocomplete demo's  placeholder text c… ([#33084](https://github.com/angular/components/pull/33084)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.8"></a>
 # 21.2.8 "v21-2-8" (2026-04-22)
 No user facing changes in this release
