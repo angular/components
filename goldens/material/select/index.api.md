@@ -361,6 +361,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     tabIndex: number;
     toggle(): void;
     trigger: ElementRef;
+    // (undocumented)
+    protected _triggerClicked(): void;
     get triggerValue(): string;
     typeaheadDebounceInterval: number;
     updateErrorState(): void;

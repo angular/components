@@ -1018,6 +1018,13 @@ export class MatSelect
     return !this._selectionModel || this._selectionModel.isEmpty();
   }
 
+  protected _triggerClicked() {
+    // If a parent form field is present, it'll pick up this click so we don't need to handle it.
+    if (!this._parentFormField) {
+      this.open();
+    }
+  }
+
   private _initializeSelection(): void {
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
