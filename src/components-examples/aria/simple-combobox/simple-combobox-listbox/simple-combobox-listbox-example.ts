@@ -8,7 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {afterRenderEffect, Component, computed, signal, viewChild, untracked} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 /** @title */

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
   SimpleComboboxListboxExample,
   SimpleComboboxTreeExample,
@@ -24,6 +24,7 @@ import {
 } from '@angular/components-examples/aria/simple-combobox';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'simple-combobox-demo.html',
   styleUrl: 'simple-combobox-demo.css',
   imports: [
