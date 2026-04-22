@@ -11,7 +11,7 @@ $m3-motion-tokens: m3-motion.md-sys-motion-values();
 $easing-standard: map.get($m3-motion-tokens, easing-standard);
 $easing-legacy: map.get($m3-motion-tokens, easing-legacy);
 $easing-legacy-decelerate: map.get($m3-motion-tokens, easing-legacy-decelerate);
-$duration-medium2: map.get($m3-motion-tokens, duration-medium2);
+$duration-medium1: map.get($m3-motion-tokens, duration-medium1);
 $duration-short3: map.get($m3-motion-tokens, duration-short3);
 $duration-short2: map.get($m3-motion-tokens, duration-short2);
 
@@ -35,7 +35,7 @@ $fallbacks: m3-fab.get-tokens();
   -webkit-appearance: none;
   overflow: visible;
   transition: box-shadow 280ms $easing-legacy, opacity 15ms linear 30ms,
-    transform $duration-medium2 0ms $easing-legacy-decelerate;
+    transform $duration-medium1 0ms $easing-legacy-decelerate;
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
   // Due to the shape of the FAB, inheriting the shape looks off. Disable it explicitly.
@@ -190,9 +190,9 @@ $fallbacks: m3-fab.get-tokens();
     // LTR: 16px at start (close to icon), 20px at end (close to text)
     padding-left: 16px;
     padding-right: 20px;
-    transition: padding $duration-medium2 $easing-standard,
-                margin $duration-medium2 $easing-standard,
-                border-radius $duration-medium2 $easing-standard;
+    transition: padding $duration-medium1 $easing-standard,
+                margin $duration-medium1 $easing-standard,
+                border-radius $duration-medium1 $easing-standard;
 
     // RTL: start moves to right (16px), end moves to left (20px)
   [dir='rtl'] & {
@@ -235,7 +235,7 @@ $fallbacks: m3-fab.get-tokens();
     overflow: hidden;
 
     transition: opacity $duration-short3 $duration-short2 linear,
-          grid-template-columns $duration-medium2 $easing-standard;
+          grid-template-columns $duration-medium1 $easing-standard;
     }
 
     // Icon visually positioned on the LEFT (first icon in LTR, or last icon in RTL)
@@ -247,7 +247,7 @@ $fallbacks: m3-fab.get-tokens();
     > .material-icons {
     margin-left: 0;
     margin-right: 12px;
-    transition: margin $duration-medium2 $easing-standard;
+    transition: margin $duration-medium1 $easing-standard;
     }
 
     // Icon visually positioned on the RIGHT (last icon in LTR, or first icon in RTL)
@@ -259,7 +259,7 @@ $fallbacks: m3-fab.get-tokens();
     [dir='rtl'] & > .material-icons {
     margin-left: 12px;
     margin-right: 0;
-    transition: margin $duration-medium2 $easing-standard;
+    transition: margin $duration-medium1 $easing-standard;
     }
 
     &.mat-mdc-extended-fab-collapsed {
@@ -278,7 +278,7 @@ $fallbacks: m3-fab.get-tokens();
       grid-template-columns: minmax(0, 0fr);
 
       opacity: 0;
-      transition: grid-template-columns $duration-medium2 $easing-standard,
+      transition: grid-template-columns $duration-medium1 $easing-standard,
             opacity $duration-short2 0ms linear;
     }
 
@@ -289,7 +289,7 @@ $fallbacks: m3-fab.get-tokens();
     .mdc-button__label + .material-icons {
       margin-left: 0;
       margin-right: 0;
-      transition: margin $duration-medium2 $easing-standard;
+      transition: margin $duration-medium1 $easing-standard;
     }
   }
   // stylelint-enable selector-class-pattern
