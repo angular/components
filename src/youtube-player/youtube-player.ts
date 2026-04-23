@@ -9,6 +9,8 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="youtube" preserve="true" />
 
+import type * as YT from 'youtube';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -576,7 +578,10 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
     // A player can't be created if the API isn't loaded,
     // or there isn't a video or playlist to be played.
-    if (typeof YT === 'undefined' || (!this.videoId && !this.playerVars?.list)) {
+    if (
+      typeof (window as Window & {YT?: typeof YT}).YT === 'undefined' ||
+      (!this.videoId && !this.playerVars?.list)
+    ) {
       return;
     }
 
@@ -597,7 +602,11 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       params.videoId = this.videoId;
     }
     const player = this._ngZone.runOutsideAngular(
-      () => new YT.Player(this.youtubeContainer.nativeElement, params),
+      () =>
+        new (window as Window & {YT?: typeof YT}).YT!.Player(
+          this.youtubeContainer.nativeElement,
+          params,
+        ),
     );
 
     const whenReady = (event: YT.PlayerEvent) => {

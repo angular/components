@@ -15,6 +15,7 @@ import {
   YouTubePlayer,
 } from './youtube-player';
 import {PlaceholderImageQuality} from './youtube-player-placeholder';
+import type * as YT from 'youtube';
 
 declare var window: Window;
 
@@ -200,7 +201,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
       events.onReady({target: playerSpy});
 
-      const playerVars: YT.PlayerVars = {modestbranding: YT.ModestBranding.Modest};
+      const playerVars: YT.PlayerVars = {
+        modestbranding: (window as Window & {YT?: typeof YT}).YT!.ModestBranding.Modest,
+      };
       fixture.componentInstance.playerVars = playerVars;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -389,7 +392,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       testComponent.youtubePlayer.playVideo();
-      expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.PLAYING);
+      expect(testComponent.youtubePlayer.getPlayerState()).toBe(
+        (window as Window & {YT?: typeof YT}).YT!.PlayerState.PLAYING,
+      );
 
       events.onReady({target: playerSpy});
 
@@ -401,7 +406,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       testComponent.youtubePlayer.pauseVideo();
-      expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.PAUSED);
+      expect(testComponent.youtubePlayer.getPlayerState()).toBe(
+        (window as Window & {YT?: typeof YT}).YT!.PlayerState.PAUSED,
+      );
 
       events.onReady({target: playerSpy});
 
@@ -413,7 +420,9 @@ describe('YoutubePlayer', () => {
       fixture.detectChanges();
 
       testComponent.youtubePlayer.stopVideo();
-      expect(testComponent.youtubePlayer.getPlayerState()).toBe(YT.PlayerState.CUED);
+      expect(testComponent.youtubePlayer.getPlayerState()).toBe(
+        (window as Window & {YT?: typeof YT}).YT!.PlayerState.CUED,
+      );
 
       events.onReady({target: playerSpy});
 

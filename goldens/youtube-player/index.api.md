@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import * as YT_2 from 'youtube';
 
 // @public
 export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
@@ -24,18 +25,18 @@ export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     constructor();
-    readonly apiChange: Observable<YT.PlayerEvent>;
+    readonly apiChange: Observable<YT_2.PlayerEvent>;
     disableCookies: boolean;
     disablePlaceholder: boolean;
     endSeconds: number | undefined;
-    readonly error: Observable<YT.OnErrorEvent>;
+    readonly error: Observable<YT_2.OnErrorEvent>;
     getAvailablePlaybackRates(): number[];
-    getAvailableQualityLevels(): YT.SuggestedVideoQuality[];
+    getAvailableQualityLevels(): YT_2.SuggestedVideoQuality[];
     getCurrentTime(): number;
     getDuration(): number;
-    getPlaybackQuality(): YT.SuggestedVideoQuality;
+    getPlaybackQuality(): YT_2.SuggestedVideoQuality;
     getPlaybackRate(): number;
-    getPlayerState(): YT.PlayerState | undefined;
+    getPlayerState(): YT_2.PlayerState | undefined;
     getVideoEmbedCode(): string;
     getVideoLoadedFraction(): number;
     getVideoUrl(): string;
@@ -75,11 +76,11 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     pauseVideo(): void;
     placeholderButtonLabel: string;
     placeholderImageQuality: PlaceholderImageQuality;
-    readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
-    readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
-    playerVars: YT.PlayerVars | undefined;
+    readonly playbackQualityChange: Observable<YT_2.OnPlaybackQualityChangeEvent>;
+    readonly playbackRateChange: Observable<YT_2.OnPlaybackRateChangeEvent>;
+    playerVars: YT_2.PlayerVars | undefined;
     playVideo(): void;
-    readonly ready: Observable<YT.PlayerEvent>;
+    readonly ready: Observable<YT_2.PlayerEvent>;
     requestFullscreen(options?: FullscreenOptions): Promise<void>;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
@@ -87,9 +88,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     protected _shouldShowPlaceholder(): boolean;
     showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
-    readonly stateChange: Observable<YT.OnStateChangeEvent>;
+    readonly stateChange: Observable<YT_2.OnStateChangeEvent>;
     stopVideo(): void;
-    suggestedQuality: YT.SuggestedVideoQuality | undefined;
+    suggestedQuality: YT_2.SuggestedVideoQuality | undefined;
     unMute(): void;
     videoId: string | undefined;
     get width(): number;
