@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import type * as YT from 'youtube';
+
 // A re-creation of YT.PlayerState since enum values cannot be bound to the window object.
 const playerState = {
   UNSTARTED: -1,

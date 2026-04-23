@@ -53,6 +53,7 @@ PKG_EXTERNALS = [
     "selenium-webdriver",
     "safevalues",
     "safevalues/dom",
+    "youtube",
 ]
 
 # Creates externals for a given package and its entry-points.
