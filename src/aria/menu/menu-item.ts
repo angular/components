@@ -62,8 +62,6 @@ export class MenuItem<V> {
   /** Whether the menu item is disabled. */
   readonly disabled = input<boolean>(false);
 
-  // TODO(wagnermaciel): Discuss whether all inputs should be models.
-
   /** The search term associated with the menu item. */
   readonly searchTerm = model<string>('');
 

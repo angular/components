@@ -116,7 +116,6 @@ export class AccordionGroup {
     element: () => this.element,
     activeItem: signal(undefined),
     items: this._triggerPatterns,
-    // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
   });
 
