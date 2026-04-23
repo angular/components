@@ -56,11 +56,6 @@ export class Option<V> {
   /** A unique identifier for the option. */
   readonly id = input(inject(_IdGenerator).getId('ng-option-', true));
 
-  // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
-  // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
-  /** The text used by the typeahead search. */
-  protected readonly searchTerm = computed(() => this.label() ?? this.element.textContent);
-
   /** The parent Listbox UIPattern. */
   private readonly _listboxPattern = computed(() => this._listbox._pattern);
 
@@ -83,6 +78,6 @@ export class Option<V> {
     value: this.value,
     listbox: this._listboxPattern,
     element: () => this.element,
-    searchTerm: () => this.searchTerm() ?? '',
+    searchTerm: () => this.label() ?? '',
   });
 }

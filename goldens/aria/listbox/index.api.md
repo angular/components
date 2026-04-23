@@ -42,7 +42,6 @@ class Option_2<V> {
     readonly id: _angular_core.InputSignal<string>;
     readonly label: _angular_core.InputSignal<string | undefined>;
     readonly _pattern: OptionPattern<V>;
-    protected readonly searchTerm: _angular_core.Signal<string>;
     readonly selected: _angular_core.Signal<boolean | undefined>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
