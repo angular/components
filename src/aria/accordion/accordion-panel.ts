@@ -8,7 +8,7 @@
 
 import {Directive, ElementRef, afterRenderEffect, computed, inject, input} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {DeferredContentAware, AccordionTriggerPattern} from '../private';
+import {AccordionTriggerPattern, DeferredContentAware, LabelControl} from '../private';
 
 /**
  * The content panel of an accordion item that is conditionally visible.
@@ -43,7 +43,8 @@ import {DeferredContentAware, AccordionTriggerPattern} from '../private';
   host: {
     'role': 'region',
     '[attr.id]': 'id()',
-    '[attr.aria-labelledby]': '_pattern?.id()',
+    '[attr.aria-label]': '_labelControl.label()',
+    '[attr.aria-labelledby]': '_labelControl.labelledBy()',
     '[attr.inert]': '!visible() ? true : null',
   },
 })
@@ -57,8 +58,17 @@ export class AccordionPanel {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
+  /** Controls label for this tabpanel. */
+  readonly _labelControl: LabelControl;
+
   /** A global unique identifier for the panel. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-panel-', true));
+
+  /** The (optional) label for the accordion panel. */
+  readonly label = input<string | undefined>(undefined);
+
+  /** The (optional) labelledBy ids for the accordion panel. */
+  readonly labelledBy = input<string[]>([]);
 
   /** Whether the accordion panel is visible. True if the associated trigger is expanded. */
   readonly visible = computed(() => this._pattern?.expanded() === true);
@@ -71,6 +81,12 @@ export class AccordionPanel {
   _pattern?: AccordionTriggerPattern;
 
   constructor() {
+    this._labelControl = new LabelControl({
+      defaultLabelledBy: computed(() => this._pattern?.id()),
+      label: this.label,
+      labelledBy: this.labelledBy,
+    });
+
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect({
       write: () => {
