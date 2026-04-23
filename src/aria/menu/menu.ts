@@ -119,13 +119,21 @@ export class Menu<V> {
   readonly _pattern: MenuPattern<V>;
 
   /**
-   * The menu items as a writable signal.
+   * The menu item patterns for the menu items that are direct children of this menu, passed
+   * to the menu pattern.
    *
-   * TODO(wagnermaciel): This would normally be a computed, but using a computed causes a bug where
-   * sometimes the items array is empty. The bug can be reproduced by switching this to use a
-   * computed and then quickly opening and closing menus in the dev app.
+   * Note: contentChildren has an issue where it will return a successively smaller list
+   * each time that the menu is open and closed, eventually resulting in an empty list.
+   * The workaround is to trigger a recomputation of this signal whenever the menu is opened
+   * or closed, by calling this._pattern.visible() in the signal body. Otherwise, computed could
+   * not be used and would have to rebuild the list each time this method is called.
    */
-  private readonly _itemPatterns = () => this._items().map(i => i._pattern);
+  private readonly _itemPatterns = computed(() => {
+    // Only needed to force a recompute.
+    this._pattern.visible();
+
+    return this._items().map(i => i._pattern);
+  });
 
   /** Whether the menu is visible. */
   readonly visible = computed(() => this._pattern.visible());
@@ -165,10 +173,9 @@ export class Menu<V> {
       }
     });
 
-    // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
-    // submenus. In those cases, the ui pattern is calling focus() before the ui has a chance to
-    // update the display property. The result is focus() being called on an element that is not
-    // focusable. This simply retries focusing the element after render.
+    // Focuses an active menu item when the menu becomes visible. This is needed to
+    // properly restore focus to the active item when returning to a menu, and to
+    // focus the first item when navigating into a submenu with hover.
     afterRenderEffect(() => {
       if (this._pattern.visible()) {
         const activeItem = untracked(() => this._pattern.inputs.activeItem());
