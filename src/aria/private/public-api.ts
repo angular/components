@@ -11,6 +11,7 @@ export * from './listbox/listbox';
 export * from './listbox/option';
 export * from './listbox/combobox-listbox';
 export * from './menu/menu';
+export * from './behaviors/label/label';
 export * from './behaviors/signal-like/signal-like';
 export * from './tabs/tabs';
 export * from './toolbar/toolbar';
