@@ -18,7 +18,7 @@
   position: absolute;
 }
 
-[ngComboboxInput] {
+input[ngCombobox] {
   width: 13rem;
   font-size: 0.9rem;
   border-radius: var(--mat-sys-corner-extra-small);
@@ -28,15 +28,13 @@
   background-color: var(--mat-sys-surface);
 }
 
-[ngComboboxInput][aria-disabled='true'] {
+input[ngCombobox][aria-disabled='true'],
+input[ngCombobox]:disabled {
   cursor: default;
   opacity: 0.5;
   background-color: var(--mat-sys-surface-dim);
 }
 
-[ngCombobox]:has([aria-expanded='false']) .example-popup {
-  display: none;
-}
 
 .example-clear-button {
   position: absolute;
