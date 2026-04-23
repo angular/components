@@ -45,7 +45,7 @@ export async function findAllEntryPointsAndExportedModules(packagePath: string) 
 function scanExportsForModules(sf: ts.SourceFile): string[] {
   const moduleExports: string[] = [];
   const visit = (node: ts.Node) => {
-    if (ts.isExportDeclaration(node) && ts.isNamedExports(node.exportClause)) {
+    if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) {
       moduleExports.push(
         ...node.exportClause.elements
           .filter(e => e.name.text.endsWith('Module'))
