@@ -559,7 +559,7 @@
     },
     "@@rules_angular+//setup:extensions.bzl%rules_angular": {
       "general": {
-        "bzlTransitiveDigest": "fkaH7HMicL3g7/NDaFzlq39kcLopMyQ3KdbDn+5CRzA=",
+        "bzlTransitiveDigest": "USMahNi8icO2j7UqTdxSDobK9vXKMkMTdrZM1RILdh4=",
         "usagesDigest": "vp6WM1d49Yy4dgDwfmS8JwvPVN+C7d2LE2X0l4Goke4=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -592,7 +592,7 @@
     },
     "@@rules_browsers+//browsers:extensions.bzl%browsers": {
       "general": {
-        "bzlTransitiveDigest": "Bm6fiKpWy96aLohOlLCP36ARVxRLZm/R+smhsb2HzmI=",
+        "bzlTransitiveDigest": "eC73J3huWBHXDgd/j+zYZ6PiUN0uIx4EhQ1QREKVpUs=",
         "usagesDigest": "FmXYJVoVJlnfUU8x8gObSvu4qWcco/9Faw61aC/wBF0=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -4111,7 +4111,7 @@
     },
     "@@rules_sass+//src/toolchain:extensions.bzl%sass": {
       "general": {
-        "bzlTransitiveDigest": "mOfuR8PsNuUWEq7JZ4MpIRbwyAGAqrCvkXXGaRNnlPQ=",
+        "bzlTransitiveDigest": "Gfwqh4WQIb7kmT5RjszNYIIVtHQNaNimdY89DHIC+yU=",
         "usagesDigest": "R0KshhzIouLWuexMUCrl4HY+FUDwlVVgF9Z7UnwyUWA=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

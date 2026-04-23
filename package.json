@@ -203,6 +203,17 @@
           "@nginfra/angular-linking": "1.0.11"
         }
       }
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@firebase/util",
+      "@parcel/watcher",
+      "bufferutil",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "protobufjs",
+      "re2",
+      "utf-8-validate"
+    ]
   }
 }
