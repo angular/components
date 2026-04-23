@@ -707,7 +707,7 @@ export class TabListPattern {
 }
 
 // @public
-export interface TabPanelInputs extends LabelControlOptionalInputs {
+export interface TabPanelInputs {
     id: SignalLike<string>;
     readonly tab: SignalLike<TabPattern | undefined>;
 }
@@ -720,7 +720,6 @@ export class TabPanelPattern {
     // (undocumented)
     readonly inputs: TabPanelInputs;
     readonly labelledBy: SignalLike<string | undefined>;
-    readonly labelManager: LabelControl;
     readonly tabIndex: SignalLike<-1 | 0>;
 }
 
