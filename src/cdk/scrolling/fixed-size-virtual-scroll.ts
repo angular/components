@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {booleanAttribute, Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {coerceNumberProperty, NumberInput} from '../coercion';
-import {Directive, forwardRef, Input, isDevMode, OnChanges} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -46,8 +46,14 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param itemSize The size of the items in the virtually scrolling list.
    * @param minBufferPx The minimum amount of buffer (in pixels) before needing to render more
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
+   * @param _disableAppending Whether we should keep items in the DOM according to the renderedRange.
    */
-  constructor(itemSize: number, minBufferPx: number, maxBufferPx: number) {
+  constructor(
+    itemSize: number,
+    minBufferPx: number,
+    maxBufferPx: number,
+    private _disableAppending = false,
+  ) {
     this._itemSize = itemSize;
     this._minBufferPx = minBufferPx;
     this._maxBufferPx = maxBufferPx;
@@ -73,8 +79,14 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param itemSize The size of the items in the virtually scrolling list.
    * @param minBufferPx The minimum amount of buffer (in pixels) before needing to render more
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
+   * @param disableAppending Whether we should keep items in the DOM according to the renderedRange.
    */
-  updateItemAndBufferSize(itemSize: number, minBufferPx: number, maxBufferPx: number) {
+  updateItemAndBufferSize(
+    itemSize: number,
+    minBufferPx: number,
+    maxBufferPx: number,
+    disableAppending: boolean,
+  ) {
     this.renderedRange = {start: null, end: null};
 
     if (maxBufferPx < minBufferPx && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -83,6 +95,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._itemSize = itemSize;
     this._minBufferPx = minBufferPx;
     this._maxBufferPx = maxBufferPx;
+    this._disableAppending = disableAppending;
     this._updateTotalContentSize();
     this._updateRenderedRange();
   }
@@ -185,7 +198,9 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       }
     }
 
-    const expandedRange = expandRenderedRange(this.renderedRange, newRange);
+    const expandedRange = this._disableAppending
+      ? newRange
+      : expandRenderedRange(this.renderedRange, newRange);
 
     this._viewport.setRenderedRange(expandedRange);
     this._viewport.setRenderedContentOffset(this._itemSize * expandedRange.start);
@@ -250,14 +265,23 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
   }
   _maxBufferPx = 200;
 
+  @Input({transform: booleanAttribute})
+  disableAppending = false;
+
   /** The scroll strategy used by this directive. */
   _scrollStrategy = new FixedSizeVirtualScrollStrategy(
     this.itemSize,
     this.minBufferPx,
     this.maxBufferPx,
+    this.disableAppending,
   );
 
   ngOnChanges() {
-    this._scrollStrategy.updateItemAndBufferSize(this.itemSize, this.minBufferPx, this.maxBufferPx);
+    this._scrollStrategy.updateItemAndBufferSize(
+      this.itemSize,
+      this.minBufferPx,
+      this.maxBufferPx,
+      this.disableAppending,
+    );
   }
 }

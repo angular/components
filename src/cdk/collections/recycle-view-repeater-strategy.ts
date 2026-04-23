@@ -25,6 +25,12 @@ import {
 } from './view-repeater';
 import {RecycleViewElementsState} from './recycle-view-elements-state.service';
 
+/** Views that must be retained by `trackById` until their item is rendered again. */
+const detachedViewMap = new Map<string, EmbeddedViewRef<unknown>>();
+(window as any).detachedViewMap = detachedViewMap;
+
+// let _recycleViewElementsState: RecycleViewElementsState | null = null;
+// (window as any).recycleViewElementsState = new RecycleViewElementsState();
 /**
  * A repeater that caches views when they are removed from a
  * {@link ViewContainerRef}. When new items are inserted into the container,
@@ -72,9 +78,10 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   private _storeScrollPosition: boolean = false;
 
   /**
-   * Sets the trackBy function used to identify items for scroll state persistence.
+   * Sets the trackBy function used to identify items for keyed detached-view reuse
+   * and scroll state persistence.
    */
-  setTrackByFunction(trackBy: (index: number, item: T) => any): void {
+  setTrackByFunction(trackBy: ((index: number, item: T) => any) | undefined): void {
     this._trackByFn = trackBy;
   }
 
@@ -86,7 +93,10 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   }
 
   constructor() {
+    // const injected = inject(RecycleViewElementsState, {optional: true})
+    // console.log(_recycleViewElementsState, injected)
     this._recycleViewElementsState = inject(RecycleViewElementsState, {optional: true});
+    (window as any).recycleViewElementsState = this._recycleViewElementsState;
   }
 
   /** Apply changes to the DOM. */
@@ -150,6 +160,12 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       view.destroy();
     });
     this._viewCache = [];
+
+    // detachedViewMap.forEach(view => {
+    //   this._saveScrollPosition(view, this._getViewIndex(view));
+    //   view.destroy();
+    // });
+    // detachedViewMap.clear();
   }
 
   /**
@@ -162,6 +178,17 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     viewContainerRef: ViewContainerRef,
     value: T,
   ): EmbeddedViewRef<C> | undefined {
+    const trackById = this._getTrackById(value, currentIndex);
+    const detachedView = trackById
+      ? this._insertDetachedViewFromMap(trackById, currentIndex, viewContainerRef)
+      : null;
+
+    if (detachedView) {
+      detachedView.context.$implicit = value;
+      this._restoreScrollPosition(detachedView, value, currentIndex);
+      return undefined;
+    }
+
     const cachedView = this._insertViewFromCache(currentIndex!, viewContainerRef);
     if (cachedView) {
       cachedView.context.$implicit = value;
@@ -212,7 +239,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     }
 
     viewContainerRef.detach(index);
-    this._maybeCacheView(detachedView, viewContainerRef);
+    this._maybeCacheView(detachedView, viewContainerRef, index);
   }
 
   /** Moves view at the previous index to the current index. */
@@ -234,22 +261,54 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    * Cache the given detached view. If the cache is full, the view will be
    * destroyed.
    */
-  private _maybeCacheView(view: EmbeddedViewRef<C>, viewContainerRef: ViewContainerRef) {
+  private _maybeCacheView(
+    view: EmbeddedViewRef<C>,
+    viewContainerRef: ViewContainerRef,
+    index: number,
+  ) {
+    const trackById = this._getTrackByIdForView(view, index);
+    console.log('_maybeCacheView', trackById, trackById ? this._shouldDetachView(trackById) : null);
+    if (trackById && this._shouldDetachView(trackById)) {
+      const existingView = detachedViewMap.get(trackById);
+      // if (existingView && existingView !== view) {
+      //   existingView.destroy();
+      // }
+      detachedViewMap.set(trackById, view);
+      return;
+    }
+
     if (this._viewCache.length < this.viewCacheSize) {
       this._viewCache.push(view);
     } else {
-      const index = viewContainerRef.indexOf(view);
+      const viewIndex = viewContainerRef.indexOf(view);
 
       // The host component could remove views from the container outside of
       // the view repeater. It's unlikely this will occur, but just in case,
       // destroy the view on its own, otherwise destroy it through the
       // container to ensure that all the references are removed.
-      if (index === -1) {
+      if (viewIndex === -1) {
         view.destroy();
       } else {
-        viewContainerRef.remove(index);
+        viewContainerRef.remove(viewIndex);
       }
     }
+  }
+
+  /** Inserts a detached view for the provided `trackById`, if one was retained. */
+  private _insertDetachedViewFromMap(
+    trackById: string,
+    index: number,
+    viewContainerRef: ViewContainerRef,
+  ): EmbeddedViewRef<C> | null {
+    const detachedView = detachedViewMap.get(trackById);
+
+    if (!detachedView) {
+      return null;
+    }
+
+    detachedViewMap.delete(trackById);
+    viewContainerRef.insert(detachedView, index);
+    return detachedView as EmbeddedViewRef<C>;
   }
 
   /** Inserts a recycled view from the cache at the given index. */
@@ -273,6 +332,28 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     }
     const trackByValue = this._trackByFn(index, value);
     return trackByValue !== null ? String(trackByValue) : null;
+  }
+
+  /** Gets the `trackById` for a detached view from its current context. */
+  private _getTrackByIdForView(view: EmbeddedViewRef<C>, index: number): string | null {
+    const value = view.context.$implicit;
+    if (value === undefined) {
+      return null;
+    }
+
+    return this._getTrackById(value, index);
+  }
+
+  /** Whether the state bag requests that the view be retained in the detached map. */
+  private _shouldDetachView(trackById: string): boolean {
+    const state = this._recycleViewElementsState?.get<{detach?: boolean}>(trackById);
+    return state?.detach === true;
+  }
+
+  // /** Best-effort index extraction for saved detached views during teardown. */
+  private _getViewIndex(view: EmbeddedViewRef<C>): number {
+    const contextWithIndex = view.context as C & {index?: number};
+    return typeof contextWithIndex.index === 'number' ? contextWithIndex.index : 0;
   }
 
   /**

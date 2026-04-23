@@ -1,4 +1,5 @@
 import {ArrayDataSource} from '../collections';
+import {RecycleViewElementsState} from '../collections/recycle-view-elements-state.service';
 import {
   CdkScrollable,
   CdkVirtualForOf,
@@ -749,6 +750,59 @@ describe('CdkVirtualScrollViewport', () => {
       expect(testComponent.virtualForOf._getEmbeddedViewArgs).toHaveBeenCalledTimes(5);
     }));
 
+    it('should reattach detached views by trackBy id even when template cache is disabled', fakeAsync(() => {
+      testComponent.trackBy = (_, item) => item;
+      testComponent.templateCacheSize = 0;
+      const state = fixture.debugElement.injector.get(RecycleViewElementsState);
+      const strategy = testComponent.virtualForOf._viewRepeater as any;
+      const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
+
+      finishInit(fixture);
+      state.add('0', {detach: true});
+
+      const initialFirstView = viewContainerRef.get(0);
+      const createEmbeddedViewSpy = spyOn(viewContainerRef, 'createEmbeddedView').and.callThrough();
+
+      strategy._detachAndCacheView(0, viewContainerRef);
+
+      expect(strategy._detachedViewMap.get('0')).toBe(initialFirstView);
+
+      const insertedView = strategy._insertView(
+        () => testComponent.virtualForOf._getEmbeddedViewArgs({item: 0} as any, 0),
+        0,
+        viewContainerRef,
+        0,
+      );
+
+      expect(insertedView).toBeUndefined();
+      expect(createEmbeddedViewSpy).not.toHaveBeenCalled();
+      expect(strategy._detachedViewMap.has('0')).toBe(false);
+      expect(viewContainerRef.get(0)).toBe(initialFirstView);
+    }));
+
+    it('should destroy keyed detached views during strategy teardown', fakeAsync(() => {
+      testComponent.trackBy = (_, item) => item;
+      testComponent.templateCacheSize = 0;
+      const state = fixture.debugElement.injector.get(RecycleViewElementsState);
+      const strategy = testComponent.virtualForOf._viewRepeater as any;
+      const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
+
+      finishInit(fixture);
+      state.add('0', {detach: true});
+
+      strategy._detachAndCacheView(0, viewContainerRef);
+      const detachedView = strategy._detachedViewMap.get('0');
+
+      expect(detachedView).toBeTruthy();
+
+      spyOn(detachedView, 'destroy').and.callThrough();
+
+      strategy.detach();
+
+      expect(detachedView.destroy).toHaveBeenCalled();
+      expect(strategy._detachedViewMap.size).toBe(0);
+    }));
+
     it('should render up to maxBufferPx when buffer dips below minBufferPx', fakeAsync(() => {
       testComponent.minBufferPx = testComponent.itemSize;
       testComponent.maxBufferPx = testComponent.itemSize * 2;
@@ -1247,6 +1301,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  providers: [RecycleViewElementsState],
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;

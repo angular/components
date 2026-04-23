@@ -131,8 +131,8 @@ export class CdkVirtualForOf<T>
       ? (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item)
       : undefined;
 
-    // Pass the trackBy function to the view repeater for scroll state persistence
-    // Only if scroll position storing is enabled
+    // Pass the trackBy function to the view repeater for keyed detached-view reuse
+    // and scroll position persistence.
     this._updateTrackByFunction();
   }
   private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
@@ -159,9 +159,7 @@ export class CdkVirtualForOf<T>
    * Updates the trackBy function in the view repeater based on current settings.
    */
   private _updateTrackByFunction(): void {
-    if (this._storeScrollPosition && this._cdkVirtualForTrackBy) {
-      this._viewRepeater.setTrackByFunction(this._cdkVirtualForTrackBy);
-    }
+    this._viewRepeater.setTrackByFunction(this._cdkVirtualForTrackBy);
   }
 
   /** The template used to stamp out new elements. */
