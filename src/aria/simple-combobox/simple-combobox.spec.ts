@@ -535,6 +535,36 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
     });
+
+    describe('Disabled', () => {
+      beforeEach(() => setupCombobox());
+
+      it('should keep the input focusable by default when disabled', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        expect(inputElement.disabled).toBe(false);
+        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should block interactions when disabled', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        focus();
+        keydown('ArrowDown');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should make the input unfocusable when softDisabled is false', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.softDisabled.set(false);
+        fixture.detectChanges();
+
+        expect(inputElement.disabled).toBe(true);
+        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      });
+    });
   });
 
   describe('with Tree', () => {
@@ -1145,6 +1175,8 @@ describe('Combobox', () => {
     [(value)]="searchString"
     [(expanded)]="popupExpanded"
     [readonly]="readonly()"
+    [disabled]="disabled()"
+    [softDisabled]="softDisabled()"
     [alwaysExpanded]="alwaysExpanded()"
     (focusout)="onBlur()"
   />
@@ -1168,6 +1200,8 @@ describe('Combobox', () => {
 })
 class ComboboxListboxExample {
   readonly = signal(false);
+  disabled = signal(false);
+  softDisabled = signal(true);
   alwaysExpanded = signal(false);
   popupExpanded = signal(false);
   searchString = signal('');
