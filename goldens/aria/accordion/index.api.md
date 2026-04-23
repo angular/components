@@ -43,11 +43,14 @@ export class AccordionPanel {
     readonly element: HTMLElement;
     expand(): void;
     readonly id: _angular_core.InputSignal<string>;
+    readonly label: _angular_core.InputSignal<string | undefined>;
+    readonly _labelControl: LabelControl;
+    readonly labelledBy: _angular_core.InputSignal<string[]>;
     _pattern?: AccordionTriggerPattern;
     toggle(): void;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "labelledBy": { "alias": "labelledBy"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionPanel, never>;
 }
