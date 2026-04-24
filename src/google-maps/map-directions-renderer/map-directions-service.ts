@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {Service, NgZone, inject} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export interface MapDirectionsResponse {
@@ -20,7 +20,7 @@ export interface MapDirectionsResponse {
  *
  * See developers.google.com/maps/documentation/javascript/reference/directions#DirectionsService
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MapDirectionsService {
   private readonly _ngZone = inject(NgZone);
   private _directionsService: google.maps.DirectionsService | undefined;
