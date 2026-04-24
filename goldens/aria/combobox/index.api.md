@@ -36,11 +36,12 @@ export class ComboboxDialog {
     // (undocumented)
     close(): void;
     readonly combobox: Combobox<any>;
-    readonly element: HTMLElement;
+    readonly element: HTMLDialogElement;
+    readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
     readonly _pattern: ComboboxDialogPattern;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxDialog, "dialog[ngComboboxDialog]", ["ngComboboxDialog"], {}, {}, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxDialog, "dialog[ngComboboxDialog]", ["ngComboboxDialog"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxDialog, never>;
 }

@@ -129,11 +129,12 @@ export class Grid {
   });
 
   constructor() {
-    afterRenderEffect(() => this._pattern.setDefaultStateEffect());
-    afterRenderEffect(() => this._pattern.resetStateEffect());
-    afterRenderEffect(() => this._pattern.resetFocusEffect());
-    afterRenderEffect(() => this._pattern.restoreFocusEffect());
-    afterRenderEffect(() => this._pattern.focusEffect());
+    // Use Write mode for all direct DOM focus management actions.
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+    afterRenderEffect({write: () => this._pattern.resetStateEffect()});
+    afterRenderEffect({write: () => this._pattern.resetFocusEffect()});
+    afterRenderEffect({write: () => this._pattern.restoreFocusEffect()});
+    afterRenderEffect({write: () => this._pattern.focusEffect()});
   }
 
   /** Gets the cell pattern for a given element. */

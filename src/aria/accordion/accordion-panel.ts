@@ -72,8 +72,10 @@ export class AccordionPanel {
 
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(this.visible());
+    afterRenderEffect({
+      write: () => {
+        this._deferredContentAware.contentVisible.set(this.visible());
+      },
     });
   }
 

@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {afterRenderEffect, Directive, ElementRef, inject} from '@angular/core';
+import {afterRenderEffect, Directive, ElementRef, inject, input} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {ComboboxDialogPattern} from '../private';
 import {Combobox} from './combobox';
 import {ComboboxPopup} from './combobox-popup';
@@ -46,35 +47,34 @@ export class ComboboxDialog {
   private readonly _elementRef = inject(ElementRef<HTMLDialogElement>);
 
   /** A reference to the dialog element. */
-  readonly element = this._elementRef.nativeElement as HTMLElement;
+  readonly element = this._elementRef.nativeElement as HTMLDialogElement;
 
   /** The combobox that the dialog belongs to. */
   readonly combobox = inject(Combobox);
+
+  /** The unique identifier for the trigger. */
+  readonly id = input(inject(_IdGenerator).getId('ng-combobox-dialog-', true));
 
   /** A reference to the parent combobox popup, if one exists. */
   private readonly _popup = inject<ComboboxPopup<unknown>>(ComboboxPopup, {
     optional: true,
   });
 
-  readonly _pattern: ComboboxDialogPattern;
+  readonly _pattern: ComboboxDialogPattern = new ComboboxDialogPattern({
+    id: this.id,
+    element: () => this.element,
+    combobox: this.combobox._pattern,
+  });
 
   constructor() {
-    this._pattern = new ComboboxDialogPattern({
-      id: () => '',
-      element: () => this._elementRef.nativeElement,
-      combobox: this.combobox._pattern,
-    });
-
     if (this._popup) {
       this._popup._controls.set(this._pattern);
     }
 
-    afterRenderEffect(() => {
-      if (this._elementRef) {
-        this.combobox._pattern.expanded()
-          ? this._elementRef.nativeElement.showModal()
-          : this._elementRef.nativeElement.close();
-      }
+    afterRenderEffect({
+      write: () => {
+        this.combobox._pattern.expanded() ? this.element.showModal() : this.element.close();
+      },
     });
   }
 

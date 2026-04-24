@@ -90,7 +90,11 @@ export class TabPanel implements OnInit, OnDestroy {
   });
 
   constructor() {
-    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(this.visible()));
+    afterRenderEffect({
+      write: () => {
+        this._deferredContentAware.contentVisible.set(this.visible());
+      },
+    });
   }
 
   ngOnInit() {

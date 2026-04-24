@@ -140,13 +140,15 @@ export class Combobox<V> {
       }
     });
 
-    afterRenderEffect(() => {
-      if (
-        !this._deferredContentAware?.contentVisible() &&
-        (this._pattern.isFocused() || this.alwaysExpanded())
-      ) {
-        this._deferredContentAware?.contentVisible.set(true);
-      }
+    afterRenderEffect({
+      write: () => {
+        if (
+          !this._deferredContentAware?.contentVisible() &&
+          (this._pattern.isFocused() || this.alwaysExpanded())
+        ) {
+          this._deferredContentAware?.contentVisible.set(true);
+        }
+      },
     });
   }
 
