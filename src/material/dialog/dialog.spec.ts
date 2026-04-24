@@ -20,6 +20,7 @@ import {
   Directive,
   Injectable,
   Injector,
+  Input,
   NgModule,
   TemplateRef,
   ViewChild,
@@ -28,6 +29,7 @@ import {
   forwardRef,
   signal,
   inject,
+  inputBinding,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -735,6 +737,15 @@ describe('MatDialog', () => {
         let dialogRef = dialog.open(DialogWithInjectedData);
         expect(dialogRef.componentInstance.data).toBeNull();
       }).not.toThrow();
+    });
+
+    it('should be able to apply bindings', () => {
+      const dialogRef = dialog.open(PizzaMsg, {
+        bindings: [inputBinding('flavor', () => 'pepperoni')],
+      });
+      viewContainerFixture.detectChanges();
+
+      expect(dialogRef.componentInstance!.flavor).toBe('pepperoni');
     });
   });
 
@@ -2340,6 +2351,7 @@ class ComponentWithTemplateRef {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
+  @Input() flavor = 'unknown';
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);
