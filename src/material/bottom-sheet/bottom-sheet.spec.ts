@@ -15,7 +15,7 @@ import {
   ComponentRef,
   createNgModule,
   Directive,
-  Injectable,
+  Service,
   Injector,
   Input,
   NgModule,
@@ -1130,7 +1130,7 @@ class ModuleBoundBottomSheetParentComponent {
   }
 }
 
-@Injectable()
+@Service({autoProvided: false})
 class ModuleBoundBottomSheetService {
   name = 'Pasta';
 }
