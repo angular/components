@@ -302,7 +302,13 @@ export class Dialog implements OnDestroy {
     } else {
       const injector = this._createInjector(config, dialogRef, dialogContainer, this._injector);
       const contentRef = dialogContainer.attachComponentPortal<C>(
-        new ComponentPortal(componentOrTemplateRef, config.viewContainerRef, injector),
+        new ComponentPortal(
+          componentOrTemplateRef,
+          config.viewContainerRef,
+          injector,
+          null,
+          config.bindings,
+        ),
       );
       (dialogRef as {componentRef: ComponentRef<C>}).componentRef = contentRef;
       (dialogRef as {componentInstance: C}).componentInstance = contentRef.instance;

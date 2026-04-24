@@ -17,11 +17,13 @@ import {
   Directive,
   InjectionToken,
   Injector,
+  Input,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   inject,
+  inputBinding,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -605,6 +607,15 @@ describe('Dialog', () => {
         viewContainerFixture.detectChanges();
         expect(dialogRef.componentInstance!.data).toBeNull();
       }).not.toThrow();
+    });
+
+    it('should be able to apply bindings', () => {
+      const dialogRef = dialog.open(PizzaMsg, {
+        bindings: [inputBinding('flavor', () => 'pepperoni')],
+      });
+      viewContainerFixture.detectChanges();
+
+      expect(dialogRef.componentInstance!.flavor).toBe('pepperoni');
     });
   });
 
@@ -1364,6 +1375,7 @@ class ComponentWithTemplateRef {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
+  @Input() flavor = 'unknown';
   dialogRef = inject<DialogRef<PizzaMsg>>(DialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);

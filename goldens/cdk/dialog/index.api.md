@@ -120,6 +120,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
+    bindings?: Binding[];
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;
