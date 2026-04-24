@@ -9,7 +9,7 @@
 import {
   ComponentRef,
   EventEmitter,
-  Injectable,
+  Service,
   Injector,
   OnDestroy,
   StaticProvider,
@@ -52,7 +52,7 @@ function getDirectionality(value: Direction): Directionality {
   };
 }
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class Dialog implements OnDestroy {
   private _injector = inject(Injector);
   private _defaultOptions = inject<DialogConfig>(DEFAULT_DIALOG_CONFIG, {optional: true});
