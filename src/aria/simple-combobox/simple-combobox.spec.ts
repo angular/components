@@ -3,7 +3,6 @@ import {
   computed,
   DebugElement,
   signal,
-  ChangeDetectionStrategy,
   untracked,
   viewChild,
   afterRenderEffect,
@@ -568,15 +567,16 @@ describe('Combobox', () => {
       it('should not close on escape when alwaysExpanded is true', () => {
         fixture.componentInstance.alwaysExpanded.set(true);
         fixture.detectChanges();
-
-        focus();
-        // Manually open since alwaysExpanded was set after init
-        fixture.componentInstance.popupExpanded.set(true);
-        fixture.detectChanges();
-
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
 
         escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should automatically report as expanded when alwaysExpanded is true', () => {
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        fixture.componentInstance.alwaysExpanded.set(true);
+        fixture.detectChanges();
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
     });
@@ -1229,7 +1229,6 @@ describe('Combobox', () => {
 </div>
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxListboxExample {
   readonly = signal(false);
@@ -1350,7 +1349,6 @@ function getTreeNodes(): TreeNode[] {
     TreeItemGroup,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxTreeExample {
   readonly tree = viewChild(Tree);
@@ -1520,7 +1518,6 @@ const states = [
 </div>
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Grid, GridRow, GridCell, GridCellWidget],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxGridExample {
   popupExpanded = signal(false);
@@ -1570,7 +1567,6 @@ class ComboboxGridExample {
 </div>
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxListboxAutoSelectExample {
   readonly = signal(false);
@@ -1634,7 +1630,6 @@ class ComboboxListboxAutoSelectExample {
 </div>
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxListboxHighlightExample {
   readonly combobox = viewChild(Combobox);

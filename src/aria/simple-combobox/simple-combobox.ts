@@ -52,7 +52,7 @@ import {
     'role': 'combobox',
     '[attr.aria-autocomplete]': '_pattern.autocomplete()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-expanded]': '_pattern.expanded()',
+    '[attr.aria-expanded]': '_pattern.isExpanded()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '[attr.aria-controls]': '_pattern.popupId()',
     '[attr.aria-haspopup]': '_pattern.popupType()',
@@ -104,7 +104,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
     afterRenderEffect(() => this._pattern.keyboardEventRelayEffect());
     afterRenderEffect(() => this._pattern.closePopupOnBlurEffect());
     afterRenderEffect(() => {
-      this.contentVisible.set(this._pattern.expanded());
+      this.contentVisible.set(this._pattern.isExpanded());
     });
 
     if (this._pattern.isEditable()) {

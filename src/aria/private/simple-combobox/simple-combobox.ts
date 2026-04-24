@@ -34,8 +34,8 @@ export interface SimpleComboboxInputs extends ExpansionItem {
 
 /** Controls the state of a simple combobox. */
 export class SimpleComboboxPattern {
-  /** Whether the combobox is expanded. */
-  readonly expanded: WritableSignalLike<boolean>;
+  /** The expanded state of the combobox. */
+  readonly isExpanded = computed(() => this.inputs.alwaysExpanded() || this.inputs.expanded());
 
   /** The value of the combobox. */
   readonly value: WritableSignalLike<string>;
@@ -95,11 +95,11 @@ export class SimpleComboboxPattern {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    if (!this.expanded()) {
-      manager.on('ArrowDown', () => this.expanded.set(true));
+    if (!this.isExpanded()) {
+      manager.on('ArrowDown', () => this.inputs.expanded.set(true));
 
       if (!this.isEditable()) {
-        manager.on(/^(Enter| )$/, () => this.expanded.set(true));
+        manager.on(/^(Enter| )$/, () => this.inputs.expanded.set(true));
       }
 
       return manager;
@@ -129,7 +129,7 @@ export class SimpleComboboxPattern {
       .on('PageDown', e => this.keyboardEventRelay.set(e))
       .on('Escape', () => {
         if (!this.inputs.alwaysExpanded()) {
-          this.expanded.set(false);
+          this.inputs.expanded.set(false);
         }
       });
 
@@ -150,13 +150,12 @@ export class SimpleComboboxPattern {
 
     if (this.isEditable()) return manager;
 
-    manager.on(() => this.expanded.update(v => !v));
+    manager.on(() => this.inputs.expanded.update(v => !v));
 
     return manager;
   });
 
   constructor(readonly inputs: SimpleComboboxInputs) {
-    this.expanded = inputs.expanded;
     this.value = inputs.value;
   }
 
@@ -189,7 +188,7 @@ export class SimpleComboboxPattern {
     if (!(event.target instanceof HTMLInputElement)) return;
     if (this.disabled()) return;
 
-    this.expanded.set(true);
+    this.inputs.expanded.set(true);
     this.value.set(event.target.value);
     this.isDeleting.set(event instanceof InputEvent && !!event.inputType.match(/^delete/));
   }
@@ -201,7 +200,7 @@ export class SimpleComboboxPattern {
 
     const isDeleting = untracked(() => this.isDeleting());
     const isFocused = untracked(() => this.isFocused());
-    const isExpanded = this.expanded();
+    const isExpanded = this.isExpanded();
 
     if (!inlineSuggestion || !isFocused || !isExpanded || isDeleting) return;
 
@@ -220,7 +219,7 @@ export class SimpleComboboxPattern {
     if (event === undefined) return;
 
     const popup = untracked(() => this.inputs.popup());
-    const popupExpanded = untracked(() => this.expanded());
+    const popupExpanded = untracked(() => this.isExpanded());
     if (popupExpanded) {
       popup?.controlTarget()?.dispatchEvent(event);
     }
@@ -228,11 +227,11 @@ export class SimpleComboboxPattern {
 
   /** Closes the popup when focus leaves the combobox and popup. */
   closePopupOnBlurEffect() {
-    const expanded = this.expanded();
+    const expanded = this.isExpanded();
     const comboboxFocused = this.isFocused();
     const popupFocused = !!this.inputs.popup()?.isFocused();
     if (expanded && !this.inputs.alwaysExpanded() && !comboboxFocused && !popupFocused) {
-      this.expanded.set(false);
+      this.inputs.expanded.set(false);
     }
   }
 }
