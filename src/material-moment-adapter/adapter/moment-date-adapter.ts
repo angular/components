@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, InjectionToken, inject} from '@angular/core';
+import {Service, InjectionToken, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -54,7 +54,7 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 }
 
 /** Adapts Moment.js Dates for use with Angular Material. */
-@Injectable()
+@Service({autoProvided: false})
 export class MomentDateAdapter extends DateAdapter<Moment> {
   private _options = inject<MatMomentDateAdapterOptions>(MAT_MOMENT_DATE_ADAPTER_OPTIONS, {
     optional: true,
