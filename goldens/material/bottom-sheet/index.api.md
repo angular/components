@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -53,6 +54,7 @@ export class MatBottomSheetConfig<D = any> {
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string;
+    bindings?: Binding[];
     closeOnNavigation?: boolean;
     data?: D | null;
     direction?: Direction;
