@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, InjectionToken, inject} from '@angular/core';
+import {Service, InjectionToken, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
   DateTime as LuxonDateTime,
@@ -58,7 +58,7 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 }
 
 /** Adapts Luxon Dates for use with Angular Material. */
-@Injectable()
+@Service({autoProvided: false})
 export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   private _useUTC: boolean;
   private _firstDayOfWeek: number | undefined;
