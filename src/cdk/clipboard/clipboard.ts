@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, inject, DOCUMENT} from '@angular/core';
+import {Service, inject, DOCUMENT} from '@angular/core';
 import {PendingCopy} from './pending-copy';
 
 /**
  * A service for copying text to the clipboard.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class Clipboard {
   private readonly _document = inject(DOCUMENT);
 
