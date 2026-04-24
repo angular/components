@@ -188,6 +188,12 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   @Input()
   headerPosition: 'top' | 'bottom' = 'top';
 
+  /**
+   * ARIA label for the stepper.
+   */
+  @Input('aria-label')
+  ariaLabel: string | null = null;
+
   /** The content prefix to use in the stepper header. */
   readonly headerPrefix = input<TemplateRef<unknown> | null>(null);
 
