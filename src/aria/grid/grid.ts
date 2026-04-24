@@ -54,7 +54,7 @@ import {GRID_ROW} from './grid-tokens';
     '[attr.aria-multiselectable]': '_pattern.multiSelectable()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
   },

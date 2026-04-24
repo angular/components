@@ -515,7 +515,7 @@ describe('Grid', () => {
       });
     });
 
-    describe('Pointer Events', () => {
+    describe('Click Events', () => {
       let grid: GridPattern;
 
       beforeEach(() => {
@@ -526,37 +526,37 @@ describe('Grid', () => {
         grid.setDefaultStateEffect();
       });
 
-      describe('Basic Pointer Actions', () => {
-        it('should move focus to the clicked cell on pointerdown', () => {
+      describe('Basic Click Actions', () => {
+        it('should move focus to the clicked cell on click', () => {
           const cells = grid.cells();
-          grid.onPointerdown(createClickEvent(cells[0][1].element()));
+          grid.onClick(createClickEvent(cells[0][1].element()));
           expect(grid.gridBehavior.focusBehavior.activeCell()).toBe(cells[0][1]);
         });
       });
 
-      describe('Pointer Selection', () => {
-        it('should follow focus in follow mode on pointerdown', () => {
+      describe('Click Selection', () => {
+        it('should follow focus in follow mode on click', () => {
           (gridInputs.selectionMode as WritableSignalLike<'follow' | 'explicit'>).set('follow');
           const cell = grid.cells()[0][1];
-          grid.onPointerdown(createClickEvent(cell.element()));
+          grid.onClick(createClickEvent(cell.element()));
           expect(cell.selected()).toBe(true);
         });
 
-        it('should toggle selection in explicit mode on pointerdown', () => {
+        it('should toggle selection in explicit mode on click', () => {
           (gridInputs.selectionMode as WritableSignalLike<'follow' | 'explicit'>).set('explicit');
           const cell = grid.cells()[0][1];
-          grid.onPointerdown(createClickEvent(cell.element()));
+          grid.onClick(createClickEvent(cell.element()));
           expect(cell.selected()).toBe(true);
 
-          grid.onPointerdown(createClickEvent(cell.element()));
+          grid.onClick(createClickEvent(cell.element()));
           expect(cell.selected()).toBe(false);
         });
 
-        it('should support multi-selection with Ctrl+pointerdown', () => {
+        it('should support multi-selection with Ctrl+click', () => {
           (gridInputs.multi as WritableSignalLike<boolean>).set(true);
           const cells = grid.cells();
-          grid.onPointerdown(createClickEvent(cells[0][0].element()));
-          grid.onPointerdown(createClickEvent(cells[0][1].element(), {control: true}));
+          grid.onClick(createClickEvent(cells[0][0].element()));
+          grid.onClick(createClickEvent(cells[0][1].element(), {control: true}));
           expect(cells[0][0].selected()).toBe(true);
           expect(cells[0][1].selected()).toBe(true);
         });
@@ -664,12 +664,12 @@ describe('Grid', () => {
       expect(grid.gridBehavior.focusBehavior.activeCell()).toBeUndefined(); // Should stay undefined, meaning default state was skipped
     });
 
-    it('should NOT set default state if pointer interacted', () => {
+    it('should NOT set default state if click interacted', () => {
       const gridInputs = getDefaultGridInputs();
       const data = [{cells: [{}, {}]}, {cells: [{}, {}]}];
       const {grid} = createGrid(data, gridInputs);
       const cells = grid.cells();
-      grid.onPointerdown({target: cells[0][0].element()} as unknown as PointerEvent); // Interaction
+      grid.onClick({target: cells[0][0].element()} as unknown as PointerEvent); // Interaction
 
       cells[0][1].inputs.selected.set(true);
       grid.setDefaultStateEffect();

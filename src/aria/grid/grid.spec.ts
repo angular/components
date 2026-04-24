@@ -59,7 +59,7 @@ describe('Grid directives', () => {
   };
 
   const pointerDown = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, ...eventInit}));
+    target.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
     fixture.detectChanges();
   };
 
@@ -468,7 +468,7 @@ describe('Grid directives', () => {
       });
     });
 
-    describe('pointer interactions', () => {
+    describe('click interactions', () => {
       beforeEach(() => {
         setupGrid({
           enableSelection: true,
@@ -479,7 +479,7 @@ describe('Grid directives', () => {
         fixture.detectChanges();
       });
 
-      it('should focus and select the clicked cell on pointerdown', () => {
+      it('should focus and select the clicked cell on click', () => {
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('aria-selected')).toBe('false');
 
