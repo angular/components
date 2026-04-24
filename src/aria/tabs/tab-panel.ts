@@ -8,27 +8,29 @@
 
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
-  computed,
   Directive,
   ElementRef,
+  OnDestroy,
+  OnInit,
+  WritableSignal,
+  afterRenderEffect,
+  computed,
   inject,
   input,
-  afterRenderEffect,
-  OnInit,
-  OnDestroy,
+  signal,
 } from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '../private';
+import {TabPattern, TabPanelPattern, DeferredContentAware} from '../private';
 import {TABS} from './tab-tokens';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
  *
- * The `ngTabPanel` directive holds the content for a specific tab. It is linked to an
- * `ngTab` by a matching `value`. If a tab panel is hidden, the `inert` attribute will be
+ * The `ngTabPanel` directive holds the content for a specific tab. It will be referenced by an
+ * `ngTab`. If a tab panel is hidden, the `inert` attribute will be
  * applied to remove it from the accessibility tree. Proper styling is required for visual hiding.
  *
  * ```html
- * <div ngTabPanel value="myTabId">
+ * <div ngTabPanel #panel1="ngTabPanel">
  *   <ng-template ngTabContent>
  *     <!-- Content for the tab panel -->
  *   </ng-template>
@@ -73,12 +75,7 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  private readonly _tabPattern = computed(() =>
-    this._tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
-  );
-
-  /** A local unique identifier for the tabpanel. */
-  readonly value = input.required<string>();
+  readonly _tabPattern: WritableSignal<TabPattern | undefined> = signal(undefined);
 
   /** Whether the tab panel is visible. */
   readonly visible = computed(() => !this._pattern.hidden());
@@ -94,10 +91,10 @@ export class TabPanel implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabs._register(this);
+    this._tabs._registerPanel(this);
   }
 
   ngOnDestroy() {
-    this._tabs._unregister(this);
+    this._tabs._unregisterPanel(this);
   }
 }

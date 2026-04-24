@@ -132,21 +132,21 @@ describe('TabsHarness', () => {
   template: `
     <div ngTabs>
       <ul ngTabList [selectedTab]="'tab1'">
-        <li ngTab value="tab1">Tab 1</li>
-        <li ngTab value="tab2">Tab 2</li>
-        <li ngTab value="tab3" [disabled]="true">Tab 3</li>
+        <li ngTab panel="tab1">Tab 1</li>
+        <li ngTab panel="tab2">Tab 2</li>
+        <li ngTab panel="tab3" [disabled]="true">Tab 3</li>
       </ul>
 
 
-      <div ngTabPanel value="tab1">
+      <div ngTabPanel id="tab1">
         <ng-template ngTabContent>
           <div class="test-content">Content 1</div>
         </ng-template>
       </div>
-      <div ngTabPanel value="tab2">
+      <div ngTabPanel id="tab2">
         <ng-template ngTabContent>Content 2</ng-template>
       </div>
-      <div ngTabPanel value="tab3">
+      <div ngTabPanel id="tab3">
         <ng-template ngTabContent>Content 3</ng-template>
       </div>
     </div>
