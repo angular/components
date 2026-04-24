@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
@@ -17,7 +17,7 @@ import {Subject} from 'rxjs';
  * @breaking-change 23.0.0
  * @docs-private
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MatSortHeaderIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
