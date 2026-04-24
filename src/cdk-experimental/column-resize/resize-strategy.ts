@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, Provider, CSP_NONCE, inject, DOCUMENT} from '@angular/core';
+import {Service, OnDestroy, Provider, CSP_NONCE, inject, DOCUMENT} from '@angular/core';
 
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {CdkTable} from '@angular/cdk/table';
@@ -18,7 +18,7 @@ import {_COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler} from './coalesced-
  * Provides an implementation for resizing a column.
  * The details of how resizing works for tables for flex mat-tables are quite different.
  */
-@Injectable()
+@Service({autoProvided: false})
 export abstract class ResizeStrategy implements OnDestroy {
   protected abstract readonly columnResize: ColumnResize;
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
@@ -115,7 +115,7 @@ export abstract class ResizeStrategy implements OnDestroy {
  *   CSS selector w/ CSS variable
  *   Updating all cell nodes
  */
-@Injectable()
+@Service({autoProvided: false})
 export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
   protected readonly columnResize = inject(ColumnResize);
   protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
@@ -161,7 +161,7 @@ export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
  *   CSS selector w/ CSS variable
  *   Updating all mat-cell nodes
  */
-@Injectable()
+@Service({autoProvided: false})
 export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDestroy {
   protected readonly columnResize = inject(ColumnResize);
   protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
