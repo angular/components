@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable, OnDestroy, DOCUMENT} from '@angular/core';
+import {inject, Service, OnDestroy, DOCUMENT} from '@angular/core';
 import {BreakpointObserver} from '../../layout';
 import {Platform} from '../../platform';
 
@@ -39,7 +39,7 @@ export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
  * Mode. This service does not detect high-contrast mode as added by the Chrome "High Contrast"
  * browser extension.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class HighContrastModeDetector implements OnDestroy {
   private _platform = inject(Platform);
 

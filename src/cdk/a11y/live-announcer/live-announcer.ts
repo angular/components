@@ -11,7 +11,7 @@ import {ContentObserver} from '../../observers';
 import {
   Directive,
   ElementRef,
-  Injectable,
+  Service,
   Input,
   NgZone,
   OnDestroy,
@@ -33,7 +33,7 @@ let uniqueIds = 0;
 /** Possible types for a message that can be announced by the `LiveAnnouncer`. */
 export type LiveAnnouncerMessage = string | SafeHtml;
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class LiveAnnouncer implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _defaultOptions = inject<LiveAnnouncerDefaultOptions>(LIVE_ANNOUNCER_DEFAULT_OPTIONS, {

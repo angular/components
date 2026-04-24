@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, APP_ID, inject, DOCUMENT} from '@angular/core';
+import {Service, OnDestroy, APP_ID, inject, DOCUMENT} from '@angular/core';
 import {Platform} from '../../platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
@@ -52,7 +52,7 @@ let nextId = 0;
  * want to use aria-describedby to further describe themselves without adding additional visual
  * content.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class AriaDescriber implements OnDestroy {
   private _platform = inject(Platform);
   private _document = inject(DOCUMENT);
