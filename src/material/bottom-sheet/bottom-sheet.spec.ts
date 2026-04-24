@@ -17,6 +17,7 @@ import {
   Directive,
   Injectable,
   Injector,
+  Input,
   NgModule,
   TemplateRef,
   ViewChild,
@@ -24,6 +25,7 @@ import {
   ViewEncapsulation,
   forwardRef,
   inject,
+  inputBinding,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -505,6 +507,15 @@ describe('MatBottomSheet', () => {
         const bottomSheetRef = bottomSheet.open(BottomSheetWithInjectedData);
         expect(bottomSheetRef.instance.data).toBeNull();
       }).not.toThrow();
+    });
+
+    it('should be able to apply bindings', () => {
+      const bottomSheetRef = bottomSheet.open(PizzaMsg, {
+        bindings: [inputBinding('flavor', () => 'pepperoni')],
+      });
+      viewContainerFixture.detectChanges();
+
+      expect(bottomSheetRef.instance.flavor).toBe('pepperoni');
     });
   });
 
@@ -1055,6 +1066,7 @@ class ComponentWithTemplateRef {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
+  @Input() flavor = 'unknown';
   bottomSheetRef = inject<MatBottomSheetRef<PizzaMsg>>(MatBottomSheetRef);
   injector = inject(Injector);
   directionality = inject(Directionality);
