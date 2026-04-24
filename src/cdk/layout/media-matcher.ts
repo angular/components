@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {Injectable, CSP_NONCE, inject} from '@angular/core';
+import {Service, CSP_NONCE, inject} from '@angular/core';
 import {Platform} from '../platform';
 
 /** Global registry for all dynamically-created, injected media queries. */
@@ -15,7 +15,7 @@ const mediaQueriesForWebkitCompatibility: Set<string> = new Set<string>();
 let mediaQueryStyleNode: HTMLStyleElement | undefined;
 
 /** A utility for calling matchMedia queries. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MediaMatcher {
   private _platform = inject(Platform);
   private _nonce = inject(CSP_NONCE, {optional: true});
