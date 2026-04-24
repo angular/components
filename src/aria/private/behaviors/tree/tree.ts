@@ -260,9 +260,11 @@ export class Tree<T extends TreeItem<V, T>, V> {
     item ??= this.inputs.activeItem();
     if (!item) return;
 
+    // If the item has a parent, get all of the parent's children.
+    // Otherwise, it is a root item, and get all other root items.
     const parent = item.parent?.();
-    // TODO: This assumes that items without a parent are root items.
     const siblings = parent ? parent.children?.() : this.inputs.items().filter(i => !i.parent?.());
+
     siblings?.forEach(s => this.expand(s));
   }
 
