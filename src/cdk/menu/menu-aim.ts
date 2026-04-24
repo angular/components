@@ -9,7 +9,7 @@
 import {
   Directive,
   inject,
-  Injectable,
+  Service,
   InjectionToken,
   NgZone,
   OnDestroy,
@@ -107,7 +107,7 @@ function isWithinSubmenu(submenuPoints: DOMRect, m: number, b: number) {
  * approach by checking if at least NUM_POINTS / 2 pairs determine that the user is moving towards
  * to submenu.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class TargetMenuAim implements MenuAim, OnDestroy {
   private readonly _ngZone = inject(NgZone);
   private readonly _renderer = inject(RendererFactory2).createRenderer(null, null);
