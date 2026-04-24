@@ -7,7 +7,7 @@
  */
 
 import {
-  Injectable,
+  Service,
   OnDestroy,
   Component,
   ChangeDetectionStrategy,
@@ -28,7 +28,7 @@ import {Platform, _isTestEnvironment} from '../platform';
 export class _CdkOverlayStyleLoader {}
 
 /** Container inside which all overlays will render. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class OverlayContainer implements OnDestroy {
   protected _platform = inject(Platform);
 

@@ -5,7 +5,7 @@ import {
   Component,
   ErrorHandler,
   EventEmitter,
-  Injectable,
+  Service,
   Injector,
   Provider,
   ViewChild,
@@ -350,7 +350,7 @@ describe('Overlay', () => {
 
   it('should be able to use the `Overlay` provider during app initialization', () => {
     /** Dummy provider that depends on `Overlay`. */
-    @Injectable()
+    @Service({autoProvided: false})
     class CustomErrorHandler extends ErrorHandler {
       private _overlay = inject(Overlay);
 
