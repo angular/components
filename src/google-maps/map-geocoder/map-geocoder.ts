@@ -31,7 +31,7 @@ export class MapGeocoder {
       this._getGeocoder().then(geocoder => {
         geocoder.geocode(request, (results, status) => {
           this._ngZone.run(() => {
-            observer.next({results: results || [], status});
+            observer.next({results: results || [], status: status as google.maps.GeocoderStatus});
             observer.complete();
           });
         });
