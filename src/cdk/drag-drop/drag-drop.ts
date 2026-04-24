@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, ElementRef, inject, Injector} from '@angular/core';
+import {Service, ElementRef, inject, Injector} from '@angular/core';
 import {createDragRef, DragRef, DragRefConfig} from './drag-ref';
 import {createDropListRef, DropListRef} from './drop-list-ref';
 
@@ -16,7 +16,7 @@ import {createDropListRef, DropListRef} from './drop-list-ref';
  * Will be removed in v23.
  * @breaking-change 23.0.0
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class DragDrop {
   private _injector = inject(Injector);
 
