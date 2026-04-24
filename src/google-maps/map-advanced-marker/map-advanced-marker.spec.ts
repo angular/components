@@ -34,6 +34,7 @@ describe('MapAdvancedMarker', () => {
       title: undefined,
       content: undefined,
       gmpDraggable: undefined,
+      gmpClickable: undefined,
       zIndex: undefined,
       map: mapSpy,
     });
@@ -46,6 +47,7 @@ describe('MapAdvancedMarker', () => {
       map: mapSpy,
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
     const advancedMarkerSpy = createAdvancedMarkerSpy(options);
@@ -56,6 +58,7 @@ describe('MapAdvancedMarker', () => {
     fixture.componentInstance.title = options.title!;
     fixture.componentInstance.content = options.content!;
     fixture.componentInstance.gmpDraggable = options.gmpDraggable!;
+    fixture.componentInstance.gmpClickable = options.gmpClickable!;
     fixture.componentInstance.zIndex = options.zIndex!;
 
     fixture.detectChanges();
@@ -69,6 +72,7 @@ describe('MapAdvancedMarker', () => {
       title: 'marker title',
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
     const advancedMarkerSpy = createAdvancedMarkerSpy(options);
@@ -87,6 +91,7 @@ describe('MapAdvancedMarker', () => {
       title: 'marker title',
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
 
@@ -95,6 +100,7 @@ describe('MapAdvancedMarker', () => {
       title: 'marker title 2',
       content: undefined,
       gmpDraggable: false,
+      gmpClickable: false,
       zIndex: 999,
       map: mapSpy,
     };
@@ -106,6 +112,7 @@ describe('MapAdvancedMarker', () => {
     fixture.componentInstance.title = expectedOptions.title!;
     fixture.componentInstance.content = expectedOptions.content!;
     fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable!;
+    fixture.componentInstance.gmpClickable = expectedOptions.gmpClickable!;
     fixture.componentInstance.zIndex = expectedOptions.zIndex!;
     fixture.componentInstance.options = options!;
 
@@ -132,6 +139,7 @@ describe('MapAdvancedMarker', () => {
     expect(customSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
     expect(customSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
     expect(customSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
+    expect(customSpy).not.toHaveBeenCalledWith('gmp-click', jasmine.any(Function));
   });
 
   it('should be able to add an event listener after init', () => {
@@ -162,6 +170,7 @@ describe('MapAdvancedMarker', () => {
         [position]="position"
         [content]="content"
         [gmpDraggable]="gmpDraggable"
+        [gmpClickable]="gmpClickable"
         [zIndex]="zIndex"
         (mapClick)="handleClick()"
         (mapDblclick)="handleDblclick()"
@@ -181,6 +190,7 @@ class TestApp {
   position!: google.maps.LatLng | google.maps.LatLngLiteral;
   content!: Node | google.maps.marker.PinElement;
   gmpDraggable!: boolean;
+  gmpClickable!: boolean;
   zIndex!: number;
   options!: google.maps.marker.AdvancedMarkerElementOptions;
 

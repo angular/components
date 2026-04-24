@@ -314,6 +314,8 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     set content(content: Node | google.maps.marker.PinElement | null);
     // (undocumented)
     getAnchor(): google.maps.marker.AdvancedMarkerElement;
+    readonly gmpClick: Observable<google.maps.marker.AdvancedMarkerClickEvent>;
+    set gmpClickable(clickable: boolean);
     set gmpDraggable(draggable: boolean);
     readonly mapClick: Observable<google.maps.MapMouseEvent>;
     readonly mapDblclick: Observable<MouseEvent>;
@@ -337,7 +339,7 @@ export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     set title(title: string);
     set zIndex(zIndex: number);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "mapRightclick": "mapRightclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "gmpClickable": { "alias": "gmpClickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "mapRightclick": "mapRightclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "gmpClick": "gmpClick"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapAdvancedMarker, never>;
 }
