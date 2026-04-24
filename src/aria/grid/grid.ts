@@ -134,6 +134,9 @@ export class Grid {
     element: () => this.element,
   });
 
+  /** The ID of the active descendant in the grid. */
+  readonly activeDescendant = computed(() => this._pattern.activeDescendant());
+
   constructor() {
     // Use Write mode for all direct DOM focus management actions.
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});

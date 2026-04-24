@@ -219,8 +219,6 @@ export class ComboboxWidget implements OnInit, OnDestroy {
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _popup = inject(ComboboxPopup);
 
-  private _observer: MutationObserver | undefined;
-
   /** A reference to the popup widget element. */
   readonly element = this._elementRef.nativeElement;
 
@@ -228,41 +226,28 @@ export class ComboboxWidget implements OnInit, OnDestroy {
   readonly popupId = signal<string | undefined>(undefined);
 
   /** The ID of the active descendant in the widget. */
-  readonly activeDescendant = signal<string | undefined>(undefined);
+  readonly activeDescendant = input<string | undefined>(undefined);
+
+  private _observer: MutationObserver | undefined;
 
   constructor() {
-    afterRenderEffect(() => {
-      const controlTarget = this.element;
-
-      this.popupId.set(controlTarget.id);
-
-      this._observer?.disconnect();
-      this._observer = new MutationObserver((mutationsList: MutationRecord[]) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === 'attributes' && mutation.attributeName) {
-            const attributeName = mutation.attributeName;
-
-            if (attributeName === 'aria-activedescendant') {
-              const activeDescendant = controlTarget.getAttribute('aria-activedescendant');
-              if (activeDescendant !== null) {
-                this.activeDescendant.set(activeDescendant);
-              }
-            }
-
-            if (attributeName === 'id') {
-              this.popupId.set(controlTarget.id);
-            }
-          }
+    const el = this.element;
+    this._observer = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'id') {
+          this.popupId.set(el.id);
         }
-      });
-      this._observer.observe(controlTarget, {
-        attributes: true,
-        attributeFilter: ['id', 'aria-activedescendant'],
-      });
+      }
+    });
+
+    this._observer.observe(el, {
+      attributes: true,
+      attributeFilter: ['id'],
     });
   }
 
   ngOnInit() {
+    this.popupId.set(this.element.id);
     this._popup._registerWidget(this);
   }
 

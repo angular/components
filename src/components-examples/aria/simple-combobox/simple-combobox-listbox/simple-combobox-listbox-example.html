@@ -8,9 +8,9 @@
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox">
-      <div ngListbox ngComboboxWidget class="example-listbox example-popup" focusMode="activedescendant"
+      <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox example-popup" focusMode="activedescendant"
         [tabbable]="false" selectionMode="explicit" [(value)]="selectedOption" (click)="onCommit()"
-        (keydown.enter)="onCommit()">
+        (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
         @for (option of options(); track option) {
         <div class="example-option example-selectable example-stateful" ngOption [value]="option" [label]="option">
           <span>{{option}}</span>

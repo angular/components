@@ -13,6 +13,7 @@ import { Signal } from '@angular/core';
 // @public
 export class Tree<V> {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
     readonly currentType: _angular_core.InputSignal<"page" | "step" | "location" | "date" | "time" | "true" | "false">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;

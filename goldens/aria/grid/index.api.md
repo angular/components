@@ -12,6 +12,7 @@ import { Signal } from '@angular/core';
 // @public
 export class Grid {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
     readonly colWrap: _angular_core.InputSignal<"continuous" | "loop" | "nowrap">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;

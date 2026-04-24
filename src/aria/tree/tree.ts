@@ -16,6 +16,7 @@ import {
   input,
   model,
   signal,
+  Signal,
   untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
@@ -153,6 +154,9 @@ export class Tree<V> {
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;
 
+  /** The ID of the active descendant in the tree. */
+  readonly activeDescendant: Signal<string | undefined>;
+
   constructor() {
     const inputs = {
       ...this,
@@ -168,6 +172,8 @@ export class Tree<V> {
     this._pattern = this._popup?.combobox
       ? new ComboboxTreePattern<V>(inputs)
       : new TreePattern<V>(inputs);
+
+    this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     if (this._popup?.combobox) {
       this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);

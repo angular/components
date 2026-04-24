@@ -17,6 +17,7 @@ import {
   input,
   model,
   signal,
+  Signal,
   untracked,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -142,6 +143,9 @@ export class Listbox<V> {
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
 
+  /** The ID of the active descendant in the listbox. */
+  readonly activeDescendant: Signal<string | undefined>;
+
   constructor() {
     const inputs = {
       ...this,
@@ -157,6 +161,8 @@ export class Listbox<V> {
     this._pattern = this._popup?.combobox
       ? new ComboboxListboxPattern<V>(inputs)
       : new ListboxPattern<V>(inputs);
+
+    this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     if (this._popup) {
       this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);

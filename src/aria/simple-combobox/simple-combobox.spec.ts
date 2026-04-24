@@ -15,45 +15,8 @@ import {runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';
 import {NgTemplateOutlet} from '@angular/common';
 import {Grid, GridRow, GridCell, GridCellWidget} from '../grid';
-import {MutationObserverFactory} from '@angular/cdk/observers';
 
 describe('Combobox', () => {
-  let currentFixture: ComponentFixture<any> | null = null;
-
-  const resetMutationState = () => {
-    // No-op, kept to avoid changing setup helpers
-  };
-
-  const waitForMutation = (ms = 50) => {
-    const factory = TestBed.inject(MutationObserverFactory);
-    return new Promise<void>(resolve => {
-      let resolved = false;
-      const timeoutId = setTimeout(() => {
-        if (!resolved) {
-          resolved = true;
-          observer?.disconnect();
-          currentFixture?.detectChanges();
-          resolve();
-        }
-      }, ms);
-
-      const observer = factory.create(() => {
-        if (!resolved) {
-          resolved = true;
-          clearTimeout(timeoutId);
-          observer?.disconnect();
-          currentFixture?.detectChanges();
-          resolve();
-        }
-      });
-      observer?.observe(document.body, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
-    });
-  };
-
   describe('with Listbox', () => {
     let fixture: ComponentFixture<ComboboxListboxExample>;
     let inputElement: HTMLInputElement;
@@ -111,8 +74,6 @@ describe('Combobox', () => {
 
       fixture.detectChanges();
       defineTestVariables();
-      currentFixture = fixture;
-      resetMutationState();
     }
 
     function defineTestVariables() {
@@ -183,8 +144,6 @@ describe('Combobox', () => {
       it('should set aria-activedescendant to the active option id', async () => {
         down();
         const option = getOption('Alabama')!;
-
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(option.id);
       });
     });
@@ -196,7 +155,6 @@ describe('Combobox', () => {
         down();
         const options = getOptions();
 
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -204,8 +162,6 @@ describe('Combobox', () => {
         down(); // Opens the focus on Alabama
         up();
         const options = getOptions();
-
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
@@ -215,7 +171,6 @@ describe('Combobox', () => {
         down(); // Open popup
         down(); // Move to next item
         const options = getOptions();
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
       });
 
@@ -224,7 +179,6 @@ describe('Combobox', () => {
         down(); // Move to next item
         up(); // Move back to first item
         const options = getOptions();
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -233,7 +187,6 @@ describe('Combobox', () => {
         down(); // Move to next item
         keydown('Home');
         const options = getOptions();
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
@@ -241,7 +194,6 @@ describe('Combobox', () => {
         down(); // Open
         keydown('End');
         const options = getOptions();
-        await waitForMutation();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
@@ -638,8 +590,6 @@ describe('Combobox', () => {
 
       fixture.detectChanges();
       defineTestVariables();
-      currentFixture = fixture;
-      resetMutationState();
     }
 
     function defineTestVariables() {
@@ -699,16 +649,13 @@ describe('Combobox', () => {
 
       it('should toggle aria-expanded on parent nodes', async () => {
         down();
-        await waitForMutation(20);
         const item = getTreeItem('Winter')!;
         expect(item.getAttribute('aria-expanded')).toBe('false');
 
         right(); // Opens Winter
-        await waitForMutation(20);
         expect(item.getAttribute('aria-expanded')).toBe('true');
 
         left(); // Closes Winter
-        await waitForMutation(20);
         expect(item.getAttribute('aria-expanded')).toBe('false');
       });
     });
@@ -718,7 +665,6 @@ describe('Combobox', () => {
 
       it('should navigate to the first focusable item on ArrowDown', async () => {
         down(); // Winter
-        await waitForMutation(10);
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -726,7 +672,6 @@ describe('Combobox', () => {
       it('should navigate to the last focusable item on ArrowUp', async () => {
         down(); // Winter
         up(); // Fall
-        await waitForMutation(10);
         const item = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -734,7 +679,6 @@ describe('Combobox', () => {
       it('should navigate to the next focusable item on ArrowDown when open', async () => {
         down(); // Winter
         down(); // Spring
-        await waitForMutation(10);
         const item = getTreeItem('Spring')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -745,7 +689,6 @@ describe('Combobox', () => {
         down(); // Summer
         down(); // Fall
         up(); // Summer
-        await waitForMutation(10);
         const item = getTreeItem('Summer')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -764,7 +707,7 @@ describe('Combobox', () => {
         right(); // December
 
         const item = getTreeItem('December')!;
-        await waitForMutation(10);
+
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
@@ -774,7 +717,7 @@ describe('Combobox', () => {
         expect(getVisibleTreeItems().length).toBe(7);
         left(); // Winter Collapsed
         expect(getVisibleTreeItems().length).toBe(4);
-        await waitForMutation(10);
+
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
@@ -783,13 +726,11 @@ describe('Combobox', () => {
         down(); // Winter
         right(); // Expand Winter
         right(); // December
-        await waitForMutation(10);
 
         const item1 = getTreeItem('December')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item1.id);
 
         left();
-        await waitForMutation(10);
 
         const item2 = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item2.id);
@@ -799,7 +740,6 @@ describe('Combobox', () => {
         down();
         down();
         keydown('Home');
-        await waitForMutation(10);
 
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
@@ -809,7 +749,6 @@ describe('Combobox', () => {
         down();
         down();
         keydown('End');
-        await waitForMutation(10);
 
         const grainsItem = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(grainsItem.id);
@@ -925,7 +864,7 @@ describe('Combobox', () => {
         // Force computed signal to re-evaluate by updating dataSource reference
         fixture.componentInstance.dataSource.set([...fixture.componentInstance.dataSource()]);
         fixture.detectChanges();
-        await waitForMutation();
+
         expect(getTreeItems().length).toBe(16);
       });
 
@@ -1017,8 +956,6 @@ describe('Combobox', () => {
       fixture.detectChanges();
       const inputDebugElement = fixture.debugElement.query(By.directive(Combobox));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
-      currentFixture = fixture;
-      resetMutationState();
     }
 
     beforeEach(() => setupCombobox());
@@ -1051,7 +988,7 @@ describe('Combobox', () => {
       it('should set aria-activedescendant to the active grid cell id', async () => {
         focus();
         down(); // Open popup
-        await waitForMutation(20);
+
         expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
       });
     });
@@ -1061,11 +998,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       down(); // Navigate down to 'Bird-label'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
 
       up(); // Navigate back up to 'Antelope-label'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1074,11 +1011,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       right(); // Move right to 'Antelope-delete'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
 
       left(); // Move back left to 'Antelope-label'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1087,11 +1024,11 @@ describe('Combobox', () => {
       down(); // Open popup
 
       right(); // Move right to 'Antelope-delete'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
 
       home(); // Move back to 'Antelope-label'
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
     });
 
@@ -1100,7 +1037,7 @@ describe('Combobox', () => {
       down(); // Open popup
 
       end(); // Move to end of row ('Antelope-delete')
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
     });
 
@@ -1109,17 +1046,16 @@ describe('Combobox', () => {
       down(); // Open popup
 
       down(); // Navigate down
-      await waitForMutation(20);
 
       // The active item is 'Bird' because we navigated down once more
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
 
       right(); // Move right to delete button
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-delete');
 
       down(); // Move down to next row
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Cat-delete');
     });
 
@@ -1133,7 +1069,6 @@ describe('Combobox', () => {
     it('should filter items and maintain selection', async () => {
       down(); // Antelope
       enter(); // Select active item
-      await waitForMutation(20);
 
       expect(fixture.componentInstance.searchString()).toBe('Antelope');
 
@@ -1144,7 +1079,7 @@ describe('Combobox', () => {
       expect(fixture.componentInstance.searchString()).toBe('');
 
       down(); // Go to BirdLabel
-      await waitForMutation(20);
+
       expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
     });
 
@@ -1180,7 +1115,6 @@ describe('Combobox', () => {
         const gridCells = fixture.nativeElement.querySelectorAll('[ngGridCellWidget]');
         gridCells[0].dispatchEvent(new PointerEvent('click', {bubbles: true}));
         fixture.detectChanges();
-        await waitForMutation(20);
 
         expect(fixture.componentInstance.selectedItem()).toBe('Antelope');
         expect(inputElement.value).toBe('Antelope');
@@ -1191,7 +1125,6 @@ describe('Combobox', () => {
         down(); // Open popup
 
         down(); // Move row down
-        await waitForMutation(20);
 
         expect(fixture.componentInstance.selectedItem()).toBeNull();
       });
@@ -1214,7 +1147,7 @@ describe('Combobox', () => {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget ngListbox id="listbox" focusMode="activedescendant" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div
           ngOption
@@ -1306,7 +1239,7 @@ function getTreeNodes(): TreeNode[] {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
-    <ul ngComboboxWidget ngTree #tree="ngTree" focusMode="activedescendant" [tabbable]="false" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()">
+    <ul ngComboboxWidget ngTree #tree="ngTree" id="tree" focusMode="activedescendant" [tabbable]="false" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="tree.activeDescendant()">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1498,7 +1431,7 @@ const states = [
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox" popupType="grid">
-    <div ngComboboxWidget ngGrid focusMode="activedescendant" [tabIndex]="-1" [tabbable]="false" colWrap="continuous">
+    <div ngComboboxWidget #grid="ngGrid" ngGrid id="grid" focusMode="activedescendant" [tabIndex]="-1" [tabbable]="false" colWrap="continuous" [activeDescendant]="grid.activeDescendant()">
       @for (item of filteredItems(); track item; let i = $index) {
         <div ngGridRow>
           <div ngGridCell [id]="item + '-label'" [rowIndex]="i" [colIndex]="0">
@@ -1556,7 +1489,7 @@ class ComboboxGridExample {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget ngListbox id="listbox" focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div ngOption [value]="option" [label]="option">
           <span>{{option}}</span>
@@ -1619,7 +1552,7 @@ class ComboboxListboxAutoSelectExample {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget ngListbox focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div ngOption [value]="option" [label]="option">
           <span>{{option}}</span>

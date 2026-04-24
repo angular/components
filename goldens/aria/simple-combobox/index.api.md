@@ -57,7 +57,7 @@ export class ComboboxPopup implements OnInit, OnDestroy {
 // @public
 export class ComboboxWidget implements OnInit, OnDestroy {
     constructor();
-    readonly activeDescendant: _angular_core.WritableSignal<string | undefined>;
+    readonly activeDescendant: _angular_core.InputSignal<string | undefined>;
     readonly element: HTMLElement;
     // (undocumented)
     ngOnDestroy(): void;
@@ -67,7 +67,7 @@ export class ComboboxWidget implements OnInit, OnDestroy {
     onFocusout(event: FocusEvent): void;
     readonly popupId: _angular_core.WritableSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxWidget, "[ngComboboxWidget]", ["ngComboboxWidget"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxWidget, "[ngComboboxWidget]", ["ngComboboxWidget"], { "activeDescendant": { "alias": "activeDescendant"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxWidget, never>;
 }

@@ -6,16 +6,18 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export class Listbox<V> {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     gotoFirst(): void;
     readonly id: _angular_core.InputSignal<string>;
-    protected readonly items: _angular_core.Signal<OptionPattern<V>[]>;
+    protected readonly items: Signal<OptionPattern<V>[]>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ListboxPattern<V>;
@@ -25,7 +27,7 @@ export class Listbox<V> {
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     tabbable: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
+    protected readonly textDirection: Signal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;

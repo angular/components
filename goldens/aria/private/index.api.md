@@ -682,13 +682,13 @@ export class SimpleComboboxPattern {
     closePopupOnBlurEffect(): void;
     readonly disabled: () => boolean;
     readonly element: () => HTMLElement;
-    readonly expanded: WritableSignalLike<boolean>;
     highlightEffect(): void;
     readonly inlineSuggestion: () => string | undefined;
     // (undocumented)
     readonly inputs: SimpleComboboxInputs;
     readonly isDeleting: _angular_core.WritableSignal<boolean>;
     readonly isEditable: _angular_core.Signal<boolean>;
+    readonly isExpanded: _angular_core.Signal<boolean>;
     readonly isFocused: _angular_core.WritableSignal<boolean>;
     readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
     keyboardEventRelayEffect(): void;

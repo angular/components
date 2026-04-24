@@ -12,7 +12,7 @@
       <div class="example-popover">
         <ul ngTree ngComboboxWidget class="example-tree" focusMode="activedescendant" [tabbable]="false"
           selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
-          #tree="ngTree">
+          #tree="ngTree" [activeDescendant]="tree.activeDescendant()">
           <ng-template [ngTemplateOutlet]="treeNodes"
             [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
         </ul>
