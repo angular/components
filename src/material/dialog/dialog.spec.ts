@@ -18,7 +18,7 @@ import {
   Component,
   createNgModule,
   Directive,
-  Injectable,
+  Service,
   Injector,
   Input,
   NgModule,
@@ -2478,7 +2478,7 @@ class ModuleBoundDialogParentComponent {
   }
 }
 
-@Injectable()
+@Service({autoProvided: false})
 class ModuleBoundDialogService {
   name = 'Pasta';
 }
