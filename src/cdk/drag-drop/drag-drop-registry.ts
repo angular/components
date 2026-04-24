@@ -9,7 +9,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Injectable,
+  Service,
   ListenerOptions,
   NgZone,
   OnDestroy,
@@ -56,7 +56,7 @@ export class _ResetsLoader {}
  * instances, and manages global event listeners on the `document`.
  * @docs-private
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class DragDropRegistry implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _document = inject(DOCUMENT);
