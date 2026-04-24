@@ -149,7 +149,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getStatus(): google.maps.KmlLayerStatus {
     this._assertInitialized();
-    return this.kmlLayer.getStatus();
+    return this.kmlLayer.getStatus() as google.maps.KmlLayerStatus;
   }
 
   /**
