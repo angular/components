@@ -7,7 +7,7 @@
  */
 
 import {
-  Injectable,
+  Service,
   Injector,
   NgZone,
   OnDestroy,
@@ -55,7 +55,7 @@ const matRippleDisabled = 'mat-ripple-loader-disabled';
  *
  * @docs-private
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MatRippleLoader implements OnDestroy {
   private _document = inject(DOCUMENT);
   private _animationsDisabled = _animationsDisabled();
