@@ -965,6 +965,34 @@ describe('CdkTree', () => {
           [`topping_3 - cheese_3 + base_3`],
         );
       });
+
+      it('should not collapse parent when child is toggled via keyboard', () => {
+        component.toggleRecursively = false;
+        fixture.changeDetectorRef.markForCheck();
+        let data = dataSource.data;
+        const child = dataSource.addChild(data[1], false);
+        dataSource.addChild(child, false);
+        fixture.detectChanges();
+
+        // Expand parent
+        (getNodes(treeElement)[1] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.tree.isExpanded(data[1])).toBe(true);
+
+        // Focus child node (which is now at index 2)
+        const childNode = getNodes(treeElement)[2] as HTMLElement;
+
+        // Simulate Enter key on child node
+        const event = createKeyboardEvent('keydown', undefined, 'Enter');
+        childNode.dispatchEvent(event);
+        fixture.detectChanges();
+
+        // Verify parent is still expanded
+        expect(component.tree.isExpanded(data[1]))
+          .withContext('Parent should remain expanded')
+          .toBe(true);
+      });
     });
 
     describe('with array data source', () => {

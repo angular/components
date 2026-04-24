@@ -277,7 +277,7 @@ export class CdkTreeNodeToggle<T, K = T> {
     static ngAcceptInputType_recursive: unknown;
     recursive: boolean;
     // (undocumented)
-    _toggle(): void;
+    _toggle(event: Event): void;
     // (undocumented)
     protected _tree: CdkTree<T, K>;
     // (undocumented)
