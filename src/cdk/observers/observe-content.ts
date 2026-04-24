@@ -12,7 +12,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Injectable,
+  Service,
   Input,
   NgModule,
   NgZone,
@@ -55,7 +55,7 @@ function shouldIgnoreRecord(record: MutationRecord) {
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * @docs-private
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MutationObserverFactory {
   create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
@@ -63,7 +63,7 @@ export class MutationObserverFactory {
 }
 
 /** An injectable service that allows watching elements for changes to their content. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ContentObserver implements OnDestroy {
   private _mutationObserverFactory = inject(MutationObserverFactory);
 
