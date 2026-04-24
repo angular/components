@@ -130,6 +130,9 @@ export class Tree<V> {
   /** The delay in seconds before the typeahead search is reset. */
   readonly typeaheadDelay = input(500);
 
+  /** Whether the tree is tabbable. */
+  readonly tabbable = input(true, {transform: booleanAttribute});
+
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);
 

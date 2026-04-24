@@ -39,6 +39,9 @@ export interface ListFocusInputs<T extends ListFocusItem> {
 
   /** The html element that should receive focus. */
   element: SignalLike<HTMLElement | undefined>;
+
+  /** Whether the list is tabbable. */
+  tabbable?: SignalLike<boolean>;
 }
 
 /** Controls focus for a list of items. */
@@ -76,6 +79,9 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** The tab index for the list. */
   getListTabIndex(): -1 | 0 {
+    if (this.inputs.tabbable !== undefined && !this.inputs.tabbable()) {
+      return -1;
+    }
     if (this.isListDisabled()) {
       return 0;
     }
@@ -84,6 +90,9 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns the tab index for the given item. */
   getItemTabIndex(item: T): -1 | 0 {
+    if (this.inputs.tabbable !== undefined && !this.inputs.tabbable()) {
+      return -1;
+    }
     if (this.isListDisabled()) {
       return -1;
     }
@@ -103,9 +112,11 @@ export class ListFocus<T extends ListFocusItem> {
     this.inputs.activeItem.set(item);
 
     if (opts?.focusElement || opts?.focusElement === undefined) {
-      this.inputs.focusMode() === 'roving'
-        ? item.element()?.focus()
-        : this.inputs.element()?.focus();
+      if (this.inputs.focusMode() === 'roving') {
+        item.element()?.focus();
+      } else if (this.inputs.focusMode() === 'activedescendant') {
+        this.inputs.element()?.focus();
+      }
     }
 
     return true;

@@ -13,8 +13,8 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/aria/combobox",
         "//src/aria/listbox",
+        "//src/aria/simple-combobox",
         "//src/cdk/overlay",
     ],
 )

@@ -274,6 +274,16 @@ describe('Grid', () => {
         expect(widget.isActivated()).toBe(true);
       });
 
+      it('should trigger click on Enter for simple widget', () => {
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const widget = grid.cells()[0][0].inputs.widget()!;
+        const element = widget.element();
+        spyOn(element, 'click');
+
+        widget.onKeydown(enter());
+        expect(element.click).toHaveBeenCalled();
+      });
+
       it('should not activate if disabled', () => {
         const {grid} = createGrid(
           [{cells: [{widget: {widgetType: 'complex', disabled: true}}]}],

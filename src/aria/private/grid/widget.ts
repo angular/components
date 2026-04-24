@@ -72,7 +72,10 @@ export class GridCellWidgetPattern {
     const manager = new KeyboardEventManager();
 
     // Simple widget does not need to pause default grid behaviors.
+    // However, it does need to capture Enter key and trigger a click on the host element
+    // since the browser won't do it for us in activedescendant mode.
     if (this.inputs.widgetType() === 'simple') {
+      manager.on('Enter', () => this.element().click());
       return manager;
     }
 
