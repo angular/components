@@ -18,7 +18,7 @@ import {
 import {
   ComponentRef,
   EmbeddedViewRef,
-  Injectable,
+  Service,
   InjectionToken,
   Injector,
   OnDestroy,
@@ -45,7 +45,7 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfi
 /**
  * Service to dispatch Material Design snack bar messages.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MatSnackBar implements OnDestroy {
   private _live = inject(LiveAnnouncer);
   private _injector = inject(Injector);
