@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Injectable, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Service, inject, signal} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -17,7 +17,7 @@ interface DynamicNode {
  * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
  * the descendants data from the database.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class DynamicDatabase {
   dataMap = new Map<string, string[]>([
     ['Fruits', ['Apple', 'Orange', 'Banana']],

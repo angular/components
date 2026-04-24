@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {ChangeDetectionStrategy, Component, Injectable, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Service, inject, signal} from '@angular/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -27,7 +27,7 @@ const batchSize = 3;
  * A database that only loads part of the data initially. After user clicks on the `Load more`
  * button, more data will be loaded.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class LoadmoreDatabase {
   /** Map of node name to node */
   private _nodes = new Map<string, TreeNode>();
