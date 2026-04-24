@@ -8,7 +8,7 @@
 
 import {coerceElement} from '../coercion';
 import {Platform} from '../platform';
-import {ElementRef, Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {ElementRef, Service, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
 import {of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import type {CdkScrollable} from './scrollable';
@@ -20,7 +20,7 @@ export const DEFAULT_SCROLL_TIME = 20;
  * Service contained all registered Scrollable references and emits an event when any one of the
  * Scrollable references emit a scrolled event.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ScrollDispatcher implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);

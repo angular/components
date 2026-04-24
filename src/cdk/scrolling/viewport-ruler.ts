@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '../platform';
-import {Injectable, NgZone, OnDestroy, RendererFactory2, inject, DOCUMENT} from '@angular/core';
+import {Service, NgZone, OnDestroy, RendererFactory2, inject, DOCUMENT} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ export interface ViewportScrollPosition {
  * Simple utility for getting the bounds of the browser viewport.
  * @docs-private
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ViewportRuler implements OnDestroy {
   private _platform = inject(Platform);
   private _listeners: (() => void)[] | undefined;
