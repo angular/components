@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Injector, inject} from '@angular/core';
+import {Service, Injector, inject} from '@angular/core';
 import {
   createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
@@ -15,7 +15,7 @@ import {
 import {createGlobalPositionStrategy, GlobalPositionStrategy} from './global-position-strategy';
 
 /** Builder for overlay position strategy. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class OverlayPositionBuilder {
   private _injector = inject(Injector);
 

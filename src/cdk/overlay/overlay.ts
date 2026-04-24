@@ -11,7 +11,7 @@ import {DomPortalOutlet} from '../portal';
 import {Location} from '@angular/common';
 import {
   ApplicationRef,
-  Injectable,
+  Service,
   Injector,
   NgZone,
   ANIMATION_MODULE_TYPE,
@@ -122,7 +122,7 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
  *
  * An overlay *is* a PortalOutlet, so any kind of Portal can be loaded into one.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class Overlay {
   scrollStrategies = inject(ScrollStrategyOptions);
   private _positionBuilder = inject(OverlayPositionBuilder);

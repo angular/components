@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable, OnDestroy, RendererFactory2} from '@angular/core';
+import {inject, Service, OnDestroy, RendererFactory2} from '@angular/core';
 import {OverlayContainer} from './overlay-container';
 
 /**
@@ -16,7 +16,7 @@ import {OverlayContainer} from './overlay-container';
  *
  * Should be provided in the root component.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _fullScreenEventName: string | undefined;
