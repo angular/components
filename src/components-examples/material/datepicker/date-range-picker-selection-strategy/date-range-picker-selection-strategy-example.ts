@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Injectable, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Service, inject} from '@angular/core';
 import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
 import {
   DateRange,
@@ -8,7 +8,7 @@ import {
 } from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
-@Injectable()
+@Service({autoProvided: false})
 export class FiveDayRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter<D>);
 

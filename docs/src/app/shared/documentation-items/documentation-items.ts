@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import type {LiveExample} from '@angular/components-examples';
 
 export interface AdditionalApiDoc {
@@ -599,7 +599,7 @@ interface DocsData {
   examples: Record<string, LiveExample>;
 }
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class DocumentationItems {
   private _cachedData: DocsData | null = null;
 

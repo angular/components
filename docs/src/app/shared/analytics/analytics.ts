@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 
 import {environment} from '../../../environments/environment';
 import {formatErrorEventForAnalytics} from './format-error';
@@ -21,7 +21,7 @@ import {formatErrorEventForAnalytics} from './format-error';
  *   - Data is uploaded to a legacy Universal Analytics property.
  *   - Data is uploaded to our main Google Analytics 4+ property.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class AnalyticsService {
   private _previousUrl: string | undefined;
   private _gaWindow = window as Window &

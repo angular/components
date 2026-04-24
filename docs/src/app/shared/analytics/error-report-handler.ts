@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ErrorHandler, Injectable, inject} from '@angular/core';
+import {ErrorHandler, Service, inject} from '@angular/core';
 import {AnalyticsService} from './analytics';
 import {formatErrorForAnalytics} from './format-error';
 
-@Injectable()
+@Service({autoProvided: false})
 export class AnalyticsErrorReportHandler extends ErrorHandler {
   private _analytics = inject(AnalyticsService);
 

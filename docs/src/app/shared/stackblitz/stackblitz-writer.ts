@@ -7,7 +7,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Injectable, NgZone, inject} from '@angular/core';
+import {Service, NgZone, inject} from '@angular/core';
 import type {ExampleData} from '@angular/components-examples';
 import {Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
@@ -59,7 +59,7 @@ type FileDictionary = {[path: string]: string};
 /**
  * StackBlitz writer, write example files to StackBlitz.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class StackBlitzWriter {
   private _http = inject(HttpClient);
   private _ngZone = inject(NgZone);

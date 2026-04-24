@@ -11,7 +11,7 @@ import {
   ChangeDetectorRef,
   Component,
   Directive,
-  Injectable,
+  Service,
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
@@ -39,7 +39,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 /** Range selection strategy that preserves the current range. */
-@Injectable()
+@Service({autoProvided: false})
 export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D> {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter<D>);
 

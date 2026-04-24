@@ -20,7 +20,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Injectable,
+  Service,
   Injector,
   Input,
   NgZone,
@@ -41,7 +41,7 @@ import {DeprecatedFieldComponent} from './deprecated-tooltip';
 import {ModuleImportCopyButton} from './module-import-copy-button';
 import {AngularAriaBanner} from './angular-aria-banner/angular-aria-banner';
 
-@Injectable({providedIn: 'root'})
+@Service()
 class DocFetcher {
   private _http = inject(HttpClient);
 
