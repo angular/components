@@ -18,7 +18,7 @@ import {
   output,
   Signal,
 } from '@angular/core';
-import {GridCellWidgetPattern} from '../private';
+import {GridCellWidgetPattern, ElementResolver} from '../private';
 import {GRID_CELL} from './grid-tokens';
 
 /**
@@ -72,7 +72,7 @@ export class GridCellWidget {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The target that will receive focus instead of the widget. */
-  readonly focusTarget = input<ElementRef | HTMLElement | undefined>();
+  readonly focusTarget = input<ElementResolver<HTMLElement>>();
 
   /** Emits when the widget is activated. */
   readonly activated = output<KeyboardEvent | FocusEvent | undefined>();
@@ -96,10 +96,6 @@ export class GridCellWidget {
     ...this,
     element: () => this.element,
     cell: () => this._cell._pattern,
-    focusTarget: computed(() => {
-      const target = this.focusTarget();
-      return target instanceof ElementRef ? target.nativeElement : target;
-    }),
   });
 
   /** Whether the widget is activated. */
@@ -109,9 +105,10 @@ export class GridCellWidget {
 
   constructor() {
     afterRenderEffect(() => {
-      const activateEvent = this._pattern.lastActivateEvent();
-      if (activateEvent) {
+      if (this._pattern.isActivated()) {
+        const activateEvent = this._pattern.lastActivateEvent();
         this.activated.emit(activateEvent);
+        this._pattern.focus();
       }
     });
 
