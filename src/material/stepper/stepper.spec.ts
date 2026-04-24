@@ -1017,6 +1017,15 @@ describe('MatStepper', () => {
       expect(headers[2].classList.contains('mat-primary')).toBe(true);
       expect(headers[1].classList.contains('mat-accent')).toBe(true);
     });
+
+    it('should set an aria label on the content container', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.componentInstance.ariaLabel.set('My Stepper');
+      fixture.detectChanges();
+
+      const container = fixture.nativeElement.querySelector('.mat-vertical-content-container');
+      expect(container.getAttribute('aria-label')).toBe('My Stepper');
+    });
   });
 
   describe('horizontal stepper', () => {
@@ -1216,6 +1225,17 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       expect(stepperHost.classList).toContain('mat-stepper-header-position-bottom');
+    });
+
+    it('should set an aria-label on the header container', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.componentInstance.ariaLabel.set('My Stepper');
+      fixture.detectChanges();
+
+      const container = fixture.nativeElement.querySelector(
+        '.mat-horizontal-stepper-header-container',
+      );
+      expect(container.getAttribute('aria-label')).toBe('My Stepper');
     });
   });
 
@@ -1849,7 +1869,8 @@ class MatHorizontalStepperWithErrorsApp {
     <mat-stepper
       [disableRipple]="disableRipple()"
       [color]="stepperTheme()"
-      [headerPosition]="headerPosition()">
+      [headerPosition]="headerPosition()"
+      [aria-label]="ariaLabel()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1881,6 +1902,7 @@ class MatHorizontalStepperWithErrorsApp {
 class SimpleMatHorizontalStepperApp {
   @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = 'Step 3';
+  ariaLabel = signal<string | null>(null);
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
   secondStepTheme = signal<ThemePalette>(undefined);
@@ -1889,7 +1911,7 @@ class SimpleMatHorizontalStepperApp {
 
 @Component({
   template: `
-    <mat-stepper orientation="vertical" [disableRipple]="disableRipple()" [color]="stepperTheme()">
+    <mat-stepper orientation="vertical" [disableRipple]="disableRipple()" [color]="stepperTheme()" [aria-label]="ariaLabel()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1923,6 +1945,7 @@ class SimpleMatHorizontalStepperApp {
 class SimpleMatVerticalStepperApp {
   @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = signal('Step 3');
+  ariaLabel = signal<string | null>(null);
   showStepTwo = signal(true);
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
