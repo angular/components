@@ -8,16 +8,18 @@
 
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
-  computed,
   Directive,
   ElementRef,
+  OnDestroy,
+  OnInit,
+  WritableSignal,
+  afterRenderEffect,
+  computed,
   inject,
   input,
-  afterRenderEffect,
-  OnInit,
-  OnDestroy,
+  signal,
 } from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '../private';
+import {TabPattern, TabPanelPattern, DeferredContentAware} from '../private';
 import {TABS} from './tab-tokens';
 
 /**
@@ -73,9 +75,7 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  private readonly _tabPattern = computed(() =>
-    this._tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
-  );
+  readonly _tabPattern: WritableSignal<TabPattern | undefined> = signal(undefined);
 
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();
@@ -94,10 +94,10 @@ export class TabPanel implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabs._register(this);
+    this._tabs._registerPanel(this);
   }
 
   ngOnDestroy() {
-    this._tabs._unregister(this);
+    this._tabs._unregisterPanel(this);
   }
 }

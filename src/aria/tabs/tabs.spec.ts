@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
@@ -27,12 +27,10 @@ describe('Tabs', () => {
   let fixture: ComponentFixture<TestTabsComponent>;
   let testComponent: TestTabsComponent;
 
-  let tabsDebugElement: DebugElement;
   let tabListDebugElement: DebugElement;
   let tabDebugElements: DebugElement[];
   let tabPanelDebugElements: DebugElement[];
 
-  let tabsElement: HTMLElement;
   let tabListElement: HTMLElement;
   let tabElements: HTMLElement[];
   let tabPanelElements: HTMLElement[];
@@ -107,12 +105,10 @@ describe('Tabs', () => {
   }
 
   function defineTestVariables() {
-    tabsDebugElement = fixture.debugElement.query(By.directive(Tabs));
     tabListDebugElement = fixture.debugElement.query(By.directive(TabList));
     tabDebugElements = fixture.debugElement.queryAll(By.directive(Tab));
     tabPanelDebugElements = fixture.debugElement.queryAll(By.directive(TabPanel));
 
-    tabsElement = tabsDebugElement.nativeElement;
     tabListElement = tabListDebugElement.nativeElement;
     tabElements = tabDebugElements.map(debugEl => debugEl.nativeElement);
     tabPanelElements = tabPanelDebugElements.map(debugEl => debugEl.nativeElement);
@@ -127,8 +123,8 @@ describe('Tabs', () => {
   }
 
   afterEach(async () => {
-    if (tabsElement) {
-      await runAccessibilityChecks(tabsElement);
+    if (fixture.nativeElement) {
+      await runAccessibilityChecks(fixture.nativeElement);
     }
   });
 

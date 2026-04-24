@@ -8,21 +8,23 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {
-  booleanAttribute,
-  computed,
   Directive,
   ElementRef,
+  OnDestroy,
+  OnInit,
+  WritableSignal,
+  afterRenderEffect,
+  booleanAttribute,
+  computed,
   inject,
   input,
+  linkedSignal,
   model,
   signal,
-  afterRenderEffect,
-  OnInit,
-  OnDestroy,
 } from '@angular/core';
 import {TabListPattern, TabPattern, sortDirectives} from '../private';
-import {TABS} from './tab-tokens';
-import type {Tab} from './tab';
+import {Tab} from './tab';
+import {TABS, TAB_LIST} from './tab-tokens';
 
 /**
  * A TabList container.
@@ -55,6 +57,7 @@ import type {Tab} from './tab';
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
   },
+  providers: [{provide: TAB_LIST, useExisting: TabList}],
 })
 export class TabList implements OnInit, OnDestroy {
   /** A reference to the host element. */
@@ -63,22 +66,23 @@ export class TabList implements OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The parent Tabs. */
-  private readonly _tabs = inject(TABS);
+  /** The parent Tabs container. */
+  private readonly _tabsParent = inject(TABS);
 
-  /** The Tabs nested inside of the TabList. */
-  private readonly _unorderedTabs = signal(new Set<Tab>());
+  /** The Tabs registered for this TabList. */
+  private readonly _tabs = signal(new Set<Tab>());
 
-  /** Text direction. */
-  readonly textDirection = inject(Directionality).valueSignal;
+  /** The Tabs registered for this TabList. */
+  readonly _sortedTabs = computed(() => [...this._tabs()].sort(sortDirectives));
 
   /** The Tab UIPatterns of the child Tabs. */
-  readonly _tabPatterns = computed<TabPattern[]>(() =>
-    [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab._pattern),
-  );
+  private readonly _tabPatterns = computed(() => [...this._sortedTabs()].map(tab => tab._pattern));
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
+
+  /** Text direction. */
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
@@ -103,8 +107,17 @@ export class TabList implements OnInit, OnDestroy {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
-  /** The current selected tab. */
+  /** The current selected tab as a model input. */
   readonly selectedTab = model<string | undefined>();
+
+  /** The current selected Tab pattern, passed to the List pattern. */
+  private readonly _selectedTabPattern: WritableSignal<TabPattern | undefined> = linkedSignal(
+    () => {
+      const tab = this.findTab(this.selectedTab());
+
+      return tab?._pattern;
+    },
+  );
 
   /** Whether the tablist is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -112,54 +125,51 @@ export class TabList implements OnInit, OnDestroy {
   /** The TabList UIPattern. */
   readonly _pattern: TabListPattern = new TabListPattern({
     ...this,
-    items: this._tabPatterns,
-    activeItem: signal(undefined),
     element: () => this._elementRef.nativeElement,
+    activeItem: signal(undefined),
+    items: this._tabPatterns,
+    selectedTab: this._selectedTabPattern,
   });
 
   constructor() {
-    afterRenderEffect(() => {
-      this._pattern.setDefaultStateEffect();
+    // This needs to be in an afterRenderEffect to ensure the tabs have all been initialized.
+    // Otherwise, the lookup here can fail and it does not get re-run afterwards.
+    afterRenderEffect({
+      write: () => {
+        const pattern = this._selectedTabPattern();
+        const tab = this._sortedTabs().find(tab => tab._pattern == pattern);
+
+        this.selectedTab.set(tab?.value());
+      },
     });
 
-    afterRenderEffect(() => {
-      const tab = this._pattern.selectedTab();
-      if (tab) {
-        this.selectedTab.set(tab.value());
-      }
-    });
-
-    afterRenderEffect(() => {
-      const value = this.selectedTab();
-      if (value) {
-        this._tabPatterns().forEach(tab => tab.expanded.set(false));
-        const tab = this._tabPatterns().find(t => t.value() === value);
-        this._pattern.selectedTab.set(tab);
-        tab?.expanded.set(true);
-      }
-    });
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
   }
 
   ngOnInit() {
-    this._tabs._register(this);
+    this._tabsParent._registerList(this);
   }
 
   ngOnDestroy() {
-    this._tabs._unregister(this);
+    this._tabsParent._registerList(this);
   }
 
-  _register(child: Tab) {
-    this._unorderedTabs().add(child);
-    this._unorderedTabs.set(new Set(this._unorderedTabs()));
+  _registerTab(child: Tab) {
+    this._tabs().add(child);
+    this._tabs.set(new Set(this._tabs()));
   }
 
-  _unregister(child: Tab) {
-    this._unorderedTabs().delete(child);
-    this._unorderedTabs.set(new Set(this._unorderedTabs()));
+  _unregisterTab(child: Tab) {
+    this._tabs().delete(child);
+    this._tabs.set(new Set(this._tabs()));
   }
 
   /** Opens the tab panel with the specified value. */
   open(value: string): boolean {
-    return this._pattern.open(value);
+    return this._pattern.open(this.findTab(value)?._pattern);
+  }
+
+  findTab(value?: string) {
+    return value ? this._sortedTabs().find(tab => tab.value() === value) : undefined;
   }
 }
