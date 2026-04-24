@@ -8,7 +8,7 @@
 
 import {ALT, CONTROL, MAC_META, META, SHIFT} from '../../keycodes';
 import {
-  Injectable,
+  Service,
   InjectionToken,
   OnDestroy,
   NgZone,
@@ -96,7 +96,7 @@ const modalityEventListenerOptions = {
  * update the input modality to keyboard, but in general this service's behavior is largely
  * undefined.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class InputModalityDetector implements OnDestroy {
   private readonly _platform = inject(Platform);
   private readonly _listenerCleanups: (() => void)[] | undefined;

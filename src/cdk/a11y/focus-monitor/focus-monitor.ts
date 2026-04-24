@@ -16,7 +16,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  Injectable,
+  Service,
   InjectionToken,
   NgZone,
   OnDestroy,
@@ -83,7 +83,7 @@ const captureEventListenerOptions = normalizePassiveListenerOptions({
 });
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class FocusMonitor implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {APP_ID, inject, Injectable} from '@angular/core';
+import {APP_ID, inject, Service} from '@angular/core';
 
 /**
  * Keeps track of the ID count per prefix. This helps us make the IDs a bit more deterministic
@@ -16,7 +16,7 @@ import {APP_ID, inject, Injectable} from '@angular/core';
 const counters: Record<string, number> = {};
 
 /** Service that generates unique IDs for DOM nodes. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class _IdGenerator {
   private _appId = inject(APP_ID);
   private static _infix = `a${Math.floor(Math.random() * 100000).toString()}`;

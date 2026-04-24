@@ -13,7 +13,7 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  Injectable,
+  Service,
   Injector,
   Input,
   NgZone,
@@ -371,7 +371,7 @@ export class FocusTrap {
 /**
  * Factory that allows easy instantiation of focus traps.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class FocusTrapFactory {
   private _checker = inject(InteractivityChecker);
   private _ngZone = inject(NgZone);

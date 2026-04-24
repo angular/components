@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Injector, NgZone, inject, DOCUMENT} from '@angular/core';
+import {Service, Injector, NgZone, inject, DOCUMENT} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
@@ -15,7 +15,7 @@ import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-in
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ConfigurableFocusTrapFactory {
   private _checker = inject(InteractivityChecker);
   private _ngZone = inject(NgZone);
