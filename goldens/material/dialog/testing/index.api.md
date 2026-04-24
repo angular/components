@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_testing from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { ComponentPortal } from '@angular/cdk/portal';
