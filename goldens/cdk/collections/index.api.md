@@ -59,6 +59,12 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     applyChanges(changes: IterableChanges<R>, viewContainerRef: ViewContainerRef, itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>, itemValueResolver: _ViewRepeaterItemValueResolver<T, R>, itemViewChanged?: _ViewRepeaterItemChanged<R, C>): void;
     // (undocumented)
     detach(): void;
+    // (undocumented)
+    setDebug(value: boolean): void;
+    // (undocumented)
+    setStoreScrollPosition(value: boolean): void;
+    // (undocumented)
+    setTrackByFunction(trackBy: ((index: number, item: T) => any) | undefined): void;
     viewCacheSize: number;
 }
 

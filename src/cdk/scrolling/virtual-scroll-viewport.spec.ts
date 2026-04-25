@@ -758,14 +758,14 @@ describe('CdkVirtualScrollViewport', () => {
       const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
 
       finishInit(fixture);
-      state.add('0', {detach: true});
+      state.markForDetach('0');
 
       const initialFirstView = viewContainerRef.get(0);
       const createEmbeddedViewSpy = spyOn(viewContainerRef, 'createEmbeddedView').and.callThrough();
 
       strategy._detachAndCacheView(0, viewContainerRef);
 
-      expect(strategy._detachedViewMap.get('0')).toBe(initialFirstView);
+      expect(state.getDetachedView('0')).toBe(initialFirstView);
 
       const insertedView = strategy._insertView(
         () => testComponent.virtualForOf._getEmbeddedViewArgs({item: 0} as any, 0),
@@ -776,11 +776,11 @@ describe('CdkVirtualScrollViewport', () => {
 
       expect(insertedView).toBeUndefined();
       expect(createEmbeddedViewSpy).not.toHaveBeenCalled();
-      expect(strategy._detachedViewMap.has('0')).toBe(false);
+      expect(state.getDetachedView('0')).toBeNull();
       expect(viewContainerRef.get(0)).toBe(initialFirstView);
     }));
 
-    it('should destroy keyed detached views during strategy teardown', fakeAsync(() => {
+    it('should keep keyed detached views alive after strategy teardown until state cleanup', fakeAsync(() => {
       testComponent.trackBy = (_, item) => item;
       testComponent.templateCacheSize = 0;
       const state = fixture.debugElement.injector.get(RecycleViewElementsState);
@@ -788,19 +788,24 @@ describe('CdkVirtualScrollViewport', () => {
       const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
 
       finishInit(fixture);
-      state.add('0', {detach: true});
+      state.markForDetach('0');
 
       strategy._detachAndCacheView(0, viewContainerRef);
-      const detachedView = strategy._detachedViewMap.get('0');
+      const detachedView = state.getDetachedView('0')!;
 
       expect(detachedView).toBeTruthy();
 
-      spyOn(detachedView, 'destroy').and.callThrough();
+      spyOn(detachedView as any, 'destroy').and.callThrough();
 
       strategy.detach();
 
+      expect(detachedView.destroy).not.toHaveBeenCalled();
+      expect(state.getDetachedView('0')).toBe(detachedView);
+
+      state.remove('0');
+
       expect(detachedView.destroy).toHaveBeenCalled();
-      expect(strategy._detachedViewMap.size).toBe(0);
+      expect(state.getDetachedView('0')).toBeNull();
     }));
 
     it('should render up to maxBufferPx when buffer dips below minBufferPx', fakeAsync(() => {

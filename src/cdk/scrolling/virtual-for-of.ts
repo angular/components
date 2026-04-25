@@ -31,6 +31,7 @@ import {
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
+  booleanAttribute,
   inject,
 } from '@angular/core';
 import {NumberInput, coerceNumberProperty} from '../coercion';
@@ -45,6 +46,8 @@ export type CdkVirtualForOfContext<T> = {
   $implicit: T;
   /** The DataSource, Observable, or NgIterable that was passed to *cdkVirtualFor. */
   cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
+  /** Optional identifier associated with this virtual-for instance. */
+  cdkVirtualForId: unknown;
   /** The index of the item in the DataSource. */
   index: number;
   /** The number of items in the DataSource. */
@@ -154,6 +157,30 @@ export class CdkVirtualForOf<T>
     this._updateTrackByFunction();
   }
   private _storeScrollPosition: boolean = false;
+
+  /**
+   * Whether to trigger debugger statements in the virtual-for repeater strategy.
+   */
+  @Input({transform: booleanAttribute})
+  get cdkVirtualForDebug(): boolean {
+    return this._debug;
+  }
+  set cdkVirtualForDebug(value: boolean) {
+    this._debug = value;
+    this._viewRepeater.setDebug(value);
+  }
+  private _debug: boolean = false;
+
+  /** Identifier associated with this virtual-for instance. */
+  @Input()
+  get cdkVirtualForId(): unknown {
+    return this._cdkVirtualForId;
+  }
+  set cdkVirtualForId(value: unknown) {
+    this._cdkVirtualForId = value;
+    this._needsUpdate = true;
+  }
+  private _cdkVirtualForId: unknown;
 
   /**
    * Updates the trackBy function in the view repeater based on current settings.
@@ -302,6 +329,9 @@ export class CdkVirtualForOf<T>
   }
 
   ngOnDestroy() {
+    if (this._cdkVirtualForId === 'tr4po4sxcnxR8snpA9NrIF') {
+      debugger;
+    }
     this._viewport.detach();
 
     this._dataSourceChanges.next(undefined!);
@@ -348,6 +378,7 @@ export class CdkVirtualForOf<T>
     let i = this._viewContainerRef.length;
     while (i--) {
       const view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
+      view.context.cdkVirtualForId = this._cdkVirtualForId;
       view.context.index = this._renderedRange.start + i;
       view.context.count = count;
       this._updateComputedContextProperties(view.context);
@@ -381,6 +412,7 @@ export class CdkVirtualForOf<T>
     let i = this._viewContainerRef.length;
     while (i--) {
       const view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
+      view.context.cdkVirtualForId = this._cdkVirtualForId;
       view.context.index = this._renderedRange.start + i;
       view.context.count = count;
       this._updateComputedContextProperties(view.context);
@@ -410,6 +442,7 @@ export class CdkVirtualForOf<T>
         // It's guaranteed that the iterable is not "undefined" or "null" because we only
         // generate views for elements if the "cdkVirtualForOf" iterable has elements.
         cdkVirtualForOf: this._cdkVirtualForOf!,
+        cdkVirtualForId: this._cdkVirtualForId,
         index: -1,
         count: -1,
         first: false,

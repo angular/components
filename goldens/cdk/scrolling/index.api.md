@@ -91,10 +91,16 @@ export class CdkScrollableModule {
 // @public
 export class CdkVirtualForOf<T> implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy {
     constructor(...args: unknown[]);
+    get cdkVirtualForDebug(): boolean;
+    set cdkVirtualForDebug(value: boolean);
+    get cdkVirtualForId(): unknown;
+    set cdkVirtualForId(value: unknown);
     get cdkVirtualForOf(): DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
     set cdkVirtualForOf(value: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined);
     // (undocumented)
     _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
+    get cdkVirtualForStoreScrollPosition(): boolean;
+    set cdkVirtualForStoreScrollPosition(value: boolean);
     set cdkVirtualForTemplate(value: TemplateRef<CdkVirtualForOfContext<T>>);
     get cdkVirtualForTemplateCacheSize(): number;
     set cdkVirtualForTemplateCacheSize(size: NumberInput);
@@ -110,7 +116,7 @@ export class CdkVirtualForOf<T> implements CdkVirtualScrollRepeater<T>, Collecti
     static ngTemplateContextGuard<T>(directive: CdkVirtualForOf<T>, context: unknown): context is CdkVirtualForOfContext<T>;
     readonly viewChange: Subject<ListRange>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualForOf<any>, "[cdkVirtualFor][cdkVirtualForOf]", never, { "cdkVirtualForOf": { "alias": "cdkVirtualForOf"; "required": false; }; "cdkVirtualForTrackBy": { "alias": "cdkVirtualForTrackBy"; "required": false; }; "cdkVirtualForTemplate": { "alias": "cdkVirtualForTemplate"; "required": false; }; "cdkVirtualForTemplateCacheSize": { "alias": "cdkVirtualForTemplateCacheSize"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualForOf<any>, "[cdkVirtualFor][cdkVirtualForOf]", never, { "cdkVirtualForOf": { "alias": "cdkVirtualForOf"; "required": false; }; "cdkVirtualForTrackBy": { "alias": "cdkVirtualForTrackBy"; "required": false; }; "cdkVirtualForStoreScrollPosition": { "alias": "cdkVirtualForStoreScrollPosition"; "required": false; }; "cdkVirtualForDebug": { "alias": "cdkVirtualForDebug"; "required": false; }; "cdkVirtualForId": { "alias": "cdkVirtualForId"; "required": false; }; "cdkVirtualForTemplate": { "alias": "cdkVirtualForTemplate"; "required": false; }; "cdkVirtualForTemplateCacheSize": { "alias": "cdkVirtualForTemplateCacheSize"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkVirtualForOf<any>, never>;
 }
@@ -119,6 +125,7 @@ export class CdkVirtualForOf<T> implements CdkVirtualScrollRepeater<T>, Collecti
 export type CdkVirtualForOfContext<T> = {
     $implicit: T;
     cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
+    cdkVirtualForId: unknown;
     index: number;
     count: number;
     first: boolean;
