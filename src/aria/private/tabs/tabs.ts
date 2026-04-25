@@ -15,7 +15,6 @@ import {
   linkedSignal,
   signal,
 } from '../behaviors/signal-like/signal-like';
-import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
 import {ListFocus} from '../behaviors/list-focus/list-focus';
 import {
   ListNavigation,
@@ -81,7 +80,7 @@ export class TabPattern {
 }
 
 /** The required inputs for the tabpanel. */
-export interface TabPanelInputs extends LabelControlOptionalInputs {
+export interface TabPanelInputs {
   /** A global unique identifier for the tabpanel. */
   id: SignalLike<string>;
 
@@ -94,9 +93,6 @@ export class TabPanelPattern {
   /** A global unique identifier for the tabpanel. */
   readonly id: SignalLike<string>; // set from inputs
 
-  /** Controls label for this tabpanel. */
-  readonly labelManager: LabelControl;
-
   /** Whether the tabpanel is hidden. */
   readonly hidden = computed(() => this.inputs.tab()?.expanded() === false);
 
@@ -104,19 +100,10 @@ export class TabPanelPattern {
   readonly tabIndex = computed(() => (this.hidden() ? -1 : 0));
 
   /** The aria-labelledby value for this tabpanel. */
-  readonly labelledBy = computed(() =>
-    this.labelManager.labelledBy().length > 0
-      ? this.labelManager.labelledBy().join(' ')
-      : undefined,
-  );
+  readonly labelledBy = computed(() => this.inputs.tab()?.id());
 
   constructor(readonly inputs: TabPanelInputs) {
     this.id = inputs.id;
-
-    this.labelManager = new LabelControl({
-      ...inputs,
-      defaultLabelledBy: computed(() => (this.inputs.tab() ? [this.inputs.tab()!.id()] : [])),
-    });
   }
 }
 
