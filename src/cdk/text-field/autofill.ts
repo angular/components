@@ -12,7 +12,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
-  Injectable,
+  Service,
   NgZone,
   OnDestroy,
   OnInit,
@@ -46,7 +46,7 @@ const listenerOptions = {passive: true};
  * Based on the following blog post:
  * https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class AutofillMonitor implements OnDestroy {
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
