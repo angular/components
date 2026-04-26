@@ -8,7 +8,7 @@
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox">
-      <div ngComboboxWidget ngGrid focusMode="activedescendant" [tabIndex]="-1" class="example-popup" [tabbable]="false"
+      <div ngComboboxWidget ngGrid focusMode="activedescendant" [tabIndex]="-1" class="example-popup"
         colWrap="continuous" #grid="ngGrid" [activeDescendant]="grid.activeDescendant()">
         @for (item of filteredItems(); track item.label; let i = $index) {
         <div ngGridRow class="example-grid-row" [attr.aria-selected]="item === selectedItem()">

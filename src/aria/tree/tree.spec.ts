@@ -91,6 +91,7 @@ describe('Tree', () => {
       selectionMode?: 'follow' | 'explicit';
       nav?: boolean;
       currentType?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
+      tabIndex?: number;
     } = {},
   ) {
     if (config.nodes !== undefined) testComponent.nodes.set(config.nodes);
@@ -104,6 +105,7 @@ describe('Tree', () => {
     if (config.selectionMode !== undefined) testComponent.selectionMode.set(config.selectionMode);
     if (config.nav !== undefined) testComponent.nav.set(config.nav);
     if (config.currentType !== undefined) testComponent.currentType.set(config.currentType);
+    if (config.tabIndex !== undefined) testComponent.tabIndex.set(config.tabIndex);
 
     fixture.detectChanges();
     defineTestVariables();
@@ -277,6 +279,11 @@ describe('Tree', () => {
         updateTree({disabled: true});
 
         expect(treeElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should be able to override tabindex', () => {
+        updateTree({tabIndex: -1});
+        expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should set aria-disabled to "true" for disabled items', () => {
@@ -1548,6 +1555,7 @@ interface TestTreeNode<V = string> {
       [(value)]="value"
       [nav]="nav()"
       [currentType]="currentType()"
+      [tabIndex]="tabIndex()"
       #tree="ngTree"
     >
       @for (node of nodes(); track node.value) {
@@ -1625,4 +1633,5 @@ class TestTreeComponent {
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);
   currentType = signal('page' as 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false');
+  tabIndex = signal<number | undefined>(undefined);
 }

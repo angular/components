@@ -15,6 +15,7 @@ import {
   ElementRef,
   inject,
   input,
+  numberAttribute,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -49,7 +50,7 @@ import {GRID_ROW} from './grid-tokens';
   exportAs: 'ngGrid',
   host: {
     'role': 'grid',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-multiselectable]': '_pattern.multiSelectable()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
@@ -123,8 +124,11 @@ export class Grid {
   /** Whether enable range selections (with modifier keys or dragging). */
   readonly enableRangeSelection = input(false, {transform: booleanAttribute});
 
-  /** Whether the grid is tabbable. */
-  readonly tabbable = input<boolean | undefined>(undefined);
+  /** The tabindex of the grid. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
 
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({

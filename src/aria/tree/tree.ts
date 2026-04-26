@@ -15,6 +15,7 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   signal,
   Signal,
   untracked,
@@ -71,7 +72,7 @@ import type {TreeItem} from './tree-item';
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
@@ -131,8 +132,11 @@ export class Tree<V> {
   /** The delay in seconds before the typeahead search is reset. */
   readonly typeaheadDelay = input(500);
 
-  /** Whether the tree is tabbable. */
-  readonly tabbable = input(true, {transform: booleanAttribute});
+  /** The tabindex of the tree. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
 
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);

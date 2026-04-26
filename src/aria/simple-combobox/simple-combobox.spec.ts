@@ -1239,7 +1239,7 @@ function getTreeNodes(): TreeNode[] {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
-    <ul ngComboboxWidget ngTree #tree="ngTree" id="tree" focusMode="activedescendant" [tabbable]="false" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="tree.activeDescendant()">
+    <ul ngComboboxWidget ngTree #tree="ngTree" id="tree" focusMode="activedescendant" [tabIndex]="-1" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="tree.activeDescendant()">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1431,7 +1431,7 @@ const states = [
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox" popupType="grid">
-    <div ngComboboxWidget #grid="ngGrid" ngGrid id="grid" focusMode="activedescendant" [tabIndex]="-1" [tabbable]="false" colWrap="continuous" [activeDescendant]="grid.activeDescendant()">
+    <div ngComboboxWidget #grid="ngGrid" ngGrid id="grid" focusMode="activedescendant" [tabIndex]="-1" colWrap="continuous" [activeDescendant]="grid.activeDescendant()">
       @for (item of filteredItems(); track item; let i = $index) {
         <div ngGridRow>
           <div ngGridCell [id]="item + '-label'" [rowIndex]="i" [colIndex]="0">
@@ -1489,7 +1489,7 @@ class ComboboxGridExample {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabIndex]="-1" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div ngOption [value]="option" [label]="option">
           <span>{{option}}</span>
@@ -1552,7 +1552,7 @@ class ComboboxListboxAutoSelectExample {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabbable]="false" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabIndex]="-1" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div ngOption [value]="option" [label]="option">
           <span>{{option}}</span>

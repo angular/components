@@ -118,13 +118,6 @@ describe('Tree Behavior', () => {
     });
   });
 
-  describe('with tabbable: false', () => {
-    it('should override tree container tabIndex to -1', () => {
-      const {tree} = getDefaultPatterns({tabbable: signal(false)});
-      expect(tree.tabIndex()).toBe(-1);
-    });
-  });
-
   describe('with focusMode: "roving"', () => {
     it('should set the list tab index to -1', () => {
       const {tree} = getDefaultPatterns({focusMode: signal('roving')});

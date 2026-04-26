@@ -21,7 +21,7 @@
         ngListbox
         ngComboboxWidget
         focusMode="activedescendant"
-        [tabbable]="false"
+        [tabIndex]="-1"
         selectionMode="explicit"
         [(value)]="selectedValues"
         (click)="onCommit()"

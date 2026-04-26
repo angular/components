@@ -107,26 +107,6 @@ describe('List Focus', () => {
     });
   });
 
-  describe('tabbable', () => {
-    it('should override getListTabIndex to -1 when tabbable is explicitly false', () => {
-      const focusManager = getListFocus({
-        focusMode: signal('activedescendant'),
-        tabbable: signal(false),
-      });
-      expect(focusManager.getListTabIndex()).toBe(-1);
-    });
-
-    it('should override getItemTabIndex to -1 when tabbable is explicitly false', () => {
-      const focusManager = getListFocus({
-        focusMode: signal('roving'),
-        tabbable: signal(false),
-      });
-      const items = focusManager.inputs.items();
-      focusManager.inputs.activeItem.set(items[0]);
-      expect(focusManager.getItemTabIndex(items[0])).toBe(-1);
-    });
-  });
-
   describe('#isFocusable', () => {
     it('should return true for enabled items', () => {
       const focusManager = getListFocus({softDisabled: signal(false)});

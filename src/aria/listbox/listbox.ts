@@ -16,6 +16,7 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   signal,
   Signal,
   untracked,
@@ -57,7 +58,7 @@ import {LISTBOX} from './tokens';
   host: {
     'role': 'listbox',
     '[attr.id]': 'id()',
-    '[attr.tabindex]': '_pattern.tabIndex()',
+    '[attr.tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '[attr.aria-readonly]': '_pattern.readonly()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
@@ -93,7 +94,7 @@ export class Listbox<V> {
 
   /** The Option UIPatterns of the child Options. */
   protected readonly items = computed<OptionPattern<V>[]>(() =>
-    this._options().map(option => option._pattern),
+    this._options().map((option: Option<V>) => option._pattern),
   );
 
   /** Whether the list is vertically or horizontally oriented. */
@@ -134,8 +135,11 @@ export class Listbox<V> {
   /** Whether the listbox is readonly. */
   readonly readonly = input(false, {transform: booleanAttribute});
 
-  /** Whether the list is tabbable. */
-  tabbable = input(true, {transform: booleanAttribute});
+  /** The tabindex of the listbox. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
 
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);
@@ -153,7 +157,6 @@ export class Listbox<V> {
       items: this.items,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
-      tabbable: this.tabbable,
       element: () => this._elementRef.nativeElement,
       combobox: () => this._popup?.combobox?._pattern,
     };

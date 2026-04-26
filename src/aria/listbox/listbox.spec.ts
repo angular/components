@@ -66,6 +66,7 @@ describe('Listbox', () => {
     disabledOptions?: number[];
     options?: TestOption[];
     textDirection?: Direction;
+    tabIndex?: number;
   }) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
@@ -85,6 +86,7 @@ describe('Listbox', () => {
     if (opts?.selectionMode !== undefined) testComponent.selectionMode = opts.selectionMode;
     if (opts?.typeaheadDelay !== undefined) testComponent.typeaheadDelay = opts.typeaheadDelay;
     if (opts?.options !== undefined) testComponent.options.set(opts.options);
+    if (opts?.tabIndex !== undefined) testComponent.tabIndex = opts.tabIndex;
 
     if (opts?.disabledOptions !== undefined) {
       const currentOptions = testComponent.options();
@@ -174,6 +176,11 @@ describe('Listbox', () => {
       it('should be able to set aria-multiselectable to "true"', () => {
         setupListbox({multi: true});
         expect(listboxElement.getAttribute('aria-multiselectable')).toBe('true');
+      });
+
+      it('should be able to override tabindex', () => {
+        setupListbox({tabIndex: -1});
+        expect(listboxElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should set aria-selected to "true" for selected options', () => {
@@ -795,7 +802,8 @@ interface TestOption {
       [multi]="multi"
       [wrap]="wrap"
       [selectionMode]="selectionMode"
-      [typeaheadDelay]="typeaheadDelay">
+      [typeaheadDelay]="typeaheadDelay"
+      [tabIndex]="tabIndex">
       @for (option of options(); track option.value) {
         <li ngOption [value]="option.value" [disabled]="option.disabled" [label]="option.label">{{ option.label }}</li>
       }
@@ -823,6 +831,7 @@ class ListboxExample {
   wrap = true;
   selectionMode: 'follow' | 'explicit' = 'explicit';
   typeaheadDelay = 500;
+  tabIndex: number | undefined = undefined;
 }
 
 @Component({
