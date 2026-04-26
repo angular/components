@@ -72,7 +72,6 @@ ts_project(
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/postcss",
         "//:node_modules/sass",
-        "//tools/postcss",
         "//tools/sass:sass_lib",
     ],
 )

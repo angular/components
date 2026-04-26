@@ -22,11 +22,9 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
-        "//src/material/card",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/paginator",
-        "//src/material/paginator/testing",
         "//src/material/slide-toggle",
     ],
 )

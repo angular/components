@@ -32,7 +32,6 @@ ng_project(
         "//src/material/progress-spinner",
         "//src/material/sort",
         "//src/material/table",
-        "//src/material/table/testing",
     ],
 )
 

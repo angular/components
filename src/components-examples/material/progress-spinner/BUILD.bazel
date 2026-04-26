@@ -21,7 +21,6 @@ ng_project(
         "//src/cdk/testing/testbed",
         "//src/material/card",
         "//src/material/progress-spinner",
-        "//src/material/progress-spinner/testing",
         "//src/material/radio",
         "//src/material/slider",
     ],

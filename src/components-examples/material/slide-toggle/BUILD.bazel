@@ -24,7 +24,6 @@ ng_project(
         "//src/material/checkbox",
         "//src/material/radio",
         "//src/material/slide-toggle",
-        "//src/material/slide-toggle/testing",
     ],
 )
 

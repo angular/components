@@ -28,7 +28,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/axe-core",
-        "//src/cdk/testing/private",
     ],
 )
 

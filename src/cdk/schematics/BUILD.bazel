@@ -97,7 +97,6 @@ ts_project(
         "//:node_modules/typescript",
         "//src/cdk/schematics/testing",
         "//src/cdk/schematics/update-tool",
-        "//src/cdk/testing/private",
     ],
 )
 

@@ -13,9 +13,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/platform",
         "//src/material/core/error",
     ],
 )

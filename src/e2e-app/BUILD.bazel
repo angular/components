@@ -42,8 +42,8 @@ ng_project(
         "//src/cdk/overlay",
         "//src/cdk/scrolling",
         "//src/cdk/testing/tests:test_components",
-        "//src/components-examples/private",
         "//src/material/core",
+        "//src/material/list",
         "//src/material/slider",
     ],
 )
