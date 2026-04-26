@@ -39,6 +39,9 @@ export interface MatTimepickerOption<D = unknown> {
 
   /** Label to show to the user. */
   label: string;
+
+  /** Whether the option is disabled. */
+  disabled?: boolean;
 }
 
 /** Parses an interval value into seconds. */
@@ -88,17 +91,39 @@ export function generateOptions<D>(
   min: D,
   max: D,
   interval: number,
+  shouldDisplayUnavailableItems: boolean = false,
 ): MatTimepickerOption<D>[] {
   const options: MatTimepickerOption<D>[] = [];
-  let current = adapter.compareTime(min, max) < 1 ? min : max;
 
-  while (
-    adapter.sameDate(current, min) &&
-    adapter.compareTime(current, max) < 1 &&
-    adapter.isValid(current)
-  ) {
-    options.push({value: current, label: adapter.format(current, formats.display.timeOptionLabel)});
-    current = adapter.addSeconds(current, interval);
+  if (shouldDisplayUnavailableItems) {
+    const todayMin = adapter.setTime(adapter.today(), 0, 0, 0);
+    const todayMax = adapter.setTime(adapter.today(), 23, 59, 0);
+    let current = todayMin;
+    while (
+      adapter.sameDate(current, todayMin) &&
+      adapter.compareTime(current, todayMax) < 1 &&
+      adapter.isValid(current)
+    ) {
+      options.push({
+        value: current,
+        label: adapter.format(current, formats.display.timeOptionLabel),
+        disabled: adapter.compareTime(current, min) < 0 || adapter.compareTime(current, max) > 0,
+      });
+      current = adapter.addSeconds(current, interval);
+    }
+  } else {
+    let current = adapter.compareTime(min, max) < 1 ? min : max;
+    while (
+      adapter.sameDate(current, min) &&
+      adapter.compareTime(current, max) < 1 &&
+      adapter.isValid(current)
+    ) {
+      options.push({
+        value: current,
+        label: adapter.format(current, formats.display.timeOptionLabel),
+      });
+      current = adapter.addSeconds(current, interval);
+    }
   }
 
   return options;

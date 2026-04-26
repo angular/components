@@ -11,6 +11,7 @@
     @for (option of _timeOptions; track option.value) {
       <mat-option
         [value]="option.value"
+        [disabled]="option.disabled"
         (onSelectionChange)="_selectValue($event.source)">{{option.label}}</mat-option>
     }
   </div>
