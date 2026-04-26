@@ -9,8 +9,7 @@ import {
   provideZoneChangeDetection,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
-import {animationFrameScheduler} from 'rxjs';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchFakeEvent} from '../testing/private';
 import {ScrollingModule} from './scrolling-module';
 import {CdkVirtualForOf} from './virtual-for-of';
@@ -32,30 +31,30 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
       viewport = testComponent.viewport;
     });
 
-    it('should emit on viewChange inside the Angular zone', fakeAsync(() => {
+    it('should emit on viewChange inside the Angular zone', async () => {
       const zoneTest = jasmine.createSpy('zone test');
       testComponent.virtualForOf.viewChange.subscribe(() => zoneTest(NgZone.isInAngularZone()));
-      finishInit(fixture);
+      await finishInit(fixture);
       expect(zoneTest).toHaveBeenCalledWith(true);
-    }));
+    });
 
     describe('viewChange change detection behavior', () => {
-      it('should run change detection if there are any viewChange listeners', fakeAsync(() => {
+      it('should run change detection if there are any viewChange listeners', async () => {
         testComponent.virtualForOf.viewChange.subscribe();
-        finishInit(fixture);
+        await finishInit(fixture);
         testComponent.items = Array(10).fill(0);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const spy = jasmine.createSpy();
         afterNextRender(spy, {injector: TestBed.inject(Injector)});
 
         viewport.scrollToIndex(5);
-        triggerScroll(viewport);
+        await triggerScroll(viewport);
 
         expect(spy).toHaveBeenCalledTimes(1);
-      }));
+      });
     });
   });
 });
@@ -132,29 +131,29 @@ class FixedSizeVirtualScroll {
 }
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
-function finishInit(fixture: ComponentFixture<any>) {
+async function finishInit(fixture: ComponentFixture<any>) {
   // On the first cycle we render and measure the viewport.
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
 
   // On the second cycle we render the items.
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
 
   // Flush the initial fake scroll event.
-  animationFrameScheduler.flush();
-  flush();
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  await fixture.whenStable();
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
 
 /** Trigger a scroll event on the viewport (optionally setting a new scroll offset). */
-function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
+async function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   if (offset !== undefined) {
     viewport.scrollToOffset(offset);
   }
   dispatchFakeEvent(viewport.scrollable.getElementRef().nativeElement, 'scroll');
-  animationFrameScheduler.flush();
+  await new Promise(resolve => setTimeout(resolve, 16));
 }
