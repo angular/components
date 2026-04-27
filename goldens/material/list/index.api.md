@@ -161,9 +161,6 @@ export class MatListModule {
 
 // @public (undocumented)
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
-    // @deprecated
-    get checkboxPosition(): MatListOptionTogglePosition;
-    set checkboxPosition(value: MatListOptionTogglePosition);
     get color(): ThemePalette;
     set color(newValue: ThemePalette);
     focus(): void;
@@ -201,15 +198,13 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": { "alias": "togglePosition"; "required": false; }; "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": { "alias": "togglePosition"; "required": false; }; "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatListOption, never>;
 }
 
 // @public
-type MatListOptionTogglePosition = 'before' | 'after';
-export { MatListOptionTogglePosition as MatListOptionCheckboxPosition }
-export { MatListOptionTogglePosition }
+export type MatListOptionTogglePosition = 'before' | 'after';
 
 // @public
 export class MatListSubheaderCssMatStyler {
