@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {booleanAttribute, computed, Directive, ElementRef, inject, input} from '@angular/core';
+import {
+  booleanAttribute,
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {OptionPattern} from '../private';
 import {LISTBOX} from './tokens';
@@ -43,7 +52,7 @@ import {LISTBOX} from './tokens';
     '[attr.aria-disabled]': '_pattern.disabled()',
   },
 })
-export class Option<V> {
+export class Option<V> implements OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = inject(ElementRef).nativeElement as HTMLElement;
 
@@ -80,4 +89,12 @@ export class Option<V> {
     element: () => this.element,
     searchTerm: () => this.label() ?? '',
   });
+
+  ngOnInit() {
+    this._listbox._collection.register(this);
+  }
+
+  ngOnDestroy() {
+    this._listbox._collection.unregister(this);
+  }
 }

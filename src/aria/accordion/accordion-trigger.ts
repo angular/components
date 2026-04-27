@@ -76,9 +76,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   /** Whether the trigger is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** The index of the trigger within the accordion group. */
-  readonly index = input<number>();
-
   /** Whether the corresponding panel is expanded. */
   readonly expanded = model<boolean>(false);
 
@@ -98,13 +95,13 @@ export class AccordionTrigger implements OnInit, OnDestroy {
 
     this.panel()._pattern = this._pattern;
 
-    this._accordionGroup._registerTrigger(this);
+    this._accordionGroup._collection.register(this);
   }
 
   ngOnDestroy() {
     this.panel()._pattern = undefined;
 
-    this._accordionGroup._unregisterTrigger(this);
+    this._accordionGroup._collection.unregister(this);
   }
 
   /** Expands this item. */

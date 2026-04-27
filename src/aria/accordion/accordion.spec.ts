@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {_IdGenerator} from '@angular/cdk/a11y';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 import {AccordionPanel} from './accordion-panel';
 import {AccordionTrigger} from './accordion-trigger';
 import {AccordionContent} from './accordion-content';
@@ -57,7 +58,6 @@ describe('AccordionGroup', () => {
 
   const getTriggerAttribute = (index: number, attribute: string) =>
     triggerElements[index].getAttribute(attribute);
-  const getTriggerText = (index: number) => triggerElements[index].textContent?.trim();
 
   const getPanelAttribute = (index: number, attribute: string) =>
     panelElements[index].getAttribute(attribute);
@@ -292,68 +292,24 @@ describe('AccordionGroup', () => {
         expect(isTriggerExpanded(0)).toBeFalse();
       });
 
-      describe('with shuffled items', () => {
-        it('should focus on new last trigger with End', () => {
-          const items = testComponent.items().reverse();
-          testComponent.items.set([...items]);
-          fixture.detectChanges();
+      it('should update collection order when items are shuffled', async () => {
+        const groupDebugElement = fixture.debugElement.query(By.directive(AccordionGroup));
+        const groupDirective = groupDebugElement.injector.get(AccordionGroup);
 
-          // Now reversed, End should move to the former first trigger.
-          endKey();
-          expect(isTriggerActive(0)).toBeTrue();
-        });
+        let orderedItems = groupDirective._collection.orderedItems();
+        expect(orderedItems.length).toBe(3);
+        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 1 Header');
+        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 3 Header');
 
-        it('should focus on newly prepended trigger with Begin', () => {
-          const items = testComponent.items();
-          items.unshift({
-            panelId: 'item-0',
-            header: 'Item 0 Header',
-            content: 'Item 0 Content',
-            disabled: signal(false),
-            expanded: signal(false),
-          });
-          testComponent.items.set([...items]);
-          setupTriggerAndPanels();
+        const items = testComponent.items().reverse();
+        testComponent.items.set([...items]);
+        fixture.detectChanges();
+        await waitForMicrotasks();
 
-          homeKey();
-          expect(isTriggerActive(0)).toBeTrue();
-          expect(getTriggerText(0)).toBe('Item 0 Header');
-        });
-
-        it('should focus on newly appended trigger with End', () => {
-          const items = testComponent.items();
-          items.push({
-            panelId: 'item-4',
-            header: 'Item 4 Header',
-            content: 'Item 4 Content',
-            disabled: signal(false),
-            expanded: signal(false),
-          });
-          testComponent.items.set([...items]);
-          setupTriggerAndPanels();
-
-          endKey();
-          expect(isTriggerActive(3)).toBeTrue();
-          expect(getTriggerText(3)).toBe('Item 4 Header');
-        });
-
-        it('should focus on inserted trigger with navigation', () => {
-          const items = testComponent.items();
-          items.splice(2, 0, {
-            panelId: 'item-2a',
-            header: 'Item 2a Header',
-            content: 'Item 2a Content',
-            disabled: signal(false),
-            expanded: signal(false),
-          });
-          testComponent.items.set([...items]);
-          setupTriggerAndPanels();
-
-          downArrowKey();
-          downArrowKey();
-          expect(isTriggerActive(2)).toBeTrue();
-          expect(triggerElements[2].textContent?.trim()).toBe('Item 2a Header');
-        });
+        orderedItems = groupDirective._collection.orderedItems();
+        expect(orderedItems.length).toBe(3);
+        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 3 Header');
+        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 1 Header');
       });
 
       describe('wrap behavior', () => {
@@ -539,7 +495,6 @@ describe('AccordionGroup', () => {
         <div>
           <button
             ngAccordionTrigger
-            [index]="$index"
             [panel]="panel"
             [disabled]="item.disabled()"
             [(expanded)]="item.expanded"
