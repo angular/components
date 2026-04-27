@@ -41,22 +41,10 @@ export class ConfigurableFocusTrapFactory {
    */
   create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): ConfigurableFocusTrap;
 
-  /**
-   * @deprecated Pass a config object instead of the `deferCaptureElements` flag.
-   * @breaking-change 11.0.0
-   */
-  create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
-
   create(
     element: HTMLElement,
-    config: ConfigurableFocusTrapConfig | boolean = {defer: false},
+    config: ConfigurableFocusTrapConfig = {defer: false},
   ): ConfigurableFocusTrap {
-    let configObject: ConfigurableFocusTrapConfig;
-    if (typeof config === 'boolean') {
-      configObject = {defer: config};
-    } else {
-      configObject = config;
-    }
     return new ConfigurableFocusTrap(
       element,
       this._checker,
@@ -64,7 +52,7 @@ export class ConfigurableFocusTrapFactory {
       this._document,
       this._focusTrapManager,
       this._inertStrategy,
-      configObject,
+      config,
       this._injector,
     );
   }

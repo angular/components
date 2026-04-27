@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, NgZone, inject, DOCUMENT} from '@angular/core';
+import {Service, NgZone, inject, DOCUMENT, Injector} from '@angular/core';
 
 import {FocusTrap, InteractivityChecker} from '@angular/cdk/a11y';
 import {Observable, Subject} from 'rxjs';
@@ -29,8 +29,9 @@ export class FocusEscapeNotifier extends FocusTrap {
     checker: InteractivityChecker,
     ngZone: NgZone,
     document: Document,
+    injector: Injector,
   ) {
-    super(element, checker, ngZone, document, true /* deferAnchors */);
+    super(element, checker, ngZone, document, true /* deferAnchors */, injector);
 
     // The focus trap adds "anchors" at the beginning and end of a trapped region that redirect
     // focus. We override that redirect behavior here with simply emitting on a stream.
@@ -57,6 +58,7 @@ export class FocusEscapeNotifierFactory {
   private _checker = inject(InteractivityChecker);
   private _ngZone = inject(NgZone);
   private _document = inject(DOCUMENT);
+  private _injector = inject(Injector);
 
   /**
    * Creates a focus escape notifier region around the given element.
@@ -64,6 +66,12 @@ export class FocusEscapeNotifierFactory {
    * @returns The created focus escape notifier instance.
    */
   create(element: HTMLElement): FocusEscapeNotifier {
-    return new FocusEscapeNotifier(element, this._checker, this._ngZone, this._document);
+    return new FocusEscapeNotifier(
+      element,
+      this._checker,
+      this._ngZone,
+      this._document,
+      this._injector,
+    );
   }
 }

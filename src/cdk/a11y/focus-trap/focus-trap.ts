@@ -64,8 +64,7 @@ export class FocusTrap {
     readonly _ngZone: NgZone,
     readonly _document: Document,
     deferAnchors = false,
-    /** @breaking-change 20.0.0 param to become required */
-    readonly _injector?: Injector,
+    readonly _injector: Injector,
   ) {
     if (!deferAnchors) {
       this.attachAnchors();
@@ -359,12 +358,7 @@ export class FocusTrap {
 
   /** Executes a function when the zone is stable. */
   private _executeOnStable(fn: () => any): void {
-    // TODO: remove this conditional when injector is required in the constructor.
-    if (this._injector) {
-      afterNextRender(fn, {injector: this._injector});
-    } else {
-      setTimeout(fn);
-    }
+    afterNextRender(fn, {injector: this._injector});
   }
 }
 
