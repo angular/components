@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {Combobox, ComboboxPopup, ComboboxWidget} from './simple-combobox';
+export * from './public-api';

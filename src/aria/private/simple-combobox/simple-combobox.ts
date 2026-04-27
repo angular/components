@@ -92,6 +92,7 @@ export class SimpleComboboxPattern {
   );
 
   /** The keydown event manager for the combobox. */
+  // TODO(tjshiu): Allow combo keys in combobox (#33101).
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 

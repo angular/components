@@ -9,7 +9,10 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Combobox, ComboboxPopup, ComboboxWidget} from './simple-combobox';
+import {Combobox} from './simple-combobox';
+import {ComboboxPopup} from './simple-combobox-popup';
+import {ComboboxWidget} from './simple-combobox-widget';
+
 import {Listbox, Option} from '../listbox';
 import {runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';

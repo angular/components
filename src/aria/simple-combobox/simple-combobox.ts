@@ -15,17 +15,12 @@ import {
   inject,
   input,
   model,
-  OnDestroy,
   OnInit,
   signal,
   Renderer2,
 } from '@angular/core';
-import {
-  DeferredContent,
-  DeferredContentAware,
-  SimpleComboboxPattern,
-  SimpleComboboxPopupPattern,
-} from '@angular/aria/private';
+import {DeferredContentAware, SimpleComboboxPattern} from '@angular/aria/private';
+import type {ComboboxPopup} from './simple-combobox-popup';
 
 /**
  * The container element that wraps a combobox input and popup, and orchestrates its behavior.
@@ -131,138 +126,5 @@ export class Combobox extends DeferredContentAware implements OnInit {
   /** Unregisters the popup from the combobox. */
   _unregisterPopup() {
     this._popup.set(undefined);
-  }
-}
-
-/**
- * A structural directive that marks the `ng-template` to be used as the popup
- * for a combobox. This content is conditionally rendered.
- *
- * The content of the popup can be any element with the `ngComboboxWidget` directive.
- *
- * ```html
- * <ng-template ngComboboxPopup>
- *   <div ngComboboxWidget>
- *     <!-- ... options ... -->
- *   </div>
- * </ng-template>
- * ```
- */
-@Directive({
-  selector: 'ng-template[ngComboboxPopup]',
-  exportAs: 'ngComboboxPopup',
-  hostDirectives: [DeferredContent],
-})
-export class ComboboxPopup implements OnInit, OnDestroy {
-  private readonly _deferredContent = inject(DeferredContent);
-
-  /** The combobox that the popup belongs to. */
-  readonly combobox = input.required<Combobox>();
-
-  /** The widget contained within the popup. */
-  readonly _widget = signal<ComboboxWidget | undefined>(undefined);
-
-  /** The element that serves as the control target for the popup. */
-  readonly controlTarget = computed(() => this._widget()?.element);
-
-  /** The ID of the popup. */
-  readonly popupId = computed(() => this._widget()?.popupId());
-
-  /** The ID of the active descendant in the popup. */
-  readonly activeDescendant = computed(() => this._widget()?.activeDescendant());
-
-  /** The type of the popup (e.g., listbox, tree, grid, dialog). */
-  readonly popupType = input<'listbox' | 'tree' | 'grid' | 'dialog'>('listbox');
-
-  /** The popup pattern. */
-  readonly _pattern = new SimpleComboboxPopupPattern({
-    ...this,
-  });
-
-  ngOnInit() {
-    this.combobox()._registerPopup(this);
-    this._deferredContent.deferredContentAware.set(this.combobox());
-  }
-
-  ngOnDestroy() {
-    this.combobox()._unregisterPopup();
-  }
-
-  /** Registers a widget with the popup. */
-  _registerWidget(widget: ComboboxWidget) {
-    this._widget.set(widget);
-  }
-
-  /** Unregisters the widget from the popup. */
-  _unregisterWidget() {
-    this._widget.set(undefined);
-  }
-}
-
-/**
- * Identifies an element as a widget within a combobox popup.
- *
- * This directive should be applied to the element that contains the options or content
- * of the popup. It handles the communication of ID and active descendant information
- * to the combobox.
- */
-@Directive({
-  selector: '[ngComboboxWidget]',
-  exportAs: 'ngComboboxWidget',
-  host: {
-    '(focusin)': 'onFocusin()',
-    '(focusout)': 'onFocusout($event)',
-  },
-})
-export class ComboboxWidget implements OnInit, OnDestroy {
-  /** The element that the popup widget is attached to. */
-  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly _popup = inject(ComboboxPopup);
-
-  /** A reference to the popup widget element. */
-  readonly element = this._elementRef.nativeElement;
-
-  /** The ID of the popup widget. */
-  readonly popupId = signal<string | undefined>(undefined);
-
-  /** The ID of the active descendant in the widget. */
-  readonly activeDescendant = input<string | undefined>(undefined);
-
-  private _observer: MutationObserver | undefined;
-
-  constructor() {
-    const el = this.element;
-    this._observer = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        if (mutation.attributeName === 'id') {
-          this.popupId.set(el.id);
-        }
-      }
-    });
-
-    this._observer.observe(el, {
-      attributes: true,
-      attributeFilter: ['id'],
-    });
-  }
-
-  ngOnInit() {
-    this.popupId.set(this.element.id);
-    this._popup._registerWidget(this);
-  }
-
-  ngOnDestroy(): void {
-    this._observer?.disconnect();
-    this._popup._unregisterWidget();
-  }
-
-  /** Handles focus in events for the widget. */
-  onFocusin() {
-    this._popup._pattern.onFocusin();
-  }
-
-  /** Handles focus out events for the widget. */
-  onFocusout(event: FocusEvent) {
-    this._popup._pattern.onFocusout(event);
   }
 }
