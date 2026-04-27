@@ -8,17 +8,17 @@
 
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
-  Directive,
-  ElementRef,
-  OnDestroy,
-  OnInit,
   booleanAttribute,
   computed,
+  Directive,
+  ElementRef,
   inject,
   input,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import {TabPattern, HasElement} from '../private';
-import {TABS, TAB_LIST} from './tab-tokens';
+import {TAB_LIST_COLLECTION, TAB_LIST} from './tab-tokens';
 
 /**
  * A selectable tab in a TabList.
@@ -56,17 +56,19 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The parent Tabs wrapper. */
-  private readonly _tabsWrapper = inject(TABS);
-
   /** The parent TabList. */
   private readonly _tabList = inject(TAB_LIST);
+
+  /** The parent collection. */
+  private readonly _collection = inject(TAB_LIST_COLLECTION);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-tab-', true));
 
-  /** The panel associated with this tab. */
-  readonly panel = computed(() => this._tabsWrapper.findTabPanel(this.value()));
+  /** The TabPanel UIPattern associated with the tab */
+  private readonly _tabpanelPattern = computed(() => {
+    return this._tabList._tabsParent._panelMap().get(this.value());
+  });
 
   /** Whether a tab is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -85,7 +87,7 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     ...this,
     element: () => this.element,
     tabList: () => this._tabList._pattern,
-    tabPanel: computed(() => this.panel()?._pattern),
+    tabPanel: this._tabpanelPattern,
   });
 
   /** Opens this tab panel. */
@@ -94,10 +96,10 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._tabList._registerTab(this);
+    this._collection.register(this);
   }
 
   ngOnDestroy() {
-    this._tabList._unregisterTab(this);
+    this._collection.unregister(this);
   }
 }

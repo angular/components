@@ -8,23 +8,25 @@
 
 import {
   afterRenderEffect,
+  afterNextRender,
   booleanAttribute,
   computed,
-  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
   model,
+  OnDestroy,
   signal,
   untracked,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxListboxPattern, ListboxPattern, OptionPattern} from '../private';
+import {ComboboxListboxPattern, ListboxPattern} from '../private';
+import {SortedCollection} from '../private/utils/collection';
+import {LISTBOX_COLLECTION, LISTBOX} from './tokens';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
-import {LISTBOX} from './tokens';
 
 /**
  * Represents a container used to display a list of items for a user to select from.
@@ -67,9 +69,12 @@ import {LISTBOX} from './tokens';
     '(focusin)': '_pattern.onFocusIn()',
   },
   hostDirectives: [ComboboxPopup],
-  providers: [{provide: LISTBOX, useExisting: Listbox}],
+  providers: [
+    {provide: LISTBOX, useExisting: Listbox},
+    {provide: LISTBOX_COLLECTION, useFactory: () => inject(Listbox)._collection},
+  ],
 })
-export class Listbox<V> {
+export class Listbox<V> implements OnDestroy {
   /** A unique identifier for the listbox. */
   readonly id = input(inject(_IdGenerator).getId('ng-listbox-', true));
 
@@ -84,16 +89,11 @@ export class Listbox<V> {
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The Options nested inside of the Listbox. */
-  private readonly _options = contentChildren(Option, {descendants: true});
+  /** The collection of Options. */
+  readonly _collection = new SortedCollection<Option<V>>();
 
   /** A signal wrapper for directionality. */
   protected readonly textDirection = inject(Directionality).valueSignal.asReadonly();
-
-  /** The Option UIPatterns of the child Options. */
-  protected readonly items = computed<OptionPattern<V>[]>(() =>
-    this._options().map(option => option._pattern),
-  );
 
   /** Whether the list is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -140,10 +140,15 @@ export class Listbox<V> {
   readonly _pattern: ListboxPattern<V>;
 
   constructor() {
+    // Map directives to their patterns for the ListboxPattern
+    const orderedItemPatterns = computed(() =>
+      this._collection.orderedItems().map(option => option._pattern),
+    );
+
     const inputs = {
       ...this,
       id: this.id,
-      items: this.items,
+      items: orderedItemPatterns,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
@@ -153,6 +158,10 @@ export class Listbox<V> {
     this._pattern = this._popup?.combobox
       ? new ComboboxListboxPattern<V>(inputs)
       : new ListboxPattern<V>(inputs);
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
 
     if (this._popup) {
       this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);
@@ -197,6 +206,10 @@ export class Listbox<V> {
         }
       },
     });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {

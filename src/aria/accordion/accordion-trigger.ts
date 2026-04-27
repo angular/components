@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {AccordionTriggerPattern} from '../private';
-import {ACCORDION_GROUP} from './accordion-tokens';
+import {ACCORDION_GROUP, ACCORDION_COLLECTION} from './accordion-tokens';
 import {AccordionPanel} from './accordion-panel';
 
 /**
@@ -64,6 +64,9 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(ACCORDION_GROUP);
 
+  /** The parent collection. */
+  private readonly _collection = inject(ACCORDION_COLLECTION);
+
   /** The associated AccordionPanel. */
   readonly panel = input.required<AccordionPanel>();
 
@@ -75,9 +78,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
 
   /** Whether the trigger is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
-
-  /** The index of the trigger within the accordion group. */
-  readonly index = input<number>();
 
   /** Whether the corresponding panel is expanded. */
   readonly expanded = model<boolean>(false);
@@ -98,13 +98,13 @@ export class AccordionTrigger implements OnInit, OnDestroy {
 
     this.panel()._pattern = this._pattern;
 
-    this._accordionGroup._registerTrigger(this);
+    this._collection.register(this);
   }
 
   ngOnDestroy() {
     this.panel()._pattern = undefined;
 
-    this._accordionGroup._unregisterTrigger(this);
+    this._collection.unregister(this);
   }
 
   /** Expands this item. */
