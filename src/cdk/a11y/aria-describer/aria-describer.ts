@@ -23,25 +23,10 @@ export interface RegisteredMessage {
   referenceCount: number;
 }
 
-/**
- * ID used for the body container where all messages are appended.
- * @deprecated No longer being used. To be removed.
- * @breaking-change 14.0.0
- */
-export const MESSAGES_CONTAINER_ID = 'cdk-describedby-message-container';
+/** ID prefix used for each created message element. */
+const CDK_DESCRIBEDBY_ID_PREFIX = 'cdk-describedby-message';
 
-/**
- * ID prefix used for each created message element.
- * @deprecated To be turned into a private variable.
- * @breaking-change 14.0.0
- */
-export const CDK_DESCRIBEDBY_ID_PREFIX = 'cdk-describedby-message';
-
-/**
- * Attribute given to each host element that is described by a message element.
- * @deprecated To be turned into a private variable.
- * @breaking-change 14.0.0
- */
+/** Attribute given to each host element that is described by a message element. */
 export const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = 'cdk-describedby-host';
 
 /** Global incremental identifier for each registered message element. */
