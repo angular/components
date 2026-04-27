@@ -25,6 +25,9 @@ $fallbacks: m3-expansion.get-tokens();
   background: token-utils.slot(expansion-container-background-color, $fallbacks);
   color: token-utils.slot(expansion-container-text-color, $fallbacks);
   border-radius: token-utils.slot(expansion-container-shape, $fallbacks);
+  border-width: token-utils.slot(expansion-container-outline-width, $fallbacks);
+  border-color: token-utils.slot(expansion-container-outline-color, $fallbacks);
+  border-style: solid;
 
   &:not([class*='#{elevation.$prefix}']) {
     box-shadow: token-utils.slot(expansion-container-elevation-shadow, $fallbacks);
