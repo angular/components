@@ -497,7 +497,7 @@ export class DropListRef<T = any> {
     data: T;
     disabled: boolean;
     dispose(): void;
-    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event?: MouseEvent | TouchEvent): void;
+    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event: MouseEvent | TouchEvent): void;
     readonly dropped: Subject<{
         item: DragRef;
         currentIndex: number;
