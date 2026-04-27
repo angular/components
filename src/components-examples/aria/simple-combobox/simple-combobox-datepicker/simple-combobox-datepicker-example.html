@@ -8,7 +8,7 @@
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: false}"
     [cdkConnectedOverlayOpen]="popupExpanded()">
-    <ng-template ngComboboxPopup [combobox]="combobox" popupType="grid">
+    <ng-template ngComboboxPopup [combobox]="combobox" popupType="dialog">
       <div class="example-popover">
         <div ngComboboxWidget class="example-datepicker-popup" cdkTrapFocus (keydown)="handleWidgetKeydown($event)">
           <div class="example-datepicker-header">
@@ -44,7 +44,7 @@
                 }
 
                 @for (day of week; track $index) {
-                <td class="example-datepicker-cell" ngGridCell [(selected)]="day.selected" (click)="selectDate(day)">
+                <td class="example-datepicker-cell" ngGridCell [(selected)]="day.selected" (click)="selectDate(day)" (keydown.enter)="selectDate(day)" (keydown.space)="selectDate(day)">
                   <button ngGridCellWidget class="example-datepicker-day-button" [attr.aria-label]="day.ariaLabel">
                     {{ day.displayName }}
                   </button>

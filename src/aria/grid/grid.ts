@@ -121,9 +121,6 @@ export class Grid {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
-  /** Whether enable range selections (with modifier keys or dragging). */
-  readonly enableRangeSelection = input(false, {transform: booleanAttribute});
-
   /** The tabindex of the grid. */
   readonly tabIndex = input(undefined, {
     transform: (v: string | number | undefined) =>

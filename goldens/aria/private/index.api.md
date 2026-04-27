@@ -300,6 +300,7 @@ export interface GridCellInputs extends GridCell {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
     grid: SignalLike<GridPattern>;
+    onActivate?: (event: KeyboardEvent) => void;
     row: SignalLike<GridRowPattern>;
     rowIndex: SignalLike<number | undefined>;
     widget: SignalLike<GridCellWidgetPattern | undefined>;

@@ -13,7 +13,6 @@ import {
   signal,
   Signal,
   computed,
-  untracked,
   viewChild,
   ElementRef,
 } from '@angular/core';
@@ -102,9 +101,10 @@ export class SimpleComboboxDatepickerExample<D> {
     });
     return weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
   });
-  readonly weeks: Signal<CalendarCell<D>[][]> = computed(() =>
-    this._createWeekCells(this.viewMonth()),
-  );
+  readonly weeks: Signal<CalendarCell<D>[][]> = computed(() => {
+    this._activeDate(); // Create dependency on active date
+    return this._createWeekCells(this.viewMonth());
+  });
 
   nextMonth(): void {
     this.viewMonth.set(this._dateAdapter.addCalendarMonths(this.viewMonth(), 1));
@@ -132,7 +132,6 @@ export class SimpleComboboxDatepickerExample<D> {
         this._activeDate.set(parsedDate);
         this.viewMonth.set(parsedDate);
         this.popupExpanded.set(false);
-        event.stopPropagation();
       }
     } else if (event.key === 'ArrowDown' && this.popupExpanded()) {
       setTimeout(() => {
@@ -180,12 +179,7 @@ export class SimpleComboboxDatepickerExample<D> {
         displayName: dateNames[i],
         ariaLabel,
         date,
-        selected: signal(
-          this._dateAdapter.compareDate(
-            date,
-            untracked(() => this._activeDate()),
-          ) === 0,
-        ),
+        selected: signal(this._dateAdapter.compareDate(date, this._activeDate()) === 0),
       });
     }
     return weeks;
