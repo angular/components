@@ -15,17 +15,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
-// @public @deprecated
-export type ArrowViewState = SortDirection | 'hint' | 'active';
-
-// @public @deprecated
-export interface ArrowViewStateTransition {
-    // (undocumented)
-    fromState?: ArrowViewState;
-    // (undocumented)
-    toState?: ArrowViewState;
-}
-
 // @public
 export const MAT_SORT_DEFAULT_OPTIONS: InjectionToken<MatSortDefaultOptions>;
 
