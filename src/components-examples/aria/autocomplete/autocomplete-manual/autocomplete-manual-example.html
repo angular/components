@@ -20,7 +20,7 @@
         <div class="example-no-results">No results found</div>
         }
 
-        <div ngListbox ngComboboxWidget focusMode="activedescendant" [tabbable]="false" selectionMode="explicit"
+        <div ngListbox ngComboboxWidget focusMode="activedescendant" [tabIndex]="-1" selectionMode="explicit"
           [(value)]="selectedOption" (click)="onCommit()" (keydown.enter)="onCommit()">
           @for (country of countries(); track country) {
           <div ngOption [value]="country" [label]="country" [disabled]="country === 'Brazil'">
