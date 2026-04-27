@@ -243,7 +243,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   }
 
   override ngOnDestroy() {
-    debugger;
     this.detach();
     this._scrollStrategy.detach();
 

@@ -329,9 +329,6 @@ export class CdkVirtualForOf<T>
   }
 
   ngOnDestroy() {
-    if (this._cdkVirtualForId === 'tr4po4sxcnxR8snpA9NrIF') {
-      debugger;
-    }
     this._viewport.detach();
 
     this._dataSourceChanges.next(undefined!);

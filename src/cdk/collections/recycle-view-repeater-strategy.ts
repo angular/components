@@ -25,7 +25,7 @@ import {
   _ViewRepeaterOperation,
 } from './view-repeater';
 import {
-  RecycleViewDetachChange,
+  RecycleViewDetachEvent,
   RecycleViewElementsState,
 } from './recycle-view-elements-state.service';
 /**
@@ -154,6 +154,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
           }
 
           // Item removed.
+          this._recycleViewElementsState?.collectDetachedViews();
           this._detachAndCacheView(adjustedPreviousIndex!, viewContainerRef);
           operation = _ViewRepeaterOperation.REMOVED;
         } else {
@@ -365,8 +366,13 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   }
 
   /** Reacts to detach lifecycle changes emitted by the state service. */
-  private _handleDetachChange(change: RecycleViewDetachChange): void {
-    if (change.type !== 'mark' || !change.id) {
+  private _handleDetachChange(change: RecycleViewDetachEvent): void {
+    if (change.type === 'collect') {
+      this._collectDetachedViews();
+      return;
+    }
+
+    if (change.type !== 'mark') {
       return;
     }
 
@@ -376,8 +382,29 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     }
   }
 
+  /** Detaches all currently rendered views that are marked for detached-view retention. */
+  private _collectDetachedViews(): void {
+    if (!this._viewContainerRef || !this._recycleViewElementsState) {
+      return;
+    }
+
+    for (const trackById of this._recycleViewElementsState.getDetachedIds()) {
+      const index = this._findRenderedViewIndexByTrackById(trackById);
+
+      if (index !== null) {
+        this._viewContainerRef.detach(index);
+      }
+    }
+  }
+
   /** Finds a currently rendered view that matches a `trackBy` id. */
   private _findRenderedViewByTrackById(trackById: string): EmbeddedViewRef<C> | null {
+    const index = this._findRenderedViewIndexByTrackById(trackById);
+    return index === null ? null : (this._viewContainerRef!.get(index) as EmbeddedViewRef<C>);
+  }
+
+  /** Finds the index of a currently rendered view that matches a `trackBy` id. */
+  private _findRenderedViewIndexByTrackById(trackById: string): number | null {
     if (!this._viewContainerRef || !this._trackByFn) {
       return null;
     }
@@ -385,7 +412,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     for (let i = 0; i < this._viewContainerRef.length; i++) {
       const view = this._viewContainerRef.get(i) as EmbeddedViewRef<C> | null;
       if (view && this._getTrackByIdForView(view, i) === trackById) {
-        return view;
+        return i;
       }
     }
 

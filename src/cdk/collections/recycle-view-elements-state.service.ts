@@ -1,10 +1,11 @@
 import {EmbeddedViewRef, Injectable, OnDestroy} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
-export interface RecycleViewDetachChange {
-  id?: string;
-  type: 'mark' | 'unmark' | 'clear';
-}
+export type RecycleViewDetachEvent =
+  | {type: 'mark'; id: string}
+  | {type: 'unmark'; id: string}
+  | {type: 'clear'}
+  | {type: 'collect'};
 
 /**
  * Service that keeps state of virtual scroll destroyed/recycled views.
@@ -25,10 +26,10 @@ export class RecycleViewElementsState implements OnDestroy {
   private _detachedViews = new Map<string, EmbeddedViewRef<unknown>>();
 
   /** Emits detach lifecycle changes so active strategies can update live candidates. */
-  private _detachChanges = new Subject<RecycleViewDetachChange>();
+  private _detachChanges = new Subject<RecycleViewDetachEvent>();
 
   /** Stream of detach lifecycle changes. */
-  readonly detachChanges: Observable<RecycleViewDetachChange> = this._detachChanges.asObservable();
+  readonly detachChanges: Observable<RecycleViewDetachEvent> = this._detachChanges.asObservable();
 
   /**
    * Adds or merges state for a given identifier.
@@ -156,6 +157,16 @@ export class RecycleViewElementsState implements OnDestroy {
   /** Whether an item is marked for detached-view retention. */
   isMarkedForDetach(id: string): boolean {
     return this._detachedIds.has(id);
+  }
+
+  /** Gets all ids currently marked for detached-view retention. */
+  getDetachedIds(): string[] {
+    return Array.from(this._detachedIds);
+  }
+
+  /** Requests active repeaters to detach and retain all currently marked views. */
+  collectDetachedViews(): void {
+    this._detachChanges.next({type: 'collect'});
   }
 
   /** Stores a detached view under a trackBy id until it is rendered again. */
