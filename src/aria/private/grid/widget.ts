@@ -71,11 +71,6 @@ export class GridCellWidgetPattern {
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    // Simple widget does not need to pause default grid behaviors.
-    if (this.inputs.widgetType() === 'simple') {
-      return manager;
-    }
-
     // If a widget is activated, only listen to events that exits activate state.
     if (this.isActivated()) {
       manager.on('Escape', e => {

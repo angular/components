@@ -300,6 +300,7 @@ export interface GridCellInputs extends GridCell {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
     grid: SignalLike<GridPattern>;
+    onActivate?: (event: KeyboardEvent) => void;
     row: SignalLike<GridRowPattern>;
     rowIndex: SignalLike<number | undefined>;
     widget: SignalLike<GridCellWidgetPattern | undefined>;
@@ -662,6 +663,68 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 
 // @public (undocumented)
 export type SignalLike<T> = () => T;
+
+// @public
+export interface SimpleComboboxInputs extends ExpansionItem {
+    alwaysExpanded: SignalLike<boolean>;
+    disabled: SignalLike<boolean>;
+    element: SignalLike<HTMLElement>;
+    inlineSuggestion: SignalLike<string | undefined>;
+    popup: SignalLike<SimpleComboboxPopupPattern | undefined>;
+    value: WritableSignalLike<string>;
+}
+
+// @public
+export class SimpleComboboxPattern {
+    constructor(inputs: SimpleComboboxInputs);
+    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
+    click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
+    closePopupOnBlurEffect(): void;
+    readonly disabled: () => boolean;
+    readonly element: () => HTMLElement;
+    highlightEffect(): void;
+    readonly inlineSuggestion: () => string | undefined;
+    // (undocumented)
+    readonly inputs: SimpleComboboxInputs;
+    readonly isDeleting: _angular_core.WritableSignal<boolean>;
+    readonly isEditable: _angular_core.Signal<boolean>;
+    readonly isExpanded: _angular_core.Signal<boolean>;
+    readonly isFocused: _angular_core.WritableSignal<boolean>;
+    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
+    keyboardEventRelayEffect(): void;
+    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    onClick(event: PointerEvent): void;
+    onFocusin(): void;
+    onFocusout(event: FocusEvent): void;
+    onInput(event: Event): void;
+    onKeydown(event: KeyboardEvent): void;
+    readonly popupId: _angular_core.Signal<string | undefined>;
+    readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
+    readonly value: WritableSignalLike<string>;
+}
+
+// @public
+export interface SimpleComboboxPopupInputs {
+    activeDescendant: SignalLike<string | undefined>;
+    controlTarget: SignalLike<HTMLElement | undefined>;
+    popupId: SignalLike<string | undefined>;
+    popupType: SignalLike<'listbox' | 'tree' | 'grid' | 'dialog'>;
+}
+
+// @public
+export class SimpleComboboxPopupPattern {
+    constructor(inputs: SimpleComboboxPopupInputs);
+    readonly activeDescendant: () => string | undefined;
+    readonly controlTarget: () => HTMLElement | undefined;
+    // (undocumented)
+    readonly inputs: SimpleComboboxPopupInputs;
+    readonly isFocused: _angular_core.WritableSignal<boolean>;
+    onFocusin(): void;
+    onFocusout(event: FocusEvent): void;
+    readonly popupId: () => string | undefined;
+    readonly popupType: () => "listbox" | "tree" | "grid" | "dialog";
+}
 
 // @public
 export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;

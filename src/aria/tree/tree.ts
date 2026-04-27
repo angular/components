@@ -15,7 +15,9 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   signal,
+  Signal,
   untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
@@ -70,7 +72,7 @@ import type {TreeItem} from './tree-item';
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
@@ -130,6 +132,12 @@ export class Tree<V> {
   /** The delay in seconds before the typeahead search is reset. */
   readonly typeaheadDelay = input(500);
 
+  /** The tabindex of the tree. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
+
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);
 
@@ -150,6 +158,9 @@ export class Tree<V> {
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;
 
+  /** The ID of the active descendant in the tree. */
+  readonly activeDescendant: Signal<string | undefined>;
+
   constructor() {
     const inputs = {
       ...this,
@@ -165,6 +176,8 @@ export class Tree<V> {
     this._pattern = this._popup?.combobox
       ? new ComboboxTreePattern<V>(inputs)
       : new TreePattern<V>(inputs);
+
+    this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     if (this._popup?.combobox) {
       this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);

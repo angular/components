@@ -365,6 +365,50 @@ describe('Grid', () => {
         cell.onKeydown(event);
         expect(widget.onKeydown).toHaveBeenCalledWith(event);
       });
+
+      it('should call onActivate on Enter for simple widget', () => {
+        const onActivateSpy = jasmine.createSpy('onActivate');
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const cell = grid.cells()[0][0];
+        (cell.inputs as any).onActivate = onActivateSpy;
+
+        const event = enter();
+        cell.onKeydown(event);
+        expect(onActivateSpy).toHaveBeenCalledWith(event);
+      });
+
+      it('should call onActivate on Space for simple widget', () => {
+        const onActivateSpy = jasmine.createSpy('onActivate');
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const cell = grid.cells()[0][0];
+        (cell.inputs as any).onActivate = onActivateSpy;
+
+        const event = space();
+        cell.onKeydown(event);
+        expect(onActivateSpy).toHaveBeenCalledWith(event);
+      });
+
+      it('should NOT call onActivate for complex widget', () => {
+        const onActivateSpy = jasmine.createSpy('onActivate');
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
+        const cell = grid.cells()[0][0];
+        (cell.inputs as any).onActivate = onActivateSpy;
+
+        const event = enter();
+        cell.onKeydown(event);
+        expect(onActivateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should NOT call onActivate for other keys', () => {
+        const onActivateSpy = jasmine.createSpy('onActivate');
+        const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
+        const cell = grid.cells()[0][0];
+        (cell.inputs as any).onActivate = onActivateSpy;
+
+        const event = up();
+        cell.onKeydown(event);
+        expect(onActivateSpy).not.toHaveBeenCalled();
+      });
     });
   });
 

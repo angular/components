@@ -16,7 +16,9 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   signal,
+  Signal,
   untracked,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -56,7 +58,7 @@ import {LISTBOX} from './tokens';
   host: {
     'role': 'listbox',
     '[attr.id]': 'id()',
-    '[attr.tabindex]': '_pattern.tabIndex()',
+    '[attr.tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '[attr.aria-readonly]': '_pattern.readonly()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-orientation]': '_pattern.orientation()',
@@ -92,7 +94,7 @@ export class Listbox<V> {
 
   /** The Option UIPatterns of the child Options. */
   protected readonly items = computed<OptionPattern<V>[]>(() =>
-    this._options().map(option => option._pattern),
+    this._options().map((option: Option<V>) => option._pattern),
   );
 
   /** Whether the list is vertically or horizontally oriented. */
@@ -133,11 +135,20 @@ export class Listbox<V> {
   /** Whether the listbox is readonly. */
   readonly readonly = input(false, {transform: booleanAttribute});
 
+  /** The tabindex of the listbox. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
+
   /** The values of the currently selected items. */
   readonly value = model<V[]>([]);
 
   /** The Listbox UIPattern. */
   readonly _pattern: ListboxPattern<V>;
+
+  /** The ID of the active descendant in the listbox. */
+  readonly activeDescendant: Signal<string | undefined>;
 
   constructor() {
     const inputs = {
@@ -153,6 +164,8 @@ export class Listbox<V> {
     this._pattern = this._popup?.combobox
       ? new ComboboxListboxPattern<V>(inputs)
       : new ListboxPattern<V>(inputs);
+
+    this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     if (this._popup) {
       this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);

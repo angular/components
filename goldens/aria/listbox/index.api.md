@@ -6,16 +6,18 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export class Listbox<V> {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     gotoFirst(): void;
     readonly id: _angular_core.InputSignal<string>;
-    protected readonly items: _angular_core.Signal<OptionPattern<V>[]>;
+    protected readonly items: Signal<OptionPattern<V>[]>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ListboxPattern<V>;
@@ -24,12 +26,13 @@ export class Listbox<V> {
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
+    protected readonly textDirection: Signal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Listbox<any>, "[ngListbox]", ["ngListbox"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, ["_options"], never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Listbox<any>, "[ngListbox]", ["ngListbox"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, ["_options"], never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Listbox<any>, never>;
 }

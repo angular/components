@@ -96,6 +96,7 @@ describe('Grid directives', () => {
     enableSelection?: boolean;
     selectionMode?: 'follow' | 'explicit';
     gridData?: RowConfig[];
+    tabIndex?: number;
   }) {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({});
@@ -111,6 +112,7 @@ describe('Grid directives', () => {
     if (opts?.enableSelection !== undefined)
       testComponent.enableSelection.set(opts.enableSelection);
     if (opts?.selectionMode !== undefined) testComponent.selectionMode.set(opts.selectionMode);
+    if (opts?.tabIndex !== undefined) testComponent.tabIndex.set(opts.tabIndex);
 
     if (opts?.gridData !== undefined) {
       testComponent.gridData.set(opts.gridData);
@@ -161,12 +163,23 @@ describe('Grid directives', () => {
     });
 
     describe('focus management', () => {
-      it('should set tabindex based on the pattern tabIndex', () => {
+      it('should set tabindex based on the pattern tabIndex', async () => {
         setupGrid({focusMode: 'roving'});
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+        await fixture.whenStable();
         expect(gridElement.getAttribute('tabindex')).toBe('-1'); // roving defaults to -1 on host
 
         setupGrid({focusMode: 'activedescendant'});
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+        await fixture.whenStable();
         expect(gridElement.getAttribute('tabindex')).toBe('0'); // activedescendant defaults to 0 on host
+      });
+
+      it('should be able to override tabindex', () => {
+        setupGrid({focusMode: 'activedescendant', tabIndex: -1});
+        expect(gridElement.getAttribute('tabindex')).toBe('-1');
       });
 
       it('should activate the cell when the grid receives focusin', () => {
@@ -960,7 +973,8 @@ describe('Grid directives', () => {
       [focusMode]="focusMode()"
       [softDisabled]="softDisabled()"
       [enableSelection]="enableSelection()"
-      [selectionMode]="selectionMode()">
+      [selectionMode]="selectionMode()"
+      [tabIndex]="tabIndex()">
       @for (row of gridData(); track $index; let rIndex = $index) {
         <tr ngGridRow [rowIndex]="row.rowIndex">
           @for (cell of row.cells; track $index; let cIndex = $index) {
@@ -1018,6 +1032,7 @@ class GridTestComponent {
   readonly enableSelection = signal(false);
   readonly selectionMode = signal<'follow' | 'explicit'>('follow');
   readonly gridData = signal<RowConfig[]>(createGridData());
+  readonly tabIndex = signal<number | undefined>(undefined);
 
   onActivated = jasmine.createSpy('activated');
   onDeactivated = jasmine.createSpy('deactivated');

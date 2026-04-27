@@ -15,6 +15,7 @@ import {
   ElementRef,
   inject,
   input,
+  numberAttribute,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -49,7 +50,7 @@ import {GRID_ROW} from './grid-tokens';
   exportAs: 'ngGrid',
   host: {
     'role': 'grid',
-    '[tabindex]': '_pattern.tabIndex()',
+    '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-multiselectable]': '_pattern.multiSelectable()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
@@ -120,6 +121,12 @@ export class Grid {
    */
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
+  /** The tabindex of the grid. */
+  readonly tabIndex = input(undefined, {
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
+
   /** The UI pattern for the grid. */
   readonly _pattern = new GridPattern({
     ...this,
@@ -128,6 +135,9 @@ export class Grid {
     element: () => this.element,
   });
 
+  /** The ID of the active descendant in the grid. */
+  readonly activeDescendant = computed(() => this._pattern.activeDescendant());
+
   constructor() {
     // Use Write mode for all direct DOM focus management actions.
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
@@ -135,6 +145,11 @@ export class Grid {
     afterRenderEffect({write: () => this._pattern.resetFocusEffect()});
     afterRenderEffect({write: () => this._pattern.restoreFocusEffect()});
     afterRenderEffect({write: () => this._pattern.focusEffect()});
+  }
+
+  /** Scrolls the active cell into view. */
+  scrollActiveCellIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {
+    this._pattern.activeCell()?.element().scrollIntoView(options);
   }
 
   /** Gets the cell pattern for a given element. */
