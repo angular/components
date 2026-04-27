@@ -6,10 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {booleanAttribute, computed, Directive, ElementRef, inject, input} from '@angular/core';
+import {
+  booleanAttribute,
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {OptionPattern} from '../private';
-import {LISTBOX} from './tokens';
+import {LISTBOX_COLLECTION, LISTBOX} from './tokens';
 
 /**
  * A selectable option in an `ngListbox`.
@@ -43,7 +52,7 @@ import {LISTBOX} from './tokens';
     '[attr.aria-disabled]': '_pattern.disabled()',
   },
 })
-export class Option<V> {
+export class Option<V> implements OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = inject(ElementRef).nativeElement as HTMLElement;
 
@@ -52,6 +61,9 @@ export class Option<V> {
 
   /** The parent Listbox. */
   private readonly _listbox = inject(LISTBOX);
+
+  /** The parent collection. */
+  private readonly _collection = inject(LISTBOX_COLLECTION);
 
   /** A unique identifier for the option. */
   readonly id = input(inject(_IdGenerator).getId('ng-option-', true));
@@ -80,4 +92,12 @@ export class Option<V> {
     element: () => this.element,
     searchTerm: () => this.label() ?? '',
   });
+
+  ngOnInit() {
+    this._collection.register(this as unknown as Option<unknown>);
+  }
+
+  ngOnDestroy() {
+    this._collection.unregister(this as unknown as Option<unknown>);
+  }
 }

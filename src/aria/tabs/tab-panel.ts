@@ -8,19 +8,17 @@
 
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
+  computed,
   Directive,
   ElementRef,
-  OnDestroy,
-  OnInit,
-  WritableSignal,
-  afterRenderEffect,
-  computed,
   inject,
   input,
-  signal,
+  afterRenderEffect,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
-import {TabPattern, TabPanelPattern, DeferredContentAware} from '../private';
-import {TABS} from './tab-tokens';
+import {TabPanelPattern, DeferredContentAware} from '../private';
+import {TABS, TABS_PANEL_COLLECTION} from './tab-tokens';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
@@ -71,11 +69,16 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The parent Tabs. */
   private readonly _tabs = inject(TABS);
 
+  /** The parent collection. */
+  private readonly _collection = inject(TABS_PANEL_COLLECTION);
+
   /** A global unique identifier for the tab. */
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  readonly _tabPattern: WritableSignal<TabPattern | undefined> = signal(undefined);
+  private readonly _tabPattern = computed(() => {
+    return this._tabs._tabMap().get(this.value());
+  });
 
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();
@@ -90,18 +93,14 @@ export class TabPanel implements OnInit, OnDestroy {
   });
 
   constructor() {
-    afterRenderEffect({
-      write: () => {
-        this._deferredContentAware.contentVisible.set(this.visible());
-      },
-    });
+    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(this.visible()));
   }
 
   ngOnInit() {
-    this._tabs._registerPanel(this);
+    this._collection.register(this);
   }
 
   ngOnDestroy() {
-    this._tabs._unregisterPanel(this);
+    this._collection.unregister(this);
   }
 }

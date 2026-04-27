@@ -8,6 +8,7 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -21,7 +22,6 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     open(): void;
-    readonly panel: _angular_core.Signal<TabPanel | undefined>;
     readonly _pattern: TabPattern;
     readonly selected: _angular_core.Signal<boolean>;
     readonly value: _angular_core.InputSignal<string>;
@@ -42,6 +42,7 @@ export class TabContent {
 // @public
 export class TabList implements OnInit, OnDestroy {
     constructor();
+    readonly _collection: SortedCollection<Tab>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     // (undocumented)
@@ -54,15 +55,12 @@ export class TabList implements OnInit, OnDestroy {
     open(value: string): boolean;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: TabListPattern;
-    // (undocumented)
-    _registerTab(child: Tab): void;
     readonly selectedTab: _angular_core.ModelSignal<string | undefined>;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly _sortedTabs: _angular_core.Signal<Tab[]>;
+    readonly _tabPatterns: _angular_core.Signal<TabPattern[]>;
+    readonly _tabsParent: Tabs;
     readonly textDirection: WritableSignal<_angular_cdk_bidi.Direction>;
-    // (undocumented)
-    _unregisterTab(child: Tab): void;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabList, "[ngTabList]", ["ngTabList"], { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "selectedTab": { "alias": "selectedTab"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "selectedTab": "selectedTabChange"; }, never, never, true, never>;
@@ -80,7 +78,6 @@ export class TabPanel implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     readonly _pattern: TabPanelPattern;
-    readonly _tabPattern: WritableSignal<TabPattern | undefined>;
     readonly value: _angular_core.InputSignal<string>;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
@@ -90,19 +87,21 @@ export class TabPanel implements OnInit, OnDestroy {
 }
 
 // @public
-export class Tabs {
+export class Tabs implements OnDestroy {
     constructor();
+    readonly _collection: SortedCollection<TabPanel>;
     readonly element: HTMLElement;
     // (undocumented)
-    findTabPanel(value?: string): TabPanel | undefined;
+    ngOnDestroy(): void;
+    readonly _panelMap: _angular_core.Signal<Map<string, TabPanelPattern>>;
     // (undocumented)
-    _registerList(list: TabList): void;
+    _register(child: TabList): void;
+    readonly _tabList: _angular_core.WritableSignal<TabList | undefined>;
+    readonly _tabMap: _angular_core.Signal<Map<string, TabPattern>>;
+    readonly _tabPanelPatterns: _angular_core.Signal<TabPanelPattern[]>;
+    readonly _tabPatterns: _angular_core.Signal<TabPattern[] | undefined>;
     // (undocumented)
-    _registerPanel(panel: TabPanel): void;
-    // (undocumented)
-    _unregisterList(list: TabList): void;
-    // (undocumented)
-    _unregisterPanel(panel: TabPanel): void;
+    _unregister(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Tabs, "[ngTabs]", ["ngTabs"], {}, {}, never, never, true, never>;
     // (undocumented)
