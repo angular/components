@@ -119,19 +119,6 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   @Input() togglePosition: MatListOptionTogglePosition = 'after';
 
   /**
-   * Whether the label should appear before or after the checkbox/radio. Defaults to 'after'
-   *
-   * @deprecated Use `togglePosition` instead.
-   * @breaking-change 17.0.0
-   */
-  @Input() get checkboxPosition(): MatListOptionTogglePosition {
-    return this.togglePosition;
-  }
-  set checkboxPosition(value: MatListOptionTogglePosition) {
-    this.togglePosition = value;
-  }
-
-  /**
    * Theme color of the list option. This sets the color of the checkbox/radio.
    * This API is supported in M2 themes only, it has no effect in M3 themes. For color customization
    * in M3, see https://material.angular.dev/components/list/styling.
