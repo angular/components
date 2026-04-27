@@ -38,12 +38,6 @@ const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position =>
   return {...position, offsetX, offsetY};
 });
 
-/**
- * @deprecated Will be removed. Use `MenuTracker` instead.
- * @breaking-change 22.0.0
- */
-export {MenuTracker as ContextMenuTracker};
-
 /** The coordinates where the context menu should open. */
 export type ContextMenuCoordinates = {x: number; y: number};
 

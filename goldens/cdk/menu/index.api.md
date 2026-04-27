@@ -356,15 +356,13 @@ export interface MenuStackItem {
 }
 
 // @public
-class MenuTracker {
+export class MenuTracker {
     update(trigger: CdkMenuTriggerBase): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MenuTracker, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<MenuTracker>;
 }
-export { MenuTracker as ContextMenuTracker }
-export { MenuTracker }
 
 // @public
 export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: "vertical" | "horizontal") => {
