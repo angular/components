@@ -11,7 +11,9 @@ The following Angular Material components are designed to work inside a `<mat-fo
 - [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.dev/components/input/overview)
 - [`<select matNativeControl>`](https://material.angular.dev/components/select/overview)
 - [`<mat-select>`](https://material.angular.dev/components/select/overview)
-- [`<mat-chip-set>`](https://material.angular.dev/components/chips/overview)
+- [`<mat-chip-grid>`](https://material.angular.dev/components/chips/overview)
+
+Note: `<mat-form-field>` requires a child component that implements `MatFormFieldControl`. Among the chips components, only `<mat-chip-grid>` supports this integration.
 
 <!-- example(form-field-overview) -->
 
