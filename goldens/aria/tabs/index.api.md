@@ -75,6 +75,9 @@ export class TabPanel implements OnInit, OnDestroy {
     constructor();
     readonly element: HTMLElement;
     readonly id: _angular_core.InputSignal<string>;
+    readonly label: _angular_core.InputSignal<string | undefined>;
+    readonly _labelControl: LabelControl;
+    readonly labelledBy: _angular_core.InputSignal<string[]>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -84,7 +87,7 @@ export class TabPanel implements OnInit, OnDestroy {
     readonly value: _angular_core.InputSignal<string>;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabPanel, "[ngTabPanel]", ["ngTabPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<TabPanel, "[ngTabPanel]", ["ngTabPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "labelledBy": { "alias": "labelledBy"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<TabPanel, never>;
 }

@@ -429,6 +429,22 @@ export interface HasElement {
     element: HTMLElement;
 }
 
+// @public
+export class LabelControl {
+    constructor(inputs: LabelControlInputs);
+    // (undocumented)
+    readonly inputs: LabelControlInputs;
+    readonly label: SignalLike<string | undefined>;
+    readonly labelledBy: SignalLike<string | undefined>;
+}
+
+// @public
+export interface LabelControlInputs {
+    defaultLabelledBy: SignalLike<string | undefined>;
+    label: SignalLike<string | undefined>;
+    labelledBy: SignalLike<string[] | undefined>;
+}
+
 // @public (undocumented)
 export function linkedSignal<T>(sourceFn: () => T): WritableSignalLike<T>;
 
