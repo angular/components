@@ -1,13 +1,10 @@
-<div class="example-combobox-container">
+<div ngCombobox filterMode="auto-select">
   <div #origin class="example-autocomplete">
     <span class="example-search-icon material-symbols-outlined" translate="no">search</span>
     <input
-      ngCombobox
-      #combobox="ngCombobox"
       aria-label="Label dropdown"
       placeholder="Select a country"
-      [(value)]="searchString"
-      [(expanded)]="popupExpanded"
+      ngComboboxInput
     />
     <button
       class="example-clear-button"
@@ -23,14 +20,17 @@
     {{countries().length === 0 ? 'No results found for ' + query() : ''}}
   </div>
 
-  <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true">
-    <ng-template ngComboboxPopup [combobox]="combobox">
+  <ng-template ngComboboxPopupContainer>
+    <ng-template
+      [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+      [cdkConnectedOverlayOpen]="true"
+    >
       <div class="example-popup">
         @if (countries().length === 0) {
           <div class="example-no-results">No results found</div>
         }
 
-        <div ngListbox ngComboboxWidget focusMode="activedescendant" [tabIndex]="-1" [(value)]="selectedOption" (click)="onCommit()" (keydown.enter)="onCommit()">
+        <div ngListbox>
           @for (country of countries(); track country) {
             <div ngOption [value]="country" [label]="country" [disabled]="country === 'Brazil'">
               <span class="example-option-label">{{country}}</span>

@@ -13,5 +13,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//src/components-examples/aria/autocomplete",
+        "//src/components-examples/aria/simple-combobox",
     ],
 )

@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
@@ -20,7 +15,6 @@ import {
   computed,
   signal,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -28,30 +22,23 @@ import {FormsModule} from '@angular/forms';
 
 /** @title Disabled autocomplete. */
 @Component({
-  selector: 'autocomplete-disabled-example',
-  templateUrl: 'autocomplete-disabled-example.html',
+  selector: 'simple-combobox-autocomplete-disabled-example',
+  templateUrl: 'simple-combobox-autocomplete-disabled-example.html',
   styleUrl: '../autocomplete.css',
-  imports: [
-    Combobox,
-    ComboboxInput,
-    ComboboxPopup,
-    ComboboxPopupContainer,
-    Listbox,
-    Option,
-    OverlayModule,
-    FormsModule,
-  ],
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AutocompleteDisabledExample {
-  /** The options available in the listbox. */
-  options = viewChildren<Option<string>>(Option);
+export class SimpleComboboxAutocompleteDisabledExample {
+  /** The selected value of the combobox. */
+  readonly listbox = viewChild(Listbox);
+  readonly combobox = viewChild(Combobox);
 
-  /** A reference to the ng aria combobox. */
-  combobox = viewChild<Combobox<string>>(Combobox);
+  popupExpanded = signal(false);
+  searchString = signal('United States of America');
+  selectedOption = signal<string[]>([]);
 
   /** The query string used to filter the list of countries. */
-  query = signal('United States of America');
+  query = computed(() => this.searchString());
 
   /** The list of countries filtered by the query. */
   countries = computed(() =>
@@ -59,12 +46,8 @@ export class AutocompleteDisabledExample {
   );
 
   constructor() {
-    // Scrolls to the active item when the active option changes.
     afterRenderEffect(() => {
-      if (this.combobox()?.expanded()) {
-        const option = this.options().find(opt => opt.active());
-        option?.element.scrollIntoView({block: 'nearest'});
-      }
+      this.listbox()?.scrollActiveItemIntoView();
     });
   }
 }

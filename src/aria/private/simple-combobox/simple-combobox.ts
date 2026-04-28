@@ -32,7 +32,7 @@ export interface SimpleComboboxInputs extends ExpansionItem {
   disabled: SignalLike<boolean>;
 
   /** Whether the combobox is soft disabled. */
-  softDisabled: SignalLike<boolean>;
+  softDisabled?: SignalLike<boolean>;
 }
 
 /** Controls the state of a simple combobox. */
@@ -50,7 +50,7 @@ export class SimpleComboboxPattern {
   readonly disabled = () => this.inputs.disabled();
 
   /** Whether the combobox is soft disabled. */
-  readonly softDisabled = () => this.inputs.softDisabled();
+  readonly softDisabled = () => this.inputs.softDisabled?.() ?? true;
 
   /** An inline suggestion to be displayed in the input. */
   readonly inlineSuggestion = () => this.inputs.inlineSuggestion();
