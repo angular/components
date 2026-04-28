@@ -129,8 +129,8 @@ importers:
         specifier: 'catalog:'
         version: 22.0.0-next.9(@angular/compiler-cli@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(typescript@6.0.2))(@angular/compiler@22.0.0-next.9)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#1f49422b70c932b13a4482e21a7925b20b7963f0
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1f49422b70c932b13a4482e21a7925b20b7963f0(@modelcontextprotocol/sdk@1.29.0)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#ab3557efa43d75ac873b8a6d94683b33bf18ca0f
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f(@modelcontextprotocol/sdk@1.29.0)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 22.0.0-next.9(@angular/common@22.0.0-next.9(@angular/compiler-cli@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(typescript@6.0.2))(@angular/core@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(typescript@6.0.2))(@angular/compiler@22.0.0-next.9)(@angular/core@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(rxjs@6.6.7)(zone.js@0.16.1))(@angular/platform-browser@22.0.0-next.9(@angular/common@22.0.0-next.9(@angular/compiler-cli@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(typescript@6.0.2))(@angular/core@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(typescript@6.0.2))(@angular/core@22.0.0-next.9(@angular/compiler@22.0.0-next.9)(rxjs@6.6.7)(zone.js@0.16.1)))(rxjs@6.6.7)
@@ -722,8 +722,8 @@ importers:
 
 packages:
 
-  '@actions/core@3.0.0':
-    resolution: {integrity: sha512-zYt6cz+ivnTmiT/ksRVriMBOiuoUpDCJJlZ5KPl2/FRdvwU3f7MPh9qftvbkXJThragzUZieit2nyHUyw53Seg==}
+  '@actions/core@3.0.1':
+    resolution: {integrity: sha512-a6d/Nwahm9fliVGRhdhofo40HjHQasUPusmc7vBfyky+7Z+P2A1J68zyFVaNcEclc/Se+eO595oAr5nwEIoIUA==}
 
   '@actions/exec@3.0.0':
     resolution: {integrity: sha512-6xH/puSoNBXb72VPlZVm7vQ+svQpFyA96qdDBvhB8eNZOE8LtPf9L4oAsfzK/crCL8YZ+19fKYVnM63Sl+Xzlw==}
@@ -963,9 +963,9 @@ packages:
       '@angular/compiler': 22.0.0-next.9
       '@angular/compiler-cli': 22.0.0-next.9
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1f49422b70c932b13a4482e21a7925b20b7963f0':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1f49422b70c932b13a4482e21a7925b20b7963f0}
-    version: 0.0.0-9fc958feba3cea291aca698839e794db5a55d051
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f}
+    version: 0.0.0-a71a5d725b4f2c8f090a58c8fda7b437bdc3b89a
     hasBin: true
 
   '@angular/platform-browser-dynamic@22.0.0-next.9':
@@ -1915,8 +1915,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@firebase/ai@2.11.0':
-    resolution: {integrity: sha512-+oqOne/h5J51LezazR+VyzKe3AK455W29JXnb4jOeVvQhC7FymledN5+XE+w5vEcMhRQ6n1f62fdGs4A44X32A==}
+  '@firebase/ai@2.11.1':
+    resolution: {integrity: sha512-WGTF81W3WBKJY+c7xqTzO15OGAkCAs8cpADqflAI0skhTZjIkhF0qyf55rq4Ctt6jKygkv99rPfMrjAHTgXaVQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@firebase/app': 0.x
@@ -2405,15 +2405,6 @@ packages:
   '@inquirer/prompts@7.10.1':
     resolution: {integrity: sha512-Dx/y9bCQcXLI5ooQ5KyvA4FTgeo2jYj/7plWfV5Ak5wDPKQZgudKez2ixyfz7tKXzcJciTxqLeK7R9HItwiByg==}
     engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/prompts@8.4.1':
-    resolution: {integrity: sha512-AH5xPQ997K7e0F0vulPlteIHke2awMkFi8F0dBemrDfmvtPmHJo82mdHbONC4F/t8d1NHwrbI5cGVI+RbLWdoQ==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
     peerDependencies:
       '@types/node': '>=18'
     peerDependenciesMeta:
@@ -5627,8 +5618,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
-  firebase@12.12.0:
-    resolution: {integrity: sha512-5Ap+pN5iEJUvBlQEZEmLuUm7Gvu6I5xv1jZ5SiSNyw4jrwlHo+4tmZv3OPPoKfN9eo1kBwyyBvi+pWHIPXwfYw==}
+  firebase@12.12.1:
+    resolution: {integrity: sha512-ee7xA+bTJLfjB9BP/8FQr3EkxmpAAGc1lNc5QkWgTDpUw24HYXFPm7FEWRdLtGnygxIdYpFmepSc5VjkI6NHhw==}
 
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
@@ -7369,8 +7360,8 @@ packages:
   no-case@2.3.2:
     resolution: {integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==}
 
-  nock@14.0.12:
-    resolution: {integrity: sha512-kZM3bHV0KzhHH6E2eRszHyML/w87AUzLBwupNTHohtYWP9fZYgUPmCbSKq6ITfEEmHqN4/p0MscvUipT4P5Qsg==}
+  nock@14.0.13:
+    resolution: {integrity: sha512-SCPsQmGVNY8h1rfS3aU0MzOGYY+wKIFukHEsoSIwPRCYocZkya7MFIlWIEYPWQZj+Gaksg6EyUaY255ZDqpQuA==}
     engines: {node: '>=18.20.0 <20 || >=20.12.1'}
 
   node-addon-api@6.1.0:
@@ -9842,7 +9833,7 @@ packages:
 
 snapshots:
 
-  '@actions/core@3.0.0':
+  '@actions/core@3.0.1':
     dependencies:
       '@actions/exec': 3.0.0
       '@actions/http-client': 4.0.1
@@ -10216,13 +10207,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1f49422b70c932b13a4482e21a7925b20b7963f0(@modelcontextprotocol/sdk@1.29.0)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f(@modelcontextprotocol/sdk@1.29.0)':
     dependencies:
-      '@actions/core': 3.0.0
+      '@actions/core': 3.0.1
       '@conventional-changelog/git-client': 2.7.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
       '@google-cloud/spanner': 8.0.0(supports-color@10.2.2)
       '@google/genai': 1.50.1(@modelcontextprotocol/sdk@1.29.0)(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
-      '@inquirer/prompts': 8.4.1(@types/node@24.12.2)
+      '@inquirer/prompts': 8.4.2(@types/node@24.12.2)
       '@inquirer/type': 4.0.5(@types/node@24.12.2)
       '@octokit/auth-app': 8.2.0
       '@octokit/core': 7.0.6
@@ -10253,7 +10244,7 @@ snapshots:
       ejs: 5.0.2
       encoding: 0.1.13
       fast-glob: 3.3.3
-      firebase: 12.12.0
+      firebase: 12.12.1
       folder-hash: 4.1.2(supports-color@10.2.2)
       jasmine: 6.2.0
       jasmine-core: 6.2.0
@@ -10261,7 +10252,7 @@ snapshots:
       jsonc-parser: 3.3.1
       minimatch: 10.2.5
       multimatch: 8.0.0
-      nock: 14.0.12
+      nock: 14.0.13
       semver: 7.7.4
       supports-color: 10.2.2
       tsx: 4.21.0
@@ -11254,7 +11245,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.0':
     optional: true
 
-  '@firebase/ai@2.11.0(@firebase/app-types@0.9.4)(@firebase/app@0.14.11)':
+  '@firebase/ai@2.11.1(@firebase/app-types@0.9.4)(@firebase/app@0.14.11)':
     dependencies:
       '@firebase/app': 0.14.11
       '@firebase/app-check-interop-types': 0.3.3
@@ -11986,21 +11977,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.19.17
 
-  '@inquirer/prompts@8.4.1(@types/node@24.12.2)':
-    dependencies:
-      '@inquirer/checkbox': 5.1.4(@types/node@24.12.2)
-      '@inquirer/confirm': 6.0.12(@types/node@24.12.2)
-      '@inquirer/editor': 5.1.1(@types/node@24.12.2)
-      '@inquirer/expand': 5.0.13(@types/node@24.12.2)
-      '@inquirer/input': 5.0.12(@types/node@24.12.2)
-      '@inquirer/number': 4.0.12(@types/node@24.12.2)
-      '@inquirer/password': 5.0.12(@types/node@24.12.2)
-      '@inquirer/rawlist': 5.2.8(@types/node@24.12.2)
-      '@inquirer/search': 4.1.8(@types/node@24.12.2)
-      '@inquirer/select': 5.1.4(@types/node@24.12.2)
-    optionalDependencies:
-      '@types/node': 24.12.2
-
   '@inquirer/prompts@8.4.2(@types/node@22.19.17)':
     dependencies:
       '@inquirer/checkbox': 5.1.4(@types/node@22.19.17)
@@ -12015,6 +11991,21 @@ snapshots:
       '@inquirer/select': 5.1.4(@types/node@22.19.17)
     optionalDependencies:
       '@types/node': 22.19.17
+
+  '@inquirer/prompts@8.4.2(@types/node@24.12.2)':
+    dependencies:
+      '@inquirer/checkbox': 5.1.4(@types/node@24.12.2)
+      '@inquirer/confirm': 6.0.12(@types/node@24.12.2)
+      '@inquirer/editor': 5.1.1(@types/node@24.12.2)
+      '@inquirer/expand': 5.0.13(@types/node@24.12.2)
+      '@inquirer/input': 5.0.12(@types/node@24.12.2)
+      '@inquirer/number': 4.0.12(@types/node@24.12.2)
+      '@inquirer/password': 5.0.12(@types/node@24.12.2)
+      '@inquirer/rawlist': 5.2.8(@types/node@24.12.2)
+      '@inquirer/search': 4.1.8(@types/node@24.12.2)
+      '@inquirer/select': 5.1.4(@types/node@24.12.2)
+    optionalDependencies:
+      '@types/node': 24.12.2
 
   '@inquirer/rawlist@4.1.11(@types/node@22.19.17)':
     dependencies:
@@ -12332,8 +12323,8 @@ snapshots:
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -15682,9 +15673,9 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  firebase@12.12.0:
+  firebase@12.12.1:
     dependencies:
-      '@firebase/ai': 2.11.0(@firebase/app-types@0.9.4)(@firebase/app@0.14.11)
+      '@firebase/ai': 2.11.1(@firebase/app-types@0.9.4)(@firebase/app@0.14.11)
       '@firebase/analytics': 0.10.21(@firebase/app@0.14.11)
       '@firebase/analytics-compat': 0.2.27(@firebase/app-compat@0.5.11)(@firebase/app@0.14.11)
       '@firebase/app': 0.14.11
@@ -15972,7 +15963,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -17632,7 +17623,7 @@ snapshots:
     dependencies:
       lower-case: 1.1.4
 
-  nock@14.0.12:
+  nock@14.0.13:
     dependencies:
       '@mswjs/interceptors': 0.41.5
       json-stringify-safe: 5.0.1
@@ -20533,6 +20524,10 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.25.2(zod@4.3.6):
+    dependencies:
+      zod: 4.3.6
 
   zod@3.25.76: {}
 
