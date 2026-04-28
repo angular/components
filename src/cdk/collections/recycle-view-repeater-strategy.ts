@@ -86,6 +86,11 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   private _debug: boolean = false;
 
   /**
+   * Whether to collect detached views before removing an item.
+   */
+  private _collectDetached: boolean = false;
+
+  /**
    * Sets the trackBy function used to identify items for keyed detached-view reuse
    * and scroll state persistence.
    */
@@ -105,6 +110,13 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    */
   setDebug(value: boolean): void {
     this._debug = value;
+  }
+
+  /**
+   * Sets whether to collect detached views before removing an item.
+   */
+  setCollectDetached(value: boolean): void {
+    this._collectDetached = value;
   }
 
   constructor() {
@@ -149,12 +161,10 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
           );
           operation = view ? _ViewRepeaterOperation.INSERTED : _ViewRepeaterOperation.REPLACED;
         } else if (currentIndex == null) {
-          if (this._debug) {
-            debugger;
-          }
-
           // Item removed.
-          this._recycleViewElementsState?.collectDetachedViews();
+          if (this._collectDetached) {
+            this._recycleViewElementsState?.collectDetachedViews();
+          }
           this._detachAndCacheView(adjustedPreviousIndex!, viewContainerRef);
           operation = _ViewRepeaterOperation.REMOVED;
         } else {
@@ -182,8 +192,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   detach() {
     // Save scroll positions before destroying cached views
     this._viewCache.forEach((view, i) => {
-      // this._saveScrollPosition(view, i);
-      // view.destroy();
+      view.destroy();
     });
     this._viewCache = [];
     this._detachChangesSubscription?.unsubscribe();

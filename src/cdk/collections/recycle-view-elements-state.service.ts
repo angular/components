@@ -186,7 +186,6 @@ export class RecycleViewElementsState implements OnDestroy {
       return null;
     }
 
-    this._detachedViews.delete(id);
     return detachedView as EmbeddedViewRef<T>;
   }
 
