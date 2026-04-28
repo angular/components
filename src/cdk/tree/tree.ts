@@ -1261,7 +1261,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /**
    * The text used to locate this item during typeahead. If not specified, the `textContent` will
-   * will be used.
+   * be used.
    */
   @Input('cdkTreeNodeTypeaheadLabel') typeaheadLabel: string | null = null;
 
