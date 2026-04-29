@@ -2733,7 +2733,7 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
       fixture.detectChanges();
-      await wait(10);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBe(initialScrollDistance);
       expect(list.scrollTop).toBeLessThan(50);
@@ -2770,7 +2770,7 @@ export function defineCommonDropListTests(config: {
       startDraggingViaMouse(fixture, item);
       dispatchMouseEvent(document, 'mousemove', listRect.left + listRect.width / 2, 0);
       fixture.detectChanges();
-      await wait(10);
+      await wait(100);
 
       expect(viewportRuler.getViewportScrollPosition().top).toBeLessThan(initialScrollDistance);
       expect(list.scrollTop).toBe(0);

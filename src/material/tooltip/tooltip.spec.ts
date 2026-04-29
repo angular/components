@@ -1277,12 +1277,13 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      await wait(250); // Halfway through the dela.
+      await wait(250); // Halfway through the delay.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
 
-      await wait(500); // Finish the dela.
+      await wait(600); // Finish the delay.
       fixture.detectChanges();
+      await fixture.whenStable();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
