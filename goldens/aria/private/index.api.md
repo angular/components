@@ -671,6 +671,7 @@ export interface SimpleComboboxInputs extends ExpansionItem {
     element: SignalLike<HTMLElement>;
     inlineSuggestion: SignalLike<string | undefined>;
     popup: SignalLike<SimpleComboboxPopupPattern | undefined>;
+    softDisabled?: SignalLike<boolean>;
     value: WritableSignalLike<string>;
 }
 
@@ -701,6 +702,7 @@ export class SimpleComboboxPattern {
     onKeydown(event: KeyboardEvent): void;
     readonly popupId: _angular_core.Signal<string | undefined>;
     readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
+    readonly softDisabled: () => boolean;
     readonly value: WritableSignalLike<string>;
 }
 
