@@ -1,0 +1,52 @@
+<div class="example-toolbar-container">
+  <div
+    ngToolbar
+    [softDisabled]="false"
+    class="example-toolbar"
+    aria-label="Horizontal Toolbar Text Formatting Tools"
+  >
+    <div class="example-group" aria-label="Undo and Redo options">
+      <button toolbar-button value="undo">undo</button>
+      <button toolbar-button value="redo" [disabled]="true">redo</button>
+    </div>
+
+    <div class="example-separator" role="separator"></div>
+
+    <div class="example-group" aria-label="Text formatting options">
+      <button toolbar-toggle-button value="bold">format_bold</button>
+      <button toolbar-toggle-button value="italic">format_italic</button>
+      <button toolbar-toggle-button value="underline">format_underlined</button>
+    </div>
+
+    <div class="example-separator" role="separator"></div>
+
+    <combobox />
+
+    <div class="example-separator" role="separator"></div>
+
+    <div
+      ngToolbarWidgetGroup
+      role="radiogroup"
+      class="example-group"
+      aria-label="Alignment options"
+    >
+      <button toolbar-radio-button value="align left">format_align_left</button>
+      <button toolbar-radio-button value="align center" [disabled]="true">format_align_center</button>
+      <button toolbar-radio-button value="align right">format_align_right</button>
+    </div>
+
+    <div class="example-separator" role="separator"></div>
+
+    <div
+      [disabled]="true"
+      ngToolbarWidgetGroup
+      role="radiogroup"
+      class="example-group"
+      aria-label="List options"
+    >
+      <button toolbar-radio-button value="checklist">checklist</button>
+      <button toolbar-radio-button value="bullet list">format_list_bulleted</button>
+      <button toolbar-radio-button value="numbered list">format_list_numbered</button>
+    </div>
+  </div>
+</div>

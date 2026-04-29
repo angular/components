@@ -73,6 +73,7 @@ export class DevAppLayout {
     {name: 'Aria Select', route: '/aria-select'},
     {name: 'Aria Tabs', route: '/aria-tabs'},
     {name: 'Aria Toolbar', route: '/aria-toolbar'},
+    {name: 'Aria Toolbar Simple Combobox', route: '/aria-toolbar-simple-combobox'},
     {name: 'Aria Tree', route: '/aria-tree'},
     {name: 'CDK Listbox', route: '/cdk-listbox'},
     {name: 'CDK Menu', route: '/cdk-menu'},
