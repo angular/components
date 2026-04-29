@@ -45,7 +45,7 @@ describe('MatDrawer', () => {
       expect(testComponent.openStartCount).toBe(0);
       expect(container.classList).not.toContain('mat-drawer-container-has-open');
 
-      await wait(20);
+      await wait(100);
       expect(testComponent.openStartCount).toBe(1);
       fixture.detectChanges();
 
@@ -72,7 +72,7 @@ describe('MatDrawer', () => {
       expect(testComponent.closeCount).toBe(0);
       expect(testComponent.closeStartCount).toBe(0);
 
-      await wait(20);
+      await wait(100);
       expect(testComponent.closeStartCount).toBeGreaterThanOrEqual(1);
       fixture.detectChanges();
 
@@ -181,7 +181,7 @@ describe('MatDrawer', () => {
 
       drawer.componentInstance.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(testComponent.openCount).withContext('Expected one open event.').toBe(1);
       expect(testComponent.openStartCount).withContext('Expected one open start event.').toBe(1);
@@ -190,7 +190,7 @@ describe('MatDrawer', () => {
 
       const event = dispatchKeyboardEvent(drawer.nativeElement, 'keydown', ESCAPE);
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(testComponent.closeCount).withContext('Expected one close event.').toBe(1);
       expect(testComponent.closeStartCount).withContext('Expected one close start event.').toBe(1);
@@ -228,7 +228,7 @@ describe('MatDrawer', () => {
       const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);
 
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(fixture.componentInstance.openCallback).toHaveBeenCalledTimes(1);
     });
@@ -280,7 +280,7 @@ describe('MatDrawer', () => {
       openButton.focus();
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
 
       const backdrop = fixture.nativeElement.querySelector('.mat-drawer-backdrop');
@@ -294,7 +294,7 @@ describe('MatDrawer', () => {
 
       backdrop.click();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(document.activeElement)
         .withContext('Expected focus to be restored to the open button on close.')
@@ -313,13 +313,13 @@ describe('MatDrawer', () => {
       openButton.focus();
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
       drawerButton.focus();
 
       drawer.close();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(document.activeElement)
         .withContext('Expected focus to be restored to the open button on close.')
@@ -337,13 +337,13 @@ describe('MatDrawer', () => {
       svg.focus();
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
       drawerButton.focus();
 
       drawer.close();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(document.activeElement)
         .withContext('Expected focus to be restored to the SVG element on close.')
@@ -496,7 +496,7 @@ describe('MatDrawer', () => {
 
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
 
       expect(fixture.componentInstance.isOpen).toBe(true);
     });
@@ -546,7 +546,7 @@ describe('MatDrawer', () => {
 
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(firstFocusableElement);
@@ -560,7 +560,7 @@ describe('MatDrawer', () => {
 
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(firstFocusableElement);
@@ -575,7 +575,7 @@ describe('MatDrawer', () => {
 
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(firstFocusableElement);
@@ -618,7 +618,7 @@ describe('MatDrawer', () => {
 
       drawer.open();
       fixture.detectChanges();
-      await wait(20);
+      await wait(100);
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(firstFocusableElement);
@@ -633,7 +633,7 @@ describe('MatDrawer', () => {
 
       drawerEl.componentInstance.open();
       nonFocusableFixture.detectChanges();
-      await wait(20);
+      await wait(100);
       nonFocusableFixture.detectChanges();
 
       expect(document.activeElement).toBe(drawerEl.nativeElement);
@@ -904,7 +904,7 @@ describe('MatDrawerContainer', () => {
 
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     expect(parseInt(contentElement.style.marginLeft)).toBeGreaterThan(0);
@@ -916,7 +916,7 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     const contentElement = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
@@ -938,7 +938,7 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     const contentElement = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
@@ -959,7 +959,7 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     const contentElement = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
@@ -998,7 +998,7 @@ describe('MatDrawerContainer', () => {
     fixture.nativeElement.querySelector('.mat-drawer').style.width = 'auto';
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     const contentEl = fixture.debugElement.nativeElement.querySelector('.mat-drawer-content');
@@ -1009,7 +1009,7 @@ describe('MatDrawerContainer', () => {
     fixture.componentInstance.fillerWidth = 200;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     expect(parseInt(contentEl.style.marginLeft)).toBeGreaterThan(initialMargin);
@@ -1027,7 +1027,7 @@ describe('MatDrawerContainer', () => {
     // Open the drawer and resolve the open animation.
     fixture.componentInstance.drawer.open();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     expect(content.style.marginLeft).not.toBe('', 'Margin should be present when drawer is open');
@@ -1035,7 +1035,7 @@ describe('MatDrawerContainer', () => {
     // Close the drawer and resolve the close animation.
     fixture.componentInstance.drawer.close();
     fixture.detectChanges();
-    await wait(20);
+    await wait(100);
     fixture.detectChanges();
 
     expect(content.style.marginLeft)
