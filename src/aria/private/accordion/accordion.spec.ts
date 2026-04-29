@@ -322,5 +322,49 @@ describe('Accordion Pattern', () => {
         expect(triggerPatterns[1].expanded()).toBeTrue();
       });
     });
+
+    describe('AccordionTriggerPattern methods', () => {
+      it('should expand via open()', () => {
+        expect(triggerPatterns[0].expanded()).toBeFalse();
+        triggerPatterns[0].open();
+        expect(triggerPatterns[0].expanded()).toBeTrue();
+      });
+
+      it('should collapse via close()', () => {
+        triggerPatterns[0].expanded.set(true);
+        expect(triggerPatterns[0].expanded()).toBeTrue();
+        triggerPatterns[0].close();
+        expect(triggerPatterns[0].expanded()).toBeFalse();
+      });
+
+      it('should toggle via toggle()', () => {
+        expect(triggerPatterns[0].expanded()).toBeFalse();
+        triggerPatterns[0].toggle();
+        expect(triggerPatterns[0].expanded()).toBeTrue();
+
+        triggerPatterns[0].toggle();
+        expect(triggerPatterns[0].expanded()).toBeFalse();
+      });
+    });
+
+    describe('softDisabled behavior', () => {
+      it('should compute hardDisabled as true when disabled=true and softDisabled=false', () => {
+        triggerInputs[0].disabled.set(true);
+        groupInputs.softDisabled.set(false);
+        expect(triggerPatterns[0].hardDisabled()).toBeTrue();
+      });
+
+      it('should compute hardDisabled as false when disabled=true and softDisabled=true', () => {
+        triggerInputs[0].disabled.set(true);
+        groupInputs.softDisabled.set(true);
+        expect(triggerPatterns[0].hardDisabled()).toBeFalse();
+      });
+
+      it('should compute hardDisabled as false when disabled=false', () => {
+        triggerInputs[0].disabled.set(false);
+        groupInputs.softDisabled.set(false);
+        expect(triggerPatterns[0].hardDisabled()).toBeFalse();
+      });
+    });
   });
 });
