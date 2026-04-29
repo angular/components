@@ -7,44 +7,42 @@
  */
 import {computed, SignalLike} from '../signal-like/signal-like';
 
-/** Represents the required inputs for the label control. */
+/** The required inputs for the label control. */
 export interface LabelControlInputs {
-  /** The default `aria-labelledby` ids. */
-  defaultLabelledBy: SignalLike<string[]>;
+  /** The default `aria-labelledby` id to use if no other inputs specified. */
+  defaultLabelledBy: SignalLike<string | undefined>;
+
+  /** The `aria-label` to use instead of the default id. */
+  label: SignalLike<string | undefined>;
+
+  /** The `aria-labelledby` id(s) to use instead of the default id (or label). */
+  labelledBy: SignalLike<string[] | undefined>;
 }
 
-/** Represents the optional inputs for the label control. */
-export interface LabelControlOptionalInputs {
-  /** The `aria-label`. */
-  label?: SignalLike<string | undefined>;
-
-  /** The user-provided `aria-labelledby` ids. */
-  labelledBy?: SignalLike<string[]>;
-}
-
-/** Controls label and description of an element. */
+/** Controls label for an element. */
 export class LabelControl {
-  /** The `aria-label`. */
-  readonly label = computed(() => this.inputs.label?.());
+  /** Use this value to set the `aria-label` attribute on the element. */
+  readonly label = computed(() => this.inputs.label());
 
-  /** The `aria-labelledby` ids. */
+  /** Use this value to set the `aria-labelledby` attribute on the element. */
   readonly labelledBy = computed(() => {
-    const label = this.label();
-    const labelledBy = this.inputs.labelledBy?.();
     const defaultLabelledBy = this.inputs.defaultLabelledBy();
+    const label = this.label();
+    const labelledBy = this.inputs.labelledBy();
 
+    // Always use any specified labelledby ids.
     if (labelledBy && labelledBy.length > 0) {
-      return labelledBy;
+      return labelledBy.join(' ');
     }
 
-    // If an aria-label is provided by developers, do not set aria-labelledby with the
-    // defaultLabelledBy value because if both attributes are set, aria-labelledby will be used.
-    if (label) {
-      return [];
+    // If an aria-label is provided, do not set aria-labelledby with the defaultLabelledBy value
+    // because if both attributes are set, aria-labelledby will be used.
+    if (!label && defaultLabelledBy) {
+      return defaultLabelledBy;
     }
 
-    return defaultLabelledBy;
+    return undefined;
   });
 
-  constructor(readonly inputs: LabelControlInputs & LabelControlOptionalInputs) {}
+  constructor(readonly inputs: LabelControlInputs) {}
 }

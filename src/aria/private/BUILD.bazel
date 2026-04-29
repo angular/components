@@ -18,6 +18,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/private/accordion",
+        "//src/aria/private/behaviors/label",
         "//src/aria/private/behaviors/signal-like",
         "//src/aria/private/combobox",
         "//src/aria/private/deferred-content",

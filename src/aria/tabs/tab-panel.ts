@@ -19,7 +19,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import {TabPattern, TabPanelPattern, DeferredContentAware} from '../private';
+import {DeferredContentAware, LabelControl, TabPattern, TabPanelPattern} from '../private';
 import {TABS} from './tab-tokens';
 
 /**
@@ -49,7 +49,8 @@ import {TABS} from './tab-tokens';
     '[attr.id]': '_pattern.id()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': '!visible() ? true : null',
-    '[attr.aria-labelledby]': '_pattern.labelledBy()',
+    '[attr.aria-label]': '_labelControl.label()',
+    '[attr.aria-labelledby]': '_labelControl.labelledBy()',
   },
   hostDirectives: [
     {
@@ -71,8 +72,17 @@ export class TabPanel implements OnInit, OnDestroy {
   /** The parent Tabs. */
   private readonly _tabs = inject(TABS);
 
+  /** Controls label for this tabpanel. */
+  readonly _labelControl: LabelControl;
+
   /** A global unique identifier for the tab. */
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
+
+  /** The (optional) label for the accordion panel. */
+  readonly label = input<string | undefined>(undefined);
+
+  /** The (optional) labelledBy ids for the accordion panel. */
+  readonly labelledBy = input<string[]>([]);
 
   /** The Tab UIPattern associated with the tabpanel */
   readonly _tabPattern: WritableSignal<TabPattern | undefined> = signal(undefined);
@@ -90,6 +100,12 @@ export class TabPanel implements OnInit, OnDestroy {
   });
 
   constructor() {
+    this._labelControl = new LabelControl({
+      defaultLabelledBy: computed(() => this._pattern?.labelledBy()),
+      label: this.label,
+      labelledBy: this.labelledBy,
+    });
+
     afterRenderEffect({
       write: () => {
         this._deferredContentAware.contentVisible.set(this.visible());

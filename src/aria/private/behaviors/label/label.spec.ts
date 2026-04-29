@@ -7,21 +7,19 @@
  */
 
 import {signal, WritableSignalLike} from '../signal-like/signal-like';
-import {LabelControl, LabelControlInputs, LabelControlOptionalInputs} from './label';
+import {LabelControl, LabelControlInputs} from './label';
 
 // This is a helper type for the initial values passed to the setup function.
 type TestInputs = Partial<{
   label: string | undefined;
-  defaultLabelledBy: string[];
+  defaultLabelledBy: string;
   labelledBy: string[];
 }>;
 
-type TestLabelControlInputs = LabelControlInputs & Required<LabelControlOptionalInputs>;
-
 // This is a helper type to make all properties of LabelControlInputs writable signals.
 type WritableLabelControlInputs = {
-  [K in keyof TestLabelControlInputs]: WritableSignalLike<
-    TestLabelControlInputs[K] extends {(): infer T} ? T : never
+  [K in keyof LabelControlInputs]: WritableSignalLike<
+    LabelControlInputs[K] extends {(): infer T} ? T : never
   >;
 };
 
@@ -30,7 +28,7 @@ function getLabelControl(initialValues: TestInputs = {}): {
   inputs: WritableLabelControlInputs;
 } {
   const inputs: WritableLabelControlInputs = {
-    defaultLabelledBy: signal(initialValues.defaultLabelledBy ?? []),
+    defaultLabelledBy: signal(initialValues.defaultLabelledBy),
     label: signal(initialValues.label),
     labelledBy: signal(initialValues.labelledBy ?? []),
   };
@@ -44,6 +42,11 @@ describe('LabelControl', () => {
   describe('#label', () => {
     it('should return the user-provided label', () => {
       const {control} = getLabelControl({label: 'My Label'});
+      expect(control.label()).toBe('My Label');
+    });
+
+    it('should return the user-provided label even ifdefaultLabelledBy is provided ', () => {
+      const {control} = getLabelControl({defaultLabelledBy: 'default-id', label: 'My Label'});
       expect(control.label()).toBe('My Label');
     });
 
@@ -62,27 +65,27 @@ describe('LabelControl', () => {
   });
 
   describe('#labelledBy', () => {
-    it('should return user-provided labelledBy even if a label is provided', () => {
+    it('should return user-provided labelledBy ids even if a label is provided', () => {
       const {control} = getLabelControl({
         label: 'My Label',
-        defaultLabelledBy: ['default-id'],
-        labelledBy: ['user-id'],
+        defaultLabelledBy: 'default-id',
+        labelledBy: ['user-id', 'user-id-2'],
       });
-      expect(control.labelledBy()).toEqual(['user-id']);
+      expect(control.labelledBy()).toEqual('user-id user-id-2');
     });
 
     it('should return defaultLabelledBy if no user-provided labelledBy exists', () => {
-      const {control} = getLabelControl({defaultLabelledBy: ['default-id']});
-      expect(control.labelledBy()).toEqual(['default-id']);
+      const {control} = getLabelControl({defaultLabelledBy: 'default-id'});
+      expect(control.labelledBy()).toEqual('default-id');
     });
 
     it('should update when label changes from undefined to a string', () => {
       const {control, inputs} = getLabelControl({
-        defaultLabelledBy: ['default-id'],
+        defaultLabelledBy: 'default-id',
       });
-      expect(control.labelledBy()).toEqual(['default-id']);
+      expect(control.labelledBy()).toEqual('default-id');
       inputs.label.set('A wild label appears');
-      expect(control.labelledBy()).toEqual([]);
+      expect(control.labelledBy()).toEqual(undefined);
     });
   });
 });
