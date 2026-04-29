@@ -7,6 +7,7 @@
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Signal } from '@angular/core';
 import { untracked } from '@angular/core/primitives/signals';
 
 // @public
@@ -730,6 +731,20 @@ export class SimpleComboboxPopupPattern {
 
 // @public
 export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;
+
+// @public
+export class SortedCollection<T extends HasElement> {
+    // (undocumented)
+    readonly orderedItems: Signal<T[]>;
+    // (undocumented)
+    register(item: T): void;
+    // (undocumented)
+    startObserving(element: HTMLElement): void;
+    // (undocumented)
+    stopObserving(): void;
+    // (undocumented)
+    unregister(item: T): void;
+}
 
 // @public
 export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable' | 'expanded'> {

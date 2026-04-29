@@ -18,8 +18,7 @@ import {
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
 import {TABS} from './tab-tokens';
-import {TabPanelPattern, TabPattern} from '../private';
-import {SortedCollection} from '../private/utils/collection';
+import {SortedCollection, TabPanelPattern, TabPattern} from '../private';
 
 /**
  * A Tabs container.

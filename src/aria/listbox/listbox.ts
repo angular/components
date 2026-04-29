@@ -24,8 +24,7 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxListboxPattern, ListboxPattern} from '../private';
-import {SortedCollection} from '../private/utils/collection';
+import {ComboboxListboxPattern, ListboxPattern, SortedCollection} from '../private';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
