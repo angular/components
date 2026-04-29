@@ -118,11 +118,28 @@
   font-size: 0.9rem;
 }
 
+/* The ::placeholder selectors are intentionally separated.
+The 'material/no-prefixes' stylelint rule flags the standard ::placeholder
+when grouped with vendor prefixes. Each prefix is on its own rule to comply.
+Vendor prefixes are included to ensure consistent placeholder styling
+across different browsers. */
+
 /* stylelint-disable material/no-prefixes -- Provides all prefixes for ::placeholder */
-input::-webkit-input-placeholder,
-input::-moz-placeholder, /* Firefox 19+ */
-input:-ms-input-placeholder, /* IE 10+ */
-input:-moz-placeholder, /* Firefox 18- */
+input::-webkit-input-placeholder {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+input::-moz-placeholder /* Firefox 19+ */ {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+input:-ms-input-placeholder /* IE 10+ */ {
+  color: var(--mat-sys-on-surface-variant);
+}
+input:-moz-placeholder  /* Firefox 18- */ {
+  color: var(--mat-sys-on-surface-variant);
+}
+
 input::placeholder {
   color: var(--mat-sys-on-surface-variant);
 }
