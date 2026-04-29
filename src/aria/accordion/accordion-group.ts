@@ -18,8 +18,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern} from '../private';
-import {SortedCollection} from '../private/utils/collection';
+import {AccordionGroupPattern, SortedCollection} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 import {AccordionTrigger} from './accordion-trigger';
 

@@ -23,10 +23,9 @@ import {
   linkedSignal,
   WritableSignal,
 } from '@angular/core';
-import {TabListPattern, TabPattern} from '../private';
+import {SortedCollection, TabListPattern, TabPattern} from '../private';
 import {TABS, TAB_LIST} from './tab-tokens';
 import type {Tab} from './tab';
-import {SortedCollection} from '../private/utils/collection';
 
 /**
  * A TabList container.
