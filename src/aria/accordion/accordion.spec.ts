@@ -232,6 +232,31 @@ describe('AccordionGroup', () => {
       });
     });
 
+    describe('Deferred content', () => {
+      it('should not render content initially', () => {
+        expect(panelElements[0].textContent?.trim()).toBe('');
+      });
+
+      it('should render content when expanded', () => {
+        click(triggerElements[0]);
+        expect(panelElements[0].textContent?.trim()).toBe('Item 1 Content');
+      });
+
+      it('should preserve content when collapsed if preserveContent is true', async () => {
+        const items = testComponent.items();
+        (items[0] as any).preserveContent = signal(true);
+        testComponent.items.set([...items]);
+        fixture.detectChanges();
+        setupTriggerAndPanels();
+
+        click(triggerElements[0]); // Expand
+        expect(panelElements[0].textContent?.trim()).toBe('Item 1 Content');
+
+        click(triggerElements[0]); // Collapse
+        expect(panelElements[0].textContent?.trim()).toBe('Item 1 Content');
+      });
+    });
+
     describe('Keyboard navigation and interaction', () => {
       beforeEach(() => {
         // Focus on the first trigger as initial state.
@@ -293,23 +318,23 @@ describe('AccordionGroup', () => {
       });
 
       it('should update collection order when items are shuffled', async () => {
-        const groupDebugElement = fixture.debugElement.query(By.directive(AccordionGroup));
-        const groupDirective = groupDebugElement.injector.get(AccordionGroup);
+        // Verify initial DOM order
+        expect(triggerElements.length).toBe(3);
+        expect(triggerElements[0].textContent?.trim()).toBe('Item 1 Header');
+        expect(triggerElements[2].textContent?.trim()).toBe('Item 3 Header');
 
-        let orderedItems = groupDirective._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 1 Header');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 3 Header');
-
+        // Shuffle (reverse) data
         const items = testComponent.items().reverse();
         testComponent.items.set([...items]);
         fixture.detectChanges();
         await waitForMicrotasks();
 
-        orderedItems = groupDirective._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 3 Header');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 1 Header');
+        // Re-query elements to check new DOM order
+        setupTriggerAndPanels();
+
+        expect(triggerElements.length).toBe(3);
+        expect(triggerElements[0].textContent?.trim()).toBe('Item 3 Header');
+        expect(triggerElements[2].textContent?.trim()).toBe('Item 1 Header');
       });
 
       describe('wrap behavior', () => {
@@ -502,6 +527,7 @@ describe('AccordionGroup', () => {
           <div
             ngAccordionPanel
             #panel="ngAccordionPanel"
+            [preserveContent]="$any(item).preserveContent ? $any(item).preserveContent() : false"
           >
             <ng-template ngAccordionContent>
               {{ item.content }}

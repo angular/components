@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {ComponentHarness} from '@angular/cdk/testing';
 import {AccordionHarness, AccordionGroupHarness} from './accordion-harness';
 import {AccordionGroup, AccordionPanel, AccordionTrigger} from '../index';
+import {AccordionContent} from '../accordion-content';
 
 /** Lightweight test harness to test querying inside the accordion body panel. */
 class TestButtonHarness extends ComponentHarness {
@@ -27,7 +28,7 @@ describe('Accordion Harnesses', () => {
   let loader: any;
 
   @Component({
-    imports: [AccordionGroup, AccordionPanel, AccordionTrigger],
+    imports: [AccordionGroup, AccordionPanel, AccordionTrigger, AccordionContent],
     template: `
       <div ngAccordionGroup>
         <div #panel1="ngAccordionPanel" ngAccordionPanel>
@@ -37,6 +38,13 @@ describe('Accordion Harnesses', () => {
 
         <div #panel2="ngAccordionPanel" ngAccordionPanel>Content 2</div>
         <button ngAccordionTrigger [panel]="panel2" disabled>Section 2</button>
+
+        <div #panel3="ngAccordionPanel" ngAccordionPanel>
+          <ng-template ngAccordionContent>
+            <button class="test-button">Inside Content 3</button>
+          </ng-template>
+        </div>
+        <button ngAccordionTrigger [panel]="panel3" id="custom-id-3">Section 3</button>
       </div>
     `,
   })
@@ -55,14 +63,14 @@ describe('Accordion Harnesses', () => {
     const group = await loader.getHarness(AccordionGroupHarness);
     const accordions = await group.getAccordions();
 
-    expect(accordions.length).toBe(2);
+    expect(accordions.length).toBe(3);
     expect(await accordions[0].getTitle()).toBe('Section 1');
     expect(await accordions[1].getTitle()).toBe('Section 2');
   });
 
   it('should find all individual accordions via standard root loader', async () => {
     const accordions = await loader.getAllHarnesses(AccordionHarness);
-    expect(accordions.length).toBe(2);
+    expect(accordions.length).toBe(3);
   });
 
   it('should filter accordions by title', async () => {
@@ -146,5 +154,11 @@ describe('Accordion Harnesses', () => {
     const accordion = await loader.getHarness(AccordionHarness.with({title: 'Section 1'}));
     const button = await accordion.getHarness(TestButtonHarness);
     expect(await button.getText()).toBe('Inside Content 1');
+  });
+
+  it('should filter accordions by id', async () => {
+    const accordions = await loader.getAllHarnesses(AccordionHarness.with({id: 'custom-id-3'}));
+    expect(accordions.length).toBe(1);
+    expect(await accordions[0].getTitle()).toBe('Section 3');
   });
 });

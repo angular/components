@@ -43,6 +43,7 @@ export class AccordionHarness extends ContentContainerComponentHarness<Accordion
 export interface AccordionHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
     expanded?: boolean;
+    id?: string | RegExp;
     title?: string | RegExp;
 }
 

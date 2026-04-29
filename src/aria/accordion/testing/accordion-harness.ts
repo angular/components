@@ -41,6 +41,9 @@ export class AccordionHarness extends ContentContainerComponentHarness<Accordion
         'disabled',
         options.disabled,
         async (harness, disabled) => (await harness.isDisabled()) === disabled,
+      )
+      .addOption('id', options.id, async (harness, id) =>
+        HarnessPredicate.stringMatches((await harness.host()).getAttribute('id'), id),
       );
   }
 

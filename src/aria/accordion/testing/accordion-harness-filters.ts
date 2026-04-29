@@ -16,6 +16,8 @@ export interface AccordionHarnessFilters extends BaseHarnessFilters {
   expanded?: boolean;
   /** Only find instances whose disabled state matches the given value. */
   disabled?: boolean;
+  /** Only find instances whose id matches the given value. */
+  id?: string | RegExp;
 }
 
 /** Filters for locating an `AccordionGroupHarness`. */
