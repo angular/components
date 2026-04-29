@@ -14,11 +14,14 @@ import {
   inject,
   input,
   signal,
+  afterNextRender,
+  OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern, sortDirectives} from '../private';
-import {AccordionTrigger} from './accordion-trigger';
+import {AccordionGroupPattern} from '../private';
+import {SortedCollection} from '../private/utils/collection';
 import {ACCORDION_GROUP} from './accordion-tokens';
+import {AccordionTrigger} from './accordion-trigger';
 
 /**
  * A container for a group of accordion items. It manages the overall state and
@@ -66,30 +69,19 @@ import {ACCORDION_GROUP} from './accordion-tokens';
   },
   providers: [{provide: ACCORDION_GROUP, useExisting: AccordionGroup}],
 })
-export class AccordionGroup {
+export class AccordionGroup implements OnDestroy {
   /** A reference to the group element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the group element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The AccordionTriggers nested inside this group. */
-  private readonly _triggers = signal(new Set<AccordionTrigger>());
-
-  /** The AccordionTriggers nested inside this group. */
-  private readonly _sortedTriggers = computed(() => {
-    const triggers = [...this._triggers()] as AccordionTrigger[];
-    const sortFn =
-      triggers[0]?.index() === undefined
-        ? sortDirectives
-        : (a: AccordionTrigger, b: AccordionTrigger) => a.index()! - b.index()!;
-
-    return triggers.sort(sortFn);
-  });
+  /** The collection of AccordionTriggers. */
+  readonly _collection = new SortedCollection<AccordionTrigger>();
 
   /** The corresponding patterns for the accordion triggers. */
   private readonly _triggerPatterns = computed(() => {
-    return this._sortedTriggers().map(t => t._pattern);
+    return this._collection.orderedItems().map(t => t._pattern);
   });
 
   /** The text direction (ltr or rtl). */
@@ -119,6 +111,16 @@ export class AccordionGroup {
     orientation: () => 'vertical',
   });
 
+  constructor() {
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
+  }
+
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {
     this._pattern.expandAll();
@@ -127,17 +129,5 @@ export class AccordionGroup {
   /** Collapses all accordion panels. */
   collapseAll() {
     this._pattern.collapseAll();
-  }
-
-  /** Internal method to register each trigger as we can not use contentChildren. */
-  _registerTrigger(trigger: AccordionTrigger) {
-    this._triggers().add(trigger);
-    this._triggers.set(new Set(this._triggers()));
-  }
-
-  /** Internal method to unregister each trigger as we can not use contentChildren. */
-  _unregisterTrigger(trigger: AccordionTrigger) {
-    this._triggers().delete(trigger);
-    this._triggers.set(new Set(this._triggers()));
   }
 }

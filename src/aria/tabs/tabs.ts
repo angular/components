@@ -6,10 +6,20 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, afterRenderEffect, computed, inject, signal} from '@angular/core';
+import {
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  signal,
+  afterNextRender,
+  OnDestroy,
+} from '@angular/core';
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
 import {TABS} from './tab-tokens';
+import {TabPanelPattern, TabPattern} from '../private';
+import {SortedCollection} from '../private/utils/collection';
 
 /**
  * A Tabs container.
@@ -47,7 +57,7 @@ import {TABS} from './tab-tokens';
   exportAs: 'ngTabs',
   providers: [{provide: TABS, useExisting: Tabs}],
 })
-export class Tabs {
+export class Tabs implements OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -55,51 +65,55 @@ export class Tabs {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The TabList registered for this container. */
-  private readonly _tabList = signal<TabList | undefined>(undefined);
+  readonly _tabList = signal<TabList | undefined>(undefined);
 
-  /** The TabPanels registered for this container. */
-  private readonly _tabPanels = signal(new Set<TabPanel>());
+  /** The collection of TabPanels. */
+  readonly _collection = new SortedCollection<TabPanel>();
 
-  /** The TabPanels registered for this container. */
-  private readonly _tabPanelsList = computed(() => [...this._tabPanels()]);
+  /** The Tab UIPattern of the child Tabs. */
+  readonly _tabPatterns = computed<TabPattern[] | undefined>(() => this._tabList()?._tabPatterns());
+
+  /** The TabPanel UIPattern of the child TabPanels. */
+  readonly _tabPanelPatterns = computed<TabPanelPattern[]>(() =>
+    this._collection.orderedItems().map(tabpanel => tabpanel._pattern),
+  );
+
+  /** A reactive map of tab values to their TabPanelPattern. */
+  readonly _panelMap = computed(() => {
+    const map = new Map<string, TabPanelPattern>();
+    for (const panel of this._collection.orderedItems()) {
+      map.set(panel.value(), panel._pattern);
+    }
+    return map;
+  });
+
+  /** A reactive map of tab values to their TabPattern. */
+  readonly _tabMap = computed(() => {
+    const map = new Map<string, TabPattern>();
+    const tabList = this._tabList();
+    if (tabList) {
+      for (const tab of tabList._collection.orderedItems()) {
+        map.set(tab.value(), tab._pattern);
+      }
+    }
+    return map;
+  });
 
   constructor() {
-    // This needs to be in an afterRenderEffect to ensure the tabs have all been initialized.
-    // Otherwise, the lookup here can fail and it does not get re-run afterwards.
-    afterRenderEffect({
-      write: () => {
-        if (this._tabList()) {
-          for (const tab of this._tabList()!._sortedTabs()) {
-            const panel = this._tabPanelsList().find(panel => panel === tab.panel());
-
-            if (panel) {
-              panel._tabPattern.set(tab._pattern);
-            }
-          }
-        }
-      },
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
     });
   }
 
-  _registerList(list: TabList) {
-    this._tabList.set(list);
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
-  _unregisterList(list: TabList) {
+  _register(child: TabList) {
+    this._tabList.set(child);
+  }
+
+  _unregister() {
     this._tabList.set(undefined);
-  }
-
-  _registerPanel(panel: TabPanel) {
-    this._tabPanels().add(panel);
-    this._tabPanels.set(new Set(this._tabPanels()));
-  }
-
-  _unregisterPanel(panel: TabPanel) {
-    this._tabPanels().delete(panel);
-    this._tabPanels.set(new Set(this._tabPanels()));
-  }
-
-  findTabPanel(value?: string) {
-    return value ? this._tabPanelsList().find(panel => panel.value() === value) : undefined;
   }
 }

@@ -8,23 +8,25 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {
-  Directive,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  WritableSignal,
-  afterRenderEffect,
   booleanAttribute,
   computed,
+  Directive,
+  ElementRef,
   inject,
   input,
-  linkedSignal,
   model,
   signal,
+  afterRenderEffect,
+  OnInit,
+  OnDestroy,
+  afterNextRender,
+  linkedSignal,
+  WritableSignal,
 } from '@angular/core';
-import {TabListPattern, TabPattern, sortDirectives} from '../private';
-import {Tab} from './tab';
+import {TabListPattern, TabPattern} from '../private';
 import {TABS, TAB_LIST} from './tab-tokens';
+import type {Tab} from './tab';
+import {SortedCollection} from '../private/utils/collection';
 
 /**
  * A TabList container.
@@ -67,16 +69,15 @@ export class TabList implements OnInit, OnDestroy {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Tabs container. */
-  private readonly _tabsParent = inject(TABS);
+  readonly _tabsParent = inject(TABS);
 
-  /** The Tabs registered for this TabList. */
-  private readonly _tabs = signal(new Set<Tab>());
-
-  /** The Tabs registered for this TabList. */
-  readonly _sortedTabs = computed(() => [...this._tabs()].sort(sortDirectives));
+  /** The collection of Tabs. */
+  readonly _collection = new SortedCollection<Tab>();
 
   /** The Tab UIPatterns of the child Tabs. */
-  private readonly _tabPatterns = computed(() => [...this._sortedTabs()].map(tab => tab._pattern));
+  readonly _tabPatterns = computed<TabPattern[]>(() =>
+    this._collection.orderedItems().map(tab => tab._pattern),
+  );
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
@@ -132,36 +133,32 @@ export class TabList implements OnInit, OnDestroy {
   });
 
   constructor() {
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+
+    afterRenderEffect(() => {
+      this._pattern.setDefaultStateEffect();
+    });
+
     // This needs to be in an afterRenderEffect to ensure the tabs have all been initialized.
     // Otherwise, the lookup here can fail and it does not get re-run afterwards.
     afterRenderEffect({
       write: () => {
         const pattern = this._selectedTabPattern();
-        const tab = this._sortedTabs().find(tab => tab._pattern == pattern);
-
+        const tab = this._collection.orderedItems().find(tab => tab._pattern == pattern);
         this.selectedTab.set(tab?.value());
       },
     });
-
-    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
   }
 
   ngOnInit() {
-    this._tabsParent._registerList(this);
+    this._tabsParent._register(this);
   }
 
   ngOnDestroy() {
-    this._tabsParent._registerList(this);
-  }
-
-  _registerTab(child: Tab) {
-    this._tabs().add(child);
-    this._tabs.set(new Set(this._tabs()));
-  }
-
-  _unregisterTab(child: Tab) {
-    this._tabs().delete(child);
-    this._tabs.set(new Set(this._tabs()));
+    this._tabsParent._unregister();
+    this._collection.stopObserving();
   }
 
   /** Opens the tab panel with the specified value. */
@@ -170,6 +167,6 @@ export class TabList implements OnInit, OnDestroy {
   }
 
   findTab(value?: string) {
-    return value ? this._sortedTabs().find(tab => tab.value() === value) : undefined;
+    return value ? this._collection.orderedItems().find(tab => tab.value() === value) : undefined;
   }
 }

@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 import {Tabs} from './tabs';
 import {TabList} from './tab-list';
 import {Tab} from './tab';
@@ -481,6 +482,37 @@ describe('Tabs', () => {
         });
       });
     }
+  });
+
+  describe('with shuffled items', () => {
+    it('should update collection order when items are shuffled', async () => {
+      setupTestTabs();
+      updateTabs({
+        initialTabs: [
+          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+          {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
+          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+        ],
+      });
+
+      const tabsDebugElement = fixture.debugElement.query(By.directive(Tabs));
+      const tabsDirective = tabsDebugElement.injector.get(Tabs);
+
+      let orderedItems = tabsDirective._collection.orderedItems();
+      expect(orderedItems.length).toBe(3);
+      expect(orderedItems[0].value()).toBe('tab1');
+      expect(orderedItems[2].value()).toBe('tab3');
+
+      const items = testComponent.tabsData().reverse();
+      testComponent.tabsData.set([...items]);
+      fixture.detectChanges();
+      await waitForMicrotasks();
+
+      orderedItems = tabsDirective._collection.orderedItems();
+      expect(orderedItems.length).toBe(3);
+      expect(orderedItems[0].value()).toBe('tab3');
+      expect(orderedItems[2].value()).toBe('tab1');
+    });
   });
 
   describe('Tab selection', () => {
