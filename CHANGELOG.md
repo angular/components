@@ -1,3 +1,20 @@
+<a name="21.2.9"></a>
+# 21.2.9 "astatine-astronaut" (2026-04-29)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bf14cc9d9](https://github.com/angular/components/commit/bf14cc9d9fd349974cba853d4747b6859b3aae5b) | fix | **menu:** use computed for menu item patterns, with trigger on visible ([#33118](https://github.com/angular/components/pull/33118)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3a3852d45](https://github.com/angular/components/commit/3a3852d45a4bbcfb23b46ca00e0eba1d70081ba3) | fix | **tree:** enter/space key on child node should not toggle parent node expansion ([#33125](https://github.com/angular/components/pull/33125)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [51271c619](https://github.com/angular/components/commit/51271c6194a9b55ee847c566a8960c9be5ec7cce) | fix | **stepper:** allow stepper to be labelled ([#33137](https://github.com/angular/components/pull/33137)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.8"></a>
 # 21.2.8 "v21-2-8" (2026-04-22)
 No user facing changes in this release
