@@ -420,4 +420,21 @@ describe('Tabs Pattern', () => {
       expect(tabPanelPatterns[2].labelledBy()).toBe('tab-3-id');
     });
   });
+
+  describe('ActiveDescendant mode', () => {
+    beforeEach(() => {
+      tabListInputs.focusMode.set('activedescendant');
+      tabListPattern.setDefaultState();
+    });
+
+    it('should update activeDescendant when navigating', () => {
+      expect(tabListPattern.activeDescendant()).toBe('tab-1-id');
+
+      tabListPattern.onKeydown(right());
+      expect(tabListPattern.activeDescendant()).toBe('tab-2-id');
+
+      tabListPattern.onKeydown(right());
+      expect(tabListPattern.activeDescendant()).toBe('tab-3-id');
+    });
+  });
 });
