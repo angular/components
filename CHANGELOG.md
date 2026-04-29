@@ -1,3 +1,28 @@
+<a name="22.0.0-next.7"></a>
+# 22.0.0-next.7 "astatine-agriculture" (2026-04-29)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6ec07bc0c](https://github.com/angular/components/commit/6ec07bc0cbe39be48faaf6021caecf2d0037df1f) | feat | **grid:** add test harnesses ([#33081](https://github.com/angular/components/pull/33081)) |
+| [05419c552](https://github.com/angular/components/commit/05419c5522305275f45b33e844adb8f063454bc2) | fix | **menu:** use computed for menu item patterns, with trigger on visible ([#33118](https://github.com/angular/components/pull/33118)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1a5d5d101](https://github.com/angular/components/commit/1a5d5d101aa0c3d3113ca8e77f0dbe4175afe655) | feat | **dialog:** add the ability to pass bindings |
+| [b916ef907](https://github.com/angular/components/commit/b916ef907fc15fd889ff0fe6fdb7c054331c906b) | fix | **tree:** enter/space key on child node should not toggle parent node expansion ([#33125](https://github.com/angular/components/pull/33125)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [867ba993b](https://github.com/angular/components/commit/867ba993b3baf35868d7c898e77289870316bbb9) | feat | **bottom-sheet:** add the ability to pass bindings |
+| [bf3596b53](https://github.com/angular/components/commit/bf3596b53ba1cf118ec06343f8a7772e0fb0e55d) | feat | **dialog:** add the ability to pass bindings |
+| [cb9148dca](https://github.com/angular/components/commit/cb9148dca63d4363bdd8b6d77cee46f93c5d2556) | fix | **stepper:** allow stepper to be labelled ([#33137](https://github.com/angular/components/pull/33137)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e44ff8318](https://github.com/angular/components/commit/e44ff8318911927624d90e0d2fcba6ee94ec5ff7) | feat | Add support for the gmp-click event ([#33147](https://github.com/angular/components/pull/33147)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.9"></a>
 # 21.2.9 "astatine-astronaut" (2026-04-29)
 ### aria
