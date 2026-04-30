@@ -7,14 +7,16 @@
  */
 
 import {
-  Directive,
-  ElementRef,
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
+  Directive,
+  ElementRef,
   inject,
   input,
   model,
+  OnDestroy,
   signal,
   Signal,
   untracked,
@@ -23,10 +25,10 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ComboboxTreePattern,
+  SortedCollection,
+  tabIndexTransform,
   TreeItemPattern,
   TreePattern,
-  sortDirectives,
-  tabIndexTransform,
 } from '../private';
 import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
@@ -84,7 +86,7 @@ import type {TreeItem} from './tree-item';
   },
   hostDirectives: [ComboboxPopup],
 })
-export class Tree<V> {
+export class Tree<V> implements OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -96,8 +98,8 @@ export class Tree<V> {
     optional: true,
   });
 
-  /** All TreeItem instances within this tree. */
-  private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
+  /** The collection of tree items. */
+  readonly _collection = new SortedCollection<TreeItem<V>>();
 
   /** A unique identifier for the tree. */
   readonly id = input(inject(_IdGenerator).getId('ng-tree-', true));
@@ -170,9 +172,7 @@ export class Tree<V> {
     const inputs = {
       ...this,
       id: this.id,
-      items: computed(() =>
-        [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
-      ),
+      items: computed(() => this._collection.orderedItems().map(item => item._pattern)),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
       combobox: () => this._popup?.combobox?._pattern,
       element: () => this.element,
@@ -184,11 +184,15 @@ export class Tree<V> {
 
     this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+
     if (this._popup?.combobox) {
       this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
     }
 
-    // Check for any violationns after the DOM has been updated.
+    // Check for any violations after the DOM has been updated.
     afterRenderEffect({
       read: () => {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -228,14 +232,8 @@ export class Tree<V> {
     });
   }
 
-  _register(child: TreeItem<V>) {
-    this._unorderedItems().add(child);
-    this._unorderedItems.set(new Set(this._unorderedItems()));
-  }
-
-  _unregister(child: TreeItem<V>) {
-    this._unorderedItems().delete(child);
-    this._unorderedItems.set(new Set(this._unorderedItems()));
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {

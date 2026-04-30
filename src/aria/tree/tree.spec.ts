@@ -7,6 +7,7 @@ import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/te
 import {Tree} from './tree';
 import {TreeItem} from './tree-item';
 import {TreeItemGroup} from './tree-item-group';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -163,6 +164,31 @@ describe('Tree', () => {
   afterEach(async () => {
     fixture.detectChanges();
     await runAccessibilityChecks(fixture.nativeElement);
+  });
+
+  describe('dynamic updates', () => {
+    it('should update item order correctly after items are shuffled', async () => {
+      setupTestTree();
+      expandAll();
+      fixture.detectChanges();
+
+      const treeDirective = fixture.debugElement.query(By.directive(Tree)).injector.get(Tree);
+      const itemsBefore = treeDirective._pattern.inputs.items();
+      expect(itemsBefore.length).toBe(11);
+      expect(itemsBefore[0].value()).toBe('fruits');
+
+      // Shuffle top-level nodes: move fruits to end
+      const nodes = testComponent.nodes();
+      const firstNode = nodes.shift()!;
+      nodes.push(firstNode);
+      testComponent.nodes.set([...nodes]);
+      fixture.detectChanges();
+      await waitForMicrotasks();
+
+      const itemsAfter = treeDirective._pattern.inputs.items();
+      expect(itemsAfter.length).toBe(11);
+      expect(itemsAfter[0].value()).toBe('vegetables');
+    });
   });
 
   describe('ARIA attributes and roles', () => {
