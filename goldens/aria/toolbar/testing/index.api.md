@@ -44,12 +44,14 @@ export class ToolbarWidgetHarness extends ContentContainerComponentHarness<strin
     static hostSelector: string;
     isActive(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
+    isSelected(): Promise<boolean>;
     static with(options?: ToolbarWidgetHarnessFilters): HarnessPredicate<ToolbarWidgetHarness>;
 }
 
 // @public
 export interface ToolbarWidgetHarnessFilters extends BaseHarnessFilters {
     active?: boolean;
+    selected?: boolean;
     text?: string | RegExp;
 }
 

@@ -626,6 +626,55 @@ describe('Toolbar', () => {
       expect(item2.getAttribute('aria-pressed')).toBe('false');
     });
   });
+
+  describe('ARIA attributes and roles', () => {
+    beforeEach(() => setupToolbar());
+
+    it('should have role="toolbar"', () => {
+      expect(toolbarElement.getAttribute('role')).toBe('toolbar');
+    });
+
+    it('should set aria-orientation based on input', () => {
+      expect(toolbarElement.getAttribute('aria-orientation')).toBe('horizontal');
+      fixture.componentInstance.orientation.set('vertical');
+      fixture.detectChanges();
+      expect(toolbarElement.getAttribute('aria-orientation')).toBe('vertical');
+    });
+
+    it('should set aria-disabled based on input', () => {
+      expect(toolbarElement.getAttribute('aria-disabled')).toBe('false');
+      fixture.componentInstance.disabled.set(true);
+      fixture.detectChanges();
+      expect(toolbarElement.getAttribute('aria-disabled')).toBe('true');
+    });
+  });
+
+  describe('Focus management', () => {
+    beforeEach(() => setupToolbar());
+
+    it('should have tabindex on widgets set by active state', () => {
+      const widgets = getWidgetEls();
+      expect(widgets[0].getAttribute('tabindex')).toBe('0');
+      expect(widgets[1].getAttribute('tabindex')).toBe('-1');
+
+      click(widgets[1]);
+      expect(widgets[0].getAttribute('tabindex')).toBe('-1');
+      expect(widgets[1].getAttribute('tabindex')).toBe('0');
+    });
+  });
+
+  describe('Hard disabled state attributes', () => {
+    beforeEach(() => setupToolbar({softDisabled: false}));
+
+    it('should set inert and disabled attributes on hard-disabled widgets', () => {
+      fixture.componentInstance.widgets[0].disabled.set(true);
+      fixture.detectChanges();
+
+      const widgets = getWidgetEls();
+      expect(widgets[0].hasAttribute('inert')).toBe(true);
+      expect(widgets[0].getAttribute('disabled')).toBe('true');
+    });
+  });
 });
 
 @Component({

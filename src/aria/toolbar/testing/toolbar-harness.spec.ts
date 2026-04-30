@@ -93,12 +93,20 @@ describe('ToolbarHarness', () => {
     fixture.componentInstance.undoDisabled.set(true);
     expect(await widget.isDisabled()).toBe(true);
   });
+
+  it('should be able to get whether a widget is selected', async () => {
+    const widget = await loader.getHarness(ToolbarWidgetHarness.with({text: 'Undo'}));
+    expect(await widget.isSelected()).toBe(false);
+
+    await widget.click();
+    expect(await widget.isSelected()).toBe(true);
+  });
 });
 
 @Component({
   template: `
     <div ngToolbar [orientation]="orientation()" [disabled]="toolbarDisabled()">
-      <button ngToolbarWidget value="undo" [disabled]="undoDisabled()">Undo</button>
+      <button ngToolbarWidget #u="ngToolbarWidget" value="undo" [disabled]="undoDisabled()" [aria-pressed]="u.selected()">Undo</button>
       <button ngToolbarWidget value="redo">Redo</button>
 
       <div ngToolbarWidgetGroup>
