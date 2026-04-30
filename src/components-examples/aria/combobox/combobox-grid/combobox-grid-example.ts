@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
@@ -14,9 +14,9 @@ import {MatIconModule} from '@angular/material/icon';
 
 /** @title */
 @Component({
-  selector: 'simple-combobox-grid-example',
-  templateUrl: 'simple-combobox-grid-example.html',
-  styleUrl: '../simple-combobox-example.css',
+  selector: 'combobox-grid-example',
+  templateUrl: 'combobox-grid-example.html',
+  styleUrl: '../combobox-example.css',
   imports: [
     Combobox,
     ComboboxPopup,
@@ -29,7 +29,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatIconModule,
   ],
 })
-export class SimpleComboboxGridExample {
+export class ComboboxGridExample {
   readonly grid = viewChild(Grid);
 
   popupExpanded = signal(true);

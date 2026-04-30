@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {ComboboxTreePattern, TreeItemPattern, TreePattern, sortDirectives} from '../private';
+import {TreeItemPattern, TreePattern, sortDirectives} from '../private';
 import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
 
@@ -77,7 +77,6 @@ import type {TreeItem} from './tree-item';
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
   },
-  hostDirectives: [ComboboxPopup],
 })
 export class Tree<V> {
   /** A reference to the host element. */
@@ -87,7 +86,7 @@ export class Tree<V> {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** A reference to the parent combobox popup, if one exists. */
-  private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
+  private readonly _popup = inject(ComboboxPopup, {
     optional: true,
   });
 
@@ -169,19 +168,13 @@ export class Tree<V> {
         [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
       ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
-      combobox: () => this._popup?.combobox?._pattern,
+      combobox: () => this._popup?.combobox()?._pattern,
       element: () => this.element,
     };
 
-    this._pattern = this._popup?.combobox
-      ? new ComboboxTreePattern<V>(inputs)
-      : new TreePattern<V>(inputs);
+    this._pattern = new TreePattern<V>(inputs);
 
     this.activeDescendant = computed(() => this._pattern.activeDescendant());
-
-    if (this._popup?.combobox) {
-      this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
-    }
 
     // Check for any violationns after the DOM has been updated.
     afterRenderEffect({
@@ -211,7 +204,7 @@ export class Tree<V> {
 
     afterRenderEffect({
       write: () => {
-        if (!(this._pattern instanceof ComboboxTreePattern)) return;
+        if (!this._popup?.combobox) return;
 
         const items = inputs.items();
         const value = untracked(() => this.value());

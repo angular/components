@@ -11,6 +11,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/private/behaviors/event-manager",
+        "//src/aria/private/behaviors/expansion",
         "//src/aria/private/behaviors/list",
         "//src/aria/private/behaviors/signal-like",
     ],

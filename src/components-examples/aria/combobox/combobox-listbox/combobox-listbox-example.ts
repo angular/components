@@ -6,19 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {afterRenderEffect, Component, computed, signal, viewChild, untracked} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Simple Combobox Disabled */
+/** @title */
 @Component({
-  selector: 'simple-combobox-disabled-example',
-  templateUrl: 'simple-combobox-disabled-example.html',
-  styleUrl: '../simple-combobox-example.css',
+  selector: 'combobox-listbox-example',
+  templateUrl: 'combobox-listbox-example.html',
+  styleUrl: '../combobox-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-export class SimpleComboboxDisabledExample {
+export class ComboboxListboxExample {
   readonly listbox = viewChild(Listbox);
 
   popupExpanded = signal(false);
@@ -33,20 +33,14 @@ export class SimpleComboboxDisabledExample {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
     });
-
-    afterRenderEffect(() => {
-      if (this.popupExpanded()) {
-        untracked(() => setTimeout(() => this.listbox()?.gotoFirst()));
-      }
-    });
   }
 
   onCommit() {
     const selectedOption = this.selectedOption();
     if (selectedOption.length > 0) {
       this.searchString.set(selectedOption[0]);
-      this.popupExpanded.set(false);
     }
+    this.popupExpanded.set(false);
   }
 }
 

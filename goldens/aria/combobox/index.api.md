@@ -4,76 +4,72 @@
 
 ```ts
 
-import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { ComboboxPattern } from '@angular/aria/private';
+import { ComboboxPopupPattern } from '@angular/aria/private';
+import { DeferredContentAware } from '@angular/aria/private';
+import * as i1 from '@angular/aria/private';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 
 // @public
-export class Combobox<V> {
+export class Combobox extends DeferredContentAware implements OnInit {
     constructor();
     readonly alwaysExpanded: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly expanded: _angular_core.Signal<boolean>;
-    readonly filterMode: _angular_core.InputSignal<"manual" | "auto-select" | "highlight">;
-    readonly firstMatch: _angular_core.InputSignal<V | undefined>;
-    readonly inputElement: _angular_core.Signal<HTMLInputElement | undefined>;
-    open(): void;
-    readonly _pattern: ComboboxPattern<any, V>;
-    readonly popup: _angular_core.Signal<ComboboxPopup<V> | undefined>;
-    readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
+    readonly expanded: _angular_core.ModelSignal<boolean>;
+    readonly inlineSuggestion: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox<any>, "[ngCombobox]", ["ngCombobox"], { "filterMode": { "alias": "filterMode"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "firstMatch": { "alias": "firstMatch"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; }, {}, ["popup"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox<any>, never>;
-}
-
-// @public
-export class ComboboxDialog {
-    constructor();
-    // (undocumented)
-    close(): void;
-    readonly combobox: Combobox<any>;
-    readonly element: HTMLDialogElement;
-    readonly id: _angular_core.InputSignal<string>;
-    // (undocumented)
-    readonly _pattern: ComboboxDialogPattern;
-    // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxDialog, "dialog[ngComboboxDialog]", ["ngComboboxDialog"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxDialog, never>;
-}
-
-// @public
-export class ComboboxInput {
-    constructor();
-    readonly combobox: Combobox<any>;
-    readonly element: HTMLElement;
+    ngOnInit(): void;
+    readonly _pattern: ComboboxPattern;
+    readonly _popup: _angular_core.WritableSignal<ComboboxPopup | undefined>;
+    _registerPopup(popup: ComboboxPopup): void;
+    _unregisterPopup(): void;
     readonly value: _angular_core.ModelSignal<string>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxInput, "input[ngComboboxInput]", ["ngComboboxInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox, "[ngCombobox]", ["ngCombobox"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "inlineSuggestion": { "alias": "inlineSuggestion"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxInput, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox, never>;
 }
 
 // @public
-export class ComboboxPopup<V> {
-    readonly combobox: Combobox<V> | null;
-    readonly _controls: _angular_core.WritableSignal<ComboboxListboxControls<any, V> | ComboboxTreeControls<any, V> | ComboboxDialogPattern | undefined>;
+export class ComboboxPopup implements OnInit, OnDestroy {
+    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly combobox: _angular_core.InputSignal<Combobox>;
+    readonly controlTarget: _angular_core.Signal<HTMLElement | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup<any>, "[ngComboboxPopup]", ["ngComboboxPopup"], {}, {}, never, never, true, never>;
+    ngOnDestroy(): void;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxPopup<any>, never>;
+    ngOnInit(): void;
+    readonly _pattern: ComboboxPopupPattern;
+    readonly popupId: _angular_core.Signal<string | undefined>;
+    readonly popupType: _angular_core.InputSignal<"listbox" | "tree" | "grid" | "dialog">;
+    _registerWidget(widget: ComboboxWidget): void;
+    _unregisterWidget(): void;
+    readonly _widget: _angular_core.WritableSignal<ComboboxWidget | undefined>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup, "ng-template[ngComboboxPopup]", ["ngComboboxPopup"], { "combobox": { "alias": "combobox"; "required": true; "isSignal": true; }; "popupType": { "alias": "popupType"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxPopup, never>;
 }
 
 // @public
-export class ComboboxPopupContainer {
+export class ComboboxWidget implements OnInit, OnDestroy {
+    constructor();
+    readonly activeDescendant: _angular_core.InputSignal<string | undefined>;
+    readonly element: HTMLElement;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopupContainer, "ng-template[ngComboboxPopupContainer]", ["ngComboboxPopupContainer"], {}, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
+    ngOnDestroy(): void;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxPopupContainer, never>;
+    ngOnInit(): void;
+    onFocusin(): void;
+    onFocusout(event: FocusEvent): void;
+    readonly popupId: _angular_core.WritableSignal<string | undefined>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxWidget, "[ngComboboxWidget]", ["ngComboboxWidget"], { "activeDescendant": { "alias": "activeDescendant"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxWidget, never>;
 }
 
 // (No @packageDocumentation comment for this package)

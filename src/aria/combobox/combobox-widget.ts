@@ -7,7 +7,7 @@
  */
 
 import {Directive, ElementRef, inject, input, OnDestroy, OnInit, signal} from '@angular/core';
-import {SIMPLE_COMBOBOX_POPUP} from './simple-combobox-tokens';
+import {COMBOBOX_POPUP} from './combobox-tokens';
 
 /**
  * Identifies an element as a widget within a combobox popup.
@@ -27,7 +27,7 @@ import {SIMPLE_COMBOBOX_POPUP} from './simple-combobox-tokens';
 export class ComboboxWidget implements OnInit, OnDestroy {
   /** The element that the popup widget is attached to. */
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly _popup = inject(SIMPLE_COMBOBOX_POPUP);
+  private readonly _popup = inject(COMBOBOX_POPUP);
 
   /** A reference to the popup widget element. */
   readonly element = this._elementRef.nativeElement;

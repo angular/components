@@ -6,37 +6,24 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  signal,
-  viewChild,
-} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
+import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Combobox with auto-select filtering. */
+/** @title Simple Combobox Auto Select */
 @Component({
   selector: 'combobox-auto-select-example',
   templateUrl: 'combobox-auto-select-example.html',
-  styleUrl: '../combobox-examples.css',
-  imports: [Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer, Listbox, Option],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: '../combobox-example.css',
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
 export class ComboboxAutoSelectExample {
-  popover = viewChild<ElementRef>('popover');
-  listbox = viewChild<Listbox<any>>(Listbox);
-  combobox = viewChild<Combobox<any>>(Combobox);
+  readonly listbox = viewChild(Listbox);
 
+  popupExpanded = signal(false);
   searchString = signal('');
+  selectedOption = signal<string[]>([]);
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -44,27 +31,16 @@ export class ComboboxAutoSelectExample {
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
-      const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
       this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
+  onCommit() {
+    const selectedOption = this.selectedOption();
+    if (selectedOption.length > 0) {
+      this.searchString.set(selectedOption[0]);
     }
-
-    popover.nativeElement.showPopover();
+    this.popupExpanded.set(false);
   }
 }
 

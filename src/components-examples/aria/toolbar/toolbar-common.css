@@ -150,6 +150,7 @@
   border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 50%, transparent);
   border-radius: var(--mat-sys-corner-extra-small);
   background-color: var(--mat-sys-surface);
+  width: 100%;
 }
 
 .example-option {

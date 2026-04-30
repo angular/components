@@ -6,127 +6,99 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  signal,
-  viewChild,
-} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
+import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Combobox with highlight filtering. */
+/** @title Simple Combobox Highlight */
 @Component({
   selector: 'combobox-highlight-example',
   templateUrl: 'combobox-highlight-example.html',
-  styleUrl: '../combobox-examples.css',
-  imports: [
-    Combobox,
-    ComboboxInput,
-    ComboboxPopup,
-    ComboboxPopupContainer,
-    Listbox,
-    Option,
-    FormsModule,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: '../combobox-example.css',
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
 export class ComboboxHighlightExample {
-  popover = viewChild<ElementRef>('popover');
-  listbox = viewChild<Listbox<any>>(Listbox);
-  combobox = viewChild<Combobox<any>>(Combobox);
+  readonly listbox = viewChild(Listbox);
 
+  popupExpanded = signal(false);
   searchString = signal('');
+  selectedOption = signal<string[]>([]);
 
   options = computed(() =>
-    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
+    states.filter(state => state.name.toLowerCase().startsWith(this.searchString().toLowerCase())),
   );
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
-      const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
-
       this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
+  onCommit() {
+    const selectedOption = this.selectedOption();
+    if (selectedOption.length > 0) {
+      const matchedState = states.find(s => s.name === selectedOption[0]);
+      if (matchedState?.disabled) {
+        return;
+      }
+      this.searchString.set(selectedOption[0]);
+    } else {
+      this.searchString.set('');
     }
-
-    popover.nativeElement.showPopover();
+    this.popupExpanded.set(false);
   }
 }
 
 const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
+  {name: 'Alabama', disabled: false},
+  {name: 'Alaska', disabled: true},
+  {name: 'Arizona', disabled: false},
+  {name: 'Arkansas', disabled: true},
+  {name: 'California', disabled: true},
+  {name: 'Colorado', disabled: false},
+  {name: 'Connecticut', disabled: false},
+  {name: 'Delaware', disabled: false},
+  {name: 'Florida', disabled: false},
+  {name: 'Georgia', disabled: false},
+  {name: 'Hawaii', disabled: false},
+  {name: 'Idaho', disabled: false},
+  {name: 'Illinois', disabled: false},
+  {name: 'Indiana', disabled: false},
+  {name: 'Iowa', disabled: false},
+  {name: 'Kansas', disabled: false},
+  {name: 'Kentucky', disabled: false},
+  {name: 'Louisiana', disabled: false},
+  {name: 'Maine', disabled: false},
+  {name: 'Maryland', disabled: false},
+  {name: 'Massachusetts', disabled: false},
+  {name: 'Michigan', disabled: false},
+  {name: 'Minnesota', disabled: false},
+  {name: 'Mississippi', disabled: false},
+  {name: 'Missouri', disabled: false},
+  {name: 'Montana', disabled: false},
+  {name: 'Nebraska', disabled: false},
+  {name: 'Nevada', disabled: false},
+  {name: 'New Hampshire', disabled: false},
+  {name: 'New Jersey', disabled: false},
+  {name: 'New Mexico', disabled: false},
+  {name: 'New York', disabled: false},
+  {name: 'North Carolina', disabled: false},
+  {name: 'North Dakota', disabled: false},
+  {name: 'Ohio', disabled: false},
+  {name: 'Oklahoma', disabled: false},
+  {name: 'Oregon', disabled: false},
+  {name: 'Pennsylvania', disabled: false},
+  {name: 'Rhode Island', disabled: false},
+  {name: 'South Carolina', disabled: false},
+  {name: 'South Dakota', disabled: false},
+  {name: 'Tennessee', disabled: false},
+  {name: 'Texas', disabled: false},
+  {name: 'Utah', disabled: false},
+  {name: 'Vermont', disabled: false},
+  {name: 'Virginia', disabled: false},
+  {name: 'Washington', disabled: false},
+  {name: 'West Virginia', disabled: false},
+  {name: 'Wisconsin', disabled: false},
+  {name: 'Wyoming', disabled: false},
 ];

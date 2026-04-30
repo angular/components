@@ -1,10 +1,10 @@
-<div ngCombobox readonly>
+<div>
   <div #origin class="example-select">
     <div class="example-select-value">
       <span class="example-select-icon material-symbols-outlined">{{ value().icon }}</span>
       <span class="example-select-label">{{ value().label }}</span>
     </div>
-    <input aria-label="Select a theme" ngComboboxInput [value]="value().label" />
+    <input ngCombobox #combobox="ngCombobox" readonly aria-label="Select a theme" [value]="value().label" />
     <span class="example-arrow material-symbols-outlined">arrow_drop_down</span>
   </div>
 
@@ -12,7 +12,7 @@
     [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
     [cdkConnectedOverlayOpen]="true"
   >
-    <ng-template ngComboboxPopupContainer>
+    <ng-template ngComboboxPopup [combobox]="combobox">
       <div class="example-popup">
         <div ngListbox [value]="[value()]">
           @for (item of items; track item.label) {

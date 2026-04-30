@@ -59,207 +59,66 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     toggle(): void;
 }
 
-// @public (undocumented)
-export class ComboboxDialogPattern {
-    constructor(inputs: {
-        combobox: ComboboxPattern<any, any>;
-        element: SignalLike<HTMLDialogElement>;
-        id: SignalLike<string>;
-    });
-    // (undocumented)
-    readonly id: () => string;
-    // (undocumented)
-    readonly inputs: {
-        combobox: ComboboxPattern<any, any>;
-        element: SignalLike<HTMLDialogElement>;
-        id: SignalLike<string>;
-    };
-    // (undocumented)
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    // (undocumented)
-    onClick(event: MouseEvent): void;
-    // (undocumented)
-    onKeydown(event: KeyboardEvent): void;
-    // (undocumented)
-    readonly role: () => "dialog";
-}
-
 // @public
-export interface ComboboxInputs<T extends ListItem<V>, V> {
+export interface ComboboxInputs extends ExpansionItem {
     alwaysExpanded: SignalLike<boolean>;
-    containerEl: SignalLike<HTMLElement | undefined>;
     disabled: SignalLike<boolean>;
-    filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
-    firstMatch: SignalLike<V | undefined>;
-    inputEl: SignalLike<HTMLInputElement | undefined>;
-    inputValue?: WritableSignalLike<string>;
-    popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | ComboboxDialogPattern | undefined>;
-    readonly: SignalLike<boolean>;
-    textDirection: SignalLike<'rtl' | 'ltr'>;
+    element: SignalLike<HTMLElement>;
+    inlineSuggestion: SignalLike<string | undefined>;
+    popup: SignalLike<ComboboxPopupPattern | undefined>;
+    value: WritableSignalLike<string>;
 }
 
 // @public
-export interface ComboboxListboxControls<T extends ListItem<V>, V> {
-    activeId: SignalLike<string | undefined>;
-    clearSelection: () => void;
-    first: () => void;
-    focus: (item: T, opts?: {
-        focusElement?: boolean;
-    }) => void;
-    getActiveItem: () => T | undefined;
-    getItem: (e: PointerEvent) => T | undefined;
-    getSelectedItems: () => T[];
-    readonly id: () => string;
-    items: SignalLike<T[]>;
-    last: () => void;
-    multi: SignalLike<boolean>;
-    next: () => void;
-    prev: () => void;
-    role: SignalLike<'listbox' | 'tree' | 'grid'>;
-    select: (item?: T) => void;
-    setValue: (value: V | undefined) => void;
-    toggle: (item?: T) => void;
-    unfocus: () => void;
-}
-
-// @public (undocumented)
-export type ComboboxListboxInputs<V> = ListboxInputs<V> & {
-    combobox: SignalLike<ComboboxPattern<OptionPattern<V>, V> | undefined>;
-};
-
-// @public (undocumented)
-export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements ComboboxListboxControls<OptionPattern<V>, V> {
-    constructor(inputs: ComboboxListboxInputs<V>);
-    readonly activeId: SignalLike<string | undefined>;
-    readonly clearSelection: () => void;
-    readonly first: () => void;
-    readonly focus: (item: OptionPattern<V>, opts?: {
-        focusElement?: boolean;
-    }) => void;
-    readonly getActiveItem: () => OptionPattern<V> | undefined;
-    readonly getItem: (e: PointerEvent) => OptionPattern<V> | undefined;
-    readonly getSelectedItems: () => OptionPattern<V>[];
-    readonly id: SignalLike<string>;
-    // (undocumented)
-    readonly inputs: ComboboxListboxInputs<V>;
-    readonly items: SignalLike<OptionPattern<V>[]>;
-    readonly last: () => void;
-    multi: SignalLike<boolean>;
-    readonly next: () => void;
-    onClick(_: PointerEvent): void;
-    onKeydown(_: KeyboardEvent): void;
-    readonly prev: () => void;
-    readonly role: SignalLike<"listbox">;
-    readonly select: (item?: OptionPattern<V>) => void;
-    setDefaultState(): void;
-    readonly setValue: (value: V | undefined) => void;
-    tabIndex: SignalLike<-1 | 0>;
-    readonly toggle: (item?: OptionPattern<V>) => void;
-    readonly unfocus: () => void;
-}
-
-// @public
-export class ComboboxPattern<T extends ListItem<V>, V> {
-    constructor(inputs: ComboboxInputs<T, V>);
-    readonly activeDescendant: SignalLike<string | null>;
-    readonly autocomplete: SignalLike<"both" | "list">;
-    readonly click: SignalLike<PointerEventManager<PointerEvent>>;
-    close(opts?: {
-        reset: boolean;
-    }): void;
-    collapseItem(): void;
-    readonly collapseKey: SignalLike<"ArrowLeft" | "ArrowRight">;
-    commit(): void;
+export class ComboboxPattern {
+    constructor(inputs: ComboboxInputs);
+    readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
+    click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
+    closePopupOnBlurEffect(): void;
     readonly disabled: () => boolean;
-    readonly expanded: WritableSignalLike<boolean>;
-    expandItem(): void;
-    readonly expandKey: SignalLike<"ArrowLeft" | "ArrowRight">;
-    first(): void;
-    readonly firstMatch: SignalLike<T | undefined>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
-    readonly hasPopup: SignalLike<"listbox" | "tree" | "grid" | "dialog" | null>;
-    highlight(): void;
-    readonly highlightedItem: WritableSignalLike<T | undefined>;
+    readonly element: () => HTMLElement;
+    highlightEffect(): void;
+    readonly inlineSuggestion: () => string | undefined;
     // (undocumented)
-    readonly inputs: ComboboxInputs<T, V>;
-    readonly isFocused: WritableSignalLike<boolean>;
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    last(): void;
-    readonly listControls: () => ComboboxListboxControls<T, V> | null | undefined;
-    next(): void;
-    onClick(event: MouseEvent): void;
-    onFilter(): void;
-    onFocusIn(): void;
-    onFocusOut(event: FocusEvent): void;
+    readonly inputs: ComboboxInputs;
+    readonly isDeleting: _angular_core.WritableSignal<boolean>;
+    readonly isEditable: _angular_core.Signal<boolean>;
+    readonly isExpanded: _angular_core.Signal<boolean>;
+    readonly isFocused: _angular_core.WritableSignal<boolean>;
+    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
+    keyboardEventRelayEffect(): void;
+    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    onClick(event: PointerEvent): void;
+    onFocusin(): void;
+    onFocusout(event: FocusEvent): void;
     onInput(event: Event): void;
     onKeydown(event: KeyboardEvent): void;
-    open(nav?: {
-        first?: boolean;
-        last?: boolean;
-        selected?: boolean;
-    }): void;
-    readonly popupId: SignalLike<string | null>;
-    prev(): void;
-    readonly readonly: SignalLike<true | null>;
-    select(opts?: {
-        item?: T;
-        commit?: boolean;
-        close?: boolean;
-    }): void;
-    readonly treeControls: () => ComboboxTreeControls<T, V> | null;
+    readonly popupId: _angular_core.Signal<string | undefined>;
+    readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
+    readonly value: WritableSignalLike<string>;
 }
 
-// @public (undocumented)
-export interface ComboboxTreeControls<T extends ListItem<V>, V> extends ComboboxListboxControls<T, V> {
-    collapseAll: () => void;
-    collapseItem: () => void;
-    expandAll: () => void;
-    expandItem: () => void;
-    isItemCollapsible: () => boolean;
-    isItemExpandable: (item?: T) => boolean;
-    isItemSelectable: (item?: T) => boolean;
-    toggleExpansion: (item?: T) => void;
+// @public
+export interface ComboboxPopupInputs {
+    activeDescendant: SignalLike<string | undefined>;
+    controlTarget: SignalLike<HTMLElement | undefined>;
+    popupId: SignalLike<string | undefined>;
+    popupType: SignalLike<'listbox' | 'tree' | 'grid' | 'dialog'>;
 }
 
-// @public (undocumented)
-export type ComboboxTreeInputs<V> = TreeInputs<V> & {
-    combobox: SignalLike<ComboboxPattern<TreeItemPattern<V>, V> | undefined>;
-};
-
-// @public (undocumented)
-export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTreeControls<TreeItemPattern<V>, V> {
-    constructor(inputs: ComboboxTreeInputs<V>);
+// @public
+export class ComboboxPopupPattern {
+    constructor(inputs: ComboboxPopupInputs);
+    readonly activeDescendant: () => string | undefined;
+    readonly controlTarget: () => HTMLElement | undefined;
     // (undocumented)
-    readonly activeId: SignalLike<string | undefined>;
-    readonly clearSelection: () => void;
-    readonly collapseAll: () => void;
-    readonly collapseItem: () => void;
-    readonly expandAll: () => void;
-    readonly expandItem: () => void;
-    readonly first: () => void;
-    readonly focus: (item: TreeItemPattern<V>) => void;
-    readonly getActiveItem: () => TreeItemPattern<V> | undefined;
-    readonly getItem: (e: PointerEvent) => TreeItemPattern<V> | undefined;
-    readonly getSelectedItems: () => TreeItemPattern<V>[];
-    // (undocumented)
-    readonly inputs: ComboboxTreeInputs<V>;
-    readonly isItemCollapsible: () => boolean;
-    isItemExpandable(item?: TreeItemPattern<V> | undefined): boolean;
-    readonly isItemSelectable: (item?: TreeItemPattern<V> | undefined) => boolean;
-    items: SignalLike<TreeItemPattern<V>[]>;
-    readonly last: () => void;
-    readonly next: () => void;
-    onClick(_: PointerEvent): void;
-    onKeydown(_: KeyboardEvent): void;
-    readonly prev: () => void;
-    readonly role: () => "tree";
-    readonly select: (item?: TreeItemPattern<V>) => void;
-    setDefaultState(): void;
-    readonly setValue: (value: V | undefined) => void;
-    readonly tabIndex: SignalLike<-1 | 0>;
-    readonly toggle: (item?: TreeItemPattern<V>) => void;
-    readonly toggleExpansion: (item?: TreeItemPattern<V>) => void;
-    readonly unfocus: () => void;
+    readonly inputs: ComboboxPopupInputs;
+    readonly isFocused: _angular_core.WritableSignal<boolean>;
+    onFocusin(): void;
+    onFocusout(event: FocusEvent): void;
+    readonly popupId: () => string | undefined;
+    readonly popupType: () => "listbox" | "tree" | "grid" | "dialog";
 }
 
 // @public (undocumented)
@@ -664,70 +523,6 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 
 // @public (undocumented)
 export type SignalLike<T> = () => T;
-
-// @public
-export interface SimpleComboboxInputs extends ExpansionItem {
-    alwaysExpanded: SignalLike<boolean>;
-    disabled: SignalLike<boolean>;
-    element: SignalLike<HTMLElement>;
-    inlineSuggestion: SignalLike<string | undefined>;
-    popup: SignalLike<SimpleComboboxPopupPattern | undefined>;
-    softDisabled?: SignalLike<boolean>;
-    value: WritableSignalLike<string>;
-}
-
-// @public
-export class SimpleComboboxPattern {
-    constructor(inputs: SimpleComboboxInputs);
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
-    readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
-    click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
-    closePopupOnBlurEffect(): void;
-    readonly disabled: () => boolean;
-    readonly element: () => HTMLElement;
-    highlightEffect(): void;
-    readonly inlineSuggestion: () => string | undefined;
-    // (undocumented)
-    readonly inputs: SimpleComboboxInputs;
-    readonly isDeleting: _angular_core.WritableSignal<boolean>;
-    readonly isEditable: _angular_core.Signal<boolean>;
-    readonly isExpanded: _angular_core.Signal<boolean>;
-    readonly isFocused: _angular_core.WritableSignal<boolean>;
-    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
-    keyboardEventRelayEffect(): void;
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
-    onClick(event: PointerEvent): void;
-    onFocusin(): void;
-    onFocusout(event: FocusEvent): void;
-    onInput(event: Event): void;
-    onKeydown(event: KeyboardEvent): void;
-    readonly popupId: _angular_core.Signal<string | undefined>;
-    readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
-    readonly softDisabled: () => boolean;
-    readonly value: WritableSignalLike<string>;
-}
-
-// @public
-export interface SimpleComboboxPopupInputs {
-    activeDescendant: SignalLike<string | undefined>;
-    controlTarget: SignalLike<HTMLElement | undefined>;
-    popupId: SignalLike<string | undefined>;
-    popupType: SignalLike<'listbox' | 'tree' | 'grid' | 'dialog'>;
-}
-
-// @public
-export class SimpleComboboxPopupPattern {
-    constructor(inputs: SimpleComboboxPopupInputs);
-    readonly activeDescendant: () => string | undefined;
-    readonly controlTarget: () => HTMLElement | undefined;
-    // (undocumented)
-    readonly inputs: SimpleComboboxPopupInputs;
-    readonly isFocused: _angular_core.WritableSignal<boolean>;
-    onFocusin(): void;
-    onFocusout(event: FocusEvent): void;
-    readonly popupId: () => string | undefined;
-    readonly popupType: () => "listbox" | "tree" | "grid" | "dialog";
-}
 
 // @public
 export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;

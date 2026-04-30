@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
@@ -28,15 +23,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
   selector: 'select-multi-example',
   templateUrl: 'select-multi-example.html',
   styleUrl: '../select.css',
-  imports: [
-    Combobox,
-    ComboboxInput,
-    ComboboxPopup,
-    ComboboxPopupContainer,
-    Listbox,
-    Option,
-    OverlayModule,
-  ],
+  imports: [Combobox, ComboboxPopup, Listbox, Option, OverlayModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectMultiExample {

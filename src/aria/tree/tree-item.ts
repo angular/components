@@ -22,7 +22,7 @@ import {
   afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware, HasElement} from '../private';
+import {TreeItemPattern, DeferredContentAware, HasElement} from '../private';
 import {Tree} from './tree';
 import {TreeItemGroup} from './tree-item-group';
 
@@ -122,17 +122,11 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   constructor() {
     super();
-    afterNextRender(() => {
-      if (this.tree()._pattern instanceof ComboboxTreePattern) {
-        this.preserveContent.set(true);
-      }
-    });
+
     // Connect the group's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect({
       write: () => {
-        this.tree()._pattern instanceof ComboboxTreePattern
-          ? this.contentVisible.set(true)
-          : this.contentVisible.set(this._pattern.expanded());
+        this.contentVisible.set(this._pattern.expanded());
       },
     });
   }

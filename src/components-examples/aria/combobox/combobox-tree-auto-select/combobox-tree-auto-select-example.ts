@@ -6,99 +6,103 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
   Component,
+  afterRenderEffect,
   computed,
-  ElementRef,
   signal,
   viewChild,
+  untracked,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import {TREE_NODES, TreeNode} from '../data';
 import {NgTemplateOutlet} from '@angular/common';
+import {OverlayModule} from '@angular/cdk/overlay';
+
+interface FoodNode {
+  name: string;
+  children?: FoodNode[];
+  expanded?: boolean;
+}
 
 /** @title Combobox with tree popup and auto-select filtering. */
 @Component({
   selector: 'combobox-tree-auto-select-example',
   templateUrl: 'combobox-tree-auto-select-example.html',
-  styleUrl: '../combobox-examples.css',
+  styleUrl: '../combobox-example.css',
   imports: [
     Combobox,
-    ComboboxInput,
     ComboboxPopup,
-    ComboboxPopupContainer,
+    ComboboxWidget,
+    NgTemplateOutlet,
     Tree,
     TreeItem,
     TreeItemGroup,
-    NgTemplateOutlet,
+    OverlayModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxTreeAutoSelectExample {
-  popover = viewChild<ElementRef>('popover');
-  tree = viewChild<Tree<TreeNode>>(Tree);
-  combobox = viewChild<Combobox<any>>(Combobox);
+  readonly tree = viewChild(Tree);
 
+  popupExpanded = signal(false);
   searchString = signal('');
+  selectedValues = signal<string[]>([]);
 
-  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
-
-  firstMatch = computed<string | undefined>(() => {
-    const flatNodes = this.flattenTreeNodes(this.nodes());
-    const node = flatNodes.find(n => this.isMatch(n));
-    return node?.name;
-  });
-
-  flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
-    return nodes.flatMap(node => {
-      return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
-    });
-  }
-
-  filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
-    return nodes.reduce((acc, node) => {
-      const children = node.children ? this.filterTreeNodes(node.children) : undefined;
-      if (this.isMatch(node) || (children && children.length > 0)) {
-        acc.push({...node, children});
-      }
-      return acc;
-    }, [] as TreeNode[]);
-  }
-
-  isMatch(node: TreeNode) {
-    return node.name.toLowerCase().includes(this.searchString().toLowerCase());
-  }
+  readonly dataSource = signal(FOOD_DATA);
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
-      const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
-      this.tree()?.scrollActiveItemIntoView();
+      const active = this.tree()?._pattern.inputs.activeItem();
+      if (active) {
+        untracked(() => {
+          active.element()?.scrollIntoView({block: 'nearest'});
+        });
+      }
     });
   }
 
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
+  filteredGroups = computed(() => {
+    const search = this.searchString().trim().toLowerCase();
+    const data = this.dataSource();
 
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
+    if (!search) {
+      return data;
     }
 
-    popover.nativeElement.showPopover();
+    const filterNode = (node: FoodNode): FoodNode | null => {
+      const matches = node.name.toLowerCase().includes(search);
+      const children = node.children
+        ?.map(child => filterNode(child))
+        .filter((child): child is FoodNode => child !== null);
+
+      if (matches || (children && children.length > 0)) {
+        return {
+          ...node,
+          children,
+          expanded: children && children.length > 0 ? true : node.expanded,
+        };
+      }
+
+      return null;
+    };
+
+    return data.map(node => filterNode(node)).filter((node): node is FoodNode => node !== null);
+  });
+
+  onCommit() {
+    const selected = this.selectedValues();
+    if (selected.length > 0) {
+      this.searchString.set(selected[0]);
+      this.popupExpanded.set(false);
+    }
   }
 }
+
+const FOOD_DATA: FoodNode[] = [
+  {name: 'Winter', children: [{name: 'December'}, {name: 'January'}, {name: 'February'}]},
+  {name: 'Spring', children: [{name: 'March'}, {name: 'April'}, {name: 'May'}]},
+  {name: 'Summer', children: [{name: 'June'}, {name: 'July'}, {name: 'August'}]},
+  {name: 'Fall', children: [{name: 'September'}, {name: 'October'}, {name: 'November'}]},
+];
