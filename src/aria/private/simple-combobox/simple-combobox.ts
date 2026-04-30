@@ -106,7 +106,8 @@ export class SimpleComboboxPattern {
       manager.on('ArrowDown', () => this.inputs.expanded.set(true));
 
       if (!this.isEditable()) {
-        manager.on(/^(Enter| )$/, () => this.inputs.expanded.set(true));
+        manager.on('Enter', () => this.inputs.expanded.set(true));
+        manager.on(' ', () => this.inputs.expanded.set(true));
       }
 
       return manager;

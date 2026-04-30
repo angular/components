@@ -544,6 +544,7 @@ describe('Combobox', () => {
         fixture.detectChanges();
 
         expect(inputElement.disabled).toBe(false);
+        expect(inputElement.getAttribute('disabled')).toBeNull();
         expect(inputElement.getAttribute('aria-disabled')).toBe('true');
       });
 
@@ -562,7 +563,37 @@ describe('Combobox', () => {
         fixture.detectChanges();
 
         expect(inputElement.disabled).toBe(true);
+        expect(inputElement.getAttribute('disabled')).toBe('');
         expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should respect user-defined tabindex when softDisabled is true', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.tabIndex.set(0);
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should respect user-defined tabindex when not disabled', () => {
+        fixture.componentInstance.tabIndex.set(0);
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should default to tabindex 0 when not disabled', () => {
+        fixture.detectChanges();
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should force tabindex to -1 when hard-disabled, ignoring user-defined tabindex', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.softDisabled.set(false);
+        fixture.componentInstance.tabIndex.set(0);
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('-1');
       });
     });
   });
@@ -1178,6 +1209,7 @@ describe('Combobox', () => {
     [disabled]="disabled()"
     [softDisabled]="softDisabled()"
     [alwaysExpanded]="alwaysExpanded()"
+    [tabIndex]="tabIndex()"
     (focusout)="onBlur()"
   />
 
@@ -1203,6 +1235,7 @@ class ComboboxListboxExample {
   disabled = signal(false);
   softDisabled = signal(true);
   alwaysExpanded = signal(false);
+  tabIndex = signal<number | undefined>(undefined);
   popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);

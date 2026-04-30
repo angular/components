@@ -51,7 +51,8 @@ import type {ComboboxPopup} from './simple-combobox-popup';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '[attr.aria-controls]': '_pattern.popupId()',
     '[attr.aria-haspopup]': '_pattern.popupType()',
-    '[attr.tabindex]': 'disabled() && !softDisabled() ? -1 : null',
+    '[attr.tabindex]':
+      'disabled() && !softDisabled() ? -1 : (tabIndex() !== undefined ? tabIndex() : 0)',
     '[attr.disabled]': 'disabled() && !softDisabled() ? "" : null',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusin)': '_pattern.onFocusin()',
@@ -80,6 +81,9 @@ export class Combobox extends DeferredContentAware implements OnInit {
 
   /** Whether the combobox should always remain expanded. */
   readonly alwaysExpanded = input(false, {transform: booleanAttribute});
+
+  /** The tabindex of the combobox. */
+  readonly tabIndex = input<number | string | null | undefined>(undefined);
 
   /** Whether the combobox is expanded. */
   readonly expanded = model<boolean>(false);
