@@ -107,10 +107,10 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this._toolbar._register(this);
+    this._toolbar._collection.register(this);
   }
 
   ngOnDestroy() {
-    this._toolbar._unregister(this);
+    this._toolbar._collection.unregister(this);
   }
 }

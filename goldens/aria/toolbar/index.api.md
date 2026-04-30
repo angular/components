@@ -8,21 +8,21 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
-export class Toolbar<V> {
+export class Toolbar<V> implements OnDestroy {
     constructor();
+    readonly _collection: SortedCollection<ToolbarWidget<V>>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern<V>[]>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ToolbarPattern<V>;
-    // (undocumented)
-    _register(widget: ToolbarWidget<V>): void;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
-    // (undocumented)
-    _unregister(widget: ToolbarWidget<V>): void;
     readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

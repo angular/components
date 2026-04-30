@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidgetGroup} from './toolbar-widget-group';
@@ -97,6 +98,33 @@ describe('Toolbar', () => {
   }
 
   afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
+
+  describe('dynamic updates', () => {
+    it('should update widget order correctly after widgets are shuffled', async () => {
+      TestBed.configureTestingModule({imports: [ShuffledToolbarExample]});
+      fixture = TestBed.createComponent(
+        ShuffledToolbarExample,
+      ) as unknown as ComponentFixture<ToolbarExample>;
+      fixture.detectChanges();
+      const shuffledToolbarDebugEl = fixture.debugElement.query(By.directive(Toolbar));
+      const shuffledToolbarInstance = shuffledToolbarDebugEl.injector.get(Toolbar);
+
+      const widgetsBefore = shuffledToolbarInstance._itemPatterns();
+      expect(widgetsBefore.length).toBe(3);
+      expect(widgetsBefore[0].element()?.textContent?.trim()).toBe('item 0');
+
+      const items = (fixture.componentInstance as unknown as ShuffledToolbarExample).items();
+      const firstItem = items.shift()!;
+      items.push(firstItem);
+      (fixture.componentInstance as unknown as ShuffledToolbarExample).items.set([...items]);
+      fixture.detectChanges();
+      await waitForMicrotasks();
+
+      const widgetsAfter = shuffledToolbarInstance._itemPatterns();
+      expect(widgetsAfter.length).toBe(3);
+      expect(widgetsAfter[0].element()?.textContent?.trim()).toBe('item 1');
+    });
+  });
 
   describe('Navigation', () => {
     describe('with horizontal orientation', () => {
@@ -773,3 +801,18 @@ export class SimpleToolbarButton {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WrappedToolbarExample {}
+
+@Component({
+  template: `
+    <div ngToolbar>
+      @for (item of items(); track item) {
+        <button ngToolbarWidget [value]="item.value">{{item.value}}</button>
+      }
+    </div>
+  `,
+  imports: [Toolbar, ToolbarWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ShuffledToolbarExample {
+  items = signal([{value: 'item 0'}, {value: 'item 1'}, {value: 'item 2'}]);
+}
