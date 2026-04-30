@@ -8,22 +8,17 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
-// @public (undocumented)
+// @public
 export class ListboxHarness extends ComponentHarness {
     blur(): Promise<void>;
-    // (undocumented)
     focus(): Promise<void>;
-    // (undocumented)
+    getActiveDescendantId(): Promise<string | null>;
     getOptions(filters?: ListboxOptionHarnessFilters): Promise<ListboxOptionHarness[]>;
-    // (undocumented)
     getOrientation(): Promise<'vertical' | 'horizontal'>;
     // (undocumented)
     static hostSelector: string;
-    // (undocumented)
     isDisabled(): Promise<boolean>;
-    // (undocumented)
     isMulti(): Promise<boolean>;
-    // (undocumented)
     static with(options?: ListboxHarnessFilters): HarnessPredicate<ListboxHarness>;
 }
 
@@ -32,19 +27,14 @@ export interface ListboxHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export class ListboxOptionHarness extends ComponentHarness {
-    // (undocumented)
     click(): Promise<void>;
-    // (undocumented)
     getText(): Promise<string>;
     // (undocumented)
     static hostSelector: string;
-    // (undocumented)
     isDisabled(): Promise<boolean>;
-    // (undocumented)
     isSelected(): Promise<boolean>;
-    // (undocumented)
     static with(options?: ListboxOptionHarnessFilters): HarnessPredicate<ListboxOptionHarness>;
 }
 

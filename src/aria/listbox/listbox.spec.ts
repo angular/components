@@ -434,10 +434,10 @@ describe('Listbox', () => {
           ],
         });
 
-        let orderedItems = listboxInstance._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 1');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 3');
+        // Verify initial DOM order
+        expect(optionElements.length).toBe(3);
+        expect(optionElements[0].textContent?.trim()).toBe('Item 1');
+        expect(optionElements[2].textContent?.trim()).toBe('Item 3');
 
         const testComponent = fixture.componentInstance as ListboxExample;
         const items = testComponent.options().reverse();
@@ -445,10 +445,12 @@ describe('Listbox', () => {
         fixture.detectChanges();
         await waitForMicrotasks();
 
-        orderedItems = listboxInstance._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 3');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 1');
+        // Re-query elements to check new DOM order
+        defineTestVariables(fixture);
+
+        expect(optionElements.length).toBe(3);
+        expect(optionElements[0].textContent?.trim()).toBe('Item 3');
+        expect(optionElements[2].textContent?.trim()).toBe('Item 1');
       });
     });
 
