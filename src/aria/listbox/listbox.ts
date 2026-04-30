@@ -133,6 +133,7 @@ export class Listbox<V> implements OnDestroy {
 
   /** The tabindex of the listbox. */
   readonly tabIndex = input(undefined, {
+    alias: 'tabindex',
     transform: (v: string | number | undefined) =>
       v === undefined ? undefined : numberAttribute(v),
   });

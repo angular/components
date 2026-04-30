@@ -7,7 +7,7 @@
   [cdkConnectedOverlayOpen]="true" [cdkConnectedOverlayDisableClose]="true">
   <ng-template ngComboboxPopup [combobox]="combobox">
     <div class="example-popup-container">
-      <div #listbox="ngListbox" ngListbox [multi]="true" ngComboboxWidget focusMode="activedescendant" [tabIndex]="-1"
+      <div #listbox="ngListbox" ngListbox [multi]="true" ngComboboxWidget focusMode="activedescendant" [tabindex]="-1"
         selectionMode="explicit" [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
         @for (option of options(); track option.value) {
         <div class="example-option" ngOption [value]="option.value" [label]="option.value">

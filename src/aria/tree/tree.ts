@@ -134,6 +134,7 @@ export class Tree<V> {
 
   /** The tabindex of the tree. */
   readonly tabIndex = input(undefined, {
+    alias: 'tabindex',
     transform: (v: string | number | undefined) =>
       v === undefined ? undefined : numberAttribute(v),
   });

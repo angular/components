@@ -1209,7 +1209,7 @@ describe('Combobox', () => {
     [disabled]="disabled()"
     [softDisabled]="softDisabled()"
     [alwaysExpanded]="alwaysExpanded()"
-    [tabIndex]="tabIndex()"
+    [tabindex]="tabIndex()"
     (focusout)="onBlur()"
   />
 

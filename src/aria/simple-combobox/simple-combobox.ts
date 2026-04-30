@@ -15,6 +15,7 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   OnInit,
   signal,
   Renderer2,
@@ -83,7 +84,11 @@ export class Combobox extends DeferredContentAware implements OnInit {
   readonly alwaysExpanded = input(false, {transform: booleanAttribute});
 
   /** The tabindex of the combobox. */
-  readonly tabIndex = input<number | string | null | undefined>(undefined);
+  readonly tabIndex = input(undefined, {
+    alias: 'tabindex',
+    transform: (v: string | number | undefined) =>
+      v === undefined ? undefined : numberAttribute(v),
+  });
 
   /** Whether the combobox is expanded. */
   readonly expanded = model<boolean>(false);

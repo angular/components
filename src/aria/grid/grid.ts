@@ -123,6 +123,7 @@ export class Grid {
 
   /** The tabindex of the grid. */
   readonly tabIndex = input(undefined, {
+    alias: 'tabindex',
     transform: (v: string | number | undefined) =>
       v === undefined ? undefined : numberAttribute(v),
   });
