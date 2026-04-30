@@ -9,7 +9,7 @@
   width: fit-content;
 }
 
-.example-select:has([ngComboboxInput][aria-disabled='true']) {
+.example-select:has([ngCombobox][aria-disabled='true']) {
   opacity: 0.7;
   background-color: var(--mat-sys-surface-dim);
 }
@@ -49,17 +49,17 @@
   transition: transform 0.2s ease-in-out;
 }
 
-[ngComboboxInput] {
+[ngCombobox] {
   cursor: pointer;
   padding: 0.7rem 3rem;
   opacity: 0;
 }
 
-[ngComboboxInput][aria-disabled='true'] {
+[ngCombobox][aria-disabled='true'] {
   cursor: default;
 }
 
-[ngComboboxInput][aria-expanded='true'] + .example-arrow {
+[ngCombobox][aria-expanded='true'] + .example-arrow {
   transform: rotate(180deg);
 }
 

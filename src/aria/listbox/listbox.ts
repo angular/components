@@ -24,7 +24,8 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxListboxPattern, ListboxPattern, SortedCollection} from '../private';
+import {ListboxPattern} from '../private';
+import {SortedCollection} from '../private/utils/collection';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
@@ -69,7 +70,7 @@ import {LISTBOX} from './tokens';
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
   },
-  hostDirectives: [ComboboxPopup],
+
   providers: [{provide: LISTBOX, useExisting: Listbox}],
 })
 export class Listbox<V> implements OnDestroy {
@@ -77,7 +78,7 @@ export class Listbox<V> implements OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-listbox-', true));
 
   /** A reference to the parent combobox popup, if one exists. */
-  private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
+  private readonly _popup = inject(ComboboxPopup, {
     optional: true,
   });
 
@@ -159,22 +160,16 @@ export class Listbox<V> implements OnDestroy {
       activeItem: signal(undefined),
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
-      combobox: () => this._popup?.combobox?._pattern,
+      combobox: () => this._popup?.combobox()?._pattern,
     };
 
-    this._pattern = this._popup?.combobox
-      ? new ComboboxListboxPattern<V>(inputs)
-      : new ListboxPattern<V>(inputs);
+    this._pattern = new ListboxPattern<V>(inputs);
 
     this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     afterNextRender(() => {
       this._collection.startObserving(this.element);
     });
-
-    if (this._popup) {
-      this._popup._controls.set(this._pattern as ComboboxListboxPattern<V>);
-    }
 
     // Check for any violationns after the DOM has been updated.
     afterRenderEffect({

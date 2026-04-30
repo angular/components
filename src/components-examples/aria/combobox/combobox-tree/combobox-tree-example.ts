@@ -6,17 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
-import {
-  Component,
-  afterRenderEffect,
-  computed,
-  signal,
-  viewChild,
-  untracked,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, afterRenderEffect, computed, signal, viewChild, untracked} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
@@ -26,11 +18,11 @@ interface FoodNode {
   expanded?: boolean;
 }
 
-/** @title Combobox with tree popup and highlight filtering. */
+/** @title */
 @Component({
-  selector: 'simple-combobox-tree-highlight-example',
-  templateUrl: 'simple-combobox-tree-highlight-example.html',
-  styleUrl: '../simple-combobox-example.css',
+  selector: 'combobox-tree-example',
+  templateUrl: 'combobox-tree-example.html',
+  styleUrl: '../combobox-example.css',
   imports: [
     Combobox,
     ComboboxPopup,
@@ -41,9 +33,8 @@ interface FoodNode {
     TreeItemGroup,
     OverlayModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimpleComboboxTreeHighlightExample {
+export class ComboboxTreeExample {
   readonly tree = viewChild(Tree);
 
   popupExpanded = signal(false);
@@ -53,11 +44,6 @@ export class SimpleComboboxTreeHighlightExample {
   readonly dataSource = signal(FOOD_DATA);
 
   constructor() {
-    // Highlight mode focus update
-    afterRenderEffect(() => {
-      this.filteredGroups();
-    });
-
     afterRenderEffect(() => {
       const active = this.tree()?._pattern.inputs.activeItem();
       if (active) {
@@ -68,22 +54,15 @@ export class SimpleComboboxTreeHighlightExample {
     });
   }
 
-  filteredData = computed(() => {
+  filteredGroups = computed(() => {
     const search = this.searchString().trim().toLowerCase();
     const data = this.dataSource();
 
     if (!search) {
-      return {groups: data, firstMatch: undefined};
+      return data;
     }
 
-    let firstMatch: string | undefined = undefined;
-
     const filterNode = (node: FoodNode): FoodNode | null => {
-      // Find the first leaf node that starts with the search string
-      if (!firstMatch && !node.children && node.name.toLowerCase().startsWith(search)) {
-        firstMatch = node.name;
-      }
-
       const matches = node.name.toLowerCase().includes(search);
       const children = node.children
         ?.map(child => filterNode(child))
@@ -100,19 +79,14 @@ export class SimpleComboboxTreeHighlightExample {
       return null;
     };
 
-    const groups = data
-      .map(node => filterNode(node))
-      .filter((node): node is FoodNode => node !== null);
-    return {groups, firstMatch};
+    return data.map(node => filterNode(node)).filter((node): node is FoodNode => node !== null);
   });
-
-  filteredGroups = computed(() => this.filteredData().groups);
-  firstMatchingOption = computed(() => this.filteredData().firstMatch);
 
   onCommit() {
     const selected = this.selectedValues();
     if (selected.length > 0) {
-      this.searchString.set(selected[0]);
+      const value = selected[0];
+      this.searchString.set(value);
       this.popupExpanded.set(false);
     }
   }

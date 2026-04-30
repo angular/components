@@ -1,9 +1,4 @@
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {ToolbarWidget} from '@angular/aria/toolbar';
 import {Dir, Directionality} from '@angular/cdk/bidi';
@@ -16,9 +11,11 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Directive({
   selector: 'button[toolbar-button]',
+  standalone: true,
   hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
   host: {
     type: 'button',
@@ -32,6 +29,7 @@ export class SimpleToolbarButton {
 
 @Directive({
   selector: 'button[toolbar-toggle-button]',
+  standalone: true,
   hostDirectives: [{directive: ToolbarWidget, inputs: ['value']}],
   host: {
     type: 'button',
@@ -46,6 +44,7 @@ export class SimpleToolbarToggleButton {
 
 @Directive({
   selector: 'button[toolbar-radio-button]',
+  standalone: true,
   hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
   host: {
     role: 'radio',
@@ -61,38 +60,45 @@ export class SimpleToolbarRadioButton {
 
 @Component({
   selector: 'combobox',
+  standalone: true,
   imports: [
     Dir,
     Combobox,
-    ComboboxInput,
     ComboboxPopup,
-    ComboboxPopupContainer,
+    ComboboxWidget,
     Listbox,
     Option,
     ToolbarWidget,
+    OverlayModule,
   ],
   styleUrl: 'toolbar-common.css',
   host: {class: 'example-combobox-container'},
   template: `
-    <div ngCombobox [dir]="dir()" #combobox="ngCombobox" class="example-combobox" [readonly]="true">
-      <div class="example-combobox-input-container">
-        <input
-          ngComboboxInput
-          ngToolbarWidget
-          [(value)]="value"
-          class="example-combobox-input"
-          aria-label="Select a text style"
-        />
+    <div class="example-combobox" [dir]="dir()">
+      <div #origin class="example-combobox-input-container"
+           ngCombobox
+           #combobox="ngCombobox"
+           ngToolbarWidget
+           [(value)]="value"
+           [(expanded)]="popupExpanded"
+           (click)="origin.focus()">
+        <div class="example-combobox-input" style="display: flex; align-items: center;" aria-label="Select a text style">
+          {{ value() }}
+        </div>
         <span class="material-symbols-outlined example-icon example-arrow-icon"
           >arrow_drop_down</span
         >
       </div>
 
-      <div popover="manual" #popover class="example-popover">
-        <ng-template ngComboboxPopupContainer>
-          <div ngListbox [value]="[value()]" class="example-listbox">
+      <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
+        [cdkConnectedOverlayDisableClose]="true">
+        <ng-template ngComboboxPopup [combobox]="combobox">
+          <div ngListbox ngComboboxWidget [(value)]="selectedOption" class="example-listbox example-popup" focusMode="activedescendant"
+            [tabIndex]="-1" selectionMode="explicit" (click)="onCommit()"
+            (keydown.enter)="onCommit()"
+            (pointerdown)="$event.preventDefault()">
             @for (option of options; track option) {
-              <div ngOption [value]="option" [label]="option" class="example-option">
+              <div ngOption [value]="option" [label]="option" class="example-option example-selectable example-stateful">
                 <span>{{option}}</span>
                 <span aria-hidden="true" class="material-symbols-outlined example-option-icon"
                   >check</span
@@ -101,42 +107,31 @@ export class SimpleToolbarRadioButton {
             }
           </div>
         </ng-template>
-      </div>
+      </ng-template>
     </div>
   `,
 })
 export class SimpleCombobox {
   dir = inject(Directionality).valueSignal;
-  popover = viewChild<ElementRef>('popover');
-  listbox = viewChild<Listbox<any>>(Listbox);
-  combobox = viewChild<Combobox<any>>(Combobox);
+  listbox = viewChild(Listbox);
+  combobox = viewChild(Combobox);
 
+  popupExpanded = signal(false);
+  selectedOption = signal<string[]>([]);
   value = signal('Normal text');
   options = ['Normal text', 'Title', 'Subtitle', 'Heading 1', 'Heading 2', 'Heading 3'];
 
   constructor() {
     afterRenderEffect(() => {
-      const popover = this.popover()!;
-      const combobox = this.combobox()!;
-      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
-
       this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
-  showPopover() {
-    const popover = this.popover()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-    const popoverEl = popover.nativeElement;
-
-    if (comboboxRect) {
-      popoverEl.style.width = `${comboboxRect.width}px`;
-      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
-      popoverEl.style.left = `${comboboxRect.left - 1}px`;
+  onCommit() {
+    const selectedOption = this.selectedOption();
+    if (selectedOption.length > 0) {
+      this.value.set(selectedOption[0]);
     }
-
-    popover.nativeElement.showPopover();
+    this.popupExpanded.set(false);
   }
 }

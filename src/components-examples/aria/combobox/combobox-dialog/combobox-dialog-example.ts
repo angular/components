@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxDialog,
-  ComboboxInput,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
@@ -19,31 +14,25 @@ import {
   Component,
   computed,
   signal,
-  untracked,
   viewChild,
+  untracked,
+  ElementRef,
 } from '@angular/core';
+import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
 
 /** @title Combobox with a dialog popup. */
 @Component({
   selector: 'combobox-dialog-example',
   templateUrl: 'combobox-dialog-example.html',
-  styleUrl: 'combobox-dialog-example.css',
-  imports: [
-    ComboboxDialog,
-    Combobox,
-    ComboboxInput,
-    ComboboxPopupContainer,
-    Listbox,
-    Option,
-    FormsModule,
-  ],
+  styleUrls: ['../combobox-example.css'],
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDialogExample {
-  dialog = viewChild(ComboboxDialog);
   listbox = viewChild<Listbox<string>>(Listbox);
-  combobox = viewChild<Combobox<string>>(Combobox);
+  combobox = viewChild(Combobox);
+  searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   value = signal('');
   searchString = signal('');
@@ -53,41 +42,39 @@ export class ComboboxDialogExample {
   );
 
   selectedStates = signal<string[]>([]);
+  popupExpanded = signal(false);
 
   constructor() {
     afterRenderEffect(() => {
-      if (this.dialog() && this.combobox()?.expanded()) {
-        untracked(() => this.listbox()?.gotoFirst());
-        this.positionDialog();
+      if (this.popupExpanded()) {
+        untracked(() => {
+          setTimeout(() => {
+            this.searchInput()?.nativeElement.focus();
+          });
+        });
       }
     });
 
     afterRenderEffect(() => {
-      if (this.selectedStates().length > 0) {
-        untracked(() => this.dialog()?.close());
-        this.value.set(this.selectedStates()[0]);
-        this.searchString.set('');
+      if (this.popupExpanded()) {
+        this.listbox()?.scrollActiveItemIntoView();
       }
     });
-
-    afterRenderEffect(() => this.listbox()?.scrollActiveItemIntoView());
   }
 
-  // TODO(wagnermaciel): Switch to using the CDK for positioning.
-
-  positionDialog() {
-    const dialog = this.dialog()!;
-    const combobox = this.combobox()!;
-
-    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
-
-    const scrollY = window.scrollY;
-
-    if (comboboxRect) {
-      dialog.element.style.width = `${comboboxRect.width}px`;
-      dialog.element.style.top = `${comboboxRect.bottom + scrollY + 4}px`;
-      dialog.element.style.left = `${comboboxRect.left - 1}px`;
+  onCommit() {
+    const selected = this.selectedStates();
+    if (selected.length > 0) {
+      this.value.set(selected[0]);
+      this.searchString.set('');
+      this.popupExpanded.set(false);
+      this.combobox()?.element.focus();
     }
+  }
+
+  onSearchEscape(event: Event) {
+    this.popupExpanded.set(false);
+    this.combobox()?.element.focus(); // Focus back to main trigger!
   }
 }
 

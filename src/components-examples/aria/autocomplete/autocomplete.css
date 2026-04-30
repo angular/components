@@ -18,7 +18,7 @@
   position: absolute;
 }
 
-[ngComboboxInput] {
+[ngCombobox] {
   width: 13rem;
   font-size: 0.9rem;
   border-radius: var(--mat-sys-corner-extra-small);
@@ -28,7 +28,7 @@
   background-color: var(--mat-sys-surface);
 }
 
-[ngComboboxInput][aria-disabled='true'] {
+[ngCombobox][aria-disabled='true'] {
   cursor: default;
   opacity: 0.5;
   background-color: var(--mat-sys-surface-dim);

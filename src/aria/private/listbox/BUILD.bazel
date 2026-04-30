@@ -13,7 +13,6 @@ ts_project(
         "//src/aria/private/behaviors/event-manager",
         "//src/aria/private/behaviors/list",
         "//src/aria/private/behaviors/signal-like",
-        "//src/aria/private/combobox",
     ],
 )
 

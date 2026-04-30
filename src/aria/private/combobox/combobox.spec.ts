@@ -1,987 +1,225 @@
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.dev/license
- */
-
-import {ComboboxInputs, ComboboxPattern} from './combobox';
-import {OptionPattern} from '../listbox/option';
-import {ComboboxListboxPattern} from '../listbox/combobox-listbox';
+import {ComboboxPattern, ComboboxPopupPattern} from './combobox';
+import {signal} from '../behaviors/signal-like/signal-like';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {SignalLike, signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
-import {ModifierKeys} from '@angular/cdk/testing';
-import {TreeItemPattern} from '../tree/tree';
-import {ComboboxTreePattern} from '../tree/combobox-tree';
 
-// Test types
-type TestOption = OptionPattern<string> & {
-  disabled: WritableSignalLike<boolean>;
-};
-
-type TestInputs = {
-  readonly [K in keyof ComboboxInputs<TestOption, string>]: WritableSignalLike<
-    ComboboxInputs<TestOption, string>[K] extends SignalLike<infer T> ? T : never
-  >;
-};
-
-type TreeItemData = {value: string; children?: TreeItemData[]};
-
-// Keyboard event helpers
-const up = () => createKeyboardEvent('keydown', 38, 'ArrowUp');
-const down = () => createKeyboardEvent('keydown', 40, 'ArrowDown');
-const home = () => createKeyboardEvent('keydown', 36, 'Home');
-const end = () => createKeyboardEvent('keydown', 35, 'End');
-const enter = () => createKeyboardEvent('keydown', 13, 'Enter');
-const escape = () => createKeyboardEvent('keydown', 27, 'Escape');
-const right = () => createKeyboardEvent('keydown', 39, 'ArrowRight');
-const left = () => createKeyboardEvent('keydown', 37, 'ArrowLeft');
-
-function clickOption(options: OptionPattern<any>[], index: number, mods?: ModifierKeys) {
-  return {
-    target: options[index].element(),
-    shiftKey: mods?.shift,
-    ctrlKey: mods?.control,
-  } as unknown as PointerEvent;
-}
-
-function clickTreeItem(items: TreeItemPattern<any>[], index: number, mods?: ModifierKeys) {
-  return {
-    target: items[index].element(),
-    shiftKey: mods?.shift,
-    ctrlKey: mods?.control,
-  } as unknown as PointerEvent;
-}
-
-function clickInput(inputEl: HTMLInputElement) {
-  return {target: inputEl} as unknown as PointerEvent;
-}
-
-function _type(
-  text: string,
-  inputEl: HTMLInputElement,
-  combobox: ComboboxPattern<any, string>,
-  allOptions: TestOption[] | TreeItemPattern<string>[],
-  popup: ComboboxListboxPattern<string> | ComboboxTreePattern<string>,
-  firstMatch: WritableSignalLike<string | undefined>,
-  backspace = false,
-) {
-  combobox.onFocusIn();
-  inputEl.value = text;
-  combobox.onInput(
-    backspace
-      ? new InputEvent('input', {inputType: 'deleteContentBackward'})
-      : new InputEvent('input'),
-  );
-  const options = allOptions.filter(o => o.searchTerm().startsWith(text));
-  if (popup instanceof ComboboxListboxPattern) {
-    (popup.inputs.items as WritableSignalLike<any[]>).set(options);
-  } else if (popup instanceof ComboboxTreePattern) {
-    (popup.inputs.items as WritableSignalLike<any[]>).set(options);
-    // Auto-expand parents of matched items so they are visible
-    options.forEach(option => {
-      if (option instanceof TreeItemPattern) {
-        let parent = option.parent();
-        while (parent instanceof TreeItemPattern) {
-          (parent.expanded as WritableSignalLike<boolean>).set(true);
-          parent = parent.parent();
-        }
-      }
-    });
-  }
-  firstMatch.set(options[0]?.value());
-  combobox.onFilter();
-}
-
-function getComboboxPattern(
-  inputs: Partial<{
-    [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
-  }> = {},
-) {
-  const containerEl = signal(document.createElement('div'));
-  const inputEl = signal(document.createElement('input'));
-  containerEl()?.appendChild(inputEl()!);
-  const firstMatch = signal<string | undefined>(undefined);
-  const inputValue = signal('');
-
-  const combobox = new ComboboxPattern<any, string>({
-    disabled: signal(inputs.disabled ?? false),
-    readonly: signal(inputs.readonly ?? false),
-    textDirection: signal(inputs.textDirection ?? 'ltr'),
-    popupControls: signal(undefined), // will be set later
-    inputEl,
-    containerEl,
-    filterMode: signal(inputs.filterMode ?? 'manual'),
-    firstMatch,
-    inputValue,
-    alwaysExpanded: signal(false),
-  });
-
-  return {combobox, inputEl, containerEl, firstMatch, inputValue};
-}
-
-function getListboxPattern(
-  combobox: ComboboxPattern<TestOption, string>,
-  value: string[],
-  initialValue?: string,
-) {
-  const options = signal<TestOption[]>([]);
-
-  const listbox = new ComboboxListboxPattern<string>({
-    id: signal('listbox-1'),
-    items: options,
-    value: signal(initialValue ? [initialValue] : []),
-    combobox: signal(combobox) as any,
-    activeItem: signal(undefined),
-    typeaheadDelay: signal(500),
-    wrap: signal(true),
-    readonly: signal(false),
-    disabled: signal(false),
-    softDisabled: signal(true),
-    multi: signal(false),
-    focusMode: signal('activedescendant'),
-    textDirection: signal('ltr'),
-    orientation: signal('vertical'),
-    selectionMode: signal('explicit'),
-    element: signal(document.createElement('div')),
-  });
-
-  options.set(
-    value.map((v, index) => {
-      const element = document.createElement('div');
-      element.role = 'option';
-      return new OptionPattern({
-        value: signal(v),
-        id: signal(`option-${index}`),
-        disabled: signal(false),
-        searchTerm: signal(v),
-        listbox: signal(listbox),
-        element: signal(element),
-      }) as TestOption;
-    }),
-  );
-
-  return {listbox, options};
-}
-
-function getTreePattern(
-  combobox: ComboboxPattern<TreeItemPattern<string>, string>,
-  data: TreeItemData[],
-  initialValue?: string,
-) {
-  const items = signal<TreeItemPattern<string>[]>([]);
-
-  const tree = new ComboboxTreePattern<string>({
-    id: signal('tree-1'),
-    items,
-    value: signal(initialValue ? [initialValue] : []),
-    combobox: signal(combobox) as any,
-    activeItem: signal(undefined),
-    typeaheadDelay: signal(500),
-    wrap: signal(true),
-    disabled: signal(false),
-    softDisabled: signal(true),
-    multi: signal(false),
-    focusMode: signal('activedescendant'),
-    textDirection: signal('ltr'),
-    orientation: signal('vertical'),
-    selectionMode: signal('explicit'),
-    element: signal(document.createElement('div')),
-    nav: signal(false),
-    currentType: signal('false'),
-  });
-
-  class TestTreeItemPattern extends TreeItemPattern<string> {}
-
-  // Recursive function to create tree items
-  function createTreeItems(
-    data: TreeItemData[],
-    parent: TreeItemPattern<string> | ComboboxTreePattern<string>,
-  ) {
-    return data.map((node, index) => {
-      const element = document.createElement('div');
-      element.role = 'treeitem';
-      const treeItem = new TestTreeItemPattern({
-        value: signal(node.value),
-        id: signal('tree-item-' + tree.inputs.items().length),
-        disabled: signal(false),
-        selectable: signal(true),
-        expanded: signal(false),
-        searchTerm: signal(node.value),
-        tree: signal(tree),
-        parent: signal(parent),
-        element: signal(element),
-        hasChildren: signal(!!node.children),
-        children: signal([]),
-      });
-
-      (tree.inputs.items as WritableSignalLike<TreeItemPattern<string>[]>).update(items =>
-        items.concat(treeItem),
-      );
-
-      if (node.children) {
-        const children = createTreeItems(node.children, treeItem);
-        (treeItem.inputs.children as WritableSignalLike<TreeItemPattern<string>[]>).set(children);
-      }
-
-      return treeItem;
-    });
-  }
-
-  createTreeItems(data, tree);
-  return {tree, items};
-}
-
-describe('Combobox with Listbox Pattern', () => {
-  function getPatterns(
+describe('ComboboxPattern', () => {
+  function setup(
     inputs: Partial<{
-      [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
+      disabled: boolean;
+      alwaysExpanded: boolean;
+      inlineSuggestion: string;
+      popupType: 'listbox' | 'tree' | 'grid' | 'dialog';
     }> = {},
   ) {
-    const {combobox, inputEl, containerEl, firstMatch, inputValue} = getComboboxPattern(inputs);
-    const {listbox, options} = getListboxPattern(combobox, [
-      'Apple',
-      'Apricot',
-      'Banana',
-      'Blackberry',
-      'Blueberry',
-      'Cantaloupe',
-      'Cherry',
-      'Clementine',
-      'Cranberry',
-    ]);
+    const element = document.createElement('input');
+    const value = signal('');
+    const expanded = signal(false);
+    const alwaysExpanded = signal(inputs.alwaysExpanded ?? false);
+    const disabled = signal(inputs.disabled ?? false);
+    const inlineSuggestion = signal<string | undefined>(inputs.inlineSuggestion);
 
-    (combobox.inputs.popupControls as WritableSignalLike<any>).set(listbox);
+    // Mock a generic popup pattern
+    const popupId = signal('popup-1');
+    const activeDescendant = signal<string | undefined>('item-1');
+    const controlTarget = document.createElement('div');
+    const popupType = signal<'listbox' | 'tree' | 'grid' | 'dialog'>(inputs.popupType ?? 'listbox');
+
+    const popup = new ComboboxPopupPattern({
+      popupType,
+      controlTarget: signal(controlTarget),
+      activeDescendant,
+      popupId,
+    });
+
+    const pattern = new ComboboxPattern({
+      alwaysExpanded,
+      value,
+      element: signal(element),
+      popup: signal(popup),
+      inlineSuggestion,
+      disabled,
+      expanded,
+      expandable: signal(true),
+    });
 
     return {
-      combobox,
-      listbox,
-      options,
-      inputEl: inputEl()!,
-      containerEl: containerEl()!,
-      firstMatch,
-      inputValue,
+      pattern,
+      element,
+      value,
+      expanded,
+      alwaysExpanded,
+      inlineSuggestion,
+      disabled,
+      popup,
+      controlTarget,
     };
   }
 
-  describe('Navigation', () => {
-    it('should navigate to the first item on ArrowDown', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(down());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
+  describe('Aria-autocomplete calculation', () => {
+    it('should return "list" when only popup is present', () => {
+      const {pattern} = setup();
+      expect(pattern.autocomplete()).toBe('list');
     });
 
-    it('should navigate to the last item on ArrowUp', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(up());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
+    it('should return "both" when popup and inline suggestion are present', () => {
+      const {pattern} = setup({inlineSuggestion: 'suggestion'});
+      expect(pattern.autocomplete()).toBe('both');
     });
 
-    it('should navigate to the next item on ArrowDown when open', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(down());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
+    it('should return "none" when only dialog popup is present', () => {
+      const {pattern} = setup({popupType: 'dialog'});
+      expect(pattern.autocomplete()).toBe('none');
     });
 
-    it('should navigate to the previous item on ArrowUp when open in listbox', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(up());
-      combobox.onKeydown(up());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[7]);
-    });
-
-    it('should navigate to the first item on Home when open', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(up());
-      combobox.onKeydown(home());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
-    });
-
-    it('should navigate to the last item on End when open', () => {
-      const {combobox, listbox} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(end());
-      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
+    it('should return "inline" when dialog popup and inline suggestion are present', () => {
+      const {pattern} = setup({popupType: 'dialog', inlineSuggestion: 'suggestion'});
+      expect(pattern.autocomplete()).toBe('inline');
     });
   });
 
-  describe('Expansion', () => {
-    it('should open on ArrowDown', () => {
-      const {combobox} = getPatterns();
-      expect(combobox.expanded()).toBe(false);
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
+  describe('Expansion via Keyboard', () => {
+    it('should open on ArrowDown when collapsed', () => {
+      const {pattern, expanded} = setup();
+      expect(expanded()).toBe(false);
+
+      pattern.onKeydown(createKeyboardEvent('keydown', 40, 'ArrowDown'));
+      expect(expanded()).toBe(true);
     });
 
-    it('should open on ArrowUp', () => {
-      const {combobox} = getPatterns();
-      expect(combobox.expanded()).toBe(false);
-      combobox.onKeydown(up());
-      expect(combobox.expanded()).toBe(true);
-    });
+    it('should close on Escape when expanded', () => {
+      const {pattern, expanded} = setup();
+      expanded.set(true);
 
-    it('should close on Escape', () => {
-      const {combobox} = getPatterns();
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
-      combobox.onKeydown(escape());
-      expect(combobox.expanded()).toBe(false);
-    });
-
-    it('should close on Enter', () => {
-      const {combobox} = getPatterns();
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
-      combobox.onKeydown(enter());
-      expect(combobox.expanded()).toBe(false);
-    });
-
-    it('should not close on Enter if the option is disabled', () => {
-      const {combobox, options} = getPatterns();
-      options()[0].disabled.set(true);
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
-      combobox.onKeydown(enter());
-      expect(combobox.expanded()).toBe(true);
-    });
-
-    it('should close on focusout', () => {
-      const {combobox} = getPatterns();
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
-      combobox.onFocusOut(new FocusEvent('focusout'));
-      expect(combobox.expanded()).toBe(false);
-    });
-
-    it('should not close on focusout if focus moves to an element inside the container', () => {
-      const {combobox, containerEl} = getPatterns();
-      const internalElement = document.createElement('div');
-      containerEl.appendChild(internalElement);
-      combobox.onKeydown(down());
-
-      expect(combobox.expanded()).toBe(true);
-
-      const event = new FocusEvent('focusout', {relatedTarget: internalElement});
-      combobox.onFocusOut(event);
-
-      expect(combobox.expanded()).toBe(true);
-    });
-
-    it('should not expand when disabled', () => {
-      const {combobox, inputEl} = getPatterns({disabled: true});
-      expect(combobox.expanded()).toBe(false);
-      combobox.onClick(clickInput(inputEl));
-      expect(combobox.expanded()).toBe(false);
+      pattern.onKeydown(createKeyboardEvent('keydown', 27, 'Escape'));
+      expect(expanded()).toBe(false);
     });
   });
 
-  describe('Selection', () => {
-    let combobox: ComboboxPattern<any, string>;
-    let listbox: ComboboxListboxPattern<string>;
-    let inputEl: HTMLInputElement;
-    let options: () => TestOption[];
-    let firstMatch: WritableSignalLike<string | undefined>;
+  describe('Input handling', () => {
+    it('should update value and expand on input', () => {
+      const {pattern, element, value, expanded} = setup();
+      expect(expanded()).toBe(false);
 
-    function type(text: string, opts: {backspace?: boolean} = {}) {
-      _type(text, inputEl, combobox, options(), listbox, firstMatch, opts.backspace);
+      element.value = 'hello';
+      pattern.onInput({target: element} as unknown as Event);
+
+      expect(value()).toBe('hello');
+      expect(expanded()).toBe(true);
+    });
+  });
+
+  describe('Focus handling', () => {
+    it('should track focus state', () => {
+      const {pattern} = setup();
+
+      pattern.onFocusin();
+      expect(pattern.isFocused()).toBe(true);
+
+      pattern.onFocusout(new FocusEvent('focusout'));
+      expect(pattern.isFocused()).toBe(false);
+    });
+  });
+
+  describe('Inline Suggestion / Highlighting', () => {
+    it('should insert the inline suggestion into the input and select the remaining text', () => {
+      const {pattern, element, value, expanded, inlineSuggestion} = setup();
+
+      value.set('App');
+      inlineSuggestion.set('Apple');
+      expanded.set(true);
+      pattern.isFocused.set(true);
+
+      pattern.highlightEffect();
+
+      expect(element.value).toBe('Apple');
+      expect(element.selectionStart).toBe(3);
+      expect(element.selectionEnd).toBe(5);
+    });
+
+    it('should not highlight when deleting text', () => {
+      const {pattern, element, value, expanded, inlineSuggestion} = setup();
+
+      value.set('App');
+      inlineSuggestion.set('Apple');
+      expanded.set(true);
+      pattern.isFocused.set(true);
+
+      const deleteEvent = new InputEvent('input', {inputType: 'deleteContentBackward'});
+      Object.defineProperty(deleteEvent, 'target', {value: element});
+      pattern.onInput(deleteEvent as Event);
+
+      expect(pattern.isDeleting()).toBe(true);
+
+      pattern.highlightEffect();
+
+      expect(element.value).not.toBe('Apple');
+    });
+  });
+
+  describe('Select-only combobox behavior', () => {
+    function setupSelectOnly() {
+      const selectOnlyElement = document.createElement('div');
+      const {pattern, expanded, controlTarget} = setup();
+
+      // Override element to be select-only
+      pattern.inputs.element = signal(selectOnlyElement);
+
+      return {pattern, expanded, selectOnlyElement, controlTarget};
     }
 
-    describe('when filterMode is "manual"', () => {
-      beforeEach(() => {
-        ({combobox, listbox, inputEl, options, firstMatch} = getPatterns({
-          filterMode: 'manual',
-        }));
-      });
+    it('should toggle expansion on click', () => {
+      const {pattern, expanded} = setupSelectOnly();
+      expect(expanded()).toBe(false);
 
-      it('should select and commit on click in manual mode', () => {
-        combobox.onClick(clickOption(listbox.inputs.items(), 0));
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-        expect(inputEl.value).toBe('Apple');
-      });
+      pattern.onClick(new PointerEvent('click'));
+      expect(expanded()).toBe(true);
 
-      it('should select and commit to input on Enter in manual mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-        expect(inputEl.value).toBe('Apple');
-      });
-
-      it('should select on focusout if the input text exactly matches an item in manual mode', () => {
-        type('Apple');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should deselect on close if the input text does not match any options in manual mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-        type('Appl', {backspace: true});
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-        combobox.onKeydown(escape());
-        expect(listbox.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on navigation in manual mode', () => {
-        combobox.onKeydown(down());
-        expect(listbox.getSelectedItems().length).toBe(0);
-        expect(listbox.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on input in manual mode', () => {
-        type('A');
-        expect(listbox.getSelectedItems().length).toBe(0);
-        expect(listbox.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on focusout if the input text does not match an item in manual mode', () => {
-        type('Appl');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(listbox.getSelectedItems().length).toBe(0);
-        expect(listbox.inputs.value()).toEqual([]);
-        expect(inputEl.value).toBe('Appl');
-      });
+      pattern.onClick(new PointerEvent('click'));
+      expect(expanded()).toBe(false);
     });
 
-    describe('when filterMode is "auto-select"', () => {
-      beforeEach(() => {
-        ({combobox, listbox, inputEl, options, firstMatch} = getPatterns({
-          filterMode: 'auto-select',
-        }));
-      });
+    it('should open on Enter or Space when collapsed', () => {
+      const {pattern, expanded} = setupSelectOnly();
 
-      it('should select and commit on click in auto-select mode', () => {
-        combobox.onClick(clickOption(listbox.inputs.items(), 3));
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
-        expect(listbox.inputs.value()).toEqual(['Blackberry']);
-        expect(inputEl.value).toBe('Blackberry');
-      });
+      pattern.onKeydown(createKeyboardEvent('keydown', 13, 'Enter'));
+      expect(expanded()).toBe(true);
 
-      it('should select and commit on Enter in auto-select mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[2]);
-        expect(listbox.inputs.value()).toEqual(['Banana']);
-        expect(inputEl.value).toBe('Banana');
-      });
+      expanded.set(false);
 
-      it('should select the first item on arrow down when collapsed in auto-select mode', () => {
-        combobox.onKeydown(down());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should select the last item on arrow up when collapsed in auto-select mode', () => {
-        combobox.onKeydown(up());
-        expect(listbox.getSelectedItems()[0]).toBe(
-          listbox.inputs.items()[listbox.inputs.items().length - 1],
-        );
-        expect(listbox.inputs.value()).toEqual(['Cranberry']);
-      });
-
-      it('should select on navigation in auto-select mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[1]);
-        expect(listbox.inputs.value()).toEqual(['Apricot']);
-      });
-
-      it('should select the first option on input in auto-select mode', () => {
-        type('A');
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-
-        type('Apr');
-        expect(listbox.inputs.value()).toEqual(['Apricot']);
-      });
-
-      it('should commit the selected option on focusout in auto-select mode', () => {
-        combobox.onKeydown(down());
-        type('App');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(inputEl.value).toBe('Apple');
-      });
-
-      it('should not commit an option on focusout if the popup is closed', () => {
-        type('A');
-        combobox.onKeydown(escape());
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(inputEl.value).toBe('A');
-      });
-    });
-
-    describe('when filterMode is "highlight"', () => {
-      beforeEach(() => {
-        ({combobox, listbox, inputEl, options, firstMatch} = getPatterns({
-          filterMode: 'highlight',
-        }));
-      });
-
-      it('should select and commit on click in highlight mode', () => {
-        combobox.onClick(clickOption(listbox.inputs.items(), 3));
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[3]);
-        expect(listbox.inputs.value()).toEqual(['Blackberry']);
-        expect(inputEl.value).toBe('Blackberry');
-      });
-
-      it('should select and commit on Enter in highlight mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[2]);
-        expect(listbox.inputs.value()).toEqual(['Banana']);
-        expect(inputEl.value).toBe('Banana');
-      });
-
-      it('should select the first item on arrow down when collapsed in highlight mode', () => {
-        combobox.onKeydown(down());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[0]);
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should select the last item on arrow up when collapsed in highlight mode', () => {
-        combobox.onKeydown(up());
-        expect(listbox.getSelectedItems()[0]).toBe(
-          listbox.inputs.items()[listbox.inputs.items().length - 1],
-        );
-        expect(listbox.inputs.value()).toEqual(['Cranberry']);
-      });
-
-      it('should select on navigation in highlight mode', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[1]);
-        expect(listbox.inputs.value()).toEqual(['Apricot']);
-      });
-
-      it('should select the first option on input in highlight mode', () => {
-        type('A');
-        expect(listbox.inputs.value()).toEqual(['Apple']);
-
-        type('Apr');
-        expect(listbox.inputs.value()).toEqual(['Apricot']);
-      });
-
-      it('should commit the selected option on navigation in highlight mode', () => {
-        combobox.onKeydown(down());
-        expect(inputEl.value).toBe('Apple');
-        combobox.onKeydown(down());
-        expect(inputEl.value).toBe('Apricot');
-      });
-
-      it('should commit the selected option on focusout in highlight mode', () => {
-        combobox.onKeydown(down());
-        type('App');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(inputEl.value).toBe('Apple');
-      });
-
-      it('should insert a highlighted completion string on input in highlight mode for listbox', () => {
-        type('A');
-        expect(inputEl.value).toBe('Apple');
-        expect(inputEl.selectionStart).toBe(1);
-        expect(inputEl.selectionEnd).toBe(5);
-      });
-
-      it('should should remember which option was highlighted after navigating', () => {
-        type('A');
-        combobox.onKeydown(down());
-
-        expect(inputEl.value).toBe('Apricot');
-        expect(inputEl.selectionStart).toBe(7);
-        expect(inputEl.selectionEnd).toBe(7);
-
-        combobox.onKeydown(up());
-
-        expect(inputEl.value).toBe('Apple');
-        expect(inputEl.selectionStart).toBe(1);
-        expect(inputEl.selectionEnd).toBe(5);
-      });
+      pattern.onKeydown(createKeyboardEvent('keydown', 32, ' '));
+      expect(expanded()).toBe(true);
     });
   });
 
-  describe('Readonly mode', () => {
-    describe('with single-select', () => {
-      it('should select and close on selection in single-select readonly mode', () => {
-        const {combobox, listbox, inputEl} = getPatterns({readonly: true});
-        combobox.onClick(clickOption(listbox.inputs.items(), 2));
-        expect(listbox.getSelectedItems()[0]).toBe(listbox.inputs.items()[2]);
-        expect(listbox.inputs.value()).toEqual(['Banana']);
-        expect(inputEl.value).toBe('Banana');
-        expect(combobox.expanded()).toBe(false);
-      });
+  describe('alwaysExpanded behavior', () => {
+    it('should stay open on Escape when alwaysExpanded is true', () => {
+      const {pattern, expanded} = setup({alwaysExpanded: true});
+      expanded.set(true);
 
-      it('should close on escape in single-select readonly mode', () => {
-        const {combobox} = getPatterns({readonly: true});
-        combobox.onKeydown(down());
-        expect(combobox.expanded()).toBe(true);
-        combobox.onKeydown(escape());
-        expect(combobox.expanded()).toBe(false);
-      });
-    });
-
-    describe('with multi-select', () => {
-      it('should allow users to select multiple options', () => {
-        const {combobox, listbox, inputEl} = getPatterns({readonly: true});
-        (listbox.inputs.multi as WritableSignalLike<boolean>).set(true);
-
-        combobox.onClick(clickOption(listbox.inputs.items(), 1));
-        combobox.onClick(clickOption(listbox.inputs.items(), 2));
-
-        expect(listbox.inputs.value()).toEqual(['Apricot', 'Banana']);
-        expect(inputEl.value).toBe('Apricot, Banana');
-      });
-    });
-  });
-});
-
-describe('Combobox with Tree Pattern', () => {
-  function getPatterns(
-    inputs: Partial<{
-      [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
-    }> = {},
-  ) {
-    const {combobox, inputEl, containerEl, firstMatch, inputValue} = getComboboxPattern(inputs);
-    const {tree, items} = getTreePattern(combobox, [
-      {value: 'Fruit', children: [{value: 'Apple'}, {value: 'Banana'}, {value: 'Cantaloupe'}]},
-      {value: 'Vegetables', children: [{value: 'Broccoli'}, {value: 'Carrot'}, {value: 'Lettuce'}]},
-      {value: 'Grains', children: [{value: 'Rice'}, {value: 'Wheat'}]},
-    ]);
-
-    (combobox.inputs.popupControls as WritableSignalLike<any>).set(tree);
-
-    return {
-      combobox,
-      tree,
-      items: items,
-      inputEl: inputEl()!,
-      containerEl: containerEl()!,
-      firstMatch,
-      inputValue,
-    };
-  }
-
-  describe('Navigation', () => {
-    it('should navigate to the first focusable item on ArrowDown', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Fruit');
-    });
-
-    it('should navigate to the last focusable item on ArrowUp', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(up());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Grains');
-    });
-
-    it('should navigate to the next focusable item on ArrowDown when open', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(down());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Vegetables');
-    });
-
-    it('should navigate to the previous item on ArrowUp when open in tree', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(up());
-      combobox.onKeydown(up());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Vegetables');
-    });
-
-    it('should expand a closed node on ArrowRight', () => {
-      const {combobox, tree} = getPatterns();
-      const before = tree.inputs
-        .items()
-        .filter(i => i.visible())
-        .map(i => i.searchTerm());
-      expect(before).toEqual(['Fruit', 'Vegetables', 'Grains']);
-      combobox.onKeydown(down());
-      combobox.onKeydown(right());
-      const after = tree.inputs
-        .items()
-        .filter(i => i.visible())
-        .map(i => i.searchTerm());
-      expect(after).toEqual(['Fruit', 'Apple', 'Banana', 'Cantaloupe', 'Vegetables', 'Grains']);
-    });
-
-    it('should navigate to the next item on ArrowRight when already expanded', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(right());
-      combobox.onKeydown(right());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Apple');
-    });
-
-    it('should collapse an open node on ArrowLeft', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(right());
-      combobox.onKeydown(left());
-      const after = tree.inputs
-        .items()
-        .filter(i => i.visible())
-        .map(i => i.searchTerm());
-      expect(after).toEqual(['Fruit', 'Vegetables', 'Grains']);
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Fruit');
-    });
-
-    it('should navigate to the parent node on ArrowLeft when in a child node', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(right());
-      combobox.onKeydown(right());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Apple');
-      combobox.onKeydown(left());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Fruit');
-    });
-
-    it('should navigate to the first focusable item on Home when open', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(up());
-      combobox.onKeydown(home());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Fruit');
-    });
-
-    it('should navigate to the last focusable item on End when open', () => {
-      const {combobox, tree} = getPatterns();
-      combobox.onKeydown(down());
-      combobox.onKeydown(end());
-      expect(tree.inputs.activeItem()?.searchTerm()).toBe('Grains');
+      pattern.onKeydown(createKeyboardEvent('keydown', 27, 'Escape'));
+      expect(expanded()).toBe(true);
     });
   });
 
-  describe('Selection', () => {
-    let combobox: ComboboxPattern<any, string>;
-    let tree: ComboboxTreePattern<string>;
-    let inputEl: HTMLInputElement;
-    let items: () => TreeItemPattern<string>[];
-    let firstMatch: WritableSignalLike<string | undefined>;
+  describe('Blur behavior', () => {
+    it('should close when focus leaves both combobox and popup', () => {
+      const {pattern, expanded} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      pattern.inputs.popup()!.isFocused.set(false);
 
-    function type(text: string, opts: {backspace?: boolean} = {}) {
-      _type(text, inputEl, combobox, items(), tree, firstMatch, opts.backspace);
-    }
-
-    describe('when filterMode is "manual"', () => {
-      beforeEach(() => {
-        ({combobox, tree, inputEl, items, firstMatch} = getPatterns({
-          filterMode: 'manual',
-        }));
-      });
-
-      it('should select and commit on click in manual mode for tree', () => {
-        combobox.onClick(clickTreeItem(tree.inputs.items(), 0));
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-        expect(inputEl.value).toBe('Fruit');
-      });
-
-      it('should select and commit to input on Enter in manual mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-        expect(inputEl.value).toBe('Fruit');
-      });
-
-      it('should select on focusout if the input text exactly matches an item in manual mode for tree', () => {
-        combobox.onClick(clickInput(inputEl));
-        type('Apple');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(tree.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should deselect on close if the input text does not match any options in manual mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-        type('Frui', {backspace: true});
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-        combobox.onKeydown(escape());
-        expect(tree.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on navigation in manual mode for tree', () => {
-        combobox.onKeydown(down());
-        expect(tree.getSelectedItems().length).toBe(0);
-        expect(tree.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on input in manual mode for tree', () => {
-        type('A');
-        expect(tree.getSelectedItems().length).toBe(0);
-        expect(tree.inputs.value()).toEqual([]);
-      });
-
-      it('should not select on focusout if the input text does not match an item in manual mode for tree', () => {
-        type('Appl');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(tree.getSelectedItems().length).toBe(0);
-        expect(tree.inputs.value()).toEqual([]);
-        expect(inputEl.value).toBe('Appl');
-      });
+      pattern.closePopupOnBlurEffect();
+      expect(expanded()).toBe(false);
     });
 
-    describe('when filterMode is "auto-select"', () => {
-      beforeEach(() => {
-        ({combobox, tree, inputEl, items, firstMatch} = getPatterns({
-          filterMode: 'auto-select',
-        }));
-      });
+    it('should remain open if popup is focused', () => {
+      const {pattern, expanded} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      pattern.inputs.popup()!.isFocused.set(true);
 
-      it('should select and commit on click in auto-select mode for tree', () => {
-        // Expand Fruit: Down -> Right
-        combobox.onKeydown(down());
-        combobox.onKeydown(right());
-        combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
-        expect(tree.inputs.value()).toEqual(['Banana']);
-        expect(inputEl.value).toBe('Banana');
-      });
-
-      it('should select and commit on Enter in auto-select mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Grains']);
-        expect(inputEl.value).toBe('Grains');
-      });
-
-      it('should select the first item on arrow down when collapsed in auto-select mode for tree', () => {
-        combobox.onKeydown(down());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-      });
-
-      it('should select the last focusable item on arrow up when collapsed in auto-select mode for tree', () => {
-        combobox.onKeydown(up());
-        expect(tree.inputs.value()).toEqual(['Grains']);
-      });
-
-      it('should select on navigation in auto-select mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(right());
-        combobox.onKeydown(right());
-        expect(tree.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should select the first option on input in auto-select mode for tree', () => {
-        type('B');
-        expect(tree.inputs.value()).toEqual(['Banana']);
-
-        type('Bro');
-        expect(tree.inputs.value()).toEqual(['Broccoli']);
-      });
-
-      it('should commit the selected option on focusout in auto-select mode for tree', () => {
-        combobox.onKeydown(down());
-        type('App');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(inputEl.value).toBe('Apple');
-      });
-    });
-
-    describe('when filterMode is "highlight"', () => {
-      beforeEach(() => {
-        ({combobox, tree, inputEl, items, firstMatch} = getPatterns({
-          filterMode: 'highlight',
-        }));
-      });
-
-      it('should select and commit on click in highlight mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(right());
-        combobox.onClick(clickTreeItem(tree.inputs.items(), 2));
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[2]);
-        expect(tree.inputs.value()).toEqual(['Banana']);
-        expect(inputEl.value).toBe('Banana');
-      });
-
-      it('should select and commit on Enter in highlight mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(down());
-        combobox.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Grains']);
-        expect(inputEl.value).toBe('Grains');
-      });
-
-      it('should select the first item on arrow down when collapsed in highlight mode for tree', () => {
-        combobox.onKeydown(down());
-        expect(tree.getSelectedItems()[0]).toBe(tree.inputs.items()[0]);
-        expect(tree.inputs.value()).toEqual(['Fruit']);
-      });
-
-      it('should select the last focusable item on arrow up when collapsed in highlight mode for tree', () => {
-        combobox.onKeydown(up());
-        expect(tree.inputs.value()).toEqual(['Grains']);
-      });
-
-      it('should select on navigation in highlight mode for tree', () => {
-        combobox.onKeydown(down());
-        combobox.onKeydown(right());
-        combobox.onKeydown(right());
-        expect(tree.inputs.value()).toEqual(['Apple']);
-      });
-
-      it('should select the first option on input in highlight mode for tree', () => {
-        type('B');
-        expect(tree.inputs.value()).toEqual(['Banana']);
-
-        type('Bro');
-        expect(tree.inputs.value()).toEqual(['Broccoli']);
-      });
-
-      it('should commit the selected option on navigation in highlight mode for tree', () => {
-        combobox.onKeydown(down());
-        expect(inputEl.value).toBe('Fruit');
-        combobox.onKeydown(right());
-        combobox.onKeydown(right());
-        expect(inputEl.value).toBe('Apple');
-        combobox.onKeydown(down());
-        expect(tree.inputs.value()).toEqual(['Banana']);
-      });
-
-      it('should commit the selected option on focusout in highlight mode for tree', () => {
-        type('App');
-        combobox.onFocusOut(new FocusEvent('focusout'));
-        expect(inputEl.value).toBe('Apple');
-      });
-
-      it('should insert a highlighted completion string on input in highlight mode for tree', () => {
-        type('A');
-        expect(inputEl.value).toBe('Apple');
-        expect(inputEl.selectionStart).toBe(1);
-        expect(inputEl.selectionEnd).toBe(5);
-      });
-    });
-  });
-
-  describe('Readonly mode', () => {
-    it('should select and close on selection in readonly mode for tree', () => {
-      const {combobox, tree, inputEl} = getPatterns({readonly: true});
-      combobox.onClick(clickInput(inputEl));
-      expect(combobox.expanded()).toBe(true);
-      combobox.onClick(clickTreeItem(tree.inputs.items(), 0));
-      expect(tree.inputs.value()).toEqual(['Fruit']);
-      expect(inputEl.value).toBe('Fruit');
-      expect(combobox.expanded()).toBe(false);
-    });
-
-    it('should close on escape in readonly mode for tree', () => {
-      const {combobox} = getPatterns({readonly: true});
-      combobox.onKeydown(down());
-      expect(combobox.expanded()).toBe(true);
-      combobox.onKeydown(escape());
-      expect(combobox.expanded()).toBe(false);
+      pattern.closePopupOnBlurEffect();
+      expect(expanded()).toBe(true);
     });
   });
 });

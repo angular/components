@@ -6,26 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
+import {Component, signal, afterRenderEffect, viewChild} from '@angular/core';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-  viewChild,
-} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Disabled readonly combobox. */
 @Component({
-  selector: 'simple-combobox-readonly-disabled-example',
-  templateUrl: 'simple-combobox-readonly-disabled-example.html',
-  styleUrl: '../simple-combobox-select/simple-combobox-select-example.css',
+  selector: 'combobox-select-example',
+  templateUrl: 'combobox-select-example.html',
+  styleUrl: 'combobox-select-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimpleComboboxReadonlyDisabledExample {
+export class ComboboxSelectExample {
   readonly listbox = viewChild(Listbox);
 
   readonly options = signal([

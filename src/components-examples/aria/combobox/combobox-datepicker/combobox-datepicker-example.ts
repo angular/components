@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {A11yModule} from '@angular/cdk/a11y';
 
@@ -33,9 +33,9 @@ interface CalendarCell<D = any> {
 
 /** @title Combobox with Datepicker Grid. */
 @Component({
-  selector: 'simple-combobox-datepicker-example',
-  templateUrl: 'simple-combobox-datepicker-example.html',
-  styleUrls: ['../simple-combobox-example.css', 'simple-combobox-datepicker-example.css'],
+  selector: 'combobox-datepicker-example',
+  templateUrl: 'combobox-datepicker-example.html',
+  styleUrls: ['../combobox-example.css', 'combobox-datepicker-example.css'],
   imports: [
     Grid,
     GridRow,
@@ -48,7 +48,7 @@ interface CalendarCell<D = any> {
     A11yModule,
   ],
 })
-export class SimpleComboboxDatepickerExample<D> {
+export class ComboboxDatepickerExample<D> {
   private readonly _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private readonly _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
 
