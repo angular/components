@@ -7,19 +7,27 @@
  */
 
 import {
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
+  OnDestroy,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridPattern, GridCellPattern, tabIndexTransform} from '../private';
-import {GRID_ROW} from './grid-tokens';
+import {
+  GridPattern,
+  GridCellPattern,
+  GridRowPattern,
+  SortedCollection,
+  tabIndexTransform,
+} from '../private';
+import {GridRow} from './grid-row';
+import {GRID} from './grid-tokens';
 
 /**
  * The container for a grid. It provides keyboard navigation and focus management for the grid's
@@ -58,19 +66,22 @@ import {GRID_ROW} from './grid-tokens';
     '(focusin)': '_pattern.onFocusIn($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
+  providers: [{provide: GRID, useExisting: Grid}],
 })
-export class Grid {
+export class Grid implements OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The rows that make up the grid. */
-  private readonly _rows = contentChildren(GRID_ROW, {descendants: true});
+  /** The collection of rows in the grid. */
+  readonly _collection = new SortedCollection<GridRow>();
 
   /** The UI patterns for the rows in the grid. */
-  private readonly _rowPatterns: Signal<any[]> = computed(() => this._rows().map(r => r._pattern));
+  private readonly _rowPatterns: Signal<GridRowPattern[]> = computed(() =>
+    this._collection.orderedItems().map(r => r._pattern),
+  );
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -144,6 +155,14 @@ export class Grid {
     afterRenderEffect({write: () => this._pattern.resetFocusEffect()});
     afterRenderEffect({write: () => this._pattern.restoreFocusEffect()});
     afterRenderEffect({write: () => this._pattern.focusEffect()});
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   /** Scrolls the active cell into view. */

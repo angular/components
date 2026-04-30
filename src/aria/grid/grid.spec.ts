@@ -5,6 +5,7 @@ import {Grid} from './grid';
 import {GridRow} from './grid-row';
 import {GridCell} from './grid-cell';
 import {GridCellWidget} from './grid-cell-widget';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -567,6 +568,29 @@ describe('Grid directives', () => {
         expect(getActiveCellId()).toBe('c1-2');
       });
     });
+
+    describe('dynamic updates', () => {
+      it('should update row order correctly after rows are shuffled', async () => {
+        setupGrid();
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+
+        const rowPatternsBefore = gridInstance._pattern.inputs.rows();
+        expect(rowPatternsBefore.length).toBe(3);
+        expect(rowPatternsBefore[0].inputs.cells()[0].element()?.id).toBe('c0-0');
+
+        const gridData = fixture.componentInstance.gridData();
+        const firstRow = gridData.shift()!;
+        gridData.push(firstRow);
+        fixture.componentInstance.gridData.set([...gridData]);
+        fixture.detectChanges();
+        await waitForMicrotasks();
+
+        const rowPatternsAfter = gridInstance._pattern.inputs.rows();
+        expect(rowPatternsAfter.length).toBe(3);
+        expect(rowPatternsAfter[0].inputs.cells()[0].element()?.id).toBe('c1-0');
+      });
+    });
   });
 
   describe('GridRow', () => {
@@ -583,6 +607,31 @@ describe('Grid directives', () => {
         setupGrid({gridData});
         const row = gridElement.querySelector('tr') as HTMLElement;
         expect(row.getAttribute('aria-rowindex')).toBe('5');
+      });
+    });
+
+    describe('dynamic updates', () => {
+      it('should update cell order correctly after cells are shuffled', async () => {
+        setupGrid();
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+
+        const firstRow = gridDebugElement.query(By.directive(GridRow)).injector.get(GridRow);
+        const cellPatternsBefore = firstRow._pattern.inputs.cells();
+        expect(cellPatternsBefore.length).toBe(3);
+        expect(cellPatternsBefore[0].element()?.id).toBe('c0-0');
+
+        const gridData = fixture.componentInstance.gridData();
+        const firstRowCells = gridData[0].cells;
+        const firstCell = firstRowCells.shift()!;
+        firstRowCells.push(firstCell);
+        fixture.componentInstance.gridData.set([...gridData]);
+        fixture.detectChanges();
+        await waitForMicrotasks();
+
+        const cellPatternsAfter = firstRow._pattern.inputs.cells();
+        expect(cellPatternsAfter.length).toBe(3);
+        expect(cellPatternsAfter[0].element()?.id).toBe('c0-1');
       });
     });
   });
@@ -975,9 +1024,9 @@ describe('Grid directives', () => {
       [enableSelection]="enableSelection()"
       [selectionMode]="selectionMode()"
       [tabindex]="tabIndex()">
-      @for (row of gridData(); track $index; let rIndex = $index) {
+      @for (row of gridData(); track row; let rIndex = $index) {
         <tr ngGridRow [rowIndex]="row.rowIndex">
-          @for (cell of row.cells; track $index; let cIndex = $index) {
+          @for (cell of row.cells; track cell; let cIndex = $index) {
             <td ngGridCell
                 [id]="cell.id"
                 [disabled]="cell.disabled ?? false"

@@ -18,6 +18,8 @@ import {
   inject,
   input,
   model,
+  OnDestroy,
+  OnInit,
   Output,
   Signal,
   Renderer2,
@@ -47,7 +49,7 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
   exportAs: 'ngGridCell',
   providers: [{provide: GRID_CELL, useExisting: GridCell}],
 })
-export class GridCell {
+export class GridCell implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
   private readonly _renderer = inject(Renderer2);
 
@@ -147,6 +149,14 @@ export class GridCell {
         toggle('tabindex', this._tabIndex());
       },
     });
+  }
+
+  ngOnInit() {
+    this._row._collection.register(this);
+  }
+
+  ngOnDestroy() {
+    this._row._collection.unregister(this);
   }
 
   private _toggleAttribute = (name: string, value: unknown) => {
