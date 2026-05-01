@@ -117,6 +117,36 @@ describe('Aria Menu Harness', () => {
     expect(await items[0].getText()).toBe('File');
     expect(await items[1].getText()).toBe('Edit');
   });
+
+  it('should be able to get whether a menu item is focused', async () => {
+    const menu = await loader.getHarness(MenuHarness.with({triggerText: 'Open Menu'}));
+    await menu.open();
+    const items = await menu.getItems();
+
+    const itemHost = await items[0].host();
+    await itemHost.focus();
+    fixture.detectChanges();
+
+    expect(await items[0].isFocused()).toBe(true);
+    expect(await items[1].isFocused()).toBe(false);
+  });
+
+  it('should be able to get whether a menu item has a submenu', async () => {
+    const menu = await loader.getHarness(MenuHarness.with({triggerText: 'Open Menu'}));
+    await menu.open();
+    const items = await menu.getItems();
+
+    expect(await items[0].hasSubmenu()).toBe(false);
+    expect(await items[2].hasSubmenu()).toBe(true);
+  });
+
+  it('should be able to get whether a menu is a menu bar', async () => {
+    const menubar = await loader.getHarness(MenuHarness.with({selector: '[ngMenuBar]'}));
+    expect(await menubar.isMenuBar()).toBe(true);
+
+    const menu = await loader.getHarness(MenuHarness.with({triggerText: 'Open Menu'}));
+    expect(await menu.isMenuBar()).toBe(false);
+  });
 });
 
 @Component({
