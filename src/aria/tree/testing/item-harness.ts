@@ -76,6 +76,26 @@ export class TreeItemHarness extends ContentContainerComponentHarness<string> {
     return (await this.host()).click();
   }
 
+  /** Focuses the tree item. */
+  async focus(): Promise<void> {
+    return (await this.host()).focus();
+  }
+
+  /** Blurs the tree item. */
+  async blur(): Promise<void> {
+    return (await this.host()).blur();
+  }
+
+  /** Whether the tree item is active. */
+  async isActive(): Promise<boolean> {
+    return (await this._getHostAttribute('data-active')) === 'true';
+  }
+
+  /** Whether the tree item has focus. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
+  }
+
   private async _getHostAttribute(attributeName: string): Promise<string | null> {
     return (await this.host()).getAttribute(attributeName);
   }

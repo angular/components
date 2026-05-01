@@ -32,13 +32,17 @@ export interface TreeHarnessFilters extends BaseHarnessFilters {
 
 // @public
 export class TreeItemHarness extends ContentContainerComponentHarness<string> {
+    blur(): Promise<void>;
     click(): Promise<void>;
+    focus(): Promise<void>;
     getLevel(): Promise<number>;
     getText(): Promise<string>;
     // (undocumented)
     static hostSelector: string;
+    isActive(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isExpanded(): Promise<boolean>;
+    isFocused(): Promise<boolean>;
     isSelected(): Promise<boolean>;
     static with(options?: TreeItemHarnessFilters): HarnessPredicate<TreeItemHarness>;
 }
