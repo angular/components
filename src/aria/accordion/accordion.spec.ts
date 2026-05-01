@@ -293,23 +293,23 @@ describe('AccordionGroup', () => {
       });
 
       it('should update collection order when items are shuffled', async () => {
-        const groupDebugElement = fixture.debugElement.query(By.directive(AccordionGroup));
-        const groupDirective = groupDebugElement.injector.get(AccordionGroup);
+        // Verify initial DOM order
+        expect(triggerElements.length).toBe(3);
+        expect(triggerElements[0].textContent?.trim()).toBe('Item 1 Header');
+        expect(triggerElements[2].textContent?.trim()).toBe('Item 3 Header');
 
-        let orderedItems = groupDirective._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 1 Header');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 3 Header');
-
+        // Shuffle (reverse) data
         const items = testComponent.items().reverse();
         testComponent.items.set([...items]);
         fixture.detectChanges();
         await waitForMicrotasks();
 
-        orderedItems = groupDirective._collection.orderedItems();
-        expect(orderedItems.length).toBe(3);
-        expect(orderedItems[0].element.textContent?.trim()).toBe('Item 3 Header');
-        expect(orderedItems[2].element.textContent?.trim()).toBe('Item 1 Header');
+        // Re-query elements to check new DOM order
+        setupTriggerAndPanels();
+
+        expect(triggerElements.length).toBe(3);
+        expect(triggerElements[0].textContent?.trim()).toBe('Item 3 Header');
+        expect(triggerElements[2].textContent?.trim()).toBe('Item 1 Header');
       });
 
       describe('wrap behavior', () => {

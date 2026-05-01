@@ -83,6 +83,22 @@ describe('Listbox Harness', () => {
     expect(orientation).toBe('horizontal');
   });
 
+  it('gets the active descendant ID', async () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [ListboxActiveDescendantTestComponent],
+    });
+    const customFixture = TestBed.createComponent(ListboxActiveDescendantTestComponent);
+    customFixture.detectChanges();
+    const customLoader = TestbedHarnessEnvironment.loader(customFixture);
+
+    const listbox = await customLoader.getHarness(ListboxHarness);
+    const options = await listbox.getOptions();
+
+    await options[0].click();
+    expect(await listbox.getActiveDescendantId()).toBe('apple-id');
+  });
+
   it('clicks an option inside the listbox', async () => {
     const option = await loader.getHarness(ListboxOptionHarness.with({text: 'Apple'}));
 
@@ -91,3 +107,14 @@ describe('Listbox Harness', () => {
     expect(await option.isSelected()).toBeTrue();
   });
 });
+
+@Component({
+  imports: [Listbox, Option],
+  template: `
+    <ul ngListbox focusMode="activedescendant">
+      <li ngOption [value]="1" id="apple-id">Apple</li>
+      <li ngOption [value]="2" id="banana-id">Banana</li>
+    </ul>
+  `,
+})
+class ListboxActiveDescendantTestComponent {}

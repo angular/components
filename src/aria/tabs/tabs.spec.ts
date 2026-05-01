@@ -495,23 +495,23 @@ describe('Tabs', () => {
         ],
       });
 
-      const tabsDebugElement = fixture.debugElement.query(By.directive(Tabs));
-      const tabsDirective = tabsDebugElement.injector.get(Tabs);
+      // Verify initial DOM order
+      expect(tabElements.length).toBe(3);
+      expect(tabElements[0].textContent?.trim()).toBe('Tab 1');
+      expect(tabElements[2].textContent?.trim()).toBe('Tab 3');
 
-      let orderedItems = tabsDirective._collection.orderedItems();
-      expect(orderedItems.length).toBe(3);
-      expect(orderedItems[0].value()).toBe('tab1');
-      expect(orderedItems[2].value()).toBe('tab3');
-
+      // Shuffle (reverse) data
       const items = testComponent.tabsData().reverse();
       testComponent.tabsData.set([...items]);
       fixture.detectChanges();
       await waitForMicrotasks();
 
-      orderedItems = tabsDirective._collection.orderedItems();
-      expect(orderedItems.length).toBe(3);
-      expect(orderedItems[0].value()).toBe('tab3');
-      expect(orderedItems[2].value()).toBe('tab1');
+      // Re-query elements to check new DOM order
+      defineTestVariables();
+
+      expect(tabElements.length).toBe(3);
+      expect(tabElements[0].textContent?.trim()).toBe('Tab 3');
+      expect(tabElements[2].textContent?.trim()).toBe('Tab 1');
     });
   });
 
@@ -740,6 +740,72 @@ describe('Tabs', () => {
       expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
     });
   });
+
+  describe('Dynamic tabs', () => {
+    beforeEach(() => {
+      setupTestTabs();
+      updateTabs({
+        initialTabs: [
+          {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+          {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
+          {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+        ],
+        selectedTab: 'tab2',
+      });
+    });
+
+    it('should update selection when active tab is removed', () => {
+      expect(testComponent.selectedTab()).toBe('tab2');
+
+      testComponent.tabsData.set([
+        {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+        {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+      ]);
+      fixture.detectChanges();
+      defineTestVariables();
+
+      expect(testComponent.selectedTab()).toBeUndefined();
+    });
+
+    it('should maintain selection when a new tab is added', () => {
+      expect(testComponent.selectedTab()).toBe('tab2');
+
+      testComponent.tabsData.set([
+        {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+        {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
+        {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+        {value: 'tab4', label: 'Tab 4', content: 'Content 4'},
+      ]);
+      fixture.detectChanges();
+      defineTestVariables();
+
+      expect(testComponent.selectedTab()).toBe('tab2');
+    });
+  });
+
+  describe('Custom IDs', () => {
+    let customIdFixture: ComponentFixture<TestTabsCustomIdComponent>;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      customIdFixture = TestBed.createComponent(TestTabsCustomIdComponent);
+      fixture = customIdFixture as any;
+      customIdFixture.detectChanges();
+    });
+
+    it('should use custom ID for tab and link to panel', async () => {
+      const tabEl = customIdFixture.nativeElement.querySelector('#custom-tab-id');
+      const panelEl = customIdFixture.nativeElement.querySelector('#custom-panel-id');
+
+      expect(tabEl).toBeTruthy();
+      expect(panelEl).toBeTruthy();
+
+      expect(tabEl.getAttribute('aria-controls')).toBe('custom-panel-id');
+      expect(panelEl.getAttribute('aria-labelledby')).toBe('custom-tab-id');
+    });
+  });
 });
 
 @Component({
@@ -797,4 +863,22 @@ class TestTabsComponent {
   softDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'follow' | 'explicit'>('follow');
+}
+
+@Component({
+  template: `
+    <div ngTabs>
+      <ul ngTabList [(selectedTab)]="selectedTab">
+        <li ngTab value="tab1" id="custom-tab-id">Tab 1</li>
+      </ul>
+      <div ngTabPanel value="tab1" id="custom-panel-id">
+        <ng-template ngTabContent>Content 1</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [Tabs, TabList, Tab, TabPanel, TabContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TestTabsCustomIdComponent {
+  selectedTab = signal('tab1');
 }

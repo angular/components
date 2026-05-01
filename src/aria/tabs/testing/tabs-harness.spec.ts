@@ -137,7 +137,6 @@ describe('TabsHarness', () => {
         <li ngTab value="tab3" [disabled]="true">Tab 3</li>
       </ul>
 
-
       <div ngTabPanel value="tab1">
         <ng-template ngTabContent>
           <div class="test-content">Content 1</div>

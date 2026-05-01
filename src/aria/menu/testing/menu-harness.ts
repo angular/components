@@ -62,6 +62,20 @@ export class MenuItemHarness extends ComponentHarness {
     }
     return null;
   }
+
+  /** Whether the menu item has focus. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
+  }
+
+  /** Whether the menu item acts as a submenu trigger. */
+  async hasSubmenu(): Promise<boolean> {
+    const host = await this.host();
+    return (
+      (await host.getAttribute('aria-haspopup')) === 'true' ||
+      !!(await host.getAttribute('aria-controls'))
+    );
+  }
 }
 
 /** Harness for interacting with a standard ngMenu or ngMenuBar in tests. */
@@ -95,6 +109,12 @@ export class MenuHarness extends ComponentHarness {
       return true;
     }
     return (await host.getAttribute('data-visible')) === 'true';
+  }
+
+  /** Whether the menu is a menu bar. */
+  async isMenuBar(): Promise<boolean> {
+    const host = await this.host();
+    return host.matchesSelector('[ngMenuBar]');
   }
 
   /** Opens the menu if it is currently closed. */

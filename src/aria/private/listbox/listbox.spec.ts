@@ -90,6 +90,26 @@ describe('Listbox Pattern', () => {
     );
   }
 
+  describe('Tabindex', () => {
+    it('should expose tabIndex signals on listbox and options', () => {
+      const {listbox, options} = getDefaultPatterns();
+
+      expect(listbox.tabIndex()).toBe(-1);
+      expect(options[0].tabIndex()).toBe(0);
+      expect(options[1].tabIndex()).toBe(-1);
+
+      listbox.onKeydown(down());
+
+      expect(options[0].tabIndex()).toBe(-1);
+      expect(options[1].tabIndex()).toBe(0);
+    });
+
+    it('should set tabindex 0 for listbox in activedescendant mode', () => {
+      const {listbox} = getDefaultPatterns({focusMode: signal('activedescendant')});
+      expect(listbox.tabIndex()).toBe(0);
+    });
+  });
+
   describe('Keyboard Navigation', () => {
     it('should navigate next on ArrowDown', () => {
       const {listbox} = getDefaultPatterns();

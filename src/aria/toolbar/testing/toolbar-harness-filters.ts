@@ -21,4 +21,7 @@ export interface ToolbarWidgetHarnessFilters extends BaseHarnessFilters {
 
   /** Active state that the widget should match. */
   active?: boolean;
+
+  /** Selected state that the widget should match. */
+  selected?: boolean;
 }

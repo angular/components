@@ -28,6 +28,11 @@ export class ToolbarWidgetHarness extends ContentContainerComponentHarness<strin
         'active',
         options.active,
         async (harness, active) => (await harness.isActive()) === active,
+      )
+      .addOption(
+        'selected',
+        options.selected,
+        async (harness, selected) => (await harness.isSelected()) === selected,
       );
   }
 
@@ -51,5 +56,11 @@ export class ToolbarWidgetHarness extends ContentContainerComponentHarness<strin
   async isDisabled(): Promise<boolean> {
     const host = await this.host();
     return (await host.getAttribute('aria-disabled')) === 'true';
+  }
+
+  /** Gets whether the widget is selected. */
+  async isSelected(): Promise<boolean> {
+    const host = await this.host();
+    return (await host.getAttribute('aria-pressed')) === 'true';
   }
 }

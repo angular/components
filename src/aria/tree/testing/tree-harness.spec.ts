@@ -109,6 +109,26 @@ describe('TreeHarness', () => {
       ],
     });
   });
+
+  it('should be able to get whether a tree item has focus', async () => {
+    const tree = await loader.getHarness(TreeHarness);
+    const item = (await tree.getItems({text: 'angular.json'}))[0];
+
+    expect(await item.isFocused()).toBeFalse();
+
+    await item.focus();
+    expect(await item.isFocused()).toBeTrue();
+
+    await item.blur();
+    expect(await item.isFocused()).toBeFalse();
+  });
+
+  it('should be able to get whether a tree item is active', async () => {
+    const tree = await loader.getHarness(TreeHarness);
+    const item = (await tree.getItems({text: 'public'}))[0];
+
+    expect(await item.isActive()).toBeTrue();
+  });
 });
 
 interface TreeNode {

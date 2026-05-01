@@ -17,7 +17,9 @@ export class GridCellHarness extends ContentContainerComponentHarness {
     getText(): Promise<string>;
     // (undocumented)
     static hostSelector: string;
+    isActive(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
+    isFocused(): Promise<boolean>;
     isSelected(): Promise<boolean>;
     static with(options?: GridCellHarnessFilters): HarnessPredicate<GridCellHarness>;
 }

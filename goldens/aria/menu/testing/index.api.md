@@ -16,6 +16,7 @@ export class MenuHarness extends ComponentHarness {
     _getTrigger(): Promise<TestElement | null>;
     // (undocumented)
     static hostSelector: string;
+    isMenuBar(): Promise<boolean>;
     isOpen(): Promise<boolean>;
     open(): Promise<void>;
     // (undocumented)
@@ -32,10 +33,12 @@ export class MenuItemHarness extends ComponentHarness {
     click(): Promise<void>;
     getSubmenu(): Promise<MenuHarness | null>;
     getText(): Promise<string>;
+    hasSubmenu(): Promise<boolean>;
     // (undocumented)
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isExpanded(): Promise<boolean>;
+    isFocused(): Promise<boolean>;
     // (undocumented)
     static with(options?: MenuItemHarnessFilters): HarnessPredicate<MenuItemHarness>;
 }
