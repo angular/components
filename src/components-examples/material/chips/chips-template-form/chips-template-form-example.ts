@@ -17,33 +17,30 @@ import {MatIconModule} from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsTemplateFormExample {
-  readonly templateKeywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
+  private _announcer = inject(LiveAnnouncer);
+  readonly keywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
 
-  announcer = inject(LiveAnnouncer);
+  addKeyword(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
 
-  removeTemplateKeyword(keyword: string) {
-    this.templateKeywords.update(keywords => {
+    if (value) {
+      this.keywords.update(keywords => [...keywords, value]);
+      this._announcer.announce(`added ${value} to template form`);
+    }
+
+    event.chipInput.clear();
+  }
+
+  removeKeyword(keyword: string) {
+    this.keywords.update(keywords => {
       const index = keywords.indexOf(keyword);
       if (index < 0) {
         return keywords;
       }
 
       keywords.splice(index, 1);
-      this.announcer.announce(`removed ${keyword} from template form`);
+      this._announcer.announce(`removed ${keyword} from template form`);
       return [...keywords];
     });
-  }
-
-  addTemplateKeyword(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our keyword
-    if (value) {
-      this.templateKeywords.update(keywords => [...keywords, value]);
-      this.announcer.announce(`added ${value} to template form`);
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
   }
 }
