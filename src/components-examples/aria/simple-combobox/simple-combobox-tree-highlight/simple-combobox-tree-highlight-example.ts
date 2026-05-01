@@ -12,6 +12,7 @@ import {
   Component,
   afterRenderEffect,
   computed,
+  effect,
   signal,
   viewChild,
   untracked,
@@ -49,6 +50,7 @@ export class SimpleComboboxTreeHighlightExample {
   popupExpanded = signal(false);
   searchString = signal('');
   selectedValues = signal<string[]>([]);
+  navigated = signal(false);
 
   readonly dataSource = signal(FOOD_DATA);
 
@@ -64,6 +66,12 @@ export class SimpleComboboxTreeHighlightExample {
         untracked(() => {
           active.element()?.scrollIntoView({block: 'nearest'});
         });
+      }
+    });
+
+    effect(() => {
+      if (!this.popupExpanded()) {
+        this.navigated.set(false);
       }
     });
   }

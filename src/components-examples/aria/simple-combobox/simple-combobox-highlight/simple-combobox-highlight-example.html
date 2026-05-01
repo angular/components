@@ -2,19 +2,20 @@
   <div #origin class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Search states..."
-      [(value)]="searchString" [(expanded)]="popupExpanded"
-      [inlineSuggestion]="selectedOption()[0] || options()[0]?.name" />
+      [(value)]="searchString" [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)"
+      (keydown.arrowdown)="navigated.set(true)" (keydown.arrowup)="navigated.set(true)"
+      [inlineSuggestion]="(searchString() || navigated()) ? selectedOption()[0] : undefined" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox">
-      <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox example-popup" focusMode="activedescendant"
-        [tabindex]="-1" [(value)]="selectedOption" (click)="onCommit()" (keydown.enter)="onCommit()"
-        [activeDescendant]="listbox.activeDescendant()">
+      <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox example-popup"
+        focusMode="activedescendant" [tabindex]="-1" [(value)]="selectedOption" (click)="onCommit()"
+        (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
         @for (option of options(); track option.name) {
-        <div class="example-option example-selectable example-stateful" ngOption [value]="option.name" [label]="option.name"
-          [disabled]="option.disabled">
+        <div class="example-option example-selectable example-stateful" ngOption [value]="option.name"
+          [label]="option.name" [disabled]="option.disabled">
           <span>{{option.name}}</span>
           <span aria-hidden="true" class="material-symbols-outlined example-icon example-selected-icon">check</span>
         </div>

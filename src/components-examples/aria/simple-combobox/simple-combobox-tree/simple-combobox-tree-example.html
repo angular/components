@@ -2,7 +2,7 @@
   <div #origin class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Search..." [(value)]="searchString"
-      [(expanded)]="popupExpanded" />
+      [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"

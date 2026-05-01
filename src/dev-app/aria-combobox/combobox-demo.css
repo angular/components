@@ -8,7 +8,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  min-width: 350px;
+  width: 350px;
   padding: 20px 0;
 }
 

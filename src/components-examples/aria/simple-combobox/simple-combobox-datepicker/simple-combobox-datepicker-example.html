@@ -3,7 +3,7 @@
     <span class="material-symbols-outlined example-icon example-search-icon">calendar_month</span>
     <input #comboboxInput ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Pick a date..."
       [(value)]="selection" [(expanded)]="popupExpanded" aria-describedby="date-format-hint"
-      (keydown)="onInputKeydown($event)" />
+      (keydown)="onInputKeydown($event)" (click)="popupExpanded.set(true)" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: false}"

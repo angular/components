@@ -8,6 +8,7 @@
       placeholder="Select a country"
       [(value)]="searchString"
       [(expanded)]="popupExpanded"
+      (click)="popupExpanded.set(true)"
     />
     <button
       class="example-clear-button"
