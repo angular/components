@@ -97,6 +97,19 @@ describe('Grid Harness', () => {
     const rows = await loader.getAllHarnesses(GridRowHarness);
     expect(await rows[0].getCellTextByIndex()).toEqual(['Cell 1.1', 'Cell 1.2']);
   });
+
+  it('reports the active state of a cell', async () => {
+    const cell = await loader.getHarness(GridCellHarness.with({text: 'Cell 1.1'}));
+    expect(await cell.isActive()).toBeTrue();
+  });
+
+  it('reports the focused state of a cell', async () => {
+    const cell = await loader.getHarness(GridCellHarness.with({text: 'Cell 1.1'}));
+    expect(await cell.isFocused()).toBeFalse();
+
+    await cell.focus();
+    expect(await cell.isFocused()).toBeTrue();
+  });
 });
 
 @Component({

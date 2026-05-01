@@ -79,6 +79,18 @@ export class GridCellHarness extends ContentContainerComponentHarness {
     const host = await this.host();
     return host.blur();
   }
+
+  /** Whether the cell is active. */
+  async isActive(): Promise<boolean> {
+    const host = await this.host();
+    return (await host.getAttribute('data-active')) === 'true';
+  }
+
+  /** Whether the cell is focused. */
+  async isFocused(): Promise<boolean> {
+    const host = await this.host();
+    return host.isFocused();
+  }
 }
 
 /** Harness for interacting with a standard ngGridRow in tests. */
