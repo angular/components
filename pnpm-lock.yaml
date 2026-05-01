@@ -129,8 +129,8 @@ importers:
         specifier: 'catalog:'
         version: 22.0.0-next.10(@angular/compiler-cli@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(typescript@6.0.2))(@angular/compiler@22.0.0-next.10)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#ab3557efa43d75ac873b8a6d94683b33bf18ca0f
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f(@modelcontextprotocol/sdk@1.29.0)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#4de8a14a1682d0f07e0b14a3b26498757c195904
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/4de8a14a1682d0f07e0b14a3b26498757c195904(@modelcontextprotocol/sdk@1.29.0)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 22.0.0-next.10(@angular/common@22.0.0-next.10(@angular/compiler-cli@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(typescript@6.0.2))(@angular/core@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(typescript@6.0.2))(@angular/compiler@22.0.0-next.10)(@angular/core@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(rxjs@6.6.7)(zone.js@0.16.1))(@angular/platform-browser@22.0.0-next.10(@angular/common@22.0.0-next.10(@angular/compiler-cli@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(typescript@6.0.2))(@angular/core@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(rxjs@6.6.7)(zone.js@0.16.1))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(typescript@6.0.2))(@angular/core@22.0.0-next.10(@angular/compiler@22.0.0-next.10)(rxjs@6.6.7)(zone.js@0.16.1)))(rxjs@6.6.7)
@@ -963,9 +963,9 @@ packages:
       '@angular/compiler': 22.0.0-next.10
       '@angular/compiler-cli': 22.0.0-next.10
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f}
-    version: 0.0.0-a71a5d725b4f2c8f090a58c8fda7b437bdc3b89a
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/4de8a14a1682d0f07e0b14a3b26498757c195904':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/4de8a14a1682d0f07e0b14a3b26498757c195904}
+    version: 0.0.0-e391d56ec4a9d89b4006515b0679350f1394d19a
     hasBin: true
 
   '@angular/platform-browser-dynamic@22.0.0-next.10':
@@ -10223,7 +10223,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/ab3557efa43d75ac873b8a6d94683b33bf18ca0f(@modelcontextprotocol/sdk@1.29.0)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/4de8a14a1682d0f07e0b14a3b26498757c195904(@modelcontextprotocol/sdk@1.29.0)':
     dependencies:
       '@actions/core': 3.0.1
       '@conventional-changelog/git-client': 2.7.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
