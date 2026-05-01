@@ -747,6 +747,9 @@ export class SortedCollection<T extends HasElement> {
 }
 
 // @public
+export function tabIndexTransform(v: string | number | undefined): number | undefined;
+
+// @public
 export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable' | 'expanded'> {
     tabList: SignalLike<TabListPattern>;
     tabPanel: SignalLike<TabPanelPattern | undefined>;

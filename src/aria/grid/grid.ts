@@ -15,11 +15,10 @@ import {
   ElementRef,
   inject,
   input,
-  numberAttribute,
   Signal,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridPattern, GridCellPattern} from '../private';
+import {GridPattern, GridCellPattern, tabIndexTransform} from '../private';
 import {GRID_ROW} from './grid-tokens';
 
 /**
@@ -123,8 +122,8 @@ export class Grid {
 
   /** The tabindex of the grid. */
   readonly tabIndex = input(undefined, {
-    transform: (v: string | number | undefined) =>
-      v === undefined ? undefined : numberAttribute(v),
+    alias: 'tabindex',
+    transform: tabIndexTransform,
   });
 
   /** The UI pattern for the grid. */

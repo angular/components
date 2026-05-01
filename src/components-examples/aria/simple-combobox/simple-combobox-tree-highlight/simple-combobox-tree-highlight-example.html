@@ -10,7 +10,7 @@
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
       <div class="example-popover">
-        <ul ngTree ngComboboxWidget class="example-tree" focusMode="activedescendant" [tabIndex]="-1"
+        <ul ngTree ngComboboxWidget class="example-tree" focusMode="activedescendant" [tabindex]="-1"
           selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
           #tree="ngTree" [activeDescendant]="tree.activeDescendant()">
           <ng-template [ngTemplateOutlet]="treeNodes"

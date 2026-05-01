@@ -1,7 +1,7 @@
-<div class="example-combobox-container" ngCombobox #combobox="ngCombobox" [(expanded)]="popupExpanded" tabindex="0">
+<div class="example-combobox-container" ngCombobox #combobox="ngCombobox" [(expanded)]="popupExpanded">
   <div #origin class="example-combobox-input-container">
     <input class="example-combobox-input example-dialog-input" placeholder="Select a state..." [value]="value()"
-      [readonly]="true" tabindex="-1" />
+      [readonly]="true" [tabindex]="-1" />
     <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
   </div>
 
@@ -19,9 +19,9 @@
                 (keydown.escape)="onSearchEscape($event)" />
             </div>
             <ng-template ngComboboxPopup [combobox]="innerCombobox">
-              <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox" focusMode="activedescendant" [tabIndex]="-1"
-                selectionMode="explicit" [(value)]="selectedStates" (click)="onCommit()" (keydown.enter)="onCommit()"
-                [activeDescendant]="listbox.activeDescendant()">
+              <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox" focusMode="activedescendant"
+                tabindex="-1" selectionMode="explicit" [(value)]="selectedStates" (click)="onCommit()"
+                (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
                 @for (option of options(); track option) {
                 <div class="example-option example-selectable example-stateful" ngOption [value]="option"
                   [label]="option">

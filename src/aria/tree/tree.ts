@@ -15,14 +15,19 @@ import {
   inject,
   input,
   model,
-  numberAttribute,
   signal,
   Signal,
   untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {ComboboxTreePattern, TreeItemPattern, TreePattern, sortDirectives} from '../private';
+import {
+  ComboboxTreePattern,
+  TreeItemPattern,
+  TreePattern,
+  sortDirectives,
+  tabIndexTransform,
+} from '../private';
 import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
 
@@ -134,8 +139,8 @@ export class Tree<V> {
 
   /** The tabindex of the tree. */
   readonly tabIndex = input(undefined, {
-    transform: (v: string | number | undefined) =>
-      v === undefined ? undefined : numberAttribute(v),
+    alias: 'tabindex',
+    transform: tabIndexTransform,
   });
 
   /** The values of the currently selected items. */

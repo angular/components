@@ -28,4 +28,5 @@ export * from './deferred-content';
 export * from './utils/collection';
 export * from './utils/element';
 export * from './utils/element-resolver';
+export * from './utils/transforms';
 export * from './simple-combobox/simple-combobox';
