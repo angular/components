@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   signal,
   viewChild,
 } from '@angular/core';
@@ -36,6 +37,7 @@ export class SimpleComboboxAutocompleteHighlightExample {
   popupExpanded = signal(false);
   searchString = signal('');
   selectedOption = signal<string[]>([]);
+  navigated = signal(false);
 
   /** The query string used to filter the list of countries. */
   query = computed(() => this.searchString());
@@ -48,6 +50,12 @@ export class SimpleComboboxAutocompleteHighlightExample {
   constructor() {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
+    });
+
+    effect(() => {
+      if (!this.popupExpanded()) {
+        this.navigated.set(false);
+      }
     });
   }
 

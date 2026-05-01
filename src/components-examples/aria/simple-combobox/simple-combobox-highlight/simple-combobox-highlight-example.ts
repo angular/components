@@ -8,7 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/simple-combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
+import {afterRenderEffect, Component, computed, effect, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 /** @title Simple Combobox Highlight */
@@ -24,6 +24,7 @@ export class SimpleComboboxHighlightExample {
   popupExpanded = signal(false);
   searchString = signal('');
   selectedOption = signal<string[]>([]);
+  navigated = signal(false);
 
   options = computed(() =>
     states.filter(state => state.name.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -32,6 +33,12 @@ export class SimpleComboboxHighlightExample {
   constructor() {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
+    });
+
+    effect(() => {
+      if (!this.popupExpanded()) {
+        this.navigated.set(false);
+      }
     });
   }
 

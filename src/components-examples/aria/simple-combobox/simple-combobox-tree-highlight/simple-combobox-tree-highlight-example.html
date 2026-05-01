@@ -3,14 +3,15 @@
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Search..."
       [(value)]="searchString" [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)"
-      [inlineSuggestion]="selectedValues()[0] || firstMatchingOption()" />
+      (keydown.arrowdown)="navigated.set(true)" (keydown.arrowup)="navigated.set(true)"
+      [inlineSuggestion]="(searchString() || navigated()) ? selectedValues()[0] : undefined" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
       <ul ngTree ngComboboxWidget class="example-tree example-popup" focusMode="activedescendant" [tabindex]="-1"
-        selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
+        selectionMode="follow" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
         #tree="ngTree" [activeDescendant]="tree.activeDescendant()">
         <ng-template [ngTemplateOutlet]="treeNodes"
           [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
