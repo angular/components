@@ -1211,6 +1211,7 @@ describe('Combobox', () => {
     [alwaysExpanded]="alwaysExpanded()"
     [tabindex]="tabIndex()"
     (focusout)="onBlur()"
+    (click)="popupExpanded.set(true)"
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
@@ -1556,6 +1557,7 @@ class ComboboxGridExample {
     (input)="onInput()"
     [disabled]="readonly()"
     (focusout)="onBlur()"
+    (click)="combobox.expanded.set(true)"
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
@@ -1619,6 +1621,7 @@ class ComboboxListboxAutoSelectExample {
     [(expanded)]="popupExpanded"
     [inlineSuggestion]="value()[0] || options()[0]"
     [disabled]="readonly()"
+    (click)="popupExpanded.set(true)"
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">

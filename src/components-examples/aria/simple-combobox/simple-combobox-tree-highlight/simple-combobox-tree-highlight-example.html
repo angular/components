@@ -2,21 +2,19 @@
   <div #origin class="example-combobox-input-container">
     <span class="material-symbols-outlined example-icon example-search-icon">search</span>
     <input ngCombobox #combobox="ngCombobox" class="example-combobox-input" placeholder="Search..."
-      [(value)]="searchString" [(expanded)]="popupExpanded"
+      [(value)]="searchString" [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)"
       [inlineSuggestion]="selectedValues()[0] || firstMatchingOption()" />
   </div>
 
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
-      <div class="example-popover">
-        <ul ngTree ngComboboxWidget class="example-tree" focusMode="activedescendant" [tabindex]="-1"
-          selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
-          #tree="ngTree" [activeDescendant]="tree.activeDescendant()">
-          <ng-template [ngTemplateOutlet]="treeNodes"
-            [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
-        </ul>
-      </div>
+      <ul ngTree ngComboboxWidget class="example-tree example-popup" focusMode="activedescendant" [tabindex]="-1"
+        selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()"
+        #tree="ngTree" [activeDescendant]="tree.activeDescendant()">
+        <ng-template [ngTemplateOutlet]="treeNodes"
+          [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
+      </ul>
     </ng-template>
   </ng-template>
 </div>

@@ -2,7 +2,7 @@
   <div #origin class="example-autocomplete">
     <span class="example-search-icon material-symbols-outlined" translate="no">search</span>
     <input ngCombobox #combobox="ngCombobox" aria-label="Label dropdown" placeholder="Select a country"
-      [(value)]="searchString" [(expanded)]="popupExpanded" />
+      [(value)]="searchString" [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)" />
     <button class="example-clear-button" aria-label="Clear" (keydown)="onKeydown($event)" (click)="clear()">
       <span aria-hidden="true" class="example-clear-icon material-symbols-outlined">close</span>
     </button>
