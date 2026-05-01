@@ -7,19 +7,20 @@
  */
 
 import {
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
   model,
+  OnDestroy,
   output,
   signal,
 } from '@angular/core';
-import {SignalLike, MenuBarPattern} from '../private';
+import {SignalLike, MenuBarPattern, SortedCollection} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuItem} from './menu-item';
 import {MENU_COMPONENT} from './menu-tokens';
@@ -69,12 +70,12 @@ import {MENU_COMPONENT} from './menu-tokens';
   },
   providers: [{provide: MENU_COMPONENT, useExisting: MenuBar}],
 })
-export class MenuBar<V> {
-  /** The menu items contained in the menubar. */
-  readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
+export class MenuBar<V> implements OnDestroy {
+  /** The collection of menu items. */
+  readonly _collection = new SortedCollection<MenuItem<V>>();
 
   readonly _items: SignalLike<MenuItem<V>[]> = () =>
-    this._allItems().filter(i => i.parent === this);
+    this._collection.orderedItems().filter(i => i.parent === this);
 
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
@@ -124,6 +125,14 @@ export class MenuBar<V> {
     });
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   /** Closes the menubar. */

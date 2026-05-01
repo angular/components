@@ -6,7 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Directive, effect, ElementRef, inject, input, model} from '@angular/core';
+import {
+  computed,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  model,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {MenuItemPattern} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {MENU_COMPONENT} from './menu-tokens';
@@ -46,7 +56,7 @@ import type {MenuBar} from './menu-bar';
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
 })
-export class MenuItem<V> {
+export class MenuItem<V> implements OnInit, OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -93,6 +103,14 @@ export class MenuItem<V> {
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+  }
+
+  ngOnInit() {
+    this.parent?._collection.register(this);
+  }
+
+  ngOnDestroy() {
+    this.parent?._collection.unregister(this);
   }
 
   /** Opens the submenu focusing on the first menu item. */
