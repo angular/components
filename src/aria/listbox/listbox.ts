@@ -16,7 +16,6 @@ import {
   inject,
   input,
   model,
-  numberAttribute,
   OnDestroy,
   signal,
   Signal,
@@ -24,7 +23,12 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxListboxPattern, ListboxPattern, SortedCollection} from '../private';
+import {
+  ComboboxListboxPattern,
+  ListboxPattern,
+  SortedCollection,
+  tabIndexTransform,
+} from '../private';
 import {ComboboxPopup} from '../combobox';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
@@ -134,8 +138,7 @@ export class Listbox<V> implements OnDestroy {
   /** The tabindex of the listbox. */
   readonly tabIndex = input(undefined, {
     alias: 'tabindex',
-    transform: (v: string | number | undefined) =>
-      v === undefined ? undefined : numberAttribute(v),
+    transform: tabIndexTransform,
   });
 
   /** The values of the currently selected items. */

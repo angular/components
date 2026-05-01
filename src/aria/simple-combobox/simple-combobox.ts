@@ -15,12 +15,15 @@ import {
   inject,
   input,
   model,
-  numberAttribute,
   OnInit,
   signal,
   Renderer2,
 } from '@angular/core';
-import {DeferredContentAware, SimpleComboboxPattern} from '@angular/aria/private';
+import {
+  DeferredContentAware,
+  SimpleComboboxPattern,
+  tabIndexTransform,
+} from '@angular/aria/private';
 import type {ComboboxPopup} from './simple-combobox-popup';
 
 /**
@@ -86,8 +89,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
   /** The tabindex of the combobox. */
   readonly tabIndex = input(undefined, {
     alias: 'tabindex',
-    transform: (v: string | number | undefined) =>
-      v === undefined ? undefined : numberAttribute(v),
+    transform: tabIndexTransform,
   });
 
   /** Whether the combobox is expanded. */

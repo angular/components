@@ -26,7 +26,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
     readonly _popup: _angular_core.WritableSignal<ComboboxPopup | undefined>;
     _registerPopup(popup: ComboboxPopup): void;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly tabIndex: _angular_core.InputSignal<string | number | null | undefined>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     _unregisterPopup(): void;
     readonly value: _angular_core.ModelSignal<string>;
     // (undocumented)
