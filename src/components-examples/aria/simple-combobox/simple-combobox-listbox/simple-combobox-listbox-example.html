@@ -5,18 +5,28 @@
       [(value)]="searchString" [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)" />
   </div>
 
+  <div aria-live="polite" class="cdk-visually-hidden">
+    {{options().length === 0 ? 'No results found for ' + searchString() : ''}}
+  </div>
+
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox">
-      <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox example-popup" focusMode="activedescendant"
-        [tabindex]="-1" selectionMode="explicit" [(value)]="selectedOption" (click)="onCommit()"
-        (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
-        @for (option of options(); track option) {
-        <div class="example-option example-selectable example-stateful" ngOption [value]="option" [label]="option">
-          <span>{{option}}</span>
-          <span aria-hidden="true" class="material-symbols-outlined example-icon example-selected-icon">check</span>
-        </div>
+      <div class="example-popup">
+        @if (options().length === 0) {
+        <div class="example-no-results">No results found</div>
         }
+        <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox" focusMode="activedescendant"
+          [tabindex]="-1" selectionMode="explicit" [(value)]="selectedOption" (click)="onCommit()"
+          (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()"
+          [class.example-empty]="options().length === 0">
+          @for (option of options(); track option) {
+          <div class="example-option example-selectable example-stateful" ngOption [value]="option" [label]="option">
+            <span>{{option}}</span>
+            <span aria-hidden="true" class="material-symbols-outlined example-icon example-selected-icon">check</span>
+          </div>
+          }
+        </div>
       </div>
     </ng-template>
   </ng-template>

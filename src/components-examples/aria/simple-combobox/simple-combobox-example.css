@@ -360,3 +360,20 @@ ul[role='group'] {
 .example-grid-row[aria-selected='true'] .example-selected-icon {
   visibility: visible;
 }
+
+.example-no-results {
+  padding: 1rem;
+}
+
+.example-empty {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.example-popup-no-margin {
+  margin-block-start: 0;
+}

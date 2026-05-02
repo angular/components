@@ -5,14 +5,24 @@
       [(expanded)]="popupExpanded" (click)="popupExpanded.set(true)" />
   </div>
 
+  <div aria-live="polite" class="cdk-visually-hidden">
+    {{filteredGroups().length === 0 ? 'No results found for ' + searchString() : ''}}
+  </div>
+
   <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
     [cdkConnectedOverlayOpen]="popupExpanded()" [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
-      <ul ngTree ngComboboxWidget class="example-tree example-popup" focusMode="activedescendant" [tabindex]="-1"
-        selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()" #tree="ngTree"
-        [activeDescendant]="tree.activeDescendant()">
-        <ng-template [ngTemplateOutlet]="treeNodes" [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
-      </ul>
+      <div class="example-popup">
+        @if (filteredGroups().length === 0) {
+        <div class="example-no-results">No results found</div>
+        }
+        <ul ngTree ngComboboxWidget class="example-tree" focusMode="activedescendant" [tabindex]="-1"
+          selectionMode="explicit" [(value)]="selectedValues" (click)="onCommit()" (keydown.enter)="onCommit()" #tree="ngTree"
+          [activeDescendant]="tree.activeDescendant()"
+          [class.example-empty]="filteredGroups().length === 0">
+          <ng-template [ngTemplateOutlet]="treeNodes" [ngTemplateOutletContext]="{nodes: filteredGroups(), parent: tree}" />
+        </ul>
+      </div>
     </ng-template>
   </ng-template>
 </div>
