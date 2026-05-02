@@ -34,7 +34,7 @@ export class SimpleComboboxAutocompleteDisabledExample {
   readonly combobox = viewChild(Combobox);
 
   popupExpanded = signal(false);
-  searchString = signal('United States of America');
+  searchString = signal('Select a country');
   selectedOption = signal<string[]>([]);
 
   /** The query string used to filter the list of countries. */

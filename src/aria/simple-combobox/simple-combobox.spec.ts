@@ -548,6 +548,13 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-disabled')).toBe('true');
       });
 
+      it('should make the input read-only when disabled and softDisabled is true', () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('readonly')).toBe('');
+      });
+
       it('should block interactions when disabled', () => {
         fixture.componentInstance.disabled.set(true);
         fixture.detectChanges();

@@ -58,6 +58,7 @@ import type {ComboboxPopup} from './simple-combobox-popup';
     '[attr.tabindex]':
       'disabled() && !softDisabled() ? -1 : (tabIndex() !== undefined ? tabIndex() : 0)',
     '[attr.disabled]': 'disabled() && !softDisabled() ? "" : null',
+    '[attr.readonly]': 'disabled() && _pattern.isEditable() ? "" : null',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusin)': '_pattern.onFocusin()',
     '(focusout)': '_pattern.onFocusout($event)',
