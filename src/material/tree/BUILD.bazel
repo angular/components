@@ -81,7 +81,6 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/cdk/collections",
         "//src/cdk/tree",
-        "//src/material/core",
     ],
 )
 

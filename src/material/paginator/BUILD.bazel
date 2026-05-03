@@ -97,7 +97,6 @@ ng_project(
         ":paginator",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/select",
     ],

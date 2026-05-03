@@ -10,7 +10,6 @@ ts_project(
     ),
     deps = [
         "//src/cdk/testing",
-        "//src/material/bottom-sheet",
     ],
 )
 

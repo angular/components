@@ -28,7 +28,6 @@ ng_project(
         "//src/material/input",
         "//src/material/radio",
         "//src/material/stepper",
-        "//src/material/stepper/testing",
     ],
 )
 

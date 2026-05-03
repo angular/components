@@ -17,7 +17,6 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//src/cdk-experimental/popover-edit",
-        "//src/material/core",
     ],
 )
 

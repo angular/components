@@ -61,7 +61,6 @@ ng_project(
         "//:node_modules/kagekiri",
         "//src/cdk/platform",
         "//src/cdk/testing",
-        "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
     ],
 )
@@ -80,7 +79,6 @@ ts_project(
         ":test_harnesses",
         "//:node_modules/protractor",
         "//src/cdk/testing",
-        "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
     ],
 )

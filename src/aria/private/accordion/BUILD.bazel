@@ -12,7 +12,6 @@ ts_project(
         "//src/aria/private/behaviors/expansion",
         "//src/aria/private/behaviors/list-focus",
         "//src/aria/private/behaviors/list-navigation",
-        "//src/aria/private/behaviors/list-selection",
         "//src/aria/private/behaviors/signal-like",
     ],
 )

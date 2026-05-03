@@ -30,7 +30,6 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/overlay",
         "//src/cdk/testing",
-        "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
         "//src/material/icon",
         "//src/material/menu",

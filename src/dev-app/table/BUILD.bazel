@@ -10,6 +10,5 @@ ng_project(
         "//:node_modules/@angular/core",
         "//src/components-examples/cdk/table",
         "//src/components-examples/material/table",
-        "//src/dev-app/example",
     ],
 )

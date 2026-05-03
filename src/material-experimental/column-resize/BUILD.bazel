@@ -14,7 +14,6 @@ ng_project(
         "//src/cdk-experimental/column-resize",
         "//src/cdk/overlay",
         "//src/cdk/table",
-        "//src/material/table",
     ],
 )
 
