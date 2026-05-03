@@ -451,6 +451,35 @@ describe('Combobox', () => {
           expect(inputElement.value).toBe('California');
           expect(fixture.componentInstance.value()).toEqual(['California']);
         });
+
+        it('should resume inserting completion strings on navigation after a backspace deletion', async () => {
+          down(); // Open popup
+
+          // 1. Type 'A', completion should pop up 'Alabama'
+          input('A');
+          expect(inputElement.value).toBe('Alabama');
+
+          // 2. Simulate Backspace deletion (dispatch InputEvent with deleteContentBackward)
+          inputElement.value = '';
+          inputElement.dispatchEvent(
+            new InputEvent('input', {
+              bubbles: true,
+              inputType: 'deleteContentBackward',
+            }),
+          );
+          fixture.detectChanges();
+
+          // Confirm no completion gets inserted during deletion
+          expect(inputElement.value).toBe('');
+
+          // 3. Press ArrowDown key to navigate to the next option (Alaska)
+          down();
+
+          // Active descendant navigation resets `isDeleting`, so highlight/completion should successfully populate the current active match!
+          const options = getOptions();
+          expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
+          expect(inputElement.value).toBe('Alaska');
+        });
       });
     });
 
