@@ -120,6 +120,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     overlapTrigger: boolean;
     overlayPanelClass: string | string[];
     _panelAnimationState: 'void' | 'enter';
+    get panelClass(): string;
     set panelClass(classes: string);
     // (undocumented)
     readonly panelId: string;
