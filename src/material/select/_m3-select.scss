@@ -19,6 +19,8 @@ $prefix: (mat, select);
   @return (
     base: (
       select-container-elevation-shadow: elevation.get-box-shadow(2),
+      select-divider-bottom-spacing: 8px,
+      select-divider-top-spacing: 8px
     ),
     color: (
       select-panel-background-color: map.get($system, surface-container),
