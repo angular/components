@@ -221,6 +221,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * @param classes list of class names
    */
   @Input('class')
+  get panelClass(): string {
+    return this._previousPanelClass;
+  }
   set panelClass(classes: string) {
     const previousPanelClass = this._previousPanelClass;
     const newClassList = {...this._classList};
@@ -243,7 +246,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
     this._classList = newClassList;
   }
-  private _previousPanelClass!: string;
+  private _previousPanelClass: string = '';
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the

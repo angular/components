@@ -568,6 +568,15 @@ describe('MatMenu', () => {
     expect(panel.classList).toContain('custom-two');
   });
 
+  it('should expose the configured classes via the getter', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.componentInstance.panelClass = 'custom-one custom-two';
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.menu.panelClass).toBe('custom-one custom-two');
+    expect(fixture.componentInstance.menu.classList).toBe('custom-one custom-two');
+  });
+
   it('should set the "menu" role on the overlay panel', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
