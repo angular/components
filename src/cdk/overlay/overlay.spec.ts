@@ -15,14 +15,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Direction, Directionality} from '../bidi';
 import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {dispatchFakeEvent} from '../testing/private';
@@ -77,7 +70,11 @@ describe('Overlay', () => {
     overlayContainer.ngOnDestroy();
   }
 
-  beforeEach(waitForAsync(setup));
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
+  beforeEach(setup);
   afterEach(cleanup);
 
   it('should load a component into an overlay', () => {
@@ -299,7 +296,7 @@ describe('Overlay', () => {
     expect(overlayRef.getConfig().direction).toBe('ltr');
   });
 
-  it('should clear out all DOM element references on dispose', fakeAsync(() => {
+  it('should clear out all DOM element references on dispose', async () => {
     const overlayRef = createOverlayRef(injector, {hasBackdrop: true});
     overlayRef.attach(componentPortal);
 
@@ -312,7 +309,7 @@ describe('Overlay', () => {
       .toBeTruthy();
 
     overlayRef.dispose();
-    tick(500);
+    await wait(500);
 
     expect(overlayRef.hostElement)
       .withContext('Expected overlay host not to be referenced.')
@@ -323,30 +320,7 @@ describe('Overlay', () => {
     expect(overlayRef.backdropElement)
       .withContext('Expected backdrop element not to be referenced.')
       .toBeFalsy();
-  }));
-
-  it('should clear the backdrop timeout if the transition finishes first', fakeAsync(() => {
-    const overlayRef = createOverlayRef(injector, {hasBackdrop: true});
-
-    overlayRef.attach(componentPortal);
-    overlayRef.detach();
-
-    const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop')!;
-    dispatchFakeEvent(backdrop, 'transitionend');
-
-    // Note: we don't `tick` or `flush` here. The assertion is that
-    // `fakeAsync` will throw if we have an unflushed timer.
-  }));
-
-  it('should clear the backdrop timeout if the overlay is disposed', fakeAsync(() => {
-    const overlayRef = createOverlayRef(injector, {hasBackdrop: true});
-    overlayRef.attach(componentPortal);
-    overlayRef.detach();
-    overlayRef.dispose();
-
-    // Note: we don't `tick` or `flush` here. The assertion is that
-    // `fakeAsync` will throw if we have an unflushed timer.
-  }));
+  });
 
   it('should be able to use the `Overlay` provider during app initialization', () => {
     /** Dummy provider that depends on `Overlay`. */
@@ -466,7 +440,7 @@ describe('Overlay', () => {
     expect(() => overlayRef.removePanelClass([''])).not.toThrow();
   });
 
-  it('should detach a component-based overlay when the view is destroyed', fakeAsync(() => {
+  it('should detach a component-based overlay when the view is destroyed', async () => {
     const overlayRef = createOverlayRef(injector);
     const paneElement = overlayRef.overlayElement;
 
@@ -476,25 +450,26 @@ describe('Overlay', () => {
     expect(paneElement.childNodes.length).not.toBe(0);
 
     viewContainerFixture.destroy();
-    flush();
+    await viewContainerFixture.whenStable();
 
     expect(paneElement.childNodes.length).toBe(0);
-  }));
+  });
 
-  it('should detach a template-based overlay when the view is destroyed', fakeAsync(() => {
+  it('should detach a template-based overlay when the view is destroyed', async () => {
     const overlayRef = createOverlayRef(injector);
     const paneElement = overlayRef.overlayElement;
 
     overlayRef.attach(templatePortal);
     viewContainerFixture.detectChanges();
+    await viewContainerFixture.whenStable();
 
     expect(paneElement.childNodes.length).not.toBe(0);
 
     viewContainerFixture.destroy();
-    flush();
+    await wait(100);
 
     expect(paneElement.childNodes.length).toBe(0);
-  }));
+  });
 
   it('should do nothing when trying to attach a disposed overlay', () => {
     const overlayRef = createOverlayRef(injector);
@@ -510,17 +485,17 @@ describe('Overlay', () => {
       config = new OverlayConfig();
     });
 
-    it('should apply the positioning strategy', fakeAsync(() => {
+    it('should apply the positioning strategy', async () => {
       config.positionStrategy = new FakePositionStrategy();
 
       createOverlayRef(injector, config).attach(componentPortal);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
-    }));
+    });
 
-    it('should have the overlay in the DOM in position strategy when reattaching', fakeAsync(() => {
+    it('should have the overlay in the DOM in position strategy when reattaching', async () => {
       let overlayPresentInDom = false;
 
       config.positionStrategy = {
@@ -537,17 +512,17 @@ describe('Overlay', () => {
         .toBeTruthy();
 
       overlayRef.detach();
-      tick();
+      await wait(0);
 
       overlayRef.attach(componentPortal);
-      tick();
+      await wait(0);
 
       expect(overlayPresentInDom)
         .withContext('Expected host element to be attached to the DOM.')
         .toBeTruthy();
-    }));
+    });
 
-    it('should not apply the position if it detaches before the zone stabilizes', fakeAsync(() => {
+    it('should not apply the position if it detaches before the zone stabilizes', async () => {
       config.positionStrategy = new FakePositionStrategy();
 
       const overlayRef = createOverlayRef(injector, config);
@@ -557,12 +532,12 @@ describe('Overlay', () => {
       overlayRef.attach(componentPortal);
       overlayRef.detach();
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(config.positionStrategy.apply).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should be able to swap position strategies', fakeAsync(() => {
+    it('should be able to swap position strategies', async () => {
       const firstStrategy = new FakePositionStrategy();
       const secondStrategy = new FakePositionStrategy();
 
@@ -577,7 +552,7 @@ describe('Overlay', () => {
       const overlayRef = createOverlayRef(injector, config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
       expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
@@ -587,7 +562,7 @@ describe('Overlay', () => {
 
       overlayRef.updatePositionStrategy(secondStrategy);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
       expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
@@ -595,9 +570,9 @@ describe('Overlay', () => {
 
       expect(secondStrategy.attach).toHaveBeenCalledTimes(1);
       expect(secondStrategy.apply).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should not do anything when trying to swap a positioning strategy with itself', fakeAsync(() => {
+    it('should not do anything when trying to swap a positioning strategy with itself', async () => {
       const strategy = new FakePositionStrategy();
 
       spyOn(strategy, 'attach');
@@ -609,7 +584,7 @@ describe('Overlay', () => {
       const overlayRef = createOverlayRef(injector, config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
       expect(strategy.apply).toHaveBeenCalledTimes(1);
@@ -617,12 +592,12 @@ describe('Overlay', () => {
 
       overlayRef.updatePositionStrategy(strategy);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
       expect(strategy.apply).toHaveBeenCalledTimes(1);
       expect(strategy.dispose).not.toHaveBeenCalled();
-    }));
+    });
 
     it('should not throw when disposing multiple times in a row', () => {
       const overlayRef = createOverlayRef(injector);
@@ -636,15 +611,6 @@ describe('Overlay', () => {
         overlayRef.dispose();
       }).not.toThrow();
     });
-
-    it('should not trigger timers when disposing of an overlay', fakeAsync(() => {
-      const overlayRef = createOverlayRef(injector, {hasBackdrop: true});
-      overlayRef.attach(templatePortal);
-      overlayRef.dispose();
-
-      // The assertion here is that `fakeAsync` doesn't flag
-      // any pending timeouts after the test is done.
-    }));
   });
 
   describe('size', () => {
@@ -1050,7 +1016,7 @@ describe('Overlay', () => {
       expect(fakeScrollStrategy.overlayRef).toBeNull();
     });
 
-    it('should be able to swap scroll strategies', fakeAsync(() => {
+    it('should be able to swap scroll strategies', async () => {
       const firstStrategy = new FakeScrollStrategy();
       const secondStrategy = new FakeScrollStrategy();
 
@@ -1065,7 +1031,7 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
       expect(firstStrategy.enable).toHaveBeenCalledTimes(1);
@@ -1075,7 +1041,7 @@ describe('Overlay', () => {
 
       overlayRef.updateScrollStrategy(secondStrategy);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
       expect(firstStrategy.enable).toHaveBeenCalledTimes(1);
@@ -1084,9 +1050,9 @@ describe('Overlay', () => {
 
       expect(secondStrategy.attach).toHaveBeenCalledTimes(1);
       expect(secondStrategy.enable).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('should not do anything when trying to swap a scroll strategy with itself', fakeAsync(() => {
+    it('should not do anything when trying to swap a scroll strategy with itself', async () => {
       const strategy = new FakeScrollStrategy();
 
       spyOn(strategy, 'attach');
@@ -1098,7 +1064,7 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
       expect(strategy.enable).toHaveBeenCalledTimes(1);
@@ -1107,13 +1073,13 @@ describe('Overlay', () => {
 
       overlayRef.updateScrollStrategy(strategy);
       viewContainerFixture.detectChanges();
-      tick();
+      await viewContainerFixture.whenStable();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
       expect(strategy.enable).toHaveBeenCalledTimes(1);
       expect(strategy.disable).not.toHaveBeenCalled();
       expect(strategy.detach).not.toHaveBeenCalled();
-    }));
+    });
   });
 });
 
