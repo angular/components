@@ -229,6 +229,9 @@ export class List<T extends ListItem<V>, V> {
 
     if (moved) {
       this.updateSelection(opts);
+      if (!opts?.selectRange) {
+        this.anchor(this.activeIndex());
+      }
     }
 
     this._wrap.set(true);

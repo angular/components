@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {computed, signal, untracked} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
@@ -130,6 +130,8 @@ export class SimpleComboboxPattern {
       )
       .on('ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
       .on('ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
       .on('Home', e => this.keyboardEventRelay.set(e))
       .on('End', e => this.keyboardEventRelay.set(e))
       .on('Enter', e => this.keyboardEventRelay.set(e))
@@ -144,6 +146,10 @@ export class SimpleComboboxPattern {
     if (!this.isEditable()) {
       manager
         .on(' ', e => this.keyboardEventRelay.set(e))
+        .on([Modifier.Ctrl, Modifier.Meta], 'a', e => this.keyboardEventRelay.set(e))
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', e => this.keyboardEventRelay.set(e))
+        .on(Modifier.Shift, 'Home', e => this.keyboardEventRelay.set(e))
+        .on(Modifier.Shift, 'End', e => this.keyboardEventRelay.set(e))
         .on(/^.$/, e => {
           this.keyboardEventRelay.set(e);
         });

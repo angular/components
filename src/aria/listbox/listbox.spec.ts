@@ -602,6 +602,17 @@ describe('Listbox', () => {
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
           });
 
+          it('should move selection anchor along with focus during normal non-shift navigation', () => {
+            setupListbox({multi: true, selectionMode: 'explicit'});
+            down({shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([0, 1]);
+            down();
+            down();
+            down();
+            up({shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([0, 1, 3, 4]);
+          });
+
           it('should toggle selection of all options on Ctrl+A', () => {
             setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
             keydown('A', {ctrlKey: true});
