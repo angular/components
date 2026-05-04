@@ -4,7 +4,7 @@
 </div>
 
 <ng-template [cdkConnectedOverlay]="{origin: combobox.element, usePopover: 'inline', matchWidth: true}"
-  [cdkConnectedOverlayOpen]="true" [cdkConnectedOverlayDisableClose]="true">
+  [cdkConnectedOverlayOpen]="popupExpanded()" [cdkConnectedOverlayDisableClose]="true">
   <ng-template ngComboboxPopup [combobox]="combobox">
     <div class="example-popup-container">
       <div #listbox="ngListbox" ngListbox [multi]="true" ngComboboxWidget focusMode="activedescendant" [tabindex]="-1"
