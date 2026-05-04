@@ -12,7 +12,7 @@ import { HarnessLoader } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export class SimpleComboboxHarness extends ContentContainerComponentHarness {
+export class ComboboxHarness extends ContentContainerComponentHarness {
     blur(): Promise<void>;
     close(): Promise<void>;
     focus(): Promise<void>;
@@ -32,11 +32,11 @@ export class SimpleComboboxHarness extends ContentContainerComponentHarness {
     isOpen(): Promise<boolean>;
     open(): Promise<void>;
     setValue(value: string): Promise<void>;
-    static with(options?: SimpleComboboxHarnessFilters): HarnessPredicate<SimpleComboboxHarness>;
+    static with(options?: ComboboxHarnessFilters): HarnessPredicate<ComboboxHarness>;
 }
 
 // @public
-export interface SimpleComboboxHarnessFilters extends BaseHarnessFilters {
+export interface ComboboxHarnessFilters extends BaseHarnessFilters {
     disabled?: boolean;
     placeholder?: string | RegExp;
     value?: string | RegExp;

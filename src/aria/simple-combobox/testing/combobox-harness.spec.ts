@@ -13,10 +13,10 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Combobox, ComboboxPopup, ComboboxWidget} from '../index';
 import {Listbox, Option} from '../../listbox';
 import {ListboxHarness, ListboxOptionHarness} from '../../listbox/testing/listbox-harness';
-import {SimpleComboboxHarness} from './simple-combobox-harness';
+import {ComboboxHarness} from './combobox-harness';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-describe('SimpleComboboxHarness', () => {
+describe('ComboboxHarness', () => {
   let fixture: ComponentFixture<any>;
   let loader: HarnessLoader;
 
@@ -27,14 +27,14 @@ describe('SimpleComboboxHarness', () => {
   }
 
   describe('Basic usage', () => {
-    beforeEach(() => setupTest(SimpleComboboxTestApp));
+    beforeEach(() => setupTest(ComboboxTestApp));
 
     it('should load combobox harness', async () => {
-      await expectAsync(loader.getHarness(SimpleComboboxHarness)).toBeResolved();
+      await expectAsync(loader.getHarness(ComboboxHarness)).toBeResolved();
     });
 
     it('should get and set values', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       await combobox.setValue('California');
       fixture.detectChanges();
 
@@ -42,7 +42,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should correctly report disabled state', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       expect(await combobox.isDisabled()).toBeFalse();
 
       fixture.componentInstance.disabled.set(true);
@@ -52,7 +52,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should open and close the popup', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       expect(await combobox.isOpen()).toBeFalse();
 
       await combobox.open();
@@ -65,7 +65,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should allow loading nested harnesses within the popup content via unified container API', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       await combobox.open();
       fixture.detectChanges();
 
@@ -76,7 +76,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should fail to resolve nested items when closed', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       // Popup isn't open yet, so getPopupWidget should fail.
       await expectAsync(combobox.getPopupWidget(ListboxHarness)).toBeRejectedWithError(
         /Cannot retrieve popup content because the combobox is closed/,
@@ -84,7 +84,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should support getting explicit popup loader for descendant matching', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       await combobox.open();
       fixture.detectChanges();
 
@@ -95,7 +95,7 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should support focusing and blurring', async () => {
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      const combobox = await loader.getHarness(ComboboxHarness);
       await combobox.focus();
       expect(await combobox.isFocused()).toBeTrue();
 
@@ -106,8 +106,8 @@ describe('SimpleComboboxHarness', () => {
 
   describe('Overlay and Popover integrations', () => {
     it('should find and resolve harnesses nested inside standard CdkOverlay', async () => {
-      setupTest(SimpleComboboxOverlayTestApp);
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      setupTest(ComboboxOverlayTestApp);
+      const combobox = await loader.getHarness(ComboboxHarness);
 
       await combobox.open();
       fixture.detectChanges();
@@ -119,8 +119,8 @@ describe('SimpleComboboxHarness', () => {
     });
 
     it('should resolve nested harnesses when using Native Popover API', async () => {
-      setupTest(SimpleComboboxNativePopoverTestApp);
-      const combobox = await loader.getHarness(SimpleComboboxHarness);
+      setupTest(ComboboxNativePopoverTestApp);
+      const combobox = await loader.getHarness(ComboboxHarness);
 
       await combobox.open();
       fixture.detectChanges();
@@ -153,7 +153,7 @@ describe('SimpleComboboxHarness', () => {
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
 })
-class SimpleComboboxTestApp {
+class ComboboxTestApp {
   disabled = signal(false);
 }
 
@@ -174,7 +174,7 @@ class SimpleComboboxTestApp {
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-class SimpleComboboxOverlayTestApp {
+class ComboboxOverlayTestApp {
   popupExpanded = signal(false);
 }
 
@@ -195,6 +195,6 @@ class SimpleComboboxOverlayTestApp {
   `,
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-class SimpleComboboxNativePopoverTestApp {
+class ComboboxNativePopoverTestApp {
   popupExpanded = signal(false);
 }

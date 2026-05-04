@@ -14,10 +14,10 @@ import {
   HarnessPredicate,
   TestKey,
 } from '@angular/cdk/testing';
-import {SimpleComboboxHarnessFilters} from './simple-combobox-harness-filters';
+import {ComboboxHarnessFilters} from './combobox-harness-filters';
 
 /** Harness for interacting with a standard `ngCombobox` input element in tests. */
-export class SimpleComboboxHarness extends ContentContainerComponentHarness {
+export class ComboboxHarness extends ContentContainerComponentHarness {
   static hostSelector = '[ngCombobox]';
 
   /**
@@ -25,8 +25,8 @@ export class SimpleComboboxHarness extends ContentContainerComponentHarness {
    * @param options Options for filtering which combobox instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: SimpleComboboxHarnessFilters = {}): HarnessPredicate<SimpleComboboxHarness> {
-    return new HarnessPredicate(SimpleComboboxHarness, options)
+  static with(options: ComboboxHarnessFilters = {}): HarnessPredicate<ComboboxHarness> {
+    return new HarnessPredicate(ComboboxHarness, options)
       .addOption('placeholder', options.placeholder, async (harness, placeholder) =>
         HarnessPredicate.stringMatches(await harness.getPlaceholder(), placeholder),
       )
@@ -108,8 +108,6 @@ export class SimpleComboboxHarness extends ContentContainerComponentHarness {
     if (value) {
       await host.sendKeys(value);
     }
-    // Trigger simulated standard input pipeline.
-    await host.dispatchEvent('input');
   }
 
   /** Gets the placeholder text of the combobox. */

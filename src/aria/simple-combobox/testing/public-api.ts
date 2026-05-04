@@ -6,5 +6,5 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './simple-combobox-harness';
-export * from './simple-combobox-harness-filters';
+export * from './combobox-harness';
+export * from './combobox-harness-filters';
