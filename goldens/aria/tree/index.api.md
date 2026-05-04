@@ -11,9 +11,10 @@ import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export class Tree<V> {
+export class Tree<V> implements OnDestroy {
     constructor();
     readonly activeDescendant: Signal<string | undefined>;
+    readonly _collection: SortedCollection<TreeItem<V>>;
     readonly currentType: _angular_core.InputSignal<"page" | "step" | "location" | "date" | "time" | "true" | "false">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
@@ -21,10 +22,10 @@ export class Tree<V> {
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly nav: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: TreePattern<V>;
-    // (undocumented)
-    _register(child: TreeItem<V>): void;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
@@ -32,8 +33,6 @@ export class Tree<V> {
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
-    // (undocumented)
-    _unregister(child: TreeItem<V>): void;
     readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

@@ -138,8 +138,10 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    this.parent()._register(this);
-    this.tree()._register(this);
+    if (this.parent() instanceof TreeItemGroup) {
+      (this.parent() as TreeItemGroup<V>)._register(this);
+    }
+    this.tree()._collection.register(this);
 
     const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
@@ -160,8 +162,10 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnDestroy() {
-    this.parent()._unregister(this);
-    this.tree()._unregister(this);
+    if (this.parent() instanceof TreeItemGroup) {
+      (this.parent() as TreeItemGroup<V>)._unregister(this);
+    }
+    this.tree()._collection.unregister(this);
   }
 
   _register(group: TreeItemGroup<V>) {
