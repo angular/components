@@ -806,6 +806,69 @@ describe('Tabs', () => {
       expect(panelEl.getAttribute('aria-labelledby')).toBe('custom-tab-id');
     });
   });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'error');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      setupTestTabs();
+    });
+
+    it('should warn when ngTab is missing its corresponding ngTabPanel', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [TabWithoutPanelComponent],
+      });
+      const noPanelFixture = TestBed.createComponent(TabWithoutPanelComponent);
+      noPanelFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "ngTab with value 'tab1' does not have a corresponding ngTabPanel.",
+      );
+    });
+
+    it('should warn when ngTabPanel is missing its corresponding ngTab', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [PanelWithoutTabComponent],
+      });
+      const noTabFixture = TestBed.createComponent(PanelWithoutTabComponent);
+      noTabFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "ngTabPanel with value 'tab1' does not have a corresponding ngTab.",
+      );
+    });
+
+    it('should warn when ngTabPanel is missing ngTabContent structural directive', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [PanelWithoutContentComponent],
+      });
+      const noContentFixture = TestBed.createComponent(PanelWithoutContentComponent);
+      noContentFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngTabPanel must have an ngTabContent structural directive to render.',
+      );
+    });
+
+    it('should warn when duplicate values are detected inside ngTabList', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [DuplicateTabValuesComponent],
+      });
+      const duplicateFixture = TestBed.createComponent(DuplicateTabValuesComponent);
+      duplicateFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith("Duplicate value 'tab1' detected inside ngTabList.");
+    });
+  });
 });
 
 @Component({
@@ -882,3 +945,62 @@ class TestTabsComponent {
 class TestTabsCustomIdComponent {
   selectedTab = signal('tab1');
 }
+
+@Component({
+  template: `
+    <div ngTabs>
+      <ul ngTabList>
+        <li ngTab value="tab1">Tab 1</li>
+      </ul>
+    </div>
+  `,
+  imports: [Tabs, TabList, Tab],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TabWithoutPanelComponent {}
+
+@Component({
+  template: `
+    <div ngTabs>
+      <div ngTabPanel value="tab1">
+        <ng-template ngTabContent>Content 1</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [Tabs, TabPanel, TabContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class PanelWithoutTabComponent {}
+
+@Component({
+  template: `
+    <div ngTabs>
+      <ul ngTabList>
+        <li ngTab value="tab1">Tab 1</li>
+      </ul>
+      <div ngTabPanel value="tab1">
+        Content 1
+      </div>
+    </div>
+  `,
+  imports: [Tabs, TabList, Tab, TabPanel],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class PanelWithoutContentComponent {}
+
+@Component({
+  template: `
+    <div ngTabs>
+      <ul ngTabList>
+        <li ngTab value="tab1">Tab 1</li>
+        <li ngTab value="tab1">Tab 1 Copy</li>
+      </ul>
+      <div ngTabPanel value="tab1">
+        <ng-template ngTabContent>Content 1</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [Tabs, TabList, Tab, TabPanel, TabContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class DuplicateTabValuesComponent {}
