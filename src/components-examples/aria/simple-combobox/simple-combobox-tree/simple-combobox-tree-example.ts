@@ -12,9 +12,9 @@ import {Component, afterRenderEffect, computed, signal, viewChild, untracked} fr
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-interface FoodNode {
+interface SeasonNode {
   name: string;
-  children?: FoodNode[];
+  children?: SeasonNode[];
   expanded?: boolean;
 }
 
@@ -41,11 +41,11 @@ export class SimpleComboboxTreeExample {
   searchString = signal('');
   selectedValues = signal<string[]>([]);
 
-  readonly dataSource = signal(FOOD_DATA);
+  readonly dataSource = signal(SEASON_DATA);
 
   constructor() {
     afterRenderEffect(() => {
-      const active = this.tree()?._pattern.inputs.activeItem();
+      const active = this.tree()?._pattern.activeItem();
       if (active) {
         untracked(() => {
           active.element()?.scrollIntoView({block: 'nearest'});
@@ -62,11 +62,11 @@ export class SimpleComboboxTreeExample {
       return data;
     }
 
-    const filterNode = (node: FoodNode): FoodNode | null => {
+    const filterNode = (node: SeasonNode): SeasonNode | null => {
       const matches = node.name.toLowerCase().includes(search);
       const children = node.children
         ?.map(child => filterNode(child))
-        .filter((child): child is FoodNode => child !== null);
+        .filter((child): child is SeasonNode => child !== null);
 
       if (matches || (children && children.length > 0)) {
         return {
@@ -79,7 +79,7 @@ export class SimpleComboboxTreeExample {
       return null;
     };
 
-    return data.map(node => filterNode(node)).filter((node): node is FoodNode => node !== null);
+    return data.map(node => filterNode(node)).filter((node): node is SeasonNode => node !== null);
   });
 
   onCommit() {
@@ -92,7 +92,7 @@ export class SimpleComboboxTreeExample {
   }
 }
 
-const FOOD_DATA: FoodNode[] = [
+const SEASON_DATA: SeasonNode[] = [
   {name: 'Winter', children: [{name: 'December'}, {name: 'January'}, {name: 'February'}]},
   {name: 'Spring', children: [{name: 'March'}, {name: 'April'}, {name: 'May'}]},
   {name: 'Summer', children: [{name: 'June'}, {name: 'July'}, {name: 'August'}]},

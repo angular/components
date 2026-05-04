@@ -226,6 +226,9 @@ export class SimpleComboboxPattern {
     const event = this.keyboardEventRelay();
     if (event === undefined) return;
 
+    // Reset isDeleting when the user navigates, so that the highlight effect can run again.
+    this.isDeleting.set(false);
+
     const popup = untracked(() => this.inputs.popup());
     const popupExpanded = untracked(() => this.isExpanded());
     if (popupExpanded) {

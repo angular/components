@@ -21,9 +21,9 @@ import {
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-interface FoodNode {
+interface SeasonNode {
   name: string;
-  children?: FoodNode[];
+  children?: SeasonNode[];
   expanded?: boolean;
 }
 
@@ -52,16 +52,13 @@ export class SimpleComboboxTreeHighlightExample {
   selectedValues = signal<string[]>([]);
   navigated = signal(false);
 
-  readonly dataSource = signal(FOOD_DATA);
+  readonly dataSource = signal(SEASON_DATA);
 
   constructor() {
-    // Highlight mode focus update
-    afterRenderEffect(() => {
-      this.filteredGroups();
-    });
+    afterRenderEffect(() => this._focusAndSelectFirstMatch());
 
     afterRenderEffect(() => {
-      const active = this.tree()?._pattern.inputs.activeItem();
+      const active = this.tree()?._pattern.activeItem();
       if (active) {
         untracked(() => {
           active.element()?.scrollIntoView({block: 'nearest'});
@@ -76,6 +73,22 @@ export class SimpleComboboxTreeHighlightExample {
     });
   }
 
+  // Selects the first matching child within the tree filters.
+  private _focusAndSelectFirstMatch() {
+    this.filteredGroups();
+
+    const option = this.firstMatchingOption();
+    const treeInstance = this.tree();
+    if (option && treeInstance) {
+      untracked(() => {
+        const matchedItem = treeInstance._pattern.items().find(item => item.value() === option);
+        if (matchedItem) {
+          treeInstance._pattern.treeBehavior.goto(matchedItem, {selectOne: true});
+        }
+      });
+    }
+  }
+
   filteredData = computed(() => {
     const search = this.searchString().trim().toLowerCase();
     const data = this.dataSource();
@@ -86,7 +99,7 @@ export class SimpleComboboxTreeHighlightExample {
 
     let firstMatch: string | undefined = undefined;
 
-    const filterNode = (node: FoodNode): FoodNode | null => {
+    const filterNode = (node: SeasonNode): SeasonNode | null => {
       // Find the first leaf node that starts with the search string
       if (!firstMatch && !node.children && node.name.toLowerCase().startsWith(search)) {
         firstMatch = node.name;
@@ -95,7 +108,7 @@ export class SimpleComboboxTreeHighlightExample {
       const matches = node.name.toLowerCase().includes(search);
       const children = node.children
         ?.map(child => filterNode(child))
-        .filter((child): child is FoodNode => child !== null);
+        .filter((child): child is SeasonNode => child !== null);
 
       if (matches || (children && children.length > 0)) {
         return {
@@ -110,7 +123,7 @@ export class SimpleComboboxTreeHighlightExample {
 
     const groups = data
       .map(node => filterNode(node))
-      .filter((node): node is FoodNode => node !== null);
+      .filter((node): node is SeasonNode => node !== null);
     return {groups, firstMatch};
   });
 
@@ -118,15 +131,32 @@ export class SimpleComboboxTreeHighlightExample {
   firstMatchingOption = computed(() => this.filteredData().firstMatch);
 
   onCommit() {
-    const selected = this.selectedValues();
-    if (selected.length > 0) {
-      this.searchString.set(selected[0]);
-      this.popupExpanded.set(false);
+    const treeInstance = this.tree();
+    if (!treeInstance) return;
+
+    const activeItem = treeInstance._pattern.activeItem();
+
+    if (activeItem) {
+      if (activeItem.selectable()) {
+        // Selectable child: commit value and close popup.
+        const selected = this.selectedValues();
+        if (selected.length > 0) {
+          this.searchString.set(selected[0]);
+          this.popupExpanded.set(false);
+        }
+      } else {
+        // Non-selectable parent: expand and focus its first child.
+        const children = activeItem.children();
+        if (children.length > 0) {
+          const firstChild = children[0];
+          treeInstance._pattern.treeBehavior.goto(firstChild);
+        }
+      }
     }
   }
 }
 
-const FOOD_DATA: FoodNode[] = [
+const SEASON_DATA: SeasonNode[] = [
   {name: 'Winter', children: [{name: 'December'}, {name: 'January'}, {name: 'February'}]},
   {name: 'Spring', children: [{name: 'March'}, {name: 'April'}, {name: 'May'}]},
   {name: 'Summer', children: [{name: 'June'}, {name: 'July'}, {name: 'August'}]},
