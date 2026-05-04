@@ -1,4 +1,4 @@
-import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
+import {Component, DebugElement, ChangeDetectionStrategy, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
@@ -7,6 +7,7 @@ import {MenuBar} from './menu-bar';
 import {MenuContent} from './menu-content';
 import {MenuItem} from './menu-item';
 import {MenuTrigger} from './menu-trigger';
+import {waitForMicrotasks} from '../private/testing/test-helpers';
 
 describe('Standalone Menu Pattern', () => {
   let fixture: ComponentFixture<StandaloneMenuExample>;
@@ -62,6 +63,33 @@ describe('Standalone Menu Pattern', () => {
       .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
     return items.find(item => item.textContent?.trim() === text) || null;
   }
+
+  describe('dynamic updates', () => {
+    it('should update item order correctly after items are shuffled', async () => {
+      TestBed.configureTestingModule({imports: [ShuffledMenuExample]});
+      const shuffledFixture = TestBed.createComponent(ShuffledMenuExample);
+      shuffledFixture.detectChanges();
+      const menuDirective = shuffledFixture.debugElement
+        .query(By.directive(Menu))
+        .injector.get(Menu);
+
+      const itemsBefore = menuDirective._pattern.inputs.items();
+      expect(itemsBefore.length).toBe(3);
+      expect(itemsBefore[0].element()?.textContent?.trim()).toBe('Apple');
+
+      // Shuffle items: move first item to the end
+      const items = (shuffledFixture.componentInstance as unknown as ShuffledMenuExample).items();
+      const firstItem = items.shift()!;
+      items.push(firstItem);
+      (shuffledFixture.componentInstance as unknown as ShuffledMenuExample).items.set([...items]);
+      shuffledFixture.detectChanges();
+      await waitForMicrotasks();
+
+      const itemsAfter = menuDirective._pattern.inputs.items();
+      expect(itemsAfter.length).toBe(3);
+      expect(itemsAfter[0].element()?.textContent?.trim()).toBe('Banana');
+    });
+  });
 
   describe('Navigation', () => {
     beforeEach(() => setupMenu());
@@ -702,6 +730,37 @@ describe('Menu Bar Pattern', () => {
     return getMenuBarItem(menuBarItemText)?.getAttribute('aria-expanded') === 'true';
   }
 
+  describe('dynamic updates', () => {
+    it('should update item order correctly after items are shuffled', async () => {
+      TestBed.configureTestingModule({imports: [ShuffledMenuBarExample]});
+      const shuffledFixture = TestBed.createComponent(ShuffledMenuBarExample);
+      shuffledFixture.detectChanges();
+      const menuBarDirective = shuffledFixture.debugElement
+        .query(By.directive(MenuBar))
+        .injector.get(MenuBar);
+
+      const itemsBefore = menuBarDirective._pattern.inputs.items();
+      expect(itemsBefore.length).toBe(3);
+      expect(itemsBefore[0].element()?.textContent?.trim()).toBe('File');
+
+      // Shuffle items: move first item to the end
+      const items = (
+        shuffledFixture.componentInstance as unknown as ShuffledMenuBarExample
+      ).items();
+      const firstItem = items.shift()!;
+      items.push(firstItem);
+      (shuffledFixture.componentInstance as unknown as ShuffledMenuBarExample).items.set([
+        ...items,
+      ]);
+      shuffledFixture.detectChanges();
+      await waitForMicrotasks();
+
+      const itemsAfter = menuBarDirective._pattern.inputs.items();
+      expect(itemsAfter.length).toBe(3);
+      expect(itemsAfter[0].element()?.textContent?.trim()).toBe('Edit');
+    });
+  });
+
   describe('Navigation', () => {
     beforeEach(() => setupMenu());
 
@@ -1061,3 +1120,33 @@ class MenuTriggerExample {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarExample {}
+
+@Component({
+  template: `
+    <div ngMenu>
+      @for (item of items(); track item) {
+        <div ngMenuItem [value]="item.value">{{item.value}}</div>
+      }
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ShuffledMenuExample {
+  items = signal([{value: 'Apple'}, {value: 'Banana'}, {value: 'Cherry'}]);
+}
+
+@Component({
+  template: `
+    <div ngMenuBar>
+      @for (item of items(); track item) {
+        <div ngMenuItem [value]="item.value">{{item.value}}</div>
+      }
+    </div>
+  `,
+  imports: [MenuBar, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ShuffledMenuBarExample {
+  items = signal([{value: 'File'}, {value: 'Edit'}, {value: 'View'}]);
+}

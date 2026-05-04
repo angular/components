@@ -7,20 +7,21 @@
  */
 
 import {
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
+  OnDestroy,
   output,
   Signal,
   signal,
   untracked,
 } from '@angular/core';
-import {MenuPattern, DeferredContentAware} from '../private';
+import {MenuPattern, DeferredContentAware, SortedCollection} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuTrigger} from './menu-trigger';
@@ -79,16 +80,16 @@ import {MENU_COMPONENT} from './menu-tokens';
   ],
   providers: [{provide: MENU_COMPONENT, useExisting: Menu}],
 })
-export class Menu<V> {
+export class Menu<V> implements OnDestroy {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
 
-  /** The menu items contained in the menu. */
-  readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
+  /** The collection of menu items. */
+  readonly _collection = new SortedCollection<MenuItem<V>>();
 
   /** The menu items that are direct children of this menu. */
   readonly _items: Signal<MenuItem<V>[]> = computed(() =>
-    this._allItems().filter(i => i.parent === this),
+    this._collection.orderedItems().filter(i => i.parent === this),
   );
 
   /** A reference to the host element. */
@@ -188,6 +189,14 @@ export class Menu<V> {
     });
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   /** Closes the menu. */
