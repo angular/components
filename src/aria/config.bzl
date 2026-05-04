@@ -10,6 +10,7 @@ ARIA_ENTRYPOINTS = [
     "menu",
     "menu/testing",
     "simple-combobox",
+    "simple-combobox/testing",
     "tabs",
     "tabs/testing",
     "toolbar",
