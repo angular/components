@@ -21,6 +21,7 @@ import {
   SimpleComboboxDialogExample,
   SimpleComboboxTreeAutoSelectExample,
   SimpleComboboxTreeHighlightExample,
+  SimpleComboboxMultiselectDialogExample,
 } from '@angular/components-examples/aria/simple-combobox';
 
 @Component({
@@ -41,6 +42,7 @@ import {
     SimpleComboboxDialogExample,
     SimpleComboboxTreeAutoSelectExample,
     SimpleComboboxTreeHighlightExample,
+    SimpleComboboxMultiselectDialogExample,
   ],
 })
 export class ComboboxDemo {}
