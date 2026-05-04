@@ -147,6 +147,19 @@ export class TabList implements OnInit, OnDestroy {
         this.selectedTab.set(tab?.value());
       },
     });
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const values = this._collection.orderedItems().map(t => t.value());
+          const duplicates = values.filter((item, index) => values.indexOf(item) !== index);
+          if (duplicates.length > 0) {
+            console.error(`Duplicate value '${duplicates[0]}' detected inside ngTabList.`);
+          }
+        },
+      });
+    }
   }
 
   ngOnInit() {
