@@ -480,6 +480,89 @@ describe('AccordionGroup', () => {
       });
     });
   });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'error');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionGroupWithLoop],
+        providers: [provideFakeDirectionality('ltr'), _IdGenerator],
+      });
+      fixture = TestBed.createComponent(AccordionGroupWithLoop);
+      setupAccordionGroup();
+    });
+
+    it('should warn when multiple triggers control the same panel', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionWithDuplicateTriggers],
+      });
+      const duplicateFixture = TestBed.createComponent(AccordionWithDuplicateTriggers);
+      duplicateFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngAccordionPanel is already controlled by another ngAccordionTrigger.',
+      );
+    });
+
+    it('should warn when trigger is nested inside its controlled panel', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionWithNestedTrigger],
+      });
+      const nestedFixture = TestBed.createComponent(AccordionWithNestedTrigger);
+      nestedFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngAccordionTrigger must not be nested inside its controlled ngAccordionPanel, otherwise it will become unreachable when collapsed.',
+      );
+    });
+
+    it('should warn when ngAccordionPanel is missing ngAccordionContent', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionPanelWithoutContent],
+      });
+      const noContentFixture = TestBed.createComponent(AccordionPanelWithoutContent);
+      noContentFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngAccordionPanel must have an ngAccordionContent to render.',
+      );
+    });
+
+    it('should warn when ngAccordionPanel is missing controlling trigger', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionPanelWithoutTrigger],
+      });
+      const noTriggerFixture = TestBed.createComponent(AccordionPanelWithoutTrigger);
+      noTriggerFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngAccordionPanel must have an ngAccordionTrigger to control it.',
+      );
+    });
+
+    it('should warn when multiple items are expanded in single-expand mode', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [AccordionWithMultipleExpandedItems],
+      });
+      const multipleExpandedFixture = TestBed.createComponent(AccordionWithMultipleExpandedItems);
+      multipleExpandedFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
+      );
+    });
+  });
 });
 
 @Component({
@@ -606,3 +689,81 @@ class AccordionGroupWithIfs extends AccordionGroupWithLoop {
   includeSecond = signal(true);
   includeThird = signal(true);
 }
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button ngAccordionTrigger [panel]="panel1">Trigger 1</button>
+      <button ngAccordionTrigger [panel]="panel1">Trigger 2</button>
+      <div ngAccordionPanel #panel1="ngAccordionPanel">
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithDuplicateTriggers {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <div ngAccordionPanel #panel1="ngAccordionPanel">
+        <button ngAccordionTrigger [panel]="panel1">Nested Trigger</button>
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithNestedTrigger {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button ngAccordionTrigger [panel]="panel1">Trigger</button>
+      <div ngAccordionPanel #panel1="ngAccordionPanel">
+        Content
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionPanelWithoutContent {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <div ngAccordionPanel>
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionPanelWithoutTrigger {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup [multiExpandable]="false">
+      <div>
+        <button ngAccordionTrigger [panel]="panel1" [expanded]="true">Trigger 1</button>
+        <div ngAccordionPanel #panel1="ngAccordionPanel">
+          <ng-template ngAccordionContent>Content 1</ng-template>
+        </div>
+      </div>
+      <div>
+        <button ngAccordionTrigger [panel]="panel2" [expanded]="true">Trigger 2</button>
+        <div ngAccordionPanel #panel2="ngAccordionPanel">
+          <ng-template ngAccordionContent>Content 2</ng-template>
+        </div>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithMultipleExpandedItems {}
