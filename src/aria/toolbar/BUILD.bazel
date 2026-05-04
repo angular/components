@@ -26,6 +26,7 @@ ts_project(
         ":toolbar",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/aria/private/testing",
         "//src/cdk/testing/private",
     ],
 )

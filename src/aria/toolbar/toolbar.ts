@@ -7,17 +7,19 @@
  */
 
 import {
+  afterNextRender,
   afterRenderEffect,
+  booleanAttribute,
+  computed,
   Directive,
   ElementRef,
   inject,
-  computed,
   input,
-  booleanAttribute,
-  signal,
   model,
+  OnDestroy,
+  signal,
 } from '@angular/core';
-import {ToolbarPattern, ToolbarWidgetPattern, sortDirectives} from '../private';
+import {ToolbarPattern, ToolbarWidgetPattern, SortedCollection} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {ToolbarWidget} from './toolbar-widget';
 
@@ -57,22 +59,22 @@ import type {ToolbarWidget} from './toolbar-widget';
     '(focusin)': '_pattern.onFocusIn()',
   },
 })
-export class Toolbar<V> {
+export class Toolbar<V> implements OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The TabList nested inside of the container. */
-  private readonly _widgets = signal(new Set<ToolbarWidget<V>>());
+  /** The collection of widgets in the toolbar. */
+  readonly _collection = new SortedCollection<ToolbarWidget<V>>();
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
   readonly _itemPatterns = computed<ToolbarWidgetPattern<V>[]>(() =>
-    [...this._widgets()].sort(sortDirectives).map(widget => widget._pattern),
+    this._collection.orderedItems().map(widget => widget._pattern),
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
@@ -106,21 +108,14 @@ export class Toolbar<V> {
 
   constructor() {
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
   }
 
-  _register(widget: ToolbarWidget<V>) {
-    const widgets = this._widgets();
-    if (!widgets.has(widget)) {
-      widgets.add(widget);
-      this._widgets.set(new Set(widgets));
-    }
-  }
-
-  _unregister(widget: ToolbarWidget<V>) {
-    const widgets = this._widgets();
-    if (widgets.delete(widget)) {
-      this._widgets.set(new Set(widgets));
-    }
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   /** Finds the toolbar item associated with a given element. */
