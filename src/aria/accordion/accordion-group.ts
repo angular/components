@@ -15,6 +15,7 @@ import {
   input,
   signal,
   afterNextRender,
+  afterRenderEffect,
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -113,6 +114,22 @@ export class AccordionGroup implements OnDestroy {
   constructor() {
     afterNextRender(() => {
       this._collection.startObserving(this.element);
+    });
+
+    // Check for any violations after the DOM has been updated.
+    afterRenderEffect({
+      read: () => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          if (!this.multiExpandable()) {
+            const expandedCount = this._collection.orderedItems().filter(t => t.expanded()).length;
+            if (expandedCount > 1) {
+              console.error(
+                'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
+              );
+            }
+          }
+        }
+      },
     });
   }
 

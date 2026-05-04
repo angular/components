@@ -16,6 +16,7 @@ import {
   inject,
   input,
   model,
+  afterRenderEffect,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {AccordionTriggerPattern} from '../private';
@@ -85,6 +86,32 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   /** The UI pattern instance for this trigger. */
   _pattern!: AccordionTriggerPattern;
 
+  constructor() {
+    // Check for any violations after the DOM has been updated.
+    afterRenderEffect({
+      read: () => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          const violations: string[] = [];
+
+          if (this.panel() && this.panel().element.contains(this.element)) {
+            violations.push(
+              'ngAccordionTrigger must not be nested inside its controlled ngAccordionPanel, otherwise it will become unreachable when collapsed.',
+            );
+          }
+          if (this.panel() && (this.panel() as any)._pattern !== this._pattern) {
+            violations.push(
+              'ngAccordionPanel is already controlled by another ngAccordionTrigger.',
+            );
+          }
+
+          for (const violation of violations) {
+            console.error(violation);
+          }
+        }
+      },
+    });
+  }
+
   ngOnInit() {
     this._pattern = new AccordionTriggerPattern({
       ...this,
@@ -93,7 +120,11 @@ export class AccordionTrigger implements OnInit, OnDestroy {
       accordionPanelId: this.panelId,
     });
 
-    this.panel()._pattern = this._pattern;
+    // Only bind panel pattern if it wasn't already claimed, otherwise keep the original
+    // to let the violation checker detect it at render time.
+    if (this.panel() && !(this.panel() as any)._pattern) {
+      this.panel()._pattern = this._pattern;
+    }
 
     this._accordionGroup._collection.register(this);
   }

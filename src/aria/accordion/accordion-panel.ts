@@ -6,9 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, afterRenderEffect, computed, inject, input} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  contentChild,
+  inject,
+  input,
+} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {DeferredContentAware, AccordionTriggerPattern} from '../private';
+import {AccordionContent} from './accordion-content';
 
 /**
  * The content panel of an accordion item that is conditionally visible.
@@ -57,6 +66,8 @@ export class AccordionPanel {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
+  private readonly _accordionContent = contentChild(AccordionContent);
+
   /** A global unique identifier for the panel. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-panel-', true));
 
@@ -75,6 +86,26 @@ export class AccordionPanel {
     afterRenderEffect({
       write: () => {
         this._deferredContentAware.contentVisible.set(this.visible());
+      },
+    });
+
+    // Check for any violations after the DOM has been updated.
+    afterRenderEffect({
+      read: () => {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          const violations: string[] = [];
+
+          if (!this._accordionContent()) {
+            violations.push('ngAccordionPanel must have an ngAccordionContent to render.');
+          }
+          if (!this._pattern) {
+            violations.push('ngAccordionPanel must have an ngAccordionTrigger to control it.');
+          }
+
+          for (const violation of violations) {
+            console.error(violation);
+          }
+        }
       },
     });
   }
