@@ -82,7 +82,7 @@ export class SimpleToolbarRadioButton {
         >
       </div>
 
-      <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
+      <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="popupExpanded()"
         [cdkConnectedOverlayDisableClose]="true">
         <ng-template ngComboboxPopup [combobox]="combobox">
           <div ngListbox ngComboboxWidget [(value)]="selectedOption" class="example-listbox example-popup" focusMode="activedescendant"

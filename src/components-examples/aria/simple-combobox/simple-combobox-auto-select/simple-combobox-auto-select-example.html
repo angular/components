@@ -9,7 +9,7 @@
     {{options().length === 0 ? 'No results found for ' + searchString() : ''}}
   </div>
 
-  <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="true"
+  <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}" [cdkConnectedOverlayOpen]="popupExpanded()"
     [cdkConnectedOverlayDisableClose]="true">
     <ng-template ngComboboxPopup [combobox]="combobox">
       <div class="example-popup">
