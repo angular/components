@@ -14,13 +14,11 @@ import {
   contentChild,
   Directive,
   ElementRef,
-  EventEmitter,
   inject,
   input,
   model,
   OnDestroy,
   OnInit,
-  Output,
   Signal,
   Renderer2,
 } from '@angular/core';
@@ -55,9 +53,6 @@ export class GridCell implements OnInit, OnDestroy {
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** Emits when the cell is activated via Enter/Space (simple widgets only). */
-  @Output() readonly activated = new EventEmitter<KeyboardEvent>();
 
   /** Whether the cell is currently active (focused). */
   readonly active = computed(() => this._pattern.active());
@@ -122,7 +117,6 @@ export class GridCell implements OnInit, OnDestroy {
     widget: this._widgetPattern,
     getWidget: e => this._getWidget(e),
     element: () => this.element,
-    onActivate: e => this.activated.emit(e),
   });
 
   constructor() {
