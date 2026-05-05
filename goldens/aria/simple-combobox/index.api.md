@@ -22,15 +22,17 @@ export class Combobox extends DeferredContentAware implements OnInit {
     readonly inlineSuggestion: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     ngOnInit(): void;
+    readonly openOnInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly _pattern: SimpleComboboxPattern;
     readonly _popup: _angular_core.WritableSignal<ComboboxPopup | undefined>;
     _registerPopup(popup: ComboboxPopup): void;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
+    readonly trigger: _angular_core.InputSignal<HTMLElement | undefined>;
     _unregisterPopup(): void;
     readonly value: _angular_core.ModelSignal<string>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox, "[ngCombobox]", ["ngCombobox"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "inlineSuggestion": { "alias": "inlineSuggestion"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox, "[ngCombobox]", ["ngCombobox"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "inlineSuggestion": { "alias": "inlineSuggestion"; "required": false; "isSignal": true; }; "openOnInput": { "alias": "openOnInput"; "required": false; "isSignal": true; }; "trigger": { "alias": "trigger"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox, never>;
 }

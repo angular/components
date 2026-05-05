@@ -33,6 +33,12 @@ export interface SimpleComboboxInputs extends ExpansionItem {
 
   /** Whether the combobox is soft disabled. */
   softDisabled?: SignalLike<boolean>;
+
+  /** Whether the combobox opens automatically on text input. */
+  openOnInput: SignalLike<boolean>;
+
+  /** Optional trigger element associated with the combobox. */
+  trigger?: SignalLike<HTMLElement | undefined>;
 }
 
 /** Controls the state of a simple combobox. */
@@ -98,7 +104,6 @@ export class SimpleComboboxPattern {
   );
 
   /** The keydown event manager for the combobox. */
-  // TODO(tjshiu): Allow combo keys in combobox (#33101).
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
@@ -202,7 +207,9 @@ export class SimpleComboboxPattern {
     if (!(event.target instanceof HTMLInputElement)) return;
     if (this.disabled()) return;
 
-    this.inputs.expanded.set(true);
+    if (this.inputs.openOnInput()) {
+      this.inputs.expanded.set(true);
+    }
     this.value.set(event.target.value);
     this.isDeleting.set(event instanceof InputEvent && !!event.inputType.match(/^delete/));
   }
@@ -244,10 +251,14 @@ export class SimpleComboboxPattern {
 
   /** Closes the popup when focus leaves the combobox and popup. */
   closePopupOnBlurEffect() {
-    const expanded = this.isExpanded();
+    if (!this.isExpanded() || this.inputs.alwaysExpanded()) return;
+
     const comboboxFocused = this.isFocused();
     const popupFocused = !!this.inputs.popup()?.isFocused();
-    if (expanded && !this.inputs.alwaysExpanded() && !comboboxFocused && !popupFocused) {
+    const triggerEl = this.inputs.trigger?.();
+    const triggerFocused = !!triggerEl?.contains(document.activeElement);
+
+    if (!comboboxFocused && !popupFocused && !triggerFocused) {
       this.inputs.expanded.set(false);
     }
   }

@@ -1,0 +1,36 @@
+<div class="example-combobox-container">
+  <div #origin class="example-combobox-input-container">
+    <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+    <input ngCombobox #combobox="ngCombobox" [trigger]="btnEl" class="example-combobox-input" placeholder="Search states..."
+      [(value)]="searchString" [(expanded)]="popupExpanded" [openOnInput]="false" />
+    <button #btnEl (click)="togglePopup()" aria-label="Toggle popup" class="example-combobox-button example-button">
+      <span class="material-symbols-outlined">{{ popupExpanded() ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+    </button>
+  </div>
+
+  <div aria-live="polite" class="cdk-visually-hidden">
+    {{options().length === 0 ? 'No results found for ' + searchString() : ''}}
+  </div>
+
+  <ng-template [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="popupExpanded()" [cdkConnectedOverlayDisableClose]="true">
+    <ng-template ngComboboxPopup [combobox]="combobox">
+      <div class="example-popup">
+        @if (options().length === 0) {
+        <div class="example-no-results">No results found</div>
+        }
+        <div #listbox="ngListbox" ngListbox ngComboboxWidget class="example-listbox" focusMode="activedescendant"
+          [tabindex]="-1" selectionMode="explicit" [(value)]="selectedOption" (click)="onCommit()"
+          (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()"
+          [class.example-empty]="options().length === 0">
+          @for (option of options(); track option) {
+          <div class="example-option example-selectable example-stateful" ngOption [value]="option" [label]="option">
+            <span>{{option}}</span>
+            <span aria-hidden="true" class="material-symbols-outlined example-icon example-selected-icon">check</span>
+          </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
