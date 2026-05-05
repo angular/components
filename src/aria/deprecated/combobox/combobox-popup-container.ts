@@ -7,7 +7,7 @@
  */
 
 import {Directive} from '@angular/core';
-import {DeferredContent} from '../private';
+import {DeferredContent} from '../../private';
 
 /**
  * A structural directive that marks the `ng-template` to be used as the popup
@@ -43,6 +43,8 @@ import {DeferredContent} from '../private';
  * @see [Select](guide/aria/select)
  * @see [Multiselect](guide/aria/multiselect)
  * @see [Autocomplete](guide/aria/autocomplete)
+ * @deprecated Use the new `simple-combobox` features instead.
+ * @breaking-change 22.0.0
  */
 @Directive({
   selector: 'ng-template[ngComboboxPopupContainer]',

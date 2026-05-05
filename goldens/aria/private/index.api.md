@@ -127,7 +127,7 @@ export type ComboboxListboxInputs<V> = ListboxInputs<V> & {
     combobox: SignalLike<ComboboxPattern<OptionPattern<V>, V> | undefined>;
 };
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements ComboboxListboxControls<OptionPattern<V>, V> {
     constructor(inputs: ComboboxListboxInputs<V>);
     readonly activeId: SignalLike<string | undefined>;
@@ -158,7 +158,7 @@ export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements Comb
     readonly unfocus: () => void;
 }
 
-// @public
+// @public @deprecated
 export class ComboboxPattern<T extends ListItem<V>, V> {
     constructor(inputs: ComboboxInputs<T, V>);
     readonly activeDescendant: SignalLike<string | null>;
@@ -226,7 +226,7 @@ export type ComboboxTreeInputs<V> = TreeInputs<V> & {
     combobox: SignalLike<ComboboxPattern<TreeItemPattern<V>, V> | undefined>;
 };
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTreeControls<TreeItemPattern<V>, V> {
     constructor(inputs: ComboboxTreeInputs<V>);
     // (undocumented)

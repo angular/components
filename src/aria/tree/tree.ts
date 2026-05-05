@@ -30,7 +30,7 @@ import {
   TreeItemPattern,
   TreePattern,
 } from '../private';
-import {ComboboxPopup} from '../combobox';
+import {ComboboxPopup} from '../deprecated/combobox';
 import type {TreeItem} from './tree-item';
 
 /**

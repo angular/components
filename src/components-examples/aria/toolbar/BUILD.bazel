@@ -12,7 +12,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/aria/combobox",
+        "//src/aria/deprecated/combobox",
         "//src/aria/listbox",
         "//src/aria/toolbar",
         "//src/cdk/a11y",

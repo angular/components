@@ -17,4 +17,4 @@ export {ComboboxPopupContainer} from './combobox-popup-container';
 export {
   DeferredContent as ɵɵDeferredContent,
   DeferredContentAware as ɵɵDeferredContentAware,
-} from '../private';
+} from '../../private';

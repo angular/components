@@ -15,7 +15,7 @@ import {
   untracked,
   WritableSignal,
 } from '@angular/core';
-import {ComboboxDialogPattern} from '../private';
+import {ComboboxDialogPattern} from '../../private';
 import {Combobox} from './combobox';
 
 /**
@@ -40,6 +40,8 @@ import {Combobox} from './combobox';
  * @see [Select](guide/aria/select)
  * @see [Multiselect](guide/aria/multiselect)
  * @see [Autocomplete](guide/aria/autocomplete)
+ * @deprecated Use the new `simple-combobox` features instead.
+ * @breaking-change 22.0.0
  */
 @Directive({
   selector: 'input[ngComboboxInput]',

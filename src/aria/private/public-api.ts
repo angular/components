@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './combobox/combobox';
+export * from './deprecated/combobox/combobox';
 export * from './listbox/listbox';
 export * from './listbox/option';
 export * from './listbox/combobox-listbox';

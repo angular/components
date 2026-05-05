@@ -9,13 +9,17 @@
 import {ListboxInputs, ListboxPattern} from './listbox';
 import {SignalLike, computed} from '../behaviors/signal-like/signal-like';
 import {OptionPattern} from './option';
-import {ComboboxPattern, ComboboxListboxControls} from '../combobox/combobox';
+import {ComboboxPattern, ComboboxListboxControls} from '../deprecated/combobox/combobox';
 
 export type ComboboxListboxInputs<V> = ListboxInputs<V> & {
   /** The combobox controlling the listbox. */
   combobox: SignalLike<ComboboxPattern<OptionPattern<V>, V> | undefined>;
 };
 
+/**
+ * @deprecated Use the new standalone combobox features instead.
+ * @breaking-change 22.0.0
+ */
 export class ComboboxListboxPattern<V>
   extends ListboxPattern<V>
   implements ComboboxListboxControls<OptionPattern<V>, V>

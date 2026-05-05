@@ -8,13 +8,17 @@
 
 import {TreeInputs, TreePattern, TreeItemPattern} from './tree';
 import {computed, SignalLike} from '../behaviors/signal-like/signal-like';
-import {ComboboxPattern, ComboboxTreeControls} from '../combobox/combobox';
+import {ComboboxPattern, ComboboxTreeControls} from '../deprecated/combobox/combobox';
 
 export type ComboboxTreeInputs<V> = TreeInputs<V> & {
   /** The combobox controlling the tree. */
   combobox: SignalLike<ComboboxPattern<TreeItemPattern<V>, V> | undefined>;
 };
 
+/**
+ * @deprecated Use the new standalone combobox features instead.
+ * @breaking-change 22.0.0
+ */
 export class ComboboxTreePattern<V>
   extends TreePattern<V>
   implements ComboboxTreeControls<TreeItemPattern<V>, V>

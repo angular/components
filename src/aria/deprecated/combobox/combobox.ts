@@ -17,7 +17,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import {DeferredContentAware, ComboboxPattern} from '../private';
+import {DeferredContentAware, ComboboxPattern} from '../../private';
 import {Directionality} from '@angular/cdk/bidi';
 import {COMBOBOX} from './combobox-tokens';
 import {ComboboxPopup} from './combobox-popup';
@@ -56,6 +56,8 @@ import {ComboboxPopup} from './combobox-popup';
  * @see [Select](guide/aria/select)
  * @see [Multiselect](guide/aria/multiselect)
  * @see [Autocomplete](guide/aria/autocomplete)
+ * @deprecated Use the new `simple-combobox` features instead.
+ * @breaking-change 22.0.0
  */
 @Directive({
   selector: '[ngCombobox]',

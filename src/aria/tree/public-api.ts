@@ -19,4 +19,4 @@ export {
   ComboboxInput as ɵɵComboboxInput,
   ComboboxPopup as ɵɵComboboxPopup,
   ComboboxPopupContainer as ɵɵComboboxPopupContainer,
-} from '../combobox';
+} from '../deprecated/combobox';

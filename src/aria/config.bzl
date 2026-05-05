@@ -2,7 +2,7 @@
 ARIA_ENTRYPOINTS = [
     "accordion",
     "accordion/testing",
-    "combobox",
+    "deprecated/combobox",
     "grid",
     "grid/testing",
     "listbox",

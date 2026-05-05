@@ -3,7 +3,7 @@ import {
   ComboboxInput,
   ComboboxPopup,
   ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+} from '@angular/aria/deprecated/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {ToolbarWidget} from '@angular/aria/toolbar';
 import {Dir, Directionality} from '@angular/cdk/bidi';

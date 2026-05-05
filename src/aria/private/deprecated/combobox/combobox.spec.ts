@@ -7,13 +7,13 @@
  */
 
 import {ComboboxInputs, ComboboxPattern} from './combobox';
-import {OptionPattern} from '../listbox/option';
-import {ComboboxListboxPattern} from '../listbox/combobox-listbox';
+import {OptionPattern} from '../../listbox/option';
+import {ComboboxListboxPattern} from '../../listbox/combobox-listbox';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
-import {SignalLike, signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {SignalLike, signal, WritableSignalLike} from '../../behaviors/signal-like/signal-like';
 import {ModifierKeys} from '@angular/cdk/testing';
-import {TreeItemPattern} from '../tree/tree';
-import {ComboboxTreePattern} from '../tree/combobox-tree';
+import {TreeItemPattern} from '../../tree/tree';
+import {ComboboxTreePattern} from '../../tree/combobox-tree';
 
 // Test types
 type TestOption = OptionPattern<string> & {

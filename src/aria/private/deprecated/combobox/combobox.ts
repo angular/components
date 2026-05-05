@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, PointerEventManager} from '../../behaviors/event-manager';
 import {
   computed,
   signal,
   SignalLike,
   WritableSignalLike,
-} from '../behaviors/signal-like/signal-like';
-import {ListItem} from '../behaviors/list/list';
+} from '../../behaviors/signal-like/signal-like';
+import {ListItem} from '../../behaviors/list/list';
 
 /** Represents the required inputs for a combobox. */
 export interface ComboboxInputs<T extends ListItem<V>, V> {
@@ -138,7 +138,11 @@ export interface ComboboxTreeControls<T extends ListItem<V>, V> extends Combobox
   isItemSelectable: (item?: T) => boolean;
 }
 
-/** Controls the state of a combobox. */
+/**
+ * Controls the state of a combobox.
+ * @deprecated Use the new standalone combobox features instead.
+ * @breaking-change 22.0.0
+ */
 export class ComboboxPattern<T extends ListItem<V>, V> {
   /** Whether the combobox is expanded. */
   readonly expanded = signal(false);

@@ -11,7 +11,7 @@ import {
   ComboboxInput,
   ComboboxPopup,
   ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+} from '@angular/aria/deprecated/combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {
   afterRenderEffect,

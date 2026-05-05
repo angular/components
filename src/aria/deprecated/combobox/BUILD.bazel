@@ -54,7 +54,7 @@ extract_api_to_json(
         ":source-files",
     ],
     entry_point = ":index.ts",
-    module_name = "@angular/aria/combobox",
+    module_name = "@angular/aria/deprecated/combobox",
     output_name = "aria-combobox.json",
     private_modules = [""],
     repo = "angular/components",

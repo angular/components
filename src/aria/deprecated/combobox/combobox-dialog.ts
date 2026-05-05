@@ -8,7 +8,7 @@
 
 import {afterRenderEffect, Directive, ElementRef, inject, input} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxDialogPattern} from '../private';
+import {ComboboxDialogPattern} from '../../private';
 import {Combobox} from './combobox';
 import {ComboboxPopup} from './combobox-popup';
 
@@ -31,6 +31,8 @@ import {ComboboxPopup} from './combobox-popup';
  * @see [Select](guide/aria/select)
  * @see [Multiselect](guide/aria/multiselect)
  * @see [Autocomplete](guide/aria/autocomplete)
+ * @deprecated Use the new `simple-combobox` features instead.
+ * @breaking-change 22.0.0
  */
 @Directive({
   selector: 'dialog[ngComboboxDialog]',

@@ -1,10 +1,10 @@
 import {Component, computed, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
-import {Listbox, Option} from '../listbox';
+import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from './public-api';
+import {Listbox, Option} from '../../listbox';
 import {runAccessibilityChecks} from '@angular/cdk/testing/private';
-import {Tree, TreeItem, TreeItemGroup} from '../tree';
+import {Tree, TreeItem, TreeItemGroup} from '../../tree';
 import {NgTemplateOutlet} from '@angular/common';
 
 describe('Combobox', () => {

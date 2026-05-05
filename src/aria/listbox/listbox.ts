@@ -29,7 +29,7 @@ import {
   SortedCollection,
   tabIndexTransform,
 } from '../private';
-import {ComboboxPopup} from '../combobox';
+import {ComboboxPopup} from '../deprecated/combobox';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
 
