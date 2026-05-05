@@ -377,3 +377,34 @@ ul[role='group'] {
 .example-popup-no-margin {
   margin-block-start: 0;
 }
+
+.example-combobox-input-container:has(.example-combobox-button) .example-combobox-input {
+  padding-right: 3rem;
+}
+
+.example-combobox-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  border-left: 1px solid color-mix(in srgb, var(--mat-sys-outline) 60%, transparent);
+  border-top-right-radius: var(--mat-sys-corner-extra-small, 4px);
+  border-bottom-right-radius: var(--mat-sys-corner-extra-small, 4px);
+}
+
+.example-combobox-container:focus-within .example-combobox-button {
+  border-left-color: var(--mat-sys-primary);
+  opacity: 1;
+  color: var(--mat-sys-primary);
+}
+
+.example-combobox-button.example-button:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -3px;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  opacity: 1;
+}
