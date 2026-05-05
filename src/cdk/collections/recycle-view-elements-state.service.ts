@@ -5,7 +5,8 @@ export type RecycleViewDetachEvent =
   | {type: 'mark'; id: string}
   | {type: 'unmark'; id: string}
   | {type: 'clear'}
-  | {type: 'collect'};
+  | {type: 'collect'; collectDetached: string}
+  | {type: 'insert'; collectDetached: string};
 
 /**
  * Service that keeps state of virtual scroll destroyed/recycled views.
@@ -22,8 +23,11 @@ export class RecycleViewElementsState implements OnDestroy {
   /** TrackBy ids that should retain their detached views. */
   private _detachedIds = new Set<string>();
 
-  /** Detached views owned by the service lifetime. */
-  private _detachedViews = new Map<string, EmbeddedViewRef<unknown>>();
+  /** Detached views owned by the service lifetime, keyed by trackBy id. */
+  private _detachedViews = new Map<
+    string,
+    {view: EmbeddedViewRef<unknown>; realIndex: number; repeaterId: string | null}
+  >();
 
   /** Emits detach lifecycle changes so active strategies can update live candidates. */
   private _detachChanges = new Subject<RecycleViewDetachEvent>();
@@ -147,9 +151,10 @@ export class RecycleViewElementsState implements OnDestroy {
   /** Cancels detached-view retention for an item and destroys any retained detached view. */
   unmarkForDetach(id: string): void {
     const wasMarked = this._detachedIds.delete(id);
-    const hadDetachedView = this._destroyDetachedView(id);
+    const wasDeletedFromDetached = this._detachedViews.delete(id);
 
-    if (wasMarked || hadDetachedView) {
+    if (wasMarked || wasDeletedFromDetached) {
+      // not sure if unmark is needed
       this._detachChanges.next({type: 'unmark', id});
     }
   }
@@ -165,33 +170,55 @@ export class RecycleViewElementsState implements OnDestroy {
   }
 
   /** Requests active repeaters to detach and retain all currently marked views. */
-  collectDetachedViews(): void {
-    this._detachChanges.next({type: 'collect'});
+  collectDetachedViews(collectDetached: string): void {
+    this._detachChanges.next({type: 'collect', collectDetached});
   }
 
-  /** Stores a detached view under a trackBy id until it is rendered again. */
-  retainDetachedView(id: string, view: EmbeddedViewRef<unknown>): void {
-    const existingView = this._detachedViews.get(id);
-    if (existingView && existingView !== view) {
-      existingView.destroy();
+  /**
+   * Notifies strategies that are NOT in collect-detached mode that an item with the given
+   * trackBy id has been reattached (inserted from a detached view). Those strategies should
+   * reattach any saved detached views that fall within their rendered range.
+   * @param collectDetached The trackBy id of the item that was reattached.
+   */
+  notifyInsert(collectDetached: string): void {
+    this._detachChanges.next({type: 'insert', collectDetached});
+  }
+
+  /**
+   * Stores a detached view under a trackBy id until it is rendered again.
+   * @param id The trackBy identifier for the item.
+   * @param view The detached embedded view.
+   * @param realIndex The real (global) dataset index of the item at the time it was detached.
+   */
+  retainDetachedView(
+    id: string,
+    view: EmbeddedViewRef<unknown>,
+    realIndex: number,
+    repeaterId: string | null = null,
+  ): void {
+    const existing = this._detachedViews.get(id);
+    if (existing && existing.view !== view) {
+      existing.view.destroy();
     }
 
-    this._detachedViews.set(id, view);
+    this._detachedViews.set(id, {view, realIndex, repeaterId});
   }
 
-  /** Takes ownership of a retained detached view for reinsertion into the container. */
-  takeDetachedView<T>(id: string): EmbeddedViewRef<T> | null {
-    const detachedView = this._detachedViews.get(id);
-    if (!detachedView) {
-      return null;
-    }
-
-    return detachedView as EmbeddedViewRef<T>;
-  }
-
-  /** Retrieves a retained detached view without removing it. */
-  getDetachedView(id: string): EmbeddedViewRef<unknown> | null {
-    return this._detachedViews.get(id) ?? null;
+  /**
+   * Takes ownership of a retained detached view for reinsertion into the container.
+   * Returns the view and the real (global) index it was detached from, or `null` if not found.
+   */
+  takeDetachedView<T>(
+    id: string,
+  ): {view: EmbeddedViewRef<T>; realIndex: number; repeaterId: string | null} | null {
+    const entry = this._detachedViews.get(id);
+    return entry
+      ? {
+          view: entry.view as EmbeddedViewRef<T>,
+          realIndex: entry.realIndex,
+          repeaterId: entry.repeaterId,
+        }
+      : null;
   }
 
   ngOnDestroy(): void {
@@ -201,19 +228,19 @@ export class RecycleViewElementsState implements OnDestroy {
 
   /** Destroys the detached view retained for an id, if present. */
   private _destroyDetachedView(id: string): boolean {
-    const detachedView = this._detachedViews.get(id);
-    if (!detachedView) {
+    const entry = this._detachedViews.get(id);
+    if (!entry) {
       return false;
     }
 
     this._detachedViews.delete(id);
-    detachedView.destroy();
+    entry.view.destroy();
     return true;
   }
 
   /** Destroys all retained detached views. */
   private _destroyDetachedViews(): void {
-    this._detachedViews.forEach(view => view.destroy());
+    this._detachedViews.forEach(entry => entry.view.destroy());
     this._detachedViews.clear();
   }
 }

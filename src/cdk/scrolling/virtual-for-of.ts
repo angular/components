@@ -130,9 +130,10 @@ export class CdkVirtualForOf<T>
   }
   set cdkVirtualForTrackBy(fn: TrackByFunction<T> | undefined) {
     this._needsUpdate = true;
-    this._cdkVirtualForTrackBy = fn
-      ? (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item)
-      : undefined;
+    // Store the user's trackBy as-is. The rendered-range offset is applied by
+    // _RecycleViewRepeaterStrategy via setRenderedRange(), so we must NOT
+    // add it here to avoid double-counting.
+    this._cdkVirtualForTrackBy = fn;
 
     // Pass the trackBy function to the view repeater for keyed detached-view reuse
     // and scroll position persistence.
@@ -171,6 +172,20 @@ export class CdkVirtualForOf<T>
   }
   private _debug: boolean = false;
 
+  /**
+   * A string label to enable collect-detached mode, or `null`/empty to disable.
+   * When set to a non-empty string, detached views are collected before an item is removed.
+   */
+  @Input()
+  get cdkVirtualForCollectDetached(): string | null {
+    return this._collectDetached;
+  }
+  set cdkVirtualForCollectDetached(value: string | null) {
+    this._collectDetached = value;
+    this._viewRepeater.setCollectDetached(value);
+  }
+  private _collectDetached: string | null = null;
+
   /** Identifier associated with this virtual-for instance. */
   @Input()
   get cdkVirtualForId(): unknown {
@@ -181,6 +196,21 @@ export class CdkVirtualForOf<T>
     this._needsUpdate = true;
   }
   private _cdkVirtualForId: unknown;
+
+  /**
+   * An optional string identifier for this repeater instance.
+   * When set, it is passed to the view repeater strategy and stored alongside
+   * any retained detached views so consumers can identify which repeater owns them.
+   */
+  @Input()
+  get cdkVirtualForRepeaterId(): string | null {
+    return this._repeaterId;
+  }
+  set cdkVirtualForRepeaterId(value: string | null) {
+    this._repeaterId = value;
+    this._viewRepeater.setRepeaterId(value);
+  }
+  private _repeaterId: string | null = null;
 
   /**
    * Updates the trackBy function in the view repeater based on current settings.
@@ -349,8 +379,13 @@ export class CdkVirtualForOf<T>
     if (!this._differ) {
       // Use a wrapper function for the `trackBy` so any new values are
       // picked up automatically without having to recreate the differ.
+      // The `index` here is local (0-based within the rendered window), so we
+      // add `_renderedRange.start` to pass the real global index to the user's
+      // trackBy function, matching the behaviour of the repeater strategy.
       this._differ = this._differs.find(this._renderedItems).create((index, item) => {
-        return this.cdkVirtualForTrackBy ? this.cdkVirtualForTrackBy(index, item) : item;
+        return this.cdkVirtualForTrackBy
+          ? this.cdkVirtualForTrackBy(index + (this._renderedRange?.start ?? 0), item)
+          : item;
       });
     }
     this._needsUpdate = true;
@@ -371,6 +406,9 @@ export class CdkVirtualForOf<T>
 
   /** Update the `CdkVirtualForOfContext` for all views. */
   private _updateContext() {
+    // Keep the repeater strategy in sync with the current rendered range so that
+    // any trackBy calls triggered from within the strategy use the correct global index.
+    this._viewRepeater.setRenderedRange(this._renderedRange ?? {start: 0, end: 0});
     const count = this._data.length;
     let i = this._viewContainerRef.length;
     while (i--) {
@@ -385,6 +423,9 @@ export class CdkVirtualForOf<T>
 
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
+    // Inform the repeater strategy of the current rendered range so it can
+    // translate local (window-relative) indices to real (global) dataset indices.
+    this._viewRepeater.setRenderedRange(this._renderedRange ?? {start: 0, end: 0});
     this._viewRepeater.applyChanges(
       changes,
       this._viewContainerRef,
