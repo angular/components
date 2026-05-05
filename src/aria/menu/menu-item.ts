@@ -31,7 +31,7 @@ import type {MenuBar} from './menu-bar';
  *
  * ```html
  * <div ngMenu (itemSelected)="doAction()">
- *   <div ngMenuItem >Action Item</div>
+ *   <div ngMenuItem>Action Item</div>
  *   <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
  * </div>
  * ```
@@ -49,7 +49,6 @@ import type {MenuBar} from './menu-bar';
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
-    '[attr.aria-label]': 'value()',
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
@@ -66,7 +65,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   /** The unique ID of the menu item. */
   readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));
 
-  /** The value of the menu item, used as the default aria-label */
+  /** The value of the menu item. */
   readonly value = input.required<V>();
 
   /** Whether the menu item is disabled. */
