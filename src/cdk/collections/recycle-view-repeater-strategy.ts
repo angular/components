@@ -88,11 +88,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   private _storeScrollPosition: boolean = false;
 
   /**
-   * Whether to trigger debugger statements for this repeater.
-   */
-  private _debug: boolean = false;
-
-  /**
    * A string label identifying the collect-detached mode, or `null` when disabled.
    * When non-null, detached views are collected before an item is removed.
    */
@@ -127,13 +122,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    */
   setStoreScrollPosition(value: boolean): void {
     this._storeScrollPosition = value;
-  }
-
-  /**
-   * Sets whether to trigger debugger statements for this repeater.
-   */
-  setDebug(value: boolean): void {
-    this._debug = value;
   }
 
   /**
@@ -197,7 +185,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
           const trackById = this._getTrackById(itemValueResolver(record), record.previousIndex!);
 
           if (this._collectDetached === null) {
-            console.log('_collectDetached', this._collectDetached, 'trackById', trackById);
             this._recycleViewElementsState?.collectDetachedViews(trackById!);
           }
           this._detachAndCacheView(adjustedPreviousIndex!, viewContainerRef);
@@ -251,7 +238,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       : null;
 
     if (detachedView) {
-      console.log('insert detachedView', trackById);
       detachedView.context.$implicit = value;
       this._restoreScrollPosition(detachedView, value, currentIndex);
       // Notify other strategies (those not in collect-detached mode) that this item
@@ -340,14 +326,8 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     index: number,
   ) {
     const trackById = this._getTrackByIdForView(view, index);
-    if (this._debug) {
-      console.log('_maybeCacheView', trackById);
-    }
 
     if (trackById && this._recycleViewElementsState?.isMarkedForDetach(trackById)) {
-      console.log('retain view', trackById, this._renderedRange);
-      // Pass the real (global) index so the service can expose it to consumers.
-      // this._recycleViewElementsState?.retainDetachedView(trackById, view, this._renderedRange.start + index);
       return;
     }
 
@@ -431,7 +411,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       this._collectDetached !== null &&
       change.collectDetached === this._collectDetached
     ) {
-      console.log('collect _collectDetachedViews', this._collectDetached);
       this._collectDetachedViews();
       return;
     }
@@ -502,7 +481,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       const index = this._findRenderedViewIndexByTrackById(trackById);
 
       if (index !== null) {
-        console.log('collected', trackById);
         this._viewContainerRef.detach(index);
       }
     }

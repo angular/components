@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 export type RecycleViewDetachEvent =
   | {type: 'mark'; id: string}
-  | {type: 'unmark'; id: string}
   | {type: 'clear'}
   | {type: 'collect'; collectDetached: string}
   | {type: 'insert'; collectDetached: string};
@@ -150,13 +149,8 @@ export class RecycleViewElementsState implements OnDestroy {
 
   /** Cancels detached-view retention for an item and destroys any retained detached view. */
   unmarkForDetach(id: string): void {
-    const wasMarked = this._detachedIds.delete(id);
-    const wasDeletedFromDetached = this._detachedViews.delete(id);
-
-    if (wasMarked || wasDeletedFromDetached) {
-      // not sure if unmark is needed
-      this._detachChanges.next({type: 'unmark', id});
-    }
+    this._detachedIds.delete(id);
+    this._detachedViews.delete(id);
   }
 
   /** Whether an item is marked for detached-view retention. */
