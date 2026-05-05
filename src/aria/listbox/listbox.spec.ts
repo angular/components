@@ -811,6 +811,23 @@ describe('Listbox', () => {
       expect(listboxInstance.value()).toEqual([]);
     });
   });
+
+  describe('item mutations and focus stability', () => {
+    it('should recover focus by shifting to the default state if the active option is removed', async () => {
+      setupListbox({focusMode: 'activedescendant'});
+      click(2);
+      expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[2].id);
+
+      const testComponent = fixture.componentInstance as ListboxExample;
+      const updatedOptions = testComponent.options().filter(o => o.value !== 2);
+      testComponent.options.set(updatedOptions);
+      fixture.detectChanges();
+      await waitForMicrotasks();
+      defineTestVariables(fixture);
+
+      expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
+    });
+  });
 });
 
 interface TestOption {
