@@ -7,6 +7,7 @@
 import { AfterContentInit } from '@angular/core';
 import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
+import { DirectiveWithBindings } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
