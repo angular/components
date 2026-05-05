@@ -252,6 +252,82 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
     });
+
+    describe('Custom triggering via openOnInput', () => {
+      it('should automatically open on text input by default', () => {
+        setupCombobox(ComboboxListboxCustomTriggerExample);
+        focus();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        input('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should not open on text input when openOnInput is false', () => {
+        setupCombobox(ComboboxListboxCustomTriggerExample);
+        (fixture.componentInstance as any).openOnInput.set(false);
+        fixture.detectChanges();
+
+        focus();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        input('A');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+    });
+
+    describe('Trigger element focus zone and toggling', () => {
+      it('should open the popup when clicking the trigger element from a closed state', () => {
+        setupCombobox(ComboboxListboxTriggerZoneExample);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+
+        const btn = fixture.nativeElement.querySelector('#test-trigger-btn');
+        btn.focus();
+        btn.click();
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should close the popup when clicking the trigger element from an open state', () => {
+        setupCombobox(ComboboxListboxTriggerZoneExample);
+
+        const btn = fixture.nativeElement.querySelector('#test-trigger-btn');
+        btn.focus();
+        btn.click();
+        fixture.detectChanges();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+
+        btn.click();
+        fixture.detectChanges();
+
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should not close the popup on focusout when focus moves to the bound trigger element', () => {
+        setupCombobox(ComboboxListboxTriggerZoneExample);
+
+        down();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+
+        const btn = fixture.nativeElement.querySelector('#test-trigger-btn');
+        btn.focus();
+        blur(btn);
+
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should close the popup on focusout if focus leaves the combobox to an unrelated element', () => {
+        setupCombobox(ComboboxListboxTriggerZoneExample);
+
+        down();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+
+        const unrelatedElement = document.createElement('div');
+        blur(unrelatedElement);
+
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+    });
+
     describe('Selection', () => {
       describe('with manual filtering', () => {
         beforeEach(() => setupCombobox(ComboboxListboxExample));
@@ -1704,4 +1780,75 @@ class ComboboxListboxHighlightExample {
     }
     this.popupExpanded.set(false);
   }
+}
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    placeholder="Search..."
+    [(value)]="searchString"
+    [(expanded)]="popupExpanded"
+    [openOnInput]="openOnInput()"
+    (click)="popupExpanded.set(true)"
+  />
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+      @for (option of options(); track option) {
+        <div ngOption [value]="option" [label]="option">
+          <span>{{option}}</span>
+        </div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxListboxCustomTriggerExample {
+  openOnInput = signal(true);
+  popupExpanded = signal(false);
+  searchString = signal('');
+  value = signal<string[]>([]);
+
+  options = computed(() =>
+    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
+  );
+
+  onCommit() {
+    const val = this.value();
+    if (val.length > 0) {
+      this.searchString.set(val[0]);
+    }
+    this.popupExpanded.set(false);
+  }
+}
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    [trigger]="triggerEl"
+    [(expanded)]="popupExpanded"
+    [openOnInput]="false"
+    aria-label="Search"
+  />
+  <button #triggerEl id="test-trigger-btn" (click)="popupExpanded.set(!popupExpanded())">Toggle</button>
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget ngListbox id="listbox" focusMode="activedescendant">
+      <div ngOption value="Alabama" label="Alabama">Alabama</div>
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxListboxTriggerZoneExample {
+  popupExpanded = signal(false);
 }

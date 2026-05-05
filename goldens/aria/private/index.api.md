@@ -671,8 +671,10 @@ export interface SimpleComboboxInputs extends ExpansionItem {
     disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement>;
     inlineSuggestion: SignalLike<string | undefined>;
+    openOnInput: SignalLike<boolean>;
     popup: SignalLike<SimpleComboboxPopupPattern | undefined>;
     softDisabled?: SignalLike<boolean>;
+    trigger?: SignalLike<HTMLElement | undefined>;
     value: WritableSignalLike<string>;
 }
 

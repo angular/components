@@ -15,6 +15,7 @@ export {SimpleComboboxAutocompleteAutoSelectExample} from './simple-combobox-aut
 export {SimpleComboboxAutocompleteDisabledExample} from './simple-combobox-autocomplete-disabled/simple-combobox-autocomplete-disabled-example';
 export {SimpleComboboxAutocompleteHighlightExample} from './simple-combobox-autocomplete-highlight/simple-combobox-autocomplete-highlight-example';
 export {SimpleComboboxAutocompleteManualExample} from './simple-combobox-autocomplete-manual/simple-combobox-autocomplete-manual-example';
+export {SimpleComboboxCustomTriggerExample} from './simple-combobox-custom-trigger/simple-combobox-custom-trigger-example';
 export {SimpleComboboxMultiselectDialogExample} from './simple-combobox-multiselect-dialog/simple-combobox-multiselect-dialog-example';
 
 // Force watcher update

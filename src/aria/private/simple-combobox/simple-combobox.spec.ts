@@ -40,6 +40,8 @@ describe('SimpleComboboxPattern', () => {
       disabled,
       expanded,
       expandable: signal(true),
+      openOnInput: signal(true),
+      trigger: signal(undefined),
     });
 
     return {

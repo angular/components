@@ -102,9 +102,17 @@ export class Combobox extends DeferredContentAware implements OnInit {
   /** An inline suggestion to be displayed in the input. */
   readonly inlineSuggestion = input<string | undefined>(undefined);
 
+  /** Whether the combobox opens automatically on text input. */
+  readonly openOnInput = input(true, {transform: booleanAttribute});
+
+  /** Optional trigger element associated with the combobox. */
+  readonly trigger = input<HTMLElement | undefined>(undefined);
+
   /** The combobox ui pattern. */
   readonly _pattern = new SimpleComboboxPattern({
     ...this,
+    openOnInput: () => this.openOnInput(),
+    trigger: () => this.trigger(),
     element: () => this.element,
     expandable: () => true,
     popup: computed(() => this._popup()?._pattern),
