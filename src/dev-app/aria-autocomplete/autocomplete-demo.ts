@@ -1,11 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
-  AutocompleteAutoSelectExample,
-  AutocompleteManualExample,
-  AutocompleteHighlightExample,
-  AutocompleteDisabledExample,
-} from '@angular/components-examples/aria/autocomplete';
-import {
   SimpleComboboxAutocompleteAutoSelectExample,
   SimpleComboboxAutocompleteManualExample,
   SimpleComboboxAutocompleteHighlightExample,
@@ -17,10 +11,6 @@ import {
   templateUrl: 'autocomplete-demo.html',
   styleUrl: 'autocomplete-demo.css',
   imports: [
-    AutocompleteAutoSelectExample,
-    AutocompleteManualExample,
-    AutocompleteHighlightExample,
-    AutocompleteDisabledExample,
     SimpleComboboxAutocompleteAutoSelectExample,
     SimpleComboboxAutocompleteManualExample,
     SimpleComboboxAutocompleteHighlightExample,

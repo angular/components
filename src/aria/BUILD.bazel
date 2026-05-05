@@ -46,7 +46,6 @@ copy_to_directory(
     name = "adev_assets",
     srcs = [
         "//src/aria/accordion:json_api",
-        "//src/aria/deprecated/combobox:json_api",
         "//src/aria/grid:json_api",
         "//src/aria/listbox:json_api",
         "//src/aria/menu:json_api",

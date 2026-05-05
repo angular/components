@@ -41,14 +41,6 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./card/card-demo').then(m => m.CardDemo),
   },
   {
-    path: 'aria-combobox',
-    loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
-  },
-  {
-    path: 'aria-select',
-    loadComponent: () => import('./aria-select/select-demo').then(m => m.SelectDemo),
-  },
-  {
     path: 'aria-simple-combobox',
     loadComponent: () =>
       import('./aria-simple-combobox/simple-combobox-demo').then(m => m.ComboboxDemo),
@@ -85,10 +77,6 @@ export const DEV_APP_ROUTES: Routes = [
     path: 'aria-autocomplete',
     loadComponent: () =>
       import('./aria-autocomplete/autocomplete-demo').then(m => m.AutocompleteDemo),
-  },
-  {
-    path: 'aria-toolbar',
-    loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
   },
   {
     path: 'aria-toolbar-simple-combobox',
