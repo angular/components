@@ -938,6 +938,56 @@ describe('Grid directives', () => {
         expect(widgetElement.getAttribute('tabindex')).toBe('-1');
       });
 
+      it('should emit the activated output on Enter for simple widget', () => {
+        const gridData = createGridData();
+        gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
+        setupGrid({gridData});
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+
+        tabIntoGrid();
+
+        expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
+
+        keydown('Enter');
+        expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
+      });
+
+      it('should emit the activated output on Space for simple widget', () => {
+        const gridData = createGridData();
+        gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
+        setupGrid({gridData});
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+
+        tabIntoGrid();
+
+        expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
+
+        keydown(' ');
+        expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
+      });
+
+      it('should emit the activated output in activedescendant mode when event is dispatched directly to grid', () => {
+        const gridData = createGridData();
+        gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
+        setupGrid({gridData, focusMode: 'activedescendant'});
+        gridInstance._pattern.setDefaultStateEffect();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
+
+        // Verify standard activedescendant behavior by targeting the CONTAINER directly
+        const event = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+        });
+        gridElement.dispatchEvent(event);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
+      });
+
       it('should emit the activated output when the widget becomes active', () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];

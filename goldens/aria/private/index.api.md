@@ -301,7 +301,6 @@ export interface GridCellInputs extends GridCell {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
     grid: SignalLike<GridPattern>;
-    onActivate?: (event: KeyboardEvent) => void;
     row: SignalLike<GridRowPattern>;
     rowIndex: SignalLike<number | undefined>;
     widget: SignalLike<GridCellWidgetPattern | undefined>;
@@ -341,6 +340,8 @@ export interface GridCellWidgetInputs {
     disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement>;
     focusTarget: SignalLike<ElementResolver<HTMLElement>>;
+    onActivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
+    onDeactivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
     widgetType: SignalLike<'simple' | 'complex' | 'editable'>;
 }
 
@@ -348,8 +349,10 @@ export interface GridCellWidgetInputs {
 export class GridCellWidgetPattern {
     constructor(inputs: GridCellWidgetInputs);
     activate(event?: KeyboardEvent | FocusEvent): void;
+    activationEffect(): void;
     readonly active: SignalLike<boolean>;
     deactivate(event?: KeyboardEvent | FocusEvent): void;
+    deactivationEffect(): void;
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;

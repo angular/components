@@ -21,15 +21,15 @@
           @for (item of filteredItems(); track item.label; let i = $index) {
           <div ngGridRow class="example-grid-row" [attr.aria-selected]="item === selectedItem()">
             <div ngGridCell [id]="item.label + '-label'" [rowIndex]="i" [colIndex]="0"
-              class="example-cell-label example-cell" (activated)="selectItem(item)">
-              <button ngGridCellWidget class="example-label-button example-no-active-outline" (click)="selectItem(item)">
+              class="example-cell-label example-cell">
+              <button ngGridCellWidget class="example-label-button example-no-active-outline" (click)="selectItem(item)" (activated)="selectItem(item)">
                 {{item.label}}
               </button>
               <mat-icon class="example-selected-icon">check</mat-icon>
             </div>
             <div ngGridCell [id]="item.label + '-delete'" [rowIndex]="i" [colIndex]="1"
-              class="example-cell-button example-cell " (activated)="removeItem(item)">
-              <button ngGridCellWidget class="example-button example-no-active-outline" (click)="removeItem(item)"
+              class="example-cell-button example-cell ">
+              <button ngGridCellWidget class="example-button example-no-active-outline" (click)="removeItem(item)" (activated)="removeItem(item)"
                 (pointerdown)="$event.preventDefault()">
                 <mat-icon>close</mat-icon>
               </button>
