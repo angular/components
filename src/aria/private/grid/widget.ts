@@ -32,6 +32,12 @@ export interface GridCellWidgetInputs {
 
   /** The element that will receive focus when the widget is activated. */
   focusTarget: SignalLike<ElementResolver<HTMLElement>>;
+
+  /** Callback hook used to notify parents or directives upon interaction. */
+  onActivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
+
+  /** Callback hook used to notify parents or directives upon exit. */
+  onDeactivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
 }
 
 /** The UI pattern for a widget inside a grid cell. */
@@ -49,7 +55,12 @@ export class GridCellWidgetPattern {
   );
 
   /** The tab index for the widget. */
-  readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.inputs.cell().widgetTabIndex());
+  readonly tabIndex: SignalLike<-1 | 0> = computed(() => {
+    if (this.inputs.focusTarget()) {
+      return -1;
+    }
+    return this.inputs.cell().widgetTabIndex();
+  });
 
   /** Whether the widget is the active widget in the cell. */
   readonly active: SignalLike<boolean> = computed(
@@ -71,18 +82,25 @@ export class GridCellWidgetPattern {
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
+    // Simple widgets emit notification on interaction without capturing event flow
+    if (this.inputs.widgetType() === 'simple') {
+      return manager
+        .on('Enter', e => this.inputs.onActivate?.(e), {
+          preventDefault: false,
+          stopPropagation: false,
+        })
+        .on(' ', e => this.inputs.onActivate?.(e), {
+          preventDefault: false,
+          stopPropagation: false,
+        });
+    }
+
     // If a widget is activated, only listen to events that exits activate state.
     if (this.isActivated()) {
-      manager.on('Escape', e => {
-        this.deactivate(e);
-        this.focus();
-      });
+      manager.on('Escape', e => this.deactivate(e));
 
       if (this.inputs.widgetType() === 'editable') {
-        manager.on('Enter', e => {
-          this.deactivate(e);
-          this.focus();
-        });
+        manager.on('Enter', e => this.deactivate(e));
       }
 
       return manager;
@@ -133,6 +151,32 @@ export class GridCellWidgetPattern {
   /** Focuses the widget's host element. */
   focus(): void {
     this.widgetHost().focus();
+  }
+
+  /** Side-effect executed whenever the widget activates. Runs in the write phase. */
+  activationEffect(): void {
+    if (this.isActivated()) {
+      const event = this.lastActivateEvent();
+      this.inputs.onActivate?.(event);
+
+      // Only automatically redirect focus if explicit configuration was supplied.
+      if (this.inputs.focusTarget()) {
+        this.focus();
+      }
+    }
+  }
+
+  /** Side-effect executed whenever the widget deactivates. Runs in the write phase. */
+  deactivationEffect(): void {
+    const event = this.lastDeactivateEvent();
+    if (event) {
+      this.inputs.onDeactivate?.(event);
+
+      // Only automatically restore focus if the deactivation was triggered by user keyboard interaction.
+      if (event instanceof KeyboardEvent) {
+        this.focus();
+      }
+    }
   }
 
   /** Activates the widget. */

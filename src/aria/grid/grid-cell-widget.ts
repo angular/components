@@ -88,7 +88,7 @@ export class GridCellWidget {
    * If a focus target exists then return -1. Unless an override.
    */
   protected readonly _tabIndex: Signal<number> = computed(
-    () => this.tabindex() ?? (this.focusTarget() ? -1 : this._pattern.tabIndex()),
+    () => this.tabindex() ?? this._pattern.tabIndex(),
   );
 
   /** The UI pattern for the grid cell widget. */
@@ -96,6 +96,8 @@ export class GridCellWidget {
     ...this,
     element: () => this.element,
     cell: () => this._cell._pattern,
+    onActivate: e => this.activated.emit(e),
+    onDeactivate: e => this.deactivated.emit(e),
   });
 
   /** Whether the widget is activated. */
@@ -105,22 +107,11 @@ export class GridCellWidget {
 
   constructor() {
     afterRenderEffect({
-      read: () => {
-        if (this._pattern.isActivated()) {
-          const activateEvent = this._pattern.lastActivateEvent();
-          this.activated.emit(activateEvent);
-          this._pattern.focus();
-        }
-      },
+      write: () => this._pattern.activationEffect(),
     });
 
     afterRenderEffect({
-      read: () => {
-        const deactivateEvent = this._pattern.lastDeactivateEvent();
-        if (deactivateEvent) {
-          this.deactivated.emit(deactivateEvent);
-        }
-      },
+      write: () => this._pattern.deactivationEffect(),
     });
   }
 

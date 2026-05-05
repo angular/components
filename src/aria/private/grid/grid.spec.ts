@@ -370,7 +370,7 @@ describe('Grid', () => {
         const onActivateSpy = jasmine.createSpy('onActivate');
         const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
         const cell = grid.cells()[0][0];
-        (cell.inputs as any).onActivate = onActivateSpy;
+        cell.inputs.widget()!.inputs.onActivate = onActivateSpy;
 
         const event = enter();
         cell.onKeydown(event);
@@ -381,7 +381,7 @@ describe('Grid', () => {
         const onActivateSpy = jasmine.createSpy('onActivate');
         const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
         const cell = grid.cells()[0][0];
-        (cell.inputs as any).onActivate = onActivateSpy;
+        cell.inputs.widget()!.inputs.onActivate = onActivateSpy;
 
         const event = space();
         cell.onKeydown(event);
@@ -392,7 +392,7 @@ describe('Grid', () => {
         const onActivateSpy = jasmine.createSpy('onActivate');
         const {grid} = createGrid([{cells: [{widget: {widgetType: 'complex'}}]}], gridInputs);
         const cell = grid.cells()[0][0];
-        (cell.inputs as any).onActivate = onActivateSpy;
+        cell.inputs.widget()!.inputs.onActivate = onActivateSpy;
 
         const event = enter();
         cell.onKeydown(event);
@@ -403,7 +403,7 @@ describe('Grid', () => {
         const onActivateSpy = jasmine.createSpy('onActivate');
         const {grid} = createGrid([{cells: [{widget: {widgetType: 'simple'}}]}], gridInputs);
         const cell = grid.cells()[0][0];
-        (cell.inputs as any).onActivate = onActivateSpy;
+        cell.inputs.widget()!.inputs.onActivate = onActivateSpy;
 
         const event = up();
         cell.onKeydown(event);
