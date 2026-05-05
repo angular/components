@@ -399,11 +399,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     return this._getTrackById(value, index);
   }
 
-  /** Whether a view should be retained by the state service. */
-  private _shouldRetainView(trackById: string): boolean {
-    return this._recycleViewElementsState?.isMarkedForDetach(trackById) === true;
-  }
-
   /** Reacts to detach lifecycle changes emitted by the state service. */
   private _handleDetachChange(change: RecycleViewDetachEvent): void {
     if (
@@ -420,15 +415,18 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       return;
     }
 
-    if (change.type !== 'mark') {
-      return;
+    if (change.type === 'mark') {
+      this._retainDetachedView(change.id);
     }
+  }
 
-    const localIndex = this._findRenderedViewIndexByTrackById(change.id);
+  /** Retains the detached view for the given track-by id if it is currently rendered. */
+  private _retainDetachedView(id: string): void {
+    const localIndex = this._findRenderedViewIndexByTrackById(id);
     if (localIndex !== null) {
       const renderedView = this._viewContainerRef!.get(localIndex) as EmbeddedViewRef<C>;
       this._recycleViewElementsState?.retainDetachedView(
-        change.id,
+        id,
         renderedView,
         this._renderedRange.start + localIndex,
         this._repeaterId,
@@ -446,16 +444,16 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       return;
     }
 
-    for (const trackById of this._recycleViewElementsState.getDetachedIds()) {
+    this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
       const entry = this._recycleViewElementsState.takeDetachedView<C>(trackById);
 
       if (!entry || entry.repeaterId !== this._repeaterId) {
-        continue;
+        return;
       }
 
       const localIndex = this._findRenderedViewIndexByTrackById(trackById);
       // we shouldn't insert View what is already in the dom
-      if (localIndex) continue;
+      if (localIndex) return;
 
       const {view, realIndex} = entry;
       const {start, end} = this._renderedRange;
@@ -465,7 +463,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
         const localIndex = realIndex - start;
         this._viewContainerRef.insert(view, localIndex);
       }
-    }
+    });
   }
 
   /** Detaches all currently rendered views that are marked for detached-view retention. */
@@ -474,16 +472,13 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       return;
     }
 
-    for (const trackById of this._recycleViewElementsState.getDetachedIds()) {
-      // if(trackById === 'NO_GROUPED_RECORDS_KEY') {
-      //   continue
-      // }
+    this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
       const index = this._findRenderedViewIndexByTrackById(trackById);
 
       if (index !== null) {
         this._viewContainerRef.detach(index);
       }
-    }
+    });
   }
 
   /** Finds the index of a currently rendered view that matches a `trackBy` id. */

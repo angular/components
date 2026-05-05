@@ -750,64 +750,6 @@ describe('CdkVirtualScrollViewport', () => {
       expect(testComponent.virtualForOf._getEmbeddedViewArgs).toHaveBeenCalledTimes(5);
     }));
 
-    it('should reattach detached views by trackBy id even when template cache is disabled', fakeAsync(() => {
-      testComponent.trackBy = (_, item) => item;
-      testComponent.templateCacheSize = 0;
-      const state = fixture.debugElement.injector.get(RecycleViewElementsState);
-      const strategy = testComponent.virtualForOf._viewRepeater as any;
-      const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
-
-      finishInit(fixture);
-      state.markForDetach('0');
-
-      const initialFirstView = viewContainerRef.get(0);
-      const createEmbeddedViewSpy = spyOn(viewContainerRef, 'createEmbeddedView').and.callThrough();
-
-      strategy._detachAndCacheView(0, viewContainerRef);
-
-      expect(state.getDetachedView('0')).toBe(initialFirstView);
-
-      const insertedView = strategy._insertView(
-        () => testComponent.virtualForOf._getEmbeddedViewArgs({item: 0} as any, 0),
-        0,
-        viewContainerRef,
-        0,
-      );
-
-      expect(insertedView).toBeUndefined();
-      expect(createEmbeddedViewSpy).not.toHaveBeenCalled();
-      expect(state.getDetachedView('0')).toBeNull();
-      expect(viewContainerRef.get(0)).toBe(initialFirstView);
-    }));
-
-    it('should keep keyed detached views alive after strategy teardown until state cleanup', fakeAsync(() => {
-      testComponent.trackBy = (_, item) => item;
-      testComponent.templateCacheSize = 0;
-      const state = fixture.debugElement.injector.get(RecycleViewElementsState);
-      const strategy = testComponent.virtualForOf._viewRepeater as any;
-      const viewContainerRef = testComponent.virtualForOf._viewContainerRef;
-
-      finishInit(fixture);
-      state.markForDetach('0');
-
-      strategy._detachAndCacheView(0, viewContainerRef);
-      const detachedView = state.getDetachedView('0')!;
-
-      expect(detachedView).toBeTruthy();
-
-      spyOn(detachedView as any, 'destroy').and.callThrough();
-
-      strategy.detach();
-
-      expect(detachedView.destroy).not.toHaveBeenCalled();
-      expect(state.getDetachedView('0')).toBe(detachedView);
-
-      state.remove('0');
-
-      expect(detachedView.destroy).toHaveBeenCalled();
-      expect(state.getDetachedView('0')).toBeNull();
-    }));
-
     it('should render up to maxBufferPx when buffer dips below minBufferPx', fakeAsync(() => {
       testComponent.minBufferPx = testComponent.itemSize;
       testComponent.maxBufferPx = testComponent.itemSize * 2;

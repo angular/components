@@ -31,7 +31,6 @@ import {
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
-  booleanAttribute,
   inject,
 } from '@angular/core';
 import {NumberInput, coerceNumberProperty} from '../coercion';
@@ -158,19 +157,6 @@ export class CdkVirtualForOf<T>
     this._updateTrackByFunction();
   }
   private _storeScrollPosition: boolean = false;
-
-  /**
-   * Whether to trigger debugger statements in the virtual-for repeater strategy.
-   */
-  @Input({transform: booleanAttribute})
-  get cdkVirtualForDebug(): boolean {
-    return this._debug;
-  }
-  set cdkVirtualForDebug(value: boolean) {
-    this._debug = value;
-    this._viewRepeater.setDebug(value);
-  }
-  private _debug: boolean = false;
 
   /**
    * A string label to enable collect-detached mode, or `null`/empty to disable.
