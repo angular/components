@@ -13,7 +13,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   signal,
   viewChild,
 } from '@angular/core';
@@ -21,15 +20,15 @@ import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
 
-/** @title Autocomplete with highlighted filtering. */
+/** @title Autocomplete with auto-select filtering. */
 @Component({
-  selector: 'combobox-autocomplete-highlight-example',
-  templateUrl: 'combobox-autocomplete-highlight-example.html',
+  selector: 'autocomplete-auto-select-example',
+  templateUrl: 'autocomplete-auto-select-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxAutocompleteHighlightExample {
+export class AutocompleteAutoSelectExample {
   /** The selected value of the combobox. */
   readonly listbox = viewChild(Listbox);
   readonly combobox = viewChild(Combobox);
@@ -37,7 +36,6 @@ export class ComboboxAutocompleteHighlightExample {
   popupExpanded = signal(false);
   searchString = signal('');
   selectedOption = signal<string[]>([]);
-  navigated = signal(false);
 
   /** The query string used to filter the list of countries. */
   query = computed(() => this.searchString());
@@ -50,12 +48,6 @@ export class ComboboxAutocompleteHighlightExample {
   constructor() {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
-    });
-
-    effect(() => {
-      if (!this.popupExpanded()) {
-        this.navigated.set(false);
-      }
     });
   }
 

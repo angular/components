@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   signal,
   viewChild,
 } from '@angular/core';
@@ -20,22 +21,23 @@ import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
 
-/** @title Disabled autocomplete. */
+/** @title Autocomplete with highlighted filtering. */
 @Component({
-  selector: 'combobox-autocomplete-disabled-example',
-  templateUrl: 'combobox-autocomplete-disabled-example.html',
+  selector: 'autocomplete-highlight-example',
+  templateUrl: 'autocomplete-highlight-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxAutocompleteDisabledExample {
+export class AutocompleteHighlightExample {
   /** The selected value of the combobox. */
   readonly listbox = viewChild(Listbox);
   readonly combobox = viewChild(Combobox);
 
   popupExpanded = signal(false);
-  searchString = signal('Select a country');
+  searchString = signal('');
   selectedOption = signal<string[]>([]);
+  navigated = signal(false);
 
   /** The query string used to filter the list of countries. */
   query = computed(() => this.searchString());
@@ -49,5 +51,35 @@ export class ComboboxAutocompleteDisabledExample {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
     });
+
+    effect(() => {
+      if (!this.popupExpanded()) {
+        this.navigated.set(false);
+      }
+    });
+  }
+
+  /** Clears the query and the listbox value. */
+  clear(): void {
+    this.searchString.set('');
+    this.selectedOption.set([]);
+  }
+
+  onCommit() {
+    const selectedOption = this.selectedOption();
+    if (selectedOption.length > 0) {
+      this.searchString.set(selectedOption[0]);
+    }
+    this.popupExpanded.set(false);
+    this.combobox()?.element.focus();
+  }
+
+  /** Handles keydown events on the clear button. */
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.clear();
+      this.popupExpanded.set(false);
+      event.stopPropagation();
+    }
   }
 }

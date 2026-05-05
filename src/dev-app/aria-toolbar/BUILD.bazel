@@ -11,6 +11,6 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/components-examples/aria/aria-toolbar:toolbar",
+        "//src/components-examples/aria/toolbar",
     ],
 )

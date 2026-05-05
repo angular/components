@@ -11,10 +11,6 @@ export {ComboboxReadonlyMultiselectExample} from './combobox-readonly-multiselec
 export {ComboboxDialogExample} from './combobox-dialog/combobox-dialog-example';
 export {ComboboxTreeAutoSelectExample} from './combobox-tree-auto-select/combobox-tree-auto-select-example';
 export {ComboboxTreeHighlightExample} from './combobox-tree-highlight/combobox-tree-highlight-example';
-export {ComboboxAutocompleteAutoSelectExample} from './combobox-autocomplete-auto-select/combobox-autocomplete-auto-select-example';
-export {ComboboxAutocompleteDisabledExample} from './combobox-autocomplete-disabled/combobox-autocomplete-disabled-example';
-export {ComboboxAutocompleteHighlightExample} from './combobox-autocomplete-highlight/combobox-autocomplete-highlight-example';
-export {ComboboxAutocompleteManualExample} from './combobox-autocomplete-manual/combobox-autocomplete-manual-example';
 export {ComboboxMultiselectDialogExample} from './combobox-multiselect-dialog/combobox-multiselect-dialog-example';
 
 // Force watcher update

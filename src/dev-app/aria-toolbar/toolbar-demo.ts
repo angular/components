@@ -13,7 +13,7 @@ import {
   ToolbarConfigurableExample,
   ToolbarRtlExample,
   ToolbarHardDisabledExample,
-} from '@angular/components-examples/aria/aria-toolbar';
+} from '@angular/components-examples/aria/toolbar';
 
 @Component({
   templateUrl: 'toolbar-demo.html',

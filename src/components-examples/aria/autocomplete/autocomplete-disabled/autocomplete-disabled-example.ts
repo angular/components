@@ -20,21 +20,21 @@ import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
 
-/** @title Autocomplete with auto-select filtering. */
+/** @title Disabled autocomplete. */
 @Component({
-  selector: 'combobox-autocomplete-auto-select-example',
-  templateUrl: 'combobox-autocomplete-auto-select-example.html',
+  selector: 'autocomplete-disabled-example',
+  templateUrl: 'autocomplete-disabled-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxAutocompleteAutoSelectExample {
+export class AutocompleteDisabledExample {
   /** The selected value of the combobox. */
   readonly listbox = viewChild(Listbox);
   readonly combobox = viewChild(Combobox);
 
   popupExpanded = signal(false);
-  searchString = signal('');
+  searchString = signal('Select a country');
   selectedOption = signal<string[]>([]);
 
   /** The query string used to filter the list of countries. */
@@ -49,29 +49,5 @@ export class ComboboxAutocompleteAutoSelectExample {
     afterRenderEffect(() => {
       this.listbox()?.scrollActiveItemIntoView();
     });
-  }
-
-  /** Clears the query and the listbox value. */
-  clear(): void {
-    this.searchString.set('');
-    this.selectedOption.set([]);
-  }
-
-  onCommit() {
-    const selectedOption = this.selectedOption();
-    if (selectedOption.length > 0) {
-      this.searchString.set(selectedOption[0]);
-    }
-    this.popupExpanded.set(false);
-    this.combobox()?.element.focus();
-  }
-
-  /** Handles keydown events on the clear button. */
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.clear();
-      this.popupExpanded.set(false);
-      event.stopPropagation();
-    }
   }
 }

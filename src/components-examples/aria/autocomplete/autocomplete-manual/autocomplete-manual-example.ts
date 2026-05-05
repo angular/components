@@ -22,13 +22,13 @@ import {FormsModule} from '@angular/forms';
 
 /** @title Combobox Autocomplete with manual filtering. */
 @Component({
-  selector: 'combobox-autocomplete-manual-example',
-  templateUrl: 'combobox-autocomplete-manual-example.html',
+  selector: 'autocomplete-manual-example',
+  templateUrl: 'autocomplete-manual-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboboxAutocompleteManualExample {
+export class AutocompleteManualExample {
   /** The selected value of the combobox. */
   readonly listbox = viewChild(Listbox);
   readonly combobox = viewChild(Combobox);
