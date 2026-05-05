@@ -36,9 +36,6 @@ export interface GridCellInputs extends GridCell {
 
   /** A function that returns the cell widget associated with a given element. */
   getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
-
-  /** Callback when the cell is activated via Enter/Space. */
-  onActivate?: (event: KeyboardEvent) => void;
 }
 
 /** The UI pattern for a grid cell. */
@@ -120,12 +117,6 @@ export class GridCellPattern implements GridCell {
   onKeydown(event: KeyboardEvent): void {
     if (this.disabled()) return;
     this.widget()?.onKeydown(event);
-
-    if (this.widget()?.inputs.widgetType() === 'simple') {
-      if (event.key === 'Enter' || event.key === ' ') {
-        this.inputs.onActivate?.(event);
-      }
-    }
   }
 
   /** Handles focusin events for the cell. */

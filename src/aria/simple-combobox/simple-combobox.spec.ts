@@ -1541,13 +1541,13 @@ const states = [
     <div ngComboboxWidget #grid="ngGrid" ngGrid id="grid" focusMode="activedescendant" [tabIndex]="-1" colWrap="continuous" [activeDescendant]="grid.activeDescendant()">
       @for (item of filteredItems(); track item; let i = $index) {
         <div ngGridRow>
-          <div ngGridCell [id]="item + '-label'" [rowIndex]="i" [colIndex]="0" (activated)="selectItem(item)">
-            <button ngGridCellWidget (click)="selectItem(item)">
+          <div ngGridCell [id]="item + '-label'" [rowIndex]="i" [colIndex]="0">
+            <button ngGridCellWidget (activated)="selectItem(item)" (click)="selectItem(item)">
               {{item}}
             </button>
           </div>
-          <div ngGridCell [id]="item + '-delete'" [rowIndex]="i" [colIndex]="1" (activated)="removeItem(item)">
-            <button ngGridCellWidget (click)="removeItem(item)" (pointerdown)="$event.preventDefault()">
+          <div ngGridCell [id]="item + '-delete'" [rowIndex]="i" [colIndex]="1">
+            <button ngGridCellWidget (activated)="removeItem(item)" (click)="removeItem(item)" (pointerdown)="$event.preventDefault()">
               Delete
             </button>
           </div>
