@@ -65,6 +65,7 @@ sass_library(
 sass_binary(
     name = "tab_group_css",
     src = "tab-group.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         ":sass",
@@ -76,6 +77,7 @@ sass_binary(
 sass_binary(
     name = "tab_nav_bar_css",
     src = "tab-nav-bar/tab-nav-bar.scss",
+    layer = "angular-material",
     deps = [
         ":sass",
     ],
@@ -84,6 +86,7 @@ sass_binary(
 sass_binary(
     name = "tab_link_css",
     src = "tab-nav-bar/tab-link.scss",
+    layer = "angular-material",
     deps = [
         ":sass",
         "//src/material/core/style:variables",
@@ -93,6 +96,7 @@ sass_binary(
 sass_binary(
     name = "tab_header_css",
     src = "tab-header.scss",
+    layer = "angular-material",
     deps = [
         ":sass",
         "//src/cdk:sass_lib",
@@ -102,6 +106,7 @@ sass_binary(
 sass_binary(
     name = "tab_body_css",
     src = "tab-body.scss",
+    layer = "angular-material",
     deps = ["//src/material/core/style:layout_common"],
 )
 
