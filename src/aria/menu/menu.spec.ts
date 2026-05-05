@@ -478,13 +478,24 @@ describe('Standalone Menu Pattern', () => {
   });
 
   it('should not reset default state on hover triggers expansion', async () => {
-    TestBed.configureTestingModule({});
     fixture = TestBed.createComponent(StandaloneMenuExample);
     fixture.detectChanges();
 
     const berries = getItem('Berries');
     await mouseover(berries!);
     expect(berries?.getAttribute('data-active')).toBe('true');
+  });
+
+  it('should be able to set an aria-label on a menu item', async () => {
+    fixture = TestBed.createComponent(StandaloneMenuExample);
+    fixture.detectChanges();
+
+    const item = getItem('Apple');
+    expect(item?.getAttribute('aria-label')).toBeFalsy();
+
+    fixture.componentInstance.firstItemAriaLabel.set('Apple item label');
+    fixture.detectChanges();
+    expect(item?.getAttribute('aria-label')).toBe('Apple item label');
   });
 });
 
@@ -1029,52 +1040,58 @@ describe('Menu Bar Pattern', () => {
 
 @Component({
   template: `
-<div ngMenu [expansionDelay]="0" (itemSelected)="itemSelected($event)">
-  <ng-template ngMenuContent>
-    <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
-    <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-    <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
-
-    <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+    <div ngMenu [expansionDelay]="0" (itemSelected)="itemSelected($event)">
       <ng-template ngMenuContent>
-        <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
-        <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
-        <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+        <div
+          ngMenuItem
+          value='Apple'
+          searchTerm='Apple'
+          [attr.aria-label]="firstItemAriaLabel()">Apple</div>
+        <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
+        <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+
+        <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+          <ng-template ngMenuContent>
+            <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
+            <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
+            <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+          </ng-template>
+        </div>
+
+        <div ngMenuItem value='Cherry' searchTerm='Cherry' [disabled]="true">Cherry</div>
       </ng-template>
     </div>
-
-    <div ngMenuItem value='Cherry' searchTerm='Cherry' [disabled]="true">Cherry</div>
-  </ng-template>
-</div>
   `,
   imports: [Menu, MenuItem, MenuContent],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneMenuExample {
+  firstItemAriaLabel = signal<string | null>(null);
+
   itemSelected(value: string) {}
 }
 
 @Component({
   template: `
-<button ngMenuTrigger [menu]="menu">Open menu</button>
+    <button ngMenuTrigger [menu]="menu">Open menu</button>
 
-<div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
-  <ng-template ngMenuContent>
-    <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
-    <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-    <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
-
-    <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+    <div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
       <ng-template ngMenuContent>
-        <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
-        <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
-        <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+        <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
+        <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
+        <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+
+        <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+          <ng-template ngMenuContent>
+            <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
+            <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
+            <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
+          </ng-template>
+        </div>
+
+        <div ngMenuItem value='Cherry' searchTerm='Cherry'>Cherry</div>
       </ng-template>
     </div>
-
-    <div ngMenuItem value='Cherry' searchTerm='Cherry'>Cherry</div>
-  </ng-template>
-</div>
   `,
   imports: [Menu, MenuItem, MenuTrigger, MenuContent],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -1085,36 +1102,36 @@ class MenuTriggerExample {
 
 @Component({
   template: `
-<div ngMenuBar>
-  <div ngMenuItem value='File' searchTerm='File'>File</div>
-  <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu">Edit</div>
+    <div ngMenuBar>
+      <div ngMenuItem value='File' searchTerm='File'>File</div>
+      <div ngMenuItem value='Edit' searchTerm='Edit' [submenu]="editMenu">Edit</div>
 
-  <div ngMenu [expansionDelay]="0" #editMenu="ngMenu">
-    <ng-template ngMenuContent>
-      <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
-      <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
-    </ng-template>
-  </div>
+      <div ngMenu [expansionDelay]="0" #editMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ngMenuItem value='Undo' searchTerm='Undo'>Undo</div>
+          <div ngMenuItem value='Redo' searchTerm='Redo'>Redo</div>
+        </ng-template>
+      </div>
 
-  <div ngMenuItem [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
+      <div ngMenuItem [submenu]="viewMenu" value='View' searchTerm='View'>View</div>
 
-  <div ngMenu [expansionDelay]="0" #viewMenu="ngMenu">
-    <ng-template ngMenuContent>
-      <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
-      <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
-      <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
-    </ng-template>
-  </div>
+      <div ngMenu [expansionDelay]="0" #viewMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ngMenuItem value='Zoom In' searchTerm='Zoom In'>Zoom In</div>
+          <div ngMenuItem value='Zoom Out' searchTerm='Zoom Out'>Zoom Out</div>
+          <div ngMenuItem value='Full Screen' searchTerm='Full Screen'>Full Screen</div>
+        </ng-template>
+      </div>
 
-  <div ngMenuItem [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
+      <div ngMenuItem [submenu]="helpMenu" value='Help' searchTerm='Help'>Help</div>
 
-  <div ngMenu [expansionDelay]="0" #helpMenu="ngMenu">
-    <ng-template ngMenuContent>
-      <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
-      <div ngMenuItem value='About' searchTerm='About'>About</div>
-    </ng-template>
-  </div>
-</div>
+      <div ngMenu [expansionDelay]="0" #helpMenu="ngMenu">
+        <ng-template ngMenuContent>
+          <div ngMenuItem value='Documentation' searchTerm='Documentation'>Documentation</div>
+          <div ngMenuItem value='About' searchTerm='About'>About</div>
+        </ng-template>
+      </div>
+    </div>
   `,
   imports: [Menu, MenuBar, MenuItem, MenuContent],
   changeDetection: ChangeDetectionStrategy.Eager,
