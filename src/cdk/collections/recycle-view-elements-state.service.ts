@@ -25,7 +25,12 @@ export class RecycleViewElementsState implements OnDestroy {
   /** Detached views owned by the service lifetime, keyed by trackBy id. */
   private _detachedViews = new Map<
     string,
-    {view: EmbeddedViewRef<unknown>; realIndex: number; repeaterId: string | null}
+    {
+      view: EmbeddedViewRef<unknown>;
+      realIndex: number;
+      repeaterId: string | null;
+      groupId: string | null;
+    }
   >();
 
   /** Emits detach lifecycle changes so active strategies can update live candidates. */
@@ -153,6 +158,16 @@ export class RecycleViewElementsState implements OnDestroy {
     this._detachedViews.delete(id);
   }
 
+  /** Removes all detached-view retention entries owned by a group. */
+  removeDetachedViewsByGroupId(groupId: string | null = null): void {
+    this._detachedViews.forEach((entry, id) => {
+      if (entry.groupId === groupId || id === groupId) {
+        this._detachedIds.delete(id);
+        this._detachedViews.delete(id);
+      }
+    });
+  }
+
   /** Whether an item is marked for detached-view retention. */
   isMarkedForDetach(id: string): boolean {
     return this._detachedIds.has(id);
@@ -189,28 +204,33 @@ export class RecycleViewElementsState implements OnDestroy {
     view: EmbeddedViewRef<unknown>,
     realIndex: number,
     repeaterId: string | null = null,
+    groupId: string | null = null,
   ): void {
     const existing = this._detachedViews.get(id);
     if (existing && existing.view !== view) {
       existing.view.destroy();
     }
 
-    this._detachedViews.set(id, {view, realIndex, repeaterId});
+    this._detachedViews.set(id, {view, realIndex, repeaterId, groupId});
   }
 
   /**
    * Takes ownership of a retained detached view for reinsertion into the container.
    * Returns the view and the real (global) index it was detached from, or `null` if not found.
    */
-  takeDetachedView<T>(
-    id: string,
-  ): {view: EmbeddedViewRef<T>; realIndex: number; repeaterId: string | null} | null {
+  takeDetachedView<T>(id: string): {
+    view: EmbeddedViewRef<T>;
+    realIndex: number;
+    repeaterId: string | null;
+    groupId: string | null;
+  } | null {
     const entry = this._detachedViews.get(id);
     return entry
       ? {
           view: entry.view as EmbeddedViewRef<T>,
           realIndex: entry.realIndex,
           repeaterId: entry.repeaterId,
+          groupId: entry.groupId,
         }
       : null;
   }

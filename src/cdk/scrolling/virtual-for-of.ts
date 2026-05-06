@@ -199,6 +199,21 @@ export class CdkVirtualForOf<T>
   private _repeaterId: string | null = null;
 
   /**
+   * An optional group identifier for retained detached views.
+   * When set, it is passed to the view repeater strategy and stored alongside
+   * any retained detached views so consumers can remove entries by group.
+   */
+  @Input()
+  get cdkVirtualForGroupId(): string | null {
+    return this._groupId;
+  }
+  set cdkVirtualForGroupId(value: string | null) {
+    this._groupId = value;
+    this._viewRepeater.setGroupId(value);
+  }
+  private _groupId: string | null = null;
+
+  /**
    * Updates the trackBy function in the view repeater based on current settings.
    */
   private _updateTrackByFunction(): void {

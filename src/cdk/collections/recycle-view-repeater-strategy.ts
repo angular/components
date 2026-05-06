@@ -100,6 +100,9 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    */
   private _repeaterId: string | null = null;
 
+  /** Optional group identifier stored alongside retained detached views. */
+  private _groupId: string | null = null;
+
   /**
    * Sets the trackBy function used to identify items for keyed detached-view reuse
    * and scroll state persistence.
@@ -137,6 +140,13 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    */
   setRepeaterId(value: string | null): void {
     this._repeaterId = value;
+  }
+
+  /**
+   * Sets the group identifier that will be stored alongside retained detached views.
+   */
+  setGroupId(value: string | null): void {
+    this._groupId = value;
   }
 
   constructor() {
@@ -430,6 +440,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
         renderedView,
         this._renderedRange.start + localIndex,
         this._repeaterId,
+        this._groupId,
       );
     }
   }
@@ -445,7 +456,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     }
 
     this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
-      const entry = this._recycleViewElementsState.takeDetachedView<C>(trackById);
+      const entry = this._recycleViewElementsState!.takeDetachedView<C>(trackById);
 
       if (!entry || entry.repeaterId !== this._repeaterId) {
         return;
@@ -461,7 +472,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       if (realIndex >= start && realIndex < end) {
         // Convert the real (global) index to a local (rendered-window) index.
         const localIndex = realIndex - start;
-        this._viewContainerRef.insert(view, localIndex);
+        this._viewContainerRef!.insert(view, localIndex);
       }
     });
   }
@@ -476,7 +487,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       const index = this._findRenderedViewIndexByTrackById(trackById);
 
       if (index !== null) {
-        this._viewContainerRef.detach(index);
+        this._viewContainerRef!.detach(index);
       }
     });
   }
