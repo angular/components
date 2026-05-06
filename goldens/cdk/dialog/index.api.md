@@ -10,6 +10,7 @@ import * as _angular_cdk_portal from '@angular/cdk/portal';
 import { Binding } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
+import { DirectiveWithBindings } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
