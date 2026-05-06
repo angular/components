@@ -1,3 +1,66 @@
+<a name="22.0.0-next.8"></a>
+# 22.0.0-next.8 "plastic-wallaby" (2026-05-06)
+## Breaking Changes
+### aria
+- The legacy combobox and autocomplete implementations have been removed. Use the new standalone combobox instead.
+  
+  * feat(aria/combobox): promote simple-combobox to stable un-prefixed combobox
+  
+  - Relocates public, private, and example directories to clean `combobox` entry points.
+  - Renames internal layout symbols, selectors, and uppercase tokens (`SIMPLE_COMBOBOX_POPUP` -> `COMBOBOX_POPUP`).
+  - Establishes full documentation extraction parity with the `json_api` Bazel rule target.
+  - Standardizes the accompanying toolbar component showcase into the clean `aria-toolbar` path.
+  - Re-routes dev-app navigation links and migrates public API golden records.
+- `SimpleCombobox` has been promoted to `Combobox`. All `simple-combobox` prefixed symbols, selectors, and tokens have been renamed to use the `combobox` prefix.
+  
+  * refactor(aria/combobox): relocate and restructure autocomplete and toolbar examples
+  Relocate the autocomplete examples to `src/components-examples/aria/autocomplete` and toolbar examples to `src/components-examples/aria/toolbar`.
+  - Restore naming continuity with the historical codebase by stripping redundant prefixes from example filenames and component selectors.
+  - Sync dev-app preview routing layout paths and strict Bazel target dependency links.
+### cdk
+- * `CDK_DESCRIBEDBY_HOST_ATTRIBUTE` has been removed.
+  * `CDK_DESCRIBEDBY_ID_PREFIX` has been removed.
+  * The `injector` parameter of the `ConfigurableFocusTrap` and `FocusTrap` constructors is now required.
+  * The boolean parameter of `ConfigurableFocusTrapFactory.create` has been replaced with a config object.
+  * `MESSAGES_CONTAINER_ID` has been removed.
+- * The `event` parameter of `DropListRef.drop` is now required.
+- * `ContextMenuTracker` has been renamed to `MenuTracker`.
+### material
+- * `MatListOption.checkboxPosition` has been removed. use `togglePosition` instead.
+  * `MatListOptionCheckboxPosition` has been renamed to `MatListOptionTogglePosition`.
+- * `ArrowViewState` has been removed.
+  * `ArrowViewStateTransition` has been removed.
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b8201edee](https://github.com/angular/components/commit/b8201edeef62258c3d1e1ebeaf8ee14766918c22) | fix | deprecate heatmap layer ([#33208](https://github.com/angular/components/pull/33208)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [add8f16c0](https://github.com/angular/components/commit/add8f16c01ad683b9e2ab9e1bf5ad3a984dd9921) | fix | **list:** breaking changes for v22 |
+| [9d73c98b5](https://github.com/angular/components/commit/9d73c98b57d46454d51344bbd59055bc06dabc6b) | fix | **menu:** missing panelClass getter ([#33191](https://github.com/angular/components/pull/33191)) |
+| [75718e4fb](https://github.com/angular/components/commit/75718e4fbebce2a7f8aa30550a12d58a5a6f9b93) | fix | **sort:** breaking changes for v22 |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [24115c021](https://github.com/angular/components/commit/24115c02189ca0b1b3f09a909b8962d330f55f91) | feat | **portal:** add directives support to ComponentPortal ([#33142](https://github.com/angular/components/pull/33142)) |
+| [7426334c5](https://github.com/angular/components/commit/7426334c5efb76ac3f359e26a7f6e48e29d4ec78) | fix | **a11y:** breaking changes for v22 |
+| [81c6bbd89](https://github.com/angular/components/commit/81c6bbd89da765a3ce8fd9dd8fd0b36b8eac4ca4) | fix | **drag-drop:** breaking changes for v22 |
+| [ffb23f6f8](https://github.com/angular/components/commit/ffb23f6f825a0e86cd6d9bf3505af70b2264e588) | fix | **menu:** breaking changes for v22 |
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e3d84f2e0](https://github.com/angular/components/commit/e3d84f2e0adb9254d804c10ba24e6c4528efad53) | feat | **combobox:** add test harnesses ([#33194](https://github.com/angular/components/pull/33194)) |
+| [0ca47b4a0](https://github.com/angular/components/commit/0ca47b4a060595919fd2b2cd62d0097071c4795d) | feat | **combobox:** migrate simple-combobox directly into primary entrypoints ([#33206](https://github.com/angular/components/pull/33206)) |
+| [218a77cf9](https://github.com/angular/components/commit/218a77cf946808ca966c131f56c393ef91c662b3) | fix | **combobox:** separates placeholder prefixes ([#33163](https://github.com/angular/components/pull/33163)) |
+| [4d045b823](https://github.com/angular/components/commit/4d045b823e5d6f6ed3512189624a06ae423e9296) | fix | **menu:** do not set default aria-label ([#33202](https://github.com/angular/components/pull/33202)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bb4f8ec50](https://github.com/angular/components/commit/bb4f8ec50407500ba4d1aa131bcd3c828cad67ae) | fix | re-export collection util ([#33171](https://github.com/angular/components/pull/33171)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.10"></a>
 # 21.2.10 "metal-wallaby" (2026-05-06)
 ### aria
