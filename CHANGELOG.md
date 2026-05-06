@@ -1,3 +1,12 @@
+<a name="21.2.10"></a>
+# 21.2.10 "metal-wallaby" (2026-05-06)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [48973661e](https://github.com/angular/components/commit/48973661ec50649918e3dcafc096d340219135da) | fix | **menu:** do not set default aria-label ([#33202](https://github.com/angular/components/pull/33202)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.9"></a>
 # 21.2.9 "astatine-astronaut" (2026-04-29)
 ### aria
