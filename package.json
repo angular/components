@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#4de8a14a1682d0f07e0b14a3b26498757c195904",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#df5bcf2c22735628d01f1e9cdb45d336bec4cfdf",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
