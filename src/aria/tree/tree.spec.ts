@@ -1556,6 +1556,25 @@ describe('Tree', () => {
       });
     }
   });
+
+  describe('item mutations and focus stability', () => {
+    it('should recover focus by shifting to the default state if the active item is removed', async () => {
+      setupTestTree();
+      updateTree({focusMode: 'activedescendant'});
+
+      const vegetablesEl = getTreeItemElementByValue('vegetables')!;
+      click(vegetablesEl);
+      expect(getFocusedTreeItemValue()).toBe('vegetables');
+
+      const updatedNodes = testComponent.nodes().filter(n => n.value !== 'vegetables');
+      testComponent.nodes.set(updatedNodes);
+      fixture.detectChanges();
+      await waitForMicrotasks();
+      defineTestVariables();
+
+      expect(getFocusedTreeItemValue()).toBe('fruits');
+    });
+  });
 });
 
 interface TestTreeNode<V = string> {
