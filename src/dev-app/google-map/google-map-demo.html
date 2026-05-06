@@ -72,11 +72,6 @@
       @if (directionsResult) {
         <map-directions-renderer [directions]="directionsResult"></map-directions-renderer>
       }
-      @if (isHeatmapDisplayed) {
-        <map-heatmap-layer
-          [data]="heatmapData"
-          [options]="heatmapOptions"></map-heatmap-layer>
-      }
     </google-map>
 
     <p><label>Latitude:</label> {{display?.lat}}</p>
@@ -203,13 +198,6 @@
       <label for="bicycling-layer-checkbox">
         Toggle Bicycling Layer
         <input type="checkbox" [(ngModel)]="isBicyclingLayerDisplayed">
-      </label>
-    </div>
-
-    <div>
-      <label for="heatmap-layer-checkbox">
-        Toggle Heatmap Layer
-        <input type="checkbox" (click)="toggleHeatmapLayerDisplay()">
       </label>
     </div>
 
