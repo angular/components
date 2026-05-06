@@ -18,7 +18,7 @@
   position: absolute;
 }
 
-[ngComboboxInput] {
+input[ngCombobox] {
   width: 13rem;
   font-size: 0.9rem;
   border-radius: var(--mat-sys-corner-extra-small);
@@ -28,15 +28,13 @@
   background-color: var(--mat-sys-surface);
 }
 
-[ngComboboxInput][aria-disabled='true'] {
+input[ngCombobox][aria-disabled='true'],
+input[ngCombobox]:disabled {
   cursor: default;
   opacity: 0.5;
   background-color: var(--mat-sys-surface-dim);
 }
 
-[ngCombobox]:has([aria-expanded='false']) .example-popup {
-  display: none;
-}
 
 .example-clear-button {
   position: absolute;
@@ -118,28 +116,11 @@
   font-size: 0.9rem;
 }
 
-/* The ::placeholder selectors are intentionally separated.
-The 'material/no-prefixes' stylelint rule flags the standard ::placeholder
-when grouped with vendor prefixes. Each prefix is on its own rule to comply.
-Vendor prefixes are included to ensure consistent placeholder styling
-across different browsers. */
-
 /* stylelint-disable material/no-prefixes -- Provides all prefixes for ::placeholder */
-input::-webkit-input-placeholder {
-  color: var(--mat-sys-on-surface-variant);
-}
-
-input::-moz-placeholder /* Firefox 19+ */ {
-  color: var(--mat-sys-on-surface-variant);
-}
-
-input:-ms-input-placeholder /* IE 10+ */ {
-  color: var(--mat-sys-on-surface-variant);
-}
-input:-moz-placeholder  /* Firefox 18- */ {
-  color: var(--mat-sys-on-surface-variant);
-}
-
+input::-webkit-input-placeholder,
+input::-moz-placeholder, /* Firefox 19+ */
+input:-ms-input-placeholder, /* IE 10+ */
+input:-moz-placeholder, /* Firefox 18- */
 input::placeholder {
   color: var(--mat-sys-on-surface-variant);
 }

@@ -6,20 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopup,
-  ComboboxPopupContainer,
-} from '@angular/aria/combobox';
+import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  signal,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -30,33 +25,20 @@ import {FormsModule} from '@angular/forms';
   selector: 'autocomplete-auto-select-example',
   templateUrl: 'autocomplete-auto-select-example.html',
   styleUrl: '../autocomplete.css',
-  imports: [
-    Combobox,
-    ComboboxInput,
-    ComboboxPopup,
-    ComboboxPopupContainer,
-    Listbox,
-    Option,
-    OverlayModule,
-    FormsModule,
-  ],
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteAutoSelectExample {
   /** The selected value of the combobox. */
-  listbox = viewChild<Listbox<string>>(Listbox);
+  readonly listbox = viewChild(Listbox);
+  readonly combobox = viewChild(Combobox);
 
-  /** The options available in the listbox. */
-  options = viewChildren<Option<string>>(Option);
-
-  /** A reference to the ng aria combobox. */
-  combobox = viewChild<Combobox<string>>(Combobox);
-
-  /** A reference to the ng aria combobox input. */
-  comboboxInput = viewChild<ComboboxInput>(ComboboxInput);
+  popupExpanded = signal(false);
+  searchString = signal('');
+  selectedOption = signal<string[]>([]);
 
   /** The query string used to filter the list of countries. */
-  query = computed(() => this.comboboxInput()?.value() || '');
+  query = computed(() => this.searchString());
 
   /** The list of countries filtered by the query. */
   countries = computed(() =>
@@ -64,26 +46,31 @@ export class AutocompleteAutoSelectExample {
   );
 
   constructor() {
-    // Scrolls to the active item when the active option changes.
     afterRenderEffect(() => {
-      if (this.combobox()?.expanded()) {
-        const option = this.options().find(opt => opt.active());
-        option?.element.scrollIntoView({block: 'nearest'});
-      }
+      this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
   /** Clears the query and the listbox value. */
   clear(): void {
-    this.comboboxInput()?.value.set('');
-    this.listbox?.()?.value.set([]);
+    this.searchString.set('');
+    this.selectedOption.set([]);
+  }
+
+  onCommit() {
+    const selectedOption = this.selectedOption();
+    if (selectedOption.length > 0) {
+      this.searchString.set(selectedOption[0]);
+    }
+    this.popupExpanded.set(false);
+    this.combobox()?.element.focus();
   }
 
   /** Handles keydown events on the clear button. */
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.clear();
-      this.combobox?.()?.close();
+      this.popupExpanded.set(false);
       event.stopPropagation();
     }
   }

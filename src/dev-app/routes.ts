@@ -45,15 +45,6 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./aria-combobox/combobox-demo').then(m => m.ComboboxDemo),
   },
   {
-    path: 'aria-select',
-    loadComponent: () => import('./aria-select/select-demo').then(m => m.SelectDemo),
-  },
-  {
-    path: 'aria-simple-combobox',
-    loadComponent: () =>
-      import('./aria-simple-combobox/simple-combobox-demo').then(m => m.ComboboxDemo),
-  },
-  {
     path: 'aria-grid',
     loadComponent: () => import('./aria-grid/grid-demo').then(m => m.GridDemo),
   },
@@ -89,11 +80,6 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'aria-toolbar',
     loadComponent: () => import('./aria-toolbar/toolbar-demo').then(m => m.ToolbarDemo),
-  },
-  {
-    path: 'aria-toolbar-simple-combobox',
-    loadComponent: () =>
-      import('./aria-toolbar-simple-combobox/toolbar-demo').then(m => m.ToolbarDemo),
   },
   {
     path: 'cdk-dialog',

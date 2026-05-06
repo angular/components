@@ -23,14 +23,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  ComboboxTreePattern,
-  SortedCollection,
-  tabIndexTransform,
-  TreeItemPattern,
-  TreePattern,
-} from '../private';
-import {ComboboxPopup} from '../combobox';
+import {SortedCollection, tabIndexTransform, TreeItemPattern, TreePattern} from '../private';
 import type {TreeItem} from './tree-item';
 
 /**
@@ -84,7 +77,6 @@ import type {TreeItem} from './tree-item';
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn()',
   },
-  hostDirectives: [ComboboxPopup],
 })
 export class Tree<V> implements OnDestroy {
   /** A reference to the host element. */
@@ -92,11 +84,6 @@ export class Tree<V> implements OnDestroy {
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
-
-  /** A reference to the parent combobox popup, if one exists. */
-  private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
-    optional: true,
-  });
 
   /** The collection of tree items. */
   readonly _collection = new SortedCollection<TreeItem<V>>();
@@ -174,23 +161,16 @@ export class Tree<V> implements OnDestroy {
       id: this.id,
       items: computed(() => this._collection.orderedItems().map(item => item._pattern)),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
-      combobox: () => this._popup?.combobox?._pattern,
       element: () => this.element,
     };
 
-    this._pattern = this._popup?.combobox
-      ? new ComboboxTreePattern<V>(inputs)
-      : new TreePattern<V>(inputs);
+    this._pattern = new TreePattern<V>(inputs);
 
     this.activeDescendant = computed(() => this._pattern.activeDescendant());
 
     afterNextRender(() => {
       this._collection.startObserving(this.element);
     });
-
-    if (this._popup?.combobox) {
-      this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
-    }
 
     // Check for any violations after the DOM has been updated.
     afterRenderEffect({
@@ -214,19 +194,6 @@ export class Tree<V> implements OnDestroy {
 
         if (!items.some(i => i === activeItem) && activeItem) {
           this._pattern.treeBehavior.unfocus();
-        }
-      },
-    });
-
-    afterRenderEffect({
-      write: () => {
-        if (!(this._pattern instanceof ComboboxTreePattern)) return;
-
-        const items = inputs.items();
-        const value = untracked(() => this.value());
-
-        if (items && value.some(v => !items.some(i => i.value() === v))) {
-          this.value.set(value.filter(v => items.some(i => i.value() === v)));
         }
       },
     });

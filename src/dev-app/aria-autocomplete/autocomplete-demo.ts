@@ -5,12 +5,6 @@ import {
   AutocompleteHighlightExample,
   AutocompleteDisabledExample,
 } from '@angular/components-examples/aria/autocomplete';
-import {
-  SimpleComboboxAutocompleteAutoSelectExample,
-  SimpleComboboxAutocompleteManualExample,
-  SimpleComboboxAutocompleteHighlightExample,
-  SimpleComboboxAutocompleteDisabledExample,
-} from '@angular/components-examples/aria/simple-combobox';
 
 @Component({
   selector: 'autocomplete-demo',
@@ -21,10 +15,6 @@ import {
     AutocompleteManualExample,
     AutocompleteHighlightExample,
     AutocompleteDisabledExample,
-    SimpleComboboxAutocompleteAutoSelectExample,
-    SimpleComboboxAutocompleteManualExample,
-    SimpleComboboxAutocompleteHighlightExample,
-    SimpleComboboxAutocompleteDisabledExample,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
