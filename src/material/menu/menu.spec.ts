@@ -2520,7 +2520,6 @@ class SimpleMenu {
 
 @Component({
   template: SIMPLE_MENU_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
   selector: 'simple-menu-on-push',
 })
@@ -2892,7 +2891,6 @@ class SimpleMenuWithRepeaterInLazyContent {
       </ng-template>
     </mat-menu>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class LazyMenuWithOnPush {
