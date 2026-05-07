@@ -4086,7 +4086,6 @@ class AutocompleteWithNumbers {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
       <input type="text" matInput [matAutocomplete]="auto">
