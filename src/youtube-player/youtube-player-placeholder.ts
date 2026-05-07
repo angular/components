@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 /**  Quality of the placeholder image.  */
 export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 
 @Component({
   selector: 'youtube-player-placeholder',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
     <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
