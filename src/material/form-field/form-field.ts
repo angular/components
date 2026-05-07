@@ -14,7 +14,6 @@ import {
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -173,7 +172,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.ng-pending]': '_shouldForward("pending")',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
