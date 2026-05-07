@@ -18,7 +18,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '../private';
+import {TabPanelPattern, DeferredContentAware, reportViolations} from '../private';
 import {TABS} from './tab-tokens';
 import {TabContent} from './tab-content';
 
@@ -114,9 +114,7 @@ export class TabPanel implements OnInit, OnDestroy {
             );
           }
 
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(violations, this.element);
         },
       });
     }

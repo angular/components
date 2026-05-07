@@ -21,7 +21,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {MenuPattern, DeferredContentAware, SortedCollection} from '../private';
+import {MenuPattern, DeferredContentAware, SortedCollection, reportViolations} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuTrigger} from './menu-trigger';
@@ -192,10 +192,7 @@ export class Menu<V> implements OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(this._pattern.validate(), this.element);
         },
       });
     }

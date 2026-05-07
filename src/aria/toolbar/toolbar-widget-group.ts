@@ -16,7 +16,7 @@ import {
   contentChildren,
   afterRenderEffect,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
+import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, reportViolations} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
 import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
@@ -69,9 +69,11 @@ export class ToolbarWidgetGroup<V> {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
+          const violations: string[] = [];
           if (!this._toolbar) {
-            console.error('ngToolbarWidgetGroup must be placed inside an ngToolbar container.');
+            violations.push('ngToolbarWidgetGroup must be placed inside an ngToolbar container.');
           }
+          reportViolations(violations, this.element);
         },
       });
     }

@@ -19,7 +19,7 @@ import {
   afterRenderEffect,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {AccordionTriggerPattern} from '../private';
+import {AccordionTriggerPattern, reportViolations} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 import {AccordionPanel} from './accordion-panel';
 
@@ -103,9 +103,7 @@ export class AccordionTrigger implements OnInit, OnDestroy {
             );
           }
 
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(violations, this.element);
         },
       });
     }

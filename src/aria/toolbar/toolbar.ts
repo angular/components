@@ -19,7 +19,7 @@ import {
   OnDestroy,
   signal,
 } from '@angular/core';
-import {ToolbarPattern, ToolbarWidgetPattern, SortedCollection} from '../private';
+import {ToolbarPattern, ToolbarWidgetPattern, SortedCollection, reportViolations} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import type {ToolbarWidget} from './toolbar-widget';
 
@@ -111,10 +111,7 @@ export class Toolbar<V> implements OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(this._pattern.validate(), this.element);
         },
       });
     }

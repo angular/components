@@ -19,7 +19,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern, SortedCollection} from '../private';
+import {AccordionGroupPattern, SortedCollection, reportViolations} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 import {AccordionTrigger} from './accordion-trigger';
 
@@ -119,10 +119,7 @@ export class AccordionGroup implements OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(this._pattern.validate(), this.element);
         },
       });
     }

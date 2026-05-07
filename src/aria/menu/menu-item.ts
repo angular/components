@@ -18,7 +18,7 @@ import {
   OnInit,
   afterRenderEffect,
 } from '@angular/core';
-import {MenuItemPattern} from '../private';
+import {MenuItemPattern, reportViolations} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {MENU_COMPONENT} from './menu-tokens';
 import type {Menu} from './menu';
@@ -106,9 +106,11 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
+          const violations: string[] = [];
           if (!this.parent) {
-            console.error('ngMenuItem must be placed inside an ngMenu or ngMenuBar container.');
+            violations.push('ngMenuItem must be placed inside an ngMenu or ngMenuBar container.');
           }
+          reportViolations(violations, this.element);
         },
       });
     }

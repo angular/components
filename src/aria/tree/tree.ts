@@ -23,7 +23,13 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {SortedCollection, tabIndexTransform, TreeItemPattern, TreePattern} from '../private';
+import {
+  SortedCollection,
+  tabIndexTransform,
+  TreeItemPattern,
+  TreePattern,
+  reportViolations,
+} from '../private';
 import type {TreeItem} from './tree-item';
 
 /**
@@ -174,11 +180,7 @@ export class Tree<V> implements OnDestroy {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
-          const violations = this._pattern.validate();
-
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(this._pattern.validate(), this.element);
         },
       });
     }

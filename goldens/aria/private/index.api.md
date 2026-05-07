@@ -32,6 +32,7 @@ export class AccordionGroupPattern {
     onKeydown(event: KeyboardEvent): void;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     toggle(): void;
+    validate(): string[];
 }
 
 // @public
@@ -271,6 +272,7 @@ export class GridPattern {
     restoreFocusEffect(): void;
     setDefaultStateEffect(): void;
     readonly tabIndex: SignalLike<0 | -1>;
+    validate(): string[];
 }
 
 // @public
@@ -461,6 +463,7 @@ export class MenuPattern<V> {
     readonly tabIndex: () => 0 | -1;
     trigger(): void;
     readonly typeaheadRegexp: RegExp;
+    validate(): string[];
     readonly visible: SignalLike<boolean>;
 }
 
@@ -519,6 +522,9 @@ export class OptionPattern<V> {
     readonly tabIndex: SignalLike<0 | -1 | undefined>;
     readonly value: SignalLike<V>;
 }
+
+// @public
+export function reportViolations(violations: string[], element: Element): void;
 
 // @public
 export function resolveElement<T = HTMLElement>(resolver: ElementResolver<T>, context: HTMLElement): T | undefined;
@@ -652,6 +658,7 @@ export class ToolbarPattern<V> {
     setDefaultStateEffect(): void;
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<0 | -1>;
+    validate(): string[];
 }
 
 // @public

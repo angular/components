@@ -16,7 +16,7 @@ import {
   input,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {DeferredContentAware, AccordionTriggerPattern} from '../private';
+import {DeferredContentAware, AccordionTriggerPattern, reportViolations} from '../private';
 import {AccordionContent} from './accordion-content';
 
 /**
@@ -101,9 +101,7 @@ export class AccordionPanel {
             violations.push('ngAccordionPanel must have an ngAccordionTrigger to control it.');
           }
 
-          for (const violation of violations) {
-            console.error(violation);
-          }
+          reportViolations(violations, this.element);
         },
       });
     }

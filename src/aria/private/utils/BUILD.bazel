@@ -9,6 +9,7 @@ ts_project(
         "element.ts",
         "element-resolver.ts",
         "transforms.ts",
+        "violations.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",

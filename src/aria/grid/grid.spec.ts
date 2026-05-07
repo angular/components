@@ -1065,7 +1065,7 @@ describe('Grid directives', () => {
     let consoleSpy: jasmine.Spy;
 
     beforeEach(() => {
-      consoleSpy = spyOn(console, 'error');
+      consoleSpy = spyOn(console, 'warn');
     });
 
     afterEach(() => {
