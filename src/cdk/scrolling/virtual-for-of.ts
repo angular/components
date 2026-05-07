@@ -215,9 +215,29 @@ export class CdkVirtualForOf<T>
 
   /**
    * Updates the trackBy function in the view repeater based on current settings.
+   * Also re-passes the full dataset mapped to trackById values so the repeater
+   * stays in sync when the trackBy function changes.
    */
   private _updateTrackByFunction(): void {
     this._viewRepeater.setTrackByFunction(this._cdkVirtualForTrackBy);
+    this._updateFullDataTrackByIds();
+  }
+
+  /**
+   * Maps the current full dataset to an array of trackById strings and passes
+   * it to the repeater strategy. Called whenever the data or trackBy function changes.
+   */
+  private _updateFullDataTrackByIds(): void {
+    if (!this._data || !this._cdkVirtualForTrackBy) {
+      return;
+    }
+    const trackByIds = this._data
+      .map((item, index) => {
+        const trackByValue = this._cdkVirtualForTrackBy!(index, item);
+        return trackByValue !== null && trackByValue !== undefined ? String(trackByValue) : null;
+      })
+      .filter((id): id is string => id !== null);
+    this._viewRepeater.setFullDataTrackByIds(trackByIds);
   }
 
   /** The template used to stamp out new elements. */
@@ -279,6 +299,7 @@ export class CdkVirtualForOf<T>
 
     this.dataStream.subscribe(data => {
       this._data = data;
+      this._updateFullDataTrackByIds();
       this._onRenderedDataChange();
     });
     this._viewport.renderedRangeStream.pipe(takeUntil(this._destroyed)).subscribe(range => {

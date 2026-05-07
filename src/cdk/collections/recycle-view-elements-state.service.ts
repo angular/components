@@ -9,7 +9,6 @@ export type RecycleViewDetachEvent =
 
 interface RecycleViewDetachedViewEntry {
   view: EmbeddedViewRef<unknown>;
-  realIndex: number;
   repeaterId: string | null;
   groupId: string | null;
   sourceIds: Set<string>;
@@ -235,12 +234,10 @@ export class RecycleViewElementsState implements OnDestroy {
    * Stores a detached view under a trackBy id until it is rendered again.
    * @param id The trackBy identifier for the item.
    * @param view The detached embedded view.
-   * @param realIndex The real (global) dataset index of the item at the time it was detached.
    */
   retainDetachedView(
     id: string,
     view: EmbeddedViewRef<unknown>,
-    realIndex: number,
     repeaterId: string | null = null,
     groupId: string | null = null,
   ): void {
@@ -251,16 +248,15 @@ export class RecycleViewElementsState implements OnDestroy {
 
     const sourceIds = new Set<string>(existing?.sourceIds);
 
-    this._detachedViews.set(id, {view, realIndex, repeaterId, groupId, sourceIds});
+    this._detachedViews.set(id, {view, repeaterId, groupId, sourceIds});
   }
 
   /**
    * Takes ownership of a retained detached view for reinsertion into the container.
-   * Returns the view and the real (global) index it was detached from, or `null` if not found.
+   * Returns the view or `null` if not found.
    */
   takeDetachedView<T>(id: string): {
     view: EmbeddedViewRef<T>;
-    realIndex: number;
     repeaterId: string | null;
     groupId: string | null;
   } | null {
@@ -268,7 +264,6 @@ export class RecycleViewElementsState implements OnDestroy {
     return entry
       ? {
           view: entry.view as EmbeddedViewRef<T>,
-          realIndex: entry.realIndex,
           repeaterId: entry.repeaterId,
           groupId: entry.groupId,
         }
