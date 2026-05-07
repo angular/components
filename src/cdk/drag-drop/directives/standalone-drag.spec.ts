@@ -1897,7 +1897,6 @@ class StandaloneDraggable {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div cdkDrag #dragElement style="width: 100px; height: 100px; background: red;"></div>
   `,
