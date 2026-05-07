@@ -191,6 +191,45 @@ describe('Tree', () => {
     });
   });
 
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'error');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      setupTestTree();
+    });
+
+    it('should warn when duplicate values are detected inside ngTree', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [TreeWithDuplicateValues],
+      });
+      const duplicateFixture = TestBed.createComponent(TreeWithDuplicateValues);
+      duplicateFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Duplicate tree item value 'item0' detected inside ngTree.",
+      );
+    });
+
+    it('should warn when single-select tree has multiple selected values', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [SingleSelectTreeWithMultipleValues],
+      });
+      const singleSelectFixture = TestBed.createComponent(SingleSelectTreeWithMultipleValues);
+      singleSelectFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'A single-select tree should not have multiple selected options. Selected options: item0, item1',
+      );
+    });
+  });
+
   describe('ARIA attributes and roles', () => {
     describe('default configuration', () => {
       beforeEach(() => {
@@ -1680,3 +1719,27 @@ class TestTreeComponent {
   currentType = signal('page' as 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false');
   tabIndex = signal<number | undefined>(undefined);
 }
+
+@Component({
+  template: `
+    <ul ngTree #tree="ngTree">
+      <li ngTreeItem [parent]="tree" value="item0">Item 0</li>
+      <li ngTreeItem [parent]="tree" value="item0">Item 0 Copy</li>
+    </ul>
+  `,
+  imports: [Tree, TreeItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TreeWithDuplicateValues {}
+
+@Component({
+  template: `
+    <ul ngTree [multi]="false" [value]="['item0', 'item1']" #tree="ngTree">
+      <li ngTreeItem [parent]="tree" value="item0">Item 0</li>
+      <li ngTreeItem [parent]="tree" value="item1">Item 1</li>
+    </ul>
+  `,
+  imports: [Tree, TreeItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class SingleSelectTreeWithMultipleValues {}

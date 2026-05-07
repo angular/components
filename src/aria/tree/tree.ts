@@ -171,16 +171,17 @@ export class Tree<V> implements OnDestroy {
     });
 
     // Check for any violations after the DOM has been updated.
-    afterRenderEffect({
-      read: () => {
-        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
           const violations = this._pattern.validate();
+
           for (const violation of violations) {
             console.error(violation);
           }
-        }
-      },
-    });
+        },
+      });
+    }
 
     // Resets default focus based on selection state until interacted.
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
