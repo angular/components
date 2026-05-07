@@ -11,7 +11,6 @@ import {Direction, Directionality} from '../bidi';
 import {ENTER, hasModifierKey, SPACE} from '../keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -107,7 +106,6 @@ export interface StepperOptions {
   exportAs: 'cdkStep',
   template: '<ng-template><ng-content/></ng-template>',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
