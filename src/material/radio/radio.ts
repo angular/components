@@ -11,7 +11,6 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -399,7 +398,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   },
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
