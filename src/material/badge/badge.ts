@@ -10,7 +10,6 @@ import {_IdGenerator, AriaDescriber, InteractivityChecker} from '@angular/cdk/a1
 
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   Directive,
   ElementRef,
@@ -51,7 +50,6 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
   styleUrl: 'badge.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class _MatBadgeStyleLoader {}
 
