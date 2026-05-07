@@ -15,7 +15,6 @@ import {
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -961,7 +960,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   templateUrl: 'tooltip.html',
   styleUrl: 'tooltip.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',

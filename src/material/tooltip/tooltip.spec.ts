@@ -1607,7 +1607,6 @@ class ScrollableTooltipDemo {
             [matTooltipPosition]="position">
       Button
     </button>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTooltipModule, OverlayModule],
 })
 class OnPushTooltipDemo {
