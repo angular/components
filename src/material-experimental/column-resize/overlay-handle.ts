@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   NgZone,
@@ -36,7 +35,6 @@ import {AbstractMatColumnResize} from './column-resize-directives/common';
  * for handling column resize mouse events and displaying a vertical line along the column edge.
  */
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {'class': 'mat-column-resize-overlay-thumb'},
   template: '<div #top class="mat-column-resize-overlay-thumb-top"></div>',
