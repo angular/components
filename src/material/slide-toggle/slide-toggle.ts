@@ -9,7 +9,6 @@
 import {
   AfterContentInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -76,7 +75,6 @@ export class MatSlideToggleChange {
   },
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
