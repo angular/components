@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   Directive,
   InjectionToken,
@@ -46,7 +45,6 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
   },
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCard {
   @Input() appearance: MatCardAppearance;
@@ -81,7 +79,6 @@ export class MatCardTitle {}
   selector: 'mat-card-title-group',
   templateUrl: 'card-title-group.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-title-group'},
 })
 export class MatCardTitleGroup {}
@@ -155,7 +152,6 @@ export class MatCardActions {
   selector: 'mat-card-header',
   templateUrl: 'card-header.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-mdc-card-header'},
 })
 export class MatCardHeader {}
