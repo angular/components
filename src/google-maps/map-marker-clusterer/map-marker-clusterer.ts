@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -48,7 +47,6 @@ declare const markerClusterer: {
 @Component({
   selector: 'map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
