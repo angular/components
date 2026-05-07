@@ -7,6 +7,14 @@ export type RecycleViewDetachEvent =
   | {type: 'collect'; collectDetached: string}
   | {type: 'insert'; collectDetached: string};
 
+interface RecycleViewDetachedViewEntry {
+  view: EmbeddedViewRef<unknown>;
+  realIndex: number;
+  repeaterId: string | null;
+  groupId: string | null;
+  sourceIds: Set<string>;
+}
+
 /**
  * Service that keeps state of virtual scroll destroyed/recycled views.
  * Provides state storage and observable subscriptions for state changes.
@@ -23,15 +31,7 @@ export class RecycleViewElementsState implements OnDestroy {
   private _detachedIds = new Set<string>();
 
   /** Detached views owned by the service lifetime, keyed by trackBy id. */
-  private _detachedViews = new Map<
-    string,
-    {
-      view: EmbeddedViewRef<unknown>;
-      realIndex: number;
-      repeaterId: string | null;
-      groupId: string | null;
-    }
-  >();
+  private _detachedViews = new Map<string, RecycleViewDetachedViewEntry>();
 
   /** Emits detach lifecycle changes so active strategies can update live candidates. */
   private _detachChanges = new Subject<RecycleViewDetachEvent>();
@@ -71,7 +71,7 @@ export class RecycleViewElementsState implements OnDestroy {
    * @param id The unique identifier for the state to remove.
    * @returns Whether the state was successfully removed.
    */
-  remove(id: string): boolean {
+  remove(id: string, sourceId?: string): boolean {
     const removed = this._stateMap.delete(id);
 
     // Notify subscribers that the state has been removed, then clean up the subject.
@@ -82,7 +82,8 @@ export class RecycleViewElementsState implements OnDestroy {
       this._stateSubjects.delete(id);
     }
 
-    this.unmarkForDetach(id);
+    this.unmarkForDetach(id, sourceId);
+    this.removeDetachedViewsByRepeaterId(id);
 
     return removed;
   }
@@ -143,17 +144,44 @@ export class RecycleViewElementsState implements OnDestroy {
   }
 
   /** Marks an item so its next detached view will be retained. */
-  markForDetach(id: string): void {
+  markForDetach(id: string, sourceId?: string): void {
+    if (sourceId !== undefined) {
+      const detachedView = this._detachedViews.get(id);
+
+      if (detachedView) {
+        if (detachedView.sourceIds.has(sourceId)) {
+          return;
+        }
+
+        detachedView.sourceIds.add(sourceId);
+        return;
+      }
+    }
+
     if (this._detachedIds.has(id)) {
       return;
     }
 
     this._detachedIds.add(id);
     this._detachChanges.next({type: 'mark', id});
+
+    const detachedView = this._detachedViews.get(id);
+    if (detachedView && sourceId) {
+      detachedView.sourceIds.add(sourceId);
+    }
   }
 
   /** Cancels detached-view retention for an item and destroys any retained detached view. */
-  unmarkForDetach(id: string): void {
+  unmarkForDetach(id: string, sourceId?: string): void {
+    if (sourceId) {
+      const entity = this._detachedViews.get(id);
+
+      if (!entity) return;
+
+      entity.sourceIds.delete(sourceId);
+      if (entity.sourceIds.size) return;
+    }
+
     this._detachedIds.delete(id);
     this._detachedViews.delete(id);
   }
@@ -162,6 +190,16 @@ export class RecycleViewElementsState implements OnDestroy {
   removeDetachedViewsByGroupId(groupId: string | null = null): void {
     this._detachedViews.forEach((entry, id) => {
       if (entry.groupId === groupId || id === groupId) {
+        this._detachedIds.delete(id);
+        this._detachedViews.delete(id);
+      }
+    });
+  }
+
+  /** Removes all detached-view retention entries owned by a repeater. */
+  removeDetachedViewsByRepeaterId(repeaterId: string | null = null): void {
+    this._detachedViews.forEach((entry, id) => {
+      if (entry.repeaterId === repeaterId) {
         this._detachedIds.delete(id);
         this._detachedViews.delete(id);
       }
@@ -211,7 +249,9 @@ export class RecycleViewElementsState implements OnDestroy {
       existing.view.destroy();
     }
 
-    this._detachedViews.set(id, {view, realIndex, repeaterId, groupId});
+    const sourceIds = new Set<string>(existing?.sourceIds);
+
+    this._detachedViews.set(id, {view, realIndex, repeaterId, groupId, sourceIds});
   }
 
   /**
