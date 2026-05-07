@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatButtonBase} from './button-base';
 
 /**
@@ -23,7 +23,6 @@ import {MatButtonBase} from './button-base';
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconButton extends MatButtonBase {
   constructor() {
