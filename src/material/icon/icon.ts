@@ -9,7 +9,6 @@
 import {
   AfterViewChecked,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   ErrorHandler,
@@ -145,7 +144,6 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
     '[class.mat-icon-no-color]': 'color !== "primary" && color !== "accent" && color !== "warn"',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
