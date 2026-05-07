@@ -196,6 +196,20 @@ export class GridPattern {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const rows = this.inputs.rows();
+    for (const row of rows) {
+      if (row.inputs.cells().length === 0) {
+        violations.push('ngGridRow must contain at least one ngGridCell.');
+      }
+    }
+
+    return violations;
+  }
+
   /** Handles keydown events on the grid. */
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
