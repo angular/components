@@ -8,7 +8,6 @@
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   Directive,
   OnDestroy,
@@ -59,7 +58,6 @@ export class MatDatepickerCancel {
       </div>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {

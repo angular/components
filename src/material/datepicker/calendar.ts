@@ -10,7 +10,6 @@ import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/
 import {
   AfterContentInit,
   AfterViewChecked,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -57,7 +56,6 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatIconButton, MatTooltip],
 })
 export class MatCalendarHeader<D> {
@@ -252,7 +250,6 @@ export class MatCalendarHeader<D> {
   },
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
   imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
