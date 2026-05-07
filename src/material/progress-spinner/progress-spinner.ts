@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   InjectionToken,
@@ -84,7 +83,6 @@ const BASE_STROKE_WIDTH = 10;
   },
   templateUrl: 'progress-spinner.html',
   styleUrl: 'progress-spinner.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [NgTemplateOutlet],
 })
