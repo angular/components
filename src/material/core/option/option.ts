@@ -11,7 +11,6 @@ import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   Component,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
   ElementRef,
   ChangeDetectorRef,
   AfterViewChecked,
@@ -76,7 +75,6 @@ export class MatOptionSelectionChange<T = any> {
   styleUrl: 'option.css',
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatPseudoCheckbox, MatRipple],
 })
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {

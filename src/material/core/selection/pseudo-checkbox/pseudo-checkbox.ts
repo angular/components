@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewEncapsulation, Input} from '@angular/core';
 import {_animationsDisabled} from '../../animation/animation';
 
 /**
@@ -30,7 +30,6 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
  */
 @Component({
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'mat-pseudo-checkbox',
   styleUrl: 'pseudo-checkbox.css',
   template: '',
