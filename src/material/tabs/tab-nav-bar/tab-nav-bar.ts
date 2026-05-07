@@ -246,7 +246,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 @Component({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',
   styleUrl: 'tab-link.css',
@@ -436,7 +435,6 @@ export class MatTabLink
     'role': 'tabpanel',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */
