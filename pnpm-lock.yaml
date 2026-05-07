@@ -216,8 +216,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0
       firebase-tools:
-        specifier: 15.15.0
-        version: 15.15.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
+        specifier: 15.17.0
+        version: 15.17.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.4
@@ -445,8 +445,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.15.0
-        version: 15.15.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
+        specifier: 15.17.0
+        version: 15.17.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.2.0
@@ -5757,8 +5757,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.15.0:
-    resolution: {integrity: sha512-WzIDUSe2PRHhsLA2uf1xe8CKTLm+Bbfum4fCduCmjzj4ei5WBszF24Kh9MVS1D3clQbyuIlQKbYhEZZTW+5DUw==}
+  firebase-tools@15.17.0:
+    resolution: {integrity: sha512-nie0gSk6m2jlkiaPI//L/b397GKcwwMo5mvwlSuiX47w7+SZfnNiMrPf/ioAkEO++gOP3YPE+uwHigsHcLdM0w==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -12497,8 +12497,8 @@ snapshots:
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      zod: 4.4.3
+      zod-to-json-schema: 3.25.2(zod@4.4.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -15850,7 +15850,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.15.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2):
+  firebase-tools@15.17.0(@types/node@22.19.17)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@6.0.2):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@22.19.17)(typescript@6.0.2)
       '@apphosting/common': 0.0.8
@@ -16233,7 +16233,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -20842,6 +20842,10 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.25.2(zod@4.4.3):
+    dependencies:
+      zod: 4.4.3
 
   zod@3.25.76: {}
 
