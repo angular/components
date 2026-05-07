@@ -30,7 +30,7 @@ export class MatBottomSheetConfig<D = any> {
    */
   injector?: Injector;
 
-  /** Extra CSS classes to be added to the bottom sheet container. */
+  /** Extra CSS classes to be added to the bottom sheet's overlay pane. */
   panelClass?: string | string[];
 
   /** Text layout direction for the bottom sheet. */
