@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   Service,
   ListenerOptions,
@@ -46,7 +45,6 @@ const activeCapturingEventOptions = {
   styleUrl: 'resets.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'cdk-drag-resets-container': ''},
 })
 export class _ResetsLoader {}
