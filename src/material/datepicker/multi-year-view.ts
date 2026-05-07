@@ -20,7 +20,6 @@ import {
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -58,7 +57,6 @@ export const yearsPerRow = 4;
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
