@@ -10,7 +10,6 @@ import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -52,7 +51,6 @@ import {MatStepContent} from './step-content';
   ],
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkPortalOutlet],
   host: {
     'hidden': '', // Hide the steps so they don't affect the layout.
@@ -134,7 +132,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   },
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet, MatStepHeader],
 })
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
