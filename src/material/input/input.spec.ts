@@ -2140,7 +2140,6 @@ class MatInputWithNgIf {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>
