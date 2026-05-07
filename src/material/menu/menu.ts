@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -98,7 +97,6 @@ const EXIT_ANIMATION = '_mat-menu-exit';
   selector: 'mat-menu',
   templateUrl: 'menu.html',
   styleUrl: 'menu.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matMenu',
   host: {

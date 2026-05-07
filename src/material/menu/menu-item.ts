@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -43,7 +42,6 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '(click)': '_checkDisabled($event)',
     '(mouseenter)': '_handleMouseEnter()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
   imports: [MatRipple],
