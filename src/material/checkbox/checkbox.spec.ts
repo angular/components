@@ -1221,7 +1221,6 @@ class CheckboxWithNgModel {
 
 @Component({
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</mat-checkbox>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
