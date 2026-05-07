@@ -1873,7 +1873,6 @@ class SelectionListWithPreselectedOptionAndModel {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-selection-list [formControl]="formControl">
       @for (opt of opts; track opt) {
