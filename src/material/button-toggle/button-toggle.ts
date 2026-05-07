@@ -23,7 +23,6 @@ import {
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -552,7 +551,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   styleUrl: 'button-toggle.css',
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matButtonToggle',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
     '[class.mat-button-toggle-checked]': 'checked',
