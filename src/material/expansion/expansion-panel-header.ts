@@ -10,7 +10,6 @@ import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -41,7 +40,6 @@ import {_StructuralStylesLoader} from '../core';
   styleUrl: 'expansion-panel-header.css',
   templateUrl: 'expansion-panel-header.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-expansion-panel-header mat-focus-indicator',
     'role': 'button',
