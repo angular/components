@@ -1793,7 +1793,6 @@ describe('MatDialog', () => {
       @Component({
         imports: [Child],
         template: `<child></child>`,
-        changeDetection: ChangeDetectionStrategy.OnPush,
       })
       class OnPushHost {
         @ViewChild(Child, {static: true}) child!: Child;
@@ -2304,7 +2303,6 @@ class DirectiveWithViewContainer {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
 class ComponentWithOnPushViewContainer {
@@ -2508,7 +2506,6 @@ class ModuleBoundDialogModule {}
 @Component({
   template: `{{message | async}}`,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DialogWithAfterOpenSubscription {
   dialogRef = inject(MatDialogRef);
