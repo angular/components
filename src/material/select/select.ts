@@ -33,7 +33,6 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -154,7 +153,6 @@ export class MatSelectChange<T = any> {
   templateUrl: 'select.html',
   styleUrl: 'select.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'combobox',
     'aria-haspopup': 'listbox',
