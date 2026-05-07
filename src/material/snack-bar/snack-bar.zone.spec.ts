@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   Directive,
   ViewChild,
@@ -69,7 +68,6 @@ class DirectiveWithViewContainer {
   selector: 'arbitrary-component',
   template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
   imports: [DirectiveWithViewContainer],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
