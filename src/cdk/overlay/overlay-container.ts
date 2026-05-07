@@ -6,21 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Service,
-  OnDestroy,
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  inject,
-  DOCUMENT,
-} from '@angular/core';
+import {Service, OnDestroy, Component, ViewEncapsulation, inject, DOCUMENT} from '@angular/core';
 import {_CdkPrivateStyleLoader} from '../private';
 import {Platform, _isTestEnvironment} from '../platform';
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrl: 'overlay-structure.css',
   host: {'cdk-overlay-style-loader': ''},
