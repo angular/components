@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -104,7 +103,6 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS = new InjectionToken<MatPaginatorDefa
     'class': 'mat-mdc-paginator',
     'role': 'group',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [MatFormField, MatSelect, MatOption, MatIconButton, MatTooltip],
 })
