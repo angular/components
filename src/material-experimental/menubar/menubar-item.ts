@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {CdkMenuItem} from '@angular/cdk/menu';
 
 /** Removes all icons from within the given element. */
@@ -27,7 +27,6 @@ function removeIcons(element: Element) {
   templateUrl: 'menubar-item.html',
   styleUrl: 'menubar-item.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[tabindex]': '_tabindex',
     'type': 'button',
