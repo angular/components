@@ -497,6 +497,43 @@ describe('Standalone Menu Pattern', () => {
     fixture.detectChanges();
     expect(item?.getAttribute('aria-label')).toBe('Apple item label');
   });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'error');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      setupMenu();
+    });
+
+    it('should warn when duplicate values are detected inside ngMenu', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuWithDuplicateValues],
+      });
+      const duplicateFixture = TestBed.createComponent(MenuWithDuplicateValues);
+      duplicateFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith("Duplicate value 'item0' detected inside ngMenu.");
+    });
+
+    it('should warn when ngMenuItem is outside ngMenu or ngMenuBar', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemOutsideMenu],
+      });
+      const noMenuFixture = TestBed.createComponent(MenuItemOutsideMenu);
+      noMenuFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngMenuItem must be placed inside an ngMenu or ngMenuBar container.',
+      );
+    });
+  });
 });
 
 describe('Menu Trigger Pattern', () => {
@@ -1167,3 +1204,26 @@ class ShuffledMenuExample {
 class ShuffledMenuBarExample {
   items = signal([{value: 'File'}, {value: 'Edit'}, {value: 'View'}]);
 }
+
+@Component({
+  template: `
+    <div ngMenu>
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="item0">Item 0</div>
+        <div ngMenuItem value="item0">Item 0 Copy</div>
+      </ng-template>
+    </div>
+  `,
+  imports: [Menu, MenuItem, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuWithDuplicateValues {}
+
+@Component({
+  template: `
+    <div ngMenuItem value="item0">Item 0</div>
+  `,
+  imports: [MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuItemOutsideMenu {}

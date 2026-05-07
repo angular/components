@@ -181,6 +181,19 @@ export class MenuPattern<V> {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const values = this.inputs.items().map(i => i.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate value '${duplicates[0]}' detected inside ngMenu.`);
+    }
+
+    return violations;
+  }
+
   /** Sets the default state for the menu. */
   setDefaultState() {
     if (!this.inputs.parent()) {

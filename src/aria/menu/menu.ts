@@ -188,6 +188,18 @@ export class Menu<V> implements OnDestroy {
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations = this._pattern.validate();
+          for (const violation of violations) {
+            console.error(violation);
+          }
+        },
+      });
+    }
+
     afterNextRender(() => {
       this._collection.startObserving(this.element);
     });
