@@ -454,6 +454,58 @@ describe('Listbox', () => {
       });
     });
 
+    describe('structural validations', () => {
+      let consoleSpy: jasmine.Spy;
+
+      beforeEach(() => {
+        consoleSpy = spyOn(console, 'error');
+      });
+
+      afterEach(() => {
+        TestBed.resetTestingModule();
+        setupListbox();
+      });
+
+      it('should warn when duplicate option values are detected inside ngListbox', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          imports: [ListboxWithDuplicateValues],
+        });
+        const duplicateFixture = TestBed.createComponent(ListboxWithDuplicateValues);
+        duplicateFixture.detectChanges();
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          "Duplicate option value 'item0' detected inside ngListbox.",
+        );
+      });
+
+      it('should warn when duplicate option IDs are detected inside ngListbox', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          imports: [ListboxWithDuplicateIds],
+        });
+        const duplicateFixture = TestBed.createComponent(ListboxWithDuplicateIds);
+        duplicateFixture.detectChanges();
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          "Duplicate option ID 'option0' detected inside ngListbox.",
+        );
+      });
+
+      it('should warn when single-select listbox has multiple selected options', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          imports: [SingleSelectListboxWithMultipleValues],
+        });
+        const singleSelectFixture = TestBed.createComponent(SingleSelectListboxWithMultipleValues);
+        singleSelectFixture.detectChanges();
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'A single-select listbox should not have multiple selected options. Selected options: item0, item1',
+        );
+      });
+    });
+
     describe('keyboard interactions', () => {
       describe('single select', () => {
         describe('selection follows focus', () => {
@@ -905,3 +957,39 @@ class ListboxExample {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DefaultListboxExample {}
+
+@Component({
+  template: `
+    <ul ngListbox>
+      <li ngOption value="item0">Item 0</li>
+      <li ngOption value="item0">Item 0 Copy</li>
+    </ul>
+  `,
+  imports: [Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ListboxWithDuplicateValues {}
+
+@Component({
+  template: `
+    <ul ngListbox>
+      <li ngOption value="item0" id="option0">Item 0</li>
+      <li ngOption value="item1" id="option0">Item 1</li>
+    </ul>
+  `,
+  imports: [Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ListboxWithDuplicateIds {}
+
+@Component({
+  template: `
+    <ul ngListbox [multi]="false" [value]="['item0', 'item1']">
+      <li ngOption value="item0">Item 0</li>
+      <li ngOption value="item1">Item 1</li>
+    </ul>
+  `,
+  imports: [Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class SingleSelectListboxWithMultipleValues {}
