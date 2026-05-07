@@ -10,7 +10,6 @@ import {
   afterNextRender,
   AfterRenderRef,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -116,7 +115,6 @@ export interface MatTimepickerConnectedInput<D> {
   exportAs: 'matTimepicker',
   templateUrl: 'timepicker.html',
   styleUrl: 'timepicker.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [MatOption],
   providers: [

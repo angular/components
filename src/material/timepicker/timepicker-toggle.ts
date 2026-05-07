@@ -8,7 +8,6 @@
 
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   computed,
   HostAttributeToken,
@@ -36,7 +35,6 @@ import type {MatTimepicker} from './timepicker';
   },
   exportAs: 'matTimepickerToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIconButton],
 })
 export class MatTimepickerToggle<D> {
