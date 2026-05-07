@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -53,7 +52,6 @@ export const DEFAULT_WIDTH = '500px';
 @Component({
   selector: 'google-map',
   exportAs: 'googleMap',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="map-container"></div><ng-content />',
   encapsulation: ViewEncapsulation.None,
 })
