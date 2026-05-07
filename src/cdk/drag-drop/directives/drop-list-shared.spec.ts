@@ -5184,7 +5184,6 @@ export class DraggableInDropZone implements AfterViewInit {
 @Component({
   selector: 'draggable-in-on-push-zone',
   template: DROP_ZONE_FIXTURE_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
@@ -5693,7 +5692,6 @@ class NestedDropListGroups {
 class DropListOnNgContainer {}
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkDropList, CdkDrag],
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
@@ -5728,7 +5726,6 @@ class DraggableInDropZoneWithoutEvents {
     </div>
   `,
   imports: [CdkDropList, CdkDrag],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class WrappedDropContainerComponent {
   @Input() items: string[] | undefined;
