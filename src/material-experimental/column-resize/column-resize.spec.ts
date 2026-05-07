@@ -285,7 +285,6 @@ class MatResizeTest extends BaseTestComponent {
 
 @Component({
   template: getTableTemplate(false),
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
 })
 class MatResizeOnPushTest extends MatResizeTest {}
