@@ -14,6 +14,7 @@ import {
   input,
   booleanAttribute,
   contentChildren,
+  afterRenderEffect,
 } from '@angular/core';
 import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
 import {Toolbar} from './toolbar';
@@ -62,4 +63,17 @@ export class ToolbarWidgetGroup<V> {
     items: this._itemPatterns,
     toolbar: this._toolbarPattern,
   });
+
+  constructor() {
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          if (!this._toolbar) {
+            console.error('ngToolbarWidgetGroup must be placed inside an ngToolbar container.');
+          }
+        },
+      });
+    }
+  }
 }

@@ -703,6 +703,43 @@ describe('Toolbar', () => {
       expect(widgets[0].getAttribute('disabled')).toBe('true');
     });
   });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'error');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      setupToolbar();
+    });
+
+    it('should warn when duplicate values are detected inside ngToolbar', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [ToolbarWithDuplicateValues],
+      });
+      const duplicateFixture = TestBed.createComponent(ToolbarWithDuplicateValues);
+      duplicateFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith("Duplicate value 'item0' detected inside ngToolbar.");
+    });
+
+    it('should warn when ngToolbarWidgetGroup is outside ngToolbar', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [ToolbarGroupOutsideToolbar],
+      });
+      const noToolbarFixture = TestBed.createComponent(ToolbarGroupOutsideToolbar);
+      noToolbarFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngToolbarWidgetGroup must be placed inside an ngToolbar container.',
+      );
+    });
+  });
 });
 
 @Component({
@@ -816,3 +853,26 @@ class WrappedToolbarExample {}
 class ShuffledToolbarExample {
   items = signal([{value: 'item 0'}, {value: 'item 1'}, {value: 'item 2'}]);
 }
+
+@Component({
+  template: `
+    <div ngToolbar>
+      <button ngToolbarWidget value="item0">Item 0</button>
+      <button ngToolbarWidget value="item0">Item 0 Copy</button>
+    </div>
+  `,
+  imports: [Toolbar, ToolbarWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarWithDuplicateValues {}
+
+@Component({
+  template: `
+    <div ngToolbarWidgetGroup>
+      Widget Group Content
+    </div>
+  `,
+  imports: [ToolbarWidgetGroup],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarGroupOutsideToolbar {}
