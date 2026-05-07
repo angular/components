@@ -12,7 +12,6 @@
 import type * as YT from 'youtube';
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -111,7 +110,6 @@ enum PlayerState {
  */
 @Component({
   selector: 'youtube-player',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [YouTubePlayerPlaceholder],
   styleUrl: 'youtube-player.css',
