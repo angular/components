@@ -22,7 +22,6 @@ import {
   AfterContentInit,
   afterNextRender,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -89,7 +88,6 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
     '[style.margin-right.px]': '_container._contentMargins.right',
     '[class.mat-drawer-content-hidden]': '_shouldBeHidden()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -151,7 +149,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // reference. Updates tabIndex of drawer/container to default to null if in side mode.
     '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkScrollable],
 })
@@ -665,7 +662,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     'class': 'mat-drawer-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
