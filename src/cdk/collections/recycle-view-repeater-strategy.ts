@@ -79,7 +79,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    * The full dataset mapped to an array of trackById strings.
    * Updated whenever the data source emits a new value.
    */
-  private _fullDataTrackByIds: string[] = [];
+  private _itemsTrackByIds: string[] = [];
 
   /**
    * The currently rendered range within the full dataset.
@@ -122,8 +122,8 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    * Allows the strategy to know which items exist in the full dataset,
    * enabling smarter detached-view retention and cleanup.
    */
-  setFullDataTrackByIds(ids: string[]): void {
-    this._fullDataTrackByIds = ids;
+  setItemsTrackByIds(ids: string[]): void {
+    this._itemsTrackByIds = ids;
   }
 
   /**
@@ -166,8 +166,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
 
   constructor() {
     this._recycleViewElementsState = inject(RecycleViewElementsState, {optional: true});
-    // for debug
-    (window as any).recycleViewElementsState = this._recycleViewElementsState;
 
     if (this._recycleViewElementsState) {
       this._detachChangesSubscription = this._recycleViewElementsState.detachChanges.subscribe(
@@ -381,10 +379,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     viewContainerRef: ViewContainerRef,
   ): EmbeddedViewRef<C> | null {
     const entry = this._recycleViewElementsState?.takeDetachedView<C>(trackById) ?? null;
-
-    if (!entry) {
-      return null;
-    }
+    if (!entry) return null;
 
     viewContainerRef.insert(entry.view, index);
     return entry.view;
@@ -464,7 +459,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    * Reattaches all retained detached views whose real (global) index falls within the
    * current rendered range. Called when another strategy notifies that an item was
    * reattached (i.e. an `'insert'` event is received).
-   * The real (global) index is derived from `_fullDataTrackByIds` — the source of truth.
+   * The real (global) index is derived from `_itemsTrackByIds` — the source of truth.
    */
   private _reattachDetachedViewsInRange(): void {
     if (!this._viewContainerRef || !this._recycleViewElementsState || !this._repeaterId) {
@@ -473,7 +468,6 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
 
     this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
       const entry = this._recycleViewElementsState!.takeDetachedView<C>(trackById);
-
       if (!entry || entry.repeaterId !== this._repeaterId) {
         return;
       }
@@ -483,7 +477,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
       if (localIndex) return;
 
       const {view} = entry;
-      const realIndex = this._fullDataTrackByIds.indexOf(trackById);
+      const realIndex = this._itemsTrackByIds.indexOf(trackById);
       const {start, end} = this._renderedRange;
 
       if (realIndex !== -1 && realIndex >= start && realIndex < end) {

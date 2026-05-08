@@ -146,20 +146,13 @@ export class RecycleViewElementsState implements OnDestroy {
   markForDetach(id: string, sourceId?: string): void {
     if (sourceId !== undefined) {
       const detachedView = this._detachedViews.get(id);
+      if (!detachedView || detachedView.sourceIds.has(sourceId)) return;
 
-      if (detachedView) {
-        if (detachedView.sourceIds.has(sourceId)) {
-          return;
-        }
-
-        detachedView.sourceIds.add(sourceId);
-        return;
-      }
-    }
-
-    if (this._detachedIds.has(id)) {
+      detachedView.sourceIds.add(sourceId);
       return;
     }
+
+    if (this._detachedIds.has(id)) return;
 
     this._detachedIds.add(id);
     this._detachChanges.next({type: 'mark', id});
@@ -173,12 +166,11 @@ export class RecycleViewElementsState implements OnDestroy {
   /** Cancels detached-view retention for an item and destroys any retained detached view. */
   unmarkForDetach(id: string, sourceId?: string): void {
     if (sourceId) {
-      const entity = this._detachedViews.get(id);
+      const entry = this._detachedViews.get(id);
+      if (!entry) return;
 
-      if (!entity) return;
-
-      entity.sourceIds.delete(sourceId);
-      if (entity.sourceIds.size) return;
+      entry.sourceIds.delete(sourceId);
+      if (entry.sourceIds.size) return;
     }
 
     this._detachedIds.delete(id);
@@ -187,18 +179,20 @@ export class RecycleViewElementsState implements OnDestroy {
 
   /** Removes all detached-view retention entries owned by a group. */
   removeDetachedViewsByGroupId(groupId: string | null = null): void {
-    this._detachedViews.forEach((entry, id) => {
-      if (entry.groupId === groupId || id === groupId) {
-        this._detachedIds.delete(id);
-        this._detachedViews.delete(id);
-      }
-    });
+    this._removeDetachedViewsWhere((entry, id) => entry.groupId === groupId || id === groupId);
   }
 
   /** Removes all detached-view retention entries owned by a repeater. */
   removeDetachedViewsByRepeaterId(repeaterId: string | null = null): void {
+    this._removeDetachedViewsWhere(entry => entry.repeaterId === repeaterId);
+  }
+
+  /** Removes all detached-view entries that satisfy the given predicate. */
+  private _removeDetachedViewsWhere(
+    predicate: (entry: RecycleViewDetachedViewEntry, id: string) => boolean,
+  ): void {
     this._detachedViews.forEach((entry, id) => {
-      if (entry.repeaterId === repeaterId) {
+      if (predicate(entry, id)) {
         this._detachedIds.delete(id);
         this._detachedViews.delete(id);
       }

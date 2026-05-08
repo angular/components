@@ -55,12 +55,64 @@ export type ListRange = {
 };
 
 // @public
+export type RecycleViewDetachEvent = {
+    type: 'mark';
+    id: string;
+} | {
+    type: 'clear';
+} | {
+    type: 'collect';
+    collectDetached: string;
+} | {
+    type: 'insert';
+    collectDetached: string;
+};
+
+// @public
+export class RecycleViewElementsState implements OnDestroy {
+    add(id: string, state: Record<string, unknown>): void;
+    clear(): void;
+    collectDetachedViews(collectDetached: string): void;
+    readonly detachChanges: Observable<RecycleViewDetachEvent>;
+    get<T extends Record<string, unknown> = Record<string, unknown>>(id: string): T | undefined;
+    getDetachedIds(): string[];
+    has(id: string): boolean;
+    isMarkedForDetach(id: string): boolean;
+    markForDetach(id: string, sourceId?: string): void;
+    ngOnDestroy(): void;
+    notifyInsert(collectDetached: string): void;
+    remove(id: string, sourceId?: string): boolean;
+    removeDetachedViewsByGroupId(groupId?: string | null): void;
+    removeDetachedViewsByRepeaterId(repeaterId?: string | null): void;
+    retainDetachedView(id: string, view: EmbeddedViewRef<unknown>, repeaterId?: string | null, groupId?: string | null): void;
+    subscribe<T extends Record<string, unknown> = Record<string, unknown>>(id: string): Observable<T | undefined>;
+    takeDetachedView<T>(id: string): {
+        view: EmbeddedViewRef<T>;
+        repeaterId: string | null;
+        groupId: string | null;
+    } | null;
+    unmarkForDetach(id: string, sourceId?: string): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RecycleViewElementsState, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<RecycleViewElementsState>;
+}
+
+// @public
 export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>> implements _ViewRepeater<T, R, C> {
     applyChanges(changes: IterableChanges<R>, viewContainerRef: ViewContainerRef, itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>, itemValueResolver: _ViewRepeaterItemValueResolver<T, R>, itemViewChanged?: _ViewRepeaterItemChanged<R, C>): void;
     // (undocumented)
     detach(): void;
     // (undocumented)
-    setDebug(value: boolean): void;
+    setCollectDetached(value: string | null): void;
+    // (undocumented)
+    setItemsTrackByIds(ids: string[]): void;
+    // (undocumented)
+    setGroupId(value: string | null): void;
+    // (undocumented)
+    setRenderedRange(range: {start: number; end: number}): void;
+    // (undocumented)
+    setRepeaterId(value: string | null): void;
     // (undocumented)
     setStoreScrollPosition(value: boolean): void;
     // (undocumented)
