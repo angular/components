@@ -146,10 +146,14 @@ export class RecycleViewElementsState implements OnDestroy {
   markForDetach(id: string, sourceId?: string): void {
     if (sourceId !== undefined) {
       const detachedView = this._detachedViews.get(id);
-      if (!detachedView || detachedView.sourceIds.has(sourceId)) return;
+      if (detachedView) {
+        if (detachedView.sourceIds.has(sourceId)) {
+          return;
+        }
 
-      detachedView.sourceIds.add(sourceId);
-      return;
+        detachedView.sourceIds.add(sourceId);
+        return;
+      }
     }
 
     if (this._detachedIds.has(id)) return;
