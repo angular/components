@@ -237,7 +237,7 @@ export class CdkVirtualForOf<T>
         return trackByValue !== null && trackByValue !== undefined ? String(trackByValue) : null;
       })
       .filter((id): id is string => id !== null);
-    this._viewRepeater.setFullDataTrackByIds(trackByIds);
+    this._viewRepeater.setItemsTrackByIds(trackByIds);
   }
 
   /** The template used to stamp out new elements. */
