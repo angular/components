@@ -8,6 +8,7 @@
 
 import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
 import {
+  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -108,7 +109,13 @@ export class MatCheckboxChange {
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
-  implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
+  implements
+    AfterContentInit,
+    AfterViewInit,
+    OnChanges,
+    ControlValueAccessor,
+    Validator,
+    FocusableOption
 {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -207,8 +214,15 @@ export class MatCheckbox
   /** The native `<input type="checkbox">` element */
   @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
-  /** The native `<label>` element */
-  @ViewChild('label') _labelElement!: ElementRef<HTMLInputElement>;
+  /** The native `<label>` element. Only present when label content has been projected. */
+  @ViewChild('label') _labelElement?: ElementRef<HTMLLabelElement>;
+
+  /**
+   * Whether the checkbox has any projected label content. Drives whether the `<label/>` element
+   * is rendered. Avoids producing an empty `<label/>` that would be flagged by accessibility
+   * tooling (#33230).
+   */
+  protected readonly _hasLabel = signal(true);
 
   /** Tabindex for the checkbox. */
   @Input({transform: (value: unknown) => (value == null ? undefined : numberAttribute(value))})
@@ -256,8 +270,45 @@ export class MatCheckbox
     }
   }
 
+  ngAfterContentInit() {
+    // Avoid producing an empty `<label/>` in the DOM which would otherwise be flagged by
+    // accessibility tooling (#33230). Content projection has resolved by this point so we can
+    // inspect the host's projected children to decide whether to keep the `<label/>` rendered.
+    this._hasLabel.set(this._hasProjectedLabelContent());
+    this._changeDetectorRef.markForCheck();
+  }
+
   ngAfterViewInit() {
     this._syncIndeterminate(this.indeterminate);
+  }
+
+  /**
+   * Returns whether any non-whitespace content was supplied as projected content to the host
+   * element. Inspected against the rendered light DOM, since projected nodes remain DOM
+   * descendants of the host element after `<ng-content/>` rendering.
+   */
+  private _hasProjectedLabelContent(): boolean {
+    const host = this._elementRef.nativeElement;
+    if (!host) {
+      return false;
+    }
+    // Element nodes inside the rendered `<label/>` indicate projected element content.
+    const label = host.querySelector('.mdc-label');
+    if (label) {
+      for (let i = 0; i < label.childNodes.length; i++) {
+        const node = label.childNodes[i];
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          return true;
+        }
+        if (node.nodeType === Node.TEXT_NODE && (node.textContent?.trim().length ?? 0) > 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+    // Fallback: trimmed host text content reflects any projected text. Used when the `<label/>`
+    // has not yet been rendered (e.g. on the first content-init pass).
+    return (host.textContent?.trim().length ?? 0) > 0;
   }
 
   /** Whether the checkbox is checked. */
@@ -535,7 +586,8 @@ export class MatCheckbox
    *  bubbles when the label is clicked.
    */
   _preventBubblingFromLabel(event: MouseEvent) {
-    if (!!event.target && this._labelElement.nativeElement.contains(event.target as HTMLElement)) {
+    const labelElement = this._labelElement?.nativeElement;
+    if (!!event.target && labelElement?.contains(event.target as HTMLElement)) {
       event.stopPropagation();
     }
   }

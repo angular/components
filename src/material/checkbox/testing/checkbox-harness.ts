@@ -19,7 +19,7 @@ export class MatCheckboxHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-checkbox';
 
   _input = this.locatorFor('input');
-  private _label = this.locatorFor('label');
+  private _label = this.locatorForOptional('label');
   private _inputContainer = this.locatorFor('.mdc-checkbox');
 
   /**
@@ -116,7 +116,8 @@ export class MatCheckboxHarness extends ComponentHarness {
 
   /** Gets the checkbox's label text. */
   async getLabelText(): Promise<string> {
-    return (await this._label()).text();
+    const label = await this._label();
+    return label ? label.text() : '';
   }
 
   /** Focuses the checkbox. */

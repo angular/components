@@ -1123,6 +1123,27 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
       expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
     });
+
+    it('should not render an empty label element when no label is provided', () => {
+      // Run change detection twice: the first pass instantiates the view and projects the
+      // (empty) content, the second flushes the signal update from `ngAfterContentInit` that
+      // hides the now-empty `<label/>` element.
+      fixture.detectChanges();
+      fixture.detectChanges();
+      expect(checkboxInnerContainer.querySelector('label')).toBeNull();
+    });
+
+    it('should render a label element when label content is provided', () => {
+      const labeledFixture = TestBed.createComponent(CheckboxWithoutLabel);
+      labeledFixture.componentInstance.label = 'Has a label';
+      labeledFixture.detectChanges();
+
+      const innerContainer = labeledFixture.debugElement
+        .query(By.directive(MatCheckbox))!
+        .query(By.css('.mdc-form-field'))!.nativeElement as HTMLElement;
+      expect(innerContainer.querySelector('label')).not.toBeNull();
+      expect(innerContainer.querySelector('label')!.textContent!.trim()).toBe('Has a label');
+    });
   });
 });
 
