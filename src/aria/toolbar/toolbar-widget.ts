@@ -40,8 +40,6 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
  * </button>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({

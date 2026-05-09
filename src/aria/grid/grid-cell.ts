@@ -38,8 +38,6 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
  * </td>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Grid](guide/aria/grid)
  */
 @Directive({

@@ -37,8 +37,6 @@ import {TreeItemGroup} from './tree-item-group';
  *   Item Label
  * </li>
  * ```
- *
- * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTreeItem]',
