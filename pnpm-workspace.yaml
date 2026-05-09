@@ -23,17 +23,17 @@ catalog:
   '@angular-devkit/schematics': 22.0.0-next.7
   '@angular/build': 22.0.0-next.7
   '@angular/cli': 22.0.0-next.7
-  '@angular/common': 22.0.0-next.10
-  '@angular/compiler-cli': 22.0.0-next.10
-  '@angular/compiler': 22.0.0-next.10
-  '@angular/core': 22.0.0-next.10
+  '@angular/common': 22.0.0-next.12
+  '@angular/compiler-cli': 22.0.0-next.12
+  '@angular/compiler': 22.0.0-next.12
+  '@angular/core': 22.0.0-next.12
   '@angular/ssr': 22.0.0-next.7
-  '@angular/forms': 22.0.0-next.10
-  '@angular/localize': 22.0.0-next.10
-  '@angular/platform-browser': 22.0.0-next.10
-  '@angular/platform-browser-dynamic': 22.0.0-next.10
-  '@angular/platform-server': 22.0.0-next.10
-  '@angular/router': 22.0.0-next.10
+  '@angular/forms': 22.0.0-next.12
+  '@angular/localize': 22.0.0-next.12
+  '@angular/platform-browser': 22.0.0-next.12
+  '@angular/platform-browser-dynamic': 22.0.0-next.12
+  '@angular/platform-server': 22.0.0-next.12
+  '@angular/router': 22.0.0-next.12
   '@schematics/angular': 22.0.0-next.7
   'rxjs': ^6.6.7
 
