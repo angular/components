@@ -44,8 +44,6 @@ import {LISTBOX} from './tokens';
  * </ul>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Listbox](guide/aria/listbox)
  * @see [Autocomplete](guide/aria/autocomplete)
  * @see [Select](guide/aria/select)

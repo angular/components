@@ -35,8 +35,6 @@ import type {Menu} from './menu';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */

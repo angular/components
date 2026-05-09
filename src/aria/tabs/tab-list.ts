@@ -41,8 +41,6 @@ import type {Tab} from './tab';
  * </ul>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Tabs](guide/aria/tabs)
  */
 @Directive({

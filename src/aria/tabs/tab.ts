@@ -32,8 +32,6 @@ import {TAB_LIST} from './tab-tokens';
  * </li>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Tabs](guide/aria/tabs)
  */
 @Directive({

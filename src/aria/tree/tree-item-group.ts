@@ -37,8 +37,6 @@ import type {TreeItem} from './tree-item';
  * </li>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Tree](guide/aria/tree)
  */
 @Directive({

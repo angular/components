@@ -48,8 +48,6 @@ import {GRID} from './grid-tokens';
  * </table>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Grid](guide/aria/grid)
  */
 @Directive({

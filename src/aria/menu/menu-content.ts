@@ -24,8 +24,6 @@ import {DeferredContent} from '../private';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */

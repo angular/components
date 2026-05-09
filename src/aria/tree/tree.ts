@@ -58,8 +58,6 @@ import type {TreeItem} from './tree-item';
  * </ng-template>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Tree](guide/aria/tree)
  */
 @Directive({
