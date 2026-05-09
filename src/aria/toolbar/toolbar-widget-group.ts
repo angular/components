@@ -24,8 +24,6 @@ import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
  * A directive that groups toolbar widgets, used for more complex widgets like radio groups
  * that have their own internal navigation.
  *
- * @developerPreview 21.0
- *
  * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({

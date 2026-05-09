@@ -37,7 +37,6 @@ import {AccordionPanel} from './accordion-panel';
  * </button>
  * ```
  *
- * @developerPreview 21.0
  * @see [Accordion](guide/aria/accordion)
  */
 @Directive({

@@ -51,8 +51,6 @@ import {MENU_COMPONENT} from './menu-tokens';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */

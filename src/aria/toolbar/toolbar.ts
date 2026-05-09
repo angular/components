@@ -41,8 +41,6 @@ import type {ToolbarWidget} from './toolbar-widget';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
