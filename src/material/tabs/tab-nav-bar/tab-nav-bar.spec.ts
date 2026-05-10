@@ -16,7 +16,7 @@ import {
   WritableSignal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
@@ -29,7 +29,11 @@ describe('MatTabNavBar', () => {
   let globalRippleOptions: RippleGlobalOptions;
   let resizeEvents: Subject<ResizeObserverEntry[]>;
 
-  beforeEach(waitForAsync(() => {
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
+  beforeEach(() => {
     globalRippleOptions = {};
     dir = signal('ltr');
 
@@ -42,7 +46,7 @@ describe('MatTabNavBar', () => {
 
     resizeEvents = new Subject();
     spyOn(TestBed.inject(SharedResizeObserver), 'observe').and.returnValue(resizeEvents);
-  }));
+  });
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
@@ -127,19 +131,19 @@ describe('MatTabNavBar', () => {
       expect(enterEvent.defaultPrevented).toBe(true);
     });
 
-    it('should re-align the ink bar when the direction changes', fakeAsync(() => {
+    it('should re-align the ink bar when the direction changes', async () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       dir.set('rtl');
-      tick();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    }));
+    });
 
-    it('should re-align the ink bar when the tabs list change', fakeAsync(() => {
+    it('should re-align the ink bar when the tabs list change', async () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
@@ -147,10 +151,10 @@ describe('MatTabNavBar', () => {
       fixture.componentInstance.tabs = [1, 2, 3, 4];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick();
+      await fixture.whenStable();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    }));
+    });
 
     it('should re-align the ink bar when the tab labels change the width', done => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
@@ -167,17 +171,17 @@ describe('MatTabNavBar', () => {
       expect(spy.calls.any()).toBe(false);
     });
 
-    it('should re-align the ink bar when the nav bar is resized', fakeAsync(() => {
+    it('should re-align the ink bar when the nav bar is resized', async () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       resizeEvents.next([]);
       fixture.detectChanges();
-      tick(32);
+      await wait(50);
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    }));
+    });
 
     it('should hide the ink bar when all the links are inactive', () => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
@@ -200,14 +204,14 @@ describe('MatTabNavBar', () => {
     });
   });
 
-  it('should hide the ink bar if no tabs are active on init', fakeAsync(() => {
+  it('should hide the ink bar if no tabs are active on init', async () => {
     const fixture = TestBed.createComponent(TabBarWithInactiveTabsOnInit);
     fixture.detectChanges();
-    tick(20); // Angular turns rAF calls into 16.6ms timeouts in tests.
+    await wait(50);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.mdc-tab-indicator--active').length).toBe(0);
-  }));
+  });
 
   it('should clean up the ripple event handlers on destroy', () => {
     let fixture: ComponentFixture<TabLinkWithNgIf> = TestBed.createComponent(TabLinkWithNgIf);
@@ -350,27 +354,27 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
   });
 
-  it('should re-show the ink bar if the same tab is cleared and re-activated', fakeAsync(() => {
+  it('should re-show the ink bar if the same tab is cleared and re-activated', async () => {
     const getInkBars = () =>
       fixture.nativeElement.querySelectorAll('.mdc-tab-indicator--active').length;
     const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
     fixture.componentInstance.activeIndex = 0;
     fixture.detectChanges();
-    tick(20);
+    await wait(50);
     expect(getInkBars()).toBe(1);
 
     fixture.componentInstance.activeIndex = -1;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(20);
+    await wait(50);
     expect(getInkBars()).toBe(0);
 
     fixture.componentInstance.activeIndex = 0;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(20);
+    await wait(50);
     expect(getInkBars()).toBe(1);
-  }));
+  });
 
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
@@ -503,11 +507,11 @@ describe('MatTabNavBar', () => {
 describe('MatTabNavBar with a default config', () => {
   let fixture: ComponentFixture<TabLinkWithNgIf>;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TabLinkWithNgIf);
@@ -524,22 +528,24 @@ describe('MatTabNavBar with a default config', () => {
 });
 
 describe('MatTabNavBar with enabled animations', () => {
-  it('should not throw when setting an animationDuration without units', fakeAsync(() => {
-    expect(() => {
-      let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
-      fixture.detectChanges();
-      tick();
-    }).not.toThrow();
-  }));
+  it('should not throw when setting an animationDuration without units', async () => {
+    await expectAsync(
+      (async () => {
+        let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+        fixture.detectChanges();
+        await fixture.whenStable();
+      })(),
+    ).not.toBeRejected();
+  });
 
-  it('should set appropiate css variable given a specified animationDuration', fakeAsync(() => {
+  it('should set appropiate css variable given a specified animationDuration', async () => {
     let fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
 
     const tabNavBar = fixture.nativeElement.querySelector('.mat-mdc-tab-nav-bar');
     expect(tabNavBar.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
-  }));
+  });
 });
 
 @Component({
