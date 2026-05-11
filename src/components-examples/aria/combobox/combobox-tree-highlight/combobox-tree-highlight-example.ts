@@ -16,7 +16,6 @@ import {
   signal,
   viewChild,
   untracked,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -42,7 +41,6 @@ interface SeasonNode {
     TreeItemGroup,
     OverlayModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxTreeHighlightExample {
   readonly tree = viewChild(Tree);

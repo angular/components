@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
 import {NgForm, FormsModule} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -45,7 +45,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'popover-edit-tab-out-mat-table-example',
   styleUrl: 'popover-edit-tab-out-mat-table-example.css',
   templateUrl: 'popover-edit-tab-out-mat-table-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatTableModule,
     FormsModule,

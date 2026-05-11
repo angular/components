@@ -10,7 +10,6 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
-  ChangeDetectionStrategy,
   Component,
   computed,
   signal,
@@ -27,7 +26,6 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'combobox-dialog-example.html',
   styleUrls: ['../combobox-example.css'],
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDialogExample {
   listbox = viewChild<Listbox<string>>(Listbox);

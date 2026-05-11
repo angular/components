@@ -1,5 +1,5 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
@@ -20,7 +20,6 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     MatIconModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsReactiveFormExample {
   private _announcer = inject(LiveAnnouncer);
