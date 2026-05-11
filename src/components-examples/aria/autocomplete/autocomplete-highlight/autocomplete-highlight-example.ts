@@ -8,15 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  signal,
-  viewChild,
-} from '@angular/core';
+import {afterRenderEffect, Component, computed, effect, signal, viewChild} from '@angular/core';
 import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
@@ -27,7 +19,6 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'autocomplete-highlight-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteHighlightExample {
   /** The selected value of the combobox. */

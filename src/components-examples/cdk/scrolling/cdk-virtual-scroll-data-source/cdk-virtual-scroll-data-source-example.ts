@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -8,7 +8,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'cdk-virtual-scroll-data-source-example',
   styleUrl: 'cdk-virtual-scroll-data-source-example.css',
   templateUrl: 'cdk-virtual-scroll-data-source-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollDataSourceExample {

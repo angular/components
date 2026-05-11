@@ -1,6 +1,6 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -17,7 +17,6 @@ export interface Fruit {
   templateUrl: 'chips-input-example.html',
   styleUrl: 'chips-input-example.css',
   imports: [MatFormFieldModule, MatChipsModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsInputExample {
   readonly addOnBlur = true;

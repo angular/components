@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatInputModule} from '@angular/material/input';
@@ -19,7 +19,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatDatepickerModule,
     FormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerDatepickerIntegrationExample {
   value!: Date;

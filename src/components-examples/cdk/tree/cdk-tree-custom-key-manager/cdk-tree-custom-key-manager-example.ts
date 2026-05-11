@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, QueryList} from '@angular/core';
+import {Component, QueryList} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {coerceObservable} from '@angular/cdk/coercion/private';
 import {FlatTreeControl, CdkTreeModule} from '@angular/cdk/tree';
@@ -313,7 +313,6 @@ const VIM_TREE_KEY_MANAGER_PROVIDER = {
   styleUrls: ['cdk-tree-custom-key-manager-example.css'],
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
   providers: [VIM_TREE_KEY_MANAGER_PROVIDER],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeCustomKeyManagerExample {
   treeControl = new FlatTreeControl<ExampleFlatNode>(

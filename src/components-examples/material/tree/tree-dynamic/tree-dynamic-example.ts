@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Service, inject, signal} from '@angular/core';
+import {Component, Service, inject, signal} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -60,7 +60,6 @@ export class DynamicDatabase {
   templateUrl: 'tree-dynamic-example.html',
   styleUrl: 'tree-dynamic-example.css',
   imports: [MatTreeModule, MatButtonModule, MatIconModule, MatProgressBarModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeDynamicExample {
   private _database = inject(DynamicDatabase);

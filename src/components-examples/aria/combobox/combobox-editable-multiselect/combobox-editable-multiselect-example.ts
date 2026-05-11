@@ -10,7 +10,6 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
-  ChangeDetectionStrategy,
   Component,
   computed,
   signal,
@@ -28,7 +27,6 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'combobox-editable-multiselect-example.html',
   styleUrl: '../combobox-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxEditableMultiselectExample {
   readonly listbox = viewChild(Listbox);

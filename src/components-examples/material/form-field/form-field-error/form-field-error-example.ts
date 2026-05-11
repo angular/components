@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -11,7 +11,6 @@ import {merge} from 'rxjs';
   templateUrl: 'form-field-error-example.html',
   styleUrl: 'form-field-error-example.css',
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldErrorExample {
   readonly email = new FormControl('', [Validators.required, Validators.email]);

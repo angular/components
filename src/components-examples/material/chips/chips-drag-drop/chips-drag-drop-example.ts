@@ -1,5 +1,5 @@
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatChipsModule} from '@angular/material/chips';
 
 export interface Vegetable {
@@ -14,7 +14,6 @@ export interface Vegetable {
   templateUrl: 'chips-drag-drop-example.html',
   styleUrl: 'chips-drag-drop-example.css',
   imports: [MatChipsModule, CdkDropList, CdkDrag],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsDragDropExample {
   readonly vegetables = signal<Vegetable[]>([

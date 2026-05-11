@@ -1,6 +1,6 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {ChangeDetectionStrategy, Component, computed, inject, model, signal} from '@angular/core';
+import {Component, computed, inject, model, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatAutocompleteModule,
@@ -20,7 +20,6 @@ import {MatIconModule} from '@angular/material/icon';
   // Make sure to import `MatAutocompleteModule` before `MatChipsModule` to prevent adding typed
   // text when autocomplete option is selected via keyboard).
   imports: [MatFormFieldModule, MatAutocompleteModule, MatChipsModule, MatIconModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsAutocompleteExample {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];

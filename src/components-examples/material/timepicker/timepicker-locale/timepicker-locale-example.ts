@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatInputModule} from '@angular/material/input';
@@ -12,7 +12,6 @@ import {MatButtonModule} from '@angular/material/button';
   templateUrl: 'timepicker-locale-example.html',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatTimepickerModule, FormsModule, MatButtonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerLocaleExample {
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
