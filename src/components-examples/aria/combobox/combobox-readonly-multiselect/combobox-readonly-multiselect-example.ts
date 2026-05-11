@@ -8,14 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-  viewChild,
-} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 /** @title Readonly multiselectable combobox. */
@@ -24,7 +17,6 @@ import {OverlayModule} from '@angular/cdk/overlay';
   templateUrl: 'combobox-readonly-multiselect-example.html',
   styleUrl: '../combobox-select/combobox-select-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxReadonlyMultiselectExample {
   readonly listbox = viewChild(Listbox);

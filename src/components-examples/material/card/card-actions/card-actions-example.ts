@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 
@@ -9,6 +9,5 @@ import {MatCardModule} from '@angular/material/card';
   selector: 'card-actions-example',
   templateUrl: 'card-actions-example.html',
   imports: [MatCardModule, MatButtonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardActionsExample {}
