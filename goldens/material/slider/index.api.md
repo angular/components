@@ -27,7 +27,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _cachedLeft: number;
     // (undocumented)
     _cachedWidth: number;
-    _calcTickMarkTransform(index: number): string;
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     color: ThemePalette;
@@ -88,7 +87,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _onMinMaxOrStepChange(): void;
     // (undocumented)
     _onResize(): void;
-    // (undocumented)
     _onTranslateXChange(source: _MatSliderThumb): void;
     // (undocumented)
     _onTranslateXChangeBySideEffect(input1: _MatSliderRangeThumb, input2: _MatSliderRangeThumb): void;
