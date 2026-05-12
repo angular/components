@@ -30,8 +30,11 @@ export class MatBottomSheetConfig<D = any> {
    */
   injector?: Injector;
 
-  /** Extra CSS classes to be added to the bottom sheet container. */
+  /** Extra CSS classes to be added to the bottom sheet pane. */
   panelClass?: string | string[];
+
+  /** Extra CSS classes to be added to the bottom sheet container. */
+  containerClass?: string | string[];
 
   /** Text layout direction for the bottom sheet. */
   direction?: Direction;
