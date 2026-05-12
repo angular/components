@@ -593,8 +593,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     trackStyle.transform = styles.transform;
   }
 
-  /** Returns the translateX positioning for a tick mark based on it's index. */
-
   // Handlers for updating the slider ui.
 
   _onTranslateXChange(source: _MatSliderThumb): void {
