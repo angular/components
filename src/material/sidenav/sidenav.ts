@@ -35,6 +35,10 @@ import {CdkScrollable} from '@angular/cdk/scrolling';
       provide: CdkScrollable,
       useExisting: MatSidenavContent,
     },
+    {
+      provide: MatDrawerContent,
+      useExisting: MatSidenavContent,
+    },
   ],
 })
 export class MatSidenavContent extends MatDrawerContent {}
