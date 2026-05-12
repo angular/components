@@ -16,6 +16,7 @@ import {CdkVirtualScrollableElement} from './virtual-scrollable-element';
 import {CdkVirtualScrollableWindow} from './virtual-scrollable-window';
 import {CdkDynamicSizeVirtualScroll} from './dynamic-size.directive';
 import {CdkVisibleRange} from './cdk-visible-range.directive';
+import {CdkVirtualScrollSticky} from './virtual-scroll-sticky.directive';
 
 @NgModule({
   exports: [CdkScrollable],
@@ -37,6 +38,7 @@ export class CdkScrollableModule {}
     CdkVirtualScrollableElement,
     CdkDynamicSizeVirtualScroll,
     CdkVisibleRange,
+    CdkVirtualScrollSticky,
   ],
   exports: [
     BidiModule,
@@ -48,6 +50,7 @@ export class CdkScrollableModule {}
     CdkVirtualScrollableElement,
     CdkDynamicSizeVirtualScroll,
     CdkVisibleRange,
+    CdkVirtualScrollSticky,
   ],
 })
 export class ScrollingModule {}
