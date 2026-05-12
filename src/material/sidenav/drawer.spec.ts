@@ -717,6 +717,40 @@ describe('MatDrawer', () => {
       expect(anchors.length).toBeGreaterThan(0);
       expect(anchors.every(anchor => !anchor.hasAttribute('tabindex'))).toBe(true);
     });
+
+    it('should mark the content as `inert` in `over` mode', async () => {
+      testComponent.mode = 'over';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      lastFocusableElement.focus();
+
+      const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+      expect(content.hasAttribute('inert')).toBe(false);
+
+      drawer.open();
+      fixture.detectChanges();
+      await wait(100);
+      fixture.detectChanges();
+
+      expect(content.getAttribute('inert')).toBe('true');
+    });
+
+    it('should not mark the content as `inert` in `side` mode', async () => {
+      testComponent.mode = 'side';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      lastFocusableElement.focus();
+
+      const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+      expect(content.hasAttribute('inert')).toBe(false);
+
+      drawer.open();
+      fixture.detectChanges();
+      await wait(100);
+      fixture.detectChanges();
+
+      expect(content.hasAttribute('inert')).toBe(false);
+    });
   });
 
   it('should mark the drawer content as scrollable', () => {
