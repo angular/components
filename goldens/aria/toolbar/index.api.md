@@ -55,6 +55,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
 
 // @public
 export class ToolbarWidgetGroup<V> {
+    constructor();
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;

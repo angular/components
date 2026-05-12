@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ListboxPattern, SortedCollection, tabIndexTransform} from '../private';
+import {ListboxPattern, SortedCollection, tabIndexTransform, reportViolations} from '../private';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
 
@@ -159,17 +159,14 @@ export class Listbox<V> implements OnDestroy {
       this._collection.startObserving(this.element);
     });
 
-    // Check for any violationns after the DOM has been updated.
-    afterRenderEffect({
-      read: () => {
-        if (typeof ngDevMode === 'undefined' || ngDevMode) {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
-        }
-      },
-    });
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 

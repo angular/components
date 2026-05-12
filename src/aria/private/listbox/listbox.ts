@@ -215,6 +215,18 @@ export class ListboxPattern<V> {
       );
     }
 
+    const values = this.inputs.items().map(o => o.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate option value '${duplicates[0]}' detected inside ngListbox.`);
+    }
+
+    const ids = this.inputs.items().map(o => o.id());
+    const duplicateIds = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+    if (duplicateIds.length > 0) {
+      violations.push(`Duplicate option ID '${duplicateIds[0]}' detected inside ngListbox.`);
+    }
+
     return violations;
   }
 

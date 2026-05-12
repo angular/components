@@ -16,8 +16,9 @@ import {
   computed,
   inject,
   input,
+  afterRenderEffect,
 } from '@angular/core';
-import {TabPattern, HasElement} from '../private';
+import {TabPattern, HasElement, reportViolations} from '../private';
 import {TAB_LIST} from './tab-tokens';
 
 /**
@@ -88,6 +89,24 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   /** Opens this tab panel. */
   open() {
     this._pattern.open();
+  }
+
+  constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+          if (this._tabList && this._tabList._tabsParent) {
+            if (!this._tabList._tabsParent._panelMap().has(this.value())) {
+              violations.push(
+                `ngTab with value '${this.value()}' does not have a corresponding ngTabPanel.`,
+              );
+            }
+          }
+          reportViolations(violations, this.element);
+        },
+      });
+    }
   }
 
   ngOnInit() {

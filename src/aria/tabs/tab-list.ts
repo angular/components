@@ -23,7 +23,7 @@ import {
   linkedSignal,
   WritableSignal,
 } from '@angular/core';
-import {SortedCollection, TabListPattern, TabPattern} from '../private';
+import {SortedCollection, TabListPattern, TabPattern, reportViolations} from '../private';
 import {TABS, TAB_LIST} from './tab-tokens';
 import type {Tab} from './tab';
 
@@ -147,6 +147,23 @@ export class TabList implements OnInit, OnDestroy {
         this.selectedTab.set(tab?.value());
       },
     });
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+
+          const values = this._collection.orderedItems().map(t => t.value());
+          const duplicates = values.filter((item, index) => values.indexOf(item) !== index);
+          if (duplicates.length > 0) {
+            violations.push(`Duplicate value '${duplicates[0]}' detected inside ngTabList.`);
+          }
+
+          reportViolations(violations, this.element);
+        },
+      });
+    }
   }
 
   ngOnInit() {

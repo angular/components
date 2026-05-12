@@ -15,10 +15,11 @@ import {
   input,
   signal,
   afterNextRender,
+  afterRenderEffect,
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern, SortedCollection} from '../private';
+import {AccordionGroupPattern, SortedCollection, reportViolations} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 import {AccordionTrigger} from './accordion-trigger';
 
@@ -113,6 +114,15 @@ export class AccordionGroup implements OnDestroy {
     afterNextRender(() => {
       this._collection.startObserving(this.element);
     });
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
   }
 
   ngOnDestroy() {
