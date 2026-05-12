@@ -99,12 +99,29 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _isInert = false;
   _container = inject(MatDrawerContainer);
 
   ngAfterContentInit() {
-    this._container._contentMarginChanges.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
+    this._container._contentMarginChanges.subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  _updateInert() {
+    const newValue = this._container._isShowingBackdrop();
+
+    if (newValue !== this._isInert) {
+      const element = this._element.nativeElement;
+      this._isInert = newValue;
+
+      // This can be called right before we attempt to move focus. Set the value
+      // directly, instead of waiting on change detection, because the timing is tight.
+      if (newValue) {
+        element.setAttribute('inert', 'true');
+      } else {
+        element.removeAttribute('inert');
+      }
+    }
   }
 
   /** Determines whether the content element should be hidden from the user. */
@@ -360,11 +377,18 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Focuses the provided element. If the element is not focusable, it will add a tabIndex
-   * attribute to forcefully focus it. The attribute is removed after focus is moved.
-   * @param element The element to focus.
+   * Focuses the first element that matches the given selector within the focus trap.
+   * @param selector The CSS selector for the element to set focus to.
    */
-  private _forceFocus(element: HTMLElement, options?: FocusOptions) {
+  private _focusByCssSelector(selector: string, options?: FocusOptions) {
+    const element = this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+
+    if (!element) {
+      return;
+    }
+
+    // If the element isn't focusable, force focus to it by
+    // setting a tabindex, focusing it and then clear it.
     if (!this._interactivityChecker.isFocusable(element)) {
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
@@ -379,20 +403,8 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
         const cleanupMousedown = this._renderer.listen(element, 'mousedown', callback);
       });
     }
-    element.focus(options);
-  }
 
-  /**
-   * Focuses the first element that matches the given selector within the focus trap.
-   * @param selector The CSS selector for the element to set focus to.
-   */
-  private _focusByCssSelector(selector: string, options?: FocusOptions) {
-    let elementToFocus = this._elementRef.nativeElement.querySelector(
-      selector,
-    ) as HTMLElement | null;
-    if (elementToFocus) {
-      this._forceFocus(elementToFocus, options);
-    }
+    element.focus(options);
   }
 
   /**
@@ -421,17 +433,27 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
             if (!hasMovedFocus && typeof element.focus === 'function') {
               element.focus();
             }
+
+            // When capturing focus, we need to delay making the
+            // container inert until focus has actually been moved.
+            this._notifyContentFocus();
           },
           {injector: this._injector},
         );
         break;
       case 'first-heading':
         this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+        this._notifyContentFocus();
         break;
       default:
         this._focusByCssSelector(this.autoFocus!);
+        this._notifyContentFocus();
         break;
     }
+  }
+
+  private _notifyContentFocus() {
+    (this._container?._content || this._container?._userContent)?._updateInert();
   }
 
   /**
@@ -439,6 +461,10 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
    * If no element was focused at that time, the focus will be restored to the drawer.
    */
   private _restoreFocus(focusOrigin: Exclude<FocusOrigin, null>) {
+    // When restoring focus, we need remove `inert` as early as possible,
+    // because the element needs to become focusable before we can focus it.
+    this._notifyContentFocus();
+
     if (this.autoFocus === 'dialog') {
       return;
     }
@@ -923,7 +949,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * is properly hidden.
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
-    //
     drawer._animationStarted.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
       this.updateContentMargins();
       this._changeDetectorRef.markForCheck();
