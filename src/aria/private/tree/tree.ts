@@ -383,6 +383,12 @@ export class TreePattern<V> implements TreeInputs<V> {
       );
     }
 
+    const values = this.inputs.items().map(t => t.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate tree item value '${duplicates[0]}' detected inside ngTree.`);
+    }
+
     return violations;
   }
 

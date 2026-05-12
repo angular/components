@@ -25,6 +25,7 @@ import {
   GridRowPattern,
   SortedCollection,
   tabIndexTransform,
+  reportViolations,
 } from '../private';
 import {GridRow} from './grid-row';
 import {GRID} from './grid-tokens';
@@ -153,6 +154,15 @@ export class Grid implements OnDestroy {
     afterRenderEffect({write: () => this._pattern.resetFocusEffect()});
     afterRenderEffect({write: () => this._pattern.restoreFocusEffect()});
     afterRenderEffect({write: () => this._pattern.focusEffect()});
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
 
     afterNextRender(() => {
       this._collection.startObserving(this.element);

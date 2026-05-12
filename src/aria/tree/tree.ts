@@ -23,7 +23,13 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {SortedCollection, tabIndexTransform, TreeItemPattern, TreePattern} from '../private';
+import {
+  SortedCollection,
+  tabIndexTransform,
+  TreeItemPattern,
+  TreePattern,
+  reportViolations,
+} from '../private';
 import type {TreeItem} from './tree-item';
 
 /**
@@ -171,16 +177,13 @@ export class Tree<V> implements OnDestroy {
     });
 
     // Check for any violations after the DOM has been updated.
-    afterRenderEffect({
-      read: () => {
-        if (typeof ngDevMode === 'undefined' || ngDevMode) {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
-        }
-      },
-    });
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
 
     // Resets default focus based on selection state until interacted.
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});

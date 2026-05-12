@@ -170,6 +170,19 @@ export class ToolbarPattern<V> {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const values = this.inputs.items().map(w => w.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate value '${duplicates[0]}' detected inside ngToolbar.`);
+    }
+
+    return violations;
+  }
+
   /** Handles keydown events for the toolbar. */
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;

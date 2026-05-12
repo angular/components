@@ -16,9 +16,10 @@ import {
   inject,
   input,
   model,
+  afterRenderEffect,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {AccordionTriggerPattern} from '../private';
+import {AccordionTriggerPattern, reportViolations} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
 import {AccordionPanel} from './accordion-panel';
 
@@ -83,6 +84,30 @@ export class AccordionTrigger implements OnInit, OnDestroy {
 
   /** The UI pattern instance for this trigger. */
   _pattern!: AccordionTriggerPattern;
+
+  constructor() {
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+
+          if (this.panel() && this.panel().element.contains(this.element)) {
+            violations.push(
+              'ngAccordionTrigger must not be nested inside its controlled ngAccordionPanel, otherwise it will become unreachable when collapsed.',
+            );
+          }
+          if (this.panel() && (this.panel() as any)._pattern !== this._pattern) {
+            violations.push(
+              'ngAccordionPanel is already controlled by another ngAccordionTrigger.',
+            );
+          }
+
+          reportViolations(violations, this.element);
+        },
+      });
+    }
+  }
 
   ngOnInit() {
     this._pattern = new AccordionTriggerPattern({

@@ -1060,6 +1060,30 @@ describe('Grid directives', () => {
       });
     });
   });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'warn');
+    });
+
+    afterEach(() => {
+      TestBed.resetTestingModule();
+      setupGrid();
+    });
+
+    it('should warn when ngGridRow contains no cells', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [GridRowWithoutCells],
+      });
+      const noCellsFixture = TestBed.createComponent(GridRowWithoutCells);
+      noCellsFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith('ngGridRow must contain at least one ngGridCell.');
+    });
+  });
 });
 
 @Component({
@@ -1136,3 +1160,14 @@ class GridTestComponent {
   onActivated = jasmine.createSpy('activated');
   onDeactivated = jasmine.createSpy('deactivated');
 }
+
+@Component({
+  template: `
+    <table ngGrid>
+      <tr ngGridRow></tr>
+    </table>
+  `,
+  imports: [Grid, GridRow],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class GridRowWithoutCells {}

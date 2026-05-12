@@ -126,6 +126,22 @@ export class AccordionGroupPattern {
     this.expansionBehavior.closeAll();
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multiExpandable()) {
+      const expandedCount = this.inputs.items().filter(t => t.expanded()).length;
+      if (expandedCount > 1) {
+        violations.push(
+          'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
+        );
+      }
+    }
+
+    return violations;
+  }
+
   /** Finds the trigger pattern for a given element. */
   private _findTriggerPattern(
     element: Element | null | undefined,
