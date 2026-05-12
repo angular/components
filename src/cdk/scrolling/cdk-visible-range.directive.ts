@@ -17,7 +17,7 @@ export type VisibleRange = {start: number; end: number};
   selector: '[visibleRange]',
   exportAs: 'visibleRange',
 })
-export class CdkVisibleRange implements OnDestroy {
+export class CdkVisibleRange {
   private readonly _viewport = inject(CdkVirtualScrollViewport, {self: true});
   private readonly _cdkFixedSizeVirtualScroll = inject(CdkFixedSizeVirtualScroll, {
     self: true,
@@ -27,7 +27,6 @@ export class CdkVisibleRange implements OnDestroy {
   _range: VisibleRange = {start: 0, end: 0};
 
   private _lastVisibleIndex!: number;
-  private _scrolledIndexChangeSubscription!: Subscription;
 
   constructor() {
     this._viewport.scrolledIndexChange.subscribe((index: number) => {
@@ -64,9 +63,5 @@ export class CdkVisibleRange implements OnDestroy {
     };
 
     this._cdr.markForCheck();
-  }
-
-  ngOnDestroy(): void {
-    this._scrolledIndexChangeSubscription.unsubscribe();
   }
 }
