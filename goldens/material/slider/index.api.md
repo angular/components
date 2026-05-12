@@ -87,6 +87,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _onMinMaxOrStepChange(): void;
     // (undocumented)
     _onResize(): void;
+    // (undocumented)
     _onTranslateXChange(source: _MatSliderThumb): void;
     // (undocumented)
     _onTranslateXChangeBySideEffect(input1: _MatSliderRangeThumb, input2: _MatSliderRangeThumb): void;
