@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatAnchor,
@@ -43,7 +43,6 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatProgressSpinner,
     MatTooltip,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonDemo {
   isDisabled = false;

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {
   MenuContextExample,
   MenuTriggerExample,
@@ -19,7 +19,6 @@ import {
   templateUrl: 'menu-demo.html',
   styleUrl: 'menu-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MenuContextExample,
     MenuTriggerExample,

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {
   ToolbarBasicHorizontalExample,
   ToolbarBasicVerticalExample,
@@ -26,6 +26,5 @@ import {
   ],
   styleUrl: './toolbar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarDemo {}

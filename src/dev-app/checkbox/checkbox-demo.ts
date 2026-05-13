@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, Directive} from '@angular/core';
+import {Component, Directive} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material/checkbox';
 import {MatPseudoCheckboxModule, ThemePalette} from '@angular/material/core';
@@ -41,7 +41,6 @@ export class ClickActionCheck {}
   `,
   templateUrl: 'nested-checklist.html',
   imports: [MatCheckboxModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCheckboxDemoNestedChecklist {
   tasks: Task[] = [
@@ -103,7 +102,6 @@ export class MatCheckboxDemoNestedChecklist {
     ClickActionCheck,
     MatTooltip,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxDemo {
   isIndeterminate = false;
