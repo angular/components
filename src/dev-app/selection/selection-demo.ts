@@ -14,7 +14,7 @@ import {
   MatSelectionColumnExample,
   MatSelectionListExample,
 } from '@angular/components-examples/material-experimental/selection';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -38,6 +38,5 @@ import {FormsModule} from '@angular/forms';
     MatSelectionListExample,
     FormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionDemo {}

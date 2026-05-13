@@ -7,7 +7,7 @@
  */
 
 import {RippleOverviewExample} from '@angular/components-examples/material/core';
-import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -27,7 +27,6 @@ import {MatInputModule} from '@angular/material/input';
     MatIconModule,
     MatInputModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RippleDemo {
   @ViewChild(MatRipple) ripple!: MatRipple;

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   CdkTableBasicExample,
   CdkTableFixedLayoutExample,
@@ -80,6 +80,5 @@ import {
     TableFlexLargeRowExample,
     TableDragDropExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableDemo {}
