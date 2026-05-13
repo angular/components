@@ -39,6 +39,7 @@ $fallbacks: m3-list.get-tokens();
   .mdc-radio,
   .mdc-checkbox {
     opacity: token-utils.slot(list-list-item-disabled-label-text-opacity, $fallbacks);
+    cursor: default;
   }
 }
 
