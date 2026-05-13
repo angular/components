@@ -8,7 +8,6 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -46,7 +45,6 @@ import {DevAppDirectionality} from './dev-app-directionality';
     MatTooltipModule,
     RouterModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);

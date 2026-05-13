@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   AutocompleteAutoSelectExample,
   AutocompleteManualExample,
@@ -16,6 +16,5 @@ import {
     AutocompleteHighlightExample,
     AutocompleteDisabledExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemo {}

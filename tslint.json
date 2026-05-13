@@ -115,7 +115,7 @@
             "properties": {
               "!changeDetection": ".*"
             },
-            "excludeFiles": ["**/docs/**", "**/*.spec.ts", "**/dev-app/**"]
+            "excludeFiles": ["**/docs/**", "**/*.spec.ts"]
           }
         ],
         "Directive": [

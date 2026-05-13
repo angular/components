@@ -7,14 +7,7 @@
  */
 
 import {A11yModule, InputModality, InputModalityDetector} from '@angular/cdk/a11y';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  NgZone,
-  OnDestroy,
-  inject,
-} from '@angular/core';
+import {ChangeDetectorRef, Component, NgZone, OnDestroy, inject} from '@angular/core';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -35,7 +28,6 @@ import {takeUntil} from 'rxjs/operators';
     MatRadioModule,
     MatSelectModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputModalityDetectorDemo implements OnDestroy {
   _modality: InputModality = null;
