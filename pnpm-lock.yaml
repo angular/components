@@ -294,8 +294,8 @@ importers:
         specifier: 6.4.1
         version: 6.4.1(rollup@4.60.3)(typescript@6.0.2)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.6
-        version: 0.5.6(@types/node@22.19.18)(rollup@4.60.3)
+        specifier: 0.5.7
+        version: 0.5.7(@types/node@22.19.18)(rollup@4.60.3)
       sass:
         specifier: ^1.99.0
         version: 1.99.0
@@ -8509,9 +8509,9 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 6.0.2
 
-  rollup-plugin-sourcemaps2@0.5.6:
-    resolution: {integrity: sha512-oalmewAT4GLVsW6NugcDybx0ypet94vU0dUK3VofdYoWiN4ZjoX1L4dizFd0OhoJ78r/Am9sARTR9gMrX0cJ7w==}
-    engines: {node: '>=18.0.0'}
+  rollup-plugin-sourcemaps2@0.5.7:
+    resolution: {integrity: sha512-z2biw/Bs4cFgVn9LKEE5EK5PXvT0aUGuZoQkTU1OENf1PTl9WsbsVRR5FsKqY6qQohltsGTp1sIQrR8tsezztQ==}
+    engines: {node: '>=22.13.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
       rollup: '>=4'
@@ -19076,7 +19076,7 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.0
 
-  rollup-plugin-sourcemaps2@0.5.6(@types/node@22.19.18)(rollup@4.60.3):
+  rollup-plugin-sourcemaps2@0.5.7(@types/node@22.19.18)(rollup@4.60.3):
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.60.3)
       rollup: 4.60.3
