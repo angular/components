@@ -44,7 +44,7 @@ import {
   signal,
 } from '@angular/core';
 import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
+import {debounceTime, delay, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
 /**
@@ -100,6 +100,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
   private _isInert = false;
   _container = inject(MatDrawerContainer);
 
@@ -107,7 +108,22 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     this._container._contentMarginChanges.subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
-  _updateInert() {
+  _drawerToggled(drawer: MatDrawer) {
+    if (drawer.opened) {
+      // If the drawer is being opened, we need to wait until the animation is done before marking
+      // the content is inert, because the drawer moves focus during the animation. We add a delay
+      // to be safe.
+      this._ngZone.runOutsideAngular(() => {
+        drawer._animationEnd.pipe(delay(50), take(1)).subscribe(() => this._updateInert());
+      });
+    } else {
+      // When the drawer is closing, we need to remove `inert` immediately so
+      // the elements that focus is being restored to can become focusable.
+      this._updateInert();
+    }
+  }
+
+  private _updateInert() {
     const newValue = this._container._isShowingBackdrop();
 
     if (newValue !== this._isInert) {
@@ -433,27 +449,17 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
             if (!hasMovedFocus && typeof element.focus === 'function') {
               element.focus();
             }
-
-            // When capturing focus, we need to delay making the
-            // container inert until focus has actually been moved.
-            this._notifyContentFocus();
           },
           {injector: this._injector},
         );
         break;
       case 'first-heading':
         this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
-        this._notifyContentFocus();
         break;
       default:
         this._focusByCssSelector(this.autoFocus!);
-        this._notifyContentFocus();
         break;
     }
-  }
-
-  private _notifyContentFocus() {
-    (this._container?._content || this._container?._userContent)?._updateInert();
   }
 
   /**
@@ -461,10 +467,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
    * If no element was focused at that time, the focus will be restored to the drawer.
    */
   private _restoreFocus(focusOrigin: Exclude<FocusOrigin, null>) {
-    // When restoring focus, we need remove `inert` as early as possible,
-    // because the element needs to become focusable before we can focus it.
-    this._notifyContentFocus();
-
     if (this.autoFocus === 'dialog') {
       return;
     }
@@ -577,6 +579,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     }
 
     this._opened.set(isOpen);
+    (this._container?._content || this._container?._userContent)?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
       // Note: it's important to set this as early as possible,
