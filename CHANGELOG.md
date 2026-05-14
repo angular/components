@@ -1,3 +1,17 @@
+<a name="22.0.0-rc.0"></a>
+# 22.0.0-rc.0 "crystal lotion" (2026-05-13)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c316198527](https://github.com/angular/components/commit/c3161985279bf49f9aae55b732fdd3b2872e1f7e) | fix | **sidenav:** mark content as inert while open |
+| [c2f1c5b035](https://github.com/angular/components/commit/c2f1c5b035795079b155b9e60a290abe4d4c9537) | fix | **sidenav:** query not resolving |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [84f2afd249](https://github.com/angular/components/commit/84f2afd24933c8742662ee6d12a6f3f98f5dea9e) | fix | remove developer preview tag from aria ([#33232](https://github.com/angular/components/pull/33232)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.11"></a>
 # 21.2.11 "crystal ball" (2026-05-13)
 No user facing changes in this release
