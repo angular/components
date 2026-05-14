@@ -497,6 +497,8 @@ export class MenuTriggerPattern<V> {
         first?: boolean;
         last?: boolean;
     }): void;
+    readonly pendingFocus: WritableSignalLike<"first" | "last" | undefined>;
+    pendingFocusEffect(): void;
     readonly role: () => string;
     readonly tabIndex: SignalLike<-1 | 0>;
 }
