@@ -17,7 +17,8 @@
     "luxon": "^3.7.2"
   },
   "devDependencies": {
-    "@angular/material": "workspace:*"
+    "@angular/material": "workspace:*",
+    "@angular/core": "catalog:"
   },
   "dependencies": {
     "tslib": "^2.3.0"

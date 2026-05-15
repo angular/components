@@ -17,7 +17,8 @@
     "date-fns": ">2.20.0 <5.0"
   },
   "devDependencies": {
-    "@angular/material": "workspace:*"
+    "@angular/material": "workspace:*",
+    "@angular/core": "catalog:"
   },
   "dependencies": {
     "tslib": "^2.3.0"

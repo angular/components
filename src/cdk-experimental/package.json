@@ -16,7 +16,8 @@
     "@angular/core": "0.0.0-NG"
   },
   "devDependencies": {
-    "@angular/cdk": "workspace:*"
+    "@angular/cdk": "workspace:*",
+    "@angular/core": "catalog:"
   },
   "dependencies": {
     "tslib": "^2.3.0"

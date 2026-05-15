@@ -153,7 +153,11 @@
   },
   "pnpm": {
     "overrides": {
-      "typescript": "6.0.2"
+      "typescript": "6.0.2",
+      "@angular/core": "catalog:",
+      "@angular/common": "catalog:",
+      "@angular/forms": "catalog:",
+      "@angular/platform-browser": "catalog:"
     },
     "onlyBuiltDependencies": [],
     "packageExtensions": {

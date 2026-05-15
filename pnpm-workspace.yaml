@@ -17,6 +17,19 @@ packages:
   - src/universal-app
   - src/youtube-player
 
+allowBuilds:
+  '@bazel/concatjs': true
+  '@firebase/util': true
+  '@google/genai': true
+  '@parcel/watcher': true
+  bufferutil: true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  protobufjs: true
+  re2: true
+  utf-8-validate: true
+
 catalog:
   '@angular-devkit/build-angular': 22.0.0-rc.0
   '@angular-devkit/core': 22.0.0-rc.0

@@ -54,6 +54,11 @@
     "parse5": "^8.0.0",
     "tslib": "^2.3.0"
   },
+  "devDependencies": {
+    "@angular/core": "catalog:",
+    "@angular/common": "catalog:",
+    "@angular/platform-browser": "catalog:"
+  },
   "schematics": "./schematics/collection.json",
   "ng-update": {
     "migrations": "./schematics/migration.json",
