@@ -44,7 +44,7 @@ import type {MenuBar} from './menu-bar';
   selector: '[ngMenuItem]',
   exportAs: 'ngMenuItem',
   host: {
-    'role': 'menuitem',
+    '[attr.role]': '_pattern.role()',
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
@@ -73,6 +73,9 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   /** The search term associated with the menu item. */
   readonly searchTerm = model<string>('');
 
+  /** The role of the menu item. */
+  readonly role = input<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitem');
+
   /** A reference to the parent menu or menubar. */
   readonly parent = inject<Menu<V> | MenuBar<V>>(MENU_COMPONENT, {optional: true});
 
@@ -97,6 +100,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     searchTerm: this.searchTerm,
     parent: computed(() => this.parent?._pattern),
     submenu: computed(() => this.submenu()?._pattern),
+    role: this.role,
   });
 
   constructor() {

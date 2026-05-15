@@ -65,6 +65,9 @@ export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectab
 
   /** A reference to the submenu associated with the menu item. */
   submenu: SignalLike<MenuPattern<V> | undefined>;
+
+  /** The role of the menu item. */
+  role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
 }
 
 /** The menu ui pattern class. */
@@ -796,7 +799,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   readonly controls = signal<string | undefined>(undefined);
 
   /** The role of the menu item. */
-  readonly role = () => 'menuitem';
+  readonly role = () => this.inputs.role();
 
   /** Whether the menu item has a popup. */
   readonly hasPopup = computed(() => !!this.submenu());
