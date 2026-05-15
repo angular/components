@@ -167,6 +167,7 @@ npm.npm_translate_lock(
         "@angular/material-date-fns-adapter": [
             "//integration:__subpackages__",
             "//docs:__subpackages__",
+            "//src/components-examples:__subpackages__",
         ],
         "@angular/material-luxon-adapter": [
             "//integration:__subpackages__",
