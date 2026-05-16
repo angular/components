@@ -113,7 +113,6 @@ export class MenuBar<V> implements OnDestroy {
       ...this,
       items: this._itemPatterns,
       multi: () => false,
-      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',

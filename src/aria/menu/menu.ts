@@ -114,6 +114,9 @@ export class Menu<V> implements OnDestroy {
   /** A reference to the parent menu item or menu trigger. */
   readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
 
+  /** Whether the menu is soft disabled. */
+  readonly softDisabled = input(true, {transform: booleanAttribute});
+
   /** The menu ui pattern instance. */
   readonly _pattern: MenuPattern<V>;
 
@@ -152,7 +155,6 @@ export class Menu<V> implements OnDestroy {
       parent: computed(() => this.parent()?._pattern),
       items: this._itemPatterns,
       multi: () => false,
-      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'vertical',
       selectionMode: () => 'explicit',
