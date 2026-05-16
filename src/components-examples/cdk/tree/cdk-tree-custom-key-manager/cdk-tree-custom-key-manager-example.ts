@@ -336,17 +336,6 @@ export class CdkTreeCustomKeyManagerExample {
 
     return null;
   }
-
-  shouldRender(node: ExampleFlatNode) {
-    let parent = this.getParentNode(node);
-    while (parent) {
-      if (!parent.isExpanded) {
-        return false;
-      }
-      parent = this.getParentNode(parent);
-    }
-    return true;
-  }
 }
 
 const EXAMPLE_DATA: ExampleFlatNode[] = [
