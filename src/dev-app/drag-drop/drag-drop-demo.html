@@ -1,11 +1,53 @@
 <div cdkDropListGroup>
   <div class="demo-list">
     <h2>To do</h2>
+
+    <div
+      cdkDropList
+      [cdkDropListData]="todo2"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListConnectedTo]="dls"
+    >
+      @for (item of todo2; track item) {
+        <div class="example-box" cdkDrag>
+          @if (isArray(item)) {
+            <div class="demo-list">
+              <div
+                cdkDropList
+                [cdkDropListData]="item"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+                [cdkDropListConnectedTo]="dls"
+              >
+                @for (innerItem of item; track innerItem) {
+                  <div class="example-box" cdkDrag>
+                    {{innerItem}}
+                    <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <div>
+              {{item}}
+              <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<div cdkDropListGroup>
+  <div class="demo-list">
+    <h2>To do</h2>
     <div
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="todo">
+      [cdkDropListData]="todo"
+    >
       @for (item of todo; track item) {
         <div cdkDrag>
           {{item}}
@@ -21,10 +63,11 @@
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="done">
+      [cdkDropListData]="done"
+    >
       @for (item of done; track item) {
         <div cdkDrag>
-          {{item}}
+          {{ item }}
           <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
         </div>
       }
@@ -40,10 +83,11 @@
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="ages">
+      [cdkDropListData]="ages"
+    >
       @for (item of ages; track item) {
         <div cdkDrag>
-          {{item}}
+          {{ item }}
           <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
         </div>
       }
@@ -57,10 +101,11 @@
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="preferredAges">
+      [cdkDropListData]="preferredAges"
+    >
       @for (item of preferredAges; track item) {
         <div cdkDrag>
-          {{item}}
+          {{ item }}
           <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
         </div>
       }
@@ -78,16 +123,18 @@
   <div
     class="demo-list"
     [class.demo-list-wrapping]="mixedWrap"
-    [class.demo-list-horizontal]="mixedWrap">
+    [class.demo-list-horizontal]="mixedWrap"
+  >
     <div
       cdkDropList
       cdkDropListOrientation="mixed"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="mixedTodo">
+      [cdkDropListData]="mixedTodo"
+    >
       @for (item of mixedTodo; track item) {
         <div cdkDrag>
-          {{item}}
+          {{ item }}
           <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
         </div>
       }
@@ -97,16 +144,18 @@
   <div
     class="demo-list"
     [class.demo-list-wrapping]="mixedWrap"
-    [class.demo-list-horizontal]="mixedWrap">
+    [class.demo-list-horizontal]="mixedWrap"
+  >
     <div
       cdkDropList
       cdkDropListOrientation="mixed"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="mixedDone">
+      [cdkDropListData]="mixedDone"
+    >
       @for (item of mixedDone; track item) {
         <div cdkDrag>
-          {{item}}
+          {{ item }}
           <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
         </div>
       }
@@ -159,10 +208,10 @@
 
 <div>
   <h2>Data</h2>
-  <pre>{{todo.join(', ')}}</pre>
-  <pre>{{done.join(', ')}}</pre>
-  <pre>{{ages.join(', ')}}</pre>
-  <pre>{{preferredAges.join(', ')}}</pre>
+  <pre>{{ todo.join(', ') }}</pre>
+  <pre>{{ done.join(', ') }}</pre>
+  <pre>{{ ages.join(', ') }}</pre>
+  <pre>{{ preferredAges.join(', ') }}</pre>
 </div>
 
 <div>

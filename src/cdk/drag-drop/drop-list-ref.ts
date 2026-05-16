@@ -211,6 +211,12 @@ export class DropListRef<T = any> {
   /** Direction of the list's layout. */
   private _direction: Direction = 'ltr';
 
+  /**
+   * Cache of all connected lists (including self) ordered by DOM hierarchy — outer containers
+   * first, inner containers last. Invalidated whenever siblings change.
+   */
+  private _cachedSortedSiblings: DropListRef[] | null = null;
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry,
@@ -240,6 +246,7 @@ export class DropListRef<T = any> {
     this._activeSiblings.clear();
     this._scrollNode = null!;
     this._parentPositions.clear();
+    this._cachedSortedSiblings = null;
     this._dragDropRegistry.removeDropContainer(this);
   }
 
@@ -366,6 +373,8 @@ export class DropListRef<T = any> {
    */
   connectedTo(connectedTo: DropListRef[]): this {
     this._siblings = connectedTo.slice();
+    // Invalidate the hierarchy cache since siblings have changed.
+    this._cachedSortedSiblings = null;
     return this;
   }
 
@@ -441,6 +450,8 @@ export class DropListRef<T = any> {
     }
 
     this._cachedShadowRoot = null;
+    // Invalidate the hierarchy cache since the DOM structure may have changed.
+    this._cachedSortedSiblings = null;
     this._scrollableElements.unshift(container);
     this._container = container;
     return this;
@@ -685,7 +696,101 @@ export class DropListRef<T = any> {
    * @param y Position of the item along the Y axis.
    */
   _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | undefined {
-    return this._siblings.find(sibling => sibling._canReceive(item, x, y));
+    // Possible targets include siblings and 'this'.
+    const targets = [this, ...this._siblings];
+
+    // Only consider targets where the drag position is within the client rect
+    // (this avoids calling enterPredicate on each possible target).
+    const matchingTargets = targets.filter(
+      ref => ref._domRect && isInsideClientRect(ref._domRect, x, y),
+    );
+
+    // Stop if no targets match the coordinates.
+    if (matchingTargets.length === 0) {
+      return undefined;
+    }
+
+    // Use the cached hierarchy order, computing it only when siblings have changed.
+    // This avoids rebuilding the DOM tree on every pointermove event.
+    if (!this._cachedSortedSiblings) {
+      this._cachedSortedSiblings = this._orderByHierarchy([this, ...this._siblings]);
+    }
+
+    // Filter the pre-ordered list to retain only the matching targets,
+    // preserving the hierarchy order without re-sorting.
+    const orderedMatchingTargets = this._cachedSortedSiblings.filter(ref =>
+      matchingTargets.includes(ref),
+    );
+
+    // The drop target is the last matching target in the ordered list,
+    // i.e. the innermost container in the DOM hierarchy.
+    const matchingTarget = orderedMatchingTargets[orderedMatchingTargets.length - 1];
+
+    // Only return the matching target if it is a sibling, not 'this'.
+    if (matchingTarget === this) {
+      return undefined;
+    }
+
+    // Can the matching target receive the item?
+    if (!matchingTarget._canReceive(item, x, y)) {
+      return undefined;
+    }
+
+    return matchingTarget;
+  }
+
+  /**
+   * Sorts a list of DropListRefs such that for every nested pair of drop containers,
+   * the outer drop container appears before the inner drop container.
+   * @param refs List of DropListRefs to sort.
+   */
+  private _orderByHierarchy(refs: DropListRef[]): DropListRef[] {
+    // Build a map from HTMLElement to DropListRef for fast ancestor lookup.
+    const refsByElement = new Map<HTMLElement, DropListRef>();
+    refs.forEach(ref => refsByElement.set(ref._container, ref));
+
+    // Finds the closest ancestor DropListRef of a given ref, if any.
+    const findAncestor = (ref: DropListRef): DropListRef | undefined => {
+      let ancestor = ref._container.parentElement;
+      while (ancestor) {
+        if (refsByElement.has(ancestor)) {
+          return refsByElement.get(ancestor);
+        }
+        ancestor = ancestor.parentElement;
+      }
+      return undefined;
+    };
+
+    // Node type for the tree structure.
+    type NodeType = {ref: DropListRef; parent?: NodeType; children: NodeType[]};
+
+    // Create a tree node for each ref.
+    const tree = new Map<DropListRef, NodeType>();
+    refs.forEach(ref => tree.set(ref, {ref, children: []}));
+
+    // Build parent-child relationships.
+    refs.forEach(ref => {
+      const parent = findAncestor(ref);
+      if (parent) {
+        const node = tree.get(ref)!;
+        const parentNode = tree.get(parent)!;
+        node.parent = parentNode;
+        parentNode.children.push(node);
+      }
+    });
+
+    // Find root nodes (those without a parent among the refs).
+    const roots = Array.from(tree.values()).filter(node => !node.parent);
+
+    // Recursively build the ordered list: parent before children.
+    const buildOrderedList = (nodes: NodeType[], list: DropListRef[]) => {
+      list.push(...nodes.map(node => node.ref));
+      nodes.forEach(node => buildOrderedList(node.children, list));
+    };
+
+    const ordered: DropListRef[] = [];
+    buildOrderedList(roots, ordered);
+    return ordered;
   }
 
   /**
@@ -861,7 +966,7 @@ function getElementScrollDirections(
 
   // Note that we here we do some extra checks for whether the element is actually scrollable in
   // a certain direction and we only assign the scroll direction if it is. We do this so that we
-  // can allow other elements to be scrolled, if the current element can't be scrolled anymore.
+  // can allow other elements to be scrolled, if the current element can't be scrollated anymore.
   // This allows us to handle cases where the scroll regions of two scrollable elements overlap.
   if (computedVertical) {
     const scrollTop = element.scrollTop;
