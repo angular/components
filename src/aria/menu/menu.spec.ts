@@ -498,6 +498,32 @@ describe('Standalone Menu Pattern', () => {
     expect(item?.getAttribute('aria-label')).toBe('Apple item label');
   });
 
+  describe('softDisabled', () => {
+    it('should skip disabled items during navigation when softDisabled is false', () => {
+      setupMenu();
+      fixture.componentInstance.softDisabled.set(false);
+      fixture.detectChanges();
+
+      const apple = getItem('Apple')!;
+      const berries = getItem('Berries');
+
+      keydown(apple, 'ArrowUp');
+      expect(document.activeElement).toBe(berries);
+    });
+
+    it('should focus disabled items during navigation when softDisabled is true', () => {
+      setupMenu();
+      fixture.componentInstance.softDisabled.set(true);
+      fixture.detectChanges();
+
+      const apple = getItem('Apple')!;
+      const cherry = getItem('Cherry');
+
+      keydown(apple!, 'ArrowUp');
+      expect(document.activeElement).toBe(cherry);
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -1077,7 +1103,7 @@ describe('Menu Bar Pattern', () => {
 
 @Component({
   template: `
-    <div ngMenu [expansionDelay]="0" (itemSelected)="itemSelected($event)">
+    <div ngMenu [softDisabled]="softDisabled()" [expansionDelay]="0" (itemSelected)="itemSelected($event)">
       <ng-template ngMenuContent>
         <div
           ngMenuItem
@@ -1104,6 +1130,7 @@ describe('Menu Bar Pattern', () => {
 })
 class StandaloneMenuExample {
   firstItemAriaLabel = signal<string | null>(null);
+  softDisabled = signal(true);
 
   itemSelected(value: string) {}
 }
