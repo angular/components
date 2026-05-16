@@ -33,7 +33,7 @@ export interface MatLuxonDateAdapterOptions {
    * Sets the output Calendar.
    * Changing this will change how Angular Material components like DatePicker output dates.
    */
-  defaultOutputCalendar: LuxonCalendarSystem;
+  defaultOutputCalendar?: LuxonCalendarSystem;
 }
 
 /** InjectionToken for LuxonDateAdapter to configure options. */
