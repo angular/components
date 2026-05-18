@@ -168,7 +168,7 @@ export class CdkOverlayOrigin {
 }
 
 // @public
-export class CdkScrollable implements OnInit, OnDestroy {
+export class CdkScrollable implements ScrollDispatcherTarget, OnInit, OnDestroy {
     // (undocumented)
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
@@ -302,7 +302,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
-    withScrollableContainers(scrollables: CdkScrollable[]): this;
+    withScrollableContainers(scrollables: ScrollDispatcherTarget[]): this;
     withTransformOriginOn(selector: string): this;
     withViewportMargin(margin: ViewportMargin): this;
 }
@@ -562,14 +562,14 @@ export interface RepositionScrollStrategyConfig {
 
 // @public
 export class ScrollDispatcher implements OnDestroy {
-    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
-    deregister(scrollable: CdkScrollable): void;
-    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
+    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
+    deregister(target: ScrollDispatcherTarget): void;
+    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): ScrollDispatcherTarget[];
     // (undocumented)
     ngOnDestroy(): void;
-    register(scrollable: CdkScrollable): void;
-    scrollContainers: Map<CdkScrollable, Subscription>;
-    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    register(target: ScrollDispatcherTarget): void;
+    readonly scrollContainers: Map<ScrollDispatcherTarget, Subscription>;
+    scrolled(auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
