@@ -534,6 +534,28 @@ describe('Standalone Menu Pattern', () => {
     });
   });
 
+  describe('role override', () => {
+    it('should allow overriding the default menuitem role', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemRoleOverrideExample],
+      });
+      const roleFixture = TestBed.createComponent(MenuItemRoleOverrideExample);
+      roleFixture.detectChanges();
+
+      const items = roleFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLElement);
+
+      expect(items[0].getAttribute('role')).toBe('menuitemradio');
+      expect(items[1].getAttribute('role')).toBe('menuitemcheckbox');
+
+      roleFixture.componentInstance.customRole.set('menuitem');
+      roleFixture.detectChanges();
+      expect(items[1].getAttribute('role')).toBe('menuitem');
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -1372,8 +1394,8 @@ class MenuItemOutsideMenu {}
 
       <ng-template
         cdkConnectedOverlay
-        [cdkConnectedOverlayOrigin]="origin"
         [cdkConnectedOverlayOpen]="menuTrigger.expanded()"
+        [cdkConnectedOverlayOrigin]="origin"
       >
         <div ngMenu #overlayMenu="ngMenu">
           <ng-template ngMenuContent>
@@ -1403,4 +1425,18 @@ class CdkOverlayMenuExample {
     this._cachedMenu = undefined;
     this._cdr.markForCheck();
   }
+}
+
+@Component({
+  template: `
+    <div ngMenu>
+      <div ngMenuItem value="item0" role="menuitemradio">Item 0</div>
+      <div ngMenuItem value="item1" [role]="customRole()">Item 1</div>
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuItemRoleOverrideExample {
+  customRole = signal<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitemcheckbox');
 }

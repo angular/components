@@ -93,6 +93,7 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
         parent: signal(menubar),
         element: signal(element),
         submenu: signal(undefined),
+        role: signal('menuitem'),
       }) as TestMenuItem;
     }),
   );
@@ -138,6 +139,7 @@ function getMenuPattern(
         parent: signal(menu),
         element: signal(element),
         submenu: signal(undefined),
+        role: signal('menuitem'),
       }) as TestMenuItem;
     }),
   );
