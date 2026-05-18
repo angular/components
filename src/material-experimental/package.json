@@ -28,11 +28,7 @@
   "devDependencies": {
     "@angular/material": "workspace:*",
     "@angular/cdk": "workspace:*",
-    "@angular/cdk-experimental": "workspace:*",
-    "@angular/core": "catalog:",
-    "@angular/common": "catalog:",
-    "@angular/forms": "catalog:",
-    "@angular/platform-browser": "catalog:"
+    "@angular/cdk-experimental": "workspace:*"
   },
   "dependencies": {
     "tslib": "^2.3.0"

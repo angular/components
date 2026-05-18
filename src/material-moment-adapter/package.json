@@ -17,8 +17,7 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
-    "@angular/material": "workspace:*",
-    "@angular/core": "catalog:"
+    "@angular/material": "workspace:*"
   },
   "dependencies": {
     "tslib": "^2.3.0"
