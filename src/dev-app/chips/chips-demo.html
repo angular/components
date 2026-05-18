@@ -134,7 +134,7 @@
 
       <h4>Multi selection</h4>
 
-      <mat-chip-listbox multiple="true" [disabled]="disabledListboxes">
+      <mat-chip-listbox multiple="true" [disabled]="disabledListboxes" hideSelectionIndicator>
         @for (hint of restaurantHints; track hint) {
           <mat-chip-option [selected]="hint.selected">
             @if (listboxesWithAvatar) {
