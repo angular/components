@@ -53,7 +53,7 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
 }
 
 // @public
-export class CdkScrollable implements OnInit, OnDestroy {
+export class CdkScrollable implements ScrollDispatcherTarget, OnInit, OnDestroy {
     // (undocumented)
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
@@ -257,18 +257,24 @@ export type _Right = {
 
 // @public
 export class ScrollDispatcher implements OnDestroy {
-    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
-    deregister(scrollable: CdkScrollable): void;
-    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
+    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
+    deregister(target: ScrollDispatcherTarget): void;
+    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): ScrollDispatcherTarget[];
     // (undocumented)
     ngOnDestroy(): void;
-    register(scrollable: CdkScrollable): void;
-    scrollContainers: Map<CdkScrollable, Subscription>;
-    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    register(target: ScrollDispatcherTarget): void;
+    readonly scrollContainers: Map<ScrollDispatcherTarget, Subscription>;
+    scrolled(auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ScrollDispatcher>;
+}
+
+// @public
+export interface ScrollDispatcherTarget {
+    elementScrolled(): Observable<Event>;
+    getElementRef(): ElementRef<HTMLElement>;
 }
 
 // @public
