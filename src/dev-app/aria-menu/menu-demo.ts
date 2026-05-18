@@ -13,6 +13,7 @@ import {
   MenuStandaloneExample,
   MenuStandaloneDisabledExample,
   MenuTriggerDisabledExample,
+  MenuCdkOverlayExample,
 } from '@angular/components-examples/aria/menu';
 
 @Component({
@@ -26,6 +27,7 @@ import {
     MenuTriggerDisabledExample,
     MenuStandaloneExample,
     MenuStandaloneDisabledExample,
+    MenuCdkOverlayExample,
   ],
 })
 export class MenuDemo {}

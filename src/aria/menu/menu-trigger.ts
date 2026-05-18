@@ -89,6 +89,7 @@ export class MenuTrigger<V> {
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
+    effect(() => this._pattern.pendingFocusEffect());
   }
 
   /** Opens the menu focusing on the first menu item. */

@@ -46,6 +46,19 @@ function getMenuTriggerPattern(opts?: {textDirection: 'ltr' | 'rtl'}) {
     menu: submenu,
     disabled: signal(false),
   });
+
+  const originalOnClick = trigger.onClick.bind(trigger);
+  trigger.onClick = () => {
+    originalOnClick();
+    trigger.pendingFocusEffect();
+  };
+
+  const originalOnKeydown = trigger.onKeydown.bind(trigger);
+  trigger.onKeydown = (event: KeyboardEvent) => {
+    originalOnKeydown(event);
+    trigger.pendingFocusEffect();
+  };
+
   return trigger;
 }
 

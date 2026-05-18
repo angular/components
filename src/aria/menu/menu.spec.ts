@@ -1,4 +1,14 @@
-import {Component, DebugElement, ChangeDetectionStrategy, signal} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  ChangeDetectionStrategy,
+  signal,
+  ViewChild,
+  inject,
+  ChangeDetectorRef,
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {OverlayModule} from '@angular/cdk/overlay';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
@@ -741,6 +751,96 @@ describe('Menu Trigger Pattern', () => {
   });
 });
 
+describe('CDK Overlay Menu Pattern', () => {
+  let fixture: ComponentFixture<CdkOverlayMenuExample>;
+
+  const focusin = (element: Element) => {
+    element.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+    fixture.detectChanges();
+  };
+
+  const keydown = async (element: Element, key: string, modifierKeys: {} = {}) => {
+    focusin(element);
+    element.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key,
+        bubbles: true,
+        ...modifierKeys,
+      }),
+    );
+    fixture.detectChanges();
+    await waitForMicrotasks();
+    fixture.detectChanges();
+  };
+
+  const click = async (element: Element, eventInit?: PointerEventInit) => {
+    focusin(element);
+    element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
+    fixture.detectChanges();
+    await waitForMicrotasks();
+    fixture.detectChanges();
+  };
+
+  function setupMenu() {
+    fixture = TestBed.createComponent(CdkOverlayMenuExample);
+    fixture.detectChanges();
+  }
+
+  function getTrigger(): HTMLElement {
+    return fixture.debugElement.query(By.directive(MenuTrigger)).nativeElement as HTMLElement;
+  }
+
+  function getItem(text: string): HTMLElement | null {
+    const items = fixture.debugElement
+      .queryAll(By.directive(MenuItem))
+      .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+    return items.find(item => item.textContent?.trim() === text) || null;
+  }
+
+  beforeEach(() => setupMenu());
+
+  it('should focus the first item when opened via arrow down', async () => {
+    await keydown(getTrigger(), 'ArrowDown');
+    expect(document.activeElement).toBe(getItem('Apple'));
+  });
+
+  it('should focus the first item when opened via enter', async () => {
+    await keydown(getTrigger(), 'Enter');
+    expect(document.activeElement).toBe(getItem('Apple'));
+  });
+
+  it('should focus the first item when opened via space', async () => {
+    await keydown(getTrigger(), ' ');
+    expect(document.activeElement).toBe(getItem('Apple'));
+  });
+
+  it('should focus the first item when opened via click', async () => {
+    await click(getTrigger());
+    expect(document.activeElement).toBe(getItem('Apple'));
+  });
+
+  it('should focus the first item stably when opened, closed via escape, and opened again', async () => {
+    const trigger = getTrigger();
+
+    // First open
+    await keydown(trigger, 'Enter');
+    expect(document.activeElement).toBe(getItem('Apple'));
+
+    // Close via escape
+    await keydown(getItem('Apple')!, 'Escape');
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+
+    // Explicitly clear cached menu before second open
+    fixture.componentInstance.clearMenu();
+    fixture.detectChanges();
+
+    // Second open
+    await keydown(trigger, 'Enter');
+    expect(document.activeElement).toBe(getItem('Apple'));
+  });
+});
+
 describe('Menu Bar Pattern', () => {
   let fixture: ComponentFixture<MenuBarExample>;
 
@@ -1254,3 +1354,53 @@ class MenuWithDuplicateValues {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuItemOutsideMenu {}
+
+@Component({
+  template: `
+    <ng-container *ngTemplateOutlet="menuTemplate"></ng-container>
+
+    <ng-template #menuTemplate>
+      <button
+        ngMenuTrigger
+        #menuTrigger="ngMenuTrigger"
+        [menu]="myMenu"
+        cdkOverlayOrigin
+        #origin="cdkOverlayOrigin"
+      >
+        Open Menu
+      </button>
+
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="origin"
+        [cdkConnectedOverlayOpen]="menuTrigger.expanded()"
+      >
+        <div ngMenu #overlayMenu="ngMenu">
+          <ng-template ngMenuContent>
+            <div ngMenuItem value="Apple" searchTerm="Apple">Apple</div>
+            <div ngMenuItem value="Banana" searchTerm="Banana">Banana</div>
+          </ng-template>
+        </div>
+      </ng-template>
+    </ng-template>
+  `,
+  imports: [CommonModule, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class CdkOverlayMenuExample {
+  @ViewChild('overlayMenu') _myMenu!: Menu<any>;
+  private _cachedMenu?: Menu<any>;
+  private readonly _cdr = inject(ChangeDetectorRef);
+
+  get myMenu() {
+    if (this._myMenu) {
+      this._cachedMenu = this._myMenu;
+    }
+    return this._cachedMenu;
+  }
+
+  clearMenu() {
+    this._cachedMenu = undefined;
+    this._cdr.markForCheck();
+  }
+}
