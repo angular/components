@@ -32,11 +32,13 @@ sass_library(
 sass_binary(
     name = "menubar_scss",
     src = "menubar.scss",
+    layer = "angular-material",
 )
 
 sass_binary(
     name = "menubar_item_scss",
     src = "menubar-item.scss",
+    layer = "angular-material",
 )
 
 ng_project(

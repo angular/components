@@ -68,6 +68,11 @@ sass_library(
 )
 
 sass_library(
+    name = "cascade_layers",
+    srcs = ["_cascade-layers.scss"],
+)
+
+sass_library(
     name = "_validation",
     srcs = ["_validation.scss"],
 )

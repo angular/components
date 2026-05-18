@@ -16,5 +16,6 @@ ng_project(
 sass_binary(
     name = "internal_form_field_css",
     src = "internal-form-field.scss",
+    layer = "angular-material",
     deps = ["//src/material/core/style:vendor_prefixes"],
 )

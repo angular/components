@@ -52,6 +52,13 @@ sass_binary(
     deps = ["//src/material:sass_lib"],
 )
 
+sass_binary(
+    name = "test-cascade-layers",
+    testonly = True,
+    src = "test-cascade-layers.scss",
+    deps = ["//src/material:sass_lib"],
+)
+
 build_test(
     name = "sass_compile_tests",
     targets = [
@@ -59,6 +66,7 @@ build_test(
         ":test-theming-api",
         ":test-theming-bundle",
         ":test-typography-font-family",
+        ":test-cascade-layers",
     ],
 )
 
@@ -83,6 +91,8 @@ jasmine_test(
         ":unit_test_lib",
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
+        "//src/material/button:css",
+        "//src/material/prebuilt-themes:azure-blue",
     ],
     no_copy_to_bin = [
         "//src/material:sass_lib",
