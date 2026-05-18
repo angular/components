@@ -638,6 +638,9 @@ export class MenuTriggerPattern<V> {
   /** Whether the menu trigger has received interaction. */
   readonly hasBeenInteracted = signal(false);
 
+  /** The pending focus target when the menu is opened before the menu instance is available. */
+  readonly pendingFocus = signal<'first' | 'last' | undefined>(undefined);
+
   /** The role of the menu trigger. */
   readonly role = () => 'button';
 
@@ -667,6 +670,20 @@ export class MenuTriggerPattern<V> {
 
   constructor(readonly inputs: MenuTriggerInputs<V>) {
     this.menu = this.inputs.menu;
+  }
+
+  /** Flushes any pending focus when the menu instance becomes available. */
+  pendingFocusEffect(): void {
+    const menu = this.inputs.menu();
+    const intent = this.pendingFocus();
+    if (menu && intent) {
+      if (intent === 'first') {
+        menu.first();
+      } else if (intent === 'last') {
+        menu.last();
+      }
+      this.pendingFocus.set(undefined);
+    }
   }
 
   /** Handles keyboard events for the menu trigger. */
@@ -708,15 +725,16 @@ export class MenuTriggerPattern<V> {
     this.expanded.set(true);
 
     if (opts?.first) {
-      this.inputs.menu()?.first();
+      this.pendingFocus.set('first');
     } else if (opts?.last) {
-      this.inputs.menu()?.last();
+      this.pendingFocus.set('last');
     }
   }
 
   /** Closes the menu. */
   close(opts: {refocus?: boolean} = {}) {
     this.expanded.set(false);
+    this.pendingFocus.set(undefined);
     this.menu()?.listBehavior.unfocus();
 
     if (opts.refocus) {
