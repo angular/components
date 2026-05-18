@@ -388,6 +388,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
 // @public
 export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
     parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
+    role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
     submenu: SignalLike<MenuPattern<V> | undefined>;
 }
 
@@ -414,7 +415,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
         first?: boolean;
         last?: boolean;
     }): void;
-    readonly role: () => string;
+    readonly role: () => "menuitem" | "menuitemradio" | "menuitemcheckbox";
     readonly searchTerm: SignalLike<string>;
     readonly selectable: SignalLike<boolean>;
     readonly submenu: SignalLike<MenuPattern<V> | undefined>;
