@@ -1152,6 +1152,25 @@ describe('MatDatepicker', () => {
         expect(document.querySelector('.mat-datepicker-dialog')).not.toBeNull();
       });
 
+      it('should keep the touch calendar container scrollable within the dialog', () => {
+        testComponent.touch = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        const content = document.querySelector('.mat-datepicker-content')!;
+        const container = content.querySelector('.mat-datepicker-content-container')!;
+        const contentStyle = getComputedStyle(content);
+        const containerStyle = getComputedStyle(container);
+
+        expect(content.classList).toContain('mat-datepicker-content-touch');
+        expect(contentStyle.maxHeight).not.toBe('none');
+        expect(containerStyle.maxHeight).not.toBe('none');
+        expect(containerStyle.overflowY).toBe('auto');
+      });
+
       it('should not open calendar when toggle clicked if datepicker is disabled', () => {
         testComponent.datepicker.disabled = true;
         fixture.changeDetectorRef.markForCheck();
