@@ -977,3 +977,39 @@
     </p>
   </mat-card-content>
 </mat-card>
+
+
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Basic outlined/filled fields with autofill attribue</mat-toolbar>
+  <mat-card-content>
+    <form>
+      <table style="width: 100%" cellspacing="0"><tr>
+        <td>
+          <mat-form-field style="width: 100%" appearance="outline">
+            <input matInput placeholder="First name" autofill="given-name">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field style="width: 100%" appearance="fill">
+            <mat-label>Last name</mat-label>
+            <input matInput autofill="family-name" placeholder="Last name">
+          </mat-form-field>
+        </td>
+      </tr>
+    <tr>
+        <td>
+          <mat-form-field style="width: 100%" appearance="outline">
+            <mat-label>Home Address</mat-label>
+            <textarea matInput autofill="address" placeholder="Home address"></textarea>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field style="width: 100%" appearance="fill">
+            <mat-label>Shipping</mat-label>
+            <textarea matInput autofill="address" placeholder="Shipping address"></textarea>
+          </mat-form-field>
+        </td>
+      </tr></table>      
+    </form>
+  </mat-card-content>
+</mat-card>
