@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+  "packageManager": "pnpm@11.1.2",
   "private": true,
   "dependencies": {
     "@angular/cdk": "next",

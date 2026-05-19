@@ -570,6 +570,9 @@ importers:
       '@angular/material':
         specifier: workspace:*
         version: link:../material
+      '@angular/material-date-fns-adapter':
+        specifier: workspace:*
+        version: link:../material-date-fns-adapter
       '@angular/material-experimental':
         specifier: workspace:*
         version: link:../material-experimental
@@ -9209,6 +9212,9 @@ packages:
   third-party-web@0.29.0:
     resolution: {integrity: sha512-nBDSJw5B7Sl1YfsATG2XkW5qgUPODbJhXw++BKygi9w6O/NKS98/uY/nR/DxDq2axEjL6halHW1v+jhm/j1DBQ==}
 
+  third-party-web@0.29.2:
+    resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
+
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
 
@@ -13211,7 +13217,7 @@ snapshots:
   '@paulirish/trace_engine@0.0.64':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.0
+      third-party-web: 0.29.2
 
   '@peculiar/asn1-cms@2.7.0':
     dependencies:
@@ -20040,6 +20046,8 @@ snapshots:
       tslib: 2.8.1
 
   third-party-web@0.29.0: {}
+
+  third-party-web@0.29.2: {}
 
   through2@2.0.5:
     dependencies:

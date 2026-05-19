@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.33.4",
+  "packageManager": "pnpm@11.1.2",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.33.4"
+    "pnpm": "11.1.2"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -150,59 +150,5 @@
     "yaml": "^2.8.1",
     "yargs": "^18.0.0",
     "zx": "^8.0.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "typescript": "6.0.2"
-    },
-    "onlyBuiltDependencies": [],
-    "packageExtensions": {
-      "dgeni-packages": {
-        "dependencies": {
-          "clonedeep": "*"
-        }
-      },
-      "grpc-gcp": {
-        "dependencies": {
-          "protobufjs": "7.4.0"
-        }
-      },
-      "@angular-eslint/eslint-plugin-template@19.3.0": {
-        "peerDependencies": {
-          "@typescript-eslint/parser": "*",
-          "@angular-eslint/template-parser": "*"
-        }
-      },
-      "@angular/common": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      },
-      "@angular/forms": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      },
-      "@angular/platform-browser": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      },
-      "@angular/router": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      },
-      "@angular/localize": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      },
-      "@angular/platform-server": {
-        "dependencies": {
-          "@nginfra/angular-linking": "1.0.11"
-        }
-      }
-    }
   }
 }

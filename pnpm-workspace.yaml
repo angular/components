@@ -47,3 +47,48 @@ minimumReleaseAgeExclude:
   - '@ngtools/webpack'
   - '@schematics/*'
   - 'ng-packagr'
+overrides:
+  typescript: 6.0.2
+packageExtensions:
+  dgeni-packages:
+    dependencies:
+      clonedeep: '*'
+  grpc-gcp:
+    dependencies:
+      protobufjs: 7.4.0
+  '@angular-eslint/eslint-plugin-template@19.3.0':
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      '@angular-eslint/template-parser': '*'
+  '@angular/common':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/forms':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/platform-browser':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/router':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/localize':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/platform-server':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+engineStrict: false
+hoist: false
+autoInstallPeers: false
+allowBuilds:
+  '@firebase/util': false
+  '@google/genai': false
+  '@parcel/watcher': false
+  bufferutil: false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
+  protobufjs: false
+  re2: false
+  utf-8-validate: false
