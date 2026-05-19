@@ -77,6 +77,15 @@ $fallbacks: m3-radio.get-tokens();
         }
       }
     }
+
+    .mdc-radio--disabled {
+      cursor: default;
+      pointer-events: none;
+
+      @include cdk.high-contrast {
+        color: GrayText;
+      }
+    }
   }
 
   .mdc-radio__background {
@@ -149,7 +158,8 @@ $fallbacks: m3-radio.get-tokens();
     width: token-utils.slot(radio-state-layer-size, $fallbacks);
     height: token-utils.slot(radio-state-layer-size, $fallbacks);
 
-    &:checked, &:disabled {
+    &:checked,
+    &:disabled {
       + .mdc-radio__background {
         transition: _enter-transition(opacity), _enter-transition(transform);
 
@@ -236,13 +246,10 @@ $fallbacks: m3-radio.get-tokens();
     &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
       pointer-events: auto;
 
-      // stylelint-disable selector-combinator-space-before
-      .mdc-radio__native-control:not(:checked) + .mdc-radio__background
-          > .mdc-radio__outer-circle {
+      .mdc-radio__native-control:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
         border-color: token-utils.slot(radio-disabled-unselected-icon-color, $fallbacks);
         opacity: token-utils.slot(radio-disabled-unselected-icon-opacity, $fallbacks);
       }
-      // stylelint-enable selector-combinator-space-before
 
       &:hover .mdc-radio__native-control:checked + .mdc-radio__background,
       .mdc-radio__native-control:checked:focus + .mdc-radio__background,
