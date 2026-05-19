@@ -56,6 +56,7 @@ export class MatBottomSheetConfig<D = any> {
     backdropClass?: string;
     bindings?: Binding[];
     closeOnNavigation?: boolean;
+    containerClass?: string | string[];
     data?: D | null;
     direction?: Direction;
     disableClose?: boolean;

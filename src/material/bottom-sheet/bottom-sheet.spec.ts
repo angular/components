@@ -148,6 +148,23 @@ describe('MatBottomSheet', () => {
     expect(containerElement.getAttribute('aria-modal')).toBe('false');
   });
 
+  it('should apply the specified container class', () => {
+    bottomSheet.open(PizzaMsg, {containerClass: 'custom-container-class'});
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('mat-bottom-sheet-container')!;
+    expect(containerElement.classList.contains('custom-container-class')).toBe(true);
+  });
+
+  it('should apply multiple container classes', () => {
+    bottomSheet.open(PizzaMsg, {containerClass: ['custom-class-1', 'custom-class-2']});
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('mat-bottom-sheet-container')!;
+    expect(containerElement.classList.contains('custom-class-1')).toBe(true);
+    expect(containerElement.classList.contains('custom-class-2')).toBe(true);
+  });
+
   it('should be able to set aria-modal', () => {
     bottomSheet.open(PizzaMsg, {
       ariaModal: true,

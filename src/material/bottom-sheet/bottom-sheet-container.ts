@@ -18,7 +18,9 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {coerceStringArray} from '@angular/cdk/coercion';
 import {_animationsDisabled} from '../core';
+import {MatBottomSheetConfig} from './bottom-sheet-config';
 
 const ENTER_ANIMATION = '_mat-bottom-sheet-enter';
 const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
@@ -72,6 +74,14 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     super();
 
     const breakpointObserver = inject(BreakpointObserver);
+    const bottomSheetConfig = this._config as MatBottomSheetConfig;
+
+    if (bottomSheetConfig.containerClass) {
+      const containerClasses = coerceStringArray(bottomSheetConfig.containerClass);
+      if (containerClasses.length) {
+        this._elementRef.nativeElement.classList.add(...containerClasses);
+      }
+    }
 
     this._breakpointSubscription = breakpointObserver
       .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
