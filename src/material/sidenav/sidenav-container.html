@@ -3,13 +3,11 @@
        [class.mat-drawer-shown]="_isShowingBackdrop()"></div>
 }
 
-<ng-content select="mat-sidenav"></ng-content>
-
-<ng-content select="mat-sidenav-content">
-</ng-content>
+<ng-content select="mat-drawer, mat-sidenav"/>
+<ng-content select="mat-drawer-content, mat-sidenav-content"/>
 
 @if (!_content) {
   <mat-sidenav-content>
-    <ng-content></ng-content>
+    <ng-content/>
   </mat-sidenav-content>
 }
