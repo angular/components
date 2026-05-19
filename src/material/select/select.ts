@@ -940,6 +940,11 @@ export class MatSelect
     if (isArrowKey && event.altKey) {
       // Close the select on ALT + arrow key to match the native <select>
       event.preventDefault();
+      // Stop propagation so the event doesn't bubble to the host element and trigger
+      // _handleClosedKeydown, which would re-open the panel immediately.
+      event.stopPropagation();
+      // Restore focus to the trigger before closing so focus isn't lost when the overlay detaches.
+      this.focus();
       this.close();
       // Don't do anything in this case if the user is typing,
       // because the typing sequence can include the space key.
@@ -950,6 +955,9 @@ export class MatSelect
       !hasModifierKey(event)
     ) {
       event.preventDefault();
+      // Stop propagation so the event doesn't bubble to the host element and trigger
+      // _handleClosedKeydown, which would re-open the panel immediately.
+      event.stopPropagation();
       manager.activeItem._selectViaInteraction();
     } else if (!isTyping && this._multiple && keyCode === A && event.ctrlKey) {
       event.preventDefault();
