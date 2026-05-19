@@ -14,13 +14,13 @@
     ),
     color: (
       card-elevated-container-color: map.get($system, surface),
-      card-elevated-container-elevation: elevation.get-box-shadow(1),
+      card-elevated-container-elevation-shadow: elevation.get-box-shadow(1),
       card-outlined-container-color: map.get($system, surface),
-      card-outlined-container-elevation: elevation.get-box-shadow(0),
+      card-outlined-container-elevation-shadow: elevation.get-box-shadow(0),
       card-outlined-outline-color: map.get($system, outline),
       card-subtitle-text-color: map.get($system, on-surface-variant),
       card-filled-container-color: map.get($system, surface),
-      card-filled-container-elevation: elevation.get-box-shadow(0)
+      card-filled-container-elevation-shadow: elevation.get-box-shadow(0)
     ),
     typography: (
       card-title-text-font: map.get($system, title-small-font),

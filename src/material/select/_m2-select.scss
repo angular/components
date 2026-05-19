@@ -9,10 +9,10 @@
   $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
 
   @return (
-    base: (
+    base: (),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       select-container-elevation-shadow: elevation.get-box-shadow(8),
-    ),
-    color: private-get-color-palette-color-tokens($theme, primary),
+    )),
     typography: (
       select-trigger-text-font: map.get($system, body-large-font),
       select-trigger-text-line-height: map.get($system, body-large-line-height),

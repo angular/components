@@ -11,12 +11,12 @@
   @return (
     base: (
       expansion-container-shape: 4px,
-      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
       expansion-legacy-header-indicator-display: inline-block,
       expansion-header-indicator-display: none,
     ),
     color: (
       expansion-container-background-color: map.get($system, surface),
+      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
       expansion-container-text-color: map.get($system, on-surface),
       expansion-actions-divider-color: map.get($system, outline),
       expansion-header-hover-state-layer-color: m3-utils.color-with-opacity(

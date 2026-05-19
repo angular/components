@@ -8,10 +8,10 @@
   @return (
     base: (
       timepicker-container-shape: 4px,
-      timepicker-container-elevation-shadow: elevation.get-box-shadow(8),
     ),
     color: (
-      timepicker-container-background-color: map.get($system, surface)
+      timepicker-container-background-color: map.get($system, surface),
+      timepicker-container-elevation-shadow: elevation.get-box-shadow(8),
     ),
     typography: (),
     density: (),
