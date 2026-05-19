@@ -19,6 +19,7 @@
       menu-item-with-icon-trailing-spacing: 12px,
     ),
     color: (
+      menu-container-elevation-shadow: elevation.get-box-shadow(2),
       menu-container-shape: map.get($system, corner-extra-small),
       menu-divider-color: map.get($system, surface-variant),
       menu-item-label-text-color: map.get($system, on-surface),
@@ -28,7 +29,6 @@
       menu-item-focus-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
       menu-container-color: map.get($system, surface-container),
-      menu-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     typography: (
       menu-item-label-text-font: map.get($system, label-large-font),

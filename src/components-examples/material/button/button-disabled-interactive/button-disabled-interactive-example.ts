@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatFabButton, MatMiniFabButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
 
 /**
@@ -9,6 +10,6 @@ import {MatTooltip} from '@angular/material/tooltip';
   selector: 'button-disabled-interactive-example',
   templateUrl: 'button-disabled-interactive-example.html',
   styleUrl: 'button-disabled-interactive-example.css',
-  imports: [MatButton, MatTooltip],
+  imports: [MatButton, MatFabButton, MatMiniFabButton, MatIcon, MatTooltip],
 })
 export class ButtonDisabledInteractiveExample {}
