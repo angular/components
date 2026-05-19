@@ -23,21 +23,37 @@ import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '@angular
 import type {ComboboxPopup} from './combobox-popup';
 
 /**
- * The container element that wraps a combobox input and popup, and orchestrates its behavior.
+ * A directive that coordinates a combobox trigger element and its associated popup widget.
  *
- * The `ngCombobox` directive is the main entry point for creating a combobox and customizing its
- * behavior. It coordinates the interactions between the input and the popup.
+ * The `ngCombobox` directive is applied directly to the interactive trigger element, which can be
+ * either an editable `<input>` (for search/autocomplete behaviors) or a non-editable element like
+ * a `<div>` (for custom select dropdowns). It manages focus and expansion states, coordinates autocomplete
+ * suggestions (if editable), and forwards navigation keys down into the active popup.
  *
+ * ### Example 1: Editable Autocomplete Input
  * ```html
- * <div ngCombobox [(expanded)]="expanded">
- *   <input ngComboboxInput />
+ * <input ngCombobox #combobox="ngCombobox" [(value)]="searchQuery" [(expanded)]="isExpanded" />
  *
- *   <ng-template ngComboboxPopup>
- *     <div ngComboboxWidget>
- *       <!-- ... options ... -->
- *     </div>
- *   </ng-template>
+ * <ng-template ngComboboxPopup [combobox]="combobox">
+ *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
+ *     <div ngOption value="first">First Option</div>
+ *     <div ngOption value="second">Second Option</div>
+ *   </div>
+ * </ng-template>
+ * ```
+ *
+ * ### Example 2: Non-Editable Custom Select Dropdown
+ * ```html
+ * <div ngCombobox #combobox="ngCombobox" [(expanded)]="isExpanded" class="select-trigger">
+ *   {{selectedValue}}
  * </div>
+ *
+ * <ng-template ngComboboxPopup [combobox]="combobox">
+ *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
+ *     <div ngOption value="first">First Option</div>
+ *     <div ngOption value="second">Second Option</div>
+ *   </div>
+ * </ng-template>
  * ```
  */
 @Directive({
