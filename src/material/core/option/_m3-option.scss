@@ -23,6 +23,7 @@
           map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
       option-label-text-color: map.get($system, on-surface),
       option-selected-state-label-text-color: map.get($system, on-secondary-container),
+      option-multiple-selected-state-label-text-color: null,
       option-selected-state-layer-color: map.get($system, secondary-container),
     ),
     typography: (
