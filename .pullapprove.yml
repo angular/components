@@ -44,6 +44,7 @@ overrides:
 groups:
   components-infra:
     <<: *defaults
+    # continue24 external-fork marker
     conditions:
       - author not in ["angular-robot"]
       - >
