@@ -70,6 +70,8 @@ groups:
           'test/**/{*,.*}',
           'tools/**/{*,.*}',
         ])
+    labels:
+      pending: "docs: preview"
     reviews:
       request: 1 # Request at least one review
       required: 1 # Require that all PRs have approval from at least one of the users in the group
