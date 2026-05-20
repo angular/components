@@ -1,3 +1,24 @@
+<a name="22.0.0-rc.1"></a>
+# 22.0.0-rc.1 "metal-monkey" (2026-05-20)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ce1d9a7286](https://github.com/angular/components/commit/ce1d9a7286b66e2c9511183586fceabf2a925c02) | fix | **menu:** allow menu item role override ([#33264](https://github.com/angular/components/pull/33264)) |
+| [196b7064db](https://github.com/angular/components/commit/196b7064db336830ee9c43244c00631935dd2c55) | fix | **menu:** defer menu item focus in case menus in cdk overlay ([#33258](https://github.com/angular/components/pull/33258)) |
+| [6443b79f9a](https://github.com/angular/components/commit/6443b79f9a629c67766675ebd740722eb65b2926) | fix | **menu:** unable to set softDisabled ([#33265](https://github.com/angular/components/pull/33265)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4c298970ed](https://github.com/angular/components/commit/4c298970ed67abfa7b9980e219bbbafe3c71ddc5) | fix | **scrolling:** make it easier to provide custom scrollable ([#33269](https://github.com/angular/components/pull/33269)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f2f62675e1](https://github.com/angular/components/commit/f2f62675e19020fb6443f1477b4b1d93015a5927) | fix | **datepicker:** ensure dates don't overflow on a small screen ([#33281](https://github.com/angular/components/pull/33281)) |
+| [f1a435508a](https://github.com/angular/components/commit/f1a435508ada291b580e20e628464f552288690d) | fix | **sidenav:** handle mixed sidenav and drawer ([#33274](https://github.com/angular/components/pull/33274)) |
+| [a4d92c5fcb](https://github.com/angular/components/commit/a4d92c5fcb7d163ec8dd180815175bbaa0a38491) | fix | **sidenav:** more robust reset logic for inert attribute ([#33257](https://github.com/angular/components/pull/33257)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.12"></a>
 # 21.2.12 "plastic-moose" (2026-05-20)
 ### material
