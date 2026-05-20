@@ -119,6 +119,10 @@ $touch-max-height: 788px;
   // Prevents the content from jumping around on Windows while the animation is running.
   overflow: visible;
 
+  // Prevent the content from shrinking to a point where it doesn't fit all the dates anymore.
+  // stylelint-disable material/no-prefixes
+  min-height: fit-content;
+
   &.mat-datepicker-content-animations-enabled {
     animation: _mat-datepicker-content-dialog-enter 150ms cubic-bezier(0, 0, 0.2, 1);
   }
