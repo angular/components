@@ -1,3 +1,12 @@
+<a name="21.2.12"></a>
+# 21.2.12 "plastic-moose" (2026-05-20)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [da87be7646](https://github.com/angular/components/commit/da87be76464d76ec11ae922abd5f4c72c5b4ea3e) | fix | **datepicker:** ensure dates don't overflow on a small screen ([#33281](https://github.com/angular/components/pull/33281)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.11"></a>
 # 21.2.11 "crystal ball" (2026-05-13)
 No user facing changes in this release
