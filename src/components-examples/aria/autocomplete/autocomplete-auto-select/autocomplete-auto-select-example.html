@@ -9,6 +9,7 @@
       [(value)]="searchString"
       [(expanded)]="popupExpanded"
       (click)="popupExpanded.set(true)"
+      (keydown.escape)="!popupExpanded() && !$event.defaultPrevented && searchString.set('')"
     />
     <button
       class="example-clear-button"
