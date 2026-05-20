@@ -23,8 +23,35 @@
       icon-button-touch-target-size: 48px,
     ),
     color: (
+      icon-button-container-color: transparent,
       icon-button-disabled-icon-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      icon-button-filled-container-color: map.get($system, primary),
+      icon-button-filled-disabled-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      icon-button-filled-disabled-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      icon-button-filled-disabled-state-layer-color: map.get($system, on-surface-variant),
+      icon-button-filled-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      icon-button-filled-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      icon-button-filled-icon-color: map.get($system, on-primary),
+      icon-button-filled-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      icon-button-filled-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+      icon-button-filled-state-layer-color: map.get($system, on-primary),
+      icon-button-tonal-container-color: map.get($system, secondary-container),
+      icon-button-tonal-disabled-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      icon-button-tonal-disabled-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      icon-button-tonal-disabled-state-layer-color: map.get($system, on-surface-variant),
+      icon-button-tonal-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      icon-button-tonal-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      icon-button-tonal-icon-color: map.get($system, on-secondary-container),
+      icon-button-tonal-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      icon-button-tonal-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-secondary-container), map.get($system, pressed-state-layer-opacity)),
+      icon-button-tonal-state-layer-color: map.get($system, on-secondary-container),
       icon-button-disabled-state-layer-color: map.get($system, on-surface-variant),
       icon-button-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
       icon-button-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
