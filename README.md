@@ -37,7 +37,7 @@ if you are just starting to contribute to the project.
 
 ## About the team
 The Angular Components team is part of the Angular team at Google. The team includes both Google
-employees and community contributors from around the globe.
+employees and community contributors from around the world.
 
 Our team has two primary goals:
 * Build high-quality UI components that developers can drop into existing applications
