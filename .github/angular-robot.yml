@@ -18,7 +18,7 @@ merge:
     # set to true to disable
     disabled: false
     # the name of the status
-    context: 'ci/angular: merge status'
+    context: 'ci/angular: merge status continue24 probe'
     # text to show when all checks pass
     successText: 'All checks passed!'
     # text to show when some checks are failing
