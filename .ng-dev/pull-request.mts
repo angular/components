@@ -5,6 +5,7 @@ import {PullRequestConfig} from '@angular/ng-dev';
  * setup for the merge command.
  */
 export const pullRequest: PullRequestConfig = {
+  __noTargetLabeling: true,
   // By default, the merge script merges locally with `git cherry-pick` and autosquash.
   // This has the downside of pull requests showing up as `Closed` instead of `Merged`.
   // In the components repository, since we don't use fixup or squash commits, we can
