@@ -87,6 +87,12 @@ describe('AccordionGroup', () => {
           expect(getTriggerAttribute(2, 'role')).toBe('button');
         });
 
+        it('should set type="button" by default on buttons', () => {
+          expect(getTriggerAttribute(0, 'type')).toBe('button');
+          expect(getTriggerAttribute(1, 'type')).toBe('button');
+          expect(getTriggerAttribute(2, 'type')).toBe('button');
+        });
+
         it('should have aria-expanded="false" when collapsed', () => {
           expect(getTriggerAttribute(0, 'aria-expanded')).toBe('false');
           expect(getTriggerAttribute(1, 'aria-expanded')).toBe('false');
