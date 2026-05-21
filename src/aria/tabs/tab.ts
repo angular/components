@@ -92,6 +92,11 @@ export class Tab implements HasElement, OnInit, OnDestroy {
   }
 
   constructor() {
+    // Automatically prevent form submission.
+    if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
+      this.element.setAttribute('type', 'button');
+    }
+
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({
         read: () => {
