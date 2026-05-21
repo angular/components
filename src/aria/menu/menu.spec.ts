@@ -861,6 +861,10 @@ describe('CDK Overlay Menu Pattern', () => {
     await keydown(trigger, 'Enter');
     expect(document.activeElement).toBe(getItem('Apple'));
   });
+
+  it('should set type="button" by default on button triggers', () => {
+    expect(getTrigger().getAttribute('type')).toBe('button');
+  });
 });
 
 describe('Menu Bar Pattern', () => {

@@ -86,6 +86,11 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   _pattern!: AccordionTriggerPattern;
 
   constructor() {
+    // Automatically prevent form submission.
+    if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
+      this.element.setAttribute('type', 'button');
+    }
+
     // Check for any violations after the DOM has been updated.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       afterRenderEffect({

@@ -90,6 +90,11 @@ export class MenuTrigger<V> {
   constructor() {
     effect(() => this.menu()?.parent.set(this));
     effect(() => this._pattern.pendingFocusEffect());
+
+    // Automatically prevent form submission.
+    if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
+      this.element.setAttribute('type', 'button');
+    }
   }
 
   /** Opens the menu focusing on the first menu item. */
