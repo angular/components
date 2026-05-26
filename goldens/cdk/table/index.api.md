@@ -346,6 +346,7 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
     removeRowDef(rowDef: CdkRowDef<T>): void;
     protected _renderedRange?: ListRange;
+    get renderedRows(): readonly RenderRow<T>[];
     renderRows(): void;
     // (undocumented)
     _rowOutlet: DataRowOutlet;
