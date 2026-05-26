@@ -67,6 +67,9 @@ export class MenuTrigger<V> {
   /** The menu associated with the trigger. */
   readonly menu = input<Menu<V> | undefined>(undefined);
 
+  /** Context data to be passed to the menu's template. */
+  readonly menuData = input<unknown>(null);
+
   /** Whether the menu is expanded. */
   readonly expanded = computed(() => this._pattern.expanded());
 

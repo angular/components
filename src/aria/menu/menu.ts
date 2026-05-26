@@ -166,11 +166,19 @@ export class Menu<V> implements OnDestroy {
     afterRenderEffect({
       write: () => {
         const parent = this.parent();
+        const deferredContentAware = this._deferredContentAware;
+
+        if (parent) {
+          deferredContentAware?.context.set(
+            parent instanceof MenuItem ? parent.submenuData() : parent.menuData(),
+          );
+        }
+
         if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
-          this._deferredContentAware?.contentVisible.set(true);
+          deferredContentAware?.contentVisible.set(true);
         } else {
-          this._deferredContentAware?.contentVisible.set(
-            this._pattern.visible() || !!this.parent()?._pattern.hasBeenInteracted(),
+          deferredContentAware?.contentVisible.set(
+            this._pattern.visible() || !!parent?._pattern.hasBeenInteracted(),
           );
         }
       },

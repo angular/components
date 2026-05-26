@@ -82,6 +82,9 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   /** The submenu associated with the menu item. */
   readonly submenu = input<Menu<V> | undefined>(undefined);
 
+  /** Context data to be passed to the submenu's template. */
+  readonly submenuData = input<unknown>(null);
+
   /** Whether the menu item is active. */
   readonly active = computed(() => this._pattern.active());
 

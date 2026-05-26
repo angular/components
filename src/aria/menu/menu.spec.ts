@@ -771,6 +771,20 @@ describe('Menu Trigger Pattern', () => {
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
     });
   });
+
+  it('should pass template context data to the menu and submenu', () => {
+    setupMenu();
+    fixture.componentInstance.menuData.set({$implicit: 'Trigger Context'});
+    fixture.componentInstance.submenuData.set({$implicit: 'Submenu Context'});
+    fixture.detectChanges();
+
+    click(getTrigger());
+    expect(getItem('Apple Trigger Context')).toBeTruthy();
+
+    click(getItem('Berries')!);
+    const blueberryItem = getItem('Blueberry Submenu Context');
+    expect(blueberryItem).toBeTruthy();
+  });
 });
 
 describe('CDK Overlay Menu Pattern', () => {
@@ -1263,17 +1277,17 @@ class StandaloneMenuExample {
 
 @Component({
   template: `
-    <button ngMenuTrigger [menu]="menu">Open menu</button>
+    <button ngMenuTrigger [menu]="menu" [menuData]="menuData()">Open menu</button>
 
     <div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
-      <ng-template ngMenuContent>
-        <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
+      <ng-template ngMenuContent let-data>
+        <div ngMenuItem value='Apple' searchTerm='Apple'>Apple {{data}}</div>
         <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-        <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+        <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu" [submenuData]="submenuData()">Berries</div>
 
         <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
-          <ng-template ngMenuContent>
-            <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry</div>
+          <ng-template ngMenuContent let-subdata>
+            <div ngMenuItem value='Blueberry' searchTerm='Blueberry'>Blueberry {{subdata}}</div>
             <div ngMenuItem value='Blackberry' searchTerm='Blackberry'>Blackberry</div>
             <div ngMenuItem value='Strawberry' searchTerm='Strawberry'>Strawberry</div>
           </ng-template>
@@ -1288,6 +1302,8 @@ class StandaloneMenuExample {
 })
 class MenuTriggerExample {
   itemSelected(value: string) {}
+  menuData = signal<unknown>(null);
+  submenuData = signal<unknown>(null);
 }
 
 @Component({
