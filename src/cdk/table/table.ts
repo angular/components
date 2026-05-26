@@ -634,6 +634,11 @@ export class CdkTable<T>
   /** Row definition that will only be rendered if there's no data in the table. */
   @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
 
+  /** Returns the currently-rendered rows in the table. */
+  get renderedRows(): readonly RenderRow<T>[] {
+    return this._renderRows;
+  }
+
   constructor() {
     const role = inject(new HostAttributeToken('role'), {optional: true});
 
