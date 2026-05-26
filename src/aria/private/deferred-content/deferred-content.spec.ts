@@ -20,16 +20,24 @@ describe('DeferredContent', () => {
     collapsible = fixture.debugElement.query(By.directive(Collapsible));
   });
 
-  it('removes the content when hidden.', async () => {
+  it('removes the content when hidden', async () => {
     collapsible.injector.get(Collapsible).contentVisible.set(false);
     await fixture.whenStable();
     expect(collapsible.nativeElement.innerText).toBe('');
   });
 
-  it('creates the content when the container becomes visible.', async () => {
+  it('creates the content when the container becomes visible', async () => {
     collapsible.injector.get(Collapsible).contentVisible.set(true);
     await fixture.whenStable();
     expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
+  });
+
+  it('creates renders the content with the provided context', async () => {
+    const instance = collapsible.injector.get(Collapsible);
+    instance.context.set({context: 'with context'});
+    instance.contentVisible.set(true);
+    await fixture.whenStable();
+    expect(collapsible.nativeElement.innerText).toBe('Lazy Content with context');
   });
 
   describe('with preserveContent', () => {
@@ -40,19 +48,19 @@ describe('DeferredContent', () => {
       component.preserveContent.set(true);
     });
 
-    it('does not create the content until first visible.', async () => {
+    it('does not create the content until first visible', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(false);
       await fixture.whenStable();
       expect(collapsible.nativeElement.innerText).toBe('');
     });
 
-    it('creates the content when first visible with preserveContent.', async () => {
+    it('creates the content when first visible with preserveContent', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(true);
       await fixture.whenStable();
       expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
     });
 
-    it('does not remove the content when hidden.', async () => {
+    it('does not remove the content when hidden', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(true);
       await fixture.whenStable();
       collapsible.injector.get(Collapsible).contentVisible.set(false);
@@ -70,9 +78,13 @@ class Collapsible {
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
   contentVisible = signal(true);
+  context = signal<unknown>(null);
 
   constructor() {
-    effect(() => this._deferredContentAware.contentVisible.set(this.contentVisible()));
+    effect(() => {
+      this._deferredContentAware.context.set(this.context());
+      this._deferredContentAware.contentVisible.set(this.contentVisible());
+    });
   }
 }
 
@@ -85,8 +97,8 @@ class CollapsibleContent {}
 @Component({
   template: `
     <div collapsible [preserveContent]="preserveContent()">
-      <ng-template collapsibleContent>
-        Lazy Content
+      <ng-template collapsibleContent let-context="context">
+        Lazy Content {{context}}
       </ng-template>
     </div>
     `,

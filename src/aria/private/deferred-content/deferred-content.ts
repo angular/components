@@ -25,6 +25,7 @@ import {
 export class DeferredContentAware {
   readonly contentVisible = signal(false);
   readonly preserveContent = model(false);
+  readonly context = signal<unknown>(null);
 }
 
 /**
@@ -55,13 +56,21 @@ export class DeferredContent implements OnDestroy {
   constructor() {
     afterRenderEffect({
       write: () => {
-        if (this.deferredContentAware()?.contentVisible()) {
+        const contentAware = this.deferredContentAware();
+        const isVisible = contentAware?.contentVisible();
+        const preserveContent = contentAware?.preserveContent();
+        const context = contentAware?.context();
+
+        if (isVisible) {
           if (!this._isRendered) {
             this._destroyContent();
-            this._currentViewRef = this._viewContainerRef.createEmbeddedView(this._templateRef);
+            this._currentViewRef = this._viewContainerRef.createEmbeddedView(
+              this._templateRef,
+              context,
+            );
             this._isRendered = true;
           }
-        } else if (!this.deferredContentAware()?.preserveContent()) {
+        } else if (!preserveContent) {
           this._destroyContent();
           this._isRendered = false;
         }

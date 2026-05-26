@@ -148,6 +148,8 @@ export class DeferredContentAware {
     // (undocumented)
     readonly contentVisible: _angular_core.WritableSignal<boolean>;
     // (undocumented)
+    readonly context: _angular_core.WritableSignal<unknown>;
+    // (undocumented)
     readonly preserveContent: _angular_core.ModelSignal<boolean>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<DeferredContentAware, never, never, { "preserveContent": { "alias": "preserveContent"; "required": false; "isSignal": true; }; }, { "preserveContent": "preserveContentChange"; }, never, never, true, never>;
