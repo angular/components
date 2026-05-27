@@ -76,7 +76,7 @@ describe('MatMenu', () => {
     window.scroll(0, 0);
   });
 
-  it('should aria-controls the menu panel', () => {
+  it('should set aria-controls on the menu panel', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -1147,6 +1147,20 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     panelRect = panel.getBoundingClientRect();
     expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
+  });
+
+  it('should close the menu when it is cleared from the trigger', async () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    await wait(200);
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.menu = null;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeFalsy();
   });
 
   describe('lazy rendering', () => {
