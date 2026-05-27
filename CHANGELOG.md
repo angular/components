@@ -1,3 +1,16 @@
+<a name="22.0.0-rc.2"></a>
+# 22.0.0-rc.2 "22-0-0-rc2" (2026-05-27)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aa42b7798](https://github.com/angular/components/commit/aa42b7798b23dfa94b96ac217d8139d9cfa86c55) | fix | **table:** expose rendered rows ([#33304](https://github.com/angular/components/pull/33304)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a88904279](https://github.com/angular/components/commit/a88904279086a29deb84f34f4fadf9e69fbf3960) | fix | prevent form submissions in aria directives ([#33297](https://github.com/angular/components/pull/33297)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="21.2.13"></a>
 # 21.2.13 "21-2-13" (2026-05-27)
 No user facing changes in this release
