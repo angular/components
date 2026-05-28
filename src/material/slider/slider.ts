@@ -874,21 +874,12 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     const numTicks = Math.floor((this.max - this.min) / step) + 1;
     this._tickMarks = [];
 
-    if (this._isRange) {
-      const endValue = this._getValue();
-      const startValue = this._getValue(_MatThumb.START);
-      for (let i = 0; i < numTicks; i++) {
-        const value = this.min + i * step;
-        const isActive = value >= startValue && value <= endValue;
-        this._tickMarks.push(isActive ? _MatTickMark.ACTIVE : _MatTickMark.INACTIVE);
-      }
-    } else {
-      const value = this._getValue();
-      for (let i = 0; i < numTicks; i++) {
-        const v = this.min + i * step;
-        const isActive = v <= value;
-        this._tickMarks.push(isActive ? _MatTickMark.ACTIVE : _MatTickMark.INACTIVE);
-      }
+    const endValue = this._getValue();
+    const startValue = this._isRange ? this._getValue(_MatThumb.START) : this.min;
+    for (let i = 0; i < numTicks; i++) {
+      const value = this.min + i * step;
+      const isActive = value >= startValue && value <= endValue;
+      this._tickMarks.push(isActive ? _MatTickMark.ACTIVE : _MatTickMark.INACTIVE);
     }
   }
 
