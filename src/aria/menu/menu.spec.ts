@@ -22,7 +22,7 @@ import {waitForMicrotasks} from '../private/testing/test-helpers';
 describe('Standalone Menu Pattern', () => {
   let fixture: ComponentFixture<StandaloneMenuExample>;
 
-  const keydown = (element: Element, key: string, modifierKeys: {} = {}) => {
+  const keydown = async (element: Element, key: string, modifierKeys: {} = {}) => {
     element.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -30,36 +30,36 @@ describe('Standalone Menu Pattern', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
   const mouseover = async (element: Element) => {
     element.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
     await new Promise(resolve => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const mouseout = (element: Element) => {
+  const mouseout = async (element: Element) => {
     element.dispatchEvent(new MouseEvent('mouseout', {bubbles: true}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const click = (element: Element, eventInit?: PointerEventInit) => {
+  const click = async (element: Element, eventInit?: PointerEventInit) => {
     element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const focusout = (element: Element, relatedTarget?: EventTarget) => {
+  const focusout = async (element: Element, relatedTarget?: EventTarget) => {
     element.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
+  async function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
     });
     fixture = TestBed.createComponent(StandaloneMenuExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
     getItem('Apple')?.focus();
   }
 
@@ -102,141 +102,141 @@ describe('Standalone Menu Pattern', () => {
   });
 
   describe('Navigation', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
     it('should focus the first item by default', () => {
       expect(getItem('Apple')?.tabIndex).toBe(0);
     });
 
-    it('should move the active item with the up and down arrows', () => {
+    it('should move the active item with the up and down arrows', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
 
-      keydown(apple!, 'ArrowDown');
+      await keydown(apple!, 'ArrowDown');
       expect(document.activeElement).toBe(banana);
 
-      keydown(banana!, 'ArrowUp');
+      await keydown(banana!, 'ArrowUp');
       expect(document.activeElement).toBe(apple);
     });
 
-    it('should wrap navigation when reaching the top or bottom', () => {
+    it('should wrap navigation when reaching the top or bottom', async () => {
       const apple = getItem('Apple');
       const cherry = getItem('Cherry');
 
-      keydown(apple!, 'ArrowUp');
+      await keydown(apple!, 'ArrowUp');
       expect(document.activeElement).toBe(cherry);
 
-      keydown(cherry!, 'ArrowDown');
+      await keydown(cherry!, 'ArrowDown');
       expect(document.activeElement).toBe(apple);
     });
 
-    it('should move focus to the first and last items with home and end', () => {
+    it('should move focus to the first and last items with home and end', async () => {
       const apple = getItem('Apple');
       const cherry = getItem('Cherry');
 
-      keydown(apple!, 'End');
+      await keydown(apple!, 'End');
       expect(document.activeElement).toBe(cherry);
 
-      keydown(cherry!, 'Home');
+      await keydown(cherry!, 'Home');
       expect(document.activeElement).toBe(apple);
     });
 
-    it('should move focus on mouse over a menu item', () => {
+    it('should move focus on mouse over a menu item', async () => {
       const banana = getItem('Banana');
-      mouseover(banana!);
+      await mouseover(banana!);
       expect(document.activeElement).toBe(banana);
     });
 
     describe('Typeahead', () => {
-      it('should move the active item to the next item that starts with the typed character', () => {
+      it('should move the active item to the next item that starts with the typed character', async () => {
         const apple = getItem('Apple');
         const banana = getItem('Banana');
 
-        keydown(apple!, 'b');
+        await keydown(apple!, 'b');
         expect(document.activeElement).toBe(banana);
       });
 
-      it('should support multi-character typeahead', () => {
+      it('should support multi-character typeahead', async () => {
         const apple = getItem('Apple');
         const banana = getItem('Banana');
         const berries = getItem('Berries');
 
-        keydown(apple!, 'b');
+        await keydown(apple!, 'b');
         expect(document.activeElement).toBe(banana);
 
-        keydown(document.activeElement!, 'e');
+        await keydown(document.activeElement!, 'e');
         expect(document.activeElement).toBe(berries);
       });
 
-      it('should wrap when reaching the end of the list during typeahead', () => {
+      it('should wrap when reaching the end of the list during typeahead', async () => {
         const apple = getItem('Apple');
         const cherry = getItem('Cherry');
 
         // Start at cherry by pressing End
-        keydown(apple!, 'End');
+        await keydown(apple!, 'End');
         expect(document.activeElement).toBe(cherry);
 
         // Type 'a', which should wrap to 'Apple'
-        keydown(document.activeElement!, 'a');
+        await keydown(document.activeElement!, 'a');
         expect(document.activeElement).toBe(apple);
       });
 
-      it('should not move the active item if no item matches the typed character', () => {
+      it('should not move the active item if no item matches the typed character', async () => {
         const apple = getItem('Apple');
 
-        keydown(apple!, 'z');
+        await keydown(apple!, 'z');
         expect(document.activeElement).toBe(apple);
       });
     });
   });
 
   describe('Selection', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
-    it('should select an item on click', () => {
+    it('should select an item on click', async () => {
       const banana = getItem('Banana');
       spyOn(fixture.componentInstance, 'itemSelected');
 
-      click(banana!);
+      await click(banana!);
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
     });
 
-    it('should select an item on enter', () => {
+    it('should select an item on enter', async () => {
       const banana = getItem('Banana');
       spyOn(fixture.componentInstance, 'itemSelected');
 
-      keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
+      await keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
       expect(document.activeElement).toBe(banana);
 
-      keydown(banana!, 'Enter');
+      await keydown(banana!, 'Enter');
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
     });
 
-    it('should select an item on space', () => {
+    it('should select an item on space', async () => {
       const banana = getItem('Banana');
       spyOn(fixture.componentInstance, 'itemSelected');
 
-      keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
+      await keydown(document.activeElement!, 'ArrowDown'); // Move focus to Banana
       expect(document.activeElement).toBe(banana);
 
-      keydown(banana!, ' ');
+      await keydown(banana!, ' ');
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
     });
 
-    it('should not select a disabled item', () => {
+    it('should not select a disabled item', async () => {
       const cherry = getItem('Cherry');
       spyOn(fixture.componentInstance, 'itemSelected');
 
-      click(cherry!);
+      await click(cherry!);
       expect(fixture.componentInstance.itemSelected).not.toHaveBeenCalled();
 
-      keydown(document.activeElement!, 'End');
+      await keydown(document.activeElement!, 'End');
       expect(document.activeElement).toBe(cherry);
 
-      keydown(cherry!, 'Enter');
+      await keydown(cherry!, 'Enter');
       expect(fixture.componentInstance.itemSelected).not.toHaveBeenCalled();
 
-      keydown(cherry!, ' ');
+      await keydown(cherry!, ' ');
       expect(fixture.componentInstance.itemSelected).not.toHaveBeenCalled();
     });
   });
@@ -252,97 +252,97 @@ describe('Standalone Menu Pattern', () => {
       return berries?.getAttribute('aria-expanded') === 'true';
     }
 
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
     it('should be expanded by default', () => {
       expect(getMenu()).not.toBeNull();
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should expand submenu on click', () => {
+    it('should expand submenu on click', async () => {
       const berries = getItem('Berries');
-      click(berries!);
+      await click(berries!);
       expect(isSubmenuExpanded()).toBe(true);
     });
 
-    it('should open submenu on arrow right', () => {
+    it('should open submenu on arrow right', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowRight');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(true);
       expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
-    it('should close submenu on arrow left', () => {
+    it('should close submenu on arrow left', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowRight');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowRight');
       const blueberry = getItem('Blueberry');
-      keydown(blueberry!, 'ArrowLeft');
+      await keydown(blueberry!, 'ArrowLeft');
 
       expect(isSubmenuExpanded()).toBe(false);
       expect(document.activeElement).toBe(berries);
     });
 
-    it('should close submenu on click outside', () => {
+    it('should close submenu on click outside', async () => {
       const berries = getItem('Berries');
 
-      click(berries!);
+      await click(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
-      focusout(getItem('Blueberry')!, document.body);
+      await focusout(getItem('Blueberry')!, document.body);
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should expand submenu on enter', () => {
+    it('should expand submenu on enter', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'Enter');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'Enter');
 
       expect(isSubmenuExpanded()).toBe(true);
       expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
-    it('should expand submenu on space', () => {
+    it('should expand submenu on space', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, ' ');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, ' ');
 
       expect(isSubmenuExpanded()).toBe(true);
       expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
-    it('should close submenu on escape', () => {
+    it('should close submenu on escape', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowRight');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(true);
       const blueberry = getItem('Blueberry');
       expect(document.activeElement).toBe(blueberry);
 
-      keydown(blueberry!, 'Escape');
+      await keydown(blueberry!, 'Escape');
 
       expect(isSubmenuExpanded()).toBe(false);
       expect(document.activeElement).toBe(berries);
@@ -354,63 +354,63 @@ describe('Standalone Menu Pattern', () => {
       expect(isSubmenuExpanded()).toBe(true);
     });
 
-    it('should close on selecting an item on click', () => {
+    it('should close on selecting an item on click', async () => {
       spyOn(fixture.componentInstance, 'itemSelected');
-      click(getItem('Berries')!); // open submenu
+      await click(getItem('Berries')!); // open submenu
       expect(isSubmenuExpanded()).toBe(true);
 
-      click(getItem('Blueberry')!);
+      await click(getItem('Blueberry')!);
 
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
+    it('should close on selecting an item on enter', async () => {
       spyOn(fixture.componentInstance, 'itemSelected');
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'Enter'); // open submenu
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'Enter'); // open submenu
       const blueberry = getItem('Blueberry');
 
       expect(document.activeElement).toBe(blueberry);
 
-      keydown(blueberry!, 'Enter');
+      await keydown(blueberry!, 'Enter');
 
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close on selecting an item on space', async () => {
       spyOn(fixture.componentInstance, 'itemSelected');
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, ' '); // open submenu
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, ' '); // open submenu
       const blueberry = getItem('Blueberry');
 
       expect(document.activeElement).toBe(blueberry);
 
-      keydown(blueberry!, ' ');
+      await keydown(blueberry!, ' ');
 
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Blueberry');
       expect(isSubmenuExpanded()).toBe(false);
     });
 
-    it('should close a submenu on focus out', () => {
+    it('should close a submenu on focus out', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowRight');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowRight');
       expect(isSubmenuExpanded()).toBe(true);
       const blueberry = getItem('Blueberry');
       expect(document.activeElement).toBe(blueberry);
@@ -418,7 +418,7 @@ describe('Standalone Menu Pattern', () => {
       const externalElement = document.createElement('button');
       document.body.appendChild(externalElement);
 
-      focusout(blueberry!, externalElement);
+      await focusout(blueberry!, externalElement);
 
       expect(isSubmenuExpanded()).toBe(false);
       externalElement.remove();
@@ -431,8 +431,8 @@ describe('Standalone Menu Pattern', () => {
       await mouseover(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
-      mouseout(berries!);
-      mouseout(submenu!);
+      await mouseout(berries!);
+      await mouseout(submenu!);
 
       expect(isSubmenuExpanded()).toBe(false);
     });
@@ -444,8 +444,8 @@ describe('Standalone Menu Pattern', () => {
       await mouseover(berries!);
       expect(isSubmenuExpanded()).toBe(true);
 
-      mouseout(berries!);
-      mouseover(submenu!);
+      await mouseout(berries!);
+      await mouseover(submenu!);
       expect(isSubmenuExpanded()).toBe(true);
     });
   });
@@ -456,31 +456,31 @@ describe('Standalone Menu Pattern', () => {
       return berries?.getAttribute('aria-expanded') === 'true';
     }
 
-    beforeEach(() => setupMenu({textDirection: 'rtl'}));
+    beforeEach(async () => await setupMenu({textDirection: 'rtl'}));
 
-    it('should open submenu on arrow left', () => {
+    it('should open submenu on arrow left', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowLeft');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowLeft');
 
       expect(isSubmenuExpanded()).toBe(true);
       expect(document.activeElement).toBe(getItem('Blueberry'));
     });
 
-    it('should close submenu on arrow right', () => {
+    it('should close submenu on arrow right', async () => {
       const apple = getItem('Apple');
       const banana = getItem('Banana');
       const berries = getItem('Berries');
 
-      keydown(apple!, 'ArrowDown');
-      keydown(banana!, 'ArrowDown');
-      keydown(berries!, 'ArrowLeft');
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana!, 'ArrowDown');
+      await keydown(berries!, 'ArrowLeft');
       const blueberry = getItem('Blueberry');
-      keydown(blueberry!, 'ArrowRight');
+      await keydown(blueberry!, 'ArrowRight');
 
       expect(isSubmenuExpanded()).toBe(false);
       expect(document.activeElement).toBe(berries);
@@ -489,7 +489,7 @@ describe('Standalone Menu Pattern', () => {
 
   it('should not reset default state on hover triggers expansion', async () => {
     fixture = TestBed.createComponent(StandaloneMenuExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     const berries = getItem('Berries');
     await mouseover(berries!);
@@ -498,38 +498,38 @@ describe('Standalone Menu Pattern', () => {
 
   it('should be able to set an aria-label on a menu item', async () => {
     fixture = TestBed.createComponent(StandaloneMenuExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     const item = getItem('Apple');
     expect(item?.getAttribute('aria-label')).toBeFalsy();
 
     fixture.componentInstance.firstItemAriaLabel.set('Apple item label');
-    fixture.detectChanges();
+    await fixture.whenStable();
     expect(item?.getAttribute('aria-label')).toBe('Apple item label');
   });
 
   describe('softDisabled', () => {
-    it('should skip disabled items during navigation when softDisabled is false', () => {
-      setupMenu();
+    it('should skip disabled items during navigation when softDisabled is false', async () => {
+      await setupMenu();
       fixture.componentInstance.softDisabled.set(false);
-      fixture.detectChanges();
+      await fixture.whenStable();
 
       const apple = getItem('Apple')!;
       const berries = getItem('Berries');
 
-      keydown(apple, 'ArrowUp');
+      await keydown(apple, 'ArrowUp');
       expect(document.activeElement).toBe(berries);
     });
 
-    it('should focus disabled items during navigation when softDisabled is true', () => {
-      setupMenu();
+    it('should focus disabled items during navigation when softDisabled is true', async () => {
+      await setupMenu();
       fixture.componentInstance.softDisabled.set(true);
-      fixture.detectChanges();
+      await fixture.whenStable();
 
       const apple = getItem('Apple')!;
       const cherry = getItem('Cherry');
 
-      keydown(apple!, 'ArrowUp');
+      await keydown(apple!, 'ArrowUp');
       expect(document.activeElement).toBe(cherry);
     });
   });
@@ -563,9 +563,9 @@ describe('Standalone Menu Pattern', () => {
       consoleSpy = spyOn(console, 'warn');
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       TestBed.resetTestingModule();
-      setupMenu();
+      await setupMenu();
     });
 
     it('should warn when duplicate values are detected inside ngMenu', () => {
@@ -597,13 +597,13 @@ describe('Standalone Menu Pattern', () => {
 describe('Menu Trigger Pattern', () => {
   let fixture: ComponentFixture<MenuTriggerExample>;
 
-  const focusin = (element: Element) => {
+  const focusin = async (element: Element) => {
     element.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const keydown = (element: Element, key: string, modifierKeys: {} = {}) => {
-    focusin(element);
+  const keydown = async (element: Element, key: string, modifierKeys: {} = {}) => {
+    await focusin(element);
     element.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -611,23 +611,23 @@ describe('Menu Trigger Pattern', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const click = (element: Element, eventInit?: PointerEventInit) => {
-    focusin(element);
+  const click = async (element: Element, eventInit?: PointerEventInit) => {
+    await focusin(element);
     element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const focusout = (element: Element, relatedTarget?: EventTarget) => {
+  const focusout = async (element: Element, relatedTarget?: EventTarget) => {
     element.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  function setupMenu() {
+  async function setupMenu() {
     fixture = TestBed.createComponent(MenuTriggerExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
   }
 
   function getTrigger(): HTMLElement {
@@ -651,123 +651,123 @@ describe('Menu Trigger Pattern', () => {
   }
 
   describe('Navigation', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
-    it('should navigate to the first item on click', () => {
-      click(getTrigger());
+    it('should navigate to the first item on click', async () => {
+      await click(getTrigger());
       expect(document.activeElement).toBe(getItem('Apple'));
     });
 
-    it('should navigate to the first item on arrow down', () => {
+    it('should navigate to the first item on arrow down', async () => {
       const trigger = getTrigger();
-      keydown(trigger, 'ArrowDown');
+      await keydown(trigger, 'ArrowDown');
       expect(document.activeElement).toBe(getItem('Apple'));
     });
 
-    it('should navigate to the last item on arrow up', () => {
+    it('should navigate to the last item on arrow up', async () => {
       const trigger = getTrigger();
-      keydown(trigger, 'ArrowUp');
+      await keydown(trigger, 'ArrowUp');
       expect(document.activeElement).toBe(getItem('Cherry'));
     });
 
-    it('should navigate to the first item on enter', () => {
+    it('should navigate to the first item on enter', async () => {
       const trigger = getTrigger();
-      keydown(trigger, 'Enter');
+      await keydown(trigger, 'Enter');
       expect(document.activeElement).toBe(getItem('Apple'));
     });
 
-    it('should navigate to the first item on space', () => {
+    it('should navigate to the first item on space', async () => {
       const trigger = getTrigger();
-      keydown(trigger, ' ');
+      await keydown(trigger, ' ');
       expect(document.activeElement).toBe(getItem('Apple'));
     });
   });
 
   describe('Expansion', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
     it('should be closed by default', () => {
       expect(isExpanded()).toBe(false);
     });
 
-    it('should open on click', () => {
-      click(getTrigger());
+    it('should open on click', async () => {
+      await click(getTrigger());
       expect(isExpanded()).toBe(true);
     });
 
-    it('should close on second click', () => {
+    it('should close on second click', async () => {
       const trigger = getTrigger();
-      click(trigger);
+      await click(trigger);
       expect(isExpanded()).toBe(true);
 
-      click(trigger);
+      await click(trigger);
       expect(isExpanded()).toBe(false);
     });
 
-    it('should open on arrow down', () => {
-      keydown(getTrigger(), 'ArrowDown');
+    it('should open on arrow down', async () => {
+      await keydown(getTrigger(), 'ArrowDown');
       expect(isExpanded()).toBe(true);
     });
 
-    it('should open on arrow up', () => {
-      keydown(getTrigger(), 'ArrowUp');
+    it('should open on arrow up', async () => {
+      await keydown(getTrigger(), 'ArrowUp');
       expect(isExpanded()).toBe(true);
     });
 
-    it('should open on space', () => {
-      keydown(getTrigger(), ' ');
+    it('should open on space', async () => {
+      await keydown(getTrigger(), ' ');
       expect(isExpanded()).toBe(true);
     });
 
-    it('should open on enter', () => {
-      keydown(getTrigger(), 'Enter');
+    it('should open on enter', async () => {
+      await keydown(getTrigger(), 'Enter');
       expect(isExpanded()).toBe(true);
     });
 
-    it('should close on escape', () => {
+    it('should close on escape', async () => {
       const trigger = getTrigger();
-      click(trigger);
+      await click(trigger);
       expect(isExpanded()).toBe(true);
 
-      keydown(getMenu()!, 'Escape');
+      await keydown(getMenu()!, 'Escape');
       expect(isExpanded()).toBe(false);
       expect(document.activeElement).toBe(trigger);
     });
 
-    it('should close on selecting an item on click', () => {
-      click(getTrigger());
-      click(getItem('Apple')!);
+    it('should close on selecting an item on click', async () => {
+      await click(getTrigger());
+      await click(getItem('Apple')!);
       expect(isExpanded()).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
-      click(getTrigger());
-      keydown(getItem('Apple')!, 'Enter');
+    it('should close on selecting an item on enter', async () => {
+      await click(getTrigger());
+      await keydown(getItem('Apple')!, 'Enter');
       expect(isExpanded()).toBe(false);
     });
 
     it('should close on selecting an item on space', async () => {
-      click(getTrigger());
-      keydown(getItem('Apple')!, ' ');
+      await click(getTrigger());
+      await keydown(getItem('Apple')!, ' ');
       expect(isExpanded()).toBe(false);
     });
 
-    it('should close the trigger on focus out from the menu', () => {
-      click(getTrigger());
+    it('should close the trigger on focus out from the menu', async () => {
+      await click(getTrigger());
       expect(isExpanded()).toBe(true);
 
-      focusout(getMenu()!, document.body);
+      await focusout(getMenu()!, document.body);
       expect(isExpanded()).toBe(false);
     });
   });
 
   describe('Selection', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
-    it('should select an item on click', () => {
+    it('should select an item on click', async () => {
       spyOn(fixture.componentInstance, 'itemSelected');
-      click(getTrigger());
-      click(getItem('Apple')!);
+      await click(getTrigger());
+      await click(getItem('Apple')!);
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
     });
   });
@@ -776,13 +776,13 @@ describe('Menu Trigger Pattern', () => {
 describe('CDK Overlay Menu Pattern', () => {
   let fixture: ComponentFixture<CdkOverlayMenuExample>;
 
-  const focusin = (element: Element) => {
+  const focusin = async (element: Element) => {
     element.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
   const keydown = async (element: Element, key: string, modifierKeys: {} = {}) => {
-    focusin(element);
+    await focusin(element);
     element.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -790,22 +790,22 @@ describe('CDK Overlay Menu Pattern', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
     await waitForMicrotasks();
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
   const click = async (element: Element, eventInit?: PointerEventInit) => {
-    focusin(element);
+    await focusin(element);
     element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
+    await fixture.whenStable();
     await waitForMicrotasks();
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  function setupMenu() {
+  async function setupMenu() {
     fixture = TestBed.createComponent(CdkOverlayMenuExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
   }
 
   function getTrigger(): HTMLElement {
@@ -819,7 +819,7 @@ describe('CDK Overlay Menu Pattern', () => {
     return items.find(item => item.textContent?.trim() === text) || null;
   }
 
-  beforeEach(() => setupMenu());
+  beforeEach(async () => await setupMenu());
 
   it('should focus the first item when opened via arrow down', async () => {
     await keydown(getTrigger(), 'ArrowDown');
@@ -855,7 +855,7 @@ describe('CDK Overlay Menu Pattern', () => {
 
     // Explicitly clear cached menu before second open
     fixture.componentInstance.clearMenu();
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     // Second open
     await keydown(trigger, 'Enter');
@@ -870,7 +870,7 @@ describe('CDK Overlay Menu Pattern', () => {
 describe('Menu Bar Pattern', () => {
   let fixture: ComponentFixture<MenuBarExample>;
 
-  const keydown = (element: Element, key: string, modifierKeys: {} = {}) => {
+  const keydown = async (element: Element, key: string, modifierKeys: {} = {}) => {
     element.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -878,30 +878,30 @@ describe('Menu Bar Pattern', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const mouseover = (element: Element) => {
+  const mouseover = async (element: Element) => {
     element.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const click = (element: Element, eventInit?: PointerEventInit) => {
+  const click = async (element: Element, eventInit?: PointerEventInit) => {
     element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const focusout = (element: Element, relatedTarget?: EventTarget) => {
+  const focusout = async (element: Element, relatedTarget?: EventTarget) => {
     element.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
+  async function setupMenu(opts?: {textDirection: 'ltr' | 'rtl'}) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
     });
     fixture = TestBed.createComponent(MenuBarExample);
-    fixture.detectChanges();
+    await fixture.whenStable();
     getMenuBarItem('File')?.focus();
   }
 
@@ -962,266 +962,266 @@ describe('Menu Bar Pattern', () => {
   });
 
   describe('Navigation', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
-    it('should navigate to the first item on arrow down', () => {
+    it('should navigate to the first item on arrow down', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowDown');
       expect(document.activeElement).toBe(getMenuItem('Zoom In'));
     });
 
-    it('should navigate to the last item on arrow up', () => {
+    it('should navigate to the last item on arrow up', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowUp');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowUp');
       expect(document.activeElement).toBe(getMenuItem('Full Screen'));
     });
 
-    it('should navigate to the first item on enter', () => {
+    it('should navigate to the first item on enter', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'Enter');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'Enter');
       expect(document.activeElement).toBe(getMenuItem('Zoom In'));
     });
 
-    it('should navigate to the first item on space', () => {
+    it('should navigate to the first item on space', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, ' ');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, ' ');
       expect(document.activeElement).toBe(getMenuItem('Zoom In'));
     });
 
-    it('should navigate to a menubar item on mouse over', () => {
+    it('should navigate to a menubar item on mouse over', async () => {
       const edit = getMenuBarItem('Edit');
-      mouseover(edit!);
+      await mouseover(edit!);
       expect(document.activeElement).toBe(edit);
     });
 
-    it('should focus the first item of the next menubar item on arrow right', () => {
+    it('should focus the first item of the next menubar item on arrow right', async () => {
       const edit = getMenuBarItem('Edit');
       const file = getMenuBarItem('File');
       const view = getMenuBarItem('View');
       const documentation = getMenuBarItem('Documentation');
       const zoomIn = getMenuItem('Zoom In');
 
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowDown');
 
-      keydown(zoomIn!, 'ArrowRight');
+      await keydown(zoomIn!, 'ArrowRight');
       expect(document.activeElement).toBe(documentation);
     });
 
-    it('should focus the first item of the previous menubar item on arrow left', () => {
+    it('should focus the first item of the previous menubar item on arrow left', async () => {
       const edit = getMenuBarItem('Edit');
       const file = getMenuBarItem('File');
       const view = getMenuBarItem('View');
       const undo = getMenuItem('Undo');
       const zoomIn = getMenuItem('Zoom In');
 
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowDown');
 
-      keydown(zoomIn!, 'ArrowLeft');
+      await keydown(zoomIn!, 'ArrowLeft');
       expect(document.activeElement).toBe(undo);
     });
   });
 
   describe('Expansion', () => {
-    beforeEach(() => setupMenu());
+    beforeEach(async () => await setupMenu());
 
     it('should be collapsed by default', () => {
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should expand on click', () => {
-      click(getMenuBarItem('View')!);
+    it('should expand on click', async () => {
+      await click(getMenuBarItem('View')!);
       expect(isExpanded('View')).toBe(true);
     });
 
-    it('should collapse on second click', () => {
+    it('should collapse on second click', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
+      await click(view!);
       expect(isExpanded('View')).toBe(true);
 
-      click(view!);
+      await click(view!);
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should expand on arrow down', () => {
+    it('should expand on arrow down', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowDown');
       expect(isExpanded('View')).toBe(true);
     });
 
-    it('should expand on arrow up', () => {
+    it('should expand on arrow up', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'ArrowUp');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'ArrowUp');
       expect(isExpanded('View')).toBe(true);
     });
 
-    it('should expand on space', () => {
+    it('should expand on space', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, ' ');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, ' ');
       expect(isExpanded('View')).toBe(true);
     });
 
-    it('should expand on enter', () => {
+    it('should expand on enter', async () => {
       const file = getMenuBarItem('File');
       const edit = getMenuBarItem('Edit');
       const view = getMenuBarItem('View');
-      keydown(file!, 'ArrowRight');
-      keydown(edit!, 'ArrowRight');
-      keydown(view!, 'Enter');
+      await keydown(file!, 'ArrowRight');
+      await keydown(edit!, 'ArrowRight');
+      await keydown(view!, 'Enter');
       expect(isExpanded('View')).toBe(true);
     });
 
-    it('should close on escape', () => {
+    it('should close on escape', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
+      await click(view!);
       expect(isExpanded('View')).toBe(true);
 
-      keydown(getMenu()!, 'Escape');
+      await keydown(getMenu()!, 'Escape');
       expect(isExpanded('View')).toBe(false);
       expect(document.activeElement).toBe(view);
     });
 
-    it('should close on selecting an item on click', () => {
-      click(getMenuBarItem('View')!);
-      click(getMenuItem('Zoom In')!);
+    it('should close on selecting an item on click', async () => {
+      await click(getMenuBarItem('View')!);
+      await click(getMenuItem('Zoom In')!);
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should close on selecting an item on enter', () => {
+    it('should close on selecting an item on enter', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
-      keydown(view!, 'ArrowDown');
-      keydown(getMenuItem('Zoom In')!, 'Enter');
+      await click(view!);
+      await keydown(view!, 'ArrowDown');
+      await keydown(getMenuItem('Zoom In')!, 'Enter');
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should close on selecting an item on space', () => {
+    it('should close on selecting an item on space', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
-      keydown(view!, 'ArrowDown');
-      keydown(getMenuItem('Zoom In')!, ' ');
+      await click(view!);
+      await keydown(view!, 'ArrowDown');
+      await keydown(getMenuItem('Zoom In')!, ' ');
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should close on focus out from the menu', () => {
-      click(getMenuBarItem('View')!);
+    it('should close on focus out from the menu', async () => {
+      await click(getMenuBarItem('View')!);
       expect(isExpanded('View')).toBe(true);
 
-      focusout(getMenu()!, document.body);
+      await focusout(getMenu()!, document.body);
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should close on arrow right on a leaf menu item', () => {
+    it('should close on arrow right on a leaf menu item', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
+      await click(view!);
       expect(isExpanded('View')).toBe(true);
 
-      keydown(getMenuItem('Zoom In')!, 'ArrowRight');
+      await keydown(getMenuItem('Zoom In')!, 'ArrowRight');
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should close on arrow left on a root menu item', () => {
+    it('should close on arrow left on a root menu item', async () => {
       const view = getMenuBarItem('View');
-      click(view!);
-      keydown(view!, 'ArrowDown');
-      keydown(getMenuItem('Zoom In')!, 'ArrowLeft');
+      await click(view!);
+      await keydown(view!, 'ArrowDown');
+      await keydown(getMenuItem('Zoom In')!, 'ArrowLeft');
       expect(isExpanded('View')).toBe(false);
     });
 
-    it('should expand the next menu bar item on arrow right on a leaf menu item', () => {
+    it('should expand the next menu bar item on arrow right on a leaf menu item', async () => {
       const view = getMenuBarItem('View');
       const zoomIn = getMenuItem('Zoom In');
-      click(view!);
+      await click(view!);
 
       expect(isExpanded('View')).toBe(true);
       expect(document.activeElement).toBe(view);
 
-      keydown(view!, 'ArrowDown');
+      await keydown(view!, 'ArrowDown');
       expect(document.activeElement).toBe(zoomIn);
 
-      keydown(zoomIn!, 'ArrowRight');
+      await keydown(zoomIn!, 'ArrowRight');
       expect(isExpanded('View')).toBe(false);
       expect(isExpanded('Help')).toBe(true);
     });
 
-    it('should expand the previous menu bar item on arrow left on a root menu item', () => {
+    it('should expand the previous menu bar item on arrow left on a root menu item', async () => {
       const view = getMenuBarItem('View');
       const zoomIn = getMenuItem('Zoom In');
-      click(view!);
+      await click(view!);
 
       expect(isExpanded('View')).toBe(true);
       expect(document.activeElement).toBe(view);
 
-      keydown(view!, 'ArrowDown');
+      await keydown(view!, 'ArrowDown');
       expect(document.activeElement).toBe(zoomIn);
 
-      keydown(zoomIn!, 'ArrowLeft');
+      await keydown(zoomIn!, 'ArrowLeft');
       expect(isExpanded('View')).toBe(false);
       expect(isExpanded('Edit')).toBe(true);
     });
   });
 
   describe('RTL', () => {
-    beforeEach(() => setupMenu({textDirection: 'rtl'}));
+    beforeEach(async () => await setupMenu({textDirection: 'rtl'}));
 
-    it('should focus the first item of the next menubar item on arrow left', () => {
+    it('should focus the first item of the next menubar item on arrow left', async () => {
       const edit = getMenuBarItem('Edit');
       const file = getMenuBarItem('File');
       const view = getMenuBarItem('View');
       const documentation = getMenuBarItem('Documentation');
       const zoomIn = getMenuItem('Zoom In');
 
-      keydown(file!, 'ArrowLeft');
-      keydown(edit!, 'ArrowLeft');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowLeft');
+      await keydown(edit!, 'ArrowLeft');
+      await keydown(view!, 'ArrowDown');
 
-      keydown(zoomIn!, 'ArrowLeft');
+      await keydown(zoomIn!, 'ArrowLeft');
       expect(document.activeElement).toBe(documentation);
     });
 
-    it('should focus the first item of the previous menubar item on arrow right', () => {
+    it('should focus the first item of the previous menubar item on arrow right', async () => {
       const edit = getMenuBarItem('Edit');
       const file = getMenuBarItem('File');
       const view = getMenuBarItem('View');
       const undo = getMenuItem('Undo');
       const zoomIn = getMenuItem('Zoom In');
 
-      keydown(file!, 'ArrowLeft');
-      keydown(edit!, 'ArrowLeft');
-      keydown(view!, 'ArrowDown');
+      await keydown(file!, 'ArrowLeft');
+      await keydown(edit!, 'ArrowLeft');
+      await keydown(view!, 'ArrowDown');
 
-      keydown(zoomIn!, 'ArrowRight');
+      await keydown(zoomIn!, 'ArrowRight');
       expect(document.activeElement).toBe(undo);
     });
   });

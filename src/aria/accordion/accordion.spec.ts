@@ -17,32 +17,32 @@ describe('AccordionGroup', () => {
   let triggerElements: HTMLElement[];
   let panelElements: HTMLElement[];
 
-  const click = (target: HTMLElement) => {
+  const click = async (target: HTMLElement) => {
     target.dispatchEvent(new PointerEvent('click', {bubbles: true}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const keydown = (key: string, target = groupElement) => {
+  const keydown = async (key: string, target = groupElement) => {
     target.dispatchEvent(new KeyboardEvent('keydown', {bubbles: true, key}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const spaceKey = (target: HTMLElement) => keydown(' ', target);
-  const enterKey = (target: HTMLElement) => keydown('Enter', target);
-  const downArrowKey = () => keydown('ArrowDown');
-  const upArrowKey = () => keydown('ArrowUp');
-  const homeKey = () => keydown('Home');
-  const endKey = () => keydown('End');
+  const spaceKey = async (target: HTMLElement) => await keydown(' ', target);
+  const enterKey = async (target: HTMLElement) => await keydown('Enter', target);
+  const downArrowKey = async () => await keydown('ArrowDown');
+  const upArrowKey = async () => await keydown('ArrowUp');
+  const homeKey = async () => await keydown('Home');
+  const endKey = async () => await keydown('End');
 
-  function setupAccordionGroup() {
+  async function setupAccordionGroup() {
     testComponent = fixture.componentInstance as AccordionGroupWithLoop;
     groupElement = fixture.nativeElement.querySelector('[ngAccordionGroup]') as HTMLElement;
 
-    setupTriggerAndPanels();
+    await setupTriggerAndPanels();
   }
 
-  function setupTriggerAndPanels() {
-    fixture.detectChanges();
+  async function setupTriggerAndPanels() {
+    await fixture.whenStable();
 
     const triggerDebugElements = fixture.debugElement.queryAll(By.directive(AccordionTrigger));
     const panelDebugElements = fixture.debugElement.queryAll(By.directive(AccordionPanel));
@@ -73,10 +73,10 @@ describe('AccordionGroup', () => {
   });
 
   describe('using a loop', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(AccordionGroupWithLoop);
 
-      setupAccordionGroup();
+      await setupAccordionGroup();
     });
 
     describe('ARIA attributes and roles', () => {
@@ -111,9 +111,9 @@ describe('AccordionGroup', () => {
           expect(getTriggerAttribute(2, 'aria-disabled')).toBe('false');
         });
 
-        it('should set aria-disabled="true" if trigger is disabled', () => {
+        it('should set aria-disabled="true" if trigger is disabled', async () => {
           testComponent.disableItem('item-1', true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(getTriggerAttribute(0, 'aria-disabled')).toBe('true');
           expect(getTriggerAttribute(1, 'aria-disabled')).toBe('false');
@@ -144,33 +144,33 @@ describe('AccordionGroup', () => {
 
     describe('Expansion behavior', () => {
       describe('single expansion mode (multiExpandable=false)', () => {
-        it('should expand panel on trigger click and update expanded panels', () => {
-          click(triggerElements[0]);
+        it('should expand panel on trigger click and update expanded panels', async () => {
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeTrue();
           expect(panelElements[0].getAttribute('inert')).toBe(null);
         });
 
-        it('should collapes panel on trigger click and update expanded panels', () => {
-          click(triggerElements[0]);
-          click(triggerElements[0]); // Collapse
+        it('should collapes panel on trigger click and update expanded panels', async () => {
+          await click(triggerElements[0]);
+          await click(triggerElements[0]); // Collapse
           expect(isTriggerExpanded(0)).toBeFalse();
           expect(panelElements[0].getAttribute('inert')).toBe('true');
         });
 
-        it('should expand one and collapse others', () => {
-          click(triggerElements[0]);
+        it('should expand one and collapse others', async () => {
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeTrue();
 
-          click(triggerElements[1]);
+          await click(triggerElements[1]);
           expect(isTriggerExpanded(0)).toBeFalse();
           expect(panelElements[0].getAttribute('inert')).toBe('true');
           expect(isTriggerExpanded(1)).toBeTrue();
           expect(panelElements[1].getAttribute('inert')).toBe(null);
         });
 
-        it('should allow setting initial value', () => {
+        it('should allow setting initial value', async () => {
           testComponent.expandItem('item-2', true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(isTriggerExpanded(0)).toBeFalse();
           expect(isTriggerExpanded(1)).toBeTrue();
@@ -179,35 +179,35 @@ describe('AccordionGroup', () => {
       });
 
       describe('multiple expansion mode (multiExpandable=true)', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           testComponent.multiExpandable.set(true);
-          fixture.detectChanges();
+          await fixture.whenStable();
         });
 
-        it('should expand multiple panels', () => {
-          click(triggerElements[0]);
+        it('should expand multiple panels', async () => {
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeTrue();
 
-          click(triggerElements[1]);
+          await click(triggerElements[1]);
           expect(isTriggerExpanded(0)).toBeTrue();
           expect(isTriggerExpanded(1)).toBeTrue();
         });
 
-        it('should collapse an item without affecting others', () => {
-          click(triggerElements[0]);
-          click(triggerElements[1]);
+        it('should collapse an item without affecting others', async () => {
+          await click(triggerElements[0]);
+          await click(triggerElements[1]);
           expect(isTriggerExpanded(0)).toBeTrue();
           expect(isTriggerExpanded(1)).toBeTrue();
 
-          click(triggerElements[0]);
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeFalse();
           expect(isTriggerExpanded(1)).toBeTrue();
         });
 
-        it('should allow setting initial multiple values', () => {
+        it('should allow setting initial multiple values', async () => {
           testComponent.expandItem('item-1', true);
           testComponent.expandItem('item-3', true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(isTriggerExpanded(0)).toBeTrue();
           expect(isTriggerExpanded(1)).toBeFalse();
@@ -216,85 +216,85 @@ describe('AccordionGroup', () => {
       });
 
       describe('disabled items and group', () => {
-        it('should not expand a disabled trigger', () => {
+        it('should not expand a disabled trigger', async () => {
           testComponent.disableItem('item-1', true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
-          click(triggerElements[0]);
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeFalse();
           expect(triggerElements[0].getAttribute('aria-disabled')).toBe('true');
         });
 
-        it('should not expand any trigger if group is disabled', () => {
+        it('should not expand any trigger if group is disabled', async () => {
           testComponent.disabledGroup.set(true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
-          click(triggerElements[0]);
+          await click(triggerElements[0]);
           expect(isTriggerExpanded(0)).toBeFalse();
 
-          click(triggerElements[1]);
+          await click(triggerElements[1]);
           expect(isTriggerExpanded(1)).toBeFalse();
         });
       });
     });
 
     describe('Keyboard navigation and interaction', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         // Focus on the first trigger as initial state.
         triggerElements[0].focus();
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should focus next trigger with ArrowDown', () => {
-        downArrowKey();
+      it('should focus next trigger with ArrowDown', async () => {
+        await downArrowKey();
 
         expect(isTriggerActive(0)).toBeFalse();
         expect(isTriggerActive(1)).toBeTrue();
       });
 
-      it('should focus previous trigger with ArrowUp', () => {
-        downArrowKey();
+      it('should focus previous trigger with ArrowUp', async () => {
+        await downArrowKey();
         expect(isTriggerActive(1)).toBeTrue();
 
-        upArrowKey();
+        await upArrowKey();
         expect(isTriggerActive(1)).toBeFalse();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should focus first trigger with Home when another item is focused', () => {
-        downArrowKey();
-        downArrowKey();
+      it('should focus first trigger with Home when another item is focused', async () => {
+        await downArrowKey();
+        await downArrowKey();
 
         expect(isTriggerActive(2)).toBeTrue();
 
-        homeKey();
+        await homeKey();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should focus last trigger with End', () => {
-        endKey();
+      it('should focus last trigger with End', async () => {
+        await endKey();
 
         expect(isTriggerActive(2)).toBeTrue();
       });
 
-      it('should toggle expansion of focused trigger with Enter', () => {
+      it('should toggle expansion of focused trigger with Enter', async () => {
         expect(isTriggerExpanded(0)).toBeFalse();
 
-        enterKey(triggerElements[0]);
+        await enterKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeTrue();
 
-        enterKey(triggerElements[0]);
+        await enterKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeFalse();
       });
 
-      it('should toggle expansion of focused trigger with Space', () => {
+      it('should toggle expansion of focused trigger with Space', async () => {
         expect(isTriggerExpanded(0)).toBeFalse();
 
-        spaceKey(triggerElements[0]);
+        await spaceKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeTrue();
 
-        spaceKey(triggerElements[0]);
+        await spaceKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeFalse();
       });
 
@@ -307,11 +307,11 @@ describe('AccordionGroup', () => {
         // Shuffle (reverse) data
         const items = testComponent.items().reverse();
         testComponent.items.set([...items]);
-        fixture.detectChanges();
+        await fixture.whenStable();
         await waitForMicrotasks();
 
         // Re-query elements to check new DOM order
-        setupTriggerAndPanels();
+        await setupTriggerAndPanels();
 
         expect(triggerElements.length).toBe(3);
         expect(triggerElements[0].textContent?.trim()).toBe('Item 3 Header');
@@ -319,88 +319,88 @@ describe('AccordionGroup', () => {
       });
 
       describe('wrap behavior', () => {
-        it('should wrap to first on ArrowDown from last if wrap=true', () => {
+        it('should wrap to first on ArrowDown from last if wrap=true', async () => {
           testComponent.wrap.set(true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
-          endKey();
+          await endKey();
           expect(isTriggerActive(2)).toBeTrue();
 
-          downArrowKey();
+          await downArrowKey();
           expect(isTriggerActive(0)).toBeTrue();
         });
 
-        it('should not wrap on ArrowDown from last if wrap=false', () => {
+        it('should not wrap on ArrowDown from last if wrap=false', async () => {
           testComponent.wrap.set(false);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
-          endKey();
+          await endKey();
           expect(isTriggerActive(2)).toBeTrue();
 
-          downArrowKey();
+          await downArrowKey();
           expect(isTriggerActive(2)).toBeTrue();
         });
 
-        it('should wrap to last on ArrowUp from first if wrap=true', () => {
+        it('should wrap to last on ArrowUp from first if wrap=true', async () => {
           testComponent.wrap.set(true);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(isTriggerActive(0)).toBeTrue();
 
-          upArrowKey();
+          await upArrowKey();
           expect(isTriggerActive(2)).toBeTrue();
         });
 
-        it('should not wrap on ArrowUp from first if wrap=false', () => {
+        it('should not wrap on ArrowUp from first if wrap=false', async () => {
           testComponent.wrap.set(false);
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(isTriggerActive(0)).toBeTrue();
 
-          upArrowKey();
+          await upArrowKey();
           expect(isTriggerActive(0)).toBeTrue();
         });
       });
 
       describe('softDisabled behavior', () => {
-        it('should skip disabled items if softDisabled=false', () => {
+        it('should skip disabled items if softDisabled=false', async () => {
           testComponent.softDisabled.set(false);
           testComponent.disableItem('item-2');
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           expect(isTriggerActive(0)).toBeTrue();
 
-          downArrowKey();
+          await downArrowKey();
           expect(isTriggerActive(2)).toBeTrue();
         });
 
-        it('should focus disabled items if softDisabled=true', () => {
+        it('should focus disabled items if softDisabled=true', async () => {
           testComponent.softDisabled.set(true);
           testComponent.disableItem('item-2');
 
           expect(isTriggerActive(0)).toBeTrue();
 
-          downArrowKey();
+          await downArrowKey();
           expect(isTriggerActive(1)).toBeTrue();
 
-          enterKey(triggerElements[1]);
+          await enterKey(triggerElements[1]);
           expect(isTriggerExpanded(1)).toBeFalse();
         });
       });
 
-      it('should not allow keyboard navigation if group is disabled', () => {
+      it('should not allow keyboard navigation if group is disabled', async () => {
         testComponent.disabledGroup.set(true);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        downArrowKey();
+        await downArrowKey();
         expect(isTriggerActive(1)).toBeFalse();
       });
 
-      it('should not allow expansion if group is disabled', () => {
+      it('should not allow expansion if group is disabled', async () => {
         testComponent.disabledGroup.set(true);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        enterKey(triggerElements[0]);
+        await enterKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeFalse();
       });
     });
@@ -409,78 +409,78 @@ describe('AccordionGroup', () => {
   describe('using an if', () => {
     let testComponent: AccordionGroupWithIfs;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(AccordionGroupWithIfs);
       testComponent = fixture.componentInstance as AccordionGroupWithIfs;
       groupElement = fixture.nativeElement.querySelector('[ngAccordionGroup]') as HTMLElement;
 
-      setupTriggerAndPanels();
+      await setupTriggerAndPanels();
     });
 
     describe('Keyboard navigation and interaction', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         // Focus on the first trigger as initial state.
         triggerElements[0].focus();
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should change focus between first and last triggers when second removed', () => {
+      it('should change focus between first and last triggers when second removed', async () => {
         testComponent.includeSecond.set(false);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        downArrowKey();
+        await downArrowKey();
         expect(isTriggerActive(0)).toBeFalse();
         expect(isTriggerActive(2)).toBeTrue();
 
-        upArrowKey();
+        await upArrowKey();
         expect(isTriggerActive(2)).toBeFalse();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should focus second trigger with Home when first is removed', () => {
+      it('should focus second trigger with Home when first is removed', async () => {
         triggerElements[2].focus();
         testComponent.includeFirst.set(false);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        homeKey();
+        await homeKey();
         expect(isTriggerActive(0)).toBeTrue();
       });
 
-      it('should focus second trigger with End when last is removed', () => {
+      it('should focus second trigger with End when last is removed', async () => {
         triggerElements[0].focus();
         testComponent.includeThird.set(false);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        endKey();
+        await endKey();
         expect(isTriggerActive(1)).toBeTrue();
       });
 
-      it('should iterate focus through all 3 in order when replaced ', () => {
+      it('should iterate focus through all 3 in order when replaced ', async () => {
         testComponent.includeFirst.set(false);
         testComponent.includeSecond.set(false);
         testComponent.includeThird.set(false);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         testComponent.includeThird.set(true);
         testComponent.includeFirst.set(true);
         testComponent.includeSecond.set(true);
-        setupTriggerAndPanels();
+        await setupTriggerAndPanels();
 
         triggerElements[0].focus();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(isTriggerActive(0)).toBeTrue();
 
-        downArrowKey();
+        await downArrowKey();
         expect(isTriggerActive(0)).toBeFalse();
         expect(isTriggerActive(1)).toBeTrue();
 
-        downArrowKey();
+        await downArrowKey();
         expect(isTriggerActive(1)).toBeFalse();
         expect(isTriggerActive(2)).toBeTrue();
 
-        downArrowKey();
+        await downArrowKey();
         expect(isTriggerActive(2)).toBeFalse();
         expect(isTriggerActive(0)).toBeTrue();
       });
@@ -494,14 +494,14 @@ describe('AccordionGroup', () => {
       consoleSpy = spyOn(console, 'warn');
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [AccordionGroupWithLoop],
         providers: [provideFakeDirectionality('ltr'), _IdGenerator],
       });
       fixture = TestBed.createComponent(AccordionGroupWithLoop);
-      setupAccordionGroup();
+      await setupAccordionGroup();
     });
 
     it('should warn when multiple triggers control the same panel', () => {

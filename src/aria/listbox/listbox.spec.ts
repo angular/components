@@ -22,7 +22,7 @@ describe('Listbox', () => {
   let listboxElement: HTMLElement;
   let optionElements: HTMLElement[];
 
-  const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
+  const keydown = async (key: string, modifierKeys: ModifierKeys = {}) => {
     listboxElement.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -30,30 +30,30 @@ describe('Listbox', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const click = (index: number, eventInit?: PointerEventInit, targets?: HTMLElement[]) => {
+  const click = async (index: number, eventInit?: PointerEventInit, targets?: HTMLElement[]) => {
     (targets || optionElements)[index].dispatchEvent(
       new PointerEvent('click', {
         bubbles: true,
         ...eventInit,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const space = (modifierKeys?: ModifierKeys) => keydown(' ', modifierKeys);
-  const enter = (modifierKeys?: ModifierKeys) => keydown('Enter', modifierKeys);
-  const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
-  const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
-  const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
-  const right = (modifierKeys?: ModifierKeys) => keydown('ArrowRight', modifierKeys);
-  const home = (modifierKeys?: ModifierKeys) => keydown('Home', modifierKeys);
-  const end = (modifierKeys?: ModifierKeys) => keydown('End', modifierKeys);
-  const type = (char: string) => keydown(char);
+  const space = async (modifierKeys?: ModifierKeys) => await keydown(' ', modifierKeys);
+  const enter = async (modifierKeys?: ModifierKeys) => await keydown('Enter', modifierKeys);
+  const up = async (modifierKeys?: ModifierKeys) => await keydown('ArrowUp', modifierKeys);
+  const down = async (modifierKeys?: ModifierKeys) => await keydown('ArrowDown', modifierKeys);
+  const left = async (modifierKeys?: ModifierKeys) => await keydown('ArrowLeft', modifierKeys);
+  const right = async (modifierKeys?: ModifierKeys) => await keydown('ArrowRight', modifierKeys);
+  const home = async (modifierKeys?: ModifierKeys) => await keydown('Home', modifierKeys);
+  const end = async (modifierKeys?: ModifierKeys) => await keydown('End', modifierKeys);
+  const type = async (char: string) => await keydown(char);
 
-  function setupListbox(opts?: {
+  async function setupListbox(opts?: {
     orientation?: 'horizontal' | 'vertical';
     disabled?: boolean;
     readonly?: boolean;
@@ -97,11 +97,11 @@ describe('Listbox', () => {
       testComponent.options.set([...currentOptions]);
     }
 
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables(fixture);
   }
 
-  function setupDefaultListbox() {
+  async function setupDefaultListbox() {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
     });
@@ -123,7 +123,7 @@ describe('Listbox', () => {
 
   describe('ARIA attributes and roles', () => {
     describe('default configuration', () => {
-      beforeEach(() => setupDefaultListbox());
+      beforeEach(async () => await setupDefaultListbox());
 
       it('should correctly set the role attribute to "listbox"', () => {
         expect(listboxElement.getAttribute('role')).toBe('listbox');
@@ -159,33 +159,33 @@ describe('Listbox', () => {
     });
 
     describe('custom configuration', () => {
-      it('should be able to set aria-orientation to "horizontal"', () => {
-        setupListbox({orientation: 'horizontal'});
+      it('should be able to set aria-orientation to "horizontal"', async () => {
+        await setupListbox({orientation: 'horizontal'});
         expect(listboxElement.getAttribute('aria-orientation')).toBe('horizontal');
       });
 
-      it('should be able to set aria-disabled to "true"', () => {
-        setupListbox({disabled: true});
+      it('should be able to set aria-disabled to "true"', async () => {
+        await setupListbox({disabled: true});
         expect(listboxElement.getAttribute('aria-disabled')).toBe('true');
       });
 
-      it('should be able to set aria-readonly to "true"', () => {
-        setupListbox({readonly: true});
+      it('should be able to set aria-readonly to "true"', async () => {
+        await setupListbox({readonly: true});
         expect(listboxElement.getAttribute('aria-readonly')).toBe('true');
       });
 
-      it('should be able to set aria-multiselectable to "true"', () => {
-        setupListbox({multi: true});
+      it('should be able to set aria-multiselectable to "true"', async () => {
+        await setupListbox({multi: true});
         expect(listboxElement.getAttribute('aria-multiselectable')).toBe('true');
       });
 
-      it('should be able to override tabindex', () => {
-        setupListbox({tabIndex: -1});
+      it('should be able to override tabindex', async () => {
+        await setupListbox({tabIndex: -1});
         expect(listboxElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set aria-selected to "true" for selected options', () => {
-        setupListbox({multi: true, value: [1, 3]});
+      it('should set aria-selected to "true" for selected options', async () => {
+        await setupListbox({multi: true, value: [1, 3]});
         expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
         expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
         expect(optionElements[2].getAttribute('aria-selected')).toBe('false');
@@ -193,8 +193,8 @@ describe('Listbox', () => {
         expect(optionElements[4].getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should set aria-disabled to "true" for disabled options', () => {
-        setupListbox({disabledOptions: [1]});
+      it('should set aria-disabled to "true" for disabled options', async () => {
+        await setupListbox({disabledOptions: [1]});
         expect(optionElements[0].getAttribute('aria-disabled')).toBe('false');
         expect(optionElements[1].getAttribute('aria-disabled')).toBe('true');
         expect(optionElements[2].getAttribute('aria-disabled')).toBe('false');
@@ -202,18 +202,18 @@ describe('Listbox', () => {
     });
 
     describe('roving focus mode', () => {
-      it('should have tabindex="-1" for the listbox when focusMode is "roving"', () => {
-        setupListbox({focusMode: 'roving'});
+      it('should have tabindex="-1" for the listbox when focusMode is "roving"', async () => {
+        await setupListbox({focusMode: 'roving'});
         expect(listboxElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set tabindex="0" for the listbox when disabled and focusMode is "roving"', () => {
-        setupListbox({disabled: true, focusMode: 'roving'});
+      it('should set tabindex="0" for the listbox when disabled and focusMode is "roving"', async () => {
+        await setupListbox({disabled: true, focusMode: 'roving'});
         expect(listboxElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set initial focus (tabindex="0") on the first non-disabled option if no values are set', () => {
-        setupListbox({focusMode: 'roving'});
+      it('should set initial focus (tabindex="0") on the first non-disabled option if no values are set', async () => {
+        await setupListbox({focusMode: 'roving'});
         expect(optionElements[0].getAttribute('tabindex')).toBe('0');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[2].getAttribute('tabindex')).toBe('-1');
@@ -221,8 +221,8 @@ describe('Listbox', () => {
         expect(optionElements[4].getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set initial focus (tabindex="0") on the first selected option', () => {
-        setupListbox({focusMode: 'roving', value: [2]});
+      it('should set initial focus (tabindex="0") on the first selected option', async () => {
+        await setupListbox({focusMode: 'roving', value: [2]});
         expect(optionElements[0].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[2].getAttribute('tabindex')).toBe('0');
@@ -230,8 +230,8 @@ describe('Listbox', () => {
         expect(optionElements[4].getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set initial focus (tabindex="0") on the first non-disabled option if selected option is disabled when softDisabled is false', () => {
-        setupListbox({
+      it('should set initial focus (tabindex="0") on the first non-disabled option if selected option is disabled when softDisabled is false', async () => {
+        await setupListbox({
           focusMode: 'roving',
           value: [1],
           disabledOptions: [0],
@@ -241,8 +241,8 @@ describe('Listbox', () => {
         expect(optionElements[1].getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set initial focus (tabindex="0") on the first option if selected option is disabled', () => {
-        setupListbox({
+      it('should set initial focus (tabindex="0") on the first option if selected option is disabled', async () => {
+        await setupListbox({
           focusMode: 'roving',
           value: [0],
           disabledOptions: [0],
@@ -251,35 +251,35 @@ describe('Listbox', () => {
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should not have aria-activedescendant when focusMode is "roving"', () => {
-        setupListbox({focusMode: 'roving'});
+      it('should not have aria-activedescendant when focusMode is "roving"', async () => {
+        await setupListbox({focusMode: 'roving'});
         expect(listboxElement.hasAttribute('aria-activedescendant')).toBe(false);
       });
     });
 
     describe('activedescendant focus mode', () => {
-      it('should have tabindex="0" for the listbox', () => {
-        setupListbox({focusMode: 'activedescendant'});
+      it('should have tabindex="0" for the listbox', async () => {
+        await setupListbox({focusMode: 'activedescendant'});
         expect(listboxElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set aria-activedescendant to the ID of the first non-disabled option if no value is set', () => {
-        setupListbox({focusMode: 'activedescendant'});
+      it('should set aria-activedescendant to the ID of the first non-disabled option if no value is set', async () => {
+        await setupListbox({focusMode: 'activedescendant'});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
       });
 
-      it('should set aria-activedescendant to the ID of the first selected option', () => {
-        setupListbox({focusMode: 'activedescendant', value: [2]});
+      it('should set aria-activedescendant to the ID of the first selected option', async () => {
+        await setupListbox({focusMode: 'activedescendant', value: [2]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[2].id);
       });
 
-      it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled', () => {
-        setupListbox({focusMode: 'activedescendant', value: [0], disabledOptions: [0]});
+      it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled', async () => {
+        await setupListbox({focusMode: 'activedescendant', value: [0], disabledOptions: [0]});
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[0].id);
       });
 
-      it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled when softDisabled is false', () => {
-        setupListbox({
+      it('should set aria-activedescendant to the ID of the first non-disabled option if selected option is disabled when softDisabled is false', async () => {
+        await setupListbox({
           focusMode: 'activedescendant',
           value: [1],
           disabledOptions: [0],
@@ -288,8 +288,8 @@ describe('Listbox', () => {
         expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[1].id);
       });
 
-      it('should set tabindex="-1" for all options', () => {
-        setupListbox({focusMode: 'activedescendant'});
+      it('should set tabindex="-1" for all options', async () => {
+        await setupListbox({focusMode: 'activedescendant'});
         expect(optionElements[0].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
         expect(optionElements[2].getAttribute('tabindex')).toBe('-1');
@@ -300,43 +300,43 @@ describe('Listbox', () => {
   });
 
   describe('value and selection', () => {
-    it('should select the options corresponding to the value input', () => {
-      setupListbox({multi: true, value: [1, 3]});
+    it('should select the options corresponding to the value input', async () => {
+      await setupListbox({multi: true, value: [1, 3]});
       expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
       expect(optionElements[3].getAttribute('aria-selected')).toBe('true');
       expect(listboxInstance.value()).toEqual([1, 3]);
     });
 
-    it('should update the value model when an option is selected via UI (single select)', () => {
-      setupListbox({multi: false});
-      click(1);
+    it('should update the value model when an option is selected via UI (single select)', async () => {
+      await setupListbox({multi: false});
+      await click(1);
       expect(listboxInstance.value()).toEqual([1]);
-      click(2);
+      await click(2);
       expect(listboxInstance.value()).toEqual([2]);
     });
 
-    it('should update the value model when options are selected via UI (multi select)', () => {
-      setupListbox({multi: true});
-      click(1);
+    it('should update the value model when options are selected via UI (multi select)', async () => {
+      await setupListbox({multi: true});
+      await click(1);
       expect(listboxInstance.value()).toEqual([1]);
-      click(3);
+      await click(3);
       expect(listboxInstance.value()).toEqual([1, 3]);
-      click(1);
+      await click(1);
       expect(listboxInstance.value()).toEqual([3]);
     });
 
     describe('pointer interactions', () => {
       describe('single select', () => {
-        it('should select an option on click', () => {
-          setupListbox({multi: false});
-          click(1);
+        it('should select an option on click', async () => {
+          await setupListbox({multi: false});
+          await click(1);
           expect(listboxInstance.value()).toEqual([1]);
           expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
         });
 
-        it('should select a new option and deselect the old one on click', () => {
-          setupListbox({multi: false, value: [0]});
-          click(1);
+        it('should select a new option and deselect the old one on click', async () => {
+          await setupListbox({multi: false, value: [0]});
+          await click(1);
           expect(listboxInstance.value()).toEqual([1]);
           expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
           expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
@@ -345,79 +345,79 @@ describe('Listbox', () => {
 
       describe('multi select', () => {
         describe('selection follows focus', () => {
-          it('should select only the clicked option with a simple click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            click(1);
+          it('should select only the clicked option with a simple click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await click(1);
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should toggle the selected state of an option with ctrl + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            click(1, {ctrlKey: true});
+          it('should toggle the selected state of an option with ctrl + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await click(1, {ctrlKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
 
-            click(0, {ctrlKey: true});
+            await click(0, {ctrlKey: true});
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should select a range starting from the first option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            click(2, {shiftKey: true});
+          it('should select a range starting from the first option on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await click(2, {shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should select a range starting from the current active option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow'});
-            click(1);
-            click(3, {shiftKey: true});
+          it('should select a range starting from the current active option on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow'});
+            await click(1);
+            await click(3, {shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
           });
 
-          it('should not select disabled options on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
-            click(2, {shiftKey: true});
+          it('should not select disabled options on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
+            await click(2, {shiftKey: true});
             expect(listboxInstance.value()).toEqual([0, 2]);
           });
         });
 
         describe('explicit selection', () => {
-          it('should toggle selection of the clicked option with a simple click', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
-            click(1);
+          it('should toggle selection of the clicked option with a simple click', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            await click(1);
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
 
-            click(0);
+            await click(0);
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
           });
 
-          it('should select a range starting from the first option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
-            click(2, {shiftKey: true});
+          it('should select a range starting from the first option on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            await click(2, {shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
           });
 
-          it('should select a range starting from the current active option on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            click(1);
-            click(3, {shiftKey: true});
+          it('should select a range starting from the current active option on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await click(1);
+            await click(3, {shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
           });
 
-          it('should not select disabled options on shift + click', () => {
-            setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
-            click(2, {shiftKey: true});
+          it('should not select disabled options on shift + click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', disabledOptions: [1]});
+            await click(2, {shiftKey: true});
             expect(listboxInstance.value()).toEqual([0, 2]);
           });
         });
@@ -426,7 +426,7 @@ describe('Listbox', () => {
 
     describe('with shuffled items', () => {
       it('should update collection order when items are shuffled', async () => {
-        setupListbox({
+        await setupListbox({
           options: [
             {value: 1, label: 'Item 1', disabled: false},
             {value: 2, label: 'Item 2', disabled: false},
@@ -442,7 +442,7 @@ describe('Listbox', () => {
         const testComponent = fixture.componentInstance as ListboxExample;
         const items = testComponent.options().reverse();
         testComponent.options.set([...items]);
-        fixture.detectChanges();
+        await fixture.whenStable();
         await waitForMicrotasks();
 
         // Re-query elements to check new DOM order
@@ -461,9 +461,9 @@ describe('Listbox', () => {
         consoleSpy = spyOn(console, 'warn');
       });
 
-      afterEach(() => {
+      afterEach(async () => {
         TestBed.resetTestingModule();
-        setupListbox();
+        await setupListbox();
       });
 
       it('should warn when duplicate option values are detected inside ngListbox', () => {
@@ -509,65 +509,65 @@ describe('Listbox', () => {
     describe('keyboard interactions', () => {
       describe('single select', () => {
         describe('selection follows focus', () => {
-          it('should select the next option on ArrowDown', () => {
-            setupListbox({multi: false, selectionMode: 'follow'});
-            down();
+          it('should select the next option on ArrowDown', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow'});
+            await down();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
-            down();
+            await down();
             expect(listboxInstance.value()).toEqual([2]);
             expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should select the previous option on ArrowUp', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
-            up();
+          it('should select the previous option on ArrowUp', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            await up();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should select the first option on Home', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
-            home();
+          it('should select the first option on Home', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            await home();
             expect(listboxInstance.value()).toEqual([0]);
           });
 
-          it('should select the last option on End', () => {
-            setupListbox({multi: false, selectionMode: 'follow', value: [2]});
-            end();
+          it('should select the last option on End', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow', value: [2]});
+            await end();
             expect(listboxInstance.value()).toEqual([4]);
           });
         });
 
         describe('explicit selection', () => {
-          it('should move focus but not select on navigation', () => {
-            setupListbox({multi: false, selectionMode: 'explicit'});
-            down();
-            up();
-            home();
-            end();
+          it('should move focus but not select on navigation', async () => {
+            await setupListbox({multi: false, selectionMode: 'explicit'});
+            await down();
+            await up();
+            await home();
+            await end();
             expect(listboxInstance.value()).toEqual([]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('false');
           });
 
-          it('should select the focused option on Space', () => {
-            setupListbox({multi: false, selectionMode: 'explicit'});
-            down();
-            space();
+          it('should select the focused option on Space', async () => {
+            await setupListbox({multi: false, selectionMode: 'explicit'});
+            await down();
+            await space();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
-            down();
-            down();
-            space();
+            await down();
+            await down();
+            await space();
             expect(listboxInstance.value()).toEqual([3]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[3].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should select the focused option on Enter', () => {
-            setupListbox({multi: false, selectionMode: 'explicit'});
-            down();
-            enter();
+          it('should select the focused option on Enter', async () => {
+            await setupListbox({multi: false, selectionMode: 'explicit'});
+            await down();
+            await enter();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
@@ -576,101 +576,101 @@ describe('Listbox', () => {
 
       describe('multi select', () => {
         describe('selection follows focus', () => {
-          it('should select only the focused option on ArrowDown (no modifier)', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            down();
+          it('should select only the focused option on ArrowDown (no modifier)', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await down();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[0].getAttribute('aria-selected')).toBe('false');
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
           });
 
-          it('should move focus but not change selection on ctrl + ArrowDown, then toggle with ctrl + Space', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            down({ctrlKey: true});
+          it('should move focus but not change selection on ctrl + ArrowDown, then toggle with ctrl + Space', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await down({ctrlKey: true});
             expect(listboxInstance.value()).toEqual([0]);
-            space({ctrlKey: true});
+            await space({ctrlKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
           });
 
-          it('should toggle selection of the focused item on ctrl + Space', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            space({ctrlKey: true});
+          it('should toggle selection of the focused item on ctrl + Space', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await space({ctrlKey: true});
             expect(listboxInstance.value()).toEqual([]);
-            down();
+            await down();
             expect(listboxInstance.value()).toEqual([1]);
-            space({ctrlKey: true});
+            await space({ctrlKey: true});
             expect(listboxInstance.value()).toEqual([]);
           });
 
-          it('should extend selection on shift + ArrowDown', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            down({shiftKey: true});
+          it('should extend selection on shift + ArrowDown', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await down({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
-            down({shiftKey: true});
+            await down({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
           });
 
-          it('should select all on Ctrl+A, then select active on second Ctrl+A', () => {
-            setupListbox({multi: true, selectionMode: 'follow', value: [0]});
-            keydown('A', {ctrlKey: true});
+          it('should select all on Ctrl+A, then select active on second Ctrl+A', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow', value: [0]});
+            await keydown('A', {ctrlKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2, 3, 4]);
 
-            keydown('A', {ctrlKey: true});
+            await keydown('A', {ctrlKey: true});
             expect(listboxInstance.value()).toEqual([0]);
           });
         });
 
         describe('explicit selection', () => {
-          it('should move focus but not select on ArrowDown', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            down();
+          it('should move focus but not select on ArrowDown', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down();
             expect(listboxInstance.value()).toEqual([]);
           });
 
-          it('should toggle selection of the focused item on Space', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            down();
-            space();
+          it('should toggle selection of the focused item on Space', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down();
+            await space();
             expect(listboxInstance.value()).toEqual([1]);
-            down();
-            space();
+            await down();
+            await space();
             expect(listboxInstance.value().sort()).toEqual([1, 2]);
-            space();
+            await space();
             expect(listboxInstance.value()).toEqual([1]);
           });
 
-          it('should toggle selection of the focused item on Enter', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            down();
-            enter();
+          it('should toggle selection of the focused item on Enter', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down();
+            await enter();
             expect(listboxInstance.value()).toEqual([1]);
           });
 
-          it('should extend selection on Shift+ArrowDown', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            down({shiftKey: true});
+          it('should extend selection on Shift+ArrowDown', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
-            down({shiftKey: true});
+            await down({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2]);
           });
 
-          it('should move selection anchor along with focus during normal non-shift navigation', () => {
-            setupListbox({multi: true, selectionMode: 'explicit'});
-            down({shiftKey: true});
+          it('should move selection anchor along with focus during normal non-shift navigation', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1]);
-            down();
-            down();
-            down();
-            up({shiftKey: true});
+            await down();
+            await down();
+            await down();
+            await up({shiftKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 3, 4]);
           });
 
-          it('should toggle selection of all options on Ctrl+A', () => {
-            setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
-            keydown('A', {ctrlKey: true});
+          it('should toggle selection of all options on Ctrl+A', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
+            await keydown('A', {ctrlKey: true});
             expect(listboxInstance.value().sort()).toEqual([0, 1, 2, 3, 4]);
 
-            keydown('A', {ctrlKey: true});
+            await keydown('A', {ctrlKey: true});
             expect(listboxInstance.value()).toEqual([]);
           });
         });
@@ -683,92 +683,92 @@ describe('Listbox', () => {
     isFocused: (index: number) => boolean,
   ) {
     describe(`keyboard navigation (focusMode="${focusMode}")`, () => {
-      it('should move focus to the last focusable option on End', () => {
-        setupListbox({focusMode, disabledOptions: [4]});
-        end();
+      it('should move focus to the last focusable option on End', async () => {
+        await setupListbox({focusMode, disabledOptions: [4]});
+        await end();
         expect(isFocused(4)).toBe(true);
       });
 
-      it('should move focus to the first focusable option on Home', () => {
-        setupListbox({focusMode, disabledOptions: [0]});
-        end();
-        home();
+      it('should move focus to the first focusable option on Home', async () => {
+        await setupListbox({focusMode, disabledOptions: [0]});
+        await end();
+        await home();
         expect(isFocused(0)).toBe(true);
       });
 
-      it('should allow keyboard navigation if the group is readonly', () => {
-        setupListbox({focusMode, orientation: 'horizontal', readonly: true});
-        right();
+      it('should allow keyboard navigation if the group is readonly', async () => {
+        await setupListbox({focusMode, orientation: 'horizontal', readonly: true});
+        await right();
         expect(isFocused(1)).toBe(true);
       });
 
-      it('should wrap focus from last to first with ArrowDown when wrap is true (vertical)', () => {
-        setupListbox({focusMode, orientation: 'vertical', wrap: true});
-        for (let i = 0; i < optionElements.length - 1; i++) down();
-        down();
+      it('should wrap focus from last to first with ArrowDown when wrap is true (vertical)', async () => {
+        await setupListbox({focusMode, orientation: 'vertical', wrap: true});
+        for (let i = 0; i < optionElements.length - 1; i++) await down();
+        await down();
         expect(isFocused(0)).toBe(true);
       });
 
-      it('should not wrap focus from last to first with ArrowDown when wrap is false (vertical)', () => {
-        setupListbox({focusMode, orientation: 'vertical', wrap: false});
-        for (let i = 0; i < optionElements.length - 1; i++) down();
-        down();
+      it('should not wrap focus from last to first with ArrowDown when wrap is false (vertical)', async () => {
+        await setupListbox({focusMode, orientation: 'vertical', wrap: false});
+        for (let i = 0; i < optionElements.length - 1; i++) await down();
+        await down();
         expect(isFocused(optionElements.length - 1)).toBe(true);
       });
 
       describe('vertical orientation', () => {
-        it('should move focus to the next option on ArrowDown', () => {
-          setupListbox({focusMode, orientation: 'vertical'});
-          down();
+        it('should move focus to the next option on ArrowDown', async () => {
+          await setupListbox({focusMode, orientation: 'vertical'});
+          await down();
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should skip disabled options with ArrowDown (softDisabled="false")', () => {
-          setupListbox({
+        it('should skip disabled options with ArrowDown (softDisabled="false")', async () => {
+          await setupListbox({
             focusMode,
             orientation: 'vertical',
             softDisabled: false,
             disabledOptions: [1, 2],
           });
-          down();
+          await down();
           expect(isFocused(3)).toBe(true);
         });
 
-        it('should not skip disabled options with ArrowDown (softDisabled="true")', () => {
-          setupListbox({
+        it('should not skip disabled options with ArrowDown (softDisabled="true")', async () => {
+          await setupListbox({
             focusMode,
             orientation: 'vertical',
             softDisabled: true,
             disabledOptions: [1, 2],
           });
-          down();
+          await down();
           expect(isFocused(1)).toBe(true);
         });
 
-        it('should not be focusable ArrowDown when completely disabled', () => {
-          setupListbox({
+        it('should not be focusable ArrowDown when completely disabled', async () => {
+          await setupListbox({
             focusMode,
             orientation: 'vertical',
             softDisabled: true,
             disabled: true,
           });
 
-          down();
+          await down();
           expect(isFocused(0)).toBe(false);
         });
       });
 
       describe('horizontal orientation', () => {
-        it('should move focus to the next option on ArrowRight', () => {
-          setupListbox({focusMode, orientation: 'horizontal'});
-          right();
+        it('should move focus to the next option on ArrowRight', async () => {
+          await setupListbox({focusMode, orientation: 'horizontal'});
+          await right();
           expect(isFocused(1)).toBe(true);
         });
 
         describe('text direction rtl', () => {
-          it('should move focus to the next option on ArrowLeft (rtl)', () => {
-            setupListbox({focusMode, textDirection: 'rtl', orientation: 'horizontal'});
-            left();
+          it('should move focus to the next option on ArrowLeft (rtl)', async () => {
+            await setupListbox({focusMode, textDirection: 'rtl', orientation: 'horizontal'});
+            await left();
             expect(isFocused(1)).toBe(true);
           });
         });
@@ -776,21 +776,21 @@ describe('Listbox', () => {
     });
 
     describe(`pointer navigation (focusMode="${focusMode}")`, () => {
-      it('should move focus to the clicked option', () => {
-        setupListbox({focusMode});
-        click(3);
+      it('should move focus to the clicked option', async () => {
+        await setupListbox({focusMode});
+        await click(3);
         expect(isFocused(3)).toBe(true);
       });
 
-      it('should move focus to the clicked disabled option', () => {
-        setupListbox({focusMode, disabledOptions: [2], softDisabled: true});
-        click(2);
+      it('should move focus to the clicked disabled option', async () => {
+        await setupListbox({focusMode, disabledOptions: [2], softDisabled: true});
+        await click(2);
         expect(isFocused(2)).toBe(true);
       });
 
-      it('should move focus if listbox is readonly', () => {
-        setupListbox({focusMode, readonly: true});
-        click(3);
+      it('should move focus if listbox is readonly', async () => {
+        await setupListbox({focusMode, readonly: true});
+        await click(3);
         expect(isFocused(3)).toBe(true);
       });
     });
@@ -804,50 +804,60 @@ describe('Listbox', () => {
         {value: 4, label: 'Orange', disabled: false},
       ];
 
-      it('should focus the first matching option when typing characters', () => {
-        setupListbox({options: getOptions(), focusMode});
-        type('B');
+      it('should focus the first matching option when typing characters', async () => {
+        await setupListbox({options: getOptions(), focusMode});
+        await type('B');
         expect(isFocused(2)).toBe(true);
-        type('l');
+        await type('l');
         expect(isFocused(3)).toBe(true);
       });
 
-      it('should select the focused option if selectionMode is "follow"', () => {
-        setupListbox({options: getOptions(), focusMode, selectionMode: 'follow'});
-        type('O');
+      it('should select the focused option if selectionMode is "follow"', async () => {
+        await setupListbox({options: getOptions(), focusMode, selectionMode: 'follow'});
+        await type('O');
         expect(isFocused(4)).toBe(true);
         expect(listboxInstance.value()).toEqual([4]);
         expect(optionElements[4].getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should not select the focused option if selectionMode is "explicit"', () => {
-        setupListbox({options: getOptions(), focusMode, selectionMode: 'explicit'});
-        type('O');
+      it('should not select the focused option if selectionMode is "explicit"', async () => {
+        await setupListbox({options: getOptions(), focusMode, selectionMode: 'explicit'});
+        await type('O');
         expect(isFocused(4)).toBe(true);
         expect(listboxInstance.value()).toEqual([]);
         expect(optionElements[4].getAttribute('aria-selected')).toBe('false');
       });
 
       it('should reset search term after typeaheadDelay', async () => {
-        setupListbox({options: getOptions(), focusMode, typeaheadDelay: 100});
+        await setupListbox({options: getOptions(), focusMode, typeaheadDelay: 100});
 
-        type('A');
+        await type('A');
         expect(isFocused(1)).toBe(true);
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        type('A');
+        await type('A');
         expect(isFocused(0)).toBe(true);
       });
 
-      it('should skip disabled options with typeahead (softDisabled=false)', () => {
-        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], softDisabled: false});
-        type('B');
+      it('should skip disabled options with typeahead (softDisabled=false)', async () => {
+        await setupListbox({
+          options: getOptions(),
+          focusMode,
+          disabledOptions: [2],
+          softDisabled: false,
+        });
+        await type('B');
         expect(isFocused(3)).toBe(true);
       });
 
-      it('should focus disabled options with typeahead if softDisabled=true', () => {
-        setupListbox({options: getOptions(), focusMode, disabledOptions: [2], softDisabled: true});
-        type('B');
+      it('should focus disabled options with typeahead if softDisabled=true', async () => {
+        await setupListbox({
+          options: getOptions(),
+          focusMode,
+          disabledOptions: [2],
+          softDisabled: true,
+        });
+        await type('B');
         expect(isFocused(2)).toBe(true);
       });
     });
@@ -866,25 +876,25 @@ describe('Listbox', () => {
   });
 
   describe('failure cases', () => {
-    it('should handle an empty set of options gracefully', () => {
-      setupListbox({options: []});
+    it('should handle an empty set of options gracefully', async () => {
+      await setupListbox({options: []});
       expect(optionElements.length).toBe(0);
-      expect(() => down()).not.toThrow();
-      expect(() => space()).not.toThrow();
+      await down();
+      await space();
       expect(listboxInstance.value()).toEqual([]);
     });
   });
 
   describe('item mutations and focus stability', () => {
     it('should recover focus by shifting to the default state if the active option is removed', async () => {
-      setupListbox({focusMode: 'activedescendant'});
-      click(2);
+      await setupListbox({focusMode: 'activedescendant'});
+      await click(2);
       expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[2].id);
 
       const testComponent = fixture.componentInstance as ListboxExample;
       const updatedOptions = testComponent.options().filter(o => o.value !== 2);
       testComponent.options.set(updatedOptions);
-      fixture.detectChanges();
+      await fixture.whenStable();
       await waitForMicrotasks();
       defineTestVariables(fixture);
 
