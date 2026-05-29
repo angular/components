@@ -53,30 +53,30 @@ describe('Grid directives', () => {
   let gridElement: HTMLElement;
   let gridInstance: Grid;
 
-  const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
+  const keydown = async (key: string, modifierKeys: ModifierKeys = {}) => {
     const event = new KeyboardEvent('keydown', {key, bubbles: true, ...modifierKeys});
     gridElement.dispatchEvent(event);
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const pointerDown = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
+  const pointerDown = async (target: HTMLElement, eventInit: PointerEventInit = {}) => {
     target.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
-  const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
-  const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
-  const right = (modifierKeys?: ModifierKeys) => keydown('ArrowRight', modifierKeys);
-  const home = (modifierKeys?: ModifierKeys) => keydown('Home', modifierKeys);
-  const end = (modifierKeys?: ModifierKeys) => keydown('End', modifierKeys);
-  const enter = (modifierKeys?: ModifierKeys) => keydown('Enter', modifierKeys);
-  const space = (modifierKeys?: ModifierKeys) => keydown(' ', modifierKeys);
+  const up = async (modifierKeys?: ModifierKeys) => await keydown('ArrowUp', modifierKeys);
+  const down = async (modifierKeys?: ModifierKeys) => await keydown('ArrowDown', modifierKeys);
+  const left = async (modifierKeys?: ModifierKeys) => await keydown('ArrowLeft', modifierKeys);
+  const right = async (modifierKeys?: ModifierKeys) => await keydown('ArrowRight', modifierKeys);
+  const home = async (modifierKeys?: ModifierKeys) => await keydown('Home', modifierKeys);
+  const end = async (modifierKeys?: ModifierKeys) => await keydown('End', modifierKeys);
+  const enter = async (modifierKeys?: ModifierKeys) => await keydown('Enter', modifierKeys);
+  const space = async (modifierKeys?: ModifierKeys) => await keydown(' ', modifierKeys);
 
-  const tabIntoGrid = () => {
+  const tabIntoGrid = async () => {
     const focusableElement = gridElement.querySelector('[tabindex="0"]') as HTMLElement;
     focusableElement?.focus();
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
   function getActiveCellId(): string | null {
@@ -87,7 +87,7 @@ describe('Grid directives', () => {
     return gridElement.getAttribute('aria-activedescendant');
   }
 
-  function setupGrid(opts?: {
+  async function setupGrid(opts?: {
     disabled?: boolean;
     multi?: boolean;
     rowWrap?: 'continuous' | 'loop' | 'nowrap';
@@ -121,7 +121,7 @@ describe('Grid directives', () => {
       testComponent.gridData.set(createGridData());
     }
 
-    fixture.detectChanges();
+    await fixture.whenStable();
     gridDebugElement = fixture.debugElement.query(By.directive(Grid));
     gridElement = gridDebugElement.nativeElement;
     gridInstance = gridDebugElement.injector.get(Grid);
@@ -129,62 +129,62 @@ describe('Grid directives', () => {
 
   describe('Grid', () => {
     describe('ARIA attributes and roles', () => {
-      it('should set role="grid" on the host element', () => {
-        setupGrid();
+      it('should set role="grid" on the host element', async () => {
+        await setupGrid();
         expect(gridElement.getAttribute('role')).toBe('grid');
       });
 
-      it('should set aria-disabled="true" when the disabled input is true', () => {
-        setupGrid({disabled: true});
+      it('should set aria-disabled="true" when the disabled input is true', async () => {
+        await setupGrid({disabled: true});
         expect(gridElement.getAttribute('aria-disabled')).toBe('true');
       });
 
-      it('should set aria-disabled="false" when the disabled input is false', () => {
-        setupGrid({disabled: false});
+      it('should set aria-disabled="false" when the disabled input is false', async () => {
+        await setupGrid({disabled: false});
         expect(gridElement.getAttribute('aria-disabled')).toBe('false');
       });
 
-      it('should set aria-multiselectable="true" when the multi input is true', () => {
-        setupGrid({enableSelection: true, multi: true});
+      it('should set aria-multiselectable="true" when the multi input is true', async () => {
+        await setupGrid({enableSelection: true, multi: true});
         expect(gridElement.getAttribute('aria-multiselectable')).toBe('true');
       });
 
-      it('should set aria-multiselectable="false" when the multi input is false', () => {
-        setupGrid({enableSelection: true, multi: false});
+      it('should set aria-multiselectable="false" when the multi input is false', async () => {
+        await setupGrid({enableSelection: true, multi: false});
         expect(gridElement.getAttribute('aria-multiselectable')).toBe('false');
       });
 
-      it('should set aria-activedescendant to the active cell id', () => {
-        setupGrid({focusMode: 'activedescendant'});
+      it('should set aria-activedescendant to the active cell id', async () => {
+        await setupGrid({focusMode: 'activedescendant'});
         // Simulate gaining focus so active Descendant gets populated
         gridElement.dispatchEvent(new Event('focusin'));
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(gridElement.getAttribute('aria-activedescendant')).toBe('c0-0');
       });
     });
 
     describe('focus management', () => {
       it('should set tabindex based on the pattern tabIndex', async () => {
-        setupGrid({focusMode: 'roving'});
+        await setupGrid({focusMode: 'roving'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
         await fixture.whenStable();
         expect(gridElement.getAttribute('tabindex')).toBe('-1'); // roving defaults to -1 on host
 
-        setupGrid({focusMode: 'activedescendant'});
+        await setupGrid({focusMode: 'activedescendant'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
         await fixture.whenStable();
         expect(gridElement.getAttribute('tabindex')).toBe('0'); // activedescendant defaults to 0 on host
       });
 
-      it('should be able to override tabindex', () => {
-        setupGrid({focusMode: 'activedescendant', tabIndex: -1});
+      it('should be able to override tabindex', async () => {
+        await setupGrid({focusMode: 'activedescendant', tabIndex: -1});
         expect(gridElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should activate the cell when the grid receives focusin', () => {
-        setupGrid();
+      it('should activate the cell when the grid receives focusin', async () => {
+        await setupGrid();
 
         // Let effect run to set default state which sets initial active cell
         gridInstance._pattern.setDefaultStateEffect();
@@ -193,21 +193,21 @@ describe('Grid directives', () => {
 
         // Dispatch focusin to the cell
         cell1.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(gridInstance._pattern.activeCell()?.element()).toBe(cell1);
         expect(gridInstance._pattern.isFocused()).toBeTrue();
       });
 
-      it('should deactivate the grid when focusout moves outside the grid', () => {
-        setupGrid();
+      it('should deactivate the grid when focusout moves outside the grid', async () => {
+        await setupGrid();
         const cell1 = fixture.debugElement.query(By.directive(GridCell)).nativeElement;
 
         // Focus first
 
         gridInstance._pattern.setDefaultStateEffect();
         cell1.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-        fixture.detectChanges();
+        await fixture.whenStable();
         expect(gridInstance._pattern.isFocused()).toBeTrue();
 
         // Focusout (blur)
@@ -217,7 +217,7 @@ describe('Grid directives', () => {
           relatedTarget: document.body,
         });
         cell1.dispatchEvent(focusOutEvent);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(gridInstance._pattern.isFocused()).toBeFalse();
       });
@@ -225,158 +225,158 @@ describe('Grid directives', () => {
 
     describe('keyboard interactions', () => {
       describe('navigation keys', () => {
-        beforeEach(() => {
-          setupGrid();
+        beforeEach(async () => {
+          await setupGrid();
           // Let effect run to set default state which sets initial active cell
           gridInstance._pattern.setDefaultStateEffect();
-          fixture.detectChanges();
+          await fixture.whenStable();
 
           // Start interactions from the middle cell (c1-1)
           const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
           centerCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-          fixture.detectChanges();
+          await fixture.whenStable();
         });
 
-        it('should move focus up to the previous row on ArrowUp', () => {
-          up();
+        it('should move focus up to the previous row on ArrowUp', async () => {
+          await up();
 
           expect(getActiveCellId()).toBe('c0-1');
         });
 
-        it('should move focus down to the next row on ArrowDown', () => {
-          down();
+        it('should move focus down to the next row on ArrowDown', async () => {
+          await down();
 
           expect(getActiveCellId()).toBe('c2-1');
         });
 
-        it('should move focus left to the previous column on ArrowLeft', () => {
-          left();
+        it('should move focus left to the previous column on ArrowLeft', async () => {
+          await left();
 
           expect(getActiveCellId()).toBe('c1-0');
         });
 
-        it('should move focus right to the next column on ArrowRight', () => {
-          right();
+        it('should move focus right to the next column on ArrowRight', async () => {
+          await right();
 
           expect(getActiveCellId()).toBe('c1-2');
         });
 
-        it('should move focus to the first cell in the row on Home', () => {
-          home();
+        it('should move focus to the first cell in the row on Home', async () => {
+          await home();
 
           expect(getActiveCellId()).toBe('c1-0');
         });
 
-        it('should move focus to the last cell in the row on End', () => {
-          end();
+        it('should move focus to the last cell in the row on End', async () => {
+          await end();
 
           expect(getActiveCellId()).toBe('c1-2');
         });
 
         describe('colWrap configuration', () => {
-          it('should wrap to next row when moving right from last column of a row', () => {
-            setupGrid({colWrap: 'continuous'});
+          it('should wrap to next row when moving right from last column of a row', async () => {
+            await setupGrid({colWrap: 'continuous'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c1-2') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            right();
+            await right();
             expect(getActiveCellId()).toBe('c2-0');
           });
 
-          it('should wrap to previous row when moving left from first column of a row', () => {
-            setupGrid({colWrap: 'continuous'});
+          it('should wrap to previous row when moving left from first column of a row', async () => {
+            await setupGrid({colWrap: 'continuous'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c1-0') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            left();
+            await left();
             expect(getActiveCellId()).toBe('c0-2');
           });
 
-          it('should not wrap to next row when passing row boundaries if colWrap is nowrap', () => {
-            setupGrid({colWrap: 'nowrap'});
+          it('should not wrap to next row when passing row boundaries if colWrap is nowrap', async () => {
+            await setupGrid({colWrap: 'nowrap'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c1-2') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            right();
+            await right();
             expect(getActiveCellId()).toBe('c1-2');
           });
 
-          it('should wrap around the same row when passing row boundaries if colWrap is loop', () => {
-            setupGrid({colWrap: 'loop'});
+          it('should wrap around the same row when passing row boundaries if colWrap is loop', async () => {
+            await setupGrid({colWrap: 'loop'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c1-2') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            right();
+            await right();
             expect(getActiveCellId()).toBe('c1-0');
           });
         });
 
         describe('rowWrap configuration', () => {
-          it('should wrap to next column when moving down from last row of a column', () => {
-            setupGrid({rowWrap: 'continuous'});
+          it('should wrap to next column when moving down from last row of a column', async () => {
+            await setupGrid({rowWrap: 'continuous'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c2-1') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            down();
+            await down();
             expect(getActiveCellId()).toBe('c0-2');
           });
 
-          it('should wrap to previous column when moving up from first row of a column', () => {
-            setupGrid({rowWrap: 'continuous'});
+          it('should wrap to previous column when moving up from first row of a column', async () => {
+            await setupGrid({rowWrap: 'continuous'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c0-1') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            up();
+            await up();
             expect(getActiveCellId()).toBe('c2-0');
           });
 
-          it('should not wrap to next column when passing column boundaries if rowWrap is nowrap', () => {
-            setupGrid({rowWrap: 'nowrap'});
+          it('should not wrap to next column when passing column boundaries if rowWrap is nowrap', async () => {
+            await setupGrid({rowWrap: 'nowrap'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c2-1') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            down();
+            await down();
             expect(getActiveCellId()).toBe('c2-1');
           });
 
-          it('should wrap around the same column when passing column boundaries if rowWrap is loop', () => {
-            setupGrid({rowWrap: 'loop'});
+          it('should wrap around the same column when passing column boundaries if rowWrap is loop', async () => {
+            await setupGrid({rowWrap: 'loop'});
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             const cell = gridElement.querySelector('#c2-1') as HTMLElement;
             cell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
 
-            down();
+            await down();
             expect(getActiveCellId()).toBe('c0-1');
           });
         });
@@ -384,58 +384,58 @@ describe('Grid directives', () => {
 
       describe('selection keys', () => {
         describe('selectionMode="explicit"', () => {
-          beforeEach(() => {
-            setupGrid({
+          beforeEach(async () => {
+            await setupGrid({
               enableSelection: true,
               selectionMode: 'explicit',
               multi: true,
             });
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             // Start interactions from the middle cell
             const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
             centerCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
           });
 
-          it('should toggle selection of the active cell on Space', () => {
+          it('should toggle selection of the active cell on Space', async () => {
             const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
 
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
 
-            space();
+            await space();
 
             expect(centerCell.getAttribute('aria-selected')).toBe('true');
 
-            space();
+            await space();
 
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
           });
 
-          it('should trigger default action of the active cell on Enter', () => {
+          it('should trigger default action of the active cell on Enter', async () => {
             const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
 
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
 
-            enter();
+            await enter();
 
             expect(centerCell.getAttribute('aria-selected')).toBe('true');
 
-            enter();
+            await enter();
 
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
           });
 
-          it('should select all selectable cells on Ctrl+A', () => {
-            keydown('a', {ctrlKey: true});
+          it('should select all selectable cells on Ctrl+A', async () => {
+            await keydown('a', {ctrlKey: true});
 
             const cells = gridElement.querySelectorAll<HTMLElement>('[ngGridCell]');
             for (let i = 0; i < cells.length; i++) {
               expect(cells[i].getAttribute('aria-selected')).toBe('true');
             }
 
-            keydown('a', {ctrlKey: true});
+            await keydown('a', {ctrlKey: true});
 
             for (let i = 0; i < cells.length; i++) {
               expect(cells[i].getAttribute('aria-selected')).toBe('false');
@@ -444,22 +444,22 @@ describe('Grid directives', () => {
         });
 
         describe('selectionMode="follow"', () => {
-          beforeEach(() => {
-            setupGrid({
+          beforeEach(async () => {
+            await setupGrid({
               enableSelection: true,
               selectionMode: 'follow',
               multi: false,
             });
             gridInstance._pattern.setDefaultStateEffect();
-            fixture.detectChanges();
+            await fixture.whenStable();
 
             // Start interactions from the middle cell
             const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
             centerCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-            fixture.detectChanges();
+            await fixture.whenStable();
           });
 
-          it('should select an item when navigated to with Arrow keys and deselect others', () => {
+          it('should select an item when navigated to with Arrow keys and deselect others', async () => {
             const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
             const topCell = gridElement.querySelector('#c0-1') as HTMLElement;
 
@@ -467,13 +467,13 @@ describe('Grid directives', () => {
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
             expect(topCell.getAttribute('aria-selected')).toBe('false');
 
-            up();
+            await up();
 
             // Arrow keys select the target
             expect(centerCell.getAttribute('aria-selected')).toBe('false');
             expect(topCell.getAttribute('aria-selected')).toBe('true');
 
-            down();
+            await down();
 
             expect(topCell.getAttribute('aria-selected')).toBe('false');
             expect(centerCell.getAttribute('aria-selected')).toBe('true');
@@ -483,21 +483,21 @@ describe('Grid directives', () => {
     });
 
     describe('click interactions', () => {
-      beforeEach(() => {
-        setupGrid({
+      beforeEach(async () => {
+        await setupGrid({
           enableSelection: true,
           selectionMode: 'explicit',
           multi: true,
         });
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
       });
 
-      it('should focus and select the clicked cell on click', () => {
+      it('should focus and select the clicked cell on click', async () => {
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('aria-selected')).toBe('false');
 
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(cell.getAttribute('aria-selected')).toBe('true');
         expect(getActiveCellId()).toBe('c1-1');
@@ -505,8 +505,8 @@ describe('Grid directives', () => {
     });
 
     describe('configuration', () => {
-      it('should prevent multiple selections if selectionMode is single (multi false)', () => {
-        setupGrid({
+      it('should prevent multiple selections if selectionMode is single (multi false)', async () => {
+        await setupGrid({
           enableSelection: true,
           selectionMode: 'explicit',
           multi: false,
@@ -515,65 +515,65 @@ describe('Grid directives', () => {
         const cell1 = gridElement.querySelector('#c0-0') as HTMLElement;
         const cell2 = gridElement.querySelector('#c1-1') as HTMLElement;
 
-        pointerDown(cell1);
+        await pointerDown(cell1);
         expect(cell1.getAttribute('aria-selected')).toBe('true');
 
-        pointerDown(cell2);
+        await pointerDown(cell2);
         expect(cell1.getAttribute('aria-selected')).toBe('false');
         expect(cell2.getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should allow interaction but indicate disabled state if softDisabled is true', () => {
+      it('should allow interaction but indicate disabled state if softDisabled is true', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].disabled = true;
-        setupGrid({
+        await setupGrid({
           enableSelection: true,
           selectionMode: 'explicit',
           softDisabled: true,
           gridData,
         });
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const disabledCell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(disabledCell.getAttribute('aria-disabled')).toBe('true');
 
         // Can still interact visually, e.g. focus
         disabledCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(getActiveCellId()).toBe('c1-1');
 
         // But space should not select it? Wait, interaction is allowed, but actions might be blocked.
-        space();
+        await space();
         expect(disabledCell.getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should skip disabled cells if softDisabled is false', () => {
+      it('should skip disabled cells if softDisabled is false', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].disabled = true;
-        setupGrid({
+        await setupGrid({
           softDisabled: false,
           gridData,
         });
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const startCell = gridElement.querySelector('#c1-0') as HTMLElement;
         startCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         // Navigating right from c1-0 should skip c1-1 and go to c1-2
-        right();
+        await right();
         expect(getActiveCellId()).toBe('c1-2');
       });
     });
 
     describe('dynamic updates', () => {
       it('should update row order correctly after rows are shuffled', async () => {
-        setupGrid();
+        await setupGrid();
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const rowPatternsBefore = gridInstance._pattern.inputs.rows();
         expect(rowPatternsBefore.length).toBe(3);
@@ -583,7 +583,7 @@ describe('Grid directives', () => {
         const firstRow = gridData.shift()!;
         gridData.push(firstRow);
         fixture.componentInstance.gridData.set([...gridData]);
-        fixture.detectChanges();
+        await fixture.whenStable();
         await waitForMicrotasks();
 
         const rowPatternsAfter = gridInstance._pattern.inputs.rows();
@@ -595,16 +595,16 @@ describe('Grid directives', () => {
 
   describe('GridRow', () => {
     describe('ARIA attributes and roles', () => {
-      it('should set role="row" on the host element', () => {
-        setupGrid();
+      it('should set role="row" on the host element', async () => {
+        await setupGrid();
         const row = gridElement.querySelector('tr') as HTMLElement;
         expect(row.getAttribute('role')).toBe('row');
       });
 
-      it('should set aria-rowindex based on the rowIndex input', () => {
+      it('should set aria-rowindex based on the rowIndex input', async () => {
         const gridData = createGridData();
         gridData[0].rowIndex = 5;
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const row = gridElement.querySelector('tr') as HTMLElement;
         expect(row.getAttribute('aria-rowindex')).toBe('5');
       });
@@ -612,9 +612,9 @@ describe('Grid directives', () => {
 
     describe('dynamic updates', () => {
       it('should update cell order correctly after cells are shuffled', async () => {
-        setupGrid();
+        await setupGrid();
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const firstRow = gridDebugElement.query(By.directive(GridRow)).injector.get(GridRow);
         const cellPatternsBefore = firstRow._pattern.inputs.cells();
@@ -626,7 +626,7 @@ describe('Grid directives', () => {
         const firstCell = firstRowCells.shift()!;
         firstRowCells.push(firstCell);
         fixture.componentInstance.gridData.set([...gridData]);
-        fixture.detectChanges();
+        await fixture.whenStable();
         await waitForMicrotasks();
 
         const cellPatternsAfter = firstRow._pattern.inputs.cells();
@@ -638,106 +638,106 @@ describe('Grid directives', () => {
 
   describe('GridCell', () => {
     describe('ARIA attributes and roles', () => {
-      it('should set the role based on the role input', () => {
+      it('should set the role based on the role input', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].role = 'columnheader';
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('role')).toBe('columnheader');
       });
 
-      it('should set aria-rowindex to the provided row index', () => {
+      it('should set aria-rowindex to the provided row index', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].rowIndex = 4;
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('aria-rowindex')).toBe('4');
       });
 
-      it('should set aria-colindex to the provided column index', () => {
+      it('should set aria-colindex to the provided column index', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].colIndex = 3;
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('aria-colindex')).toBe('3');
       });
 
-      it('should set aria-selected="true" when the cell is selected', () => {
-        setupGrid({enableSelection: true, selectionMode: 'explicit'});
+      it('should set aria-selected="true" when the cell is selected', async () => {
+        await setupGrid({enableSelection: true, selectionMode: 'explicit'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('aria-selected')).toBe('false');
 
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(cell.getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should set aria-selected="false" when the cell is unselected', () => {
-        setupGrid({enableSelection: true, selectionMode: 'explicit'});
+      it('should set aria-selected="false" when the cell is unselected', async () => {
+        await setupGrid({enableSelection: true, selectionMode: 'explicit'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
-        pointerDown(cell);
+        await pointerDown(cell);
         expect(cell.getAttribute('aria-selected')).toBe('true');
 
-        pointerDown(cell);
+        await pointerDown(cell);
         expect(cell.getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should set aria-rowspan to the provided rowspan configuration', () => {
+      it('should set aria-rowspan to the provided rowspan configuration', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].rowSpan = 2;
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('rowspan')).toBe('2');
         expect(cell.getAttribute('aria-rowspan')).toBe('2');
       });
 
-      it('should set aria-colspan to the provided colspan configuration', () => {
+      it('should set aria-colspan to the provided colspan configuration', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].colSpan = 3;
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('colspan')).toBe('3');
         expect(cell.getAttribute('aria-colspan')).toBe('3');
       });
 
-      it('should set id from the id input if provided', () => {
+      it('should set id from the id input if provided', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].id = 'custom-id';
-        setupGrid({gridData});
+        await setupGrid({gridData});
         const cell = gridElement.querySelector('#custom-id') as HTMLElement;
         expect(cell.getAttribute('id')).toBe('custom-id');
       });
     });
 
     describe('focus management', () => {
-      it('should set tabindex="0" on the active cell', () => {
-        setupGrid({focusMode: 'roving'});
+      it('should set tabindex="0" on the active cell', async () => {
+        await setupGrid({focusMode: 'roving'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c0-0') as HTMLElement;
         expect(cell.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set tabindex="-1" on inactive cells', () => {
-        setupGrid({focusMode: 'roving'});
+      it('should set tabindex="-1" on inactive cells', async () => {
+        await setupGrid({focusMode: 'roving'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         expect(cell.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set data-active="true" when the cell becomes active', () => {
-        setupGrid();
+      it('should set data-active="true" when the cell becomes active', async () => {
+        await setupGrid();
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c0-0') as HTMLElement;
         expect(cell.getAttribute('data-active')).toBe('true');
@@ -745,64 +745,64 @@ describe('Grid directives', () => {
     });
 
     describe('configuration', () => {
-      it('should prevent selection when disabled input is true', () => {
+      it('should prevent selection when disabled input is true', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].disabled = true;
-        setupGrid({enableSelection: true, selectionMode: 'explicit', gridData});
+        await setupGrid({enableSelection: true, selectionMode: 'explicit', gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(cell.getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should prevent interaction when disabled input is true', () => {
+      it('should prevent interaction when disabled input is true', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].disabled = true;
-        setupGrid({
+        await setupGrid({
           enableSelection: true,
           selectionMode: 'explicit',
           softDisabled: false,
           gridData,
         });
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const startCell = gridElement.querySelector('#c1-0') as HTMLElement;
         startCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         // Navigating right from c1-0 should skip c1-1 and go to c1-2 because it's completely disabled
-        right();
+        await right();
         expect(getActiveCellId()).toBe('c1-2');
       });
 
-      it('should prevent selection when selectable input is false', () => {
+      it('should prevent selection when selectable input is false', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].selectable = false;
-        setupGrid({enableSelection: true, selectionMode: 'explicit', gridData});
+        await setupGrid({enableSelection: true, selectionMode: 'explicit', gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(cell.hasAttribute('aria-selected')).toBeFalse();
       });
 
-      it('should update the selected property when bound value changes', () => {
+      it('should update the selected property when bound value changes', async () => {
         // Needs a two-way binding test, but we can just test selection updates since it is model()
-        setupGrid({enableSelection: true, selectionMode: 'explicit'});
+        await setupGrid({enableSelection: true, selectionMode: 'explicit'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cellDirective = fixture.debugElement.query(By.css('#c1-1')).injector.get(GridCell);
         expect(cellDirective.selected()).toBeFalse();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(cellDirective.selected()).toBeTrue();
       });
@@ -811,65 +811,65 @@ describe('Grid directives', () => {
 
   describe('GridCellWidget', () => {
     describe('ARIA and Host attributes', () => {
-      it('should set data-active="true" when the widget is active', () => {
+      it('should set data-active="true" when the widget is active', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         const widget = gridElement.querySelector('#w1') as HTMLElement;
 
         expect(widget.getAttribute('data-active')).toBe('false');
-        pointerDown(cell);
+        await pointerDown(cell);
         expect(widget.getAttribute('data-active')).toBe('true');
       });
 
-      it('should set data-active-control="widget" when the widget is activated', () => {
+      it('should set data-active-control="widget" when the widget is activated', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].widgets = [{id: 'w1', type: 'editable'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         const widget = gridElement.querySelector('#w1') as HTMLElement;
 
-        pointerDown(cell);
+        await pointerDown(cell);
         expect(widget.getAttribute('data-active-control')).toBe('cell');
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(widget.getAttribute('data-active-control')).toBe('widget');
       });
 
-      it('should set tabindex="0" on the active widget', () => {
+      it('should set tabindex="0" on the active widget', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
         const widget = gridElement.querySelector('#w1') as HTMLElement;
 
-        pointerDown(cell);
+        await pointerDown(cell);
         expect(widget.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set tabindex="-1" on inactive widgets', () => {
+      it('should set tabindex="-1" on inactive widgets', async () => {
         const gridData = createGridData();
         gridData[1].cells[1].widgets = [{id: 'w1', type: 'simple'}];
         gridData[1].cells[2].widgets = [{id: 'w2', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widget1 = gridElement.querySelector('#w1') as HTMLElement;
         const widget2 = gridElement.querySelector('#w2') as HTMLElement;
 
         const cell = gridElement.querySelector('#c1-1') as HTMLElement;
-        pointerDown(cell);
+        await pointerDown(cell);
 
         expect(widget1.getAttribute('tabindex')).toBe('0');
         expect(widget2.getAttribute('tabindex')).toBe('-1');
@@ -877,103 +877,103 @@ describe('Grid directives', () => {
     });
 
     describe('widget activation', () => {
-      it('should immediately delegate focus when widgetType is simple', () => {
+      it('should immediately delegate focus when widgetType is simple', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widget = gridElement.querySelector('#w1') as HTMLElement;
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
         expect(document.activeElement).toBe(widget);
       });
 
-      it('should wait for enter key to delegate focus when widgetType is complex', () => {
+      it('should wait for enter key to delegate focus when widgetType is complex', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widgetDirective = fixture.debugElement
           .query(By.css('#w1'))
           .injector.get(GridCellWidget);
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
         expect(widgetDirective.isActivated()).toBeFalse();
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(widgetDirective.isActivated()).toBeTrue();
       });
 
-      it('should enter edit mode when widgetType is editable and enter is pressed', () => {
+      it('should enter edit mode when widgetType is editable and enter is pressed', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'editable'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widgetDirective = fixture.debugElement
           .query(By.css('#w1'))
           .injector.get(GridCellWidget);
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(widgetDirective.isActivated()).toBeTrue();
       });
 
-      it('should give widget tabindex -1 when focusTarget is present', () => {
+      it('should give widget tabindex -1 when focusTarget is present', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex', hasTarget: true}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widgetElement = gridElement.querySelector('#w1') as HTMLElement;
         expect(widgetElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should emit the activated output on Enter for simple widget', () => {
+      it('should emit the activated output on Enter for simple widget', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
         expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
-      it('should emit the activated output on Space for simple widget', () => {
+      it('should emit the activated output on Space for simple widget', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
         expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
 
-        keydown(' ');
+        await keydown(' ');
         expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
-      it('should emit the activated output in activedescendant mode when event is dispatched directly to grid', () => {
+      it('should emit the activated output in activedescendant mode when event is dispatched directly to grid', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'simple'}];
-        setupGrid({gridData, focusMode: 'activedescendant'});
+        await setupGrid({gridData, focusMode: 'activedescendant'});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
 
@@ -983,78 +983,78 @@ describe('Grid directives', () => {
           bubbles: true,
         });
         gridElement.dispatchEvent(event);
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
-      it('should emit the activated output when the widget becomes active', () => {
+      it('should emit the activated output when the widget becomes active', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
         expect(fixture.componentInstance.onActivated).not.toHaveBeenCalled();
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
-      it('should emit the deactivated output when the widget loses active state', () => {
+      it('should emit the deactivated output when the widget loses active state', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
-        tabIntoGrid();
+        await tabIntoGrid();
 
-        keydown('Enter');
+        await keydown('Enter');
         expect(fixture.componentInstance.onDeactivated).not.toHaveBeenCalled();
 
-        keydown('Escape');
+        await keydown('Escape');
         expect(fixture.componentInstance.onDeactivated).toHaveBeenCalled();
       });
 
-      it('should become active when activate() is called programmatically', () => {
+      it('should become active when activate() is called programmatically', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widgetDirective = fixture.debugElement
           .query(By.css('#w1'))
           .injector.get(GridCellWidget);
 
         widgetDirective.activate();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(widgetDirective.isActivated()).toBeTrue();
         expect(fixture.componentInstance.onActivated).toHaveBeenCalled();
       });
 
-      it('should lose active state when deactivate() is called programmatically', () => {
+      it('should lose active state when deactivate() is called programmatically', async () => {
         const gridData = createGridData();
         gridData[0].cells[0].widgets = [{id: 'w1', type: 'complex'}];
-        setupGrid({gridData});
+        await setupGrid({gridData});
         gridInstance._pattern.setDefaultStateEffect();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         const widgetDirective = fixture.debugElement
           .query(By.css('#w1'))
           .injector.get(GridCellWidget);
 
         widgetDirective.activate();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(widgetDirective.isActivated()).toBeTrue();
 
         widgetDirective.deactivate();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(widgetDirective.isActivated()).toBeFalse();
       });
@@ -1068,9 +1068,9 @@ describe('Grid directives', () => {
       consoleSpy = spyOn(console, 'warn');
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       TestBed.resetTestingModule();
-      setupGrid();
+      await setupGrid();
     });
 
     it('should warn when ngGridRow contains no cells', () => {

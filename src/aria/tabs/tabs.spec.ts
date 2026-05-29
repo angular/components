@@ -36,7 +36,7 @@ describe('Tabs', () => {
   let tabElements: HTMLElement[];
   let tabPanelElements: HTMLElement[];
 
-  const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
+  const keydown = async (key: string, modifierKeys: ModifierKeys = {}) => {
     tabListElement.dispatchEvent(
       new KeyboardEvent('keydown', {
         key,
@@ -44,31 +44,31 @@ describe('Tabs', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables();
   };
 
-  const click = (target: HTMLElement, eventInit?: PointerEventInit) => {
+  const click = async (target: HTMLElement, eventInit?: PointerEventInit) => {
     target.dispatchEvent(
       new PointerEvent('click', {
         bubbles: true,
         ...eventInit,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables();
   };
 
-  const space = (modifierKeys?: ModifierKeys) => keydown(' ', modifierKeys);
-  const enter = (modifierKeys?: ModifierKeys) => keydown('Enter', modifierKeys);
-  const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
-  const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
-  const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
-  const right = (modifierKeys?: ModifierKeys) => keydown('ArrowRight', modifierKeys);
-  const home = (modifierKeys?: ModifierKeys) => keydown('Home', modifierKeys);
-  const end = (modifierKeys?: ModifierKeys) => keydown('End', modifierKeys);
+  const space = async (modifierKeys?: ModifierKeys) => await keydown(' ', modifierKeys);
+  const enter = async (modifierKeys?: ModifierKeys) => await keydown('Enter', modifierKeys);
+  const up = async (modifierKeys?: ModifierKeys) => await keydown('ArrowUp', modifierKeys);
+  const down = async (modifierKeys?: ModifierKeys) => await keydown('ArrowDown', modifierKeys);
+  const left = async (modifierKeys?: ModifierKeys) => await keydown('ArrowLeft', modifierKeys);
+  const right = async (modifierKeys?: ModifierKeys) => await keydown('ArrowRight', modifierKeys);
+  const home = async (modifierKeys?: ModifierKeys) => await keydown('Home', modifierKeys);
+  const end = async (modifierKeys?: ModifierKeys) => await keydown('End', modifierKeys);
 
-  function setupTestTabs(options: {textDirection?: Direction} = {}) {
+  async function setupTestTabs(options: {textDirection?: Direction} = {}) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(options.textDirection ?? 'ltr')],
     });
@@ -76,11 +76,11 @@ describe('Tabs', () => {
     fixture = TestBed.createComponent(TestTabsComponent);
     testComponent = fixture.componentInstance;
 
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables();
   }
 
-  function updateTabs(
+  async function updateTabs(
     options: {
       initialTabs?: TestTabDefinition[];
       selectedTab?: string | undefined;
@@ -101,7 +101,7 @@ describe('Tabs', () => {
     if (options.focusMode !== undefined) testComponent.focusMode.set(options.focusMode);
     if (options.selectionMode !== undefined) testComponent.selectionMode.set(options.selectionMode);
 
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables();
   }
 
@@ -130,9 +130,9 @@ describe('Tabs', () => {
   });
 
   describe('ARIA attributes and roles', () => {
-    beforeEach(() => {
-      setupTestTabs();
-      updateTabs({
+    beforeEach(async () => {
+      await setupTestTabs();
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
@@ -146,33 +146,33 @@ describe('Tabs', () => {
         expect(tabListElement.getAttribute('role')).toBe('tablist');
       });
 
-      it('should set aria-orientation based on input', () => {
+      it('should set aria-orientation based on input', async () => {
         expect(tabListElement.getAttribute('aria-orientation')).toBe('horizontal');
-        updateTabs({orientation: 'vertical'});
+        await updateTabs({orientation: 'vertical'});
         expect(tabListElement.getAttribute('aria-orientation')).toBe('vertical');
       });
 
-      it('should set aria-disabled based on input', () => {
+      it('should set aria-disabled based on input', async () => {
         expect(tabListElement.getAttribute('aria-disabled')).toBe('false');
-        updateTabs({disabled: true});
+        await updateTabs({disabled: true});
         expect(tabListElement.getAttribute('aria-disabled')).toBe('true');
       });
 
-      it('should have tabindex set by focusMode', () => {
-        updateTabs({focusMode: 'roving'});
+      it('should have tabindex set by focusMode', async () => {
+        await updateTabs({focusMode: 'roving'});
         expect(tabListElement.getAttribute('tabindex')).toBe('-1');
 
-        updateTabs({focusMode: 'activedescendant'});
+        await updateTabs({focusMode: 'activedescendant'});
         expect(tabListElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set aria-activedescendant in activedescendant mode', () => {
-        updateTabs({focusMode: 'activedescendant', selectedTab: 'tab1'});
+      it('should set aria-activedescendant in activedescendant mode', async () => {
+        await updateTabs({focusMode: 'activedescendant', selectedTab: 'tab1'});
         expect(tabListElement.getAttribute('aria-activedescendant')).toBe(tabElements[0].id);
       });
 
-      it('should not set aria-activedescendant in roving mode', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should not set aria-activedescendant in roving mode', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(tabListElement.hasAttribute('aria-activedescendant')).toBe(false);
       });
     });
@@ -184,13 +184,13 @@ describe('Tabs', () => {
         });
       });
 
-      it('should have aria-selected based on selection state', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should have aria-selected based on selection state', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[2].getAttribute('aria-selected')).toBe('false');
 
-        updateTabs({selectedTab: 'tab3'});
+        await updateTabs({selectedTab: 'tab3'});
         expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
@@ -208,13 +208,13 @@ describe('Tabs', () => {
         expect(tabElements[2].getAttribute('aria-disabled')).toBe('false');
       });
 
-      it('should have tabindex set by focusMode and active state', () => {
-        updateTabs({focusMode: 'roving', selectedTab: 'tab1'});
+      it('should have tabindex set by focusMode and active state', async () => {
+        await updateTabs({focusMode: 'roving', selectedTab: 'tab1'});
         expect(tabElements[0].getAttribute('tabindex')).toBe('0');
         expect(tabElements[1].getAttribute('tabindex')).toBe('-1');
         expect(tabElements[2].getAttribute('tabindex')).toBe('-1');
 
-        updateTabs({focusMode: 'activedescendant'});
+        await updateTabs({focusMode: 'activedescendant'});
         tabElements.forEach(tabElement => {
           expect(tabElement.getAttribute('tabindex')).toBe('-1');
         });
@@ -228,13 +228,13 @@ describe('Tabs', () => {
         });
       });
 
-      it('should have tabindex="0" when visible.', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should have tabindex="0" when visible.', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(tabPanelElements[0].getAttribute('tabindex')).toBe('0');
       });
 
-      it('should have tabindex="-1" when hidden.', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should have tabindex="-1" when hidden.', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(tabPanelElements[1].getAttribute('tabindex')).toBe('-1');
         expect(tabPanelElements[2].getAttribute('tabindex')).toBe('-1');
       });
@@ -245,13 +245,13 @@ describe('Tabs', () => {
         expect(tabPanelElements[2].getAttribute('aria-labelledby')).toBe(tabElements[2].id);
       });
 
-      it('should have inert attribute when hidden and not when visible', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should have inert attribute when hidden and not when visible', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(tabPanelElements[0].hasAttribute('inert')).toBe(false);
         expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
 
-        updateTabs({selectedTab: 'tab3'});
+        await updateTabs({selectedTab: 'tab3'});
         expect(tabPanelElements[0].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
         expect(tabPanelElements[2].hasAttribute('inert')).toBe(false);
@@ -263,9 +263,9 @@ describe('Tabs', () => {
     for (const focusMode of ['roving', 'activedescendant'] as const) {
       describe(`focusMode="${focusMode}"`, () => {
         describe('LTR', () => {
-          beforeEach(() => {
-            setupTestTabs({textDirection: 'ltr'});
-            updateTabs({
+          beforeEach(async () => {
+            await setupTestTabs({textDirection: 'ltr'});
+            await updateTabs({
               initialTabs: [
                 {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
                 {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
@@ -276,87 +276,87 @@ describe('Tabs', () => {
             });
           });
 
-          it('should move focus with ArrowRight', () => {
+          it('should move focus with ArrowRight', async () => {
             expect(isTabFocused(0)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(1)).toBe(true);
           });
 
-          it('should move focus with ArrowLeft', () => {
-            right();
+          it('should move focus with ArrowLeft', async () => {
+            await right();
             expect(isTabFocused(1)).toBe(true);
-            left();
+            await left();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should wrap focus with ArrowRight if wrap is true', () => {
-            updateTabs({wrap: true});
-            right();
+          it('should wrap focus with ArrowRight if wrap is true', async () => {
+            await updateTabs({wrap: true});
+            await right();
             expect(isTabFocused(1)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(2)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should not wrap focus with ArrowRight if wrap is false', () => {
-            updateTabs({wrap: false});
-            right();
+          it('should not wrap focus with ArrowRight if wrap is false', async () => {
+            await updateTabs({wrap: false});
+            await right();
             expect(isTabFocused(1)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(2)).toBe(true);
-            right();
-            expect(isTabFocused(2)).toBe(true);
-          });
-
-          it('should wrap focus with ArrowLeft if wrap is true', () => {
-            updateTabs({wrap: true});
-            expect(isTabFocused(0)).toBe(true);
-            left();
+            await right();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should not wrap focus with ArrowLeft if wrap is false', () => {
-            updateTabs({wrap: false});
+          it('should wrap focus with ArrowLeft if wrap is true', async () => {
+            await updateTabs({wrap: true});
             expect(isTabFocused(0)).toBe(true);
-            left();
-            expect(isTabFocused(0)).toBe(true);
-          });
-
-          it('should move focus to first tab with Home', () => {
-            left();
-            expect(isTabFocused(2)).toBe(true);
-            home();
-            expect(isTabFocused(0)).toBe(true);
-          });
-
-          it('should move focus to last tab with End', () => {
-            expect(isTabFocused(0)).toBe(true);
-            end();
+            await left();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should skip disabled tabs if softDisabled is false', () => {
-            updateTabs({softDisabled: false});
+          it('should not wrap focus with ArrowLeft if wrap is false', async () => {
+            await updateTabs({wrap: false});
             expect(isTabFocused(0)).toBe(true);
-            right();
+            await left();
+            expect(isTabFocused(0)).toBe(true);
+          });
+
+          it('should move focus to first tab with Home', async () => {
+            await left();
+            expect(isTabFocused(2)).toBe(true);
+            await home();
+            expect(isTabFocused(0)).toBe(true);
+          });
+
+          it('should move focus to last tab with End', async () => {
+            expect(isTabFocused(0)).toBe(true);
+            await end();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should not skip disabled tabs if softDisabled is true', () => {
-            updateTabs({softDisabled: true});
+          it('should skip disabled tabs if softDisabled is false', async () => {
+            await updateTabs({softDisabled: false});
+            expect(isTabFocused(0)).toBe(true);
+            await right();
+            expect(isTabFocused(2)).toBe(true);
+          });
+
+          it('should not skip disabled tabs if softDisabled is true', async () => {
+            await updateTabs({softDisabled: true});
             tabListElement.focus();
-            fixture.detectChanges();
+            await fixture.whenStable();
             expect(isTabFocused(0)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(1)).toBe(true);
           });
         });
 
         describe('RTL', () => {
-          beforeEach(() => {
-            setupTestTabs({textDirection: 'rtl'});
-            updateTabs({
+          beforeEach(async () => {
+            await setupTestTabs({textDirection: 'rtl'});
+            await updateTabs({
               initialTabs: [
                 {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
                 {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
@@ -366,41 +366,41 @@ describe('Tabs', () => {
               selectedTab: 'tab1',
             });
           });
-          it('should move focus with ArrowLeft (effectively next)', () => {
+          it('should move focus with ArrowLeft (effectively next)', async () => {
             expect(isTabFocused(0)).toBe(true);
-            left();
+            await left();
             expect(isTabFocused(1)).toBe(true);
           });
 
-          it('should move focus with ArrowRight (effectively previous)', () => {
-            left();
+          it('should move focus with ArrowRight (effectively previous)', async () => {
+            await left();
             expect(isTabFocused(1)).toBe(true);
-            right();
+            await right();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should wrap focus with ArrowLeft if wrap is true', () => {
-            updateTabs({wrap: true});
-            left();
+          it('should wrap focus with ArrowLeft if wrap is true', async () => {
+            await updateTabs({wrap: true});
+            await left();
             expect(isTabFocused(1)).toBe(true);
-            left();
+            await left();
             expect(isTabFocused(2)).toBe(true);
-            left();
+            await left();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should not wrap focus with ArrowLeft if wrap is false', () => {
-            updateTabs({wrap: false});
-            left();
-            left();
+          it('should not wrap focus with ArrowLeft if wrap is false', async () => {
+            await updateTabs({wrap: false});
+            await left();
+            await left();
             expect(isTabFocused(2)).toBe(true);
           });
         });
 
         describe('orientation="vertical"', () => {
-          beforeEach(() => {
-            setupTestTabs({textDirection: 'ltr'});
-            updateTabs({
+          beforeEach(async () => {
+            await setupTestTabs({textDirection: 'ltr'});
+            await updateTabs({
               orientation: 'vertical',
               initialTabs: [
                 {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
@@ -412,71 +412,71 @@ describe('Tabs', () => {
             });
           });
 
-          it('should move focus with ArrowDown', () => {
+          it('should move focus with ArrowDown', async () => {
             expect(isTabFocused(0)).toBe(true);
-            down();
+            await down();
             expect(isTabFocused(1)).toBe(true);
           });
 
-          it('should move focus with ArrowUp', () => {
-            down();
+          it('should move focus with ArrowUp', async () => {
+            await down();
             expect(isTabFocused(1)).toBe(true);
-            up();
+            await up();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should wrap focus with ArrowDown if wrap is true', () => {
-            updateTabs({wrap: true});
-            down();
+          it('should wrap focus with ArrowDown if wrap is true', async () => {
+            await updateTabs({wrap: true});
+            await down();
             expect(isTabFocused(1)).toBe(true);
-            down();
+            await down();
             expect(isTabFocused(2)).toBe(true);
-            down();
+            await down();
             expect(isTabFocused(0)).toBe(true);
           });
 
-          it('should not wrap focus with ArrowDown if wrap is false', () => {
-            updateTabs({wrap: false});
-            down();
+          it('should not wrap focus with ArrowDown if wrap is false', async () => {
+            await updateTabs({wrap: false});
+            await down();
             expect(isTabFocused(1)).toBe(true);
-            down();
+            await down();
             expect(isTabFocused(2)).toBe(true);
-            down();
-            expect(isTabFocused(2)).toBe(true);
-          });
-
-          it('should wrap focus with ArrowUp if wrap is true', () => {
-            updateTabs({wrap: true});
-            expect(isTabFocused(0)).toBe(true);
-            up();
+            await down();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should not wrap focus with ArrowUp if wrap is false', () => {
-            updateTabs({wrap: false});
+          it('should wrap focus with ArrowUp if wrap is true', async () => {
+            await updateTabs({wrap: true});
             expect(isTabFocused(0)).toBe(true);
-            up();
-            expect(isTabFocused(0)).toBe(true);
-          });
-
-          it('should move focus to first tab with Home', () => {
-            end();
-            expect(isTabFocused(2)).toBe(true);
-            home();
-            expect(isTabFocused(0)).toBe(true);
-          });
-
-          it('should move focus to last tab with End', () => {
-            expect(isTabFocused(0)).toBe(true);
-            end();
+            await up();
             expect(isTabFocused(2)).toBe(true);
           });
 
-          it('should not move focus with ArrowLeft/ArrowRight', () => {
+          it('should not wrap focus with ArrowUp if wrap is false', async () => {
+            await updateTabs({wrap: false});
             expect(isTabFocused(0)).toBe(true);
-            left();
+            await up();
             expect(isTabFocused(0)).toBe(true);
-            right();
+          });
+
+          it('should move focus to first tab with Home', async () => {
+            await end();
+            expect(isTabFocused(2)).toBe(true);
+            await home();
+            expect(isTabFocused(0)).toBe(true);
+          });
+
+          it('should move focus to last tab with End', async () => {
+            expect(isTabFocused(0)).toBe(true);
+            await end();
+            expect(isTabFocused(2)).toBe(true);
+          });
+
+          it('should not move focus with ArrowLeft/ArrowRight', async () => {
+            expect(isTabFocused(0)).toBe(true);
+            await left();
+            expect(isTabFocused(0)).toBe(true);
+            await right();
             expect(isTabFocused(0)).toBe(true);
           });
         });
@@ -486,8 +486,8 @@ describe('Tabs', () => {
 
   describe('with shuffled items', () => {
     it('should update collection order when items are shuffled', async () => {
-      setupTestTabs();
-      updateTabs({
+      await setupTestTabs();
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
@@ -503,7 +503,7 @@ describe('Tabs', () => {
       // Shuffle (reverse) data
       const items = testComponent.tabsData().reverse();
       testComponent.tabsData.set([...items]);
-      fixture.detectChanges();
+      await fixture.whenStable();
       await waitForMicrotasks();
 
       // Re-query elements to check new DOM order
@@ -516,9 +516,9 @@ describe('Tabs', () => {
   });
 
   describe('Tab selection', () => {
-    beforeEach(() => {
-      setupTestTabs();
-      updateTabs({
+    beforeEach(async () => {
+      await setupTestTabs();
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
@@ -529,147 +529,147 @@ describe('Tabs', () => {
     });
 
     describe('selectionMode="follow"', () => {
-      beforeEach(() => {
-        updateTabs({selectionMode: 'follow'});
+      beforeEach(async () => {
+        await updateTabs({selectionMode: 'follow'});
       });
 
-      it('should select tab on focus via ArrowKeys', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should select tab on focus via ArrowKeys', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
-        right();
+        await right();
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
 
-        left();
+        await left();
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should select tab on focus via Home/End', () => {
-        updateTabs({selectedTab: 'tab2'});
+      it('should select tab on focus via Home/End', async () => {
+        await updateTabs({selectedTab: 'tab2'});
         expect(testComponent.selectedTab()).toBe('tab2');
 
-        home();
+        await home();
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
-        end();
+        await end();
         expect(testComponent.selectedTab()).toBe('tab3');
         expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should select tab on click', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should select tab on click', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
-        click(tabElements[1]);
+        await click(tabElements[1]);
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should not change selection with Space/Enter on already selected tab', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should not change selection with Space/Enter on already selected tab', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
-        space();
+        await space();
         expect(testComponent.selectedTab()).toBe('tab1');
-        enter();
+        await enter();
         expect(testComponent.selectedTab()).toBe('tab1');
       });
     });
 
     describe('selectionMode="explicit"', () => {
-      beforeEach(() => {
-        updateTabs({selectionMode: 'explicit'});
+      beforeEach(async () => {
+        await updateTabs({selectionMode: 'explicit'});
       });
 
-      it('should not select tab on focus via ArrowKeys', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should not select tab on focus via ArrowKeys', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
-        right();
+        await right();
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(isTabFocused(1)).toBe(true);
 
-        left();
+        await left();
         expect(testComponent.selectedTab()).toBe('tab1');
         expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
         expect(isTabFocused(0)).toBe(true);
       });
 
-      it('should select focused tab on Space', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should select focused tab on Space', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
 
-        right();
+        await right();
         expect(isTabFocused(1)).toBe(true);
         expect(testComponent.selectedTab()).toBe('tab1');
 
-        space();
+        await space();
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should select focused tab on Enter', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should select focused tab on Enter', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
 
-        right();
+        await right();
         expect(isTabFocused(1)).toBe(true);
         expect(testComponent.selectedTab()).toBe('tab1');
 
-        enter();
+        await enter();
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should select tab on click', () => {
-        updateTabs({selectedTab: 'tab1'});
+      it('should select tab on click', async () => {
+        await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');
-        click(tabElements[1]);
+        await click(tabElements[1]);
         expect(testComponent.selectedTab()).toBe('tab2');
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
     });
 
-    it('should update selectedTab model on selection change', () => {
-      updateTabs({selectedTab: 'tab1', selectionMode: 'follow'});
+    it('should update selectedTab model on selection change', async () => {
+      await updateTabs({selectedTab: 'tab1', selectionMode: 'follow'});
       expect(testComponent.selectedTab()).toBe('tab1');
 
-      right();
+      await right();
       expect(testComponent.selectedTab()).toBe('tab2');
 
-      updateTabs({selectionMode: 'explicit'});
-      right();
+      await updateTabs({selectionMode: 'explicit'});
+      await right();
       expect(testComponent.selectedTab()).toBe('tab2');
-      enter();
+      await enter();
       expect(testComponent.selectedTab()).toBe('tab3');
 
-      click(tabElements[0]);
+      await click(tabElements[0]);
       expect(testComponent.selectedTab()).toBe('tab1');
     });
 
-    it('should update selection when selectedTab model changes', () => {
-      updateTabs({selectedTab: 'tab1'});
+    it('should update selection when selectedTab model changes', async () => {
+      await updateTabs({selectedTab: 'tab1'});
       expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
 
-      updateTabs({selectedTab: 'tab2'});
+      await updateTabs({selectedTab: 'tab2'});
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
 
-      updateTabs({selectedTab: 'tab3'});
+      await updateTabs({selectedTab: 'tab3'});
       expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
-    it('should not select a disabled tab via click', () => {
-      updateTabs({
+    it('should not select a disabled tab via click', async () => {
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
@@ -678,13 +678,13 @@ describe('Tabs', () => {
         selectedTab: 'tab1',
       });
       expect(testComponent.selectedTab()).toBe('tab1');
-      click(tabElements[1]);
+      await click(tabElements[1]);
       expect(testComponent.selectedTab()).toBe('tab1');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
-    it('should not select a disabled tab via keyboard', () => {
-      updateTabs({
+    it('should not select a disabled tab via keyboard', async () => {
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2', disabled: true},
@@ -695,31 +695,31 @@ describe('Tabs', () => {
         softDisabled: true,
       });
       expect(testComponent.selectedTab()).toBe('tab1');
-      right();
+      await right();
       expect(isTabFocused(1)).toBe(true);
-      enter();
+      await enter();
       expect(testComponent.selectedTab()).toBe('tab1');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
-    it('should not change selection if tablist is disabled', () => {
-      updateTabs({selectedTab: 'tab1', disabled: true});
+    it('should not change selection if tablist is disabled', async () => {
+      await updateTabs({selectedTab: 'tab1', disabled: true});
       expect(testComponent.selectedTab()).toBe('tab1');
-      click(tabElements[1]);
+      await click(tabElements[1]);
       expect(testComponent.selectedTab()).toBe('tab1');
-      right();
+      await right();
       expect(testComponent.selectedTab()).toBe('tab1');
     });
 
-    it('should handle initial selection via input', () => {
-      updateTabs({selectedTab: 'tab2'});
+    it('should handle initial selection via input', async () => {
+      await updateTabs({selectedTab: 'tab2'});
       expect(testComponent.selectedTab()).toBe('tab2');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
     });
 
-    it('should allow programmatic selection even if disabled', () => {
-      updateTabs({disabled: true});
+    it('should allow programmatic selection even if disabled', async () => {
+      await updateTabs({disabled: true});
 
       expect(tabElements[0].getAttribute('aria-selected')).toBe('true');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
@@ -729,7 +729,7 @@ describe('Tabs', () => {
       expect(tabPanelElements[1].hasAttribute('inert')).toBe(true);
       expect(tabPanelElements[2].hasAttribute('inert')).toBe(true);
 
-      updateTabs({selectedTab: 'tab2'});
+      await updateTabs({selectedTab: 'tab2'});
 
       expect(tabElements[0].getAttribute('aria-selected')).toBe('false');
       expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
@@ -742,9 +742,9 @@ describe('Tabs', () => {
   });
 
   describe('Dynamic tabs', () => {
-    beforeEach(() => {
-      setupTestTabs();
-      updateTabs({
+    beforeEach(async () => {
+      await setupTestTabs();
+      await updateTabs({
         initialTabs: [
           {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
           {value: 'tab2', label: 'Tab 2', content: 'Content 2'},
@@ -754,20 +754,20 @@ describe('Tabs', () => {
       });
     });
 
-    it('should update selection when active tab is removed', () => {
+    it('should update selection when active tab is removed', async () => {
       expect(testComponent.selectedTab()).toBe('tab2');
 
       testComponent.tabsData.set([
         {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
         {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
       ]);
-      fixture.detectChanges();
+      await fixture.whenStable();
       defineTestVariables();
 
       expect(testComponent.selectedTab()).toBeUndefined();
     });
 
-    it('should maintain selection when a new tab is added', () => {
+    it('should maintain selection when a new tab is added', async () => {
       expect(testComponent.selectedTab()).toBe('tab2');
 
       testComponent.tabsData.set([
@@ -776,7 +776,7 @@ describe('Tabs', () => {
         {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
         {value: 'tab4', label: 'Tab 4', content: 'Content 4'},
       ]);
-      fixture.detectChanges();
+      await fixture.whenStable();
       defineTestVariables();
 
       expect(testComponent.selectedTab()).toBe('tab2');
@@ -814,9 +814,9 @@ describe('Tabs', () => {
       consoleSpy = spyOn(console, 'warn');
     });
 
-    afterEach(() => {
+    afterEach(async () => {
       TestBed.resetTestingModule();
-      setupTestTabs();
+      await setupTestTabs();
     });
 
     it('should warn when ngTab is missing its corresponding ngTabPanel', () => {
