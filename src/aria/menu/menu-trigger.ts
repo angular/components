@@ -14,6 +14,7 @@ import {
   ElementRef,
   inject,
   input,
+  model,
 } from '@angular/core';
 import {MenuTriggerPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
@@ -68,7 +69,7 @@ export class MenuTrigger<V> {
   readonly menu = input<Menu<V> | undefined>(undefined);
 
   /** Whether the menu is expanded. */
-  readonly expanded = computed(() => this._pattern.expanded());
+  readonly expanded = model<boolean>(false);
 
   /** Whether the menu trigger has a popup. */
   readonly hasPopup = computed(() => this._pattern.hasPopup());
@@ -85,11 +86,19 @@ export class MenuTrigger<V> {
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),
     disabled: () => this.disabled(),
+    expanded: this.expanded,
   });
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
     effect(() => this._pattern.pendingFocusEffect());
+
+    // Minimal support for sharing one menu across multiple menu triggers.
+    effect(() => {
+      if (this.expanded() && this.menu()) {
+        this.menu()!.parent.set(this);
+      }
+    });
 
     // Automatically prevent form submission.
     if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {

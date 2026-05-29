@@ -45,6 +45,7 @@ function getMenuTriggerPattern(opts?: {textDirection: 'ltr' | 'rtl'}) {
     element,
     menu: submenu,
     disabled: signal(false),
+    expanded: signal(false),
   });
 
   const originalOnClick = trigger.onClick.bind(trigger);
@@ -94,6 +95,7 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
         element: signal(element),
         submenu: signal(undefined),
         role: signal('menuitem'),
+        expanded: signal(false),
       }) as TestMenuItem;
     }),
   );
@@ -140,6 +142,7 @@ function getMenuPattern(
         element: signal(element),
         submenu: signal(undefined),
         role: signal('menuitem'),
+        expanded: signal(false),
       }) as TestMenuItem;
     }),
   );

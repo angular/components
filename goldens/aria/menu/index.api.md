@@ -76,7 +76,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     close(): void;
     readonly disabled: _angular_core.InputSignal<boolean>;
     readonly element: HTMLElement;
-    readonly expanded: _angular_core.Signal<boolean | null>;
+    readonly expanded: _angular_core.ModelSignal<boolean>;
     readonly hasPopup: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -91,7 +91,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     readonly submenu: _angular_core.InputSignal<Menu<V> | undefined>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; "expanded": "expandedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuItem<any>, never>;
 }
@@ -102,7 +102,7 @@ export class MenuTrigger<V> {
     close(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly expanded: _angular_core.Signal<boolean>;
+    readonly expanded: _angular_core.ModelSignal<boolean>;
     readonly hasPopup: _angular_core.Signal<boolean>;
     readonly menu: _angular_core.InputSignal<Menu<V> | undefined>;
     open(): void;
@@ -110,7 +110,7 @@ export class MenuTrigger<V> {
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuTrigger<any>, "[ngMenuTrigger]", ["ngMenuTrigger"], { "menu": { "alias": "menu"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuTrigger<any>, "[ngMenuTrigger]", ["ngMenuTrigger"], { "menu": { "alias": "menu"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuTrigger<any>, never>;
 }

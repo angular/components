@@ -7,7 +7,12 @@
  */
 
 import {KeyboardEventManager} from '../behaviors/event-manager';
-import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  computed,
+  signal,
+  SignalLike,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The inputs for the MenuBarPattern class. */
@@ -56,6 +61,9 @@ export interface MenuTriggerInputs<V> {
 
   /** Whether the menu trigger is disabled. */
   disabled: SignalLike<boolean>;
+
+  /** Whether the menu trigger is expanded. */
+  expanded: WritableSignalLike<boolean>;
 }
 
 /** The inputs for the MenuItemPattern class. */
@@ -68,6 +76,9 @@ export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectab
 
   /** The role of the menu item. */
   role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
+
+  /** Whether the menu item is expanded. */
+  expanded: WritableSignalLike<boolean>;
 }
 
 /** The menu ui pattern class. */
@@ -636,7 +647,7 @@ export class MenuBarPattern<V> {
 /** The menu trigger ui pattern class. */
 export class MenuTriggerPattern<V> {
   /** Whether the menu trigger is expanded. */
-  readonly expanded = signal(false);
+  readonly expanded: WritableSignalLike<boolean>;
 
   /** Whether the menu trigger has received interaction. */
   readonly hasBeenInteracted = signal(false);
@@ -672,6 +683,7 @@ export class MenuTriggerPattern<V> {
   });
 
   constructor(readonly inputs: MenuTriggerInputs<V>) {
+    this.expanded = this.inputs.expanded;
     this.menu = this.inputs.menu;
   }
 
@@ -748,7 +760,7 @@ export class MenuTriggerPattern<V> {
 
     while (menuitems.length) {
       const menuitem = menuitems.pop();
-      menuitem?._expanded.set(false);
+      menuitem?.inputs.expanded.set(false);
       menuitem?.inputs.parent()?.listBehavior.unfocus();
       menuitems = menuitems.concat(menuitem?.submenu()?.inputs.items() ?? []);
     }
@@ -790,10 +802,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   readonly index = computed(() => this.inputs.parent()?.inputs.items().indexOf(this) ?? -1);
 
   /** Whether the menu item is expanded. */
-  readonly expanded = computed(() => (this.submenu() ? this._expanded() : null));
-
-  /** Whether the menu item is expanded. */
-  readonly _expanded = signal(false);
+  readonly expanded = computed(() => (this.submenu() ? this.inputs.expanded() : null));
 
   /** The ID of the menu that the menu item controls. */
   readonly controls = signal<string | undefined>(undefined);
@@ -825,7 +834,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
       return;
     }
 
-    this._expanded.set(true);
+    this.inputs.expanded.set(true);
 
     if (opts?.first) {
       this.submenu()?.first();
@@ -837,7 +846,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   /** Closes the submenu. */
   close(opts: {refocus?: boolean} = {}) {
-    this._expanded.set(false);
+    this.inputs.expanded.set(false);
 
     if (opts.refocus) {
       this.inputs.parent()?.listBehavior.goto(this);
@@ -847,7 +856,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
     while (menuitems.length) {
       const menuitem = menuitems.pop();
-      menuitem?._expanded.set(false);
+      menuitem?.inputs.expanded.set(false);
       menuitem?.inputs.parent()?.listBehavior.unfocus();
       menuitems = menuitems.concat(menuitem?.submenu()?.inputs.items() ?? []);
 

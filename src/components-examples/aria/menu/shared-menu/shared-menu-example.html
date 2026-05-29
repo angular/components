@@ -1,0 +1,30 @@
+<ul class="example-shared-menu-list">
+  @for (item of items; track item.id) {
+    <li class="example-shared-menu-list-item">
+      <span class="example-shared-menu-item-name">{{ item.name }}</span>
+      <button
+        ngMenuTrigger
+        (expandedChange)="onExpandedChange($event, item)"
+        [menu]="sharedMenu"
+        aria-label="Open menu"
+        class="example-menu-trigger example-shared-menu-trigger-btn"
+      >
+        <span aria-hidden="true" class="material-symbols-outlined example-shared-menu-trigger-icon">more_vert</span>
+      </button>
+    </li>
+  }
+</ul>
+
+<div ng-menu #sharedMenu="ngMenu" (itemSelected)="onItemSelected($event)">
+  <ng-template ngMenuContent>
+    <div ng-menu-item value="Delete">
+      <span ng-menu-item-icon>delete</span>
+      <span ng-menu-item-text>Delete {{ activeItem()?.name }}</span>
+    </div>
+
+    <div ng-menu-item value="Archive">
+      <span ng-menu-item-icon>archive</span>
+      <span ng-menu-item-text>Archive {{ activeItem()?.name }}</span>
+    </div>
+  </ng-template>
+</div>

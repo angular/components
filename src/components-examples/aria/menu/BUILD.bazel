@@ -15,6 +15,7 @@ ng_project(
         "//src/aria/menu",
         "//src/cdk/a11y",
         "//src/cdk/overlay",
+        "//src/material/snack-bar",
     ],
 )
 

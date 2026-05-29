@@ -1,0 +1,35 @@
+.example-shared-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 20rem;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  background: var(--mat-sys-surface);
+}
+
+.example-shared-menu-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+.example-shared-menu-list-item:last-child {
+  border-bottom: none;
+}
+
+.example-shared-menu-item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.example-shared-menu-trigger-btn {
+  padding: 0.25rem;
+}
+
+.example-shared-menu-trigger-icon {
+  font-size: 1.25rem;
+}

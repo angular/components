@@ -4,3 +4,4 @@ export {MenuTriggerDisabledExample} from './menu-trigger-disabled/menu-trigger-d
 export {MenuStandaloneExample} from './menu-standalone/menu-standalone-example';
 export {MenuStandaloneDisabledExample} from './menu-standalone-disabled/menu-standalone-disabled-example';
 export {MenuCdkOverlayExample} from './menu-cdk-overlay/menu-cdk-overlay-example';
+export {SharedMenuExample} from './shared-menu/shared-menu-example';

@@ -49,7 +49,7 @@ import type {MenuBar} from './menu-bar';
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
     '[attr.aria-haspopup]': 'hasPopup()',
-    '[attr.aria-expanded]': 'expanded()',
+    '[attr.aria-expanded]': '_pattern.expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
@@ -86,7 +86,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   readonly active = computed(() => this._pattern.active());
 
   /** Whether the menu is expanded. */
-  readonly expanded = computed(() => this._pattern.expanded());
+  readonly expanded = model<boolean>(false);
 
   /** Whether the menu item has a popup. */
   readonly hasPopup = computed(() => this._pattern.hasPopup());
@@ -101,10 +101,18 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     parent: computed(() => this.parent?._pattern),
     submenu: computed(() => this.submenu()?._pattern),
     role: this.role,
+    expanded: this.expanded,
   });
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+
+    // Minimal support for sharing one submenu across multiple menu items.
+    effect(() => {
+      if (this.expanded() && this.submenu()) {
+        this.submenu()!.parent.set(this);
+      }
+    });
 
     // Check for any violations after the DOM has been updated.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {

@@ -759,6 +759,55 @@ describe('Menu Trigger Pattern', () => {
       await focusout(getMenu()!, document.body);
       expect(isExpanded()).toBe(false);
     });
+
+    it('should update trigger model when opened via click', async () => {
+      expect(fixture.componentInstance.expanded()).toBe(false);
+      await click(getTrigger());
+      expect(fixture.componentInstance.expanded()).toBe(true);
+    });
+
+    it('should update trigger model when closed', async () => {
+      await click(getTrigger());
+      expect(fixture.componentInstance.expanded()).toBe(true);
+      await click(getTrigger());
+      expect(fixture.componentInstance.expanded()).toBe(false);
+    });
+
+    it('should update submenu model when opened via click', async () => {
+      await click(getTrigger());
+      const berries = getItem('Berries');
+      expect(fixture.componentInstance.berriesExpanded()).toBe(false);
+      await click(berries!);
+      expect(fixture.componentInstance.berriesExpanded()).toBe(true);
+    });
+
+    it('should open menu programmatically when trigger model is updated', async () => {
+      expect(isExpanded()).toBe(false);
+      fixture.componentInstance.expanded.set(true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(isExpanded()).toBe(true);
+    });
+
+    it('should close menu programmatically when trigger model is updated', async () => {
+      await click(getTrigger());
+      expect(isExpanded()).toBe(true);
+      fixture.componentInstance.expanded.set(false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(isExpanded()).toBe(false);
+    });
+
+    it('should open submenu programmatically when submenu model is updated', async () => {
+      await click(getTrigger());
+      const berries = getItem('Berries');
+      expect(berries!.getAttribute('aria-expanded')).toBe('false');
+
+      fixture.componentInstance.berriesExpanded.set(true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(berries!.getAttribute('aria-expanded')).toBe('true');
+    });
   });
 
   describe('Selection', () => {
@@ -1263,13 +1312,13 @@ class StandaloneMenuExample {
 
 @Component({
   template: `
-    <button ngMenuTrigger [menu]="menu">Open menu</button>
+    <button ngMenuTrigger [(expanded)]="expanded" [menu]="menu">Open menu</button>
 
     <div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
       <ng-template ngMenuContent>
         <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
         <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
-        <div ngMenuItem value='Berries' searchTerm='Berries' [submenu]="berriesMenu">Berries</div>
+        <div ngMenuItem value='Berries' searchTerm='Berries' [(expanded)]="berriesExpanded" [submenu]="berriesMenu">Berries</div>
 
         <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
           <ng-template ngMenuContent>
@@ -1287,6 +1336,8 @@ class StandaloneMenuExample {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuTriggerExample {
+  expanded = signal(false);
+  berriesExpanded = signal(false);
   itemSelected(value: string) {}
 }
 

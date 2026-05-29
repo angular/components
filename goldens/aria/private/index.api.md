@@ -387,6 +387,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
 
 // @public
 export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
+    expanded: WritableSignalLike<boolean>;
     parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
     role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
     submenu: SignalLike<MenuPattern<V> | undefined>;
@@ -403,7 +404,6 @@ export class MenuItemPattern<V> implements ListItem<V> {
     readonly disabled: () => boolean;
     readonly element: SignalLike<HTMLElement | undefined>;
     readonly expanded: SignalLike<boolean | null>;
-    readonly _expanded: WritableSignalLike<boolean>;
     readonly hasBeenInteracted: WritableSignalLike<boolean>;
     readonly hasPopup: SignalLike<boolean>;
     readonly id: SignalLike<string>;
@@ -472,6 +472,7 @@ export class MenuPattern<V> {
 export interface MenuTriggerInputs<V> {
     disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement | undefined>;
+    expanded: WritableSignalLike<boolean>;
     menu: SignalLike<MenuPattern<V> | undefined>;
     textDirection: SignalLike<'ltr' | 'rtl'>;
 }
