@@ -82,6 +82,10 @@ packageExtensions:
 engineStrict: false
 hoist: false
 autoInstallPeers: false
+
+# Avoid prompting for confirmation when pnpm determines node_modules needs to be purged and recreated.
+confirmModulesPurge: false
+
 allowBuilds:
   '@firebase/util': false
   '@google/genai': false
