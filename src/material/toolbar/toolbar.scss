@@ -14,14 +14,20 @@ $height-mobile-portrait: 56px !default;
 .mat-toolbar {
   background: token-utils.slot(toolbar-container-background-color, $fallbacks);
   color: token-utils.slot(toolbar-container-text-color, $fallbacks);
+  font-family: token-utils.slot(toolbar-title-text-font, $fallbacks);
+  font-size: token-utils.slot(toolbar-title-text-size, $fallbacks);
+  line-height: token-utils.slot(toolbar-title-text-line-height, $fallbacks);
+  font-weight: token-utils.slot(toolbar-title-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(toolbar-title-text-tracking, $fallbacks);
 
-  &, h1, h2, h3, h4, h5, h6 {
-    font-family: token-utils.slot(toolbar-title-text-font, $fallbacks);
-    font-size: token-utils.slot(toolbar-title-text-size, $fallbacks);
-    line-height: token-utils.slot(toolbar-title-text-line-height, $fallbacks);
-    font-weight: token-utils.slot(toolbar-title-text-weight, $fallbacks);
-    letter-spacing: token-utils.slot(toolbar-title-text-tracking, $fallbacks);
-    margin: 0;
+  // Use doubled class selector (specificity 0-2-1) to ensure heading styles
+  // take precedence over .mat-typography heading styles (specificity 0-1-1).
+  &.mat-toolbar {
+    h1, h2, h3, h4, h5, h6 {
+      font: inherit;
+      letter-spacing: inherit;
+      margin: 0;
+    }
   }
 
   @include cdk.high-contrast {
