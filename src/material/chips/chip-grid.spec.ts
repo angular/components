@@ -180,6 +180,32 @@ describe('MatChipGrid', () => {
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('-1');
       });
 
+
+      it('should silently update the active item without stealing document focus when a focused chip is destroyed', fakeAsync(() => {
+        const fixture = createComponent(StandardChipGrid);
+        fixture.detectChanges();
+        
+        
+        chips.first.focus();
+        fixture.detectChanges();
+
+        
+        const activeElementBeforeDeletion = document.activeElement;
+
+        
+        fixture.componentInstance.foods.splice(0, 1);
+        fixture.detectChanges();
+        flush();
+
+        
+        expect(chipGridInstance._keyManager.activeItemIndex).toBe(0);
+        
+        
+        expect(document.activeElement).not.toBe(chips.toArray()[1].nativeElement);
+      }));
+      
+
+    });
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
           const fixture = createComponent(StandardChipGrid);
