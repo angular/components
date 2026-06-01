@@ -1,3 +1,13 @@
+<a name="22.0.0-rc.3"></a>
+# 22.0.0-rc.3 "ameghinite-ashtray" (2026-06-01)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [21f8bbbf2](https://github.com/angular/components/commit/21f8bbbf226c1938c46fe2afcc4d8d070ec33c86) | fix | **badge:** allow badge defaults to be configured ([#33312](https://github.com/angular/components/pull/33312)) |
+| [31904510b](https://github.com/angular/components/commit/31904510be852961916283d830ae80167ee52dbb) | fix | **menu:** close menu when cleared from trigger ([#33306](https://github.com/angular/components/pull/33306)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0-rc.2"></a>
 # 22.0.0-rc.2 "22-0-0-rc2" (2026-05-27)
 ### cdk
