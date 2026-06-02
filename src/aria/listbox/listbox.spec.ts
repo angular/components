@@ -833,7 +833,7 @@ describe('Listbox', () => {
 
         await type('A');
         expect(isFocused(1)).toBe(true);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
 
         await type('A');
         expect(isFocused(0)).toBe(true);
