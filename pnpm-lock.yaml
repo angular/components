@@ -130,8 +130,8 @@ importers:
         specifier: 'catalog:'
         version: 22.0.0-rc.2(@angular/compiler-cli@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(typescript@6.0.2))(@angular/compiler@22.0.0-rc.2)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a450a2420ca888116e6d4207b38819cd27b06179
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a450a2420ca888116e6d4207b38819cd27b06179(@modelcontextprotocol/sdk@1.29.0)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#2606bcfbee9625f2c16e34c7a3ff43d8a82a08e5
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2606bcfbee9625f2c16e34c7a3ff43d8a82a08e5(@modelcontextprotocol/sdk@1.29.0)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 22.0.0-rc.2(@angular/common@22.0.0-rc.2(@angular/compiler-cli@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(typescript@6.0.2))(@angular/core@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(typescript@6.0.2))(@angular/compiler@22.0.0-rc.2)(@angular/core@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.0.0-rc.2(@angular/common@22.0.0-rc.2(@angular/compiler-cli@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(typescript@6.0.2))(@angular/core@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(typescript@6.0.2))(@angular/core@22.0.0-rc.2(@angular/compiler@22.0.0-rc.2)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
@@ -968,9 +968,9 @@ packages:
       '@angular/compiler': 22.0.0-rc.2
       '@angular/compiler-cli': 22.0.0-rc.2
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a450a2420ca888116e6d4207b38819cd27b06179':
-    resolution: {gitHosted: true, integrity: sha512-yKQqLu4g+2WiIoXV4M7F0x94929zZESjhTj0kTrincYgJ6GrAzfzdeayD5D2ZVg6xUg6ubPEMDDVUwEMeB93Mw==, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a450a2420ca888116e6d4207b38819cd27b06179}
-    version: 0.0.0-9ee8a680dd018d61d21588bb04cf40d49a9f5deb
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2606bcfbee9625f2c16e34c7a3ff43d8a82a08e5':
+    resolution: {gitHosted: true, integrity: sha512-8jQ58SIEa+rZHllum78UB7rmkYfb7miZXLQ97UwhjRLL40/m5PQ7a4vwSbFhPobBcZ4sIX/R7rE5B0H5Hkwn/Q==, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2606bcfbee9625f2c16e34c7a3ff43d8a82a08e5}
+    version: 0.0.0-6a613f2a8529185fda503da34fc4ddcab6967e7d
     hasBin: true
 
   '@angular/platform-browser-dynamic@22.0.0-rc.2':
@@ -10457,7 +10457,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a450a2420ca888116e6d4207b38819cd27b06179(@modelcontextprotocol/sdk@1.29.0)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2606bcfbee9625f2c16e34c7a3ff43d8a82a08e5(@modelcontextprotocol/sdk@1.29.0)':
     dependencies:
       '@actions/core': 3.0.1
       '@conventional-changelog/git-client': 2.7.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)
@@ -12618,8 +12618,8 @@ snapshots:
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      zod: 4.4.3
+      zod-to-json-schema: 3.25.2(zod@4.4.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -12765,7 +12765,7 @@ snapshots:
 
   '@npmcli/fs@5.0.0':
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.1
 
   '@npmcli/git@7.0.2':
     dependencies:
@@ -12775,7 +12775,7 @@ snapshots:
       lru-cache: 11.5.1
       npm-pick-manifest: 11.0.3
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.1
       which: 6.0.1
 
   '@npmcli/installed-package-contents@4.0.0':
@@ -12792,7 +12792,7 @@ snapshots:
       hosted-git-info: 9.0.3
       json-parse-even-better-errors: 5.0.0
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.1
       spdx-expression-parse: 4.0.0
 
   '@npmcli/promise-spawn@9.0.1':
@@ -15108,7 +15108,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.13)
       postcss-modules-values: 4.0.0(postcss@8.5.13)
       postcss-value-parser: 4.2.0
-      semver: 7.7.4
+      semver: 7.8.1
     optionalDependencies:
       webpack: 5.106.2(esbuild@0.28.0)(postcss@8.5.13)
 
@@ -16347,7 +16347,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -17101,7 +17101,7 @@ snapshots:
       '@babel/parser': 7.29.7
       '@istanbuljs/schema': 0.1.6
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.4
+      semver: 7.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -18088,7 +18088,7 @@ snapshots:
 
   npm-install-checks@8.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.1
 
   npm-normalize-package-bin@5.0.0: {}
 
@@ -18096,7 +18096,7 @@ snapshots:
     dependencies:
       hosted-git-info: 9.0.3
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.1
       validate-npm-package-name: 7.0.2
 
   npm-packlist@10.0.4:
@@ -18109,7 +18109,7 @@ snapshots:
       npm-install-checks: 8.0.0
       npm-normalize-package-bin: 5.0.0
       npm-package-arg: 13.0.2
-      semver: 7.7.4
+      semver: 7.8.1
 
   npm-registry-fetch@19.1.1:
     dependencies:
@@ -18550,7 +18550,7 @@ snapshots:
       cosmiconfig: 9.0.1(typescript@6.0.2)
       jiti: 2.7.0
       postcss: 8.5.13
-      semver: 7.7.4
+      semver: 7.8.1
     optionalDependencies:
       webpack: 5.106.2(esbuild@0.28.0)(postcss@8.5.13)
     transitivePeerDependencies:
@@ -20947,6 +20947,10 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.25.2(zod@4.4.3):
+    dependencies:
+      zod: 4.4.3
 
   zod@3.25.76: {}
 
