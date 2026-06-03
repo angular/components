@@ -178,7 +178,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** Whether the tree direction is RTL. */
-  readonly isRtl = computed(() => this.inputs.textDirection() === 'rtl');
+  readonly isRtl = computed(() => this.textDirection() === 'rtl');
 
   /** The key for navigating to the previous item. */
   readonly prevKey = computed(() => {
@@ -348,7 +348,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
 
   /** The text direction of the tree. */
-  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.textDirection();
+  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.inputs.textDirection();
 
   /** Whether multiple items can be selected at the same time. */
   readonly multi: SignalLike<boolean> = computed(() => (this.nav() ? false : this.inputs.multi()));
