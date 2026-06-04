@@ -11,6 +11,8 @@ import {Component, ViewEncapsulation, computed, input} from '@angular/core';
 /**  Quality of the placeholder image.  */
 export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 
+const VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
+
 @Component({
   selector: 'youtube-player-placeholder',
   encapsulation: ViewEncapsulation.None,
@@ -59,6 +61,18 @@ export class YouTubePlayerPlaceholder {
   protected _backgroundImage = computed(() => {
     const quality = this.quality();
     const videoId = this.videoId();
+
+    // Since we're interpolating the ID into a CSS value, we need
+    // to ensure that it doesn't become an XSS attack vector.
+    if (!VIDEO_ID_REGEX.test(videoId)) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error(
+          `Skipping placeholder image generation for invalid YouTube video ID: ${videoId}`,
+        );
+      }
+      return null;
+    }
+
     let url: string;
 
     if (quality === 'low') {
