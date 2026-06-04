@@ -496,7 +496,13 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (!window.YT || !window.YT.Player) {
+    // Might be clobbered by something like `<form id="YT"><input name="Player"></form>`.
+    if (
+      typeof window.YT !== 'object' ||
+      !window.YT ||
+      !window.YT.Player ||
+      typeof window.YT.Player !== 'function'
+    ) {
       if (this.loadApi) {
         this._isLoading = true;
         loadApi(this._nonce);
@@ -508,7 +514,12 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         );
       }
 
-      this._existingApiReadyCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
+      const existingCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
+
+      // The callback might be clobbered by an element with an ID of `onYouTubeIframeAPIReady`.
+      if (typeof existingCallback === 'function') {
+        this._existingApiReadyCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
+      }
 
       (window as YoutubeWindow).onYouTubeIframeAPIReady = () => {
         this._existingApiReadyCallback?.();
