@@ -7,8 +7,8 @@
 /// <reference types="youtube" />
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -97,9 +97,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<YouTubePlayer, never>;
 }
 
 // @public
@@ -113,11 +113,11 @@ export interface YouTubePlayerConfig {
 // @public (undocumented)
 export class YouTubePlayerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<YouTubePlayerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof YouTubePlayer], [typeof YouTubePlayer]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof YouTubePlayer], [typeof YouTubePlayer]>;
 }
 
 // (No @packageDocumentation comment for this package)
