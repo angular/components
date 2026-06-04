@@ -840,6 +840,17 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
     });
 
+    it('should not show a pointer cursor around radios in disabled single-selection lists', () => {
+      fixture.destroy();
+
+      const singleSelectionFixture = TestBed.createComponent(DisabledSingleSelectionList);
+      singleSelectionFixture.detectChanges();
+
+      const radio = singleSelectionFixture.nativeElement.querySelector('.mdc-radio')!;
+
+      expect(getComputedStyle(radio).cursor).toBe('auto');
+    });
+
     it('should update state of options if list state has changed', () => {
       const testOption = listOption[2].componentInstance as MatListOption;
 
@@ -1699,7 +1710,7 @@ describe('MatSelectionList with forms', () => {
     }
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithListOptions {
   showLastOption = true;
@@ -1728,7 +1739,7 @@ class SelectionListWithListOptions {
     </mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithCheckboxPositionAfter {}
 
@@ -1749,11 +1760,21 @@ class SelectionListWithCheckboxPositionAfter {}
     </mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithListDisabled {
   disabled: boolean = true;
 }
+
+@Component({
+  template: `
+  <mat-selection-list [disabled]="true" [multiple]="false">
+    <mat-list-option>Inbox</mat-list-option>
+  </mat-selection-list>`,
+  imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Default,
+})
+class DisabledSingleSelectionList {}
 
 @Component({
   template: `
@@ -1762,7 +1783,7 @@ class SelectionListWithListDisabled {
   </mat-selection-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithDisabledOption {
   disableItem: boolean = false;
@@ -1777,7 +1798,7 @@ class SelectionListWithDisabledOption {
     <mat-list-option>Not selected - Item #4</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithSelectedOption {}
 
@@ -1788,7 +1809,7 @@ class SelectionListWithSelectedOption {}
     <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SingleSelectionListWithSelectedOption {}
 
@@ -1798,7 +1819,7 @@ class SingleSelectionListWithSelectedOption {}
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
   </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
@@ -1815,7 +1836,7 @@ class SelectionListWithSelectedOptionAndValue {
       }
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
@@ -1838,7 +1859,7 @@ class SelectionListWithModel {
     }
   `,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithFormControl {
   formControl = new FormControl([] as string[]);
@@ -1853,7 +1874,7 @@ class SelectionListWithFormControl {
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithPreselectedOption {
   selectedOptions!: string[];
@@ -1866,7 +1887,7 @@ class SelectionListWithPreselectedOption {
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
@@ -1895,7 +1916,7 @@ class SelectionListWithPreselectedFormControlOnPush {
       }
     </mat-selection-list>`,
   imports: [MatListModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
@@ -1918,7 +1939,7 @@ class SelectionListWithCustomComparator {
     </mat-selection-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithAvatar {
   togglePosition!: MatListOptionTogglePosition;
@@ -1934,7 +1955,7 @@ class SelectionListWithAvatar {
     </mat-selection-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithIcon {
   togglePosition!: MatListOptionTogglePosition;
@@ -1950,7 +1971,7 @@ class SelectionListWithIcon {
       }
     </mat-selection-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListWithIndirectChildOptions {
   @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
@@ -1963,7 +1984,7 @@ class SelectionListWithIndirectChildOptions {
   </mat-selection-list>
 `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListOptionWithTwoWayBinding {
   selected = false;

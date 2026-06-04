@@ -417,7 +417,7 @@ class BaseTestList {
     </a>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithOneAnchorItem extends BaseTestList {
   // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
@@ -433,7 +433,7 @@ class ListWithOneAnchorItem extends BaseTestList {
     </a>
   </mat-nav-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class NavListWithOneAnchorItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -452,7 +452,7 @@ class NavListWithOneAnchorItem extends BaseTestList {
     }
   </mat-nav-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class NavListWithActivatedItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -471,7 +471,7 @@ class NavListWithActivatedItem extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ActionListWithoutType extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -487,7 +487,7 @@ class ActionListWithoutType extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ActionListWithType extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -501,7 +501,7 @@ class ActionListWithType extends BaseTestList {
     }
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ActionListWithDisabledList extends BaseTestList {
   disableList = true;
@@ -515,7 +515,7 @@ class ActionListWithDisabledList extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ActionListWithDisabledItem extends BaseTestList {
   @ViewChild(MatListItem) buttonItem!: MatListItem;
@@ -530,7 +530,7 @@ class ActionListWithDisabledItem extends BaseTestList {
     </mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithOneItem extends BaseTestList {}
 
@@ -546,7 +546,7 @@ class ListWithOneItem extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithTwoLineItem extends BaseTestList {}
 
@@ -562,7 +562,7 @@ class ListWithTwoLineItem extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithThreeLineItem extends BaseTestList {}
 
@@ -578,7 +578,7 @@ class ListWithThreeLineItem extends BaseTestList {}
     </mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithAvatar extends BaseTestList {}
 
@@ -593,7 +593,7 @@ class ListWithAvatar extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithItemWithCssClass extends BaseTestList {}
 
@@ -611,7 +611,7 @@ class ListWithItemWithCssClass extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
@@ -623,7 +623,7 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithMultipleItems extends BaseTestList {}
 
@@ -635,7 +635,7 @@ class ListWithMultipleItems extends BaseTestList {}
     <mat-list-item>Three</mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListWithDisabledItems {
   firstItemDisabled = false;
@@ -645,6 +645,6 @@ class ListWithDisabledItems {
 @Component({
   template: `<mat-list-item></mat-list-item>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class StandaloneListItem {}

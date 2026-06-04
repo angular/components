@@ -40,6 +40,10 @@ $fallbacks: m3-list.get-tokens();
   .mdc-checkbox {
     opacity: token-utils.slot(list-list-item-disabled-label-text-opacity, $fallbacks);
   }
+
+  .mdc-radio {
+    cursor: auto;
+  }
 }
 
 // In Angular Material we put the avatar class directly on the .mdc-list-item__start element,

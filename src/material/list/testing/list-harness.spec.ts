@@ -526,7 +526,7 @@ describe('MatSelectionListHarness', () => {
       <mat-list class="test-empty"></mat-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ListHarnessTest {
   disableThirdItem = signal(false);
@@ -567,7 +567,7 @@ class ListHarnessTest {
       <mat-action-list class="test-empty"></mat-action-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class ActionListHarnessTest {
   lastClicked!: string;
@@ -610,7 +610,7 @@ class ActionListHarnessTest {
       <mat-nav-list class="test-empty"></mat-nav-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class NavListHarnessTest {
   lastClicked!: string;
@@ -654,7 +654,7 @@ class NavListHarnessTest {
     <mat-selection-list class="test-empty" disabled></mat-selection-list>
   `,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 class SelectionListHarnessTest {
   disableThirdItem = signal(false);
