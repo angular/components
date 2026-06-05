@@ -89,6 +89,8 @@ export function generateOptions<D>(
   max: D,
   interval: number,
 ): MatTimepickerOption<D>[] {
+  // Avoid generating intervals less than a second, because it can freeze up the browser.
+  interval = Math.max(interval, 1);
   const options: MatTimepickerOption<D>[] = [];
   let current = adapter.compareTime(min, max) < 1 ? min : max;
 
