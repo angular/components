@@ -147,11 +147,9 @@ export class RecycleViewElementsState implements OnDestroy {
     if (sourceId !== undefined) {
       const detachedView = this._detachedViews.get(id);
       if (detachedView) {
-        if (detachedView.sourceIds.has(sourceId)) {
-          return;
+        if (!detachedView.sourceIds.has(sourceId)) {
+          detachedView.sourceIds.add(sourceId);
         }
-
-        detachedView.sourceIds.add(sourceId);
         return;
       }
     }
@@ -259,13 +257,13 @@ export class RecycleViewElementsState implements OnDestroy {
     groupId: string | null;
   } | null {
     const entry = this._detachedViews.get(id);
-    return entry
-      ? {
-          view: entry.view as EmbeddedViewRef<T>,
-          repeaterId: entry.repeaterId,
-          groupId: entry.groupId,
-        }
-      : null;
+    if (!entry) return null;
+
+    return {
+      view: entry.view as EmbeddedViewRef<T>,
+      repeaterId: entry.repeaterId,
+      groupId: entry.groupId,
+    };
   }
 
   ngOnDestroy(): void {

@@ -444,15 +444,15 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   /** Retains the detached view for the given track-by id if it is currently rendered. */
   private _retainDetachedView(id: string): void {
     const localIndex = this._findRenderedViewIndexByTrackById(id);
-    if (localIndex !== null) {
-      const renderedView = this._viewContainerRef!.get(localIndex) as EmbeddedViewRef<C>;
-      this._recycleViewElementsState?.retainDetachedView(
-        id,
-        renderedView,
-        this._repeaterId,
-        this._groupId,
-      );
-    }
+    if (localIndex === null) return;
+
+    const renderedView = this._viewContainerRef!.get(localIndex) as EmbeddedViewRef<C>;
+    this._recycleViewElementsState?.retainDetachedView(
+      id,
+      renderedView,
+      this._repeaterId,
+      this._groupId,
+    );
   }
 
   /**
