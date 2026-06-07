@@ -46,7 +46,7 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
     options?: Partial<EventHandlerOptions>,
   ): this;
 
-  on(...args: any[]) {
+  on(...args: unknown[]) {
     const {modifiers, key, handler, options} = this._normalizeInputs(...args);
 
     this.configs.push({
@@ -59,8 +59,8 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
     return this;
   }
 
-  private _normalizeInputs(...args: any[]) {
-    const withModifiers = Array.isArray(args[0]) || args[0] in Modifier;
+  private _normalizeInputs(...args: unknown[]) {
+    const withModifiers = Array.isArray(args[0]) || (args[0] as string) in Modifier;
     const modifiers = withModifiers ? args[0] : Modifier.None;
     const key = withModifiers ? args[1] : args[0];
     const handler = withModifiers ? args[2] : args[1];
@@ -80,7 +80,8 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
     modifiers: ModifierInputs,
     options?: Partial<EventHandlerOptions>,
   ): boolean {
-    if (!hasModifiers(event, modifiers)) {
+    // In some cases the `key` may be undefined, despite the types saying otherwise. See #33359.
+    if (event.key == null || !hasModifiers(event, modifiers)) {
       return false;
     }
 
