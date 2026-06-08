@@ -82,8 +82,6 @@ abstract class MatDateRangeInputPartBase<D>
     this._errorStateTracker.errorState = value;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

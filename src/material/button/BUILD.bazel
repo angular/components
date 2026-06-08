@@ -135,6 +135,7 @@ sass_binary(
         "//src/material/core/style:private",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
+        "//src/material/progress-spinner:theme",
     ],
 )
 

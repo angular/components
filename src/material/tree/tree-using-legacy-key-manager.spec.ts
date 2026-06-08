@@ -1,4 +1,11 @@
-import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {of} from 'rxjs';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTreeModule} from './tree-module';
@@ -94,6 +101,7 @@ class MinimalTestData {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;

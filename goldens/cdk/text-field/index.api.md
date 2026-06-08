@@ -21,7 +21,6 @@ export type AutofillEvent = {
 
 // @public
 export class AutofillMonitor implements OnDestroy {
-    constructor(...args: unknown[]);
     monitor(element: Element): Observable<AutofillEvent>;
     monitor(element: ElementRef<Element>): Observable<AutofillEvent>;
     // (undocumented)
@@ -36,7 +35,6 @@ export class AutofillMonitor implements OnDestroy {
 
 // @public
 export class CdkAutofill implements OnDestroy, OnInit {
-    constructor(...args: unknown[]);
     readonly cdkAutofill: EventEmitter<AutofillEvent>;
     // (undocumented)
     ngOnDestroy(): void;
@@ -50,7 +48,7 @@ export class CdkAutofill implements OnDestroy, OnInit {
 
 // @public
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _document: Document;
     get enabled(): boolean;
     set enabled(value: boolean);

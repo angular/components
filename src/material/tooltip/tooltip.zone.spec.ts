@@ -6,8 +6,9 @@ import {
   NgZone,
   ViewChild,
   provideZoneChangeDetection,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatTooltipModule} from './tooltip-module';
 import {MatTooltip, TooltipPosition} from './tooltip';
@@ -15,11 +16,15 @@ import {MatTooltip, TooltipPosition} from './tooltip';
 const initialTooltipMessage = 'initial tooltip message';
 
 describe('MatTooltip Zone.js integration', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideZoneChangeDetection(), provideFakeDirectionality('rtl')],
     });
-  }));
+  });
+
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
 
   describe('scrollable usage', () => {
     let fixture: ComponentFixture<ScrollableTooltipDemo>;
@@ -33,24 +38,24 @@ describe('MatTooltip Zone.js integration', () => {
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
     });
 
-    it('should execute the `hide` call, after scrolling away, inside the NgZone', fakeAsync(() => {
+    it('should execute the `hide` call, after scrolling away, inside the NgZone', async () => {
       const inZoneSpy = jasmine.createSpy('in zone spy');
 
       tooltipDirective.show();
       fixture.detectChanges();
-      tick(0);
+      await wait(0);
 
       spyOn(tooltipDirective._tooltipInstance!, 'hide').and.callFake(() => {
         inZoneSpy(NgZone.isInAngularZone());
       });
 
       fixture.componentInstance.scrollDown();
-      tick(100);
+      await wait(100);
       fixture.detectChanges();
 
       expect(inZoneSpy).toHaveBeenCalled();
       expect(inZoneSpy).toHaveBeenCalledWith(true);
-    }));
+    });
   });
 });
 
@@ -66,6 +71,7 @@ describe('MatTooltip Zone.js integration', () => {
         }
       </div>`,
   imports: [MatTooltipModule, OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollableTooltipDemo {
   position: TooltipPosition = 'below';

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   TabsConfigurableExample,
   TabsExplicitSelectionExample,
@@ -17,6 +17,7 @@ import {
   TabsDisabledFocusableExample,
   TabsDisabledSkippedExample,
   TabsDisabledExample,
+  TabsScrollableExample,
 } from '@angular/components-examples/aria/tabs';
 
 @Component({
@@ -33,7 +34,7 @@ import {
     TabsDisabledFocusableExample,
     TabsDisabledSkippedExample,
     TabsDisabledExample,
+    TabsScrollableExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsDemo {}

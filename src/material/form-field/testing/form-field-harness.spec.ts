@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {createFakeEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
@@ -365,6 +365,7 @@ describe('MatFormFieldHarness', () => {
     MatSuffix,
     MatOption,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FormFieldHarnessTest {
   requiredControl = new FormControl('Initial value', [Validators.required]);

@@ -7,50 +7,56 @@
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export class Menu<V> {
+export class Menu<V> implements OnDestroy {
     constructor();
-    readonly _allItems: Signal<readonly MenuItem<V>[]>;
     close(): void;
+    readonly _collection: SortedCollection<MenuItem<V>>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly expansionDelay: _angular_core.InputSignal<number>;
     readonly id: _angular_core.InputSignal<string>;
     readonly _items: Signal<MenuItem<V>[]>;
-    onSelect: _angular_core.OutputEmitterRef<V>;
+    readonly itemSelected: _angular_core.OutputEmitterRef<V>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly parent: _angular_core.WritableSignal<MenuTrigger<V> | MenuItem<V> | undefined>;
     readonly _pattern: MenuPattern<V>;
+    readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: Signal<0 | -1>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     readonly visible: Signal<boolean>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "onSelect": "onSelect"; }, ["_allItems"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "itemSelected": "itemSelected"; }, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Menu<any>, never>;
 }
 
 // @public
-export class MenuBar<V> {
+export class MenuBar<V> implements OnDestroy {
     constructor();
-    readonly _allItems: _angular_core.Signal<readonly MenuItem<V>[]>;
     close(): void;
+    readonly _collection: SortedCollection<MenuItem<V>>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     // (undocumented)
     readonly _items: SignalLike<MenuItem<V>[]>;
-    onSelect: _angular_core.OutputEmitterRef<V>;
+    readonly itemSelected: _angular_core.OutputEmitterRef<V>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly _pattern: MenuBarPattern<V>;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
-    readonly values: _angular_core.ModelSignal<V[]>;
+    readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuBar<any>, "[ngMenuBar]", ["ngMenuBar"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "values": { "alias": "values"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; }, { "values": "valuesChange"; "onSelect": "onSelect"; }, ["_allItems"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuBar<any>, "[ngMenuBar]", ["ngMenuBar"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; "itemSelected": "itemSelected"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuBar<any>, never>;
 }
@@ -64,7 +70,7 @@ export class MenuContent {
 }
 
 // @public
-export class MenuItem<V> {
+export class MenuItem<V> implements OnInit, OnDestroy {
     constructor();
     readonly active: _angular_core.Signal<boolean>;
     close(): void;
@@ -73,14 +79,19 @@ export class MenuItem<V> {
     readonly expanded: _angular_core.Signal<boolean | null>;
     readonly hasPopup: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
     readonly _pattern: MenuItemPattern<V>;
+    readonly role: _angular_core.InputSignal<"menuitem" | "menuitemradio" | "menuitemcheckbox">;
     readonly searchTerm: _angular_core.ModelSignal<string>;
     readonly submenu: _angular_core.InputSignal<Menu<V> | undefined>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuItem<any>, never>;
 }
@@ -93,9 +104,9 @@ export class MenuTrigger<V> {
     readonly element: HTMLElement;
     readonly expanded: _angular_core.Signal<boolean>;
     readonly hasPopup: _angular_core.Signal<boolean>;
-    menu: _angular_core.InputSignal<Menu<V> | undefined>;
+    readonly menu: _angular_core.InputSignal<Menu<V> | undefined>;
     open(): void;
-    _pattern: MenuTriggerPattern<V>;
+    readonly _pattern: MenuTriggerPattern<V>;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)

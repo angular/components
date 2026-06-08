@@ -294,8 +294,6 @@ export class MatInput
     'week',
   ].filter(t => getSupportedInputTypes().has(t));
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const parentForm = inject(NgForm, {optional: true});
     const parentFormGroup = inject(FormGroupDirective, {optional: true});

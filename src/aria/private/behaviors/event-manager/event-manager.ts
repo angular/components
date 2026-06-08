@@ -24,6 +24,7 @@ export interface EventWithModifiers extends Event {
  * This library has not yet had a need for stopPropagationImmediate.
  */
 export interface EventHandlerOptions {
+  ignoreRepeat?: boolean;
   stopPropagation: boolean;
   preventDefault: boolean;
 }

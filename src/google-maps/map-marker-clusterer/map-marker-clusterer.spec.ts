@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import type {MarkerClusterer, Renderer, Algorithm} from './map-marker-clusterer-types';
 
@@ -197,6 +197,7 @@ describe('MapMarkerClusterer', () => {
       </map-marker-clusterer>
     </google-map>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapMarkerClusterer) markerClusterer!: MapMarkerClusterer;

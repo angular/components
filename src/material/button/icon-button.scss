@@ -68,6 +68,21 @@ $fallbacks: m3-icon-button.get-tokens();
     vertical-align: baseline;
   }
 
+  // These style support the progress feature of the icon button. We could accomplish the same by
+  // using a :not selector with the svg selector above, but doing so breaks apps which overwrite the
+  // styles. To avoid this we instead reset the properties that matter back to the values set by
+  // mat-progress-spinner.
+  .mat-mdc-button-progress-indicator-container {
+    .mdc-circular-progress__determinate-circle-graphic {
+      width: inherit;
+      height: inherit;
+    }
+
+    .mdc-circular-progress__indeterminate-circle-graphic {
+      height: 100%;
+    }
+  }
+
   .mat-mdc-button-persistent-ripple {
     border-radius: token-utils.slot(icon-button-container-shape, $fallbacks, $fallback: 50%);
   }
@@ -90,3 +105,20 @@ $fallbacks: m3-icon-button.get-tokens();
   }
 }
 
+.mat-mdc-button-progress-indicator-container {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mat-mdc-button-progress-indicator-shown {
+  mat-icon {
+    visibility: hidden;
+  }
+}

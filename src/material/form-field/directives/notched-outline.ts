@@ -8,7 +8,6 @@
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -33,7 +32,6 @@ import {
     // a host binding in order to ensure that the notched-outline renders correctly on the server.
     '[class.mdc-notched-outline--notched]': 'open',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit {

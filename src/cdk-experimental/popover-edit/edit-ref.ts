@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, afterNextRender, inject, Injector} from '@angular/core';
+import {Service, OnDestroy, afterNextRender, inject, Injector} from '@angular/core';
 import {ControlContainer} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 
@@ -16,7 +16,7 @@ import {EditEventDispatcher} from './edit-event-dispatcher';
  * Used for communication between the form within the edit lens and the
  * table that launched it. Provided by CdkEditControl within the lens.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class EditRef<FormValue> implements OnDestroy {
   private readonly _form = inject(ControlContainer, {self: true});
   private readonly _editEventDispatcher =

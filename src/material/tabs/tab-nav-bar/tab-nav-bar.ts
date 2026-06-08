@@ -64,11 +64,11 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_animationsDisabled',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
+    '[style.--mat-tab-header-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
@@ -163,8 +163,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
   _inkBar!: MatInkBar;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
 
@@ -248,7 +246,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 @Component({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',
   styleUrl: 'tab-link.css',
@@ -340,8 +337,6 @@ export class MatTabLink
 
   /** Unique id for the tab. */
   @Input() id: string = inject(_IdGenerator).getId('mat-tab-link-');
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();
@@ -440,7 +435,6 @@ export class MatTabLink
     'role': 'tabpanel',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */

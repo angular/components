@@ -38,7 +38,7 @@ export function isComponent(doc: ClassExportDoc): boolean {
 }
 
 export function isService(doc: ClassExportDoc): boolean {
-  return hasClassDecorator(doc, 'Injectable');
+  return hasClassDecorator(doc, 'Injectable') || hasClassDecorator(doc, 'Service');
 }
 
 export function isNgModule(doc: ClassExportDoc): boolean {

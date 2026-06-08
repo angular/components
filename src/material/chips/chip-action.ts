@@ -41,7 +41,7 @@ export class MatChipContent {
     _handlePrimaryActionInteraction(): void;
     remove(): void;
     disabled: boolean;
-    _edit(): void;
+    _edit(event: Event): void;
     _isEditing?: boolean;
   }>(MAT_CHIP);
 
@@ -81,8 +81,6 @@ export class MatChipContent {
     // string to indicate that disabled attribute should be included.
     return this.disabled && !this._allowFocusWhenDisabled ? '' : null;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

@@ -34,6 +34,7 @@ import {
   WritableSignal,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
@@ -386,7 +387,7 @@ describe('MatStepper', () => {
     });
   });
 
-  describe('basic stepper when attempting to set the selected step too early', () => {
+  describe('basic stepper when attempting to get the selected step too early', () => {
     it('should not throw', () => {
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       const stepper: MatStepper = fixture.debugElement.query(
@@ -965,7 +966,7 @@ describe('MatStepper', () => {
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
     });
 
-    it('should be able to disable ripples', () => {
+    it('should be able to focus the step headers', () => {
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       fixture.detectChanges();
 
@@ -1015,6 +1016,15 @@ describe('MatStepper', () => {
       expect(headers[1].classList.contains('mat-primary')).toBe(false);
       expect(headers[2].classList.contains('mat-primary')).toBe(true);
       expect(headers[1].classList.contains('mat-accent')).toBe(true);
+    });
+
+    it('should set an aria label on the content container', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.componentInstance.ariaLabel.set('My Stepper');
+      fixture.detectChanges();
+
+      const container = fixture.nativeElement.querySelector('.mat-vertical-content-container');
+      expect(container.getAttribute('aria-label')).toBe('My Stepper');
     });
   });
 
@@ -1215,6 +1225,17 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       expect(stepperHost.classList).toContain('mat-stepper-header-position-bottom');
+    });
+
+    it('should set an aria-label on the header container', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.componentInstance.ariaLabel.set('My Stepper');
+      fixture.detectChanges();
+
+      const container = fixture.nativeElement.querySelector(
+        '.mat-horizontal-stepper-header-container',
+      );
+      expect(container.getAttribute('aria-label')).toBe('My Stepper');
     });
   });
 
@@ -1832,6 +1853,7 @@ function createComponent<T>(
   </form>
   `,
   imports: [MatStepperModule, MatInputModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatHorizontalStepperWithErrorsApp {
   private readonly _formBuilder = inject(FormBuilder);
@@ -1847,7 +1869,8 @@ class MatHorizontalStepperWithErrorsApp {
     <mat-stepper
       [disableRipple]="disableRipple()"
       [color]="stepperTheme()"
-      [headerPosition]="headerPosition()">
+      [headerPosition]="headerPosition()"
+      [aria-label]="ariaLabel()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1874,10 +1897,12 @@ class MatHorizontalStepperWithErrorsApp {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatHorizontalStepperApp {
   @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = 'Step 3';
+  ariaLabel = signal<string | null>(null);
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
   secondStepTheme = signal<ThemePalette>(undefined);
@@ -1886,7 +1911,7 @@ class SimpleMatHorizontalStepperApp {
 
 @Component({
   template: `
-    <mat-stepper orientation="vertical" [disableRipple]="disableRipple()" [color]="stepperTheme()">
+    <mat-stepper orientation="vertical" [disableRipple]="disableRipple()" [color]="stepperTheme()" [aria-label]="ariaLabel()">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1915,10 +1940,12 @@ class SimpleMatHorizontalStepperApp {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatVerticalStepperApp {
   @ViewChild(MatStepper) stepper!: MatStepper;
   inputLabel = signal('Step 3');
+  ariaLabel = signal<string | null>(null);
   showStepTwo = signal(true);
   disableRipple = signal(false);
   stepperTheme = signal<ThemePalette>(undefined);
@@ -1964,6 +1991,7 @@ class SimpleMatVerticalStepperApp {
     </mat-stepper>
   `,
   imports: [ReactiveFormsModule, MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LinearMatVerticalStepperApp {
   validationTrigger = new Subject<void>();
@@ -1987,6 +2015,7 @@ class LinearMatVerticalStepperApp {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimplePreselectedMatHorizontalStepperApp {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2032,6 +2061,7 @@ class SimplePreselectedMatHorizontalStepperApp {
     </mat-stepper>
   `,
   imports: [ReactiveFormsModule, MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LinearMatVerticalStepperAppForAlreadyFilledForm {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2057,6 +2087,7 @@ class LinearMatVerticalStepperAppForAlreadyFilledForm {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleStepperWithoutStepControl {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2079,6 +2110,7 @@ class SimpleStepperWithoutStepControl {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleStepperWithStepControlAndCompletedBinding {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2105,6 +2137,7 @@ class SimpleStepperWithStepControlAndCompletedBinding {
     </mat-stepper>
 `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconOverridesStepper {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2143,6 +2176,7 @@ class IconOverridesStepper {
     </mat-stepper>
 `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
 
@@ -2155,6 +2189,7 @@ class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl(''));
@@ -2168,6 +2203,7 @@ class LinearStepperWithValidOptionalStep {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithAriaInputs {
   ariaLabel = signal('');
@@ -2185,6 +2221,7 @@ class StepperWithAriaInputs {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithIndirectDescendantSteps {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2205,6 +2242,7 @@ class StepperWithIndirectDescendantSteps {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithNgIf {
   showStep2 = signal(false);
@@ -2224,6 +2262,7 @@ class StepperWithNgIf {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedSteppers {
   @ViewChildren(MatStepper) steppers!: QueryList<MatStepper>;
@@ -2238,6 +2277,7 @@ class NestedSteppers {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithStaticOutOfBoundsIndex {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2261,6 +2301,7 @@ class StepperWithStaticOutOfBoundsIndex {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithLazyContent {
   selectedIndex = signal(0);
@@ -2277,6 +2318,7 @@ class StepperWithLazyContent {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class HorizontalStepperWithDelayedStep {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2292,6 +2334,7 @@ class HorizontalStepperWithDelayedStep {
     </mat-stepper>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperWithTwoWayBindingOnSelectedIndex {
   index: number = 0;
@@ -2310,6 +2353,7 @@ class StepperWithTwoWayBindingOnSelectedIndex {
     </ng-template>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class HorizontalStepperWithHeaderPrefix {
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -2328,6 +2372,7 @@ class HorizontalStepperWithHeaderPrefix {
     </ng-template>
   `,
   imports: [MatStepperModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class VerticalStepperWithHeaderPrefix {
   @ViewChild(MatStepper) stepper!: MatStepper;

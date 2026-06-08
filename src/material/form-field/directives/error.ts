@@ -27,8 +27,4 @@ export const MAT_ERROR = new InjectionToken<MatError>('MatError');
 })
 export class MatError {
   @Input() id: string = inject(_IdGenerator).getId('mat-mdc-error-');
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
@@ -11,7 +11,6 @@ import {MatChipsModule} from '@angular/material/chips';
   templateUrl: 'card-footer-example.html',
   styleUrl: 'card-footer-example.css',
   imports: [MatCardModule, MatChipsModule, MatProgressBarModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardFooterExample {
   longText = `The Chihuahua is a Mexican breed of toy dog. It is named for the

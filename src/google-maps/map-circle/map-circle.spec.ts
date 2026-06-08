@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -38,19 +38,18 @@ describe('MapCircle', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Circle', fakeAsync(() => {
+  it('initializes a Google Map Circle', () => {
     const circleSpy = createCircleSpy({});
     const circleConstructorSpy = createCircleConstructorSpy(circleSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(circleConstructorSpy).toHaveBeenCalledWith({center: undefined, radius: undefined});
     expect(circleSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('sets center and radius from input', fakeAsync(() => {
+  it('sets center and radius from input', () => {
     const center: google.maps.LatLngLiteral = {lat: 3, lng: 5};
     const radius = 15;
     const options: google.maps.CircleOptions = {center, radius};
@@ -61,12 +60,11 @@ describe('MapCircle', () => {
     fixture.componentInstance.center = center;
     fixture.componentInstance.radius = radius;
     fixture.detectChanges();
-    flush();
 
     expect(circleConstructorSpy).toHaveBeenCalledWith(options);
-  }));
+  });
 
-  it('gives precedence to other inputs over options', fakeAsync(() => {
+  it('gives precedence to other inputs over options', () => {
     const center: google.maps.LatLngLiteral = {lat: 3, lng: 5};
     const radius = 15;
     const expectedOptions: google.maps.CircleOptions = {...circleOptions, center, radius};
@@ -78,12 +76,11 @@ describe('MapCircle', () => {
     fixture.componentInstance.center = center;
     fixture.componentInstance.radius = radius;
     fixture.detectChanges();
-    flush();
 
     expect(circleConstructorSpy).toHaveBeenCalledWith(expectedOptions);
-  }));
+  });
 
-  it('exposes methods that provide information about the Circle', fakeAsync(() => {
+  it('exposes methods that provide information about the Circle', () => {
     const circleSpy = createCircleSpy(circleOptions);
     createCircleConstructorSpy(circleSpy);
 
@@ -92,7 +89,6 @@ describe('MapCircle', () => {
       .query(By.directive(MapCircle))!
       .injector.get<MapCircle>(MapCircle);
     fixture.detectChanges();
-    flush();
 
     circleComponent.getCenter();
     expect(circleSpy.getCenter).toHaveBeenCalled();
@@ -108,16 +104,15 @@ describe('MapCircle', () => {
 
     circleSpy.getVisible.and.returnValue(true);
     expect(circleComponent.getVisible()).toBe(true);
-  }));
+  });
 
-  it('initializes Circle event handlers', fakeAsync(() => {
+  it('initializes Circle event handlers', () => {
     const circleSpy = createCircleSpy(circleOptions);
     createCircleConstructorSpy(circleSpy);
 
     const addSpy = circleSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).toHaveBeenCalledWith('center_changed', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
@@ -132,16 +127,15 @@ describe('MapCircle', () => {
     expect(addSpy).not.toHaveBeenCalledWith('mouseup', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('radius_changed', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
-  }));
+  });
 
-  it('should be able to add an event listener after init', fakeAsync(() => {
+  it('should be able to add an event listener after init', () => {
     const circleSpy = createCircleSpy(circleOptions);
     createCircleConstructorSpy(circleSpy);
 
     const addSpy = circleSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
 
@@ -151,7 +145,7 @@ describe('MapCircle', () => {
 
     expect(addSpy).toHaveBeenCalledWith('dragend', jasmine.any(Function));
     subscription.unsubscribe();
-  }));
+  });
 });
 
 @Component({
@@ -167,6 +161,7 @@ describe('MapCircle', () => {
         (circleRightclick)="handleRightclick()" />
     </google-map>`,
   imports: [GoogleMap, MapCircle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapCircle) circle!: MapCircle;

@@ -90,4 +90,5 @@ sass_library(
 sass_library(
     name = "classes",
     srcs = ["_classes.scss"],
+    deps = ["//src/material/core/theming:typography"],
 )

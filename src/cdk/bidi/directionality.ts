@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EventEmitter, Injectable, OnDestroy, inject, signal} from '@angular/core';
+import {EventEmitter, Service, OnDestroy, inject, signal} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
 export type Direction = 'ltr' | 'rtl';
@@ -30,7 +30,7 @@ export function _resolveDirectionality(rawValue: string): Direction {
  * The directionality (LTR / RTL) context for the application (or a subtree of it).
  * Exposes the current direction and a stream of direction changes.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class Directionality implements OnDestroy {
   /** The current 'ltr' or 'rtl' value. */
   get value() {
@@ -44,8 +44,6 @@ export class Directionality implements OnDestroy {
 
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const _document = inject(DIR_DOCUMENT, {optional: true});

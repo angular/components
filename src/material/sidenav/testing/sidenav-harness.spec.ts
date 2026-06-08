@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -168,6 +168,7 @@ describe('MatSidenavHarness', () => {
     </mat-drawer-container>
   `,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DrawerHarnessTest {
   threeOpened = signal(true);
@@ -187,5 +188,6 @@ class DrawerHarnessTest {
     </mat-sidenav-container>
   `,
   imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SidenavHarnessTest {}

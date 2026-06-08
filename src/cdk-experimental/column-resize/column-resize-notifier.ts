@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable} from '@angular/core';
+import {inject, Service} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** Indicates the width of a column. */
@@ -40,7 +40,7 @@ export interface ColumnSizeAction extends ColumnSize {
  * Originating source of column resize events within a table.
  * @docs-private
  */
-@Injectable()
+@Service({autoProvided: false})
 export class ColumnResizeNotifierSource {
   /** Emits when an in-progress resize is canceled. */
   readonly resizeCanceled = new Subject<ColumnSizeAction>();
@@ -53,7 +53,7 @@ export class ColumnResizeNotifierSource {
 }
 
 /** Service for triggering column resizes imperatively or being notified of them. */
-@Injectable()
+@Service({autoProvided: false})
 export class ColumnResizeNotifier {
   private readonly _source = inject(ColumnResizeNotifierSource);
 

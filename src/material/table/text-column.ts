@@ -38,7 +38,7 @@ import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from
   // mean's the template in the table's view will not have the updated value (and in fact will cause
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell],
 })
 export class MatTextColumn<T> extends CdkTextColumn<T> {}

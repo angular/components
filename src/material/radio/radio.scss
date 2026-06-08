@@ -4,6 +4,7 @@
 @use './radio-common';
 
 $fallbacks: m3-radio.get-tokens();
+$_is-external-build: true;
 
 .mat-mdc-radio-button {
   -webkit-tap-highlight-color: transparent;
@@ -15,6 +16,14 @@ $fallbacks: m3-radio.get-tokens();
   // user of this. Therefore we add the pointer cursor on top of MDC's styles.
   label {
     cursor: pointer;
+
+    // TODO(crisbeto): disable internally due to a large amount of breakages.
+    // Prevent the label from taking up space when it's empty.
+    @if ($_is-external-build) {
+      &:empty {
+        display: none;
+      }
+    }
   }
 
   .mdc-radio__background::before {

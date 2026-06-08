@@ -1,5 +1,5 @@
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
@@ -158,6 +158,7 @@ describe('MatChip', () => {
       }
     </mat-chip-set>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleChip {
   @ViewChild(MatChipSet) chipList!: MatChipSet;
@@ -176,18 +177,21 @@ class SingleChip {
 @Component({
   template: `<mat-basic-chip>Hello</mat-basic-chip>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicChip {}
 
 @Component({
   template: `<mat-basic-chip role="button" tabindex="3">Hello</mat-basic-chip>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicChipWithStaticTabindex {}
 
 @Component({
   template: `<mat-basic-chip role="button" [tabIndex]="tabindex">Hello</mat-basic-chip>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicChipWithBoundTabindex {
   tabindex = 12;

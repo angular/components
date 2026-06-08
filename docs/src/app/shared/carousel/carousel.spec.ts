@@ -1,4 +1,9 @@
-import {Component, provideZoneChangeDetection, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  provideZoneChangeDetection,
+  ViewChild,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
 import {Carousel, CarouselItem} from './carousel';
@@ -61,6 +66,7 @@ describe('HorizontalCarousel', () => {
   `,
   ],
   imports: [Carousel, CarouselItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CarouselTestComponent {
   @ViewChild(Carousel) carousel!: Carousel;

@@ -158,9 +158,6 @@ export class MapCircle implements OnInit, OnDestroy {
   @Output() readonly circleInitialized: EventEmitter<google.maps.Circle> =
     new EventEmitter<google.maps.Circle>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (!this._map._isBrowser) {
       return;

@@ -31,6 +31,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
+        "//src/material/button",
         "//src/material/core",
         "//src/material/datepicker",
         "//src/material/form-field",

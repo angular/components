@@ -16,11 +16,6 @@ export const VIRTUAL_SCROLLABLE = new InjectionToken<CdkVirtualScrollable>('VIRT
  */
 @Directive()
 export abstract class CdkVirtualScrollable extends CdkScrollable {
-  constructor(...args: unknown[]);
-  constructor() {
-    super();
-  }
-
   /**
    * Measure the viewport size for the provided orientation.
    *

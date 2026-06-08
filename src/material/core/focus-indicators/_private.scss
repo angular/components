@@ -11,7 +11,7 @@ $default-border-color: transparent;
 $default-border-radius: 4px;
 
 // Mixin that renders the focus indicator structural styles.
-@mixin structural-styling() {
+@mixin strong-focus-indicators-structure() {
   .mat-focus-indicator {
     position: relative;
 

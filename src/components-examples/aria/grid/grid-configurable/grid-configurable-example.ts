@@ -103,7 +103,6 @@ export class GridConfigurableExample {
   softDisabled = new FormControl(false, {nonNullable: true});
   enableSelection = new FormControl(false, {nonNullable: true});
   multi = new FormControl(false, {nonNullable: true});
-  enableRangeSelection = new FormControl(false, {nonNullable: true});
 
   gridData: Cell[][] = generateValidGrid(
     10,

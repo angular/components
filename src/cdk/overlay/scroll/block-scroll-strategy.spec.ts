@@ -1,4 +1,4 @@
-import {Component, Injector} from '@angular/core';
+import {Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Platform} from '../../platform';
@@ -264,5 +264,6 @@ describe('BlockScrollStrategy', () => {
 @Component({
   template: '<p>Focaccia</p>',
   imports: [OverlayModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocacciaMsg {}

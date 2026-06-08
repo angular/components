@@ -32,8 +32,6 @@ export class MatFormFieldLineRipple implements OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _cleanupTransitionEnd!: () => void;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const ngZone = inject(NgZone);
     const renderer = inject(Renderer2);

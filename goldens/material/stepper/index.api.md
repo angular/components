@@ -51,7 +51,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
 // @public
 export class MatStepContent<C = unknown> {
-    constructor(...args: unknown[]);
     // (undocumented)
     _template: TemplateRef<C>;
     // (undocumented)
@@ -62,7 +61,7 @@ export class MatStepContent<C = unknown> {
 
 // @public (undocumented)
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     active: boolean;
     color: ThemePalette;
     disableRipple: boolean;
@@ -109,11 +108,12 @@ export class MatStepLabel extends CdkStepLabel {
 
 // @public (undocumented)
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _animatedContainers: QueryList<ElementRef>;
     readonly animationDone: EventEmitter<void>;
     get animationDuration(): string;
     set animationDuration(value: string);
+    ariaLabel: string | null;
     color: ThemePalette;
     disableRipple: boolean;
     // (undocumented)
@@ -136,14 +136,13 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     readonly steps: QueryList<MatStep>;
     _steps: QueryList<MatStep>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "headerPrefix": { "alias": "headerPrefix"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "headerPrefix": { "alias": "headerPrefix"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
 
 // @public
 export class MatStepperIcon {
-    constructor(...args: unknown[]);
     name: StepState;
     // (undocumented)
     templateRef: TemplateRef<MatStepperIconContext>;

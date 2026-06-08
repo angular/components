@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, QueryList, ViewChildren, signal} from '@angular/core';
+import {Component, QueryList, ViewChildren, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   MAT_OPTION_PARENT_COMPONENT,
@@ -109,6 +109,7 @@ describe('MatOptionHarness', () => {
     <mat-option disabled>Disabled option</mat-option>
   `,
   imports: [MatOptionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class OptionHarnessTest implements MatOptionParentComponent {
   @ViewChildren(MatOption) options!: QueryList<{setActiveStyles(): void}>;

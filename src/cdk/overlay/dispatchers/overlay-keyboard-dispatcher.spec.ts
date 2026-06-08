@@ -1,6 +1,6 @@
 import {ESCAPE} from '../../keycodes';
 import {ComponentPortal} from '../../portal';
-import {ApplicationRef, Component, Injector} from '@angular/core';
+import {ApplicationRef, Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
 import {createOverlayRef} from '../index';
@@ -17,7 +17,7 @@ describe('OverlayKeyboardDispatcher', () => {
     injector = TestBed.inject(Injector);
   });
 
-  it('should track overlays in order as they are attached and detached', () => {
+  it('should track keyboard overlays in order as they are attached and detached', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -157,7 +157,7 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayOneSpy).toHaveBeenCalled();
   });
 
-  it('should not add the same overlay to the stack multiple times', () => {
+  it('should not add the same keyboard overlay to the stack multiple times', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
@@ -187,7 +187,27 @@ describe('OverlayKeyboardDispatcher', () => {
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     expect(appRef.tick).toHaveBeenCalledTimes(0);
   });
+
+  it('should not dispatch to overlay whose eventPredicate does not allow the event', () => {
+    const overlayOne = createOverlayRef(injector);
+    const overlayTwo = createOverlayRef(injector, {eventPredicate: () => false});
+    const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
+
+    overlayOne.keydownEvents().subscribe(overlayOneSpy);
+    overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
+
+    // Attach overlays
+    keyboardDispatcher.add(overlayOne);
+    keyboardDispatcher.add(overlayTwo);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+    // Most recent overlay should receive event
+    expect(overlayOneSpy).toHaveBeenCalled();
+    expect(overlayTwoSpy).not.toHaveBeenCalled();
+  });
 });
 
-@Component({template: 'Hello'})
+@Component({template: 'Hello', changeDetection: ChangeDetectionStrategy.Eager})
 class TestComponent {}

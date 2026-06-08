@@ -23,20 +23,20 @@
         [matButton]="appearance"
         disabled
         [disabledInteractive]="disabledInteractive"
-        [matTooltip]="tooltipText">{{appearance}}</button>
+        [matTooltip]="tooltipText"
+      >
+        {{appearance}}
+      </button>
     }
-    <button
-      matFab
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+    <button matFab disabled [disabledInteractive]="disabledInteractive" [matTooltip]="tooltipText">
       <mat-icon>check</mat-icon>
     </button>
     <button
       matMiniFab
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+      [matTooltip]="tooltipText"
+    >
       <mat-icon>check</mat-icon>
     </button>
     <button
@@ -44,13 +44,74 @@
       extended
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">Search</button>
+      [matTooltip]="tooltipText"
+    >
+      Search
+    </button>
     <button
       matFab
       extended
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+      [matTooltip]="tooltipText"
+    >
+      <mat-icon>check</mat-icon>
+      Search
+      <mat-icon iconPositionEnd>check</mat-icon>
+    </button>
+  </section>
+  <section>
+    @for (appearance of appearances; track $index) {
+      <button [matButton]="appearance" [showProgress]="true">
+        {{appearance}}
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        >
+        </mat-progress-spinner>
+      </button>
+    }
+    <button matFab [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <mat-icon>check</mat-icon>
+    </button>
+    <button matMiniFab [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <mat-icon>check</mat-icon>
+    </button>
+    <button matFab extended [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      Search
+    </button>
+    <button matFab extended [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
       <mat-icon>check</mat-icon>
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
@@ -82,32 +143,41 @@
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
       matButton
-      color="primary">SEARCH</a>
+      color="primary"
+      >SEARCH</a
+    >
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      matButton="elevated">SEARCH</a>
+      matButton="elevated"
+      >SEARCH</a
+    >
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
       matButton="outlined"
-      color="primary">SEARCH</a>
+      color="primary"
+      >SEARCH</a
+    >
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      matButton="filled">SEARCH</a>
+      matButton="filled"
+      >SEARCH</a
+    >
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      matFab>
+      matFab
+    >
       <mat-icon>check</mat-icon>
     </a>
     <a
@@ -115,7 +185,8 @@
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      matMiniFab>
+      matMiniFab
+    >
       <mat-icon>check</mat-icon>
     </a>
     <a
@@ -124,14 +195,17 @@
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
       matFab
-      extended>Search</a>
+      extended
+      >Search</a
+    >
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
       matFab
-      extended>
+      extended
+    >
       <mat-icon>check</mat-icon>
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
@@ -139,7 +213,9 @@
   </section>
 
   @for (appearance of appearances; track $index) {
-    <h4 class="demo-section-header"><code>{{appearance}}</code> Appearance</h4>
+    <h4 class="demo-section-header">
+      <code>{{appearance}}</code> Appearance
+    </h4>
     <section>
       <button [matButton]="appearance">unthemed</button>
       <button [matButton]="appearance" color="primary">primary</button>
@@ -149,13 +225,27 @@
         [matButton]="appearance"
         disabled
         [disabledInteractive]="disabledInteractive"
-        [matTooltip]="tooltipText">disabled</button>
+        [matTooltip]="tooltipText"
+      >
+        disabled
+      </button>
       <button [matButton]="appearance">
         <mat-icon>home</mat-icon>
         with icons
         <mat-icon iconPositionEnd>favorite</mat-icon>
       </button>
       <button [matButton]="appearance">
+        <mat-icon>home</mat-icon>
+        with icons
+      </button>
+      <button [matButton]="appearance" [showProgress]="true">
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
         <mat-icon>home</mat-icon>
         with icons
       </button>
@@ -180,8 +270,19 @@
       matIconButton
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+      [matTooltip]="tooltipText"
+    >
       <mat-icon>visibility</mat-icon>
+    </button>
+    <button matIconButton color="warn" [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <mat-icon>trending_up</mat-icon>
     </button>
   </section>
 
@@ -204,7 +305,8 @@
       matIconButton
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+      [matTooltip]="tooltipText"
+    >
       <mat-icon>visibility</mat-icon>
     </a>
   </section>
@@ -223,12 +325,18 @@
     <button matFab color="warn">
       <mat-icon>home</mat-icon>
     </button>
-    <button
-      matFab
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+    <button matFab disabled [disabledInteractive]="disabledInteractive" [matTooltip]="tooltipText">
       <mat-icon>favorite</mat-icon>
+    </button>
+    <button matFab color="warn" [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <mat-icon>home</mat-icon>
     </button>
   </section>
 
@@ -246,11 +354,22 @@
     <button matMiniFab color="warn">
       <mat-icon>filter_list</mat-icon>
     </button>
+    <button matMiniFab color="warn" [showProgress]="true">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <mat-icon>filter_list</mat-icon>
+    </button>
     <button
       matMiniFab
       disabled
       [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">
+      [matTooltip]="tooltipText"
+    >
       <mat-icon>home</mat-icon>
     </button>
   </section>
@@ -261,10 +380,15 @@
       <p>isDisabled: {{isDisabled}}</p>
       <p>Button 1 as been clicked {{clickCounter}} times</p>
       <p>
-        <mat-checkbox [(ngModel)]="disabledInteractive">Allow disabled button interactivity</mat-checkbox>
+        <mat-checkbox [(ngModel)]="disabledInteractive"
+          >Allow disabled button interactivity</mat-checkbox
+        >
       </p>
       <p>
         <mat-checkbox [(ngModel)]="isDisabled">All disabled</mat-checkbox>
+      </p>
+      <p>
+        <mat-checkbox [(ngModel)]="showProgress">All showProgress</mat-checkbox>
       </p>
       <button matButton="filled" (click)="button1.focus()">Focus 1</button>
       <button matButton="filled" (click)="button2.focus()">Focus 2</button>
@@ -272,26 +396,90 @@
       <button matButton="filled" (click)="button4.focus()">Focus 4</button>
     </div>
     <div>
-      <button matButton #button1 [disabled]="isDisabled"
-              (click)="clickCounter=clickCounter+1">
+      <button
+        matButton
+        #button1
+        [disabled]="isDisabled"
+        [showProgress]="showProgress"
+        (click)="clickCounter=clickCounter+1"
+      >
         Button 1
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
-      <button matButton #button2 color="primary" [disabled]="isDisabled">
+      <button
+        matButton
+        #button2
+        color="primary"
+        [disabled]="isDisabled"
+        [showProgress]="showProgress"
+      >
         Button 2
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
-      <a href="//www.google.com" #button3 matButton color="accent"
-         [disabled]="isDisabled">
+      <a
+        href="//www.google.com"
+        #button3
+        matButton
+        color="accent"
+        [disabled]="isDisabled"
+        [showProgress]="showProgress"
+      >
         Button 3
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </a>
-      <button matButton="elevated" #button4 color="primary"
-              [disabled]="isDisabled">
+      <button
+        matButton="elevated"
+        #button4
+        color="primary"
+        [disabled]="isDisabled"
+        [showProgress]="showProgress"
+      >
         Button 4
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
-      <button matMiniFab [disabled]="isDisabled">
+      <button matMiniFab [disabled]="isDisabled" [showProgress]="showProgress">
         <mat-icon>check</mat-icon>
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
-      <button matIconButton color="accent" [disabled]="isDisabled">
+      <button matIconButton color="accent" [disabled]="isDisabled" [showProgress]="showProgress">
         <mat-icon>favorite</mat-icon>
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          diameter="20"
+          aria-label="Loading"
+          tabindex=""
+        />
       </button>
     </div>
   </section>

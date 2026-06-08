@@ -6,25 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, inject, DOCUMENT} from '@angular/core';
+import {Service, OnDestroy, inject, DOCUMENT} from '@angular/core';
 import type {OverlayRef} from '../overlay-ref';
+import {Subject} from 'rxjs';
 
 /**
  * Service for dispatching events that land on the body to appropriate overlay ref,
  * if any. It maintains a list of attached overlays to determine best suited overlay based
  * on event target and order of overlay opens.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export abstract class BaseOverlayDispatcher implements OnDestroy {
   /** Currently attached overlays in the order they were attached. */
   _attachedOverlays: OverlayRef[] = [];
 
   protected _document = inject(DOCUMENT);
   protected _isAttached = false;
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   ngOnDestroy(): void {
     this.detach();
@@ -53,4 +50,17 @@ export abstract class BaseOverlayDispatcher implements OnDestroy {
 
   /** Detaches the global event listener. */
   protected abstract detach(): void;
+
+  /** Determines whether an overlay is allowed to receive an event. */
+  protected canReceiveEvent<T>(overlayRef: OverlayRef, event: Event, stream: Subject<T>): boolean {
+    if (stream.observers.length < 1) {
+      return false;
+    }
+
+    if (overlayRef.eventPredicate) {
+      return overlayRef.eventPredicate(event);
+    }
+
+    return true;
+  }
 }

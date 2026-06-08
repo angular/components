@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {DateAdapter, provideNativeDateAdapter} from '../../core';
@@ -52,6 +52,7 @@ describe('MatTimepickerToggleHarness', () => {
     <mat-timepicker-toggle id="two" [for]="twoPicker" [disabled]="disabled()"/>
   `,
   imports: [MatTimepickerInput, MatTimepicker, MatTimepickerToggle],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerHarnessTest {
   disabled = signal(false);

@@ -55,8 +55,9 @@
             class="mat-vertical-content-container"
             [class.mat-stepper-vertical-line]="!$last"
             [class.mat-vertical-content-container-active]="selectedIndex === $index"
-            [attr.inert]="selectedIndex === $index ? null : ''">
-            <div 
+            [attr.inert]="selectedIndex === $index ? null : ''"
+            [attr.aria-label]="ariaLabel">
+            <div
               class="mat-vertical-stepper-content"
               role="region"
               [id]="_getStepContentId($index)"
@@ -105,10 +106,11 @@
 </ng-template>
 
 <ng-template #horizontalStepsTemplate let-steps="steps">
-  <div 
+  <div
     aria-orientation="horizontal"
-    class="mat-horizontal-stepper-header-container" 
-    role="tablist">
+    class="mat-horizontal-stepper-header-container"
+    role="tablist"
+    [attr.aria-label]="ariaLabel">
     @for (step of steps; track step) {
       <ng-container
         [ngTemplateOutlet]="stepTemplate"

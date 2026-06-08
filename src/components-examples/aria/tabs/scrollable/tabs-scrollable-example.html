@@ -1,0 +1,13 @@
+<div ngTabs>
+  <div ngTabList aria-label="Scrollable tabs" selectedTab="tab1">
+    @for (i of tabsList; track i) {
+      <div ngTab [value]="'tab' + i">Tab {{i}}</div>
+    }
+  </div>
+
+  @for (i of tabsList; track i) {
+    <div ngTabPanel [value]="'tab' + i">
+      <ng-template ngTabContent>Content for Tab {{i}}</ng-template>
+    </div>
+  }
+</div>

@@ -1,7 +1,7 @@
 import {COMMA} from '@angular/cdk/keycodes';
 import {HarnessLoader, TestKey} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChipsModule} from '../index';
 import {MatChipInputHarness} from './chip-input-harness';
@@ -102,6 +102,7 @@ describe('MatChipInputHarness', () => {
     </mat-chip-grid>
   `,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipInputHarnessTest {
   required = false;

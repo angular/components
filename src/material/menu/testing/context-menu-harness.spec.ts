@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -76,6 +76,7 @@ describe('MatContextMenuHarness', () => {
       outline: solid 1px;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuHarnessTest {
   disabled = signal(false);

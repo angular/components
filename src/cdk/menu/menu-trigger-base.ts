@@ -10,7 +10,7 @@ import {
   Directive,
   EventEmitter,
   inject,
-  Injectable,
+  Service,
   InjectionToken,
   Injector,
   OnDestroy,
@@ -44,7 +44,7 @@ export const MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
 );
 
 /** Tracks the last open menu trigger across the entire application. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MenuTracker {
   /** The last open menu trigger. */
   private static _openMenuTrigger?: CdkMenuTriggerBase;

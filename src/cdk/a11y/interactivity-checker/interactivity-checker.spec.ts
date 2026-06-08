@@ -45,7 +45,7 @@ describe('InteractivityChecker', () => {
   });
 
   describe('isVisible', () => {
-    it('should return false for a `display: none` element', () => {
+    it('should return false for a `display: none` element (isVisible)', () => {
       testContainerElement.innerHTML = `<input style="display: none;">`;
       const input = testContainerElement.querySelector('input') as HTMLElement;
 
@@ -54,7 +54,7 @@ describe('InteractivityChecker', () => {
         .toBe(false);
     });
 
-    it('should return false for the child of a `display: none` element', () => {
+    it('should return false for the child of a `display: none` element (isVisible)', () => {
       testContainerElement.innerHTML = `<div style="display: none;">
            <input>
          </div>`;
@@ -65,7 +65,7 @@ describe('InteractivityChecker', () => {
         .toBe(false);
     });
 
-    it('should return false for a `visibility: hidden` element', () => {
+    it('should return false for a `visibility: hidden` element (isVisible)', () => {
       testContainerElement.innerHTML = `<input style="visibility: hidden;">`;
       const input = testContainerElement.querySelector('input') as HTMLElement;
 
@@ -74,7 +74,7 @@ describe('InteractivityChecker', () => {
         .toBe(false);
     });
 
-    it('should return false for the child of a `visibility: hidden` element', () => {
+    it('should return false for the child of a `visibility: hidden` element (isVisible)', () => {
       testContainerElement.innerHTML = `<div style="visibility: hidden;">
            <input>
          </div>`;
@@ -158,7 +158,7 @@ describe('InteractivityChecker', () => {
       });
     });
 
-    it('should return false for a `display: none` element', () => {
+    it('should return false for a `display: none` element (isFocusable)', () => {
       testContainerElement.innerHTML = `<input style="display: none;">`;
       const input = testContainerElement.querySelector('input') as HTMLElement;
 
@@ -178,7 +178,7 @@ describe('InteractivityChecker', () => {
         .toBe(true);
     });
 
-    it('should return false for the child of a `display: none` element', () => {
+    it('should return false for the child of a `display: none` element (isFocusable)', () => {
       testContainerElement.innerHTML = `<div style="display: none;">
            <input>
          </div>`;
@@ -189,7 +189,7 @@ describe('InteractivityChecker', () => {
         .toBe(false);
     });
 
-    it('should return false for a `visibility: hidden` element', () => {
+    it('should return false for a `visibility: hidden` element (isFocusable)', () => {
       testContainerElement.innerHTML = `<input style="visibility: hidden;">`;
       const input = testContainerElement.querySelector('input') as HTMLElement;
 
@@ -198,7 +198,7 @@ describe('InteractivityChecker', () => {
         .toBe(false);
     });
 
-    it('should return false for the child of a `visibility: hidden` element', () => {
+    it('should return false for the child of a `visibility: hidden` element (isFocusable)', () => {
       testContainerElement.innerHTML = `<div style="visibility: hidden;">
            <input>
          </div>`;
@@ -331,7 +331,7 @@ describe('InteractivityChecker', () => {
         });
       });
 
-      it('should return true for div and span with tabindex == 0', () => {
+      it('should return true for div and span with tabindex == 0 (isFocusable)', () => {
         if (shouldSkip) {
           return;
         }
@@ -365,7 +365,7 @@ describe('InteractivityChecker', () => {
         });
       });
 
-      it('should return true for div and span with tabindex == 0', () => {
+      it('should return true for div and span with tabindex == 0 (isTabbable)', () => {
         if (shouldSkip) {
           return;
         }

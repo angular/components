@@ -6,7 +6,7 @@ import {
   parallel,
 } from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, Type, WritableSignal, signal} from '@angular/core';
+import {Component, Type, WritableSignal, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDividerHarness} from '../../divider/testing';
 import {MatListModule} from '../../list';
@@ -526,6 +526,7 @@ describe('MatSelectionListHarness', () => {
       <mat-list class="test-empty"></mat-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListHarnessTest {
   disableThirdItem = signal(false);
@@ -566,6 +567,7 @@ class ListHarnessTest {
       <mat-action-list class="test-empty"></mat-action-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ActionListHarnessTest {
   lastClicked!: string;
@@ -608,6 +610,7 @@ class ActionListHarnessTest {
       <mat-nav-list class="test-empty"></mat-nav-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NavListHarnessTest {
   lastClicked!: string;
@@ -651,6 +654,7 @@ class NavListHarnessTest {
     <mat-selection-list class="test-empty" disabled></mat-selection-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectionListHarnessTest {
   disableThirdItem = signal(false);

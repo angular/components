@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
@@ -217,6 +217,7 @@ describe('MatDatepickerInputHarness', () => {
     <input id="no-datepicker" [matDatepicker]="null!">
   `,
   imports: [MatDatepickerModule, MatFormFieldModule, MatInputModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DatepickerInputHarnessTest {
   date: Date | null = null;

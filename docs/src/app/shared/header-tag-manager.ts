@@ -7,14 +7,14 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 
 const MAT_ANGULAR_DEV = 'https://material.angular.dev';
 
 /**
  * Information about the deployment of this application.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class HeaderTagManager {
   private readonly _document = inject(DOCUMENT);
 

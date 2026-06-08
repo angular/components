@@ -9,7 +9,6 @@
 import {
   AfterContentInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -76,7 +75,6 @@ export class MatSlideToggleChange {
   },
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -204,8 +202,6 @@ export class MatSlideToggle
     return `${this.id || this._uniqueId}-input`;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
@@ -239,7 +235,7 @@ export class MatSlideToggle
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     if (changes['required']) {
       this._validatorOnChange();
     }

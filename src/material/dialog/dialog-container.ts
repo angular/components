@@ -48,7 +48,7 @@ export const CLOSE_ANIMATION_DURATION = 75;
   encapsulation: ViewEncapsulation.None,
   // Disabled for consistency with the non-MDC dialog container.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CdkPortalOutlet],
   host: {
     'class': 'mat-mdc-dialog-container mdc-dialog',

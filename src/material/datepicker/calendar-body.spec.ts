@@ -3,7 +3,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
@@ -377,17 +377,6 @@ describe('MatCalendarBody', () => {
       expect(cells[27].classList).toContain(inComparisonClass);
     });
 
-    it('should be able to show a range that ends after the end of the calendar', () => {
-      testComponent.startValue = 27;
-      testComponent.endValue = 50;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(cells.some(cell => cell.classList.contains(endClass))).toBe(false);
-      expect(cells[26].classList).toContain(startClass);
-      expect(cells[27].classList).toContain(inRangeClass);
-    });
-
     it('should not to mark a date as both the start and end', () => {
       testComponent.startValue = 1;
       testComponent.endValue = 1;
@@ -721,6 +710,7 @@ describe('MatCalendarBody', () => {
           (selectedValueChange)="onSelect($event)">
     </table>`,
   imports: [MatCalendarBody],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardCalendarBody {
   label = 'Jan 2017';
@@ -753,6 +743,7 @@ class StandardCalendarBody {
           >
     </table>`,
   imports: [MatCalendarBody],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {
   ListboxConfigurableExample,
   ListboxSingleSelectExample,
@@ -40,6 +40,5 @@ import {
   ],
   styleUrl: 'listbox-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListboxDemo {}

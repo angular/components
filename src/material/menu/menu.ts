@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -98,7 +97,6 @@ const EXIT_ANIMATION = '_mat-menu-exit';
   selector: 'mat-menu',
   templateUrl: 'menu.html',
   styleUrl: 'menu.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matMenu',
   host: {
@@ -221,6 +219,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * @param classes list of class names
    */
   @Input('class')
+  get panelClass(): string {
+    return this._previousPanelClass;
+  }
   set panelClass(classes: string) {
     const previousPanelClass = this._previousPanelClass;
     const newClassList = {...this._classList};
@@ -243,7 +244,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
     this._classList = newClassList;
   }
-  private _previousPanelClass!: string;
+  private _previousPanelClass: string = '';
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -271,8 +272,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   @Output() readonly close: EventEmitter<MenuCloseReason> = this.closed;
 
   readonly panelId: string = inject(_IdGenerator).getId('mat-menu-panel-');
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultOptions = inject<MatMenuDefaultOptions>(MAT_MENU_DEFAULT_OPTIONS);

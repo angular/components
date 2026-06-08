@@ -1,5 +1,13 @@
-import {Component, ElementRef, Injector, signal, ViewChild, WritableSignal} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  signal,
+  ViewChild,
+  WritableSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {Direction} from '../bidi';
 import {A, ESCAPE} from '../keycodes';
@@ -170,7 +178,7 @@ describe('Overlay directives', () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
-  it('should prevent closing via clicks on the backdrop by default', fakeAsync(() => {
+  it('should prevent closing via clicks on the backdrop by default', () => {
     fixture.componentInstance.hasBackdrop = true;
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
@@ -181,7 +189,7 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
-  }));
+  });
 
   it('should prevent closing via the escape key with disableClose option', () => {
     fixture.componentInstance.isOpen = true;
@@ -196,7 +204,7 @@ describe('Overlay directives', () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
-  it('should not depend on the order in which the `origin` and `open` are set', waitForAsync(() => {
+  it('should not depend on the order in which the `origin` and `open` are set', () => {
     fixture.destroy();
 
     const propOrderFixture = TestBed.createComponent(ConnectedOverlayPropertyInitOrder);
@@ -209,7 +217,7 @@ describe('Overlay directives', () => {
       overlayDirective.origin = propOrderFixture.componentInstance.trigger;
       propOrderFixture.detectChanges();
     }).not.toThrow();
-  }));
+  });
 
   describe('inputs', () => {
     it('should set the width', () => {
@@ -313,7 +321,7 @@ describe('Overlay directives', () => {
       expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
 
-    it('should be able to change hasBackdrop after the overlay has been initialized', fakeAsync(() => {
+    it('should be able to change hasBackdrop after the overlay has been initialized', async () => {
       // Open once with a backdrop
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
@@ -325,7 +333,7 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick(500);
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Open again without a backdrop.
       fixture.componentInstance.hasBackdrop = false;
@@ -334,7 +342,7 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-    }));
+    });
 
     it('should set the custom backdrop class', () => {
       fixture.componentInstance.hasBackdrop = true;
@@ -521,7 +529,7 @@ describe('Overlay directives', () => {
       expect(Math.floor(overlayRect.left)).toBe(Math.floor(triggerRect.left) + 20);
     });
 
-    it('should take the offset from the position', () => {
+    it('should apply the panelClass from the position', () => {
       fixture.componentInstance.positionOverrides = [
         {
           originX: 'start',
@@ -789,6 +797,7 @@ describe('Overlay directives', () => {
     <p>Menu content</p>
   </ng-template>`,
   imports: [OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ConnectedOverlayDirectiveTest {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
@@ -832,6 +841,7 @@ class ConnectedOverlayDirectiveTest {
     <ng-template cdk-connected-overlay>Menu content</ng-template>
   `,
   imports: [OverlayModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ConnectedOverlayPropertyInitOrder {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;

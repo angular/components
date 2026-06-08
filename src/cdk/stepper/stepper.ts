@@ -11,7 +11,6 @@ import {Direction, Directionality} from '../bidi';
 import {ENTER, hasModifierKey, SPACE} from '../keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -107,7 +106,6 @@ export interface StepperOptions {
   exportAs: 'cdkStep',
   template: '<ng-template><ng-content/></ng-template>',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
@@ -258,8 +256,6 @@ export class CdkStep implements OnChanges {
     return this.interacted && !!this.stepControl?.invalid;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const stepperOptions = inject<StepperOptions>(STEPPER_GLOBAL_OPTIONS, {optional: true});
     this._stepperOptions = stepperOptions ? stepperOptions : {};
@@ -341,7 +337,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _sortedHeaders = new QueryList<CdkStepHeader>();
 
   /** Whether the validity of previous steps should be checked or not. */
-  @Input({transform: booleanAttribute}) linear: boolean = false;
+  @Input({transform: booleanAttribute})
+  get linear(): boolean {
+    return this._linear();
+  }
+  set linear(value: boolean) {
+    this._linear.set(value);
+  }
+  private _linear = signal(false);
 
   /** The index of the selected step. */
   @Input({transform: numberAttribute})
@@ -403,9 +406,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     }
   }
   private _orientation: StepperOrientation = 'horizontal';
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterContentInit() {
     this._steps.changes

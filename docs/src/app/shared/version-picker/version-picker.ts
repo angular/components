@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
@@ -29,6 +29,7 @@ interface VersionInfo {
   styleUrls: ['./version-picker.scss'],
   imports: [MatButton, MatTooltip, MatMenu, MatMenuItem, MatIcon, MatMenuTrigger, AsyncPipe],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class VersionPicker {
   private _http = inject(HttpClient);

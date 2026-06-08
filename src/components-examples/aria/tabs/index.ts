@@ -7,3 +7,4 @@ export {TabsActiveDescendantExample} from './active-descendant/tabs-active-desce
 export {TabsDisabledFocusableExample} from './disabled-focusable/tabs-disabled-focusable-example';
 export {TabsDisabledSkippedExample} from './disabled-skipped/tabs-disabled-skipped-example';
 export {TabsDisabledExample} from './disabled/tabs-disabled-example';
+export {TabsScrollableExample} from './scrollable/tabs-scrollable-example';

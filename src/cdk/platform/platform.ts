@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {inject, Service, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 
 // Whether the current platform supports the V8 Break Iterator. The V8 check
@@ -28,7 +28,7 @@ try {
  * Service to detect the current platform by comparing the userAgent strings and
  * checking browser-specific global properties.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class Platform {
   private _platformId = inject(PLATFORM_ID);
 
@@ -85,9 +85,4 @@ export class Platform {
   // Safari browser should also use Webkit as its layout engine.
   /** Whether the current browser is Safari. */
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
-
-  /** Backwards-compatible constructor. */
-  constructor(..._args: unknown[]);
-
-  constructor() {}
 }

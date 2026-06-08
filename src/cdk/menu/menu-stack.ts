@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Injectable, InjectionToken} from '@angular/core';
+import {inject, Service, InjectionToken} from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
@@ -64,7 +64,7 @@ export interface MenuStackCloseEvent {
  * from the `empty` observable specifying the next focus action which the listener should perform
  * as requested by the closer.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class MenuStack {
   /** The ID of this menu stack. */
   readonly id = inject(_IdGenerator).getId('cdk-menu-stack-');

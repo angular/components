@@ -1,4 +1,4 @@
-import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {dispatchFakeEvent} from '../testing/private';
 import {ViewportRuler} from './viewport-ruler';
 
@@ -109,17 +109,17 @@ describe('ViewportRuler', () => {
       subscription.unsubscribe();
     });
 
-    it('should be able to throttle the callback', fakeAsync(() => {
+    it('should be able to throttle the callback', async () => {
       const spy = jasmine.createSpy('viewport changed spy');
-      const subscription = viewportRuler.change(1337).subscribe(spy);
+      const subscription = viewportRuler.change(10).subscribe(spy);
 
       dispatchFakeEvent(window, 'resize');
       expect(spy).not.toHaveBeenCalled();
 
-      tick(1337);
+      await new Promise(resolve => setTimeout(resolve, 20));
 
       expect(spy).toHaveBeenCalledTimes(1);
       subscription.unsubscribe();
-    }));
+    });
   });
 });

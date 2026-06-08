@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -48,7 +47,6 @@ declare const markerClusterer: {
 @Component({
   selector: 'map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
@@ -107,7 +105,7 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges<this>) {
     const change = changes['renderer'] || changes['algorithm'];
 
     // Since the options are set in the constructor, we have to recreate the cluster if they change.

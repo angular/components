@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, SignalLike} from '../behaviors/signal-like/signal-like';
+import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {List, ListInputs} from '../behaviors/list/list';
 import {ToolbarWidgetPattern} from './toolbar-widget';
@@ -24,6 +24,9 @@ export type ToolbarInputs<V> = Omit<
 export class ToolbarPattern<V> {
   /** The list behavior for the toolbar. */
   readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
+
+  /** Whether the toolbar has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -80,10 +83,10 @@ export class ToolbarPattern<V> {
     const manager = new KeyboardEventManager();
 
     return manager
-      .on(this._nextKey, () => this.listBehavior.next())
-      .on(this._prevKey, () => this.listBehavior.prev())
-      .on(this._altNextKey, () => this._groupNext())
-      .on(this._altPrevKey, () => this._groupPrev())
+      .on(this._nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
+      .on(this._prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+      .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
+      .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false})
       .on(' ', () => this.select())
       .on('Enter', () => this.select())
       .on('Home', () => this.listBehavior.first())
@@ -167,19 +170,38 @@ export class ToolbarPattern<V> {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const values = this.inputs.items().map(w => w.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate value '${duplicates[0]}' detected inside ngToolbar.`);
+    }
+
+    return violations;
+  }
+
   /** Handles keydown events for the toolbar. */
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
+    this.hasBeenInteracted.set(true);
     this._keydown().handle(event);
   }
 
   onPointerdown(event: PointerEvent) {
+    this.hasBeenInteracted.set(true);
     event.preventDefault();
+  }
+
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Handles click events for the toolbar. */
   onClick(event: MouseEvent) {
-    if (this.disabled()) return;
+    if (this.disabled() || (event as PointerEvent).pointerType === '') return;
     this._goto(event);
   }
 
@@ -196,6 +218,15 @@ export class ToolbarPattern<V> {
 
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
+    }
+  }
+
+  /** Sets the default active state of the toolbar before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    if (this.inputs.items().length > 0) {
+      this.setDefaultState();
     }
   }
 }

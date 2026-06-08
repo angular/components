@@ -7,7 +7,7 @@
  */
 
 import {OptionPattern} from './option';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 
@@ -22,37 +22,40 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 
 /** Controls the state of a listbox. */
 export class ListboxPattern<V> {
-  listBehavior: List<OptionPattern<V>, V>;
+  readonly listBehavior: List<OptionPattern<V>, V>;
+
+  /** Whether the listbox has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the listbox is disabled. */
-  disabled = computed(() => this.listBehavior.disabled());
+  readonly disabled = computed(() => this.listBehavior.disabled());
 
   /** Whether the listbox is readonly. */
-  readonly: SignalLike<boolean>;
+  readonly readonly: SignalLike<boolean>;
 
   /** The tab index of the listbox. */
-  tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
+  readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active item. */
-  activeDescendant = computed(() => this.listBehavior.activeDescendant());
+  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
   multi: SignalLike<boolean>;
 
   /** The number of items in the listbox. */
-  setsize = computed(() => this.inputs.items().length);
+  readonly setsize = computed(() => this.inputs.items().length);
 
   /** Whether the listbox selection follows focus. */
-  followFocus = computed(() => this.inputs.selectionMode() === 'follow');
+  readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** Whether the listbox should wrap. Used to disable wrapping while range selecting. */
-  wrap = signal(true);
+  readonly wrap = signal(true);
 
   /** The key used to navigate to the previous item in the list. */
-  prevKey = computed(() => {
+  readonly prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -60,7 +63,7 @@ export class ListboxPattern<V> {
   });
 
   /** The key used to navigate to the next item in the list. */
-  nextKey = computed(() => {
+  readonly nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -68,19 +71,19 @@ export class ListboxPattern<V> {
   });
 
   /** Represents the space key. Does nothing when the user is actively using typeahead. */
-  dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
+  readonly dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
 
   /** The regexp used to decide if a key should trigger typeahead. */
-  typeaheadRegexp = /^.$/;
+  readonly typeaheadRegexp = /^.$/;
 
   /** The keydown event manager for the listbox. */
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
     if (this.readonly()) {
       return manager
-        .on(this.prevKey, () => this.listBehavior.prev())
-        .on(this.nextKey, () => this.listBehavior.next())
+        .on(this.prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first())
         .on('End', () => this.listBehavior.last())
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
@@ -88,8 +91,8 @@ export class ListboxPattern<V> {
 
     if (!this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.listBehavior.prev())
-        .on(this.nextKey, () => this.listBehavior.next())
+        .on(this.prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first())
         .on('End', () => this.listBehavior.last())
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
@@ -97,8 +100,8 @@ export class ListboxPattern<V> {
 
     if (this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}))
-        .on(this.nextKey, () => this.listBehavior.next({selectOne: true}))
+        .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}), {ignoreRepeat: false})
+        .on(this.nextKey, () => this.listBehavior.next({selectOne: true}), {ignoreRepeat: false})
         .on('Home', () => this.listBehavior.first({selectOne: true}))
         .on('End', () => this.listBehavior.last({selectOne: true}))
         .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key, {selectOne: true}));
@@ -107,8 +110,12 @@ export class ListboxPattern<V> {
     if (this.inputs.multi()) {
       manager
         .on(Modifier.Any, 'Shift', () => this.listBehavior.anchor(this.listBehavior.activeIndex()))
-        .on(Modifier.Shift, this.prevKey, () => this.listBehavior.prev({selectRange: true}))
-        .on(Modifier.Shift, this.nextKey, () => this.listBehavior.next({selectRange: true}))
+        .on(Modifier.Shift, this.prevKey, () => this.listBehavior.prev({selectRange: true}), {
+          ignoreRepeat: false,
+        })
+        .on(Modifier.Shift, this.nextKey, () => this.listBehavior.next({selectRange: true}), {
+          ignoreRepeat: false,
+        })
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
           this.listBehavior.first({selectRange: true, anchor: false}),
         )
@@ -137,8 +144,12 @@ export class ListboxPattern<V> {
 
     if (this.inputs.multi() && this.followFocus()) {
       manager
-        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.listBehavior.prev())
-        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.listBehavior.next())
+        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.listBehavior.prev(), {
+          ignoreRepeat: false,
+        })
+        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.listBehavior.next(), {
+          ignoreRepeat: false,
+        })
         .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.listBehavior.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => this.listBehavior.toggle())
         .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => this.listBehavior.first())
@@ -152,9 +163,9 @@ export class ListboxPattern<V> {
     return manager;
   });
 
-  /** The pointerdown event manager for the listbox. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the listbox. */
+  readonly clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.readonly()) {
       return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
@@ -198,10 +209,22 @@ export class ListboxPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+    if (!this.inputs.multi() && this.inputs.value().length > 1) {
       violations.push(
-        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
       );
+    }
+
+    const values = this.inputs.items().map(o => o.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate option value '${duplicates[0]}' detected inside ngListbox.`);
+    }
+
+    const ids = this.inputs.items().map(o => o.id());
+    const duplicateIds = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+    if (duplicateIds.length > 0) {
+      violations.push(`Duplicate option ID '${duplicateIds[0]}' detected inside ngListbox.`);
     }
 
     return violations;
@@ -210,14 +233,20 @@ export class ListboxPattern<V> {
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
-  onPointerdown(event: PointerEvent) {
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.hasBeenInteracted.set(true);
+      this.clickManager().handle(event);
     }
+  }
+
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /**
@@ -247,7 +276,19 @@ export class ListboxPattern<V> {
 
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
+      if (this.followFocus()) {
+        this.listBehavior.select();
+      }
     }
+  }
+
+  /**
+   * Sets the default active state of the listbox before receiving interaction for the first time.
+   */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
   }
 
   protected _getItem(e: PointerEvent) {

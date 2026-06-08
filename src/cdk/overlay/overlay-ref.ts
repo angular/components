@@ -109,6 +109,14 @@ export class OverlayRef implements PortalOutlet {
     return this._host;
   }
 
+  /**
+   * Function that determines if this overlay should receive a specific event.
+   */
+  get eventPredicate(): ((event: Event) => boolean) | null {
+    // Note: the safe read here is redundant, but some internal tests mock out the overlay ref.
+    return this._config?.eventPredicate || null;
+  }
+
   attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
   attach<T>(portal: TemplatePortal<T>): EmbeddedViewRef<T>;
   attach(portal: any): any;

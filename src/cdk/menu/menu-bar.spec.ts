@@ -6,6 +6,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
@@ -1077,6 +1078,7 @@ describe('MenuBar', () => {
     </ul>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarRadioGroup {}
 
@@ -1112,6 +1114,7 @@ class MenuBarRadioGroup {}
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiMenuWithSubmenu {
   clickEmitter = new EventEmitter<void>();
@@ -1138,6 +1141,7 @@ class MultiMenuWithSubmenu {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithCheckboxes {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
@@ -1165,6 +1169,7 @@ class MenuWithCheckboxes {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithRadioButtons {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
@@ -1198,6 +1203,7 @@ class MenuWithRadioButtons {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarWithMenusAndInlineMenu {
   @ViewChildren(CdkMenu) menus!: QueryList<CdkMenu>;

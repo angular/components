@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, OnDestroy, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
@@ -24,6 +24,7 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   selector: 'app-navbar',
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatButton,
     MatIconButton,

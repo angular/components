@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -170,6 +170,7 @@ describe('MatTabGroupHarness', () => {
     </mat-tab-group>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabGroupHarnessTest {
   isDisabled = signal(false);

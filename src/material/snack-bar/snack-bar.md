@@ -61,15 +61,15 @@ snackBar.openFromComponent(MessageArchivedComponent, {
 To access the data in your component, you have to use the `MAT_SNACK_BAR_DATA` injection token:
 
 ```ts
-import {Component, Inject} from '@angular/core';
-import {MAT_SNACK_BAR_DATA} from '../snack-bar';
+import {Component, inject} from '@angular/core';
+import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'your-snackbar',
   template: 'passed in {{ data }}',
 })
 export class MessageArchivedComponent {
-  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: string) { }
+  data = inject<string>(MAT_SNACK_BAR_DATA);
 }
 ```
 
@@ -91,11 +91,11 @@ If you want to override the default snack bar options, you can do so using the
 `MAT_SNACK_BAR_DEFAULT_OPTIONS` injection token.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
   ]
-})
+});
 ```
 
 ### Accessibility

@@ -8,7 +8,6 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -46,7 +45,6 @@ import {DevAppDirectionality} from './dev-app-directionality';
     MatTooltipModule,
     RouterModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -63,13 +61,12 @@ export class DevAppLayout {
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
     {name: 'Aria Accordion', route: '/aria-accordion'},
-    {name: 'Aria Combobox', route: '/aria-combobox'},
     {name: 'Aria Autocomplete', route: '/aria-autocomplete'},
+    {name: 'Aria Combobox', route: '/aria-combobox'},
     {name: 'Aria Grid', route: '/aria-grid'},
     {name: 'Aria Listbox', route: '/aria-listbox'},
     {name: 'Aria Menu', route: '/aria-menu'},
     {name: 'Aria Menubar', route: '/aria-menubar'},
-    {name: 'Aria Select', route: '/aria-select'},
     {name: 'Aria Tabs', route: '/aria-tabs'},
     {name: 'Aria Toolbar', route: '/aria-toolbar'},
     {name: 'Aria Tree', route: '/aria-tree'},

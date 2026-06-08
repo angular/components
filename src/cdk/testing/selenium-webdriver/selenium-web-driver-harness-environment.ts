@@ -18,8 +18,8 @@ declare interface FrameworkStabilizer {
   (callback: (didWork: boolean) => void): void;
 }
 
-declare global {
-  interface Window {
+type WindowWithStabiliziers = Window &
+  typeof globalThis & {
     /**
      * These hooks are exposed by Angular to register a callback for when the application is stable
      * (no more pending tasks).
@@ -28,8 +28,7 @@ declare global {
      *  angular/angular/blob/main/packages/platform-browser/src/browser/testability.ts#L30-L49
      */
     frameworkStabilizers: FrameworkStabilizer[];
-  }
-}
+  };
 
 /** Options to configure the environment. */
 export interface WebDriverHarnessEnvironmentOptions {
@@ -48,9 +47,11 @@ const defaultEnvironmentOptions: WebDriverHarnessEnvironmentOptions = {
  * and invokes the specified `callback` when the application is stable (no more pending tasks).
  */
 function whenStable(callback: (didWork: boolean[]) => void): void {
-  Promise.all(window.frameworkStabilizers.map(stabilizer => new Promise(stabilizer))).then(
-    callback,
-  );
+  Promise.all(
+    (window as WindowWithStabiliziers).frameworkStabilizers.map(
+      stabilizer => new Promise(stabilizer),
+    ),
+  ).then(callback);
 }
 
 /**
@@ -58,7 +59,7 @@ function whenStable(callback: (didWork: boolean[]) => void): void {
  * bootstrapped yet.
  */
 function isBootstrapped() {
-  return !!window.frameworkStabilizers;
+  return !!(window as WindowWithStabiliziers).frameworkStabilizers;
 }
 
 /** Waits for angular to be ready after the page load. */

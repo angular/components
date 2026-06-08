@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {ContentObserver, MutationObserverFactory, ObserversModule} from './observe-content';
 
@@ -252,6 +252,7 @@ describe('ContentObserver injectable', () => {
       [cdkObserveContentDisabled]="disabled">{{text}}</div>
   `,
   imports: [ObserversModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithTextContent {
   text = '';
@@ -262,6 +263,7 @@ class ComponentWithTextContent {
 @Component({
   template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>`,
   imports: [ObserversModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildTextContent {
   text = '';
@@ -271,6 +273,7 @@ class ComponentWithChildTextContent {
 @Component({
   template: `<div (cdkObserveContent)="spy($event)" [debounce]="debounce">{{text}}</div>`,
   imports: [ObserversModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithDebouncedListener {
   debounce = 500;
@@ -281,6 +284,7 @@ class ComponentWithDebouncedListener {
 @Component({
   template: `<div #contentEl>{{text}}</div>`,
   imports: [ObserversModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class UnobservedComponentWithTextContent {
   @ViewChild('contentEl') contentEl!: ElementRef<HTMLElement>;

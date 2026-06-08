@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -29,7 +29,7 @@ describe('MapGroundOverlay', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Ground Overlay', fakeAsync(() => {
+  it('initializes a Google Map Ground Overlay', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     const groundOverlayConstructorSpy = createGroundOverlayConstructorSpy(groundOverlaySpy);
 
@@ -40,13 +40,12 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.opacity = opacity;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(groundOverlayConstructorSpy).toHaveBeenCalledWith(url, bounds, groundOverlayOptions);
     expect(groundOverlaySpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('exposes methods that provide information about the Ground Overlay', fakeAsync(() => {
+  it('exposes methods that provide information about the Ground Overlay', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     createGroundOverlayConstructorSpy(groundOverlaySpy);
 
@@ -59,7 +58,6 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.opacity = opacity;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     groundOverlayComponent.getBounds();
     expect(groundOverlaySpy.getBounds).toHaveBeenCalled();
@@ -69,9 +67,9 @@ describe('MapGroundOverlay', () => {
 
     groundOverlaySpy.getUrl.and.returnValue(url);
     expect(groundOverlayComponent.getUrl()).toBe(url);
-  }));
+  });
 
-  it('initializes Ground Overlay event handlers', fakeAsync(() => {
+  it('initializes Ground Overlay event handlers', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     createGroundOverlayConstructorSpy(groundOverlaySpy);
 
@@ -81,13 +79,12 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.bounds = bounds;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dblclick', jasmine.any(Function));
-  }));
+  });
 
-  it('should be able to add an event listener after init', fakeAsync(() => {
+  it('should be able to add an event listener after init', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     createGroundOverlayConstructorSpy(groundOverlaySpy);
 
@@ -97,7 +94,6 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.bounds = bounds;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('dblclick', jasmine.any(Function));
 
@@ -107,9 +103,9 @@ describe('MapGroundOverlay', () => {
 
     expect(addSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
     subscription.unsubscribe();
-  }));
+  });
 
-  it('should be able to change the image after init', fakeAsync(() => {
+  it('should be able to change the image after init', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     const groundOverlayConstructorSpy = createGroundOverlayConstructorSpy(groundOverlaySpy);
 
@@ -120,7 +116,6 @@ describe('MapGroundOverlay', () => {
     fixture.componentInstance.opacity = opacity;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     expect(groundOverlayConstructorSpy).toHaveBeenCalledWith(url, bounds, groundOverlayOptions);
     expect(groundOverlaySpy.setMap).toHaveBeenCalledWith(mapSpy);
@@ -134,26 +129,24 @@ describe('MapGroundOverlay', () => {
     expect(groundOverlaySpy.setMap).toHaveBeenCalledTimes(2);
     expect(groundOverlaySpy.setMap).toHaveBeenCalledWith(null);
     expect(groundOverlaySpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('should recreate the ground overlay when the bounds change', fakeAsync(() => {
+  it('should recreate the ground overlay when the bounds change', () => {
     const groundOverlaySpy = createGroundOverlaySpy(url, bounds, groundOverlayOptions);
     createGroundOverlayConstructorSpy(groundOverlaySpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     const oldOverlay = fixture.componentInstance.groundOverlay.groundOverlay;
     fixture.componentInstance.bounds = {...bounds};
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
 
     const newOverlay = fixture.componentInstance.groundOverlay.groundOverlay;
     expect(newOverlay).toBeTruthy();
     expect(newOverlay).not.toBe(oldOverlay);
-  }));
+  });
 });
 
 @Component({
@@ -169,6 +162,7 @@ describe('MapGroundOverlay', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapGroundOverlay],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapGroundOverlay) groundOverlay!: MapGroundOverlay;

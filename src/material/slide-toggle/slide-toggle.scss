@@ -33,11 +33,6 @@ $fallbacks: m3-slide-toggle.get-tokens();
   }
 }
 
-// Ensure no label element (with a click handler) present to ensure hidden from screen readers.
-label:empty {
-  display: none;
-}
-
 .mdc-switch__track {
   overflow: hidden;
   position: relative;
@@ -554,6 +549,11 @@ label:empty {
 
   .mdc-switch--disabled + label {
     color: token-utils.slot(slide-toggle-disabled-label-text-color, $fallbacks);
+  }
+
+  // Ensure no label element (with a click handler) present to ensure hidden from screen readers.
+  label:empty {
+    display: none;
   }
 }
 

@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import {Observable} from 'rxjs';
 
 /**
  * Can be provided by the host application to enable persistence of column resize state.
  */
-@Injectable()
+@Service({autoProvided: false})
 export abstract class ColumnSizeStore {
   /** Returns the persisted size of the specified column in the specified table. */
   abstract getSize(tableId: string, columnId: string): Observable<number | null> | null;

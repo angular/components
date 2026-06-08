@@ -1,4 +1,4 @@
-import {Component, computed, Signal, viewChildren} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -37,17 +37,41 @@ export class AccordionConfigurableExample {
   disabled = new FormControl(false, {nonNullable: true});
   softDisabled = new FormControl(true, {nonNullable: true});
 
-  triggers = viewChildren(AccordionTrigger);
-  expandedIds = computed(() =>
-    this.triggers()
-      .filter(t => t.expanded())
-      .map(t => t.panelId()),
-  );
-
-  // Example items
-  items = ['item1', 'item2', 'item3', 'item4', 'item5'];
-
-  expansionIcon(item: string): Signal<string> {
-    return computed(() => (this.expandedIds().includes(item) ? 'expand_less' : 'expand_more'));
-  }
+  items = signal([
+    {
+      panelId: 'item-1',
+      header: 'Item 1 Trigger',
+      content: 'This is the content for Item 1.',
+      disabled: signal(false),
+      expanded: signal(false),
+    },
+    {
+      panelId: 'item-2',
+      header: 'Item 2 Trigger (disabled)',
+      content: 'This is the content for Item 2.',
+      disabled: signal(true),
+      expanded: signal(false),
+    },
+    {
+      panelId: 'item-3',
+      header: 'Item 3 Trigger',
+      content: 'This is the content for Item 3.',
+      disabled: signal(false),
+      expanded: signal(false),
+    },
+    {
+      panelId: 'item-4',
+      header: 'Item 4 Trigger',
+      content: 'This is the content for Item 4.',
+      disabled: signal(false),
+      expanded: signal(false),
+    },
+    {
+      panelId: 'item-5',
+      header: 'Item 5 Trigger',
+      content: 'This is the content for Item 5.',
+      disabled: signal(false),
+      expanded: signal(false),
+    },
+  ]);
 }

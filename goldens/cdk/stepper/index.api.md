@@ -21,7 +21,7 @@ import { TemplateRef } from '@angular/core';
 
 // @public (undocumented)
 export class CdkStep implements OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     ariaLabel: string;
     ariaLabelledby: string;
     protected _childForms: QueryList<Partial<NgForm | FormGroupDirective>> | undefined;
@@ -75,7 +75,6 @@ export class CdkStep implements OnChanges {
 
 // @public (undocumented)
 export class CdkStepHeader implements FocusableOption {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -87,7 +86,6 @@ export class CdkStepHeader implements FocusableOption {
 
 // @public (undocumented)
 export class CdkStepLabel {
-    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -98,7 +96,6 @@ export class CdkStepLabel {
 
 // @public (undocumented)
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
@@ -106,7 +103,8 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     _getFocusIndex(): number | null;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
-    linear: boolean;
+    get linear(): boolean;
+    set linear(value: boolean);
     next(): void;
     // (undocumented)
     static ngAcceptInputType_linear: unknown;
@@ -152,7 +150,6 @@ export class CdkStepperModule {
 
 // @public
 export class CdkStepperNext {
-    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;
@@ -164,7 +161,6 @@ export class CdkStepperNext {
 
 // @public
 export class CdkStepperPrevious {
-    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;

@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import {OverlayContainer} from '@angular/cdk/overlay';
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class SceneOverlayContainer extends OverlayContainer {
   _createContainer(): void {
     const container = this._document.createElement('div');

@@ -1,6 +1,6 @@
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAccordionTogglePosition, MatExpansionModule} from '../../expansion';
 import {MatAccordionHarness} from './accordion-harness';
@@ -324,6 +324,7 @@ function getActiveElementTag() {
     <div class="test-content-harness">Outside of expansion panel</div>
   `,
   imports: [MatExpansionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ExpansionHarnessTestComponent {
   panel1Expanded = false;

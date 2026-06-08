@@ -7,20 +7,21 @@
  */
 
 import {
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
+  OnDestroy,
   output,
   Signal,
   signal,
   untracked,
 } from '@angular/core';
-import {MenuPattern, DeferredContentAware} from '../private';
+import {MenuPattern, DeferredContentAware, SortedCollection, reportViolations} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuTrigger} from './menu-trigger';
@@ -50,8 +51,6 @@ import {MENU_COMPONENT} from './menu-tokens';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */
@@ -79,16 +78,16 @@ import {MENU_COMPONENT} from './menu-tokens';
   ],
   providers: [{provide: MENU_COMPONENT, useExisting: Menu}],
 })
-export class Menu<V> {
+export class Menu<V> implements OnDestroy {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
 
-  /** The menu items contained in the menu. */
-  readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
+  /** The collection of menu items. */
+  readonly _collection = new SortedCollection<MenuItem<V>>();
 
   /** The menu items that are direct children of this menu. */
   readonly _items: Signal<MenuItem<V>[]> = computed(() =>
-    this._allItems().filter(i => i.parent === this),
+    this._collection.orderedItems().filter(i => i.parent === this),
   );
 
   /** A reference to the host element. */
@@ -115,17 +114,28 @@ export class Menu<V> {
   /** A reference to the parent menu item or menu trigger. */
   readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
 
+  /** Whether the menu is soft disabled. */
+  readonly softDisabled = input(true, {transform: booleanAttribute});
+
   /** The menu ui pattern instance. */
   readonly _pattern: MenuPattern<V>;
 
   /**
-   * The menu items as a writable signal.
+   * The menu item patterns for the menu items that are direct children of this menu, passed
+   * to the menu pattern.
    *
-   * TODO(wagnermaciel): This would normally be a computed, but using a computed causes a bug where
-   * sometimes the items array is empty. The bug can be reproduced by switching this to use a
-   * computed and then quickly opening and closing menus in the dev app.
+   * Note: contentChildren has an issue where it will return a successively smaller list
+   * each time that the menu is open and closed, eventually resulting in an empty list.
+   * The workaround is to trigger a recomputation of this signal whenever the menu is opened
+   * or closed, by calling this._pattern.visible() in the signal body. Otherwise, computed could
+   * not be used and would have to rebuild the list each time this method is called.
    */
-  private readonly _itemPatterns = () => this._items().map(i => i._pattern);
+  private readonly _itemPatterns = computed(() => {
+    // Only needed to force a recompute.
+    this._pattern.visible();
+
+    return this._items().map(i => i._pattern);
+  });
 
   /** Whether the menu is visible. */
   readonly visible = computed(() => this._pattern.visible());
@@ -134,7 +144,7 @@ export class Menu<V> {
   readonly tabIndex = computed(() => this._pattern.tabIndex());
 
   /** A callback function triggered when a menu item is selected. */
-  onSelect = output<V>();
+  readonly itemSelected = output<V>();
 
   /** The delay in milliseconds before expanding sub-menus on hover. */
   readonly expansionDelay = input<number>(100); // Arbitrarily chosen.
@@ -145,46 +155,57 @@ export class Menu<V> {
       parent: computed(() => this.parent()?._pattern),
       items: this._itemPatterns,
       multi: () => false,
-      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'vertical',
       selectionMode: () => 'explicit',
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-      onSelect: (value: V) => this.onSelect.emit(value),
+      itemSelected: (value: V) => this.itemSelected.emit(value),
     });
 
-    afterRenderEffect(() => {
-      const parent = this.parent();
-      if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
-        this._deferredContentAware?.contentVisible.set(true);
-      } else {
-        this._deferredContentAware?.contentVisible.set(
-          this._pattern.visible() || !!this.parent()?._pattern.hasBeenFocused(),
-        );
-      }
+    afterRenderEffect({
+      write: () => {
+        const parent = this.parent();
+        if (parent instanceof MenuItem && parent.parent instanceof MenuBar) {
+          this._deferredContentAware?.contentVisible.set(true);
+        } else {
+          this._deferredContentAware?.contentVisible.set(
+            this._pattern.visible() || !!this.parent()?._pattern.hasBeenInteracted(),
+          );
+        }
+      },
     });
 
-    // TODO(wagnermaciel): This is a redundancy needed for if the user uses display: none to hide
-    // submenus. In those cases, the ui pattern is calling focus() before the ui has a chance to
-    // update the display property. The result is focus() being called on an element that is not
-    // focusable. This simply retries focusing the element after render.
-    afterRenderEffect(() => {
-      if (this._pattern.visible()) {
-        const activeItem = untracked(() => this._pattern.inputs.activeItem());
-        this._pattern.listBehavior.goto(activeItem!);
-      }
+    // Focuses an active menu item when the menu becomes visible. This is needed to
+    // properly restore focus to the active item when returning to a menu, and to
+    // focus the first item when navigating into a submenu with hover.
+    afterRenderEffect({
+      write: () => {
+        if (this.visible()) {
+          const activeItem = untracked(() => this._pattern.inputs.activeItem());
+          this._pattern.listBehavior.goto(activeItem!);
+        }
+      },
     });
 
-    afterRenderEffect(() => {
-      if (
-        !this._pattern.hasBeenFocused() &&
-        !this._pattern.hasBeenHovered() &&
-        this._items().length
-      ) {
-        untracked(() => this._pattern.setDefaultState());
-      }
+    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
+
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
     });
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
   }
 
   /** Closes the menu. */

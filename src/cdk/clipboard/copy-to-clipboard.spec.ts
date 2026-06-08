@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
@@ -15,6 +15,7 @@ const COPY_CONTENT = 'copy content';
     [cdkCopyToClipboardAttempts]="attempts"
     (cdkCopyToClipboardCopied)="copied($event)"></button>`,
   imports: [ClipboardModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CopyToClipboardHost {
   content = '';

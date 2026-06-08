@@ -1,4 +1,4 @@
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
 import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
 import {MatChipEditInput, MatChipsModule} from './index';
 import {By} from '@angular/platform-browser';
@@ -39,5 +39,6 @@ describe('MatChipEditInput', () => {
 @Component({
   template: `<mat-chip><span matChipEditInput></span></mat-chip>`,
   imports: [MatChipsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipEditInputContainer {}

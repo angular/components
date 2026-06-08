@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, InjectionToken, ViewEncapsulation} from '@angular/core';
+import {Component, InjectionToken, ViewEncapsulation} from '@angular/core';
 import {MatListBase} from './list-base';
 
 /**
@@ -26,7 +26,6 @@ export const MAT_NAV_LIST = new InjectionToken<MatNavList>('MatNavList');
   },
   styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatNavList}],
 })
 export class MatNavList extends MatListBase {

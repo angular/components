@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 
 /**
@@ -28,6 +28,7 @@ const ANGULAR_ARIA_LINKS: Record<string, string> = {
   templateUrl: 'angular-aria-banner.html',
   styleUrl: 'angular-aria-banner.css',
   imports: [MatIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AngularAriaBanner {
   @Input() componentName: string = '';

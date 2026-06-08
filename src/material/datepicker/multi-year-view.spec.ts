@@ -14,7 +14,7 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
+import {Component, signal, ViewChild, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideNativeDateAdapter} from '../core';
@@ -398,6 +398,7 @@ describe('MatMultiYearView', () => {
     <mat-multi-year-view [(activeDate)]="date" [(selected)]="selected"
                          (yearSelected)="selectedYear=$event"></mat-multi-year-view>`,
   imports: [MatMultiYearView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardMultiYearView {
   date = new Date(2017, JAN, 1);
@@ -416,6 +417,7 @@ class StandardMultiYearView {
       [maxDate]="maxDate"></mat-multi-year-view>
     `,
   imports: [MatMultiYearView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiYearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -432,6 +434,7 @@ class MultiYearViewWithDateFilter {
     </mat-multi-year-view>
     `,
   imports: [MatMultiYearView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiYearViewWithMinMaxDate {
   activeDate = new Date(2019, JAN, 1);
@@ -444,6 +447,7 @@ class MultiYearViewWithMinMaxDate {
     <mat-multi-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-multi-year-view>
   `,
   imports: [MatMultiYearView],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiYearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

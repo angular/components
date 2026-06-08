@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -196,6 +196,7 @@ describe('MatCheckboxHarness', () => {
     <span id="second-label">Second checkbox</span>
   `,
   imports: [MatCheckboxModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);

@@ -60,6 +60,11 @@ sass_library(
 )
 
 sass_library(
+    name = "typography",
+    srcs = ["_typography.scss"],
+)
+
+sass_library(
     name = "_inspection",
     srcs = ["_inspection.scss"],
     deps = [

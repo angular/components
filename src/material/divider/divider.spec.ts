@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatDividerModule} from './divider-module';
 
@@ -60,6 +60,7 @@ describe('MatDivider', () => {
 @Component({
   template: `<mat-divider [vertical]="vertical" [inset]="inset"></mat-divider>`,
   imports: [MatDividerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatDividerTestComponent {
   vertical = false;

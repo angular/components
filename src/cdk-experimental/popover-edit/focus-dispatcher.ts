@@ -8,7 +8,7 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 import {PartialObserver} from 'rxjs';
 
 import {
@@ -23,7 +23,7 @@ import {closest} from './polyfill';
  * Service responsible for moving cell focus around in response to keyboard events.
  * May be overridden to customize the keyboard behavior of popover edit.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class FocusDispatcher {
   protected readonly directionality = inject(Directionality);
 

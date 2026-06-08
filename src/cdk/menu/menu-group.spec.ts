@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
@@ -96,6 +96,7 @@ describe('MenuGroup', () => {
     </ng-template>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxMenu {
   @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;
@@ -140,6 +141,7 @@ class CheckboxMenu {
     </ng-template>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithMultipleRadioGroups {
   @ViewChild(CdkMenuItem) readonly trigger!: CdkMenuItem;

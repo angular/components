@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
 import {NgTemplateOutlet} from '@angular/common';
@@ -26,6 +26,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
   templateUrl: './component-category-list.html',
   styleUrls: ['./component-category-list.scss'],
   imports: [NavigationFocus, RouterLink, MatRipple, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
   private readonly _docItems = inject(DocumentationItems);

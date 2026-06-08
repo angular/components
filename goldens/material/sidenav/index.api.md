@@ -27,7 +27,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 
 // @public
 export class MatDrawer implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly _animationEnd: Subject<unknown>;
     readonly _animationStarted: Subject<unknown>;
     get autoFocus(): AutoFocusTarget | string | boolean;
@@ -68,7 +68,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
 // @public
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _allDrawers: QueryList<MatDrawer>;
     get autosize(): boolean;
     set autosize(value: BooleanInput);
@@ -112,16 +112,17 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     // (undocumented)
     _userContent: MatDrawerContent;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { "autosize": { "alias": "autosize"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; }, { "backdropClick": "backdropClick"; }, ["_content", "_allDrawers"], ["mat-drawer", "mat-drawer-content", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { "autosize": { "alias": "autosize"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; }, { "backdropClick": "backdropClick"; }, ["_content", "_allDrawers"], ["mat-drawer, mat-sidenav", "mat-drawer-content, mat-sidenav-content", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawerContainer, never>;
 }
 
 // @public (undocumented)
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     _container: MatDrawerContainer;
+    // (undocumented)
+    _drawerToggled(drawer: MatDrawer): void;
     // (undocumented)
     ngAfterContentInit(): void;
     protected _shouldBeHidden(): boolean;
@@ -158,7 +159,7 @@ export class MatSidenavContainer extends MatDrawerContainer {
     // (undocumented)
     _content: MatSidenavContent;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenavContainer, "mat-sidenav-container", ["matSidenavContainer"], {}, {}, ["_content", "_allDrawers"], ["mat-sidenav", "mat-sidenav-content", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenavContainer, "mat-sidenav-container", ["matSidenavContainer"], {}, {}, ["_content", "_allDrawers"], ["mat-drawer, mat-sidenav", "mat-drawer-content, mat-sidenav-content", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSidenavContainer, never>;
 }

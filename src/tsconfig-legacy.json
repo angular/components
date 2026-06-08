@@ -10,6 +10,7 @@
     },
     "types": ["jasmine"],
     "emitDecoratorMetadata": true,
+    "noUncheckedSideEffectImports": false,
     "experimentalDecorators": true
   },
   "include": ["**/*.spec.ts", "dev-mode-types.d.ts", "../node_modules/zone.js/zone.d.ts"],

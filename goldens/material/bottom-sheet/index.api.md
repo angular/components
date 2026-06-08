@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -18,6 +19,7 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
@@ -33,7 +35,6 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConf
 
 // @public
 export class MatBottomSheet implements OnDestroy {
-    constructor(...args: unknown[]);
     dismiss<R = any>(result?: R): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -53,6 +54,7 @@ export class MatBottomSheetConfig<D = any> {
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string;
+    bindings?: Binding[];
     closeOnNavigation?: boolean;
     data?: D | null;
     direction?: Direction;
@@ -63,14 +65,14 @@ export class MatBottomSheetConfig<D = any> {
     maxHeight?: number | string;
     minHeight?: number | string;
     panelClass?: string | string[];
-    restoreFocus?: boolean;
+    restoreFocus?: RestoreFocusValue;
     scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;
 }
 
 // @public
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected _animationsDisabled: boolean;
     _animationState: 'void' | 'visible' | 'hidden';

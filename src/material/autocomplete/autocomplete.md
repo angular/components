@@ -16,7 +16,7 @@ track the value of the input.
 
 > Note: It is possible to use template-driven forms instead, if you prefer. We use reactive forms
 in this example because it makes subscribing to changes in the input's value easy. For this
-example, be sure to import `ReactiveFormsModule` from `@angular/forms` into your `NgModule`.
+example, be sure to import `ReactiveFormsModule` from `@angular/forms` in your component.
 If you are unfamiliar with using reactive forms, you can read more about the subject in the
 [Angular documentation](https://angular.dev/guide/forms/reactive-forms).
 

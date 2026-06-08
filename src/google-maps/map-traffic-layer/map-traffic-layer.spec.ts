@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
@@ -24,17 +24,16 @@ describe('MapTrafficLayer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Traffic Layer', fakeAsync(() => {
+  it('initializes a Google Map Traffic Layer', () => {
     const trafficLayerSpy = createTrafficLayerSpy(trafficLayerOptions);
     const trafficLayerConstructorSpy = createTrafficLayerConstructorSpy(trafficLayerSpy);
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.autoRefresh = false;
     fixture.detectChanges();
-    flush();
 
     expect(trafficLayerConstructorSpy).toHaveBeenCalledWith(trafficLayerOptions);
     expect(trafficLayerSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 });
 
 @Component({
@@ -45,6 +44,7 @@ describe('MapTrafficLayer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapTrafficLayer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   autoRefresh = false;

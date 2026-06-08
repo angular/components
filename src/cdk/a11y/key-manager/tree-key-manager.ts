@@ -102,19 +102,9 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (items instanceof QueryList) {
       this._items = items.toArray();
-      items.changes.subscribe((newItems: QueryList<T>) => {
-        this._items = newItems.toArray();
-        this._typeahead?.setItems(this._items);
-        this._updateActiveItemIndex(this._items);
-        this._initializeFocus();
-      });
+      items.changes.subscribe((newItems: QueryList<T>) => this._itemsChanged(newItems.toArray()));
     } else if (isObservable(items)) {
-      items.subscribe(newItems => {
-        this._items = newItems;
-        this._typeahead?.setItems(newItems);
-        this._updateActiveItemIndex(newItems);
-        this._initializeFocus();
-      });
+      items.subscribe(newItems => this._itemsChanged(newItems));
     } else {
       this._items = items;
       this._initializeFocus();
@@ -217,6 +207,19 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
   /** The currently active item. */
   getActiveItem(): T | null {
     return this._activeItem;
+  }
+
+  /** Called when the list of items has changed. */
+  private _itemsChanged(newItems: T[]) {
+    if (this._hasInitialFocused && this._activeItem && !newItems.includes(this._activeItem)) {
+      this._activeItem = null;
+      this._hasInitialFocused = false;
+    }
+
+    this._items = newItems;
+    this._typeahead?.setItems(this._items);
+    this._updateActiveItemIndex(this._items);
+    this._initializeFocus();
   }
 
   /** Focus the first available item. */

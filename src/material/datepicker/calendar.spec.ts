@@ -5,7 +5,7 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DateAdapter, provideNativeDateAdapter} from '../core';
@@ -672,6 +672,7 @@ describe('MatCalendar', () => {
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
   imports: [MatCalendar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardCalendar {
   selected!: Date;
@@ -685,6 +686,7 @@ class StandardCalendar {
     <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `,
   imports: [MatCalendar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CalendarWithMinMax {
   startAt!: Date;
@@ -698,6 +700,7 @@ class CalendarWithMinMax {
     </mat-calendar>
   `,
   imports: [MatCalendar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CalendarWithDateFilter {
   selected!: Date;
@@ -718,6 +721,7 @@ class CalendarWithDateFilter {
     </mat-calendar>
   `,
   imports: [MatCalendar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);

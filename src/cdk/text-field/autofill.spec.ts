@@ -7,7 +7,7 @@
  */
 
 import {normalizePassiveListenerOptions} from '../platform';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {EMPTY} from 'rxjs';
 import {AutofillEvent, AutofillMonitor} from './autofill';
@@ -193,6 +193,7 @@ describe('cdkAutofill', () => {
     <input #input3>
   `,
   imports: [TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class Inputs {
   // Cast to `any` so we can stub out some methods in the tests.
@@ -204,6 +205,7 @@ class Inputs {
 @Component({
   template: `<input #input cdkAutofill>`,
   imports: [TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputWithCdkAutofilled {
   // Cast to `any` so we can stub out some methods in the tests.

@@ -1,4 +1,11 @@
-import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  ViewChild,
+  provideZoneChangeDetection,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AutofillMonitor} from './autofill';
 import {TextFieldModule} from './text-field-module';
@@ -45,6 +52,7 @@ describe('AutofillMonitor Zone.js integration', () => {
       <input #input3>
     `,
   imports: [TextFieldModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class Inputs {
   // Cast to `any` so we can stub out some methods in the tests.

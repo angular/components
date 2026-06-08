@@ -14,11 +14,13 @@ import {
   inject,
   input,
   afterRenderEffect,
+  contentChild,
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TabPanelPattern, DeferredContentAware} from '../private';
-import {TABS} from './utils';
+import {TabPanelPattern, DeferredContentAware, reportViolations} from '../private';
+import {TABS} from './tab-tokens';
+import {TabContent} from './tab-content';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
@@ -34,8 +36,6 @@ import {TABS} from './utils';
  *   </ng-template>
  * </div>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Tabs](guide/aria/tabs)
  */
@@ -73,9 +73,9 @@ export class TabPanel implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-tabpanel-', true));
 
   /** The Tab UIPattern associated with the tabpanel */
-  private readonly _tabPattern = computed(() =>
-    this._tabs._tabPatterns()?.find(tab => tab.value() === this.value()),
-  );
+  private readonly _tabPattern = computed(() => {
+    return this._tabs._tabMap().get(this.value());
+  });
 
   /** A local unique identifier for the tabpanel. */
   readonly value = input.required<string>();
@@ -89,15 +89,42 @@ export class TabPanel implements OnInit, OnDestroy {
     tab: this._tabPattern,
   });
 
+  private readonly _tabContent = contentChild(TabContent);
+
   constructor() {
-    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(this.visible()));
+    // Connect the panel's hidden state to the DeferredContentAware's visibility.
+    afterRenderEffect({
+      write: () => {
+        this._deferredContentAware.contentVisible.set(this.visible());
+      },
+    });
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+
+          if (!this._tabContent()) {
+            violations.push('ngTabPanel must have an ngTabContent structural directive to render.');
+          }
+          if (!this._tabs._tabMap().has(this.value())) {
+            violations.push(
+              `ngTabPanel with value '${this.value()}' does not have a corresponding ngTab.`,
+            );
+          }
+
+          reportViolations(violations, this.element);
+        },
+      });
+    }
   }
 
   ngOnInit() {
-    this._tabs._register(this);
+    this._tabs._collection.register(this);
   }
 
   ngOnDestroy() {
-    this._tabs._unregister(this);
+    this._tabs._collection.unregister(this);
   }
 }

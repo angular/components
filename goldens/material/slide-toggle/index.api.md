@@ -25,7 +25,7 @@ export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatSlideToggleDefa
 
 // @public (undocumented)
 export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator {
-    constructor(...args: unknown[]);
+    constructor();
     ariaDescribedby: string;
     ariaLabel: string | null;
     ariaLabelledby: string | null;
@@ -72,7 +72,7 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _noopAnimations: boolean;

@@ -27,11 +27,11 @@ Out of the box, if you do not specify an `appearance` for the `<mat-form-field>`
 appearance for your app.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ]
-})
+});
 ```
 
 <!-- example(form-field-appearance) -->
@@ -54,15 +54,15 @@ field control, or to `auto` to restore the default behavior.
 <!-- example(form-field-label) -->
 
 The floating label behavior can be adjusted globally by providing a value for
-`MAT_FORM_FIELD_DEFAULT_OPTIONS` in your application's root module. Like the `floatLabel` input,
+`MAT_FORM_FIELD_DEFAULT_OPTIONS` in your app config. Like the `floatLabel` input,
 the option can be either set to `always` or `auto`.
 
 ```ts
-@NgModule({
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}
   ]
-})
+});
 ```
 
 ### Hint labels

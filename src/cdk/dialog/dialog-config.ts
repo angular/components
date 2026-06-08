@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
+import {ViewContainerRef, Injector, StaticProvider, Type, Binding} from '@angular/core';
 import {Direction} from '../bidi';
 import {PositionStrategy, ScrollStrategy} from '../overlay';
 import {Observable} from 'rxjs';
@@ -15,6 +15,16 @@ import {FocusOrigin} from '../a11y';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
+
+/**
+ * Value that determines the focus restoration behavior for a dialog.
+ * The values represent the following behaviors:
+ * - `boolean` - when true, will return focus to the element that was focused before the dialog
+ *    was opened, otherwise won't restore focus at all.
+ * - `string` - focus will be restored to the first element that matches the CSS selector.
+ * - `HTMLElement` - focus will be restored to the specific element.
+ */
+export type RestoreFocusValue = boolean | string | HTMLElement;
 
 /** Valid ARIA roles for a dialog. */
 export type DialogRole = 'dialog' | 'alertdialog';
@@ -121,15 +131,8 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
    */
   autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
 
-  /**
-   * Whether the dialog should restore focus to the previously-focused element upon closing.
-   * Has the following behavior based on the type that is passed in:
-   * - `boolean` - when true, will return focus to the element that was focused before the dialog
-   *    was opened, otherwise won't restore focus at all.
-   * - `string` - focus will be restored to the first element that matches the CSS selector.
-   * - `HTMLElement` - focus will be restored to the specific element.
-   */
-  restoreFocus?: boolean | string | HTMLElement = true;
+  /** Configures the focus restoration behavior. See `RestoreFocusValue` for more information. */
+  restoreFocus?: RestoreFocusValue = true;
 
   /**
    * Scroll strategy to be used for the dialog. This determines how
@@ -188,4 +191,10 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
    * A function can be passed in to resolve the context lazily.
    */
   templateContext?: Record<string, any> | (() => Record<string, any>);
+
+  /**
+   * Bindings to apply to the component rendered inside the dialog.
+   * Does nothing for template-based dialogs.
+   */
+  bindings?: Binding[];
 }

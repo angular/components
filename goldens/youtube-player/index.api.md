@@ -7,13 +7,14 @@
 /// <reference types="youtube" />
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import * as YT_2 from 'youtube';
 
 // @public
 export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
@@ -23,19 +24,19 @@ export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
 
 // @public
 export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
-    readonly apiChange: Observable<YT.PlayerEvent>;
+    constructor();
+    readonly apiChange: Observable<YT_2.PlayerEvent>;
     disableCookies: boolean;
     disablePlaceholder: boolean;
     endSeconds: number | undefined;
-    readonly error: Observable<YT.OnErrorEvent>;
+    readonly error: Observable<YT_2.OnErrorEvent>;
     getAvailablePlaybackRates(): number[];
-    getAvailableQualityLevels(): YT.SuggestedVideoQuality[];
+    getAvailableQualityLevels(): YT_2.SuggestedVideoQuality[];
     getCurrentTime(): number;
     getDuration(): number;
-    getPlaybackQuality(): YT.SuggestedVideoQuality;
+    getPlaybackQuality(): YT_2.SuggestedVideoQuality;
     getPlaybackRate(): number;
-    getPlayerState(): YT.PlayerState | undefined;
+    getPlayerState(): YT_2.PlayerState | undefined;
     getVideoEmbedCode(): string;
     getVideoLoadedFraction(): number;
     getVideoUrl(): string;
@@ -69,17 +70,17 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     pauseVideo(): void;
     placeholderButtonLabel: string;
     placeholderImageQuality: PlaceholderImageQuality;
-    readonly playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
-    readonly playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
-    playerVars: YT.PlayerVars | undefined;
+    readonly playbackQualityChange: Observable<YT_2.OnPlaybackQualityChangeEvent>;
+    readonly playbackRateChange: Observable<YT_2.OnPlaybackRateChangeEvent>;
+    playerVars: YT_2.PlayerVars | undefined;
     playVideo(): void;
-    readonly ready: Observable<YT.PlayerEvent>;
+    readonly ready: Observable<YT_2.PlayerEvent>;
     requestFullscreen(options?: FullscreenOptions): Promise<void>;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
@@ -87,18 +88,18 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     protected _shouldShowPlaceholder(): boolean;
     showBeforeIframeApiLoads: boolean;
     startSeconds: number | undefined;
-    readonly stateChange: Observable<YT.OnStateChangeEvent>;
+    readonly stateChange: Observable<YT_2.OnStateChangeEvent>;
     stopVideo(): void;
-    suggestedQuality: YT.SuggestedVideoQuality | undefined;
+    suggestedQuality: YT_2.SuggestedVideoQuality | undefined;
     unMute(): void;
     videoId: string | undefined;
     get width(): number;
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": { "alias": "videoId"; "required": false; }; "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "startSeconds": { "alias": "startSeconds"; "required": false; }; "endSeconds": { "alias": "endSeconds"; "required": false; }; "suggestedQuality": { "alias": "suggestedQuality"; "required": false; }; "playerVars": { "alias": "playerVars"; "required": false; }; "disableCookies": { "alias": "disableCookies"; "required": false; }; "loadApi": { "alias": "loadApi"; "required": false; }; "disablePlaceholder": { "alias": "disablePlaceholder"; "required": false; }; "showBeforeIframeApiLoads": { "alias": "showBeforeIframeApiLoads"; "required": false; }; "placeholderButtonLabel": { "alias": "placeholderButtonLabel"; "required": false; }; "placeholderImageQuality": { "alias": "placeholderImageQuality"; "required": false; }; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<YouTubePlayer, never>;
 }
 
 // @public
@@ -112,11 +113,11 @@ export interface YouTubePlayerConfig {
 // @public (undocumented)
 export class YouTubePlayerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<YouTubePlayerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<YouTubePlayerModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<YouTubePlayerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof YouTubePlayer], [typeof YouTubePlayer]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<YouTubePlayerModule, never, [typeof YouTubePlayer], [typeof YouTubePlayer]>;
 }
 
 // (No @packageDocumentation comment for this package)

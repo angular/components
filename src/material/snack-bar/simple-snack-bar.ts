@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation, inject} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {MatButton} from '../button';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
@@ -28,7 +28,6 @@ export interface TextOnlySnackBar {
   styleUrl: 'simple-snack-bar.css',
   exportAs: 'matSnackBar',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
   host: {
     'class': 'mat-mdc-simple-snack-bar',
@@ -37,9 +36,6 @@ export interface TextOnlySnackBar {
 export class SimpleSnackBar implements TextOnlySnackBar {
   snackBarRef = inject<MatSnackBarRef<SimpleSnackBar>>(MatSnackBarRef);
   data = inject(MAT_SNACK_BAR_DATA);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   /** Performs the action on the snack bar. */
   action(): void {

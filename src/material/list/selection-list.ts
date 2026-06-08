@@ -13,7 +13,6 @@ import {A, ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -72,7 +71,6 @@ export class MatSelectionListChange {
     {provide: MatListBase, useExisting: MatSelectionList},
     {provide: SELECTION_LIST, useExisting: MatSelectionList},
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSelectionList
   extends MatListBase
@@ -161,8 +159,6 @@ export class MatSelectionList
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     this._isNonInteractive = false;
@@ -190,7 +186,7 @@ export class MatSelectionList
     this._watchForSelectionChange();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const disabledChanges = changes['disabled'];
     const disableRippleChanges = changes['disableRipple'];
     const hideSingleSelectionIndicatorChanges = changes['hideSingleSelectionIndicator'];

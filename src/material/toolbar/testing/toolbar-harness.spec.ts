@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentHarness, HarnessLoader} from '@angular/cdk/testing';
 import {MatToolbarModule} from '../../toolbar';
 import {MatToolbarHarness, MatToolbarSection} from './toolbar-harness';
@@ -71,6 +71,7 @@ describe('MatToolbarHarness', () => {
     </mat-toolbar>
   `,
   imports: [MatToolbarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarHarnessTest {}
 

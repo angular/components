@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -39,5 +39,6 @@ describe('MatLegacyButtonHarness', () => {
     <mat-divider inset vertical></mat-divider>
   `,
   imports: [MatDividerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DividerHarnessTest {}

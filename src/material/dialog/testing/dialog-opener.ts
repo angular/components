@@ -7,15 +7,7 @@
  */
 
 import {ComponentType} from '@angular/cdk/overlay';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  ViewEncapsulation,
-  inject,
-} from '@angular/core';
+import {Component, NgModule, NgZone, OnDestroy, ViewEncapsulation, inject} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '../../dialog';
 import {Subscription} from 'rxjs';
 import {AnimationsConfig, MATERIAL_ANIMATIONS} from '@angular/material/core';
@@ -24,7 +16,6 @@ import {AnimationsConfig, MATERIAL_ANIMATIONS} from '@angular/material/core';
 @Component({
   selector: 'mat-test-dialog-opener',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
@@ -55,8 +46,6 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
     MatTestDialogOpener.config = config;
     return MatTestDialogOpener as ComponentType<MatTestDialogOpener<T, R>>;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     if (!MatTestDialogOpener.component) {

@@ -1,6 +1,13 @@
 import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
-import {ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
@@ -429,6 +436,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
       }
     </ul>`,
   imports: [CdkSelectionModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithMultiSelection {
   private readonly _elementRef = inject(ElementRef);
@@ -493,6 +501,7 @@ class ListWithMultiSelection {
       }
     </ul>`,
   imports: [CdkSelectionModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithSingleSelection {
   private readonly _elementRef = inject(ElementRef);
@@ -534,6 +543,7 @@ class ListWithSingleSelection {
     </table>
     `,
   imports: [CdkSelectionModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);
@@ -601,6 +611,7 @@ class MultiSelectTableWithSelectionColumn {
     </table>
     `,
   imports: [CdkSelectionModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);

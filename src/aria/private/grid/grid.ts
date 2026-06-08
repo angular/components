@@ -7,7 +7,7 @@
  */
 
 import {SignalLike, computed, signal, untracked} from '../behaviors/signal-like/signal-like';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
 import type {GridRowPattern} from './row';
 import type {GridCellPattern} from './cell';
@@ -32,9 +32,6 @@ export interface GridInputs extends Omit<GridBehaviorInputs<GridCellPattern>, 'c
   /** The selection strategy used by the grid. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
 
-  /** Whether enable range selection. */
-  enableRangeSelection: SignalLike<boolean>;
-
   /** A function that returns the grid cell associated with a given element. */
   getCell: (e: Element | null) => GridCellPattern | undefined;
 }
@@ -53,6 +50,11 @@ export class GridPattern {
   /** Whether the grid is disabled. */
   readonly disabled = computed(() => this.gridBehavior.gridDisabled());
 
+  /** Whether the grid is multi-selectable. */
+  readonly multiSelectable = computed(() =>
+    this.inputs.enableSelection() ? this.inputs.multi() : undefined,
+  );
+
   /** The ID of the currently active descendant cell. */
   readonly activeDescendant = computed(() => this.gridBehavior.activeDescendant());
 
@@ -61,9 +63,7 @@ export class GridPattern {
 
   /** The current selection anchor cell. */
   readonly anchorCell: SignalLike<GridCellPattern | undefined> = computed(() =>
-    this.inputs.enableSelection() && this.inputs.multi()
-      ? this.gridBehavior.selectionAnchorCell()
-      : undefined,
+    this.multiSelectable() ? this.gridBehavior.selectionAnchorCell() : undefined,
   );
 
   /** Whether to pause grid navigation and give the keyboard control to cell or widget. */
@@ -77,8 +77,8 @@ export class GridPattern {
   /** Whether the focus is in the grid. */
   readonly isFocused = signal(false);
 
-  /** Whether the grid has been focused once. */
-  readonly hasBeenFocused = signal(false);
+  /** Whether the grid has received focus once. */
+  readonly hasBeenInteracted = signal(false);
 
   /** Whether the user is currently dragging to select a range of cells. */
   readonly dragging = signal(false);
@@ -93,16 +93,6 @@ export class GridPattern {
     this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight',
   );
 
-  /** Whether the grid pattern is currently accepting `pointermove` events. */
-  readonly acceptsPointerMove = computed(() => {
-    return (
-      !this.disabled() &&
-      this.inputs.enableSelection() &&
-      this.inputs.enableRangeSelection() &&
-      this.dragging()
-    );
-  });
-
   /** The keydown event manager for the grid. */
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
@@ -116,10 +106,10 @@ export class GridPattern {
       selectOne: this.inputs.enableSelection() && this.inputs.selectionMode() === 'follow',
     };
     manager
-      .on('ArrowUp', () => this.gridBehavior.up(opts))
-      .on('ArrowDown', () => this.gridBehavior.down(opts))
-      .on(this.prevColKey(), () => this.gridBehavior.left(opts))
-      .on(this.nextColKey(), () => this.gridBehavior.right(opts))
+      .on('ArrowUp', () => this.gridBehavior.up(opts), {ignoreRepeat: false})
+      .on('ArrowDown', () => this.gridBehavior.down(opts), {ignoreRepeat: false})
+      .on(this.prevColKey(), () => this.gridBehavior.left(opts), {ignoreRepeat: false})
+      .on(this.nextColKey(), () => this.gridBehavior.right(opts), {ignoreRepeat: false})
       .on('Home', () => this.gridBehavior.firstInRow(opts))
       .on('End', () => this.gridBehavior.lastInRow(opts))
       .on([Modifier.Ctrl], 'Home', () => this.gridBehavior.first(opts))
@@ -132,17 +122,9 @@ export class GridPattern {
       );
     }
 
-    // Range selection handlers.
-    if (this.inputs.enableSelection() && this.inputs.enableRangeSelection()) {
+    // Explicit multiselection modifier handlers.
+    if (this.inputs.enableSelection() && this.inputs.multi()) {
       manager
-        .on(Modifier.Shift, 'ArrowUp', () => this.gridBehavior.up({anchor: true}))
-        .on(Modifier.Shift, 'ArrowDown', () => this.gridBehavior.down({anchor: true}))
-        .on(Modifier.Shift, this.prevColKey(), () => this.gridBehavior.left({anchor: true}))
-        .on(Modifier.Shift, this.nextColKey(), () => this.gridBehavior.right({anchor: true}))
-        .on(Modifier.Shift, 'Home', () => this.gridBehavior.firstInRow({anchor: true}))
-        .on(Modifier.Shift, 'End', () => this.gridBehavior.lastInRow({anchor: true}))
-        .on([Modifier.Ctrl | Modifier.Shift], 'Home', () => this.gridBehavior.first({anchor: true}))
-        .on([Modifier.Ctrl | Modifier.Shift], 'End', () => this.gridBehavior.last({anchor: true}))
         .on([Modifier.Ctrl, Modifier.Meta], 'A', () => {
           if (this.gridBehavior.allSelected()) {
             this.gridBehavior.deselectAll();
@@ -157,9 +139,9 @@ export class GridPattern {
     return manager;
   });
 
-  /** The pointerdown event manager for the grid. */
-  readonly pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the grid. */
+  readonly clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     // Navigation without selection.
     if (!this.inputs.enableSelection()) {
@@ -182,10 +164,6 @@ export class GridPattern {
           toggleOne: this.inputs.selectionMode() === 'explicit' && !this.inputs.multi(),
           toggle: this.inputs.selectionMode() === 'explicit' && this.inputs.multi(),
         });
-
-        if (this.inputs.multi() && this.inputs.enableRangeSelection()) {
-          this.dragging.set(true);
-        }
       });
 
       // Selection with modifier keys.
@@ -195,35 +173,8 @@ export class GridPattern {
           if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
           this.gridBehavior.gotoCell(cell, {toggle: true});
-
-          if (this.inputs.enableRangeSelection()) {
-            this.dragging.set(true);
-          }
         });
-
-        if (this.inputs.enableRangeSelection()) {
-          manager.on(Modifier.Shift, e => {
-            const cell = this.inputs.getCell(e.target as Element);
-            if (!cell) return;
-
-            this.gridBehavior.gotoCell(cell, {anchor: true});
-            this.dragging.set(true);
-          });
-        }
       }
-    }
-
-    return manager;
-  });
-
-  /** The pointerup event manager for the grid. */
-  readonly pointerup = computed(() => {
-    const manager = new PointerEventManager();
-
-    if (this.inputs.enableSelection() && this.inputs.enableRangeSelection()) {
-      manager.on([Modifier.Shift, Modifier.Ctrl, Modifier.Meta, Modifier.None], () => {
-        this.dragging.set(false);
-      });
     }
 
     return manager;
@@ -245,47 +196,41 @@ export class GridPattern {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const rows = this.inputs.rows();
+    for (const row of rows) {
+      if (row.inputs.cells().length === 0) {
+        violations.push('ngGridRow must contain at least one ngGridCell.');
+      }
+    }
+
+    return violations;
+  }
+
   /** Handles keydown events on the grid. */
   onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
 
+    this.hasBeenInteracted.set(true);
     this.activeCell()?.onKeydown(event);
     this.keydown().handle(event);
   }
 
-  /** Handles pointerdown events on the grid. */
-  onPointerdown(event: PointerEvent) {
+  /** Handles click events on the grid. */
+  onClick(event: PointerEvent) {
     if (this.disabled()) return;
 
-    this.pointerdown().handle(event);
-  }
-
-  /** Handles pointermove events on the grid. */
-  onPointermove(event: PointerEvent) {
-    if (this.acceptsPointerMove()) {
-      const cell = this.inputs.getCell(event.target as Element);
-
-      // Dragging anchor.
-      if (cell !== undefined) {
-        this.gridBehavior.gotoCell(cell, {anchor: true});
-      }
-    }
-  }
-
-  /** Handles pointerup events on the grid. */
-  onPointerup(event: PointerEvent) {
-    if (this.disabled()) return;
-
-    this.pointerup().handle(event);
+    this.hasBeenInteracted.set(true);
+    this.clickManager().handle(event);
   }
 
   /** Handles focusin events on the grid. */
   onFocusIn(event: FocusEvent) {
     this.isFocused.set(true);
-    this.hasBeenFocused.set(true);
-
-    // Skip if in the middle of range selection.
-    if (this.dragging()) return;
+    this.hasBeenInteracted.set(true);
 
     // Cell that receives focus.
     const cell = this.inputs.getCell(event.target as Element | null);
@@ -325,8 +270,7 @@ export class GridPattern {
 
   /** Sets the default active state of the grid before receiving focus the first time. */
   setDefaultStateEffect(): void {
-    if (this.hasBeenFocused()) return;
-
+    if (this.hasBeenInteracted()) return;
     this.gridBehavior.setDefaultState();
   }
 

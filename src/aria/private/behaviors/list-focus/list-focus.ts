@@ -18,9 +18,6 @@ export interface ListFocusItem {
 
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
-
-  /** The index of the item in the list. */
-  index: SignalLike<number>;
 }
 
 /** Represents the required inputs for a collection that contains focusable items. */
@@ -47,15 +44,15 @@ export interface ListFocusInputs<T extends ListFocusItem> {
 /** Controls focus for a list of items. */
 export class ListFocus<T extends ListFocusItem> {
   /** The last item that was active. */
-  prevActiveItem = signal<T | undefined>(undefined);
+  readonly prevActiveItem = signal<T | undefined>(undefined);
 
   /** The index of the last item that was active. */
-  prevActiveIndex = computed(() => {
+  readonly prevActiveIndex = computed(() => {
     return this.prevActiveItem() ? this.inputs.items().indexOf(this.prevActiveItem()!) : -1;
   });
 
   /** The current active index in the list. */
-  activeIndex = computed(() => {
+  readonly activeIndex = computed(() => {
     return this.inputs.activeItem() ? this.inputs.items().indexOf(this.inputs.activeItem()!) : -1;
   });
 
@@ -106,9 +103,9 @@ export class ListFocus<T extends ListFocusItem> {
     this.inputs.activeItem.set(item);
 
     if (opts?.focusElement || opts?.focusElement === undefined) {
-      this.inputs.focusMode() === 'roving'
-        ? item.element()?.focus()
-        : this.inputs.element()?.focus();
+      if (this.inputs.focusMode() === 'roving') {
+        item.element()?.focus();
+      }
     }
 
     return true;

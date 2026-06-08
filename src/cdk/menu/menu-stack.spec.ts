@@ -1,4 +1,10 @@
-import {QueryList, ViewChild, ViewChildren, Component} from '@angular/core';
+import {
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  Component,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {CdkMenu} from './menu';
 import {CdkMenuBar} from './menu-bar';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -95,6 +101,7 @@ describe('MenuStack', () => {
     </div>
   `,
   imports: [CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiMenuWithSubmenu {
   @ViewChild(CdkMenuBar) menuBar!: CdkMenuBar;

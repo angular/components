@@ -22,13 +22,12 @@ export interface ClusterOptions {
 
 export interface Cluster {
   marker?: Marker;
-  readonly markers?: Marker[];
+  markers?: Marker[];
   bounds?: google.maps.LatLngBounds;
   position: google.maps.LatLng;
   count: number;
   push(marker: Marker): void;
   delete(): void;
-  new (options: ClusterOptions): Cluster;
 }
 
 export declare class MarkerClusterer extends google.maps.OverlayView {

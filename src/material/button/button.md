@@ -43,6 +43,47 @@ the `extended` attribute, mini FABs do not.
 </button>
 ```
 
+### Icon positioning
+
+Buttons can contain icons alongside text. By default, icons (`mat-icon`, `.material-icons`, or
+elements with the `matButtonIcon` attribute) are projected **before** the button label.
+
+```html
+<button matButton>
+  <mat-icon>favorite</mat-icon>
+  Like
+</button>
+```
+
+To place an icon **after** the button label, add the `iconPositionEnd` attribute to the icon element:
+
+```html
+<button matButton>
+  Send
+  <mat-icon iconPositionEnd>send</mat-icon>
+</button>
+```
+
+You can also use both positions at once:
+
+```html
+<button matButton>
+  <mat-icon>arrow_back</mat-icon>
+  Navigate
+  <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+</button>
+```
+
+If you are using a custom icon element that is not a `mat-icon` or `.material-icons`, add the
+`matButtonIcon` attribute so that the button can project it into the correct slot:
+
+```html
+<button matButton>
+  <my-custom-icon matButtonIcon>custom</my-custom-icon>
+  Action
+</button>
+```
+
 ### Interactive disabled buttons
 Native disabled `<button>` elements cannot receive focus and do not dispatch any events. This can
 be problematic in some cases because it can prevent the app from telling the user why the button is
@@ -55,6 +96,11 @@ actions to no longer do so, for example a submit button in a form. When using th
 guard against such cases in your component.
 
 <!-- example(button-disabled-interactive) -->
+
+### Buttons with progress indicators
+An element with the `progressIndicator` attribute may be projected into the button element. When the `showProgress` input is `true` this element will be shown over the content of the button and the content of the button will be made invisible.
+
+<!-- example(button-progress-indicator) -->
 
 ### Accessibility
 Angular Material uses native `<button>` and `<a>` elements to ensure an accessible experience by
@@ -82,3 +128,6 @@ information on using icons in buttons. Additionally, to be fully accessible the 
 #### Toggle buttons
 [See the documentation for `MatButtonToggle`](https://material.angular.dev/components/button-toggle)
 for information on stateful toggle buttons.
+
+#### Buttons with progress indicators
+The element projected using the `progressIndicator` attribute must not be interactable. When using `MatProgressSpinner` set `tabindex=""` to remove the progress indicator for the tab order.

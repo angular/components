@@ -124,8 +124,6 @@ export class DataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._rowOutlet = this;
@@ -143,8 +141,6 @@ export class DataRowOutlet implements RowOutlet {
 export class HeaderRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
@@ -164,8 +160,6 @@ export class FooterRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
     table._footerRowOutlet = this;
@@ -184,8 +178,6 @@ export class FooterRowOutlet implements RowOutlet {
 export class NoDataRowOutlet implements RowOutlet {
   viewContainer = inject(ViewContainerRef);
   elementRef = inject(ElementRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const table = inject<CdkTable<unknown>>(CDK_TABLE);
@@ -275,7 +267,7 @@ export interface RenderRow<T> {
   // The view for `MatTable` consists entirely of templates declared in other views. As they are
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
@@ -642,7 +634,10 @@ export class CdkTable<T>
   /** Row definition that will only be rendered if there's no data in the table. */
   @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
 
-  constructor(...args: unknown[]);
+  /** Returns the currently-rendered rows in the table. */
+  get renderedRows(): readonly RenderRow<T>[] {
+    return this._renderRows;
+  }
 
   constructor() {
     const role = inject(new HostAttributeToken('role'), {optional: true});

@@ -1,6 +1,6 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonToggleModule} from '../../button-toggle';
 import {MatButtonToggleHarness} from './button-toggle-harness';
@@ -151,6 +151,7 @@ describe('MatButtonToggleHarness', () => {
       <span id="second-label">Second toggle</span>
   `,
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleHarnessTest {
   disabled = true;

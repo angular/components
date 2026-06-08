@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {MatProgressSpinnerModule} from './progress-spinner-module';
 import {
   MatProgressSpinner,
@@ -381,12 +381,14 @@ describe('MatProgressSpinner', () => {
 @Component({
   template: '<mat-progress-spinner></mat-progress-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicProgressSpinner {}
 
 @Component({
   template: '<mat-progress-spinner [strokeWidth]="strokeWidth"></mat-progress-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerCustomStrokeWidth {
   strokeWidth!: number;
@@ -395,6 +397,7 @@ class ProgressSpinnerCustomStrokeWidth {
 @Component({
   template: '<mat-progress-spinner [diameter]="diameter"></mat-progress-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerCustomDiameter {
   diameter!: number;
@@ -403,12 +406,14 @@ class ProgressSpinnerCustomDiameter {
 @Component({
   template: '<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IndeterminateProgressSpinner {}
 
 @Component({
   template: '<mat-progress-spinner [value]="value()" [mode]="mode()"></mat-progress-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerWithValueAndBoundMode {
   mode = signal<ProgressSpinnerMode>('indeterminate');
@@ -419,6 +424,7 @@ class ProgressSpinnerWithValueAndBoundMode {
   template: `
     <mat-spinner [color]="color()"></mat-spinner>`,
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SpinnerWithColor {
   color = signal('primary');
@@ -428,6 +434,7 @@ class SpinnerWithColor {
   template: `
     <mat-progress-spinner value="50" [color]="color()"></mat-progress-spinner>`,
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerWithColor {
   color = signal('primary');
@@ -438,11 +445,13 @@ class ProgressSpinnerWithColor {
     <mat-progress-spinner value="25" diameter="37" strokeWidth="11"></mat-progress-spinner>
   `,
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerWithStringValues {}
 
 @Component({
   template: '<mat-spinner mode="determinate"></mat-spinner>',
   imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SpinnerWithMode {}

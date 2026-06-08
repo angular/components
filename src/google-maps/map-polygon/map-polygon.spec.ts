@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -35,19 +35,18 @@ describe('MapPolygon', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Polygon', fakeAsync(() => {
+  it('initializes a Google Map Polygon', () => {
     const polygonSpy = createPolygonSpy({});
     const polygonConstructorSpy = createPolygonConstructorSpy(polygonSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(polygonConstructorSpy).toHaveBeenCalledWith({paths: undefined});
     expect(polygonSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  }));
+  });
 
-  it('sets path from input', fakeAsync(() => {
+  it('sets path from input', () => {
     const paths: google.maps.LatLngLiteral[] = [{lat: 3, lng: 5}];
     const options: google.maps.PolygonOptions = {paths};
     const polygonSpy = createPolygonSpy(options);
@@ -56,12 +55,11 @@ describe('MapPolygon', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.paths = paths;
     fixture.detectChanges();
-    flush();
 
     expect(polygonConstructorSpy).toHaveBeenCalledWith(options);
-  }));
+  });
 
-  it('gives precedence to path input over options', fakeAsync(() => {
+  it('gives precedence to path input over options', () => {
     const paths: google.maps.LatLngLiteral[] = [{lat: 3, lng: 5}];
     const expectedOptions: google.maps.PolygonOptions = {...polygonOptions, paths};
     const polygonSpy = createPolygonSpy(expectedOptions);
@@ -71,12 +69,11 @@ describe('MapPolygon', () => {
     fixture.componentInstance.options = polygonOptions;
     fixture.componentInstance.paths = paths;
     fixture.detectChanges();
-    flush();
 
     expect(polygonConstructorSpy).toHaveBeenCalledWith(expectedOptions);
-  }));
+  });
 
-  it('exposes methods that provide information about the Polygon', fakeAsync(() => {
+  it('exposes methods that provide information about the Polygon', () => {
     const polygonSpy = createPolygonSpy(polygonOptions);
     createPolygonConstructorSpy(polygonSpy);
 
@@ -85,7 +82,6 @@ describe('MapPolygon', () => {
       .query(By.directive(MapPolygon))!
       .injector.get<MapPolygon>(MapPolygon);
     fixture.detectChanges();
-    flush();
 
     polygonSpy.getDraggable.and.returnValue(true);
     expect(polygonComponent.getDraggable()).toBe(true);
@@ -101,16 +97,15 @@ describe('MapPolygon', () => {
 
     polygonSpy.getVisible.and.returnValue(true);
     expect(polygonComponent.getVisible()).toBe(true);
-  }));
+  });
 
-  it('initializes Polygon event handlers', fakeAsync(() => {
+  it('initializes Polygon event handlers', () => {
     const polygonSpy = createPolygonSpy(polygonOptions);
     createPolygonConstructorSpy(polygonSpy);
 
     const addSpy = polygonSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dblclick', jasmine.any(Function));
@@ -123,16 +118,15 @@ describe('MapPolygon', () => {
     expect(addSpy).not.toHaveBeenCalledWith('mouseover', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('mouseup', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
-  }));
+  });
 
-  it('should be able to add an event listener after init', fakeAsync(() => {
+  it('should be able to add an event listener after init', () => {
     const polygonSpy = createPolygonSpy(polygonOptions);
     createPolygonConstructorSpy(polygonSpy);
 
     const addSpy = polygonSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
 
@@ -142,7 +136,7 @@ describe('MapPolygon', () => {
 
     expect(addSpy).toHaveBeenCalledWith('dragend', jasmine.any(Function));
     subscription.unsubscribe();
-  }));
+  });
 });
 
 @Component({
@@ -158,6 +152,7 @@ describe('MapPolygon', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapPolygon],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapPolygon) polygon!: MapPolygon;

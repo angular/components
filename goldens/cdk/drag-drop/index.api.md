@@ -41,11 +41,11 @@ export const CDK_DRAG_PREVIEW: InjectionToken<CdkDragPreview<any>>;
 export const CDK_DROP_LIST: InjectionToken<CdkDropList<any>>;
 
 // @public
-export const CDK_DROP_LIST_GROUP: InjectionToken<CdkDropListGroup<unknown>>;
+export const CDK_DROP_LIST_GROUP: InjectionToken<CdkDropListGroup<CdkDropList<any>>>;
 
 // @public
 export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     _addHandle(handle: CdkDragHandle): void;
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
@@ -76,7 +76,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     previewClass: string | string[];
@@ -152,7 +152,7 @@ export interface CdkDragExit<T = any, I = T> {
 
 // @public
 export class CdkDragHandle implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -190,7 +190,7 @@ export interface CdkDragMove<T = any> {
 
 // @public
 export class CdkDragPlaceholder<T = any> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     data: T;
     // (undocumented)
     ngOnDestroy(): void;
@@ -204,7 +204,7 @@ export class CdkDragPlaceholder<T = any> implements OnDestroy {
 
 // @public
 export class CdkDragPreview<T = any> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     data: T;
     matchSize: boolean;
     // (undocumented)
@@ -241,7 +241,7 @@ export interface CdkDragStart<T = any> {
 
 // @public
 export class CdkDropList<T = any> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     addItem(item: CdkDrag): void;
     autoScrollDisabled: boolean;
     autoScrollStep: NumberInput;
@@ -313,7 +313,6 @@ export type DragConstrainPosition = (userPointerPosition: Point, dragRef: DragRe
 
 // @public @deprecated
 export class DragDrop {
-    constructor(...args: unknown[]);
     // @deprecated
     createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement, config?: DragRefConfig): DragRef<T>;
     // @deprecated
@@ -364,7 +363,6 @@ export class DragDropModule {
 
 // @public
 export class DragDropRegistry implements OnDestroy {
-    constructor(...args: unknown[]);
     getDragDirectiveForNode(node: Node): CdkDrag | null;
     isDragging(drag: DragRef): boolean;
     // (undocumented)
@@ -499,7 +497,7 @@ export class DropListRef<T = any> {
     data: T;
     disabled: boolean;
     dispose(): void;
-    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event?: MouseEvent | TouchEvent): void;
+    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event: MouseEvent | TouchEvent): void;
     readonly dropped: Subject<{
         item: DragRef;
         currentIndex: number;

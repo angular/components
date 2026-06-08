@@ -9,7 +9,7 @@
 import {BreakpointObserver, BreakpointState} from './breakpoints-observer';
 import {MediaMatcher} from './media-matcher';
 import {fakeAsync, TestBed, flush, tick} from '@angular/core/testing';
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {skip, take} from 'rxjs/operators';
 
@@ -205,7 +205,7 @@ export class FakeMediaQueryList {
   }
 }
 
-@Injectable()
+@Service({autoProvided: false})
 export class FakeMediaMatcher {
   /** A map of match media queries. */
   private _queries = new Map<string, FakeMediaQueryList>();

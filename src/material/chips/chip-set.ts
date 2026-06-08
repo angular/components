@@ -10,7 +10,6 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -47,7 +46,6 @@ import {MatChipAction, MatChipContent} from './chip-action';
     '[attr.role]': 'role',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipSet implements AfterViewInit, OnDestroy {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -133,9 +131,6 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
 
   /** Flat list of all the actions contained within the chips. */
   _chipActions = new QueryList<MatChipAction>();
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterViewInit() {
     this._setUpFocusManagement();

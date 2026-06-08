@@ -14,7 +14,7 @@ export const CDK_COPY_TO_CLIPBOARD_CONFIG: InjectionToken<CdkCopyToClipboardConf
 
 // @public
 export class CdkCopyToClipboard implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     attempts: number;
     readonly copied: EventEmitter<boolean>;
     copy(attempts?: number): void;
@@ -34,7 +34,6 @@ export interface CdkCopyToClipboardConfig {
 
 // @public
 class Clipboard_2 {
-    constructor(...args: unknown[]);
     beginCopy(text: string): PendingCopy;
     copy(text: string): boolean;
     // (undocumented)

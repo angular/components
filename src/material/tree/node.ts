@@ -84,7 +84,7 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
    */
   defaultTabIndex = 0;
 
-  protected _getTabindexAttribute() {
+  protected _getTabindexAttribute(): number | null {
     if (isNoopTreeKeyManager(this._tree._keyManager)) {
       return this.tabIndexInputBinding;
     }
@@ -104,8 +104,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
   set disabled(value: boolean) {
     this.isDisabled = value;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

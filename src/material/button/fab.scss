@@ -229,3 +229,22 @@ $fallbacks: m3-fab.get-tokens();
   }
 }
 
+.mat-mdc-button-progress-indicator-container {
+  position: absolute;
+  inset-inline-start: 0;
+  margin-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mat-mdc-button-progress-indicator-shown {
+  mat-icon,
+  [matButtonIcon],
+  .mdc-button__label {
+    visibility: hidden;
+  }
+}

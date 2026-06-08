@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
@@ -11,6 +11,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   imports: [MatSlideToggleModule, FormsModule, ReactiveFormsModule],
 })
 export class SlideToggleHarnessExample {
-  disabled = true;
+  disabled = signal(true);
   ctrl = new FormControl(true);
 }

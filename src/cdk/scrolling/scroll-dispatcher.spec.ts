@@ -1,5 +1,5 @@
-import {TestBed, fakeAsync, ComponentFixture, tick} from '@angular/core/testing';
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {Component, ViewChild, ElementRef, ChangeDetectionStrategy} from '@angular/core';
 import {CdkScrollable, ScrollDispatcher, ScrollingModule} from './public-api';
 import {dispatchFakeEvent} from '../testing/private';
 
@@ -31,7 +31,7 @@ describe('ScrollDispatcher', () => {
       expect(scroll.scrollContainers.has(componentScrollable)).toBe(false);
     });
 
-    it('should notify through the directive and service that a scroll event occurred', fakeAsync(() => {
+    it('should notify through the directive and service that a scroll event occurred', async () => {
       // Listen for notifications from scroll directive
       const scrollable = fixture.componentInstance.scrollable;
       const directiveSpy = jasmine.createSpy('directive scroll callback');
@@ -55,9 +55,9 @@ describe('ScrollDispatcher', () => {
       expect(serviceSpy).not.toHaveBeenCalled();
 
       // After the throttle time, the notification should be sent.
-      tick(throttleTime);
+      await new Promise(resolve => setTimeout(resolve, throttleTime + 10));
       expect(serviceSpy).toHaveBeenCalled();
-    }));
+    });
 
     it('should be able to unsubscribe from the global scrollable', () => {
       const spy = jasmine.createSpy('global scroll callback');
@@ -259,6 +259,7 @@ describe('ScrollDispatcher', () => {
 @Component({
   template: `<div #scrollingElement cdkScrollable style="height: 9999px"></div>`,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollingComponent {
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
@@ -277,6 +278,7 @@ class ScrollingComponent {
     <div id="scrollable-2" cdkScrollable></div>
   `,
   imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedScrollingComponent {
   @ViewChild('interestingElement') interestingElement!: ElementRef<HTMLElement>;

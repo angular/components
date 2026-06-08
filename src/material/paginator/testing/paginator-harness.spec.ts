@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -133,6 +133,7 @@ describe('MatPaginatorHarness', () => {
     </mat-paginator>
   `,
   imports: [MatPaginatorModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PaginatorHarnessTest {
   length = 500;

@@ -24,7 +24,7 @@ has billing enabled. See [here](https://developers.google.com/maps/documentation
 
 ```typescript
 // google-maps-demo.component.ts
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MapGeocoder} from '@angular/google-maps';
 
 @Component({
@@ -32,8 +32,10 @@ import {MapGeocoder} from '@angular/google-maps';
   templateUrl: 'google-map-demo.html',
 })
 export class GoogleMapDemo {
-  constructor(geocoder: MapGeocoder) {
-    geocoder.geocode({
+  private geocoder = inject(MapGeocoder);
+
+  search() {
+    this.geocoder.geocode({
       address: '1600 Amphitheatre Parkway, Mountain View, CA'
     }).subscribe(({results}) => {
       console.log(results);

@@ -1,5 +1,5 @@
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, DebugElement, signal} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   dispatchFakeEvent,
@@ -237,6 +237,7 @@ describe('MatOption component', () => {
 @Component({
   template: `<mat-option [id]="id()" [disabled]="disabled()"></mat-option>`,
   imports: [MatOptionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicOption {
   disabled = signal(false);
@@ -250,5 +251,6 @@ class BasicOption {
     </mat-optgroup>
   `,
   imports: [MatOptionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InsideGroup {}

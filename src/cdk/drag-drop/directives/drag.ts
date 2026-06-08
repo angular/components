@@ -216,8 +216,6 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
   private _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const dropContainer = this.dropContainer;
     const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
@@ -315,7 +313,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     );
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const rootSelectorChange = changes['rootElementSelector'];
     const positionChange = changes['freeDragPosition'];
 

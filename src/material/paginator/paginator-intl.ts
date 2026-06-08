@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
  * To modify the labels and text displayed, create a new instance of MatPaginatorIntl and
  * include it in a custom provider
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class MatPaginatorIntl {
   /**
    * Stream to emit from when labels are changed. Use this to notify components when the labels have
