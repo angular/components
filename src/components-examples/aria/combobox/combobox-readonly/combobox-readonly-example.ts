@@ -12,19 +12,19 @@ import {afterRenderEffect, Component, computed, signal, viewChild} from '@angula
 import {OverlayModule} from '@angular/cdk/overlay';
 import {STATES as states} from '../states';
 
-/** @title */
+/** @title Combobox Readonly */
 @Component({
-  selector: 'combobox-listbox-example',
-  templateUrl: 'combobox-listbox-example.html',
+  selector: 'combobox-readonly-example',
+  templateUrl: 'combobox-readonly-example.html',
   styleUrl: '../combobox-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
 })
-export class ComboboxListboxExample {
+export class ComboboxReadonlyExample {
   readonly listbox = viewChild(Listbox);
 
   popupExpanded = signal(false);
-  searchString = signal('');
-  selectedOption = signal<string[]>([]);
+  searchString = signal('California');
+  selectedOption = signal<string[]>(['California']);
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -37,10 +37,6 @@ export class ComboboxListboxExample {
   }
 
   onCommit() {
-    const selectedOption = this.selectedOption();
-    if (selectedOption.length > 0) {
-      this.searchString.set(selectedOption[0]);
-    }
-    this.popupExpanded.set(false);
+    // Readonly combobox suppresses commits
   }
 }

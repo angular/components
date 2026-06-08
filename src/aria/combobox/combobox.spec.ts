@@ -525,23 +525,96 @@ describe('Combobox', () => {
       });
     });
 
-    describe('Readonly', () => {
-      beforeEach(async () => await setupCombobox(ComboboxListboxExample, {readonly: true}));
+    describe('Interactivity and Disablement (disabled, softDisabled, readonly)', () => {
+      describe('Readonly', () => {
+        beforeEach(async () => await setupCombobox(ComboboxListboxExample, {readonly: true}));
 
-      it('should close on selection', async () => {
-        await focus();
-        await down();
-        await click(getOption('Alabama')!);
-        expect(inputElement.value).toBe('Alabama');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        it('should set native readonly attribute on editable inputs without assigning disabled', () => {
+          expect(inputElement.hasAttribute('readonly')).toBe(true);
+          expect(inputElement.hasAttribute('disabled')).toBe(false);
+        });
+
+        it('should suppress typing when readonly', async () => {
+          await focus();
+          inputElement.value = 'New';
+          inputElement.dispatchEvent(new Event('input'));
+          expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        });
+
+        it('should block expansion on arrow down when readonly', async () => {
+          await focus();
+          await down();
+          expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        });
       });
 
-      it('should close on escape', async () => {
-        await focus();
-        await down();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        await escape();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      describe('Disabled (Soft and Hard)', () => {
+        beforeEach(async () => await setupCombobox());
+
+        it('should keep the input focusable by default when disabled', async () => {
+          fixture.componentInstance.disabled.set(true);
+          await fixture.whenStable();
+
+          expect(inputElement.disabled).toBe(false);
+          expect(inputElement.getAttribute('disabled')).toBeNull();
+          expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('should assign readonly when disabled and softDisabled is true on editable inputs', async () => {
+          fixture.componentInstance.disabled.set(true);
+          await fixture.whenStable();
+
+          expect(inputElement.hasAttribute('readonly')).toBe(true);
+        });
+
+        it('should block interactions when disabled', async () => {
+          fixture.componentInstance.disabled.set(true);
+          await fixture.whenStable();
+
+          await focus();
+          await keydown('ArrowDown');
+          expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        });
+
+        it('should assign disabled, readonly, and aria-disabled when hard-disabled', async () => {
+          fixture.componentInstance.disabled.set(true);
+          fixture.componentInstance.softDisabled.set(false);
+          await fixture.whenStable();
+
+          expect(inputElement.disabled).toBe(true);
+          expect(inputElement.getAttribute('disabled')).toBe('');
+          expect(inputElement.hasAttribute('readonly')).toBe(true);
+          expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('should respect user-defined tabindex when softDisabled is true', async () => {
+          fixture.componentInstance.disabled.set(true);
+          fixture.componentInstance.tabIndex.set(0);
+          await fixture.whenStable();
+
+          expect(inputElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should respect user-defined tabindex when not disabled', async () => {
+          fixture.componentInstance.tabIndex.set(0);
+          await fixture.whenStable();
+
+          expect(inputElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should default to tabindex 0 when not disabled', async () => {
+          await fixture.whenStable();
+          expect(inputElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should force tabindex to -1 when hard-disabled, ignoring user-defined tabindex', async () => {
+          fixture.componentInstance.disabled.set(true);
+          fixture.componentInstance.softDisabled.set(false);
+          fixture.componentInstance.tabIndex.set(0);
+          await fixture.whenStable();
+
+          expect(inputElement.getAttribute('tabindex')).toBe('-1');
+        });
       });
     });
 
@@ -562,74 +635,6 @@ describe('Combobox', () => {
         fixture.componentInstance.alwaysExpanded.set(true);
         await fixture.whenStable();
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-    });
-
-    describe('Disabled', () => {
-      beforeEach(async () => await setupCombobox());
-
-      it('should keep the input focusable by default when disabled', async () => {
-        fixture.componentInstance.disabled.set(true);
-        await fixture.whenStable();
-
-        expect(inputElement.disabled).toBe(false);
-        expect(inputElement.getAttribute('disabled')).toBeNull();
-        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
-      });
-
-      it('should make the input read-only when disabled and softDisabled is true', async () => {
-        fixture.componentInstance.disabled.set(true);
-        await fixture.whenStable();
-
-        expect(inputElement.getAttribute('readonly')).toBe('');
-      });
-
-      it('should block interactions when disabled', async () => {
-        fixture.componentInstance.disabled.set(true);
-        await fixture.whenStable();
-
-        await focus();
-        await keydown('ArrowDown');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should make the input unfocusable when softDisabled is false', async () => {
-        fixture.componentInstance.disabled.set(true);
-        fixture.componentInstance.softDisabled.set(false);
-        await fixture.whenStable();
-
-        expect(inputElement.disabled).toBe(true);
-        expect(inputElement.getAttribute('disabled')).toBe('');
-        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
-      });
-
-      it('should respect user-defined tabindex when softDisabled is true', async () => {
-        fixture.componentInstance.disabled.set(true);
-        fixture.componentInstance.tabIndex.set(0);
-        await fixture.whenStable();
-
-        expect(inputElement.getAttribute('tabindex')).toBe('0');
-      });
-
-      it('should respect user-defined tabindex when not disabled', async () => {
-        fixture.componentInstance.tabIndex.set(0);
-        await fixture.whenStable();
-
-        expect(inputElement.getAttribute('tabindex')).toBe('0');
-      });
-
-      it('should default to tabindex 0 when not disabled', async () => {
-        await fixture.whenStable();
-        expect(inputElement.getAttribute('tabindex')).toBe('0');
-      });
-
-      it('should force tabindex to -1 when hard-disabled, ignoring user-defined tabindex', async () => {
-        fixture.componentInstance.disabled.set(true);
-        fixture.componentInstance.softDisabled.set(false);
-        fixture.componentInstance.tabIndex.set(0);
-        await fixture.whenStable();
-
-        expect(inputElement.getAttribute('tabindex')).toBe('-1');
       });
     });
   });
@@ -1341,7 +1346,8 @@ function getTreeNodes(): TreeNode[] {
     placeholder="Search..."
     [(value)]="searchString"
     [(expanded)]="popupExpanded"
-    [disabled]="readonly()"
+    [readonly]="readonly()"
+    [disabled]="disabled()"
     (focusout)="onBlur()"
   />
 
@@ -1394,6 +1400,7 @@ class ComboboxTreeExample {
   readonly tree = viewChild(Tree);
 
   readonly = signal(false);
+  disabled = signal(false);
   popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);
@@ -1591,7 +1598,8 @@ class ComboboxGridExample {
     placeholder="Search..."
     [(value)]="searchString"
     (input)="onInput()"
-    [disabled]="readonly()"
+    [readonly]="readonly()"
+    [disabled]="disabled()"
     (focusout)="onBlur()"
     (click)="combobox.expanded.set(true)"
   />
@@ -1611,6 +1619,7 @@ class ComboboxGridExample {
 })
 class ComboboxListboxAutoSelectExample {
   readonly = signal(false);
+  disabled = signal(false);
   popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);
@@ -1656,7 +1665,8 @@ class ComboboxListboxAutoSelectExample {
     [(value)]="searchString"
     [(expanded)]="popupExpanded"
     [inlineSuggestion]="value()[0] || options()[0]"
-    [disabled]="readonly()"
+    [readonly]="readonly()"
+    [disabled]="disabled()"
     (click)="popupExpanded.set(true)"
   />
 
@@ -1676,6 +1686,7 @@ class ComboboxListboxAutoSelectExample {
 class ComboboxListboxHighlightExample {
   readonly combobox = viewChild(Combobox);
   readonly = signal(false);
+  disabled = signal(false);
   popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);

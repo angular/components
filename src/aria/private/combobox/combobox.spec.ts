@@ -6,6 +6,7 @@ describe('ComboboxPattern', () => {
   function setup(
     inputs: Partial<{
       disabled: boolean;
+      readonly: boolean;
       alwaysExpanded: boolean;
       inlineSuggestion: string;
       popupType: 'listbox' | 'tree' | 'grid' | 'dialog';
@@ -16,6 +17,7 @@ describe('ComboboxPattern', () => {
     const expanded = signal(false);
     const alwaysExpanded = signal(inputs.alwaysExpanded ?? false);
     const disabled = signal(inputs.disabled ?? false);
+    const readonly = signal(inputs.readonly ?? false);
     const inlineSuggestion = signal<string | undefined>(inputs.inlineSuggestion);
 
     // Mock a generic popup pattern
@@ -38,6 +40,7 @@ describe('ComboboxPattern', () => {
       popup: signal(popup),
       inlineSuggestion,
       disabled,
+      readonly,
       expanded,
       expandable: signal(true),
     });
@@ -50,6 +53,7 @@ describe('ComboboxPattern', () => {
       alwaysExpanded,
       inlineSuggestion,
       disabled,
+      readonly,
       popup,
       controlTarget,
     };
@@ -269,6 +273,18 @@ describe('ComboboxPattern', () => {
       Object.defineProperty(shiftHome, 'shiftKey', {value: true});
       pattern.onKeydown(shiftHome);
       expect(pattern.keyboardEventRelay()).toBe(shiftHome);
+    });
+  });
+
+  describe('Readonly', () => {
+    it('should ignore input when readonly', () => {
+      const {pattern, expanded, value} = setup({readonly: true});
+      const inputEl = document.createElement('input');
+      inputEl.value = 'abc';
+      pattern.onInput({target: inputEl} as unknown as Event);
+
+      expect(expanded()).toBe(false);
+      expect(value()).toBe('');
     });
   });
 });
