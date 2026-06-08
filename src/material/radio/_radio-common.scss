@@ -23,7 +23,7 @@ $fallbacks: m3-radio.get-tokens();
     box-sizing: content-box;
     width: $_icon-size;
     height: $_icon-size;
-    cursor: pointer;
+    cursor: default;
 
     // This is something we inherited from MDC, but it shouldn't be necessary.
     // Removing it will likely lead to screenshot diffs.
