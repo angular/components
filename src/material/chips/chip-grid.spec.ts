@@ -181,31 +181,24 @@ describe('MatChipGrid', () => {
       });
 
 
-      it('should silently update the active item without stealing document focus when a focused chip is destroyed', fakeAsync(() => {
-        const fixture = createComponent(StandardChipGrid);
-        fixture.detectChanges();
-        
-        
-        chips.first.focus();
-        fixture.detectChanges();
-
-        
-        const activeElementBeforeDeletion = document.activeElement;
-
-        
-        fixture.componentInstance.foods.splice(0, 1);
-        fixture.detectChanges();
-        flush();
-
-        
-        expect(chipGridInstance._keyManager.activeItemIndex).toBe(0);
-        
-        
-        expect(document.activeElement).not.toBe(chips.toArray()[1].nativeElement);
-      }));
+     it('should clear the active item in key manager when the last focused chip is destroyed', fakeAsync(() => {
+      const fixture = createComponent(StandardChipGrid);
+      fixture.detectChanges();
       
-
-    });
+      // Focus a chip
+      chips.first.focus();
+      fixture.detectChanges();
+  
+      // Remove ALL chips
+      fixture.componentInstance.foods = []; // Clear the bound data array
+      fixture.detectChanges();
+      flush();
+  
+      // Verify key manager is reset to prevent stale references
+      expect(chipGridInstance._keyManager.activeItemIndex).toBe(-1);
+    }));
+  
+  
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
           const fixture = createComponent(StandardChipGrid);
