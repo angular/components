@@ -235,11 +235,12 @@ export class ComboboxPattern {
     // Reset isDeleting when the user navigates, so that the highlight effect can run again.
     this.isDeleting.set(false);
 
-    const popup = untracked(() => this.inputs.popup());
-    const popupExpanded = untracked(() => this.isExpanded());
-    if (popupExpanded) {
-      popup?.controlTarget()?.dispatchEvent(event);
-    }
+    untracked(() => {
+      const popup = this.inputs.popup();
+      if (this.isExpanded()) {
+        popup?.controlTarget()?.dispatchEvent(event);
+      }
+    });
   }
 
   /** Closes the popup when focus leaves the combobox and popup. */
