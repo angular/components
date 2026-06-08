@@ -492,32 +492,19 @@ export class MatChipGrid
     this.stateChanges.next();
   }
 
-  protected override _redirectDestroyedChipFocus() {
+   protected override _redirectDestroyedChipFocus() {
     if (this._lastDestroyedFocusedChipIndex === null) {
       return;
     }
-    
-    if (this._chips.length) {
-      const newIndex =
-          Math.min(this._lastDestroyedFocusedChipIndex, this._chips.length - 1);
-      const chipToFocus = this._chips.toArray()[newIndex];
 
-      if (chipToFocus.disabled) {
-        if (this._chips.length === 1) {
-          this.focus();
-        } else {
-          this._keyManager.setPreviousItemActive();
-        }
-      } else {
-        // SILENT UPDATE: Fixes stale reference without stealing browser focus
-        this._keyManager.updateActiveItem(chipToFocus._getActions()[0]);
-      }
-    } else {
-      // No chips left. Clear the active item silently.
+    super._redirectDestroyedChipFocus();
+
+    // If there are no chips left, or the set focuses the input,
+    // clear the active item silently to prevent stale references.
+    if (!this._chips.length ||
+        (this._chips.length === 1 && this._chips.first.disabled)) {
       this._keyManager.updateActiveItem(-1);
     }
-
-    this._lastDestroyedFocusedChipIndex = null;
   }
 
   _focusLastChip() {
