@@ -1,6 +1,7 @@
 :host {
   display: block;
   background: #fff;
+  color: CanvasText;
   border-radius: 8px;
   padding: 8px 16px;
 }
