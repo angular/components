@@ -104,7 +104,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   readonly chipEnd: EventEmitter<MatChipInputEvent> = new EventEmitter<MatChipInputEvent>();
 
   /** The input's placeholder text. */
-  @Input() placeholder: string = '';
+  @Input() placeholder: string | null | undefined = '';
 
   /** Unique id for the input. */
   @Input() id: string = inject(_IdGenerator).getId('mat-mdc-chip-list-input-');

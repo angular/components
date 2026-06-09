@@ -155,14 +155,14 @@ export class MatChipGrid
    * @docs-private
    */
   @Input()
-  get placeholder(): string {
+  get placeholder(): string | null | undefined {
     return this._chipInput ? this._chipInput.placeholder : this._placeholder;
   }
-  set placeholder(value: string) {
+  set placeholder(value: string | null | undefined) {
     this._placeholder = value;
     this.stateChanges.next();
   }
-  protected _placeholder = '';
+  protected _placeholder: string | null | undefined = '';
 
   /** Whether any chips or the matChipInput inside of this chip-grid has focus. */
   override get focused(): boolean {
