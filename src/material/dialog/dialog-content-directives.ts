@@ -70,6 +70,12 @@ export class MatDialogClose implements OnInit, OnChanges {
   }
 
   _onButtonClick(event: MouseEvent) {
+    // For compatibility with `disabledInteractive`. We don't need to handle plain `disabled`,
+    // because disabled buttons don't dispatch click events by default. See #33366.
+    if (this._elementRef.nativeElement.getAttribute('aria-disabled') === 'true') {
+      return;
+    }
+
     // Determinate the focus origin using the click event, because using the FocusMonitor will
     // result in incorrect origins. Most of the time, close buttons will be auto focused in the
     // dialog, and therefore clicking the button won't result in a focus change. This means that

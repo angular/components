@@ -1835,6 +1835,25 @@ describe('MatDialog', () => {
         );
       });
 
+      it('should not close when clicking on an aria-disabled close button', async () => {
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
+        );
+
+        const closeButton = overlayContainerElement.querySelector(
+          'button[mat-dialog-close]',
+        ) as HTMLElement;
+
+        closeButton.setAttribute('aria-disabled', 'true');
+        closeButton.click();
+        viewContainerFixture.detectChanges();
+        await viewContainerFixture.whenStable();
+
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
+        );
+      });
+
       it('should not close if [mat-dialog-close] is applied on a non-button node', () => {
         expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
           1,
