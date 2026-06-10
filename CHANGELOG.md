@@ -1,3 +1,29 @@
+<a name="22.0.1"></a>
+# 22.0.1 "argon-apple" (2026-06-10)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7581b0592](https://github.com/angular/components/commit/7581b0592b6aef617e3563e206b0645d3122d68c) | fix | **combobox:** avoid error for synthetic events ([#33360](https://github.com/angular/components/pull/33360)) |
+| [1c4706155](https://github.com/angular/components/commit/1c4706155d6f8a5d465dbb2b6a40cf7da2efdf17) | fix | **combobox:** prevent re-dispatching keyboard event on control target change ([#33362](https://github.com/angular/components/pull/33362)) |
+| [96e9ce10c](https://github.com/angular/components/commit/96e9ce10c35ea3df9a9604a5ab3b5c85e8cc263e) | fix | **tree:** recursive textDirection getter ([#33337](https://github.com/angular/components/pull/33337)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [629aea403](https://github.com/angular/components/commit/629aea4032cedf9428e3ed4f729d6a5836fa84de) | fix | **a11y:** avoid prototype conflicts in id generator ([#33356](https://github.com/angular/components/pull/33356)) |
+| [49aeb676c](https://github.com/angular/components/commit/49aeb676cd82d84f00983c9959d68199115c31e0) | fix | **clipboard:** avoid infinite attempt loop ([#33366](https://github.com/angular/components/pull/33366)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d7a8cb963](https://github.com/angular/components/commit/d7a8cb9633f2f670a6bf455a9f51d492b01cb68c) | fix | **dialog:** ignore clicks on aria-disabled close buttons ([#33373](https://github.com/angular/components/pull/33373)) |
+| [bde3c7621](https://github.com/angular/components/commit/bde3c7621dddba2932f23743fc67a18feec664fe) | fix | **timepicker:** do not allow intervals less than a second ([#33354](https://github.com/angular/components/pull/33354)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d75a22d69](https://github.com/angular/components/commit/d75a22d69ddc9ffc5afa6b677f39fbbfc3ad5f7f) | fix | avoid errors with clobbered variables |
+| [fe0a96ce6](https://github.com/angular/components/commit/fe0a96ce673c3622e87a7a44bff8f40a1ad70675) | fix | validate ID before attaching them to placeholder |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.0"></a>
 # 22.0.0 "aurostibite-ambulance" (2026-06-03)
 ## Breaking Changes
