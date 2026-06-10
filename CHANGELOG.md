@@ -1,3 +1,9 @@
+<a name="22.1.0-next.0"></a>
+# 22.1.0-next.0 "argon-pineapple" (2026-06-10)
+No user facing changes in this release
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.1"></a>
 # 22.0.1 "argon-apple" (2026-06-10)
 ### aria
