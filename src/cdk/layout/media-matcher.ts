@@ -73,7 +73,12 @@ function createEmptyStyleRule(query: string, nonce: string | undefined | null) {
     }
 
     if (mediaQueryStyleNode.sheet) {
-      mediaQueryStyleNode.sheet.insertRule(`@media ${query} {body{ }}`, 0);
+      mediaQueryStyleNode.sheet.insertRule(
+        // Drop the curly braces to avoid injection attacks. Curly braces aren't
+        // valid media query syntax so this should be a no-op in valid cases.
+        `@media ${query.replace(/[{}]/g, '')} {body{ }}`,
+        0,
+      );
       mediaQueriesForWebkitCompatibility.add(query);
     }
   } catch (e) {
