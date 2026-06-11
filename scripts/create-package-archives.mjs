@@ -10,6 +10,7 @@
  */
 
 import {join} from 'path';
+import {execFileSync} from 'child_process';
 import sh from 'shelljs';
 import chalk from 'chalk';
 import yargs from 'yargs';
@@ -40,16 +41,38 @@ const builtPackages = sh
 // If multiple packages should be archived, we also generate a single archive that
 // contains all packages. This makes it easier to transfer the release packages.
 if (builtPackages.length > 1) {
-  console.info('Creating archive with all packages..');
-  sh.exec(
-    `tar --create --gzip --directory ${releasesDir} --file ${archivesDir}/all-${suffix}.tgz .`,
+  console.info('Creating archive with all packages...');
+  execFileSync(
+    'tar',
+    [
+      '--create',
+      '--gzip',
+      '--directory',
+      releasesDir,
+      '--file',
+      `${archivesDir}/all-${suffix}.tgz`,
+      '.',
+    ],
+    {stdio: 'inherit'},
   );
 }
 
+// Note that we're using `exec` here, rather than interpolating the arguments into `sh.exec`,
+// to avoid a potential command injection through the `suffix` which is user-provided.
 for (const pkg of builtPackages) {
   console.info(`Creating archive for package: ${pkg.name}`);
-  sh.exec(
-    `tar --create --gzip --directory ${pkg.path} --file ${archivesDir}/${pkg.name}-${suffix}.tgz .`,
+  execFileSync(
+    'tar',
+    [
+      '--create',
+      '--gzip',
+      '--directory',
+      pkg.path,
+      '--file',
+      `${archivesDir}/${pkg.name}-${suffix}.tgz`,
+      '.',
+    ],
+    {stdio: 'inherit'},
   );
 }
 
