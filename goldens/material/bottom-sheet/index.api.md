@@ -83,7 +83,7 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     enter(): void;
     exit(): void;
     // (undocumented)
-    protected _handleAnimationEvent(isStart: boolean, animationName: string): void;
+    protected _handleAnimationEvent(isStart: boolean, animationName: string, target: EventTarget | null): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
