@@ -203,7 +203,13 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     return this._animationDuration;
   }
   set animationDuration(value: string) {
-    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
+    if (/^[0-9]+(?:\.[0-9]+)?$/.test(value)) {
+      this._animationDuration = value + 'ms';
+    } else if (/^[0-9]+(?:\.[0-9]+)?(?:ms|s)$/.test(value)) {
+      this._animationDuration = value;
+    } else {
+      this._animationDuration = '';
+    }
   }
   private _animationDuration = '';
 
