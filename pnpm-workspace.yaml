@@ -18,23 +18,23 @@ packages:
   - src/youtube-player
 
 catalog:
-  '@angular-devkit/build-angular': 22.0.0-next.4
-  '@angular-devkit/core': 22.0.0-next.4
-  '@angular-devkit/schematics': 22.0.0-next.4
-  '@angular/build': 22.0.0-next.4
-  '@angular/cli': 22.0.0-next.4
-  '@angular/common': 22.0.0-next.6
-  '@angular/compiler-cli': 22.0.0-next.6
-  '@angular/compiler': 22.0.0-next.6
-  '@angular/core': 22.0.0-next.6
-  '@angular/ssr': 22.0.0-next.4
-  '@angular/forms': 22.0.0-next.6
-  '@angular/localize': 22.0.0-next.6
-  '@angular/platform-browser': 22.0.0-next.6
-  '@angular/platform-browser-dynamic': 22.0.0-next.6
-  '@angular/platform-server': 22.0.0-next.6
-  '@angular/router': 22.0.0-next.6
-  '@schematics/angular': 22.0.0-next.4
+  '@angular-devkit/build-angular': 22.0.0
+  '@angular-devkit/core': 22.0.0
+  '@angular-devkit/schematics': 22.0.0
+  '@angular/build': 22.0.0
+  '@angular/cli': 22.0.0
+  '@angular/common': 22.0.0
+  '@angular/compiler-cli': 22.0.0
+  '@angular/compiler': 22.0.0
+  '@angular/core': 22.0.0
+  '@angular/ssr': 22.0.0
+  '@angular/forms': 22.0.0
+  '@angular/localize': 22.0.0
+  '@angular/platform-browser': 22.0.0
+  '@angular/platform-browser-dynamic': 22.0.0
+  '@angular/platform-server': 22.0.0
+  '@angular/router': 22.0.0
+  '@schematics/angular': 22.0.0
   'rxjs': ^6.6.7
 
 # The minimum age of a release to be considered for dependency installation.
@@ -47,3 +47,53 @@ minimumReleaseAgeExclude:
   - '@ngtools/webpack'
   - '@schematics/*'
   - 'ng-packagr'
+overrides:
+  typescript: 6.0.2
+  protobufjs: 8.6.1
+packageExtensions:
+  dgeni-packages:
+    dependencies:
+      clonedeep: '*'
+  grpc-gcp:
+    dependencies:
+      protobufjs: 7.4.0
+  '@angular-eslint/eslint-plugin-template@19.3.0':
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      '@angular-eslint/template-parser': '*'
+  '@angular/common':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/forms':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/platform-browser':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/router':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/localize':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+  '@angular/platform-server':
+    dependencies:
+      '@nginfra/angular-linking': 1.0.11
+engineStrict: false
+hoist: false
+autoInstallPeers: false
+
+# Avoid prompting for confirmation when pnpm determines node_modules needs to be purged and recreated.
+confirmModulesPurge: false
+
+allowBuilds:
+  '@firebase/util': false
+  '@google/genai': false
+  '@parcel/watcher': false
+  bufferutil: false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
+  protobufjs: false
+  re2: false
+  utf-8-validate: false

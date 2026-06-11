@@ -28,7 +28,7 @@ export type MatAnchor = MatButton;
 
 // @public
 export class MatButton extends MatButtonBase {
-    constructor(...args: unknown[]);
+    constructor();
     get appearance(): MatButtonAppearance | null;
     set appearance(value: MatButtonAppearance | '');
     setAppearance(appearance: MatButtonAppearance): void;
@@ -66,7 +66,7 @@ export type MatFabAnchor = MatFabButton;
 
 // @public
 export class MatFabButton extends MatButtonBase {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     extended: boolean;
     // (undocumented)
@@ -92,7 +92,7 @@ export type MatIconAnchor = MatIconButton;
 
 // @public
 export class MatIconButton extends MatButtonBase {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatIconButton, "button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]", ["matButton", "matAnchor"], {}, {}, never, ["*", "[progressIndicator]"], true, never>;
     // (undocumented)
@@ -107,7 +107,7 @@ export type MatMiniFabAnchor = MatMiniFabButton;
 
 // @public
 export class MatMiniFabButton extends MatButtonBase {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     _isFab: boolean;
     // (undocumented)

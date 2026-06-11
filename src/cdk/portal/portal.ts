@@ -14,6 +14,8 @@ import {
   EmbeddedViewRef,
   Injector,
   Binding,
+  Type,
+  DirectiveWithBindings,
 } from '@angular/core';
 import {
   throwNullPortalOutletError,
@@ -105,12 +107,18 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
    */
   readonly bindings: Binding[] | null;
 
+  /**
+   * Directives to apply to the created component.
+   */
+  readonly directives: (Type<unknown> | DirectiveWithBindings<unknown>)[] | null;
+
   constructor(
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
     projectableNodes?: Node[][] | null,
     bindings?: Binding[],
+    directives?: (Type<unknown> | DirectiveWithBindings<unknown>)[],
   ) {
     super();
     this.component = component;
@@ -118,6 +126,7 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
     this.injector = injector;
     this.projectableNodes = projectableNodes;
     this.bindings = bindings || null;
+    this.directives = directives || null;
   }
 }
 

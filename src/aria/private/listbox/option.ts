@@ -26,37 +26,37 @@ export interface OptionInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable
 /** Represents an option in a listbox. */
 export class OptionPattern<V> {
   /** A unique identifier for the option. */
-  id: SignalLike<string>;
+  readonly id: SignalLike<string>;
 
   /** The value of the option. */
-  value: SignalLike<V>;
+  readonly value: SignalLike<V>;
 
   /** The position of the option in the list. */
-  index = computed(() => this.listbox()?.inputs.items().indexOf(this) ?? -1);
+  readonly index = computed(() => this.listbox()?.inputs.items().indexOf(this) ?? -1);
 
   /** Whether the option is active. */
-  active = computed(() => this.listbox()?.inputs.activeItem() === this);
+  readonly active = computed(() => this.listbox()?.inputs.activeItem() === this);
 
   /** Whether the option is selected. */
-  selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));
+  readonly selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));
 
   /** Whether the option is selectable. */
-  selectable = () => true;
+  readonly selectable = () => true;
 
   /** Whether the option is disabled. */
-  disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean>;
 
   /** The text used by the typeahead search. */
-  searchTerm: SignalLike<string>;
+  readonly searchTerm: SignalLike<string>;
 
   /** A reference to the parent listbox. */
-  listbox: SignalLike<ListboxPattern<V> | undefined>;
+  readonly listbox: SignalLike<ListboxPattern<V> | undefined>;
 
   /** The tab index of the option. */
-  tabIndex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
+  readonly tabIndex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
 
   /** The html element that should receive focus. */
-  element: SignalLike<HTMLElement | undefined>;
+  readonly element: SignalLike<HTMLElement | undefined>;
 
   constructor(args: OptionInputs<V>) {
     this.id = args.id;

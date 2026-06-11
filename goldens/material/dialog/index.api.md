@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
@@ -61,7 +62,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatDialog implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly afterAllClosed: Observable<void>;
     get afterOpened(): Subject<MatDialogRef<any>>;
     closeAll(): void;
@@ -98,7 +99,6 @@ export class MatDialogActions extends MatDialogLayoutSection {
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
-    constructor(...args: unknown[]);
     ariaLabel: string;
     // (undocumented)
     dialogRef: MatDialogRef<any, any>;
@@ -126,6 +126,7 @@ export class MatDialogConfig<D = any> {
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
+    bindings?: Binding[];
     closeOnNavigation?: boolean;
     closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = MatDialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     data?: D | null;

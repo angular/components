@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -34,7 +35,6 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConf
 
 // @public
 export class MatBottomSheet implements OnDestroy {
-    constructor(...args: unknown[]);
     dismiss<R = any>(result?: R): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -54,6 +54,7 @@ export class MatBottomSheetConfig<D = any> {
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string;
+    bindings?: Binding[];
     closeOnNavigation?: boolean;
     data?: D | null;
     direction?: Direction;
@@ -71,7 +72,7 @@ export class MatBottomSheetConfig<D = any> {
 
 // @public
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected _animationsDisabled: boolean;
     _animationState: 'void' | 'visible' | 'hidden';
@@ -82,7 +83,7 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     enter(): void;
     exit(): void;
     // (undocumented)
-    protected _handleAnimationEvent(isStart: boolean, animationName: string): void;
+    protected _handleAnimationEvent(isStart: boolean, animationName: string, target: EventTarget | null): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

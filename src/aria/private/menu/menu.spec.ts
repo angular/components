@@ -46,6 +46,19 @@ function getMenuTriggerPattern(opts?: {textDirection: 'ltr' | 'rtl'}) {
     menu: submenu,
     disabled: signal(false),
   });
+
+  const originalOnClick = trigger.onClick.bind(trigger);
+  trigger.onClick = () => {
+    originalOnClick();
+    trigger.pendingFocusEffect();
+  };
+
+  const originalOnKeydown = trigger.onKeydown.bind(trigger);
+  trigger.onKeydown = (event: KeyboardEvent) => {
+    originalOnKeydown(event);
+    trigger.pendingFocusEffect();
+  };
+
   return trigger;
 }
 
@@ -80,6 +93,7 @@ function getMenuBarPattern(values: string[], opts?: {textDirection: 'ltr' | 'rtl
         parent: signal(menubar),
         element: signal(element),
         submenu: signal(undefined),
+        role: signal('menuitem'),
       }) as TestMenuItem;
     }),
   );
@@ -125,6 +139,7 @@ function getMenuPattern(
         parent: signal(menu),
         element: signal(element),
         submenu: signal(undefined),
+        role: signal('menuitem'),
       }) as TestMenuItem;
     }),
   );

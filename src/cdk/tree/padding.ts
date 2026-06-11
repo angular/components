@@ -60,8 +60,6 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
   }
   _indent: number = 40;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this._setPadding();
     this._dir?.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._setPadding(true));

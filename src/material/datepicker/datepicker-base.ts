@@ -38,7 +38,6 @@ import {
   afterNextRender,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
@@ -117,7 +116,6 @@ export type DatepickerDropdownPositionY = 'above' | 'below';
   },
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTrapFocus, MatCalendar, CdkPortalOutlet, MatButton],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
@@ -186,8 +184,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   /** Id of the label for the `role="dialog"` element. */
   _dialogLabelId: string | null = null;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
@@ -550,8 +546,6 @@ export abstract class MatDatepickerBase<
   readonly stateChanges = new Subject<void>();
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {

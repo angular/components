@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-export * from './aria-describer/aria-describer';
+export {AriaDescriber, RegisteredMessage} from './aria-describer/aria-describer';
 export * from './aria-describer/aria-reference';
 export * from './key-manager/activedescendant-key-manager';
 export * from './key-manager/focus-key-manager';

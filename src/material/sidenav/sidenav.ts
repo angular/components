@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -30,11 +29,14 @@ import {CdkScrollable} from '@angular/cdk/scrolling';
   host: {
     'class': 'mat-drawer-content mat-sidenav-content',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
       provide: CdkScrollable,
+      useExisting: MatSidenavContent,
+    },
+    {
+      provide: MatDrawerContent,
       useExisting: MatSidenavContent,
     },
   ],
@@ -60,7 +62,6 @@ export class MatSidenavContent extends MatDrawerContent {}
     '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
     '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkScrollable],
   providers: [{provide: MatDrawer, useExisting: MatSidenav}],
@@ -112,7 +113,6 @@ export class MatSidenav extends MatDrawer {
     'class': 'mat-drawer-container mat-sidenav-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {

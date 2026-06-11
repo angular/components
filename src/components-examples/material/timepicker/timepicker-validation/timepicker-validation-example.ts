@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {JsonPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -13,7 +13,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   styleUrl: './timepicker-validation-example.css',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule, JsonPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerValidationExample {
   formControl = new FormControl<Date | null>(null);

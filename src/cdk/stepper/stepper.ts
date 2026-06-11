@@ -11,7 +11,6 @@ import {Direction, Directionality} from '../bidi';
 import {ENTER, hasModifierKey, SPACE} from '../keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -107,7 +106,6 @@ export interface StepperOptions {
   exportAs: 'cdkStep',
   template: '<ng-template><ng-content/></ng-template>',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
@@ -257,8 +255,6 @@ export class CdkStep implements OnChanges {
   private _getDefaultError() {
     return this.interacted && !!this.stepControl?.invalid;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const stepperOptions = inject<StepperOptions>(STEPPER_GLOBAL_OPTIONS, {optional: true});
@@ -410,9 +406,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     }
   }
   private _orientation: StepperOrientation = 'horizontal';
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterContentInit() {
     this._steps.changes

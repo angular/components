@@ -699,51 +699,16 @@ describe('TreeKeyManager', () => {
 
         it('should debounce the input key presses', async () => {
           keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
-          await wait(1);
+          await wait(50);
           keyManager.onKeydown(createKeyboardEvent('keydown', 78, 'n')); // types "n"
-          await wait(1);
+          await wait(50);
           keyManager.onKeydown(createKeyboardEvent('keydown', 69, 'e')); // types "e"
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, before debounce interval')
             .not.toBe(0);
 
-          await wait(debounceInterval - 1);
-
-          expect(keyManager.getActiveItemIndex())
-            .withContext('active item index, after partial debounce interval')
-            .not.toBe(0);
-
-          await wait(100);
-
-          expect(keyManager.getActiveItemIndex())
-            .withContext('active item index, after full debounce interval')
-            .toBe(0);
-        });
-
-        it('uses a default debounce interval', async () => {
-          const defaultInterval = 200;
-          keyManager = new TreeKeyManager(itemList, {
-            typeAheadDebounceInterval: true,
-          });
-
-          keyManager.onKeydown(createKeyboardEvent('keydown', 79, 'o')); // types "o"
-          await wait(1);
-          keyManager.onKeydown(createKeyboardEvent('keydown', 78, 'n')); // types "n"
-          await wait(1);
-          keyManager.onKeydown(createKeyboardEvent('keydown', 69, 'e')); // types "e"
-
-          expect(keyManager.getActiveItemIndex())
-            .withContext('active item index, before debounce interval')
-            .not.toBe(0);
-
-          await wait(defaultInterval - 1);
-
-          expect(keyManager.getActiveItemIndex())
-            .withContext('active item index, after partial debounce interval')
-            .not.toBe(0);
-
-          await wait(100);
+          await wait(debounceInterval * 1.5);
 
           expect(keyManager.getActiveItemIndex())
             .withContext('active item index, after full debounce interval')

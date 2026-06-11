@@ -55,7 +55,7 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOp
 
 // @public
 export class MatPaginator implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _buttonClicked(targetIndex: number, isDisabled: boolean): void;
     _changePageSize(pageSize: number): void;
     color: ThemePalette;

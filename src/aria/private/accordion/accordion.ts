@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {
@@ -53,7 +53,7 @@ export class AccordionGroupPattern {
   }
 
   /** The key used to navigate to the previous accordion trigger. */
-  prevKey = computed(() => {
+  readonly prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -61,7 +61,7 @@ export class AccordionGroupPattern {
   });
 
   /** The key used to navigate to the next accordion trigger. */
-  nextKey = computed(() => {
+  readonly nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -69,7 +69,7 @@ export class AccordionGroupPattern {
   });
 
   /** The keydown event manager for the accordion trigger. */
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     return new KeyboardEventManager()
       .on(this.prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
       .on(this.nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
@@ -79,9 +79,9 @@ export class AccordionGroupPattern {
       .on('Enter', () => this.toggle());
   });
 
-  /** The pointerdown event manager for the accordion trigger. */
-  pointerdown = computed(() => {
-    return new PointerEventManager().on(e => {
+  /** The click event manager for the accordion trigger. */
+  readonly click = computed(() => {
+    return new ClickEventManager<PointerEvent>().on((e: PointerEvent) => {
       const item = this._findTriggerPattern(e.target as Element);
       if (!item) return;
 
@@ -95,9 +95,9 @@ export class AccordionGroupPattern {
     this.keydown().handle(event);
   }
 
-  /** Handles pointerdown events on the trigger, delegating to the group if not disabled. */
-  onPointerdown(event: PointerEvent): void {
-    this.pointerdown().handle(event);
+  /** Handles click events on the trigger, delegating to the group if not disabled. */
+  onClick(event: PointerEvent): void {
+    this.click().handle(event);
   }
 
   /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
@@ -124,6 +124,22 @@ export class AccordionGroupPattern {
   /** Collapses all accordion panels. */
   collapseAll() {
     this.expansionBehavior.closeAll();
+  }
+
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multiExpandable()) {
+      const expandedCount = this.inputs.items().filter(t => t.expanded()).length;
+      if (expandedCount > 1) {
+        violations.push(
+          'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
+        );
+      }
+    }
+
+    return violations;
   }
 
   /** Finds the trigger pattern for a given element. */

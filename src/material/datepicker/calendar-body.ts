@@ -8,7 +8,6 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -96,7 +95,6 @@ const passiveEventOptions = {passive: true};
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -223,8 +221,6 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
    * use the built-in identity tracking, because it logs warnings.
    */
   _trackRow = (row: MatCalendarCell[]) => row;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const renderer = inject(Renderer2);

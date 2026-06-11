@@ -3325,7 +3325,6 @@ class TableWithIndirectDescendantDefs {
       </tr>
     </table>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTableModule],
 })
 class NativeHtmlTableAppOnPush {

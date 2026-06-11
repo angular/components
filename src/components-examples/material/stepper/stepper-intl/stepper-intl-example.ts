@@ -1,4 +1,4 @@
-import {Component, Injectable, inject} from '@angular/core';
+import {Component, Service, inject} from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
@@ -6,7 +6,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatRadioModule} from '@angular/material/radio';
 
-@Injectable()
+@Service({autoProvided: false})
 export class StepperIntl extends MatStepperIntl {
   // the default optional label text, if unspecified is "Optional"
   override optionalLabel = 'Optional Label';

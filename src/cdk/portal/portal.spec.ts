@@ -481,6 +481,20 @@ describe('Portals', () => {
       fixture.detectChanges();
       expect(ref.instance.flavor).toBe('cheese');
     });
+
+    it('should be able to pass directives to the component via a CdkPortalOutlet', () => {
+      const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, undefined, [
+        HighlightDirective,
+      ]);
+
+      fixture.componentInstance.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const ref = fixture.componentInstance.portalOutlet.attachedRef as ComponentRef<PizzaMsg>;
+      const hostElement = ref.location.nativeElement as HTMLElement;
+      expect(hostElement.style.background).toBe('yellow');
+    });
   });
 
   describe('DomPortalOutlet', () => {
@@ -750,6 +764,19 @@ describe('Portals', () => {
       someFixture.detectChanges();
       expect(componentInstance.flavor).toBe('pepperoni');
     });
+
+    it('should be able to pass directives to the component via a DomPortalOutlet', () => {
+      const portal = new ComponentPortal(PizzaMsg, null, null, null, undefined, [
+        HighlightDirective,
+      ]);
+
+      const ref = portal.attach(host);
+      someFixture.changeDetectorRef.markForCheck();
+      someFixture.detectChanges();
+
+      const hostElement = ref.location.nativeElement as HTMLElement;
+      expect(hostElement.style.background).toBe('yellow');
+    });
   });
 });
 
@@ -766,6 +793,18 @@ class ChocolateInjector {
     return token === Chocolate
       ? new Chocolate()
       : this.parentInjector.get<any>(token, notFoundValue);
+  }
+}
+
+/** Simple directive for testing directives support in ComponentPortal. */
+@Directive({
+  selector: 'pizza-msg',
+})
+class HighlightDirective {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    this._elementRef.nativeElement.style.background = 'yellow';
   }
 }
 

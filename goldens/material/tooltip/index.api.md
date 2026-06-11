@@ -34,7 +34,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatTooltip implements OnDestroy, AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     protected _addOffset(position: ConnectedPosition): ConnectedPosition;
     // (undocumented)
     protected _dir: Directionality;
@@ -122,7 +122,6 @@ export const TOOLTIP_PANEL_CLASS = "mat-mdc-tooltip-panel";
 
 // @public
 export class TooltipComponent implements OnDestroy {
-    constructor(...args: unknown[]);
     afterHidden(): Observable<void>;
     _cancelPendingAnimations(): void;
     // (undocumented)

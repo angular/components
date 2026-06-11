@@ -13,7 +13,6 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -91,7 +90,6 @@ export interface MatChipEvent {
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_CHIP, useExisting: MatChip}],
   imports: [MatChipContent],
 })
@@ -254,8 +252,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   private _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
 
   protected _injector = inject(Injector);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -24,7 +24,6 @@ import {map} from 'rxjs/operators';
     MatSelectModule,
     MatIconModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldLabelExample {
   readonly hideRequiredControl = new FormControl(false);

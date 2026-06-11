@@ -11,15 +11,17 @@ import {
   ElementRef,
   booleanAttribute,
   computed,
-  contentChildren,
   inject,
   input,
   signal,
+  afterNextRender,
+  afterRenderEffect,
+  OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {AccordionGroupPattern} from '../private';
-import {AccordionTrigger} from './accordion-trigger';
+import {AccordionGroupPattern, SortedCollection, reportViolations} from '../private';
 import {ACCORDION_GROUP} from './accordion-tokens';
+import {AccordionTrigger} from './accordion-trigger';
 
 /**
  * A container for a group of accordion items. It manages the overall state and
@@ -54,7 +56,6 @@ import {ACCORDION_GROUP} from './accordion-tokens';
  * </div>
  * ```
  *
- * @developerPreview 21.0
  * @see [Accordion](guide/aria/accordion)
  */
 @Directive({
@@ -62,23 +63,25 @@ import {ACCORDION_GROUP} from './accordion-tokens';
   exportAs: 'ngAccordionGroup',
   host: {
     '(keydown)': '_pattern.onKeydown($event)',
-    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocus($event)',
   },
   providers: [{provide: ACCORDION_GROUP, useExisting: AccordionGroup}],
 })
-export class AccordionGroup {
+export class AccordionGroup implements OnDestroy {
   /** A reference to the group element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the group element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The AccordionTriggers nested inside this group. */
-  private readonly _triggers = contentChildren(AccordionTrigger, {descendants: true});
+  /** The collection of AccordionTriggers. */
+  readonly _collection = new SortedCollection<AccordionTrigger>();
 
   /** The corresponding patterns for the accordion triggers. */
-  private readonly _triggerPatterns = computed(() => this._triggers().map(t => t._pattern));
+  private readonly _triggerPatterns = computed(() => {
+    return this._collection.orderedItems().map(t => t._pattern);
+  });
 
   /** The text direction (ltr or rtl). */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -104,9 +107,27 @@ export class AccordionGroup {
     element: () => this.element,
     activeItem: signal(undefined),
     items: this._triggerPatterns,
-    // TODO(ok7sai): Investigate whether an accordion should support horizontal mode.
     orientation: () => 'vertical',
   });
+
+  constructor() {
+    afterNextRender(() => {
+      this._collection.startObserving(this.element);
+    });
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this._collection.stopObserving();
+  }
 
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {

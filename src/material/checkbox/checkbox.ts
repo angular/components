@@ -9,7 +9,6 @@
 import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -104,7 +103,6 @@ export class MatCheckboxChange {
   ],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
@@ -239,8 +237,6 @@ export class MatCheckbox
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
   private _validatorChangeFn = () => {};
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

@@ -1,5 +1,4 @@
-import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from '../index';
-import {AriaDescriber} from './aria-describer';
+import {AriaDescriber, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from './aria-describer';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 
@@ -395,7 +394,6 @@ function expectMessage(el: Element, message: string) {
     <div id="description-with-existing-id">Hello</div>
     <div description-without-id>Hey</div>
   `,
-  imports: [A11yModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {

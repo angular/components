@@ -282,9 +282,6 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    */
   marker?: google.maps.Marker;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
       return;

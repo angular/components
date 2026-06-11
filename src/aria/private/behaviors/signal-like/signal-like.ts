@@ -41,8 +41,6 @@ export function convertGetterSetterToWritableSignalLike<T>(
 
 export function computed<T>(computation: () => T): SignalLike<T> {
   const computed = createComputed(computation);
-  // TODO: Remove the `toString` after https://github.com/angular/angular/pull/65948 is merged.
-  computed.toString = () => `[Computed: ${computed()}]`;
   computed[SIGNAL].debugName = '';
   return computed;
 }

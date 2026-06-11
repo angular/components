@@ -6,7 +6,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {TestBed, fakeAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
@@ -133,7 +133,7 @@ describe('MatList', () => {
     expect(activeItem.getAttribute('aria-current')).toBe('page');
   });
 
-  it('should not show ripples for non-nav lists', fakeAsync(() => {
+  it('should not show ripples for non-nav lists', () => {
     const fixture = TestBed.createComponent(ListWithOneAnchorItem);
     fixture.detectChanges();
 
@@ -144,7 +144,7 @@ describe('MatList', () => {
       dispatchMouseEvent(item._hostElement, 'mousedown');
       expect(fixture.nativeElement.querySelector('.mat-ripple-element')).toBe(null);
     });
-  }));
+  });
 
   it('should allow disabling ripples for specific nav-list items', () => {
     const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
@@ -252,7 +252,7 @@ describe('MatList', () => {
     expect(items.every(item => item.rippleDisabled)).toBe(true);
   });
 
-  it('should disable item ripples when list ripples are disabled via the input in nav list', fakeAsync(() => {
+  it('should disable item ripples when list ripples are disabled via the input in nav list', () => {
     const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
     fixture.detectChanges();
 
@@ -285,9 +285,9 @@ describe('MatList', () => {
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected no ripples after list ripples are disabled.')
       .toBe(0);
-  }));
+  });
 
-  it('should disable item ripples when list ripples are disabled via the input in an action list', fakeAsync(() => {
+  it('should disable item ripples when list ripples are disabled via the input in an action list', () => {
     const fixture = TestBed.createComponent(ActionListWithoutType);
     fixture.detectChanges();
 
@@ -320,7 +320,7 @@ describe('MatList', () => {
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected no ripples after list ripples are disabled.')
       .toBe(0);
-  }));
+  });
 
   it('should be able to disable a single list item', () => {
     const fixture = TestBed.createComponent(ListWithDisabledItems);

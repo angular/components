@@ -6,45 +6,55 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
-export class Listbox<V> {
+export class Listbox<V> implements OnDestroy {
     constructor();
-    disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly activeDescendant: Signal<string | undefined>;
+    readonly _collection: SortedCollection<Option_2<V>>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
+    readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     gotoFirst(): void;
     readonly id: _angular_core.InputSignal<string>;
-    protected items: _angular_core.Signal<OptionPattern<V>[]>;
-    multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: ListboxPattern<V>;
-    readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
-    selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
-    softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected textDirection: _angular_core.Signal<_angular_cdk_bidi.Direction>;
-    typeaheadDelay: _angular_core.InputSignal<number>;
-    value: _angular_core.ModelSignal<V[]>;
-    wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
+    readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
+    protected readonly textDirection: Signal<_angular_cdk_bidi.Direction>;
+    readonly typeaheadDelay: _angular_core.InputSignal<number>;
+    readonly value: _angular_core.ModelSignal<V[]>;
+    readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Listbox<any>, "[ngListbox]", ["ngListbox"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, ["_options"], never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Listbox<any>, "[ngListbox]", ["ngListbox"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Listbox<any>, never>;
 }
 
 // @public
-class Option_2<V> {
-    active: _angular_core.Signal<boolean>;
-    disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+class Option_2<V> implements OnInit, OnDestroy {
+    readonly active: _angular_core.Signal<boolean>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly id: _angular_core.InputSignal<string>;
-    label: _angular_core.InputSignal<string | undefined>;
+    readonly label: _angular_core.InputSignal<string | undefined>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly _pattern: OptionPattern<V>;
-    protected searchTerm: _angular_core.Signal<string>;
     readonly selected: _angular_core.Signal<boolean | undefined>;
-    value: _angular_core.InputSignal<V>;
+    readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Option_2<any>, "[ngOption]", ["ngOption"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)

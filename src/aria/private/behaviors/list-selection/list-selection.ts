@@ -33,13 +33,13 @@ export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> extends 
 /** Controls selection for a list of items. */
 export class ListSelection<T extends ListSelectionItem<V>, V> {
   /** The start index to use for range selection. */
-  rangeStartIndex = signal<number>(0);
+  readonly rangeStartIndex = signal<number>(0);
 
   /** The end index to use for range selection. */
-  rangeEndIndex = signal<number>(0);
+  readonly rangeEndIndex = signal<number>(0);
 
   /** The currently selected items. */
-  selectedItems = computed(() =>
+  readonly selectedItems = computed(() =>
     this.inputs.items().filter(item => this.inputs.value().includes(item.value())),
   );
 

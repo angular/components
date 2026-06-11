@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Configure Firebase deploy target
         run: |
@@ -33,7 +33,7 @@ jobs:
           npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
           npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
 
-      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@ad935905ff554e020ca790a085e835f3308fff45
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@ba726e7bca0b08b125ccc6f93c233749e1213c17
         with:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'dev-app'

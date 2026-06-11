@@ -1,19 +1,31 @@
-import {Component, computed, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  DebugElement,
+  signal,
+  untracked,
+  viewChild,
+  afterRenderEffect,
+} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer} from '../combobox';
+import {Combobox} from './combobox';
+import {ComboboxPopup} from './combobox-popup';
+import {ComboboxWidget} from './combobox-widget';
+
 import {Listbox, Option} from '../listbox';
 import {runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';
 import {NgTemplateOutlet} from '@angular/common';
+import {Grid, GridRow, GridCell, GridCellWidget} from '../grid';
 
 describe('Combobox', () => {
   describe('with Listbox', () => {
     let fixture: ComponentFixture<ComboboxListboxExample>;
     let inputElement: HTMLInputElement;
 
-    const keydown = (key: string, modifierKeys: {} = {}) => {
-      focus();
+    const keydown = async (key: string, modifierKeys: {} = {}) => {
+      await focus();
       inputElement.dispatchEvent(
         new KeyboardEvent('keydown', {
           key,
@@ -21,117 +33,99 @@ describe('Combobox', () => {
           ...modifierKeys,
         }),
       );
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const input = (value: string) => {
-      focus();
+    const input = async (value: string) => {
+      await focus();
       inputElement.value = value;
       inputElement.dispatchEvent(new Event('input', {bubbles: true}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
-      focus();
+    const click = async (element: HTMLElement, eventInit?: PointerEventInit) => {
+      await focus();
       element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const focus = () => {
+    const focus = async () => {
       inputElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const blur = (relatedTarget?: EventTarget) => {
+    const blur = async (relatedTarget?: EventTarget) => {
       inputElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const up = (modifierKeys?: {}) => keydown('ArrowUp', modifierKeys);
-    const down = (modifierKeys?: {}) => keydown('ArrowDown', modifierKeys);
-    const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
-    const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
+    const up = async (modifierKeys?: {}) => await keydown('ArrowUp', modifierKeys);
+    const down = async (modifierKeys?: {}) => await keydown('ArrowDown', modifierKeys);
+    const enter = async (modifierKeys?: {}) => await keydown('Enter', modifierKeys);
+    const escape = async (modifierKeys?: {}) => await keydown('Escape', modifierKeys);
 
-    function setupCombobox(
-      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
+    async function setupCombobox(
+      componentType: any = ComboboxListboxExample,
+      opts: {readonly?: boolean} = {},
     ) {
-      fixture = TestBed.createComponent(ComboboxListboxExample);
+      fixture = TestBed.createComponent(componentType);
       const testComponent = fixture.componentInstance;
 
-      if (opts.filterMode) {
-        testComponent.filterMode.set(opts.filterMode);
-      }
       if (opts.readonly) {
         testComponent.readonly.set(true);
       }
 
-      fixture.detectChanges();
+      await fixture.whenStable();
       defineTestVariables();
     }
 
     function defineTestVariables() {
-      const inputDebugElement = fixture.debugElement.query(By.directive(ComboboxInput));
+      const inputDebugElement = fixture.debugElement.query(By.directive(Combobox));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
     }
 
     function getOption(text: string): HTMLElement | null {
-      const options = fixture.debugElement
-        .queryAll(By.directive(Option))
-        .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+      const options = Array.from(document.querySelectorAll('[ngoption]')) as HTMLElement[];
       return options.find(option => option.textContent?.trim() === text) || null;
     }
 
     function getOptions(): HTMLElement[] {
-      return fixture.debugElement
-        .queryAll(By.directive(Option))
-        .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+      return Array.from(document.querySelectorAll('[ngoption]')) as HTMLElement[];
     }
 
     afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
 
     describe('ARIA attributes and roles', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
       it('should have the combobox role on the input', () => {
         expect(inputElement.getAttribute('role')).toBe('combobox');
       });
 
-      it('should have aria-haspopup set to listbox', () => {
-        focus();
+      it('should have aria-haspopup set to listbox', async () => {
+        await focus();
         expect(inputElement.getAttribute('aria-haspopup')).toBe('listbox');
       });
 
-      it('should set aria-controls to the listbox id', () => {
-        focus();
+      it('should set aria-controls to the listbox id', async () => {
+        await down(); // Focus on Alabama
         const listbox = fixture.debugElement.query(By.directive(Listbox)).nativeElement;
         expect(inputElement.getAttribute('aria-controls')).toBe(listbox.id);
       });
 
-      it('should set aria-autocomplete to list for manual mode', () => {
-        expect(inputElement.getAttribute('aria-autocomplete')).toBe('list');
-      });
-
-      it('should set aria-autocomplete to list for auto-select mode', () => {
-        fixture.componentInstance.filterMode.set('auto-select');
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-autocomplete')).toBe('list');
-      });
-
-      it('should set aria-autocomplete to both for highlight mode', () => {
-        fixture.componentInstance.filterMode.set('highlight');
-        fixture.detectChanges();
-        expect(inputElement.getAttribute('aria-autocomplete')).toBe('both');
-      });
-
-      it('should set aria-multiselectable to false on the listbox', () => {
-        focus();
+      it('should set aria-multiselectable to false on the listbox', async () => {
+        await down(); // Focus on Alabama
         const listbox = fixture.debugElement.query(By.directive(Listbox)).nativeElement;
         expect(listbox.getAttribute('aria-multiselectable')).toBe('false');
       });
 
-      it('should set aria-selected on the selected option', () => {
-        down();
-        enter();
+      it('should set aria-selected on the selected option', async () => {
+        await down(); // Focus on Alabama
+        expect(getOption('Alabama')!.getAttribute('aria-selected')).toBe('false');
+        await enter(); // Select Alabama
+
+        await down(); // Reopen popup and focus on Alabama
+
         expect(getOption('Alabama')!.getAttribute('aria-selected')).toBe('true');
       });
 
@@ -139,10 +133,10 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should toggle aria-expanded when opening and closing', () => {
-        down();
+      it('should toggle aria-expanded when opening and closing', async () => {
+        await down();
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        escape();
+        await escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
@@ -150,56 +144,58 @@ describe('Combobox', () => {
         expect(inputElement.hasAttribute('aria-activedescendant')).toBe(false);
       });
 
-      it('should set aria-activedescendant to the active option id', () => {
-        down();
+      it('should set aria-activedescendant to the active option id', async () => {
+        await down();
         const option = getOption('Alabama')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(option.id);
       });
     });
 
     describe('Navigation', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
-      it('should navigate to the first item on ArrowDown', () => {
-        down();
+      it('should navigate to the first item on ArrowDown', async () => {
+        await down();
         const options = getOptions();
+
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
-      it('should navigate to the last item on ArrowUp', () => {
-        up();
+      it('should navigate to the last item on ArrowUp', async () => {
+        await down(); // Opens the focus on Alabama
+        await up();
         const options = getOptions();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
         );
       });
 
-      it('should navigate to the next item on ArrowDown when open', () => {
-        down();
-        down();
+      it('should navigate to the next item on ArrowDown when open', async () => {
+        await down(); // Open popup
+        await down(); // Move to next item
         const options = getOptions();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
       });
 
-      it('should navigate to the previous item on ArrowUp when open', () => {
-        down();
-        down();
-        up();
+      it('should navigate to the previous item on ArrowUp when open', async () => {
+        await down(); // Open
+        await down(); // Move to next item
+        await up(); // Move back to first item
         const options = getOptions();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
-      it('should navigate to the first item on Home when open', () => {
-        down();
-        down();
-        keydown('Home');
+      it('should navigate to the first item on Home when open', async () => {
+        await down(); // Open
+        await down(); // Move to next item
+        await keydown('Home');
         const options = getOptions();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[0].id);
       });
 
-      it('should navigate to the last item on End when open', () => {
-        down();
-        keydown('End');
+      it('should navigate to the last item on End when open', async () => {
+        await down(); // Open
+        await keydown('End');
         const options = getOptions();
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(
           options[options.length - 1].id,
@@ -208,265 +204,299 @@ describe('Combobox', () => {
     });
 
     describe('Expansion', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
-      it('should open on ArrowDown', () => {
-        focus();
-        keydown('ArrowDown');
+      it('should open on ArrowDown', async () => {
+        await focus();
+        await keydown('ArrowDown');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should open on ArrowUp', () => {
-        focus();
-        keydown('ArrowUp');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
-      it('should close on Escape', () => {
-        down();
-        escape();
+      it('should close on Escape', async () => {
+        await down();
+        await escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should close on focusout', () => {
-        focus();
-        blur();
+      it('should close on focusout', async () => {
+        await focus();
+        await blur();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should not close on focusout if focus moves to an element inside the container', () => {
-        down();
-        blur(getOption('Alabama')!);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
+      it('should close on escape and maintain the current input value', async () => {
+        await setupCombobox(ComboboxListboxHighlightExample);
 
-      it('should close then clear the completion string', () => {
-        fixture.componentInstance.filterMode.set('highlight');
-        focus();
-        input('Ala');
+        await down(); // Use await down() instead of await focus()
+        await input('Ala');
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        escape();
+
+        await escape();
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.selectionEnd).toBe(7);
         expect(inputElement.selectionStart).toBe(3);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
-        escape();
-        expect(inputElement.value).toBe(''); // clear input
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should close on enter', () => {
-        down();
-        enter();
+      it('should close on enter', async () => {
+        await down();
+        await enter();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should close on click to select an item', () => {
-        down();
+      it('should close on click to select an item', async () => {
+        await down();
         const fruitItem = getOption('Alabama')!;
-        click(fruitItem);
+        await click(fruitItem);
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
     });
-
     describe('Selection', () => {
-      describe('when filterMode is "manual"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'manual'}));
+      describe('with manual filtering', () => {
+        beforeEach(async () => await setupCombobox(ComboboxListboxExample));
 
-        it('should select and commit on click', () => {
-          click(inputElement);
+        it('should select and commit on click', async () => {
+          await down(); // Use await down() to open
+
           const options = getOptions();
-          click(options[0]);
-          fixture.detectChanges();
+          await click(options[0]);
 
           expect(fixture.componentInstance.value()).toEqual(['Alabama']);
           expect(inputElement.value).toBe('Alabama');
         });
 
-        it('should select and commit to input on Enter', () => {
-          focus();
-          down();
-          enter();
+        it('should select and commit to input on Enter', async () => {
+          await focus();
+          await down();
+
+          await enter();
 
           expect(fixture.componentInstance.value()).toEqual(['Alabama']);
           expect(inputElement.value).toBe('Alabama');
         });
 
-        it('should not select on navigation', () => {
-          down();
-          down();
+        it('should not select on navigation', async () => {
+          await down();
+          await down();
 
           expect(fixture.componentInstance.value()).toEqual([]);
         });
 
-        it('should select on focusout if the input text exactly matches an item', () => {
-          focus();
-          input('Alabama');
-          blur();
+        it('should select on focusout if the input text exactly matches an item', async () => {
+          await focus();
+          await input('Alabama');
+          await blur();
 
           expect(fixture.componentInstance.value()).toEqual(['Alabama']);
         });
 
-        it('should not select on focusout if the input text does not match an item', () => {
-          focus();
-          input('Appl');
-          blur();
+        it('should not select on focusout if the input text does not match an item', async () => {
+          await focus();
+          await input('Appl');
+          await blur();
 
           expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
 
-      describe('when filterMode is "auto-select"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'auto-select'}));
+      describe('with auto-select behavior', () => {
+        beforeEach(async () => await setupCombobox(ComboboxListboxAutoSelectExample));
 
-        it('should select and commit on click', () => {
-          click(inputElement);
+        it('should select and commit on click', async () => {
+          await down(); // Use await down() to open
+
           const options = getOptions();
-          click(options[1]);
-          fixture.detectChanges();
+          await click(options[1]);
 
           expect(fixture.componentInstance.value()).toEqual(['Alaska']);
           expect(inputElement.value).toBe('Alaska');
         });
 
-        it('should select and commit on Enter', () => {
-          down();
-          down();
-          enter();
+        it('should select and commit on Enter', async () => {
+          await down();
+          await down();
+          await enter();
 
           expect(fixture.componentInstance.value()).toEqual(['Alaska']);
           expect(inputElement.value).toBe('Alaska');
         });
 
-        it('should select on navigation', () => {
-          down();
+        it('should select on navigation in auto-select', async () => {
+          await down();
+
           expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
-          down();
+          await down();
+
           expect(fixture.componentInstance.value()).toEqual(['Alaska']);
 
-          down();
+          await down();
+
           expect(fixture.componentInstance.value()).toEqual(['Arizona']);
         });
-
-        it('should select the first option on input', () => {
-          focus();
-          input('W');
+        it('should select the first option on input', async () => {
+          await focus();
+          await input('W');
 
           expect(fixture.componentInstance.value()).toEqual(['Washington']);
         });
 
-        it('should commit the selected option on focusout', () => {
-          focus();
-          input('G');
-          blur();
+        it('should commit the selected option on focusout', async () => {
+          await focus();
+          await input('G');
+          await blur();
 
           expect(inputElement.value).toBe('Georgia');
           expect(fixture.componentInstance.value()).toEqual(['Georgia']);
         });
       });
 
-      describe('when filterMode is "highlight"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'highlight'}));
+      describe('with highlight behavior', () => {
+        beforeEach(async () => await setupCombobox(ComboboxListboxHighlightExample));
 
-        it('should select and commit on click', () => {
-          click(inputElement);
+        it('should select and commit on click', async () => {
+          await down(); // Use await down() to open
+
           const options = getOptions();
-          click(options[2]);
-          fixture.detectChanges();
+          await click(options[2]);
 
           expect(fixture.componentInstance.value()).toEqual(['Arizona']);
           expect(inputElement.value).toBe('Arizona');
         });
 
-        it('should select and commit on Enter', () => {
-          down();
-          down();
-          down();
-          enter();
+        it('should select and commit on Enter', async () => {
+          await down();
+
+          await down();
+          await down();
+          await enter();
 
           expect(fixture.componentInstance.value()).toEqual(['Arizona']);
           expect(inputElement.value).toBe('Arizona');
         });
 
-        it('should select on navigation', () => {
-          down();
+        it('should select on navigation', async () => {
+          await down();
+
+          // Should auto-select the first option on open
           expect(fixture.componentInstance.value()).toEqual(['Alabama']);
 
-          down();
+          await down();
+
+          // Should update selection on navigation
           expect(fixture.componentInstance.value()).toEqual(['Alaska']);
         });
 
-        it('should update input value on navigation', () => {
-          down();
+        it('should update input value on navigation', async () => {
+          await down();
+
           expect(inputElement.value).toBe('Alabama');
 
-          down();
+          await down();
+
           expect(inputElement.value).toBe('Alaska');
         });
 
-        it('should select the first option on input', () => {
-          focus();
-          input('Cali');
+        it('should select the first option on input', async () => {
+          await down(); // Use await down() instead of await focus()
+
+          await input('Cali');
 
           expect(fixture.componentInstance.value()).toEqual(['California']);
         });
 
-        it('should insert a highlighted completion string on input', () => {
-          focus();
-          input('A');
+        it('should insert a highlighted completion string on input', async () => {
+          await down(); // Use await down() instead of await focus()
+
+          await input('A');
 
           expect(inputElement.value).toBe('Alabama');
           expect(inputElement.selectionStart).toBe(1);
           expect(inputElement.selectionEnd).toBe(7);
         });
 
-        it('should not insert a completion string on backspace', () => {
-          focus();
-          input('New');
+        it('should not insert a completion string on backspace', async () => {
+          await down(); // Use await down() instead of await focus()
+
+          await input('New');
 
           expect(inputElement.value).toBe('New Hampshire');
           expect(inputElement.selectionStart).toBe(3);
           expect(inputElement.selectionEnd).toBe(13);
         });
 
-        it('should insert a completion string even if the items are not changed', () => {
-          focus();
-          input('New');
+        it('should insert a completion string even if the items are not changed', async () => {
+          await down(); // Use await down() instead of await focus()
 
-          input('New ');
+          await input('New');
+          await fixture.whenStable();
+          await fixture.whenStable();
+
+          await input('New ');
+
           expect(inputElement.value).toBe('New Hampshire');
           expect(inputElement.selectionStart).toBe(4);
           expect(inputElement.selectionEnd).toBe(13);
         });
 
-        it('should commit the selected option on focusout', () => {
-          focus();
-          input('Cali');
-          blur();
+        it('should commit the selected option on focusout', async () => {
+          await down(); // Use await down() instead of await focus()
+
+          await input('Cali');
+
+          await blur();
 
           expect(inputElement.value).toBe('California');
           expect(fixture.componentInstance.value()).toEqual(['California']);
         });
+
+        it('should resume inserting completion strings on navigation after a backspace deletion', async () => {
+          await down(); // Open popup
+
+          // 1. Type 'A', completion should pop up 'Alabama'
+          await input('A');
+          expect(inputElement.value).toBe('Alabama');
+
+          // 2. Simulate Backspace deletion (dispatch InputEvent with deleteContentBackward)
+          inputElement.value = '';
+          inputElement.dispatchEvent(
+            new InputEvent('input', {
+              bubbles: true,
+              inputType: 'deleteContentBackward',
+            }),
+          );
+          await fixture.whenStable();
+
+          // Confirm no completion gets inserted during deletion
+          expect(inputElement.value).toBe('');
+
+          // 3. Press ArrowDown key to navigate to the next option (Alaska)
+          await down();
+
+          // Active descendant navigation resets `isDeleting`, so highlight/completion should successfully populate the current active match!
+          const options = getOptions();
+          expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
+          expect(inputElement.value).toBe('Alaska');
+        });
       });
     });
 
-    // TODO(wagnermaciel): Add unit tests for disabled options.
-
     describe('Filtering', () => {
-      it('should lazily render options', () => {
-        setupCombobox();
+      it('should lazily render options', async () => {
+        await setupCombobox();
         expect(getOptions().length).toBe(0);
-        focus();
+
+        await down();
+
         expect(getOptions().length).toBe(50);
       });
 
-      it('should filter the options based on the input value', () => {
-        setupCombobox();
-        focus();
-        input('New');
+      it('should filter the options based on the input value', async () => {
+        await setupCombobox();
+        await focus();
+        await input('New');
 
         const options = getOptions();
         expect(options.length).toBe(4);
@@ -476,91 +506,140 @@ describe('Combobox', () => {
         expect(options[3].textContent?.trim()).toBe('New York');
       });
 
-      it('should show no options if nothing matches', () => {
-        setupCombobox();
-        focus();
-        input('xyz');
+      it('should show no options if nothing matches', async () => {
+        await setupCombobox();
+        await focus();
+        await input('xyz');
         const options = getOptions();
         expect(options.length).toBe(0);
       });
 
-      it('should show all options when the input is cleared', () => {
-        setupCombobox();
-        focus();
-        input('Alabama');
+      it('should show all options when the input is cleared', async () => {
+        await setupCombobox();
+        await focus();
+        await input('Alabama');
         expect(getOptions().length).toBe(1);
 
-        input('');
+        await input('');
         expect(getOptions().length).toBe(50);
-      });
-
-      it('should determine the highlighted state on open', () => {
-        setupCombobox({filterMode: 'highlight'});
-        focus();
-        input('N');
-        expect(inputElement.value).toBe('Nebraska');
-        expect(inputElement.selectionEnd).toBe(8);
-        expect(inputElement.selectionStart).toBe(1);
-        expect(getOptions().length).toBe(8);
-
-        escape(); // close
-        inputElement.selectionStart = 2; // Change highlighting
-        down(); // open
-
-        expect(inputElement.value).toBe('Nebraska');
-        expect(inputElement.selectionEnd).toBe(8);
-        expect(inputElement.selectionStart).toBe(2);
-        expect(getOptions().length).toBe(6);
-
-        escape(); // close
-        inputElement.selectionStart = 3; // Change highlighting
-        down(); // open
-
-        expect(getOptions().length).toBe(1);
       });
     });
 
     describe('Readonly', () => {
-      beforeEach(() => setupCombobox({readonly: true}));
+      beforeEach(async () => await setupCombobox(ComboboxListboxExample, {readonly: true}));
 
-      it('should close on selection', () => {
-        focus();
-        down();
-        click(getOption('Alabama')!);
+      it('should close on selection', async () => {
+        await focus();
+        await down();
+        await click(getOption('Alabama')!);
         expect(inputElement.value).toBe('Alabama');
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should close on escape', () => {
-        focus();
-        down();
+      it('should close on escape', async () => {
+        await focus();
+        await down();
         expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        escape();
+        await escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
-    // describe('with programmatic value changes', () => {
-    //   // TODO(wagnermaciel): Figure out if there's a way to automatically update the
-    //   // input value when the popup value signal is updated programmatically.
-    //   it('should update the selected item when the value is set programmatically', () => {
-    //     setupCombobox();
-    //     focus();
-    //     fixture.componentInstance.value.set(['Banana']);
-    //     fixture.detectChanges();
-    //     expect(fixture.componentInstance.value()).toEqual(['Banana']);
-    //     const bananaOption = getOption('Banana')!;
-    //     expect(bananaOption.getAttribute('aria-selected')).toBe('true');
-    //   });
-    // });
+    describe('Always Expanded', () => {
+      beforeEach(async () => await setupCombobox());
+
+      it('should not close on escape when alwaysExpanded is true', async () => {
+        fixture.componentInstance.alwaysExpanded.set(true);
+        await fixture.whenStable();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+
+        await escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should automatically report as expanded when alwaysExpanded is true', async () => {
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+        fixture.componentInstance.alwaysExpanded.set(true);
+        await fixture.whenStable();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+    });
+
+    describe('Disabled', () => {
+      beforeEach(async () => await setupCombobox());
+
+      it('should keep the input focusable by default when disabled', async () => {
+        fixture.componentInstance.disabled.set(true);
+        await fixture.whenStable();
+
+        expect(inputElement.disabled).toBe(false);
+        expect(inputElement.getAttribute('disabled')).toBeNull();
+        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should make the input read-only when disabled and softDisabled is true', async () => {
+        fixture.componentInstance.disabled.set(true);
+        await fixture.whenStable();
+
+        expect(inputElement.getAttribute('readonly')).toBe('');
+      });
+
+      it('should block interactions when disabled', async () => {
+        fixture.componentInstance.disabled.set(true);
+        await fixture.whenStable();
+
+        await focus();
+        await keydown('ArrowDown');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should make the input unfocusable when softDisabled is false', async () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.softDisabled.set(false);
+        await fixture.whenStable();
+
+        expect(inputElement.disabled).toBe(true);
+        expect(inputElement.getAttribute('disabled')).toBe('');
+        expect(inputElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should respect user-defined tabindex when softDisabled is true', async () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.tabIndex.set(0);
+        await fixture.whenStable();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should respect user-defined tabindex when not disabled', async () => {
+        fixture.componentInstance.tabIndex.set(0);
+        await fixture.whenStable();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should default to tabindex 0 when not disabled', async () => {
+        await fixture.whenStable();
+        expect(inputElement.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should force tabindex to -1 when hard-disabled, ignoring user-defined tabindex', async () => {
+        fixture.componentInstance.disabled.set(true);
+        fixture.componentInstance.softDisabled.set(false);
+        fixture.componentInstance.tabIndex.set(0);
+        await fixture.whenStable();
+
+        expect(inputElement.getAttribute('tabindex')).toBe('-1');
+      });
+    });
   });
 
   describe('with Tree', () => {
     let fixture: ComponentFixture<ComboboxTreeExample>;
     let inputElement: HTMLInputElement;
 
-    const keydown = (key: string, modifierKeys: {} = {}) => {
-      focus();
+    const keydown = async (key: string, modifierKeys: {} = {}) => {
+      await focus();
       inputElement.dispatchEvent(
         new KeyboardEvent('keydown', {
           key,
@@ -568,75 +647,65 @@ describe('Combobox', () => {
           ...modifierKeys,
         }),
       );
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const input = (value: string, opts: {backspace?: boolean} = {}) => {
-      focus();
+    const input = async (value: string) => {
+      await focus();
       inputElement.value = value;
-      const event = opts.backspace
-        ? new InputEvent('input', {inputType: 'deleteContentBackward', bubbles: true})
-        : new InputEvent('input', {bubbles: true});
-      inputElement.dispatchEvent(event);
-      fixture.detectChanges();
+      inputElement.dispatchEvent(new Event('input', {bubbles: true}));
+      await fixture.whenStable();
     };
 
-    const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
-      focus();
+    const click = async (element: HTMLElement, eventInit?: PointerEventInit) => {
+      await focus();
       element.dispatchEvent(new PointerEvent('click', {bubbles: true, ...eventInit}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const focus = () => {
+    const focus = async () => {
       inputElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const blur = (relatedTarget?: EventTarget) => {
+    const blur = async (relatedTarget?: EventTarget) => {
       inputElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
-      fixture.detectChanges();
+      await fixture.whenStable();
     };
 
-    const up = (modifierKeys?: {}) => keydown('ArrowUp', modifierKeys);
-    const down = (modifierKeys?: {}) => keydown('ArrowDown', modifierKeys);
-    const left = (modifierKeys?: {}) => keydown('ArrowLeft', modifierKeys);
-    const right = (modifierKeys?: {}) => keydown('ArrowRight', modifierKeys);
-    const enter = (modifierKeys?: {}) => keydown('Enter', modifierKeys);
-    const escape = (modifierKeys?: {}) => keydown('Escape', modifierKeys);
+    const up = async (modifierKeys?: {}) => await keydown('ArrowUp', modifierKeys);
+    const down = async (modifierKeys?: {}) => await keydown('ArrowDown', modifierKeys);
+    const left = async (modifierKeys?: {}) => await keydown('ArrowLeft', modifierKeys);
+    const right = async (modifierKeys?: {}) => await keydown('ArrowRight', modifierKeys);
+    const enter = async (modifierKeys?: {}) => await keydown('Enter', modifierKeys);
+    const escape = async (modifierKeys?: {}) => await keydown('Escape', modifierKeys);
 
-    function setupCombobox(
-      opts: {readonly?: boolean; filterMode?: 'manual' | 'auto-select' | 'highlight'} = {},
-    ) {
+    async function setupCombobox(opts: {readonly?: boolean} = {}) {
       fixture = TestBed.createComponent(ComboboxTreeExample);
       const testComponent = fixture.componentInstance;
 
-      if (opts.filterMode) {
-        testComponent.filterMode.set(opts.filterMode);
-      }
       if (opts.readonly) {
         testComponent.readonly.set(true);
       }
 
-      fixture.detectChanges();
+      await fixture.whenStable();
       defineTestVariables();
     }
 
     function defineTestVariables() {
-      const inputDebugElement = fixture.debugElement.query(By.directive(ComboboxInput));
+      const inputDebugElement = fixture.debugElement.query(By.directive(Combobox));
       inputElement = inputDebugElement.nativeElement as HTMLInputElement;
     }
 
     function getTreeItem(text: string): HTMLElement | null {
-      const items = fixture.debugElement
-        .queryAll(By.directive(TreeItem))
-        .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
-      return items.find(item => item.textContent?.trim() === text) || null;
+      const items = Array.from(
+        fixture.nativeElement.querySelectorAll('[ngTreeItem]'),
+      ) as HTMLElement[];
+      return items.find(item => item.textContent?.trim().startsWith(text)) || null;
     }
 
     function getTreeItems(): HTMLElement[] {
-      return fixture.debugElement
-        .queryAll(By.directive(TreeItem))
-        .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+      return Array.from(fixture.nativeElement.querySelectorAll('[ngTreeItem]')) as HTMLElement[];
     }
 
     function getVisibleTreeItems(): HTMLElement[] {
@@ -653,379 +722,264 @@ describe('Combobox', () => {
         });
     }
 
-    afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
+    afterEach(async () => {
+      await runAccessibilityChecks(fixture.nativeElement);
+    });
 
     describe('ARIA attributes and roles', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
-      it('should have aria-haspopup set to tree', () => {
-        focus();
+      it('should have aria-haspopup set to tree', async () => {
+        await focus();
         expect(inputElement.getAttribute('aria-haspopup')).toBe('tree');
       });
 
-      it('should set aria-controls to the tree id', () => {
-        down();
+      it('should set aria-controls to the tree id', async () => {
+        await down();
         const tree = fixture.debugElement.query(By.directive(Tree)).nativeElement;
         expect(inputElement.getAttribute('aria-controls')).toBe(tree.id);
       });
 
-      it('should set aria-selected on the selected tree item', () => {
-        down();
-        enter();
-
+      it('should set aria-selected on the selected tree item', async () => {
+        await down();
         const item = getTreeItem('Winter')!;
+        await enter();
         expect(item.getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should toggle aria-expanded on parent nodes', () => {
-        down();
+      it('should toggle aria-expanded on parent nodes', async () => {
+        await down();
         const item = getTreeItem('Winter')!;
         expect(item.getAttribute('aria-expanded')).toBe('false');
 
-        right();
+        await right(); // Opens Winter
         expect(item.getAttribute('aria-expanded')).toBe('true');
 
-        left();
+        await left(); // Closes Winter
         expect(item.getAttribute('aria-expanded')).toBe('false');
       });
     });
 
     describe('Navigation', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
-      it('should navigate to the first focusable item on ArrowDown', () => {
-        down();
+      it('should navigate to the first focusable item on ArrowDown', async () => {
+        await down(); // Winter
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should navigate to the last focusable item on ArrowUp', () => {
-        up();
+      it('should navigate to the last focusable item on ArrowUp', async () => {
+        await down(); // Winter
+        await up(); // Fall
         const item = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should navigate to the next focusable item on ArrowDown when open', () => {
-        down();
-        down();
+      it('should navigate to the next focusable item on ArrowDown when open', async () => {
+        await down(); // Winter
+        await down(); // Spring
         const item = getTreeItem('Spring')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should navigate to the previous item on ArrowUp when open', () => {
-        up();
-        up();
+      it('should navigate to the previous item on ArrowUp when open', async () => {
+        await down(); // Winter
+        await down(); // Spring
+        await down(); // Summer
+        await down(); // Fall
+        await up(); // Summer
         const item = getTreeItem('Summer')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should expand a closed node on ArrowRight', () => {
-        down();
+      it('should expand a closed node on ArrowRight', async () => {
+        await down(); // Winter
         expect(getVisibleTreeItems().length).toBe(4);
-        right();
-        fixture.detectChanges();
+        await right(); // Expand Winter
         expect(getVisibleTreeItems().length).toBe(7);
         expect(getTreeItem('January')).not.toBeNull();
       });
 
-      it('should navigate to the next item on ArrowRight when already expanded', () => {
-        down();
-        right();
-        right();
+      it('should navigate to the next item on ArrowRight when already expanded', async () => {
+        await down(); // Winter
+        await right(); // Expand Winter
+        await right(); // December
+
         const item = getTreeItem('December')!;
+
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should collapse an open node on ArrowLeft', () => {
-        down();
-        right();
-        fixture.detectChanges();
+      it('should collapse an open node on ArrowLeft', async () => {
+        await down(); // Winter
+        await right(); // Winter Expanded
         expect(getVisibleTreeItems().length).toBe(7);
-        left();
-        fixture.detectChanges();
+        await left(); // Winter Collapsed
         expect(getVisibleTreeItems().length).toBe(4);
+
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should navigate to the parent node on ArrowLeft when in a child node', () => {
-        down();
-        right();
-        right();
+      it('should navigate to the parent node on ArrowLeft when in a child node', async () => {
+        await down(); // Winter
+        await right(); // Expand Winter
+        await right(); // December
+
         const item1 = getTreeItem('December')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item1.id);
-        left();
+
+        await left();
+
         const item2 = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item2.id);
       });
 
-      it('should navigate to the first focusable item on Home when open', () => {
-        up();
-        keydown('Home');
+      it('should navigate to the first focusable item on Home when open', async () => {
+        await down();
+        await down();
+        await keydown('Home');
+
         const item = getTreeItem('Winter')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(item.id);
       });
 
-      it('should navigate to the last focusable item on End when open', () => {
-        down();
-        keydown('End');
+      it('should navigate to the last focusable item on End when open', async () => {
+        await down();
+        await down();
+        await keydown('End');
+
         const grainsItem = getTreeItem('Fall')!;
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(grainsItem.id);
       });
     });
 
-    describe('Selection', () => {
-      describe('when filterMode is "manual"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'manual'}));
+    describe('Expansion', () => {
+      beforeEach(async () => await setupCombobox());
 
-        it('should select and commit on click', () => {
-          click(inputElement);
+      it('should open on ArrowDown', async () => {
+        await focus();
+        await keydown('ArrowDown');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should close on Escape', async () => {
+        await down();
+        await escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on focusout', async () => {
+        await focus();
+        await blur();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on escape', async () => {
+        await focus();
+        await input('Mar');
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        await escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on enter', async () => {
+        await down();
+        await enter();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on click to select an item', async () => {
+        await down();
+        await click(getTreeItem('Spring')!);
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+    });
+
+    describe('Selection', () => {
+      describe('with manual filtering', () => {
+        beforeEach(async () => await setupCombobox());
+
+        it('should select and commit on click', async () => {
+          await click(inputElement);
 
           // Iterate to the parent node and expand it so the child is visible
-          down(); // Winter
-          down(); // Spring
-          right(); // Expand Spring
-          fixture.detectChanges();
+          await down(); // Winter
+          await down(); // Spring
+          await right(); // Expand Spring
 
           const item = getTreeItem('April')!;
-          click(item);
-          fixture.detectChanges();
+          await click(item);
 
           expect(fixture.componentInstance.value()).toEqual(['April']);
           expect(inputElement.value).toBe('April');
         });
 
-        it('should select and commit to input on Enter', () => {
-          down();
-          enter();
+        it('should select and commit to input on Enter', async () => {
+          await down();
+          await enter();
 
           expect(fixture.componentInstance.value()).toEqual(['Winter']);
           expect(inputElement.value).toBe('Winter');
         });
 
-        it('should select on focusout if the input text exactly matches an item', () => {
-          focus();
-          input('November');
-          blur();
+        it('should select on focusout if the input text exactly matches an item', async () => {
+          await focus();
+          await input('November');
+          await blur();
 
           expect(fixture.componentInstance.value()).toEqual(['November']);
         });
 
-        it('should not select on navigation', () => {
-          down();
-          down();
+        it('should not select on navigation', async () => {
+          await down();
+          await down();
 
           expect(fixture.componentInstance.value()).toEqual([]);
         });
 
-        it('should not select on focusout if the input text does not match an item', () => {
-          focus();
-          input('Appl');
-          blur();
+        it('should not select on focusout if the input text does not match an item', async () => {
+          await focus();
+          await input('Appl');
+          await blur();
 
           expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
         });
       });
-
-      describe('when filterMode is "auto-select"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'auto-select'}));
-
-        it('should select and commit on click', () => {
-          click(inputElement);
-          down();
-          right();
-          const item = getTreeItem('February')!;
-          click(item);
-          fixture.detectChanges();
-
-          expect(fixture.componentInstance.value()).toEqual(['February']);
-          expect(inputElement.value).toBe('February');
-        });
-
-        it('should select and commit on Enter', () => {
-          down();
-          down();
-          enter();
-
-          expect(fixture.componentInstance.value()).toEqual(['Spring']);
-          expect(inputElement.value).toBe('Spring');
-        });
-
-        it('should select on navigation', () => {
-          down();
-          expect(fixture.componentInstance.value()).toEqual(['Winter']);
-
-          down();
-          expect(fixture.componentInstance.value()).toEqual(['Spring']);
-        });
-
-        it('should select the first option on input', () => {
-          focus();
-          input('Dec');
-          expect(fixture.componentInstance.value()).toEqual(['December']);
-        });
-
-        it('should commit the selected option on focusout', () => {
-          focus();
-          input('Jun');
-          blur();
-
-          expect(inputElement.value).toBe('June');
-          expect(fixture.componentInstance.value()).toEqual(['June']);
-        });
-      });
-
-      describe('when filterMode is "highlight"', () => {
-        beforeEach(() => setupCombobox({filterMode: 'highlight'}));
-
-        it('should select and commit on click', () => {
-          click(inputElement);
-          down();
-          right();
-          const item = getTreeItem('February')!;
-          click(item);
-          fixture.detectChanges();
-
-          expect(fixture.componentInstance.value()).toEqual(['February']);
-          expect(inputElement.value).toBe('February');
-        });
-
-        it('should select and commit on Enter', () => {
-          down();
-          down();
-          enter();
-
-          expect(fixture.componentInstance.value()).toEqual(['Spring']);
-          expect(inputElement.value).toBe('Spring');
-        });
-
-        it('should select on navigation', () => {
-          down();
-          expect(fixture.componentInstance.value()).toEqual(['Winter']);
-
-          down();
-          expect(fixture.componentInstance.value()).toEqual(['Spring']);
-        });
-
-        it('should update input value on navigation', () => {
-          down();
-          expect(inputElement.value).toBe('Winter');
-
-          down();
-          expect(inputElement.value).toBe('Spring');
-        });
-
-        it('should select the first option on input', () => {
-          focus();
-          input('Sept');
-
-          expect(fixture.componentInstance.value()).toEqual(['September']);
-        });
-
-        it('should insert a highlighted completion string on input', () => {
-          focus();
-          input('Feb');
-
-          expect(inputElement.value).toBe('February');
-          expect(inputElement.selectionStart).toBe(3);
-          expect(inputElement.selectionEnd).toBe(8);
-        });
-
-        it('should commit the selected option on focusout', () => {
-          focus();
-          input('Jan');
-          blur();
-
-          expect(inputElement.value).toBe('January');
-          expect(fixture.componentInstance.value()).toEqual(['January']);
-        });
-      });
     });
-
-    describe('Expansion', () => {
-      beforeEach(() => setupCombobox());
-
-      it('should open on ArrowDown', () => {
-        focus();
-        keydown('ArrowDown');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
-      it('should open on ArrowUp', () => {
-        focus();
-        keydown('ArrowUp');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
-      it('should close on Escape', () => {
-        down();
-        escape();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should close on focusout', () => {
-        focus();
-        blur();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should not close on focusout if focus moves to an element inside the container', () => {
-        down();
-        blur(getTreeItem('Spring')!);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-      });
-
-      it('should close then clear the completion string', () => {
-        fixture.componentInstance.filterMode.set('highlight');
-        focus();
-        input('Mar');
-        expect(inputElement.value).toBe('March');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        escape();
-        expect(inputElement.value).toBe('March');
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false'); // close
-        escape();
-        expect(inputElement.value).toBe(''); // clear input
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should close on enter', () => {
-        down();
-        enter();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-
-      it('should close on click to select an item', () => {
-        down();
-        click(getTreeItem('Spring')!);
-        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
-      });
-    });
-
-    // TODO(wagnermaciel): Add unit tests for disabled options.
 
     describe('Filtering', () => {
-      beforeEach(() => setupCombobox());
+      beforeEach(async () => await setupCombobox());
 
-      it('should lazily render options', () => {
+      it('should lazily render options', async () => {
         expect(getTreeItems().length).toBe(0);
-        focus();
+
+        await focus();
+        await down();
+        // Mutate dataSource to expand all
+        fixture.componentInstance.dataSource().forEach(node => (node.expanded = true));
+
+        // Force computed signal to re-evaluate by updating dataSource reference
+        fixture.componentInstance.dataSource.set([...fixture.componentInstance.dataSource()]);
+        await fixture.whenStable();
+
         expect(getTreeItems().length).toBe(16);
       });
 
-      it('should filter the options based on the input value', () => {
-        focus();
-        input('Summer');
+      it('should filter the options based on the input value', async () => {
+        await focus();
+        await input('Summer');
 
         let items = getVisibleTreeItems();
         expect(items.length).toBe(1);
         expect(items[0].textContent?.trim()).toBe('Summer');
       });
 
-      it('should render parents if a child matches', () => {
-        focus();
-        input('January');
+      it('should render parents if a child matches', async () => {
+        await focus();
+        await input('January');
 
         let items = getVisibleTreeItems();
         expect(items.length).toBe(2);
@@ -1033,64 +987,246 @@ describe('Combobox', () => {
         expect(items[1].textContent?.trim()).toBe('January');
       });
 
-      it('should show no options if nothing matches', () => {
-        focus();
-        input('xyz');
+      it('should show no options if nothing matches', async () => {
+        await focus();
+        await input('xyz');
         expect(getVisibleTreeItems().length).toBe(0);
       });
 
-      it('should show all options when the input is cleared', () => {
-        focus();
-        input('Winter');
+      it('should show all options when the input is cleared', async () => {
+        await focus();
+        await input('Winter');
         expect(getVisibleTreeItems().length).toBe(1);
 
-        input('', {backspace: true});
-        fixture.detectChanges();
+        await input('');
         expect(getVisibleTreeItems().length).toBe(4);
       });
 
-      it('should expand all nodes when filtering', () => {
-        focus();
+      it('should expand all nodes when filtering', async () => {
+        await focus();
+        await down();
+
         expect(getVisibleTreeItems().length).toBe(4);
 
-        input('J');
+        await input('J');
+
         expect(getTreeItem('Winter')!.getAttribute('aria-expanded')).toBe('true');
         expect(getTreeItem('Summer')!.getAttribute('aria-expanded')).toBe('true');
       });
     });
+  });
 
-    describe('with programmatic value changes', () => {
-      // TODO(wagnermaciel): Figure out if there's a way to automatically update the
-      // input value when the popup value signal is updated programmatically.
-      it('should update the selected item when the value is set programmatically', () => {
-        setupCombobox();
-        focus();
-        fixture.componentInstance.value.set(['August']);
-        fixture.detectChanges();
-        expect(fixture.componentInstance.value()).toEqual(['August']);
-        expect(getTreeItem('August')!.getAttribute('aria-selected')).toBe('true');
+  describe('with Grid', () => {
+    let fixture: ComponentFixture<ComboboxGridExample>;
+    let inputElement: HTMLInputElement;
+
+    const keydown = async (key: string, modifierKeys: {} = {}) => {
+      await focus();
+      inputElement.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          ...modifierKeys,
+        }),
+      );
+      await fixture.whenStable();
+    };
+
+    const focus = async () => {
+      inputElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+    };
+
+    const blur = async (relatedTarget?: EventTarget) => {
+      inputElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true, relatedTarget}));
+      await fixture.whenStable();
+    };
+
+    const up = async (modifierKeys?: {}) => await keydown('ArrowUp', modifierKeys);
+    const down = async (modifierKeys?: {}) => await keydown('ArrowDown', modifierKeys);
+    const left = async (modifierKeys?: {}) => await keydown('ArrowLeft', modifierKeys);
+    const right = async (modifierKeys?: {}) => await keydown('ArrowRight', modifierKeys);
+    const enter = async (modifierKeys?: {}) => await keydown('Enter', modifierKeys);
+    const escape = async (modifierKeys?: {}) => await keydown('Escape', modifierKeys);
+    const home = async (modifierKeys?: {}) => await keydown('Home', modifierKeys);
+    const end = async (modifierKeys?: {}) => await keydown('End', modifierKeys);
+
+    async function setupCombobox() {
+      fixture = TestBed.createComponent(ComboboxGridExample);
+      await fixture.whenStable();
+      const inputDebugElement = fixture.debugElement.query(By.directive(Combobox));
+      inputElement = inputDebugElement.nativeElement as HTMLInputElement;
+    }
+
+    beforeEach(async () => await setupCombobox());
+
+    describe('ARIA attributes and roles', () => {
+      beforeEach(async () => await setupCombobox());
+
+      it('should have the combobox role on the input', () => {
+        expect(inputElement.getAttribute('role')).toBe('combobox');
+      });
+
+      it('should have aria-haspopup set to grid', async () => {
+        await focus();
+        expect(inputElement.getAttribute('aria-haspopup')).toBe('grid');
+      });
+
+      it('should set aria-controls to the grid id', async () => {
+        await down();
+        const grid = fixture.debugElement.query(By.directive(Grid)).nativeElement;
+        expect(inputElement.getAttribute('aria-controls')).toBe(grid.id);
+      });
+
+      it('should toggle aria-expanded when opening and closing', async () => {
+        await down();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+        await escape();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should set aria-activedescendant to the active grid cell id', async () => {
+        await focus();
+        await down(); // Open popup
+
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
       });
     });
 
-    describe('Readonly', () => {
-      beforeEach(() => setupCombobox({readonly: true}));
+    it('should navigate up and down with grid navigation', async () => {
+      await focus();
+      await down(); // Open popup
 
-      it('should close on selection', () => {
-        focus();
-        down();
-        right();
-        right();
-        enter();
-        expect(inputElement.value).toBe('December');
+      await down(); // Navigate down to 'Bird-label'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
+
+      await up(); // Navigate back up to 'Antelope-label'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
+    });
+
+    it('should navigate left and right with grid navigation', async () => {
+      await focus();
+      await down(); // Open popup
+
+      await right(); // Move right to 'Antelope-delete'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
+
+      await left(); // Move back left to 'Antelope-label'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
+    });
+
+    it('should navigate to the start of the row on Home', async () => {
+      await focus();
+      await down(); // Open popup
+
+      await right(); // Move right to 'Antelope-delete'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
+
+      await home(); // Move back to 'Antelope-label'
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-label');
+    });
+
+    it('should navigate to the end of the row on End', async () => {
+      await focus();
+      await down(); // Open popup
+
+      await end(); // Move to end of row ('Antelope-delete')
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Antelope-delete');
+    });
+
+    it('should update aria-activedescendant with grid navigation', async () => {
+      await focus();
+      await down(); // Open popup
+
+      await down(); // Navigate down
+
+      // The active item is 'Bird' because we navigated down once more
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
+
+      await right(); // Move right to delete button
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-delete');
+
+      await down(); // Move down to next row
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Cat-delete');
+    });
+
+    it('should remove an item when delete is pressed in the delete cell', async () => {
+      await down(); // On Antelope
+      await right(); // Move right to delete button
+      await enter(); // Click delete button
+      expect(fixture.componentInstance.items()).not.toContain('Antelope');
+    });
+
+    it('should filter items and maintain selection', async () => {
+      await down(); // Antelope
+      await enter(); // Select active item
+
+      expect(fixture.componentInstance.searchString()).toBe('Antelope');
+
+      inputElement.value = '';
+      inputElement.dispatchEvent(new Event('input', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(fixture.componentInstance.searchString()).toBe('');
+
+      await down(); // Go to BirdLabel
+
+      expect(inputElement.getAttribute('aria-activedescendant')).toBe('Bird-label');
+    });
+
+    describe('Expansion', () => {
+      beforeEach(async () => await setupCombobox());
+
+      it('should close on Escape', async () => {
+        await down();
+        await escape();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should close on escape', () => {
-        focus();
-        down();
-        expect(inputElement.getAttribute('aria-expanded')).toBe('true');
-        escape();
+      it('should close on focusout', async () => {
+        await focus();
+        await blur();
         expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+
+      it('should close on enter', async () => {
+        await down();
+        await enter();
+        expect(inputElement.getAttribute('aria-expanded')).toBe('false');
+      });
+    });
+
+    describe('Selection', () => {
+      beforeEach(async () => await setupCombobox());
+
+      it('should select and commit on click', async () => {
+        await focus();
+        await down(); // Open popup
+
+        const gridCells = fixture.nativeElement.querySelectorAll('[ngGridCellWidget]');
+        gridCells[0].dispatchEvent(new PointerEvent('click', {bubbles: true}));
+        await fixture.whenStable();
+
+        expect(fixture.componentInstance.selectedItem()).toBe('Antelope');
+        expect(inputElement.value).toBe('Antelope');
+      });
+
+      it('should not select on navigation', async () => {
+        await focus();
+        await down(); // Open popup
+
+        await down(); // Move row down
+
+        expect(fixture.componentInstance.selectedItem()).toBeNull();
       });
     });
   });
@@ -1098,20 +1234,24 @@ describe('Combobox', () => {
 
 @Component({
   template: `
-<div
-  ngCombobox
-  #combobox="ngCombobox"
-  [readonly]="readonly()"
-  [filterMode]="filterMode()"
->
+<div>
   <input
-    ngComboboxInput
+    ngCombobox
+    #combobox="ngCombobox"
     placeholder="Search..."
     [(value)]="searchString"
+    [(expanded)]="popupExpanded"
+    [readonly]="readonly()"
+    [disabled]="disabled()"
+    [softDisabled]="softDisabled()"
+    [alwaysExpanded]="alwaysExpanded()"
+    [tabindex]="tabIndex()"
+    (focusout)="onBlur()"
+    (click)="popupExpanded.set(true)"
   />
 
-  <ng-template ngComboboxPopupContainer>
-    <div ngListbox [(value)]="value">
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div
           ngOption
@@ -1125,37 +1265,88 @@ describe('Combobox', () => {
   </ng-template>
 </div>
   `,
-  imports: [Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer, Listbox, Option],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
 })
 class ComboboxListboxExample {
   readonly = signal(false);
+  disabled = signal(false);
+  softDisabled = signal(true);
+  alwaysExpanded = signal(false);
+  tabIndex = signal<number | undefined>(undefined);
+  popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
   );
+
+  onCommit() {
+    const val = this.value();
+    if (val.length > 0) {
+      this.searchString.set(val[0]);
+    }
+    this.popupExpanded.set(false);
+  }
+
+  onBlur() {
+    const search = this.searchString().trim().toLowerCase();
+    if (!search) return;
+
+    const match = states.find(state => state.toLowerCase().startsWith(search));
+    if (match) {
+      this.value.set([match]);
+      this.searchString.set(match);
+    }
+  }
+}
+
+interface TreeNode {
+  name: string;
+  children?: TreeNode[];
+  expanded?: boolean;
+}
+
+function getTreeNodes(): TreeNode[] {
+  return [
+    {
+      name: 'Winter',
+      expanded: false,
+      children: [{name: 'December'}, {name: 'January'}, {name: 'February'}],
+    },
+    {
+      name: 'Spring',
+      expanded: false,
+      children: [{name: 'March'}, {name: 'April'}, {name: 'May'}],
+    },
+    {
+      name: 'Summer',
+      expanded: false,
+      children: [{name: 'June'}, {name: 'July'}, {name: 'August'}],
+    },
+    {
+      name: 'Fall',
+      expanded: false,
+      children: [{name: 'September'}, {name: 'October'}, {name: 'November'}],
+    },
+  ];
 }
 
 @Component({
   template: `
-<div
-  ngCombobox
-  #combobox="ngCombobox"
-  [readonly]="readonly()"
-  [firstMatch]="firstMatch()"
-  [filterMode]="filterMode()"
->
+<div>
   <input
-    ngComboboxInput
+    ngCombobox
+    #combobox="ngCombobox"
     placeholder="Search..."
     [(value)]="searchString"
+    [(expanded)]="popupExpanded"
+    [disabled]="readonly()"
+    (focusout)="onBlur()"
   />
 
-  <ng-template ngComboboxPopupContainer>
-    <ul ngTree #tree="ngTree" [(value)]="value">
+  <ng-template ngComboboxPopup [combobox]="combobox" popupType="tree">
+    <ul ngComboboxWidget ngTree #tree="ngTree" id="tree" focusMode="activedescendant" [tabIndex]="-1" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="tree.activeDescendant()">
       <ng-template
         [ngTemplateOutlet]="treeNodes"
         [ngTemplateOutletContext]="{nodes: nodes(), parent: tree}"
@@ -1170,6 +1361,7 @@ class ComboboxListboxExample {
       [parent]="parent"
       [value]="node.name"
       [label]="node.name"
+      [(expanded)]="node.expanded"
       #treeItem="ngTreeItem"
     >
       {{ node.name }}
@@ -1190,21 +1382,42 @@ class ComboboxListboxExample {
   `,
   imports: [
     Combobox,
-    ComboboxInput,
-    ComboboxPopupContainer,
+    ComboboxPopup,
+    ComboboxWidget,
     Tree,
     TreeItem,
     TreeItemGroup,
     NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComboboxTreeExample {
+  readonly tree = viewChild(Tree);
+
   readonly = signal(false);
+  popupExpanded = signal(false);
   searchString = signal('');
   value = signal<string[]>([]);
-  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
-  filterMode = signal<'manual' | 'auto-select' | 'highlight'>('manual');
+  readonly dataSource = signal<TreeNode[]>(getTreeNodes());
+  nodes = computed(() => {
+    const res = this.filterTreeNodes(this.dataSource());
+    return res;
+  });
+
+  onCommit() {
+    const selected = this.value();
+    if (selected.length > 0) {
+      this.searchString.set(selected[0]);
+    }
+    this.popupExpanded.set(false);
+  }
+
+  onBlur() {
+    const flatNodes = this.flattenTreeNodes(this.dataSource());
+    const match = flatNodes.find(n => n.name.toLowerCase() === this.searchString().toLowerCase());
+    if (match) {
+      this.value.set([match.name]);
+    }
+  }
 
   firstMatch = computed<string | undefined>(() => {
     const flatNodes = this.flattenTreeNodes(this.nodes());
@@ -1212,17 +1425,44 @@ class ComboboxTreeExample {
     return node?.name;
   });
 
+  constructor() {
+    afterRenderEffect(() => {
+      const active = this.tree()?._pattern.inputs.activeItem();
+      if (active) {
+        untracked(() => {
+          active.element()?.scrollIntoView({block: 'nearest'});
+        });
+      }
+    });
+  }
+
   flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
     return nodes.flatMap(node => {
       return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
     });
   }
 
+  deepCopyNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.map(node => ({
+      ...node,
+      children: node.children ? this.deepCopyNodes(node.children) : undefined,
+    }));
+  }
+
   filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    const search = this.searchString().trim().toLowerCase();
+    if (!search) {
+      return nodes;
+    }
+
     return nodes.reduce((acc, node) => {
       const children = node.children ? this.filterTreeNodes(node.children) : undefined;
       if (this.isMatch(node) || (children && children.length > 0)) {
-        acc.push({...node, children});
+        acc.push({
+          ...node,
+          children,
+          expanded: children && children.length > 0 ? true : node.expanded,
+        });
       }
       return acc;
     }, [] as TreeNode[]);
@@ -1232,30 +1472,6 @@ class ComboboxTreeExample {
     return node.name.toLowerCase().includes(this.searchString().toLowerCase());
   }
 }
-
-interface TreeNode {
-  name: string;
-  children?: TreeNode[];
-}
-
-const TREE_NODES = [
-  {
-    name: 'Winter',
-    children: [{name: 'December'}, {name: 'January'}, {name: 'February'}],
-  },
-  {
-    name: 'Spring',
-    children: [{name: 'March'}, {name: 'April'}, {name: 'May'}],
-  },
-  {
-    name: 'Summer',
-    children: [{name: 'June'}, {name: 'July'}, {name: 'August'}],
-  },
-  {
-    name: 'Fall',
-    children: [{name: 'September'}, {name: 'October'}, {name: 'November'}],
-  },
-];
 
 const states = [
   'Alabama',
@@ -1309,3 +1525,183 @@ const states = [
   'Wisconsin',
   'Wyoming',
 ];
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    placeholder="Search..."
+    [(value)]="searchString"
+    [(expanded)]="popupExpanded"
+  />
+
+  <ng-template ngComboboxPopup [combobox]="combobox" popupType="grid">
+    <div ngComboboxWidget #grid="ngGrid" ngGrid id="grid" focusMode="activedescendant" [tabIndex]="-1" colWrap="continuous" [activeDescendant]="grid.activeDescendant()">
+      @for (item of filteredItems(); track item; let i = $index) {
+        <div ngGridRow>
+          <div ngGridCell [id]="item + '-label'" [rowIndex]="i" [colIndex]="0">
+            <button ngGridCellWidget (activated)="selectItem(item)" (click)="selectItem(item)">
+              {{item}}
+            </button>
+          </div>
+          <div ngGridCell [id]="item + '-delete'" [rowIndex]="i" [colIndex]="1">
+            <button ngGridCellWidget (activated)="removeItem(item)" (click)="removeItem(item)" (pointerdown)="$event.preventDefault()">
+              Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Grid, GridRow, GridCell, GridCellWidget],
+})
+class ComboboxGridExample {
+  popupExpanded = signal(false);
+  searchString = signal('');
+  selectedItem = signal<string | null>(null);
+
+  items = signal(['Antelope', 'Bird', 'Cat', 'Dog']);
+
+  filteredItems = computed(() => {
+    const search = this.searchString().toLowerCase();
+    return this.items().filter(item => item.toLowerCase().includes(search));
+  });
+
+  selectItem(item: string) {
+    this.selectedItem.set(item);
+    this.searchString.set(item);
+    this.popupExpanded.set(false);
+  }
+
+  removeItem(itemToRemove: string) {
+    this.items.update(items => items.filter(item => item !== itemToRemove));
+  }
+}
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    placeholder="Search..."
+    [(value)]="searchString"
+    (input)="onInput()"
+    [disabled]="readonly()"
+    (focusout)="onBlur()"
+    (click)="combobox.expanded.set(true)"
+  />
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabIndex]="-1" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+      @for (option of options(); track option) {
+        <div ngOption [value]="option" [label]="option">
+          <span>{{option}}</span>
+        </div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxListboxAutoSelectExample {
+  readonly = signal(false);
+  popupExpanded = signal(false);
+  searchString = signal('');
+  value = signal<string[]>([]);
+
+  options = computed(() =>
+    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
+  );
+
+  onInput() {
+    const filtered = this.options();
+    if (filtered.length > 0) {
+      this.value.set([filtered[0]]);
+    }
+  }
+
+  onCommit() {
+    const val = this.value();
+    if (val.length > 0) {
+      this.searchString.set(val[0]);
+    }
+    this.popupExpanded.set(false);
+  }
+
+  onBlur() {
+    const search = this.searchString().trim().toLowerCase();
+    if (!search) return;
+
+    const match = states.find(state => state.toLowerCase().startsWith(search));
+    if (match) {
+      this.value.set([match]);
+      this.searchString.set(match);
+    }
+  }
+}
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    placeholder="Search..."
+    [(value)]="searchString"
+    [(expanded)]="popupExpanded"
+    [inlineSuggestion]="value()[0] || options()[0]"
+    [disabled]="readonly()"
+    (click)="popupExpanded.set(true)"
+  />
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" [tabIndex]="-1" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+      @for (option of options(); track option) {
+        <div ngOption [value]="option" [label]="option">
+          <span>{{option}}</span>
+        </div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxListboxHighlightExample {
+  readonly combobox = viewChild(Combobox);
+  readonly = signal(false);
+  popupExpanded = signal(false);
+  searchString = signal('');
+  value = signal<string[]>([]);
+  readonly activeDescendantValue = signal<string | undefined>(undefined);
+
+  options = computed(() =>
+    states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
+  );
+
+  constructor() {
+    afterRenderEffect(() => {
+      const id = this.combobox()?._pattern.activeDescendant();
+      if (id) {
+        const el = document.getElementById(id);
+        this.activeDescendantValue.set(el?.textContent?.trim());
+      } else {
+        this.activeDescendantValue.set(undefined);
+      }
+    });
+  }
+
+  onCommit() {
+    const val = this.value();
+    if (val.length > 0) {
+      this.searchString.set(val[0]);
+    }
+    this.popupExpanded.set(false);
+  }
+}

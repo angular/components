@@ -10,6 +10,7 @@ import * as _angular_cdk_portal from '@angular/cdk/portal';
 import { Binding } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
+import { DirectiveWithBindings } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -40,7 +41,7 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
 // @public
 export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends BasePortalOutlet implements DialogContainer, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     _addAriaLabelledBy(id: string): void;
     _ariaLabelledByQueue: string[];
@@ -84,7 +85,6 @@ export const DEFAULT_DIALOG_CONFIG: InjectionToken<DialogConfig<unknown, unknown
 
 // @public (undocumented)
 export class Dialog implements OnDestroy {
-    constructor(...args: unknown[]);
     readonly afterAllClosed: Observable<void>;
     get afterOpened(): Subject<DialogRef<any, any>>;
     closeAll(): void;
@@ -121,6 +121,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
+    bindings?: Binding[];
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;

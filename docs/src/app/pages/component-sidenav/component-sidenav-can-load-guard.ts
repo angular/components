@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {SECTIONS} from '../../shared/documentation-items/documentation-items';
 
@@ -14,7 +14,7 @@ import {SECTIONS} from '../../shared/documentation-items/documentation-items';
  * Guard to determine if the sidenav can load, based on whether the section exists in documentation
  * items.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class CanActivateComponentSidenav {
   private _router = inject(Router);
 

@@ -11,7 +11,7 @@ import {
   runInInjectionContext,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
@@ -2457,7 +2457,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       },
     );
 
-    it('should account for sub-pixel deviations in the size of the overlay', fakeAsync(() => {
+    it('should account for sub-pixel deviations in the size of the overlay', async () => {
       originElement.style.top = '200px';
       originElement.style.left = '200px';
 
@@ -2497,11 +2497,12 @@ describe('FlexibleConnectedPositionStrategy', () => {
       // Trigger a resize so that the overlay get repositioned from scratch
       // and to have it use the patched `getBoundingClientRect`.
       dispatchFakeEvent(window, 'resize');
-      tick(100); // The resize listener is usually debounced.
+      // The resize listener is usually debounced.
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const overlayRect = originalGetBoundingClientRect.apply(overlayRef.overlayElement);
       expect(Math.floor(overlayRect.top)).toBe(0);
-    }));
+    });
   });
 
   describe('onPositionChange with scrollable view properties', () => {

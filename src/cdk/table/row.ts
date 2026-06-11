@@ -48,9 +48,6 @@ export abstract class BaseRowDef implements OnChanges {
   /** Differ used to check if any changes were made to the columns. */
   protected _columnsDiffer!: IterableDiffer<any>;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnChanges(changes: SimpleChanges<this>): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property or an empty array if none is provided.
@@ -108,12 +105,6 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
   }
   private _sticky = false;
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
-  }
-
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
   override ngOnChanges(changes: SimpleChanges<this>): void {
@@ -159,12 +150,6 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
   }
   private _sticky = false;
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
-  }
-
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
   override ngOnChanges(changes: SimpleChanges<this>): void {
@@ -199,6 +184,9 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
 export class CdkRowDef<T> extends BaseRowDef {
   _table? = inject(CDK_TABLE, {optional: true});
 
+  // TODO(andrewseguin): Add an input for providing a switch function to determine
+  //   if this template should be used.
+
   /**
    * Function that should return true if this row template should be used for the provided index
    * and row data. If left undefined, this row will be considered the default row template to use
@@ -206,14 +194,6 @@ export class CdkRowDef<T> extends BaseRowDef {
    * For every row, there must be at least one when function that passes or an undefined to default.
    */
   when!: (index: number, rowData: T) => boolean;
-
-  constructor(...args: unknown[]);
-
-  constructor() {
-    // TODO(andrewseguin): Add an input for providing a switch function to determine
-    //   if this template should be used.
-    super(inject<TemplateRef<any>>(TemplateRef), inject(IterableDiffers));
-  }
 }
 
 /** Context provided to the row cells when `multiTemplateDataRows` is false */
@@ -296,8 +276,6 @@ export class CdkCellOutlet implements OnDestroy {
    */
   static mostRecentCellOutlet: CdkCellOutlet | null = null;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     CdkCellOutlet.mostRecentCellOutlet = this;
   }
@@ -369,7 +347,4 @@ export class CdkNoDataRow {
   _contentClassNames = ['cdk-no-data-row', 'cdk-row'];
   _cellClassNames = ['cdk-cell', 'cdk-no-data-cell'];
   _cellSelector = 'td, cdk-cell, [cdk-cell], .cdk-cell';
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

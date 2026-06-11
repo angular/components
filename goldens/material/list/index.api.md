@@ -103,7 +103,6 @@ export class MatListItemAvatar extends _MatListItemGraphicBase {
 
 // @public
 export class _MatListItemGraphicBase {
-    constructor(...args: unknown[]);
     // (undocumented)
     _isAlignedAtStart(): boolean;
     // (undocumented)
@@ -124,7 +123,6 @@ export class MatListItemIcon extends _MatListItemGraphicBase {
 
 // @public
 export class MatListItemLine {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -143,7 +141,6 @@ export class MatListItemMeta {
 
 // @public
 export class MatListItemTitle {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -164,9 +161,6 @@ export class MatListModule {
 
 // @public (undocumented)
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
-    // @deprecated
-    get checkboxPosition(): MatListOptionTogglePosition;
-    set checkboxPosition(value: MatListOptionTogglePosition);
     get color(): ThemePalette;
     set color(newValue: ThemePalette);
     focus(): void;
@@ -204,15 +198,13 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": { "alias": "togglePosition"; "required": false; }; "checkboxPosition": { "alias": "checkboxPosition"; "required": false; }; "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatListOption, "mat-list-option", ["matListOption"], { "togglePosition": { "alias": "togglePosition"; "required": false; }; "color": { "alias": "color"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, { "selectedChange": "selectedChange"; }, ["_lines", "_titles"], ["[matListItemAvatar],[matListItemIcon]", "[matListItemTitle]", "[matListItemLine]", "*", "mat-divider"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatListOption, never>;
 }
 
 // @public
-type MatListOptionTogglePosition = 'before' | 'after';
-export { MatListOptionTogglePosition as MatListOptionCheckboxPosition }
-export { MatListOptionTogglePosition }
+export type MatListOptionTogglePosition = 'before' | 'after';
 
 // @public
 export class MatListSubheaderCssMatStyler {
@@ -234,7 +226,7 @@ export class MatNavList extends MatListBase {
 
 // @public (undocumented)
 export class MatSelectionList extends MatListBase implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     color: ThemePalette;
     compareWith: (o1: any, o2: any) => boolean;
     deselectAll(): MatListOption[];

@@ -12,7 +12,6 @@ import {
   afterRenderEffect,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -74,7 +73,6 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class._mat-animation-noopable]': '_noopAnimations',
   },
   exportAs: 'matSlider',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
   imports: [MatSliderVisualThumb],
@@ -414,8 +412,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
 
   private _platform = inject(Platform);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

@@ -16,13 +16,12 @@ import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
 
 import {
   AfterContentInit,
   afterNextRender,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -45,7 +44,7 @@ import {
   signal,
 } from '@angular/core';
 import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
+import {debounceTime, delay, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
 /**
@@ -89,7 +88,6 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
     '[style.margin-right.px]': '_container._contentMargins.right',
     '[class.mat-drawer-content-hidden]': '_shouldBeHidden()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -101,22 +99,45 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+  private _isInert = false;
   _container = inject(MatDrawerContainer);
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    const scrollDispatcher = inject(ScrollDispatcher);
-    const ngZone = inject(NgZone);
-
-    super(elementRef, scrollDispatcher, ngZone);
+  ngAfterContentInit() {
+    this._container._contentMarginChanges.subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
-  ngAfterContentInit() {
-    this._container._contentMarginChanges.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
+  _drawerToggled(drawer: MatDrawer) {
+    if (drawer.opened) {
+      // If the drawer is being opened, we need to wait until the animation is done before marking
+      // the content is inert, because the drawer moves focus during the animation. We add a delay
+      // to be safe.
+      this._ngZone.runOutsideAngular(() => {
+        drawer._animationEnd.pipe(delay(50), take(1)).subscribe(() => this._updateInert());
+      });
+    } else {
+      // When the drawer is closing, we need to remove `inert` immediately so
+      // the elements that focus is being restored to can become focusable.
+      this._updateInert();
+    }
+  }
+
+  private _updateInert() {
+    const newValue = this._container._isShowingBackdrop();
+
+    if (newValue !== this._isInert) {
+      const element = this._element.nativeElement;
+      this._isInert = newValue;
+
+      // This can be called right before we attempt to move focus. Set the value
+      // directly, instead of waiting on change detection, because the timing is tight.
+      if (newValue) {
+        element.setAttribute('inert', 'true');
+      } else {
+        element.removeAttribute('inert');
+      }
+    }
   }
 
   /** Determines whether the content element should be hidden from the user. */
@@ -161,7 +182,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // reference. Updates tabIndex of drawer/container to default to null if in side mode.
     '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkScrollable],
 })
@@ -333,8 +353,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _injector = inject(Injector);
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
@@ -375,11 +393,18 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Focuses the provided element. If the element is not focusable, it will add a tabIndex
-   * attribute to forcefully focus it. The attribute is removed after focus is moved.
-   * @param element The element to focus.
+   * Focuses the first element that matches the given selector within the focus trap.
+   * @param selector The CSS selector for the element to set focus to.
    */
-  private _forceFocus(element: HTMLElement, options?: FocusOptions) {
+  private _focusByCssSelector(selector: string, options?: FocusOptions) {
+    const element = this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+
+    if (!element) {
+      return;
+    }
+
+    // If the element isn't focusable, force focus to it by
+    // setting a tabindex, focusing it and then clear it.
     if (!this._interactivityChecker.isFocusable(element)) {
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
@@ -394,20 +419,8 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
         const cleanupMousedown = this._renderer.listen(element, 'mousedown', callback);
       });
     }
-    element.focus(options);
-  }
 
-  /**
-   * Focuses the first element that matches the given selector within the focus trap.
-   * @param selector The CSS selector for the element to set focus to.
-   */
-  private _focusByCssSelector(selector: string, options?: FocusOptions) {
-    let elementToFocus = this._elementRef.nativeElement.querySelector(
-      selector,
-    ) as HTMLElement | null;
-    if (elementToFocus) {
-      this._forceFocus(elementToFocus, options);
-    }
+    element.focus(options);
   }
 
   /**
@@ -566,6 +579,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     }
 
     this._opened.set(isOpen);
+    (this._container?._content || this._container?._userContent)?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
       // Note: it's important to set this as early as possible,
@@ -677,7 +691,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     'class': 'mat-drawer-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -787,8 +800,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   }
 
   private _injector = inject(Injector);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const platform = inject(Platform);
@@ -941,7 +952,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * is properly hidden.
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
-    //
     drawer._animationStarted.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
       this.updateContentMargins();
       this._changeDetectorRef.markForCheck();

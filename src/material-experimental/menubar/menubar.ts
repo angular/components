@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {CDK_MENU, CdkMenuBar, CdkMenuGroup, MENU_STACK, MenuStack} from '@angular/cdk/menu';
 
 /**
@@ -19,7 +19,6 @@ import {CDK_MENU, CdkMenuBar, CdkMenuGroup, MENU_STACK, MenuStack} from '@angula
   templateUrl: 'menubar.html',
   styleUrl: 'menubar.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-menubar]': 'true',
   },

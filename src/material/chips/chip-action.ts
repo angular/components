@@ -82,8 +82,6 @@ export class MatChipContent {
     return this.disabled && !this._allowFocusWhenDisabled ? '' : null;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     if (this._elementRef.nativeElement.nodeName === 'BUTTON') {

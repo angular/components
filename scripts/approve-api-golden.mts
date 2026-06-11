@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
+import {execFileSync} from 'child_process';
 import {join} from 'path';
 import sh from 'shelljs';
 import {guessPackageName} from './util.mjs';
 
-const bazel = process.env['BAZEL'] || 'pnpm -s bazel';
 const targetsToRun = new Set<string>();
 
 if (process.argv.length < 3) {
@@ -34,5 +34,5 @@ for (const searchPackageName of process.argv.slice(2)) {
 }
 
 for (const target of targetsToRun) {
-  sh.exec(`${bazel} run ${target}`);
+  execFileSync('pnpm', ['-s', 'bazel', 'run', target], {stdio: 'inherit'});
 }

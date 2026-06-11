@@ -58,12 +58,6 @@ export class CdkNestedTreeNode<T, K = T>
   })
   nodeOutlet!: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super();
-  }
-
   ngAfterContentInit() {
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
     this._tree

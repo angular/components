@@ -24,7 +24,7 @@ import {
 } from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Toolbar} from './toolbar';
-import {TOOLBAR_WIDGET_GROUP} from './utils';
+import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
 import type {ToolbarWidgetGroup} from './toolbar-widget-group';
 
 /**
@@ -40,14 +40,14 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
  * </button>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
   selector: '[ngToolbarWidget]',
   exportAs: 'ngToolbarWidget',
   host: {
+    // Ensure the attribute is applied even when used as a host directive.
+    'ngToolbarWidget': '',
     '[attr.data-active]': 'active()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
@@ -105,10 +105,10 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this._toolbar._register(this);
+    this._toolbar._collection.register(this);
   }
 
   ngOnDestroy() {
-    this._toolbar._unregister(this);
+    this._toolbar._collection.unregister(this);
   }
 }

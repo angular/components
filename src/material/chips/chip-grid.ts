@@ -12,7 +12,6 @@ import {
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   DoCheck,
@@ -76,7 +75,6 @@ export class MatChipGridChange {
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatChipGrid}],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipGrid
   extends MatChipSet
@@ -253,8 +251,6 @@ export class MatChipGrid
   set errorState(value: boolean) {
     this._errorStateTracker.errorState = value;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -53,7 +52,6 @@ export class MatDatepickerToggleIcon {}
   },
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIconButton],
 })
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
@@ -92,8 +90,6 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
 
   /** Underlying button element. */
   @ViewChild('button') _button!: MatButton;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});

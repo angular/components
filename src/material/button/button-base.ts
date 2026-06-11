@@ -155,8 +155,6 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   /** Whether the button is showing a progress indicator. */
   readonly showProgress = input(false, {transform: booleanAttribute});
 
-  constructor(...args: unknown[]);
-
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const element = this._elementRef.nativeElement;

@@ -48,10 +48,6 @@ export class MatMenuContent implements OnDestroy {
   /** Emits when the menu content has been attached. */
   readonly _attached = new Subject<void>();
 
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   /**
    * Attaches the content with a particular context.
    * @docs-private

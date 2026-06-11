@@ -9,7 +9,6 @@
 import {
   AfterContentInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -76,7 +75,6 @@ export class MatSlideToggleChange {
   },
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -203,8 +201,6 @@ export class MatSlideToggle
   get inputId(): string {
     return `${this.id || this._uniqueId}-input`;
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

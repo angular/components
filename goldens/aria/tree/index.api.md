@@ -11,8 +11,10 @@ import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export class Tree<V> {
+export class Tree<V> implements OnDestroy {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
+    readonly _collection: SortedCollection<TreeItem<V>>;
     readonly currentType: _angular_core.InputSignal<"page" | "step" | "location" | "date" | "time" | "true" | "false">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
@@ -20,22 +22,21 @@ export class Tree<V> {
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly nav: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
     readonly _pattern: TreePattern<V>;
-    // (undocumented)
-    _register(child: TreeItem<V>): void;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
-    // (undocumented)
-    _unregister(child: TreeItem<V>): void;
     readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Tree<any>, "[ngTree]", ["ngTree"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "nav": { "alias": "nav"; "required": false; "isSignal": true; }; "currentType": { "alias": "currentType"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, [{ directive: typeof ComboboxPopup; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Tree<any>, "[ngTree]", ["ngTree"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "nav": { "alias": "nav"; "required": false; "isSignal": true; }; "currentType": { "alias": "currentType"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Tree<any>, never>;
 }

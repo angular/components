@@ -6,7 +6,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MATERIAL_ANIMATIONS} from '../core';
 import {MatFormField} from '../form-field';
@@ -79,7 +79,7 @@ describe('MatChipInput', () => {
       expect(chipInputDirective.disabled).toBe(true);
     });
 
-    it('should be able to set an input as being disabled and interactive', fakeAsync(() => {
+    it('should be able to set an input as being disabled and interactive', () => {
       fixture.componentInstance.chipGridInstance.disabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -95,7 +95,7 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.disabled).toBe(false);
       expect(inputNativeElement.readOnly).toBe(true);
       expect(inputNativeElement.getAttribute('aria-disabled')).toBe('true');
-    }));
+    });
 
     it('should be aria-required if the list is required', () => {
       expect(inputNativeElement.hasAttribute('aria-required')).toBe(false);
@@ -117,7 +117,7 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.getAttribute('required')).toBe('true');
     });
 
-    it('should allow focus to escape when tabbing forwards', fakeAsync(() => {
+    it('should allow focus to escape when tabbing forwards', async () => {
       const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
 
       expect(gridElement.getAttribute('tabindex')).toBe('0');
@@ -129,13 +129,13 @@ describe('MatChipInput', () => {
         .withContext('Expected tabIndex to be set to -1 temporarily.')
         .toBe('-1');
 
-      flush();
+      await new Promise(r => setTimeout(r, 0));
       fixture.detectChanges();
 
       expect(gridElement.getAttribute('tabindex'))
         .withContext('Expected tabIndex to be reset back to 0')
         .toBe('0');
-    }));
+    });
 
     it('should set input styling classes', () => {
       expect(inputNativeElement.classList).toContain('mat-mdc-input-element');
@@ -164,7 +164,7 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.getAttribute('aria-describedby')).toBe('test');
     });
 
-    it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+    it('should preserve aria-describedby set directly in the DOM', () => {
       inputNativeElement.setAttribute('aria-describedby', 'custom');
       fixture.componentInstance.hint = 'test';
       fixture.changeDetectorRef.markForCheck();
@@ -174,7 +174,7 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.getAttribute('aria-describedby')).toBe(
         `${hint.getAttribute('id')} custom`,
       );
-    }));
+    });
   });
 
   describe('[addOnBlur]', () => {
@@ -270,25 +270,23 @@ describe('MatChipInput', () => {
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
 
-    it('should set aria-describedby correctly when a non-empty list of ids is passed to setDescribedByIds', fakeAsync(() => {
+    it('should set aria-describedby correctly when a non-empty list of ids is passed to setDescribedByIds', () => {
       const ids = ['a', 'b', 'c'];
 
       testChipInput.chipGridInstance.setDescribedByIds(ids);
-      flush();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('aria-describedby')).toEqual('a b c');
-    }));
+    });
 
-    it('should set aria-describedby correctly when an empty list of ids is passed to setDescribedByIds', fakeAsync(() => {
+    it('should set aria-describedby correctly when an empty list of ids is passed to setDescribedByIds', () => {
       const ids: string[] = [];
 
       testChipInput.chipGridInstance.setDescribedByIds(ids);
-      flush();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('aria-describedby')).toBeNull();
-    }));
+    });
 
     it('should not emit chipEnd if the key is repeated', () => {
       spyOn(testChipInput, 'add');

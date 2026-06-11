@@ -55,9 +55,6 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
   @Output() readonly trafficLayerInitialized: EventEmitter<google.maps.TrafficLayer> =
     new EventEmitter<google.maps.TrafficLayer>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()

@@ -46,7 +46,7 @@ export function addAriaReferencedId(el: Element, attr: `aria-${string}`, id: str
 
 // @public
 export class AriaDescriber implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     describe(hostElement: Element, message: string, role?: string): void;
     describe(hostElement: Element, message: HTMLElement): void;
     ngOnDestroy(): void;
@@ -61,15 +61,9 @@ export class AriaDescriber implements OnDestroy {
 // @public
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
-// @public @deprecated
-export const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = "cdk-describedby-host";
-
-// @public @deprecated
-export const CDK_DESCRIBEDBY_ID_PREFIX = "cdk-describedby-message";
-
 // @public
 export class CdkAriaLive implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     duration: number;
     // (undocumented)
     ngOnDestroy(): void;
@@ -83,7 +77,6 @@ export class CdkAriaLive implements OnDestroy {
 
 // @public
 export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly cdkFocusChange: EventEmitter<FocusOrigin>;
     // (undocumented)
@@ -100,7 +93,7 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
 
 // @public
 export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
-    constructor(...args: unknown[]);
+    constructor();
     autoCapture: boolean;
     get enabled(): boolean;
     set enabled(value: boolean);
@@ -125,7 +118,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
 
 // @public
 export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
-    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, _focusTrapManager: FocusTrapManager, _inertStrategy: FocusTrapInertStrategy, config: ConfigurableFocusTrapConfig, injector?: Injector);
+    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, _focusTrapManager: FocusTrapManager, _inertStrategy: FocusTrapInertStrategy, config: ConfigurableFocusTrapConfig, injector: Injector);
     destroy(): void;
     _disable(): void;
     _enable(): void;
@@ -140,10 +133,8 @@ export interface ConfigurableFocusTrapConfig {
 
 // @public
 export class ConfigurableFocusTrapFactory {
-    constructor(...args: unknown[]);
+    constructor();
     create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): ConfigurableFocusTrap;
-    // @deprecated (undocumented)
-    create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ConfigurableFocusTrapFactory, never>;
     // (undocumented)
@@ -177,7 +168,7 @@ export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
 
 // @public
 export class FocusMonitor implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _document: Document;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions_2): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions_2): void;
@@ -217,8 +208,7 @@ export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
 // @public
 export class FocusTrap {
-    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, deferAnchors?: boolean,
-    _injector?: Injector | undefined);
+    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, deferAnchors: boolean | undefined, _injector: Injector);
     attachAnchors(): boolean;
     destroy(): void;
     // (undocumented)
@@ -238,7 +228,8 @@ export class FocusTrap {
     focusLastTabbableElement(options?: FocusOptions): boolean;
     focusLastTabbableElementWhenReady(options?: FocusOptions): Promise<boolean>;
     hasAttached(): boolean;
-    readonly _injector?: Injector | undefined;
+    // (undocumented)
+    readonly _injector: Injector;
     // (undocumented)
     readonly _ngZone: NgZone;
     // (undocumented)
@@ -248,7 +239,7 @@ export class FocusTrap {
 
 // @public
 export class FocusTrapFactory {
-    constructor(...args: unknown[]);
+    constructor();
     create(element: HTMLElement, deferCaptureElements?: boolean): FocusTrap;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FocusTrapFactory, never>;
@@ -277,7 +268,7 @@ export enum HighContrastMode {
 
 // @public
 export class HighContrastModeDetector implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _applyBodyHighContrastModeCssClasses(): void;
     getHighContrastMode(): HighContrastMode;
     // (undocumented)
@@ -314,7 +305,7 @@ export type InputModality = 'keyboard' | 'mouse' | 'touch' | null;
 
 // @public
 export class InputModalityDetector implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly modalityChanged: Observable<InputModality>;
     readonly modalityDetected: Observable<InputModality>;
     get mostRecentModality(): InputModality;
@@ -334,7 +325,6 @@ export interface InputModalityDetectorOptions {
 
 // @public
 export class InteractivityChecker {
-    constructor(...args: unknown[]);
     isDisabled(element: HTMLElement): boolean;
     isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean;
     isTabbable(element: HTMLElement): boolean;
@@ -404,7 +394,7 @@ export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 
 // @public (undocumented)
 export class LiveAnnouncer implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     announce(message: LiveAnnouncerMessage): Promise<void>;
     announce(message: LiveAnnouncerMessage, politeness?: AriaLivePoliteness): Promise<void>;
     announce(message: LiveAnnouncerMessage, duration?: number): Promise<void>;
@@ -426,9 +416,6 @@ export interface LiveAnnouncerDefaultOptions {
 
 // @public
 export type LiveAnnouncerMessage = string | SafeHtml;
-
-// @public @deprecated
-export const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container";
 
 // @public @deprecated
 export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER: Provider;

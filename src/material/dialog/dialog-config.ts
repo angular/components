@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ViewContainerRef, Injector} from '@angular/core';
+import {ViewContainerRef, Injector, Binding} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {DialogConfig, RestoreFocusValue} from '@angular/cdk/dialog';
@@ -159,5 +159,9 @@ export class MatDialogConfig<D = any> {
    */
   exitAnimationDuration?: string | number;
 
-  // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
+  /**
+   * Bindings to apply to the component rendered inside the dialog.
+   * Does nothing for template-based dialogs.
+   */
+  bindings?: Binding[];
 }

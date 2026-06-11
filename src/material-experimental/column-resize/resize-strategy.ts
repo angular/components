@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Provider} from '@angular/core';
+import {Service, Provider} from '@angular/core';
 
 import {
   ResizeStrategy,
@@ -19,7 +19,7 @@ export {TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER};
 /**
  * Overrides CdkFlexTableResizeStrategy to match mat-column elements.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class MatFlexTableResizeStrategy extends CdkFlexTableResizeStrategy {
   protected override getColumnCssClass(cssFriendlyColumnName: string): string {
     return `mat-column-${cssFriendlyColumnName}`;

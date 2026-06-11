@@ -82,7 +82,7 @@ export class MatExpansionModule {
 
 // @public
 export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     accordion: MatAccordionBase;
     readonly afterCollapse: EventEmitter<void>;
     readonly afterExpand: EventEmitter<void>;
@@ -156,7 +156,6 @@ export class MatExpansionPanelActionRow {
 
 // @public
 export class MatExpansionPanelContent {
-    constructor(...args: unknown[]);
     // (undocumented)
     _expansionPanel: MatExpansionPanelBase | null;
     // (undocumented)
@@ -184,7 +183,7 @@ export class MatExpansionPanelDescription {
 
 // @public
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
-    constructor(...args: unknown[]);
+    constructor();
     collapsedHeight: string;
     get disabled(): boolean;
     expandedHeight: string;

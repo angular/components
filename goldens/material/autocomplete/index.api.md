@@ -43,7 +43,7 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // @public
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected _animationsDisabled: boolean;
     ariaLabel: string;
@@ -136,7 +136,6 @@ export class MatAutocompleteModule {
 
 // @public
 export class MatAutocompleteOrigin {
-    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -156,7 +155,6 @@ export class MatAutocompleteSelectedEvent {
 
 // @public
 export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
     get activeOption(): MatOption | null;
     autocomplete: MatAutocomplete;
     autocompleteAttribute: string;
@@ -204,7 +202,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
 
 // @public
 export class MatOptgroup {
-    constructor(...args: unknown[]);
+    constructor();
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -219,7 +217,7 @@ export class MatOptgroup {
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;

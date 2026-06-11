@@ -13,7 +13,6 @@ import {A, ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -72,7 +71,6 @@ export class MatSelectionListChange {
     {provide: MatListBase, useExisting: MatSelectionList},
     {provide: SELECTION_LIST, useExisting: MatSelectionList},
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSelectionList
   extends MatListBase
@@ -160,8 +158,6 @@ export class MatSelectionList
   _onTouched: () => void = () => {};
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

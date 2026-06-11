@@ -7,6 +7,7 @@
 import { ApplicationRef } from '@angular/core';
 import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
+import { DirectiveWithBindings } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -15,6 +16,7 @@ import { Injector } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { TemplateRef } from '@angular/core';
+import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
@@ -40,7 +42,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
 
 // @public
 export class CdkPortal extends TemplatePortal {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkPortal, "[cdkPortal]", ["cdkPortal"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -49,7 +51,6 @@ export class CdkPortal extends TemplatePortal {
 
 // @public
 export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
@@ -73,9 +74,10 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 
 // @public
 export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
-    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, projectableNodes?: Node[][] | null, bindings?: Binding[]);
+    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, projectableNodes?: Node[][] | null, bindings?: Binding[], directives?: (Type<unknown> | DirectiveWithBindings<unknown>)[]);
     readonly bindings: Binding[] | null;
     component: ComponentType<T>;
+    readonly directives: (Type<unknown> | DirectiveWithBindings<unknown>)[] | null;
     injector?: Injector | null;
     projectableNodes?: Node[][] | null;
     viewContainerRef?: ViewContainerRef | null;

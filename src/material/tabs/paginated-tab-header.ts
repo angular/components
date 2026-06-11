@@ -159,8 +159,6 @@ export abstract class MatPaginatedTabHeader
   /** Event emitted when a label is focused. */
   @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
     this._eventCleanups = this._ngZone.runOutsideAngular(() => [

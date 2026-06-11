@@ -65,37 +65,32 @@ describe('Tabs Pattern', () => {
       softDisabled: signal(true),
       items: signal([]),
       element: signal(document.createElement('div')),
+      selectedTab: signal(undefined),
     };
     tabListPattern = new TabListPattern(tabListInputs);
 
     // Initiate a list of TabPatterns.
     tabInputs = [
       {
-        tablist: signal(tabListPattern),
-        tabpanel: signal(undefined),
+        tabList: signal(tabListPattern),
+        tabPanel: signal(undefined),
         id: signal('tab-1-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-1'),
-        expanded: signal(false),
       },
       {
-        tablist: signal(tabListPattern),
-        tabpanel: signal(undefined),
+        tabList: signal(tabListPattern),
+        tabPanel: signal(undefined),
         id: signal('tab-2-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-2'),
-        expanded: signal(false),
       },
       {
-        tablist: signal(tabListPattern),
-        tabpanel: signal(undefined),
+        tabList: signal(tabListPattern),
+        tabPanel: signal(undefined),
         id: signal('tab-3-id'),
         element: signal(createTabElement()),
         disabled: signal(false),
-        value: signal('tab-3'),
-        expanded: signal(false),
       },
     ];
     tabPatterns = [
@@ -109,17 +104,14 @@ describe('Tabs Pattern', () => {
       {
         id: signal('tabpanel-1-id'),
         tab: signal(undefined),
-        value: signal('tab-1'),
       },
       {
         id: signal('tabpanel-2-id'),
         tab: signal(undefined),
-        value: signal('tab-2'),
       },
       {
         id: signal('tabpanel-3-id'),
         tab: signal(undefined),
-        value: signal('tab-3'),
       },
     ];
     tabPanelPatterns = [
@@ -129,9 +121,9 @@ describe('Tabs Pattern', () => {
     ];
 
     // Binding between tabs and tabpanels.
-    tabInputs[0].tabpanel.set(tabPanelPatterns[0]);
-    tabInputs[1].tabpanel.set(tabPanelPatterns[1]);
-    tabInputs[2].tabpanel.set(tabPanelPatterns[2]);
+    tabInputs[0].tabPanel.set(tabPanelPatterns[0]);
+    tabInputs[1].tabPanel.set(tabPanelPatterns[1]);
+    tabInputs[2].tabPanel.set(tabPanelPatterns[2]);
     tabPanelInputs[0].tab.set(tabPatterns[0]);
     tabPanelInputs[1].tab.set(tabPatterns[1]);
     tabPanelInputs[2].tab.set(tabPatterns[2]);
@@ -143,8 +135,8 @@ describe('Tabs Pattern', () => {
     describe('#open', () => {
       it('should open a tab with value', () => {
         expect(tabListPattern.selectedTab()).toBeUndefined();
-        tabListPattern.open('tab-1');
-        expect(tabListPattern.selectedTab()!.value()).toBe('tab-1');
+        tabListPattern.open(tabPatterns[0]);
+        expect(tabListPattern.selectedTab()!).toBe(tabPatterns[0]);
       });
 
       it('should open a tab with tab pattern instance', () => {
@@ -426,6 +418,23 @@ describe('Tabs Pattern', () => {
       expect(tabPanelPatterns[0].labelledBy()).toBe('tab-1-id');
       expect(tabPanelPatterns[1].labelledBy()).toBe('tab-2-id');
       expect(tabPanelPatterns[2].labelledBy()).toBe('tab-3-id');
+    });
+  });
+
+  describe('ActiveDescendant mode', () => {
+    beforeEach(() => {
+      tabListInputs.focusMode.set('activedescendant');
+      tabListPattern.setDefaultState();
+    });
+
+    it('should update activeDescendant when navigating', () => {
+      expect(tabListPattern.activeDescendant()).toBe('tab-1-id');
+
+      tabListPattern.onKeydown(right());
+      expect(tabListPattern.activeDescendant()).toBe('tab-2-id');
+
+      tabListPattern.onKeydown(right());
+      expect(tabListPattern.activeDescendant()).toBe('tab-3-id');
     });
   });
 });

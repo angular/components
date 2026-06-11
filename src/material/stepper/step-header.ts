@@ -8,7 +8,6 @@
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -39,7 +38,6 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
     'role': '', // ignore cdk role in favor of setting appropriately in html
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRipple, NgTemplateOutlet, MatIcon],
 })
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
@@ -83,8 +81,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
    * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color!: ThemePalette;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
+import {ViewContainerRef, Injector, StaticProvider, Type, Binding} from '@angular/core';
 import {Direction} from '../bidi';
 import {PositionStrategy, ScrollStrategy} from '../overlay';
 import {Observable} from 'rxjs';
@@ -191,4 +191,10 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
    * A function can be passed in to resolve the context lazily.
    */
   templateContext?: Record<string, any> | (() => Record<string, any>);
+
+  /**
+   * Bindings to apply to the component rendered inside the dialog.
+   * Does nothing for template-based dialogs.
+   */
+  bindings?: Binding[];
 }

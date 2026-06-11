@@ -8,6 +8,7 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export class AccordionContent {
@@ -18,18 +19,22 @@ export class AccordionContent {
 }
 
 // @public
-export class AccordionGroup {
+export class AccordionGroup implements OnDestroy {
+    constructor();
     collapseAll(): void;
+    readonly _collection: SortedCollection<AccordionTrigger>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     expandAll(): void;
     readonly multiExpandable: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly _pattern: AccordionGroupPattern;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionGroup, "[ngAccordionGroup]", ["ngAccordionGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiExpandable": { "alias": "multiExpandable"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, {}, ["_triggers"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionGroup, "[ngAccordionGroup]", ["ngAccordionGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multiExpandable": { "alias": "multiExpandable"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionGroup, never>;
 }
@@ -38,19 +43,21 @@ export class AccordionGroup {
 export class AccordionPanel {
     constructor();
     collapse(): void;
+    readonly element: HTMLElement;
     expand(): void;
     readonly id: _angular_core.InputSignal<string>;
     _pattern?: AccordionTriggerPattern;
     toggle(): void;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, ["_accordionContent"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionPanel, never>;
 }
 
 // @public
-export class AccordionTrigger implements OnInit {
+export class AccordionTrigger implements OnInit, OnDestroy {
+    constructor();
     readonly active: _angular_core.Signal<boolean>;
     collapse(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -58,6 +65,8 @@ export class AccordionTrigger implements OnInit {
     expand(): void;
     readonly expanded: _angular_core.ModelSignal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     readonly panel: _angular_core.InputSignal<AccordionPanel>;

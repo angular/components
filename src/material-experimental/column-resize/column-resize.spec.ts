@@ -6,7 +6,7 @@ import {
   Component,
   Directive,
   ElementRef,
-  Injectable,
+  Service,
   ViewChild,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
@@ -285,7 +285,6 @@ class MatResizeTest extends BaseTestComponent {
 
 @Component({
   template: getTableTemplate(false),
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
 })
 class MatResizeOnPushTest extends MatResizeTest {}
@@ -720,7 +719,7 @@ function createElementData() {
   ];
 }
 
-@Injectable()
+@Service({autoProvided: false})
 class FakeColumnSizeStore extends ColumnSizeStore {
   readonly emitStore = new Map<string, ReplaySubject<number>>();
   readonly setSizeCalls: {tableId: string; columnId: string; sizePx: number}[] = [];

@@ -18,7 +18,7 @@ import {
   output,
   Signal,
 } from '@angular/core';
-import {GridCellWidgetPattern} from '../private';
+import {GridCellWidgetPattern, ElementResolver} from '../private';
 import {GRID_CELL} from './grid-tokens';
 
 /**
@@ -34,8 +34,6 @@ import {GRID_CELL} from './grid-tokens';
  *   <button ngGridCellWidget>Click Me</button>
  * </td>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Grid](guide/aria/grid)
  */
@@ -72,7 +70,7 @@ export class GridCellWidget {
   readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The target that will receive focus instead of the widget. */
-  readonly focusTarget = input<ElementRef | HTMLElement | undefined>();
+  readonly focusTarget = input<ElementResolver<HTMLElement>>();
 
   /** Emits when the widget is activated. */
   readonly activated = output<KeyboardEvent | FocusEvent | undefined>();
@@ -88,7 +86,7 @@ export class GridCellWidget {
    * If a focus target exists then return -1. Unless an override.
    */
   protected readonly _tabIndex: Signal<number> = computed(
-    () => this.tabindex() ?? (this.focusTarget() ? -1 : this._pattern.tabIndex()),
+    () => this.tabindex() ?? this._pattern.tabIndex(),
   );
 
   /** The UI pattern for the grid cell widget. */
@@ -96,10 +94,8 @@ export class GridCellWidget {
     ...this,
     element: () => this.element,
     cell: () => this._cell._pattern,
-    focusTarget: computed(() => {
-      const target = this.focusTarget();
-      return target instanceof ElementRef ? target.nativeElement : target;
-    }),
+    onActivate: e => this.activated.emit(e),
+    onDeactivate: e => this.deactivated.emit(e),
   });
 
   /** Whether the widget is activated. */
@@ -108,18 +104,12 @@ export class GridCellWidget {
   }
 
   constructor() {
-    afterRenderEffect(() => {
-      const activateEvent = this._pattern.lastActivateEvent();
-      if (activateEvent) {
-        this.activated.emit(activateEvent);
-      }
+    afterRenderEffect({
+      write: () => this._pattern.activationEffect(),
     });
 
-    afterRenderEffect(() => {
-      const deactivateEvent = this._pattern.lastDeactivateEvent();
-      if (deactivateEvent) {
-        this.deactivated.emit(deactivateEvent);
-      }
+    afterRenderEffect({
+      write: () => this._pattern.deactivationEffect(),
     });
   }
 

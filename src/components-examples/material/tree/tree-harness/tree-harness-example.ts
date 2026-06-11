@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,7 +15,6 @@ interface Node {
   selector: 'tree-harness-example',
   templateUrl: 'tree-harness-example.html',
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeHarnessExample {
   dataSource = EXAMPLE_DATA;

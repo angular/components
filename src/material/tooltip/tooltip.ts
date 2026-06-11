@@ -15,7 +15,6 @@ import {
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -377,8 +376,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   /** Whether ngOnDestroyed has been called. */
   private _isDestroyed = false;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultOptions = this._defaultOptions;
@@ -963,7 +960,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   templateUrl: 'tooltip.html',
   styleUrl: 'tooltip.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
@@ -1019,10 +1015,6 @@ export class TooltipComponent implements OnDestroy {
 
   /** Name of the hide animation and the class that toggles it. */
   private readonly _hideAnimation = 'mat-mdc-tooltip-hide';
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin

@@ -16,13 +16,6 @@ import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
 import * as ts from 'typescript';
 import {getProjectMainFile} from './project-main-file';
 
-/**
- * Temporary type until the CLI starts bundling TS6.
- *
- * TODO(crisbeto): clean this up eventually.
- */
-export type AnyDuringTs6Migration = any;
-
 /** Reads file given path and returns TypeScript source file. */
 export function parseSourceFile(host: Tree, path: string): ts.SourceFile {
   const buffer = host.read(path);
@@ -62,12 +55,7 @@ export function addModuleImportToModule(
     throw new SchematicsException(`Module not found: ${modulePath}`);
   }
 
-  const changes = addImportToModule(
-    moduleSource as AnyDuringTs6Migration,
-    modulePath,
-    moduleName,
-    src,
-  );
+  const changes = addImportToModule(moduleSource, modulePath, moduleName, src);
   const recorder = host.beginUpdate(modulePath);
 
   changes.forEach(change => {

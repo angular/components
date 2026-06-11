@@ -22,7 +22,6 @@ import {
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -67,7 +66,6 @@ let uniqueIdCounter = 0;
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
 export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
@@ -218,8 +216,6 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
 
   /** The names of the weekdays. */
   _weekdays = signal<{long: string; narrow: string; id: number}[]>([]);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);

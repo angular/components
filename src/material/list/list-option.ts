@@ -9,7 +9,6 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -92,7 +91,6 @@ export interface SelectionList extends MatListBase {
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {provide: MatListItemBase, useExisting: MatListOption},
     {provide: LIST_OPTION, useExisting: MatListOption},
@@ -117,19 +115,6 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
 
   /** Whether the label should appear before or after the checkbox/radio. Defaults to 'after' */
   @Input() togglePosition: MatListOptionTogglePosition = 'after';
-
-  /**
-   * Whether the label should appear before or after the checkbox/radio. Defaults to 'after'
-   *
-   * @deprecated Use `togglePosition` instead.
-   * @breaking-change 17.0.0
-   */
-  @Input() get checkboxPosition(): MatListOptionTogglePosition {
-    return this.togglePosition;
-  }
-  set checkboxPosition(value: MatListOptionTogglePosition) {
-    this.togglePosition = value;
-  }
 
   /**
    * Theme color of the list option. This sets the color of the checkbox/radio.

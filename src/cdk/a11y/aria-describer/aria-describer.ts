@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, OnDestroy, APP_ID, inject, DOCUMENT} from '@angular/core';
+import {Service, OnDestroy, APP_ID, inject, DOCUMENT} from '@angular/core';
 import {Platform} from '../../platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
@@ -23,25 +23,10 @@ export interface RegisteredMessage {
   referenceCount: number;
 }
 
-/**
- * ID used for the body container where all messages are appended.
- * @deprecated No longer being used. To be removed.
- * @breaking-change 14.0.0
- */
-export const MESSAGES_CONTAINER_ID = 'cdk-describedby-message-container';
+/** ID prefix used for each created message element. */
+const CDK_DESCRIBEDBY_ID_PREFIX = 'cdk-describedby-message';
 
-/**
- * ID prefix used for each created message element.
- * @deprecated To be turned into a private variable.
- * @breaking-change 14.0.0
- */
-export const CDK_DESCRIBEDBY_ID_PREFIX = 'cdk-describedby-message';
-
-/**
- * Attribute given to each host element that is described by a message element.
- * @deprecated To be turned into a private variable.
- * @breaking-change 14.0.0
- */
+/** Attribute given to each host element that is described by a message element. */
 export const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = 'cdk-describedby-host';
 
 /** Global incremental identifier for each registered message element. */
@@ -52,7 +37,7 @@ let nextId = 0;
  * want to use aria-describedby to further describe themselves without adding additional visual
  * content.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class AriaDescriber implements OnDestroy {
   private _platform = inject(Platform);
   private _document = inject(DOCUMENT);
@@ -65,8 +50,6 @@ export class AriaDescriber implements OnDestroy {
 
   /** Unique ID for the service. */
   private readonly _id = `${nextId++}`;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);

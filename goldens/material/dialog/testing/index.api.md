@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_testing from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -66,7 +67,7 @@ export enum MatDialogSection {
 
 // @public
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     closedResult: R | undefined;
     protected static component: ComponentType<unknown> | undefined;
     protected static config: MatDialogConfig | undefined;

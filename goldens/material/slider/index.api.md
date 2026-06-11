@@ -22,7 +22,7 @@ import { WritableSignal } from '@angular/core';
 
 // @public
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     _cachedLeft: number;
     // (undocumented)
@@ -152,7 +152,7 @@ export class MatSliderModule {
 
 // @public (undocumented)
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -197,7 +197,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
 // @public
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -301,7 +301,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
 // @public
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     discrete: boolean;

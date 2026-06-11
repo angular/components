@@ -163,6 +163,20 @@ describe('Toolbar Pattern', () => {
     return toolbar.inputs.items().find(item => item.value() === value)!;
   }
 
+  describe('Tabindex', () => {
+    it('should expose tabIndex signals', () => {
+      const {toolbar, items} = getPatterns();
+
+      expect(items[0].tabIndex()).toBe(0);
+      expect(items[1].tabIndex()).toBe(-1);
+
+      toolbar.onKeydown(right()); // Move focus to item 1
+
+      expect(items[0].tabIndex()).toBe(-1);
+      expect(items[1].tabIndex()).toBe(0);
+    });
+  });
+
   describe('Navigation', () => {
     describe('with horizontal orientation', () => {
       it('should navigate on click (horizontal, ltr)', () => {

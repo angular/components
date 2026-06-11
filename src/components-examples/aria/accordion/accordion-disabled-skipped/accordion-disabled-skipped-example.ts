@@ -16,6 +16,6 @@ import {
 })
 export class AccordionDisabledSkippedExample {
   expansionIcon(panel: AccordionPanel): string {
-    return panel ? 'expand_less' : 'expand_more';
+    return panel.visible() ? 'expand_less' : 'expand_more';
   }
 }

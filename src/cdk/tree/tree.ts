@@ -267,9 +267,6 @@ export class CdkTree<T, K = T>
   _keyManager!: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngAfterContentInit() {
     this._initializeKeyManager();
   }
@@ -1264,7 +1261,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /**
    * The text used to locate this item during typeahead. If not specified, the `textContent` will
-   * will be used.
+   * be used.
    */
   @Input('cdkTreeNodeTypeaheadLabel') typeaheadLabel: string | null = null;
 
@@ -1387,8 +1384,6 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;

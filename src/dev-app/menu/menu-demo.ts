@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
@@ -18,7 +18,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: 'menu-demo.html',
   styleUrl: 'menu-demo.css',
   imports: [MatMenuModule, MatButtonModule, MatToolbarModule, MatIconModule, MatDividerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuDemo {
   selected = '';

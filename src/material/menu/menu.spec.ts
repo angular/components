@@ -76,7 +76,7 @@ describe('MatMenu', () => {
     window.scroll(0, 0);
   });
 
-  it('should aria-controls the menu panel', () => {
+  it('should set aria-controls on the menu panel', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -566,6 +566,15 @@ describe('MatMenu', () => {
 
     expect(panel.classList).toContain('custom-one');
     expect(panel.classList).toContain('custom-two');
+  });
+
+  it('should expose the configured classes via the getter', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.componentInstance.panelClass = 'custom-one custom-two';
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.menu.panelClass).toBe('custom-one custom-two');
+    expect(fixture.componentInstance.menu.classList).toBe('custom-one custom-two');
   });
 
   it('should set the "menu" role on the overlay panel', () => {
@@ -1138,6 +1147,20 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     panelRect = panel.getBoundingClientRect();
     expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
+  });
+
+  it('should close the menu when it is cleared from the trigger', async () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    await wait(200);
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.menu = null;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeFalsy();
   });
 
   describe('lazy rendering', () => {
@@ -2511,7 +2534,6 @@ class SimpleMenu {
 
 @Component({
   template: SIMPLE_MENU_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
   selector: 'simple-menu-on-push',
 })
@@ -2883,7 +2905,6 @@ class SimpleMenuWithRepeaterInLazyContent {
       </ng-template>
     </mat-menu>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class LazyMenuWithOnPush {

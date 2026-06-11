@@ -182,8 +182,6 @@ export class CdkVirtualForOf<T>
 
   private readonly _destroyed = new Subject<void>();
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const ngZone = inject(NgZone);
 

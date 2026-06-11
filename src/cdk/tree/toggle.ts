@@ -16,9 +16,9 @@ import {CdkTree, CdkTreeNode} from './tree';
 @Directive({
   selector: '[cdkTreeNodeToggle]',
   host: {
-    '(click)': '_toggle(); $event.stopPropagation();',
-    '(keydown.Enter)': '_toggle(); $event.preventDefault();',
-    '(keydown.Space)': '_toggle(); $event.preventDefault();',
+    '(click)': '_toggle($event)',
+    '(keydown.Enter)': '_toggle($event); $event.preventDefault();',
+    '(keydown.Space)': '_toggle($event); $event.preventDefault();',
     'tabindex': '-1',
   },
 })
@@ -30,14 +30,13 @@ export class CdkTreeNodeToggle<T, K = T> {
   @Input({alias: 'cdkTreeNodeToggleRecursive', transform: booleanAttribute})
   recursive: boolean = false;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   // Toggle the expanded or collapsed state of this node.
   //
   // Focus this node with expanding or collapsing it. This ensures that the active node will always
   // be visible when expanding and collapsing.
-  _toggle(): void {
+  _toggle(event: Event): void {
+    event.stopPropagation();
+
     this.recursive
       ? this._tree.toggleDescendants(this._treeNode.data)
       : this._tree.toggle(this._treeNode.data);

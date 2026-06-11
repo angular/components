@@ -12,7 +12,6 @@ import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   Directive,
@@ -76,7 +75,6 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   exportAs: 'matExpansionPanel',
   templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
     // to the same accordion.
@@ -149,8 +147,6 @@ export class MatExpansionPanel
 
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId: string = inject(_IdGenerator).getId('mat-expansion-panel-header-');
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();

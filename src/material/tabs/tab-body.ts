@@ -46,12 +46,6 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   /** Subscription to events for when the tab body finishes leaving from center position. */
   private _leavingSub = Subscription.EMPTY;
 
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super();
-  }
-
   /** Set initial visibility or set up subscription for changing visibility. */
   override ngOnInit(): void {
     super.ngOnInit();
@@ -191,8 +185,6 @@ export class MatTabBody implements OnInit, OnDestroy {
     this._positionIndex = position;
     this._computePositionAnimationState();
   }
-
-  constructor(...args: unknown[]);
 
   constructor() {
     if (this._dir) {

@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
@@ -34,7 +34,7 @@ describe('MatSidenav', () => {
     expect(sidenavEl.style.bottom).toBeFalsy();
   });
 
-  it('should pick up sidenavs that are not direct descendants', fakeAsync(() => {
+  it('should pick up sidenavs that are not direct descendants', async () => {
     const fixture = TestBed.createComponent(IndirectDescendantSidenav);
     fixture.detectChanges();
 
@@ -42,13 +42,13 @@ describe('MatSidenav', () => {
 
     fixture.componentInstance.container.open();
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.sidenav.opened).toBe(true);
-  }));
+  });
 
-  it('should not pick up sidenavs from nested containers', fakeAsync(() => {
+  it('should not pick up sidenavs from nested containers', async () => {
     const fixture = TestBed.createComponent(NestedSidenavContainers);
     const instance = fixture.componentInstance;
     fixture.detectChanges();
@@ -58,7 +58,7 @@ describe('MatSidenav', () => {
 
     instance.outerContainer.open();
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(instance.outerSidenav.opened).toBe(true);
@@ -66,12 +66,12 @@ describe('MatSidenav', () => {
 
     instance.innerContainer.open();
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(instance.outerSidenav.opened).toBe(true);
     expect(instance.innerSidenav.opened).toBe(true);
-  }));
+  });
 });
 
 @Component({

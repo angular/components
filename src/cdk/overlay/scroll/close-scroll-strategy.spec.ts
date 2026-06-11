@@ -1,7 +1,7 @@
 import {ComponentPortal, PortalModule} from '../../portal';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '../../scrolling';
 import {Component, ElementRef, Injector, ChangeDetectionStrategy} from '@angular/core';
-import {TestBed, fakeAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {
   createCloseScrollStrategy,
@@ -20,7 +20,7 @@ describe('CloseScrollStrategy', () => {
   let overlayContainer: OverlayContainer;
   let injector: Injector;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     scrollPosition = 0;
 
     TestBed.configureTestingModule({
@@ -45,7 +45,7 @@ describe('CloseScrollStrategy', () => {
     const overlayConfig = new OverlayConfig({scrollStrategy: createCloseScrollStrategy(injector)});
     overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
-  }));
+  });
 
   afterEach(() => {
     overlayRef.dispose();

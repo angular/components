@@ -97,8 +97,6 @@ export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentIn
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super(true);
 

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken, Injector, ViewContainerRef} from '@angular/core';
+import {Binding, InjectionToken, Injector, ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {RestoreFocusValue} from '@angular/cdk/dialog';
@@ -30,7 +30,7 @@ export class MatBottomSheetConfig<D = any> {
    */
   injector?: Injector;
 
-  /** Extra CSS classes to be added to the bottom sheet container. */
+  /** Extra CSS classes to be added to the overlay panel containing the bottom sheet. */
   panelClass?: string | string[];
 
   /** Text layout direction for the bottom sheet. */
@@ -86,4 +86,10 @@ export class MatBottomSheetConfig<D = any> {
 
   /** Maximum height for the bottom sheet. If a number is provided, assumes pixel units. */
   maxHeight?: number | string;
+
+  /**
+   * Bindings to apply to the component rendered inside the dialog.
+   * Does nothing for template-based dialogs.
+   */
+  bindings?: Binding[];
 }

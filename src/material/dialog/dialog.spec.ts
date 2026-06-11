@@ -18,8 +18,9 @@ import {
   Component,
   createNgModule,
   Directive,
-  Injectable,
+  Service,
   Injector,
+  Input,
   NgModule,
   TemplateRef,
   ViewChild,
@@ -28,6 +29,7 @@ import {
   forwardRef,
   signal,
   inject,
+  inputBinding,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -735,6 +737,15 @@ describe('MatDialog', () => {
         let dialogRef = dialog.open(DialogWithInjectedData);
         expect(dialogRef.componentInstance.data).toBeNull();
       }).not.toThrow();
+    });
+
+    it('should be able to apply bindings', () => {
+      const dialogRef = dialog.open(PizzaMsg, {
+        bindings: [inputBinding('flavor', () => 'pepperoni')],
+      });
+      viewContainerFixture.detectChanges();
+
+      expect(dialogRef.componentInstance!.flavor).toBe('pepperoni');
     });
   });
 
@@ -1782,7 +1793,6 @@ describe('MatDialog', () => {
       @Component({
         imports: [Child],
         template: `<child></child>`,
-        changeDetection: ChangeDetectionStrategy.OnPush,
       })
       class OnPushHost {
         @ViewChild(Child, {static: true}) child!: Child;
@@ -1822,6 +1832,25 @@ describe('MatDialog', () => {
 
         expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
           0,
+        );
+      });
+
+      it('should not close when clicking on an aria-disabled close button', async () => {
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
+        );
+
+        const closeButton = overlayContainerElement.querySelector(
+          'button[mat-dialog-close]',
+        ) as HTMLElement;
+
+        closeButton.setAttribute('aria-disabled', 'true');
+        closeButton.click();
+        viewContainerFixture.detectChanges();
+        await viewContainerFixture.whenStable();
+
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
         );
       });
 
@@ -2293,7 +2322,6 @@ class DirectiveWithViewContainer {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
 class ComponentWithOnPushViewContainer {
@@ -2340,6 +2368,7 @@ class ComponentWithTemplateRef {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
+  @Input() flavor = 'unknown';
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);
@@ -2466,7 +2495,7 @@ class ModuleBoundDialogParentComponent {
   }
 }
 
-@Injectable()
+@Service({autoProvided: false})
 class ModuleBoundDialogService {
   name = 'Pasta';
 }
@@ -2496,7 +2525,6 @@ class ModuleBoundDialogModule {}
 @Component({
   template: `{{message | async}}`,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DialogWithAfterOpenSubscription {
   dialogRef = inject(MatDialogRef);

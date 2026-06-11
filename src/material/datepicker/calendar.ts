@@ -10,7 +10,6 @@ import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/
 import {
   AfterContentInit,
   AfterViewChecked,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -57,7 +56,6 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatIconButton, MatTooltip],
 })
 export class MatCalendarHeader<D> {
@@ -70,8 +68,6 @@ export class MatCalendarHeader<D> {
   private _periodButtonLabel!: string;
   private _prevButtonLabel!: string;
   private _nextButtonLabel!: string;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
@@ -254,7 +250,6 @@ export class MatCalendarHeader<D> {
   },
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
   imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
@@ -419,8 +414,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    * Emits whenever there is a state change that the header may need to respond to.
    */
   readonly stateChanges = new Subject<void>();
-
-  constructor(...args: unknown[]);
 
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
