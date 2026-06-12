@@ -24,6 +24,18 @@
   flex: 1;
 }
 
+.example-standalone-trigger {
+  background-color: rgb(239, 239, 239);
+}
+
+.example-standalone-trigger:hover {
+  background-color: rgb(208, 208, 208);
+}
+
+.example-standalone-trigger:active {
+  background-color: rgb(170, 170, 170);
+}
+
 .example-menu-item:hover {
   background-color: rgb(208, 208, 208);
 }
