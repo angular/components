@@ -278,6 +278,7 @@ abstract class BaseTestComponentRtl extends BaseTestComponent {
   template: getTableTemplate(false),
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeTest extends BaseTestComponent {
   @ViewChild(MatColumnResize) columnResize!: AbstractMatColumnResize;
@@ -286,6 +287,7 @@ class MatResizeTest extends BaseTestComponent {
 @Component({
   template: getTableTemplate(false),
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+  jit: true, // Due to dynamic template
 })
 class MatResizeOnPushTest extends MatResizeTest {}
 
@@ -293,6 +295,7 @@ class MatResizeOnPushTest extends MatResizeTest {}
   template: getTableTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
@@ -302,6 +305,7 @@ class MatResizeDefaultTest extends BaseTestComponent {
   template: getTableTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
@@ -311,6 +315,7 @@ class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   template: getFlexTemplate(false),
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeFlexTest extends BaseTestComponent {
   @ViewChild(MatColumnResizeFlex) columnResize!: AbstractMatColumnResize;
@@ -320,6 +325,7 @@ class MatResizeFlexTest extends BaseTestComponent {
   template: getFlexTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultFlexTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
@@ -330,6 +336,7 @@ class MatResizeDefaultFlexTest extends BaseTestComponent {
   template: getFlexTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
