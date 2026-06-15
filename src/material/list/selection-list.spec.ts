@@ -1088,6 +1088,12 @@ describe('MatSelectionList without forms', () => {
       expect(fixture.nativeElement.querySelector('mat-pseudo-checkbox')).toBeFalsy();
     });
 
+    it('should not show a pointer cursor on a disabled radio indicator', () => {
+      const radio = listOptions[0].nativeElement.querySelector('.mdc-radio')!;
+
+      expect(getComputedStyle(radio).cursor).toBe('default');
+    });
+
     it('should not deselect the target option on click', () => {
       const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
       const selectList =

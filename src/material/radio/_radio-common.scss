@@ -79,6 +79,10 @@ $fallbacks: m3-radio.get-tokens();
     }
   }
 
+  .mdc-radio--disabled {
+    cursor: default;
+  }
+
   .mdc-radio__background {
     display: inline-block;
     position: relative;
