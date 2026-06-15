@@ -23,7 +23,7 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      <span class="toolbar-title"><%= project %></span>
+      <span><%= project %></span>
     </mat-toolbar>
     <!-- Add Content Here -->
   </mat-sidenav-content>

@@ -1,4 +1,6 @@
-import { Component, inject, signal, computed<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, shareReplay } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';<% if(standalone) { %>
 import { NgIf } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -31,11 +33,11 @@ import { MatIconModule } from '@angular/material/icon';<% } %>
 })
 export class <%= classify(name) %>Component {
   private breakpointObserver = inject(BreakpointObserver);
-  protected isHandset = signal(false);
-
-  constructor() {
-    this.breakpointObserver.observe(Breakpoints.Handset).subscribe(result => {
-      this.isHandset.set(result.matches);
-    });
-  }
+  protected isHandset = toSignal(
+    this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+      map(result => result.matches),
+      shareReplay()
+    ),
+    { initialValue: false }
+  );
 }
