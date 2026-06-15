@@ -28,7 +28,11 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
     // Lazily start dispatcher once first overlay is added
     if (!this._isAttached) {
       this._ngZone.runOutsideAngular(() => {
-        this._cleanupKeydown = this._renderer.listen('body', 'keydown', this._keydownListener);
+        this._cleanupKeydown = this._renderer.listen(
+          this._document.body,
+          'keydown',
+          this._keydownListener,
+        );
       });
 
       this._isAttached = true;
