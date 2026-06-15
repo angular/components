@@ -92,6 +92,9 @@ export class Listbox<V> implements OnDestroy {
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
+  /** Whether the value should always be in sync with the available options */
+  readonly syncValue = input(true, {transform: booleanAttribute});
+
   /**
    * Whether to allow disabled items to receive focus. When `true`, disabled items are
    * focusable but not interactive. When `false`, disabled items are skipped during navigation.
@@ -190,8 +193,9 @@ export class Listbox<V> implements OnDestroy {
       write: () => {
         const items = inputs.items();
         const value = untracked(() => this.value());
+        const syncValue = untracked(() => this.syncValue());
 
-        if (items && value.some(v => !items.some(i => i.value() === v))) {
+        if (syncValue && items && value.some(v => !items.some(i => i.value() === v))) {
           this.value.set(value.filter(v => items.some(i => i.value() === v)));
         }
       },
