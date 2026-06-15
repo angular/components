@@ -59,5 +59,14 @@ export function _getFocusedElementPierceShadowDom(): HTMLElement | null {
 export function _getEventTarget<T extends EventTarget>(event: Event): T | null {
   // If an event is bound outside the Shadow DOM, the `event.target` will
   // point to the shadow root so we have to use `composedPath` instead.
-  return (event.composedPath ? event.composedPath()[0] : event.target) as T | null;
+  if (event.composedPath) {
+    try {
+      return event.composedPath()[0] as T | null;
+    } catch {
+      // Hydration event replay can dispatch wrapper events whose `composedPath`
+      // intentionally throws. Fall back to the event target in that case.
+    }
+  }
+
+  return event.target as T | null;
 }
