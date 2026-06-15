@@ -63,14 +63,15 @@ import type {ComboboxPopup} from './combobox-popup';
     'role': 'combobox',
     '[attr.aria-autocomplete]': '_pattern.autocomplete()',
     '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-readonly]': '_pattern.ariaReadonly()',
     '[attr.aria-expanded]': '_pattern.isExpanded()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '[attr.aria-controls]': '_pattern.popupId()',
     '[attr.aria-haspopup]': '_pattern.popupType()',
     '[attr.tabindex]':
       'disabled() && !softDisabled() ? -1 : (tabIndex() !== undefined ? tabIndex() : 0)',
-    '[attr.disabled]': 'disabled() && !softDisabled() ? "" : null',
-    '[attr.readonly]': 'disabled() && _pattern.isEditable() ? "" : null',
+    '[attr.disabled]': '_pattern.nativeDisabled()',
+    '[attr.readonly]': '_pattern.nativeReadonly()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusin)': '_pattern.onFocusin()',
     '(focusout)': '_pattern.onFocusout($event)',
@@ -92,6 +93,9 @@ export class Combobox extends DeferredContentAware implements OnInit {
 
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the combobox is readonly. */
+  readonly readonly = input(false, {transform: booleanAttribute});
 
   /** Whether the combobox is soft disabled (remains focusable). */
   readonly softDisabled = input(true, {transform: booleanAttribute});
@@ -117,6 +121,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
   /** The combobox ui pattern. */
   readonly _pattern = new ComboboxPattern({
     ...this,
+    readonly: () => this.readonly(),
     element: () => this.element,
     expandable: () => true,
     popup: computed(() => this._popup()?._pattern),

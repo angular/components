@@ -67,6 +67,7 @@ export interface ComboboxInputs extends ExpansionItem {
     element: SignalLike<HTMLElement>;
     inlineSuggestion: SignalLike<string | undefined>;
     popup: SignalLike<ComboboxPopupPattern | undefined>;
+    readonly: SignalLike<boolean>;
     softDisabled?: SignalLike<boolean>;
     value: WritableSignalLike<string>;
 }
@@ -75,6 +76,7 @@ export interface ComboboxInputs extends ExpansionItem {
 export class ComboboxPattern {
     constructor(inputs: ComboboxInputs);
     readonly activeDescendant: _angular_core.Signal<string | undefined>;
+    readonly ariaReadonly: _angular_core.Signal<"true" | null>;
     readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
     click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
     closePopupOnBlurEffect(): void;
@@ -91,6 +93,8 @@ export class ComboboxPattern {
     readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
     keyboardEventRelayEffect(): void;
     keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
+    readonly nativeDisabled: _angular_core.Signal<"" | null>;
+    readonly nativeReadonly: _angular_core.Signal<"" | null>;
     onClick(event: PointerEvent): void;
     onFocusin(): void;
     onFocusout(event: FocusEvent): void;
@@ -98,6 +102,7 @@ export class ComboboxPattern {
     onKeydown(event: KeyboardEvent): void;
     readonly popupId: _angular_core.Signal<string | undefined>;
     readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
+    readonly readonly: () => boolean;
     readonly softDisabled: () => boolean;
     readonly value: WritableSignalLike<string>;
 }
