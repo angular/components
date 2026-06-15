@@ -10,25 +10,25 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/cdk": "^21.2.0",
-    "@angular/common": "^21.2.0",
-    "@angular/compiler": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/localize": "^21.2.0",
-    "@angular/material": "^21.2.0",
-    "@angular/material-luxon-adapter": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/localize": "^22.0.0",
+    "@angular/material": "^22.0.0",
+    "@angular/material-luxon-adapter": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
     "luxon": "^3.7.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.2"
   },
   "devDependencies": {
-    "@angular/cli": "^21.2.0",
-    "@angular/build": "^21.2.0",
-    "@angular/compiler-cli": "^21.2.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/build": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.0.0",
     "@types/node": "^12.11.1",
@@ -38,6 +38,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.2"
+    "typescript": "~6.0.3"
   }
 }
