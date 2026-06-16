@@ -492,6 +492,21 @@ export class MatChipGrid
     this.stateChanges.next();
   }
 
+   protected override _redirectDestroyedChipFocus() {
+    if (this._lastDestroyedFocusedChipIndex === null) {
+      return;
+    }
+
+    super._redirectDestroyedChipFocus();
+
+    // If there are no chips left, or the set focuses the input,
+    // clear the active item silently to prevent stale references.
+    if (!this._chips.length ||
+        (this._chips.length === 1 && this._chips.first.disabled)) {
+      this._keyManager.updateActiveItem(-1);
+    }
+  }
+
   _focusLastChip() {
     if (this._chips.length) {
       this._chips.last.focus();

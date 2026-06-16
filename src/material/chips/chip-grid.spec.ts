@@ -180,6 +180,25 @@ describe('MatChipGrid', () => {
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('-1');
       });
 
+
+     it('should clear the active item in key manager when the last focused chip is destroyed', fakeAsync(() => {
+      const fixture = createComponent(StandardChipGrid);
+      fixture.detectChanges();
+      
+      // Focus a chip
+      chips.first.focus();
+      fixture.detectChanges();
+  
+      // Remove ALL chips
+      fixture.componentInstance.foods = []; // Clear the bound data array
+      fixture.detectChanges();
+      flush();
+  
+      // Verify key manager is reset to prevent stale references
+      expect(chipGridInstance._keyManager.activeItemIndex).toBe(-1);
+    }));
+  
+  
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
           const fixture = createComponent(StandardChipGrid);
