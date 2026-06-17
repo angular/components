@@ -1,3 +1,33 @@
+<a name="22.1.0-next.1"></a>
+# 22.1.0-next.1 "plastic scooter" (2026-06-17)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [31781a0246](https://github.com/angular/components/commit/31781a0246acacc7db7d8f77d502d2460e2cd832) | fix | **combobox:** allow setting readonly ([#33364](https://github.com/angular/components/pull/33364)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [231f94f555](https://github.com/angular/components/commit/231f94f5557bb58afc0070585688b3014d541eb2) | fix | **layout:** avoid CSS injection attacks in media matcher |
+| [10db3e30f9](https://github.com/angular/components/commit/10db3e30f94c8cfd160679da7ba22e4c6c0dd8bb) | fix | **platform:** account for composedPath error during event replay ([#33409](https://github.com/angular/components/pull/33409)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cd10a97a9d](https://github.com/angular/components/commit/cd10a97a9d2ae6cac888d72424d332207f9883cb) | fix | **bottom-sheet:** ensure animation event comes from container |
+| [e49f1273c8](https://github.com/angular/components/commit/e49f1273c8f7de2deda7ab1d2162b5594d9b04fa) | fix | **chips:** correct focus management on chip destruction ([#33329](https://github.com/angular/components/pull/33329)) |
+| [e31d3fd247](https://github.com/angular/components/commit/e31d3fd2477348bf9c47b39f05650735e6c4e536) | fix | **chips:** wrong padding when chip only has edit icon ([#33407](https://github.com/angular/components/pull/33407)) |
+| [a02d935ca3](https://github.com/angular/components/commit/a02d935ca3f30f6302e04172b1ffb7dfd2e5522c) | fix | **grid-list:** always validate colspan |
+| [0939437095](https://github.com/angular/components/commit/0939437095c14608b35edeec0312f6dcac45f917) | fix | **stepper:** validate animation durations |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2430e6e53b](https://github.com/angular/components/commit/2430e6e53bb797129a3ed0ee4a024ed647785b17) | fix | update to latest typings and fix error ([#33387](https://github.com/angular/components/pull/33387)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [eb2c033311](https://github.com/angular/components/commit/eb2c033311977369573f864a5be06632d1cc66a1) | fix | improve dark theme visibility in menu, overlay, and portal examples ([#33367](https://github.com/angular/components/pull/33367)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.2"></a>
 # 22.0.2 "plastic lion" (2026-06-17)
 ### cdk
