@@ -1,3 +1,25 @@
+<a name="22.0.2"></a>
+# 22.0.2 "plastic lion" (2026-06-17)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e8f3419060](https://github.com/angular/components/commit/e8f34190606a706e27b594ad84543fad62dd24e8) | fix | **layout:** avoid CSS injection attacks in media matcher |
+| [9dc2b2b2ed](https://github.com/angular/components/commit/9dc2b2b2edefa0b01859ef68059d1a16a6837ecc) | fix | **platform:** account for composedPath error during event replay ([#33409](https://github.com/angular/components/pull/33409)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fb4478bff3](https://github.com/angular/components/commit/fb4478bff31976f6179fde21f800f1326395f707) | fix | **bottom-sheet:** ensure animation event comes from container |
+| [e4f7f3498b](https://github.com/angular/components/commit/e4f7f3498b472badf60250ca1bf884e6b0f7a6aa) | fix | **chips:** correct focus management on chip destruction ([#33329](https://github.com/angular/components/pull/33329)) |
+| [766b7aceee](https://github.com/angular/components/commit/766b7aceee027d6f40af15ab29d6fd47ebe1661b) | fix | **chips:** wrong padding when chip only has edit icon ([#33407](https://github.com/angular/components/pull/33407)) |
+| [ebca801ee5](https://github.com/angular/components/commit/ebca801ee55b9f63a3b5b29cc6113e09ff66ffe2) | fix | **grid-list:** always validate colspan |
+| [30942bcd36](https://github.com/angular/components/commit/30942bcd3640efd7f3980044144dd1fc8b10e8f3) | fix | **stepper:** validate animation durations |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2995797ded](https://github.com/angular/components/commit/2995797ded3713909d9742c4032f4f8647193cb3) | fix | improve dark theme visibility in menu, overlay, and portal examples ([#33367](https://github.com/angular/components/pull/33367)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.0-next.0"></a>
 # 22.1.0-next.0 "argon-pineapple" (2026-06-10)
 No user facing changes in this release
