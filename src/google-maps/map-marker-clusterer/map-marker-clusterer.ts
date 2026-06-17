@@ -82,7 +82,11 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
   @Output() readonly clusteringend: Observable<void> =
     this._closestMapEventManager.getLazyEmitter<void>('clusteringend');
 
-  /** Emits when a cluster has been clicked. */
+  /**
+   * Emits when a cluster has been clicked.
+   * Listening to this output will replace the default click handler on the cluster,
+   * disabling the default behavior of zooming into the markers in the cluster.
+   */
   @Output()
   readonly clusterClick: EventEmitter<Cluster> = new EventEmitter<Cluster>();
 
