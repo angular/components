@@ -57,7 +57,14 @@ export function _getFocusedElementPierceShadowDom(): HTMLElement | null {
 
 /** Gets the target of an event while accounting for Shadow DOM. */
 export function _getEventTarget<T extends EventTarget>(event: Event): T | null {
-  // If an event is bound outside the Shadow DOM, the `event.target` will
-  // point to the shadow root so we have to use `composedPath` instead.
-  return (event.composedPath ? event.composedPath()[0] : event.target) as T | null;
+  // If an event is bound outside the Shadow DOM, the `event.target` will point to the shadow root
+  // so we have to use `composedPath` instead. Note that `composedPath` can throw if it's called
+  // during event replay (see #33386).
+  // TODO(crisbeto): it seems like `preventDefault` throws during replay as well.
+  if (event.composedPath) {
+    try {
+      return event.composedPath()[0] as T | null;
+    } catch {}
+  }
+  return event.target as T | null;
 }
