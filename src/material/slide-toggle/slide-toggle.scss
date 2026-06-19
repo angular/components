@@ -557,6 +557,25 @@ $fallbacks: m3-slide-toggle.get-tokens();
   }
 }
 
+.mat-slide-toggle-full-width {
+  width: 100%;
+
+  .mat-internal-form-field {
+    width: 100%;
+    justify-content: space-between;
+
+    label {
+      margin: 0;
+      flex-grow: 1;
+      text-align: end;
+    }
+  }
+
+  .mdc-form-field--align-end label {
+    text-align: start;
+  }
+}
+
 // Element used to provide a larger tap target for users on touch devices.
 .mat-mdc-slide-toggle-touch-target {
   position: absolute;
