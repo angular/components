@@ -26,6 +26,12 @@
 
   <mat-slide-toggle aria-label="Toggle only" hideLabel color="primary" [(ngModel)]="firstToggle" />
 
+  <p>With full width</p>
+  <div class="demo-full-width-container">
+    <mat-slide-toggle fullWidth labelPosition="before" [(ngModel)]="firstToggle">Full Width Before</mat-slide-toggle>
+    <mat-slide-toggle fullWidth labelPosition="after" [(ngModel)]="firstToggle">Full Width After</mat-slide-toggle>
+  </div>
+
   <p>Example where the slide toggle is required inside of a form.</p>
 
   <form #form="ngForm" (ngSubmit)="onFormSubmit()">
