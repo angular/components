@@ -180,23 +180,23 @@ describe('MatChipGrid', () => {
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      // TODO: re-enable this test.
-      // it('should clear the active item in key manager when the last focused chip is destroyed', fakeAsync(() => {
-      //   const fixture = createComponent(StandardChipGrid);
-      //   fixture.detectChanges();
+      it('should clear the active item in key manager when the last focused chip is destroyed', async () => {
+        const fixture = createComponent(InputChipGrid);
+        patchElementFocus(primaryActions[0]);
+        fixture.detectChanges();
 
-      //   // Focus a chip
-      //   chips.first.focus();
-      //   fixture.detectChanges();
+        // Focus a chip
+        chips.first.focus();
+        fixture.detectChanges();
 
-      //   // Remove ALL chips
-      //   fixture.componentInstance.foods = []; // Clear the bound data array
-      //   fixture.detectChanges();
-      //   flush();
+        // Remove ALL chips
+        fixture.componentInstance.foods.set([]); // Clear the bound data array
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-      //   // Verify key manager is reset to prevent stale references
-      //   expect(chipGridInstance._keyManager.activeItemIndex).toBe(-1);
-      // }));
+        // Verify key manager is reset to prevent stale references
+        expect((chipGridInstance as any)._keyManager.activeItemIndex).toBe(-1);
+      });
 
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
@@ -872,7 +872,7 @@ describe('MatChipGrid', () => {
       }
 
       nativeInput.focus();
-      expect(fixture.componentInstance.foods)
+      expect(fixture.componentInstance.foods())
         .withContext('Expected all chips to be removed.')
         .toEqual([]);
       expect(document.activeElement).withContext('Expected input to be focused.').toBe(nativeInput);
@@ -1172,7 +1172,7 @@ class FormFieldChipGrid {
     <mat-form-field>
       <mat-label>New food...</mat-label>
       <mat-chip-grid #chipGrid placeholder="Food" [formControl]="control">
-        @for (food of foods; track food) {
+        @for (food of foods(); track food) {
           <mat-chip-row [value]="food.value" (removed)="remove(food)">
             {{ food.viewValue }}
           </mat-chip-row>
@@ -1189,7 +1189,7 @@ class FormFieldChipGrid {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputChipGrid {
-  foods: any[] = [
+  readonly foods = signal([
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos', disabled: true},
@@ -1198,7 +1198,7 @@ class InputChipGrid {
     {value: 'eggs-5', viewValue: 'Eggs'},
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
-  ];
+  ]);
   control = new FormControl<string | null>(null);
 
   separatorKeyCodes = [ENTER, SPACE];
@@ -1209,10 +1209,13 @@ class InputChipGrid {
 
     // Add our foods
     if (value) {
-      this.foods.push({
-        value: `${value.toLowerCase()}-${this.foods.length}`,
-        viewValue: value,
-      });
+      this.foods.update(current => [
+        ...current,
+        {
+          value: `${value.toLowerCase()}-${current.length}`,
+          viewValue: value,
+        },
+      ]);
     }
 
     // Reset the input value
@@ -1220,10 +1223,14 @@ class InputChipGrid {
   }
 
   remove(food: any): void {
-    const index = this.foods.indexOf(food);
+    const index = this.foods().indexOf(food);
 
     if (index > -1) {
-      this.foods.splice(index, 1);
+      this.foods.update(current => {
+        const newValue = current.slice();
+        newValue.splice(index, 1);
+        return newValue;
+      });
     }
   }
 
