@@ -306,8 +306,8 @@ export class GoogleMapsModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof GoogleMap, typeof MapBaseLayer, typeof MapBicyclingLayer, typeof MapCircle, typeof MapDirectionsRenderer, typeof MapGroundOverlay, typeof MapHeatmapLayer, typeof MapInfoWindow, typeof MapKmlLayer, typeof MapMarker, typeof MapAdvancedMarker, typeof DeprecatedMapMarkerClusterer, typeof MapPolygon, typeof MapPolyline, typeof MapRectangle, typeof MapTrafficLayer, typeof MapTransitLayer, typeof MapMarkerClusterer], [typeof GoogleMap, typeof MapBaseLayer, typeof MapBicyclingLayer, typeof MapCircle, typeof MapDirectionsRenderer, typeof MapGroundOverlay, typeof MapHeatmapLayer, typeof MapInfoWindow, typeof MapKmlLayer, typeof MapMarker, typeof MapAdvancedMarker, typeof DeprecatedMapMarkerClusterer, typeof MapPolygon, typeof MapPolyline, typeof MapRectangle, typeof MapTrafficLayer, typeof MapTransitLayer, typeof MapMarkerClusterer]>;
 }
 
-// @public
-export type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
+// @public @deprecated
+export type HeatmapData = any;
 
 // @public
 export class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
@@ -538,20 +538,14 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGroundOverlay, never>;
 }
 
-// @public
-export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+// @public @deprecated
+export class MapHeatmapLayer {
+    constructor();
     set data(data: HeatmapData);
     getData(): HeatmapData;
-    heatmap?: google.maps.visualization.HeatmapLayer;
-    readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer>;
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    set options(options: Partial<google.maps.visualization.HeatmapLayerOptions>);
+    heatmap?: any;
+    readonly heatmapInitialized: EventEmitter<any>;
+    set options(options: any);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapHeatmapLayer, "map-heatmap-layer", ["mapHeatmapLayer"], { "data": { "alias": "data"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "heatmapInitialized": "heatmapInitialized"; }, never, never, true, never>;
     // (undocumented)
