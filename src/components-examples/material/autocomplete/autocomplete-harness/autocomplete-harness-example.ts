@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 /**
@@ -8,6 +8,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
   selector: 'autocomplete-harness-example',
   templateUrl: 'autocomplete-harness-example.html',
   imports: [MatAutocompleteModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AutocompleteHarnessExample {
   states = [

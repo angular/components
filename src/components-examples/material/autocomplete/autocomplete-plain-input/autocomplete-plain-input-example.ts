@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -13,6 +13,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
   templateUrl: 'autocomplete-plain-input-example.html',
   styleUrl: 'autocomplete-plain-input-example.css',
   imports: [FormsModule, MatAutocompleteModule, ReactiveFormsModule, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AutocompletePlainInputExample {
   control = new FormControl('');

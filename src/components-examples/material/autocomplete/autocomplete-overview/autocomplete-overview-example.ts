@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -30,6 +30,7 @@ export interface State {
     MatSlideToggleModule,
     AsyncPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AutocompleteOverviewExample {
   stateCtrl = new FormControl('');

@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -32,6 +32,7 @@ export const _filter = (opt: string[], value: string): string[] => {
     MatAutocompleteModule,
     AsyncPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AutocompleteOptgroupExample {
   private _formBuilder = inject(FormBuilder);
