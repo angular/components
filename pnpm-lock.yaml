@@ -93,7 +93,7 @@ importers:
         specifier: 'catalog:'
         version: 22.1.0-next.1(@angular/common@22.1.0-next.1(@angular/compiler-cli@22.1.0-next.1(@angular/compiler@22.1.0-next.1)(typescript@6.0.2))(@angular/core@22.1.0-next.1(@angular/compiler@22.1.0-next.1)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.1(@angular/compiler@22.1.0-next.1)(typescript@6.0.2))(@angular/core@22.1.0-next.1(@angular/compiler@22.1.0-next.1)(rxjs@6.6.7)(zone.js@0.16.2))
       '@types/google.maps':
-        specifier: ^3.54.10
+        specifier: ^3.65.1
         version: 3.65.1
       '@types/youtube':
         specifier: 0.3.0
@@ -414,10 +414,10 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 22.1.0-next.0(57273a5f4a80a292dfa623a38f707b1c)
+        version: 22.1.0-next.0(bdb3d4bd82c72a6fdf5a0dc9f0a0d5e8)
       '@angular/cli':
         specifier: 'catalog:'
-        version: 22.1.0-next.0(@types/node@22.19.21)(chokidar@5.0.0)(supports-color@10.2.2)
+        version: 22.1.0-next.0(@types/node@22.19.21)(chokidar@5.0.0)
       '@angular/compiler-cli':
         specifier: 'catalog:'
         version: 22.1.0-next.1(@angular/compiler@22.1.0-next.1)(typescript@6.0.2)
@@ -614,7 +614,7 @@ importers:
   src/google-maps:
     dependencies:
       '@types/google.maps':
-        specifier: ^3.54.10
+        specifier: ^3.65.1
         version: 3.65.1
       tslib:
         specifier: ^2.3.0
@@ -3020,7 +3020,6 @@ packages:
   '@ngtools/webpack@22.1.0-next.0':
     resolution: {integrity: sha512-S7s7pu3b0Igdww8SvbRvkObaJ6jOSTYEFEUGQBbw4/7CyxCBPJA0CQSh0esoxlZEvMLQeLOfXCIqbo8x9ljR7g==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
-    deprecated: Angular's Webpack support is deprecated. Use the esbuild and Vite-based "@angular/build" package instead.
     peerDependencies:
       '@angular/compiler-cli': ^22.0.0 || ^22.1.0-next.0
       typescript: 6.0.2
@@ -10219,13 +10218,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.1.0-next.0(57273a5f4a80a292dfa623a38f707b1c)':
+  '@angular-devkit/build-angular@22.1.0-next.0(bdb3d4bd82c72a6fdf5a0dc9f0a0d5e8)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.0(chokidar@5.0.0)
-      '@angular-devkit/build-webpack': 0.2201.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
+      '@angular-devkit/build-webpack': 0.2201.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
       '@angular-devkit/core': 22.1.0-next.0(chokidar@5.0.0)
-      '@angular/build': 22.1.0-next.0(c6727602120179119bb8a88ad3108aca)
+      '@angular/build': 22.1.0-next.0(58e48319d02d281a8858475bfc09236f)
       '@angular/compiler-cli': 22.1.0-next.1(@angular/compiler@22.1.0-next.1)(typescript@6.0.2)
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
@@ -10245,7 +10244,7 @@ snapshots:
       copy-webpack-plugin: 14.0.0(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
       css-loader: 7.1.4(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
       esbuild-wasm: 0.28.0
-      http-proxy-middleware: 4.0.0(supports-color@10.2.2)
+      http-proxy-middleware: 4.0.0
       istanbul-lib-instrument: 6.0.3
       jsonc-parser: 3.3.1
       karma-source-map-support: 1.4.0
@@ -10273,7 +10272,7 @@ snapshots:
       typescript: 6.0.2
       webpack: 5.107.2(esbuild@0.28.0)(postcss@8.5.15)
       webpack-dev-middleware: 8.0.3(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
-      webpack-dev-server: 5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
+      webpack-dev-server: 5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
     optionalDependencies:
@@ -10313,12 +10312,12 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-webpack@0.2201.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))':
+  '@angular-devkit/build-webpack@0.2201.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))':
     dependencies:
       '@angular-devkit/architect': 0.2201.0-next.0(chokidar@5.0.0)
       rxjs: 7.8.2
       webpack: 5.107.2(esbuild@0.28.0)(postcss@8.5.15)
-      webpack-dev-server: 5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
+      webpack-dev-server: 5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15))
     transitivePeerDependencies:
       - chokidar
 
@@ -10343,7 +10342,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.1.0-next.0(c6727602120179119bb8a88ad3108aca)':
+  '@angular/build@22.1.0-next.0(58e48319d02d281a8858475bfc09236f)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.0(chokidar@5.0.0)
@@ -10357,7 +10356,7 @@ snapshots:
       beasties: 0.4.2
       browserslist: 4.28.2
       esbuild: 0.28.0
-      https-proxy-agent: 9.0.0(supports-color@10.2.2)
+      https-proxy-agent: 9.0.0
       jsonc-parser: 3.3.1
       listr2: 10.2.1
       magic-string: 0.30.21
@@ -10398,7 +10397,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@angular/cli@22.1.0-next.0(@types/node@22.19.21)(chokidar@5.0.0)(supports-color@10.2.2)':
+  '@angular/cli@22.1.0-next.0(@types/node@22.19.21)(chokidar@5.0.0)':
     dependencies:
       '@angular-devkit/architect': 0.2201.0-next.0(chokidar@5.0.0)
       '@angular-devkit/core': 22.1.0-next.0(chokidar@5.0.0)
@@ -10413,7 +10412,7 @@ snapshots:
       jsonc-parser: 3.3.1
       listr2: 10.2.1
       npm-package-arg: 14.0.0
-      pacote: 21.5.0(supports-color@10.2.2)
+      pacote: 21.5.0
       parse5-html-rewriting-stream: 8.0.1
       semver: 7.8.1
       yargs: 18.0.0
@@ -13734,10 +13733,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@sigstore/tuf@4.0.2(supports-color@10.2.2)':
+  '@sigstore/tuf@4.0.2':
     dependencies:
       '@sigstore/protobuf-specs': 0.5.1
-      tuf-js: 4.1.0(supports-color@10.2.2)
+      tuf-js: 4.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -16716,7 +16715,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  http-proxy-middleware@4.0.0(supports-color@10.2.2):
+  http-proxy-middleware@4.0.0:
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       httpxy: 0.5.3
@@ -16761,7 +16760,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@9.0.0(supports-color@10.2.2):
+  https-proxy-agent@9.0.0:
     dependencies:
       agent-base: 9.0.0
       debug: 4.4.3(supports-color@10.2.2)
@@ -18412,7 +18411,7 @@ snapshots:
 
   package-json-from-dist@1.0.1: {}
 
-  pacote@21.5.0(supports-color@10.2.2):
+  pacote@21.5.0:
     dependencies:
       '@gar/promise-retry': 1.0.3
       '@npmcli/git': 7.0.2
@@ -18428,7 +18427,7 @@ snapshots:
       npm-pick-manifest: 11.0.3
       npm-registry-fetch: 19.1.1
       proc-log: 6.1.0
-      sigstore: 4.1.1(supports-color@10.2.2)
+      sigstore: 4.1.1
       ssri: 13.0.1
       tar: 7.5.16
     transitivePeerDependencies:
@@ -19502,13 +19501,13 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  sigstore@4.1.1(supports-color@10.2.2):
+  sigstore@4.1.1:
     dependencies:
       '@sigstore/bundle': 4.0.0
       '@sigstore/core': 3.2.1
       '@sigstore/protobuf-specs': 0.5.1
       '@sigstore/sign': 4.1.1
-      '@sigstore/tuf': 4.0.2(supports-color@10.2.2)
+      '@sigstore/tuf': 4.0.2
       '@sigstore/verify': 3.1.1
     transitivePeerDependencies:
       - supports-color
@@ -20203,7 +20202,7 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  tuf-js@4.1.0(supports-color@10.2.2):
+  tuf-js@4.1.0:
     dependencies:
       '@tufjs/models': 4.1.0
       debug: 4.4.3(supports-color@10.2.2)
@@ -20470,7 +20469,7 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
       postcss: 8.5.15
-      rollup: 4.61.0
+      rollup: 4.62.0
       tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 22.19.21
@@ -20565,7 +20564,7 @@ snapshots:
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)):
+  webpack-dev-server@5.2.4(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.15)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
