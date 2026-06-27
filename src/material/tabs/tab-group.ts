@@ -39,6 +39,7 @@ import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
+import {normalizeDuration} from './paginated-tab-header';
 
 /** @docs-private */
 export interface MatTabGroupBaseHeader {
@@ -605,10 +606,4 @@ export class MatTabChangeEvent {
   index!: number;
   /** Reference to the currently-selected tab. */
   tab!: MatTab;
-}
-
-/** Normalizes an animation duration value. */
-function normalizeDuration(value: string | number): string {
-  const stringValue = value + '';
-  return /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
 }
