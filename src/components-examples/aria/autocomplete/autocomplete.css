@@ -12,27 +12,23 @@
   Vendor prefixes are included to ensure consistent placeholder styling
   across different browsers. */
 
-  /* stylelint-disable-next-line material/no-prefixes -- Provides all prefixes for ::placeholder */
+  /* stylelint-disable material/no-prefixes -- Provides all prefixes for ::placeholder */
   input::-webkit-input-placeholder {
     color: var(--mat-sys-on-surface-variant);
   }
 
-  /* stylelint-disable-next-line material/no-prefixes -- Provides all prefixes for ::placeholder */
   input::-moz-placeholder /* Firefox 19+ */ {
     color: var(--mat-sys-on-surface-variant);
   }
 
-  /* stylelint-disable-next-line material/no-prefixes -- Provides all prefixes for ::placeholder */
   input:-ms-input-placeholder /* IE 10+ */ {
     color: var(--mat-sys-on-surface-variant);
   }
 
-  /* stylelint-disable-next-line material/no-prefixes -- Provides all prefixes for ::placeholder */
   input:-moz-placeholder  /* Firefox 18- */ {
     color: var(--mat-sys-on-surface-variant);
   }
 
-  /* stylelint-disable-next-line material/no-prefixes -- Provides all prefixes for ::placeholder */
   input::placeholder {
     color: var(--mat-sys-on-surface-variant);
   }
