@@ -285,6 +285,22 @@ export class FocusTrap {
       return root;
     }
 
+    // Check shadow DOM first if it exists
+    if (root.shadowRoot) {
+      const shadowChildren = root.shadowRoot.children;
+      for (let i = 0; i < shadowChildren.length; i++) {
+        const tabbableChild =
+          shadowChildren[i].nodeType === this._document.ELEMENT_NODE
+            ? this._getFirstTabbableElement(shadowChildren[i] as HTMLElement)
+            : null;
+
+        if (tabbableChild) {
+          return tabbableChild;
+        }
+      }
+    }
+
+    // Then check light DOM children
     const children = root.children;
 
     for (let i = 0; i < children.length; i++) {
@@ -307,7 +323,7 @@ export class FocusTrap {
       return root;
     }
 
-    // Iterate in reverse DOM order.
+    // Iterate in reverse DOM order - check light DOM children first
     const children = root.children;
 
     for (let i = children.length - 1; i >= 0; i--) {
@@ -318,6 +334,21 @@ export class FocusTrap {
 
       if (tabbableChild) {
         return tabbableChild;
+      }
+    }
+
+    // Then check shadow DOM if it exists
+    if (root.shadowRoot) {
+      const shadowChildren = root.shadowRoot.children;
+      for (let i = shadowChildren.length - 1; i >= 0; i--) {
+        const tabbableChild =
+          shadowChildren[i].nodeType === this._document.ELEMENT_NODE
+            ? this._getLastTabbableElement(shadowChildren[i] as HTMLElement)
+            : null;
+
+        if (tabbableChild) {
+          return tabbableChild;
+        }
       }
     }
 
