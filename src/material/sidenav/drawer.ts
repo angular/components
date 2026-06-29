@@ -123,6 +123,10 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     }
   }
 
+  _drawerModeChanged() {
+    this._updateInert();
+  }
+
   private _updateInert() {
     const newValue = this._container._isShowingBackdrop();
 
@@ -235,6 +239,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._mode = value;
     this._updateFocusTrapState();
     this._modeChanged.next();
+    this._getContent()?._drawerModeChanged();
   }
   private _mode: MatDrawerMode = 'over';
 
@@ -579,7 +584,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     }
 
     this._opened.set(isOpen);
-    (this._container?._content || this._container?._userContent)?._drawerToggled(this);
+    this._getContent()?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
       // Note: it's important to set this as early as possible,
@@ -611,6 +616,11 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     return new Promise<MatDrawerToggleResult>(resolve => {
       this.openedChange.pipe(take(1)).subscribe(open => resolve(open ? 'open' : 'close'));
     });
+  }
+
+  /** Gets the current content element. */
+  private _getContent() {
+    return this._container?._content || this._container?._userContent;
   }
 
   /** Toggles whether the drawer is currently animating. */

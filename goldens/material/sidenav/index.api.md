@@ -122,6 +122,8 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // (undocumented)
     _container: MatDrawerContainer;
     // (undocumented)
+    _drawerModeChanged(): void;
+    // (undocumented)
     _drawerToggled(drawer: MatDrawer): void;
     // (undocumented)
     ngAfterContentInit(): void;
