@@ -289,6 +289,10 @@ $fallbacks: m3-button.get-tokens();
 
   // Similar to MDC's `_icon-structure`, apart from the margin which we
   // handle via custom tokens in `mat-private-button-horizontal-layout`.
+  // `rotate: 0.03deg` Fixes a browser rendering issue that causes icons to be cut off in some 
+  // cases. 
+  // See: https://github.com/angular/components/issues/30763 
+  // See: https://github.com/google/material-design-icons/issues/679
   & > .mat-icon {
     $icon-size: 1.125rem;
     display: inline-block;
@@ -297,6 +301,7 @@ $fallbacks: m3-button.get-tokens();
     font-size: $icon-size;
     height: $icon-size;
     width: $icon-size;
+    rotate: 0.03deg;
   }
 }
 
