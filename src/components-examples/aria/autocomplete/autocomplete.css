@@ -10,7 +10,9 @@
   The 'material/no-prefixes' stylelint rule flags the standard ::placeholder
   when grouped with vendor prefixes. Each prefix is on its own rule to comply.
   Vendor prefixes are included to ensure consistent placeholder styling
-  across different browsers. */
+  across different browsers.
+
+  NOTE: These styles are primarily needed for internal testing. */
 
   /* stylelint-disable material/no-prefixes -- Provides all prefixes for ::placeholder */
   input::-webkit-input-placeholder {
