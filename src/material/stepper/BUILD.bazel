@@ -53,6 +53,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "stepper.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         ":variables",
@@ -64,6 +65,7 @@ sass_binary(
 sass_binary(
     name = "header_css",
     src = "step-header.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         ":variables",

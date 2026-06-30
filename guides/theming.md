@@ -48,6 +48,73 @@ html {
 }
 ```
 
+### CSS cascade layers
+
+Angular Material ships all component CSS inside the `angular-material`
+[cascade layer](https://www.w3.org/TR/css-cascade-5/#layering). This lets
+applications control where Material sits in the cascade relative to resets,
+CDK styles, and utility frameworks such as Tailwind — without resorting to
+extra specificity or `!important`. See also
+[MDN: Cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
+
+Component styles are layered automatically at build time — no action is
+needed for component CSS. Prebuilt themes are also shipped pre-layered.
+
+**Layer order.** In Sass, `@use` must come before any other rules. After your
+`@use` lines, declare the order of named layers:
+
+```scss
+@use '@angular/material' as mat;
+
+@layer base, cdk-resets, cdk-overlay, angular-material, components, utilities;
+```
+
+If your app uses CDK overlay or drag-drop resets, include their published
+layer names (`cdk-overlay`, `cdk-resets`) so their priority is predictable.
+
+**Tailwind CSS.** Placing `angular-material` before `utilities` allows
+Tailwind utility classes to override Material styles at equal specificity.
+Put Material `@use` and your layer prelude before Tailwind’s `@tailwind`
+directives (Tailwind’s own docs describe layer setup for your stack):
+
+```scss
+@use '@angular/material' as mat;
+
+@layer base, cdk-resets, cdk-overlay, angular-material, components, utilities;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+**Theme output.** Wrap `mat.theme` in `mat.theme-layer` so the generated
+CSS custom properties land in the same `angular-material` layer as the
+component styles. You can also use the same mixin around other Angular
+Material theme output such as `all-component-themes` or individual
+component theme mixins:
+
+```scss
+@use '@angular/material' as mat;
+
+@layer base, cdk-resets, cdk-overlay, angular-material, components, utilities;
+
+@include mat.theme-layer {
+  html {
+    @include mat.theme((
+      color: mat.$violet-palette,
+      typography: Roboto,
+      density: 0,
+    ));
+  }
+}
+```
+
+**Cascade note.** In the CSS Cascade Level 5 model, unlayered author
+styles have higher priority than any named layer. Plain CSS rules can
+therefore override layered Material at equal specificity. Overrides that
+live inside named layers must appear after `angular-material` in the
+`@layer` order list, or use higher specificity / `!important` as usual.
+
 You can use the following styles to apply the theme’s surface background and
 on-surface text colors as a default across your application:
 

@@ -25,5 +25,6 @@ ng_project(
 sass_binary(
     name = "structural_styles_css",
     src = "structural-styles.scss",
+    layer = "angular-material",
     deps = [":focus-indicators"],
 )

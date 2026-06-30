@@ -55,6 +55,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "list.scss",
+    layer = "angular-material",
     deps = [
         ":list_inherited_structure",
         ":list_item_hcm_indicator",
@@ -83,6 +84,7 @@ sass_library(
 sass_binary(
     name = "option_css",
     src = "list-option.scss",
+    layer = "angular-material",
     deps = [
         ":list_item_hcm_indicator",
         "//src/material/checkbox:checkbox_common",
