@@ -422,11 +422,15 @@ export class MyComponent {
 <!-- example(datepicker-luxon) -->
 
 By default the `LuxonDateAdapter` creates dates in your time zone specific locale. You can change
-the default behaviour to parse dates as UTC by passing `useUtc: true` into `provideLuxonDateAdapter`:
+the default behaviour to parse dates as UTC by providing `MAT_LUXON_DATE_ADAPTER_OPTIONS` with
+`useUtc: true`:
 
 ```ts
 bootstrapApplication(MyApp, {
-  providers: [provideLuxonDateAdapter(undefined, {useUtc: true})]
+  providers: [
+    provideLuxonDateAdapter(),
+    {provide: MAT_LUXON_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
+  ]
 });
 ```
 
