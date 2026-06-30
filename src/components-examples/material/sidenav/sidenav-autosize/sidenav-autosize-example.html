@@ -1,5 +1,5 @@
-<mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
+<mat-sidenav-container class="example-container" autosize>
+  <mat-sidenav #sidenav class="example-sidenav" mode="side">
     <p>Auto-resizing sidenav</p>
     @if (showFiller) {
       <p>Lorem, ipsum dolor sit amet consectetur.</p>
@@ -7,12 +7,12 @@
     <button (click)="showFiller = !showFiller" matButton="elevated">
       Toggle extra text
     </button>
-  </mat-drawer>
+  </mat-sidenav>
 
-  <div class="example-sidenav-content">
-    <button type="button" matButton (click)="drawer.toggle()">
+  <mat-sidenav-content class="example-sidenav-content">
+    <button type="button" matButton (click)="sidenav.toggle()">
       Toggle sidenav
     </button>
-  </div>
+  </mat-sidenav-content>
 
-</mat-drawer-container>
+</mat-sidenav-container>
