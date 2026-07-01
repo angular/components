@@ -3,3 +3,4 @@ export {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-exampl
 export {ToolbarSimpleExample} from './toolbar-simple/toolbar-simple-example';
 export {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
 export {ToolbarHarnessExample} from './toolbar-harness/toolbar-harness-example';
+export {ToolbarNavbarExample} from './toolbar-navbar/toolbar-navbar-example';
