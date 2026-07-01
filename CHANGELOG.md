@@ -1,3 +1,25 @@
+<a name="22.1.0-next.2"></a>
+# 22.1.0-next.2 "22-1-0-next-2" (2026-07-01)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e2cab48d6](https://github.com/angular/components/commit/e2cab48d68f61ccf967934c51e255734a94cd95d) | fix | **combobox:** improve autocomplete placeholder text color contrast ([#33465](https://github.com/angular/components/pull/33465)) |
+| [8002bce0c](https://github.com/angular/components/commit/8002bce0c64883f5bc923d3b05663f66dd4beb80) | fix | **combobox:** zonejs compatibility ([#33453](https://github.com/angular/components/pull/33453)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [864dcadee](https://github.com/angular/components/commit/864dcadeeae85295d54b080e6da1335ced4d909c) | fix | **collections:** add ability to bulk select/deselect values ([#33469](https://github.com/angular/components/pull/33469)) |
+| [918478727](https://github.com/angular/components/commit/9184787277cccc1da93026bfc549d2c7b073c99c) | fix | **scrolling:** reset more properties to avoid jumping during virtual scroll ([#33439](https://github.com/angular/components/pull/33439)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [73939a835](https://github.com/angular/components/commit/73939a835b49f9603cc8026eb373dbef5e9cb96a) | feat | **slide-toggle:** add full-width support ([#33424](https://github.com/angular/components/pull/33424)) |
+| [d81320fad](https://github.com/angular/components/commit/d81320fadf92e5f865a851e6325cf94040b45197) | fix | **radio:** do not set cursor on non interactive radio ([#33418](https://github.com/angular/components/pull/33418)) |
+| [ce4710970](https://github.com/angular/components/commit/ce47109701f2831add652533910e9105038a4138) | fix | **sidenav:** update inert value if mode changes ([#33461](https://github.com/angular/components/pull/33461)) |
+| [58a78073f](https://github.com/angular/components/commit/58a78073fd88007a914e1f19d78d37fb2bff4eaa) | fix | **tabs:** validate animation duration ([#33452](https://github.com/angular/components/pull/33452)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.3"></a>
 # 22.0.3 "22-0-3" (2026-07-01)
 ### aria
