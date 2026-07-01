@@ -187,7 +187,7 @@ export class MatInput
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input() placeholder!: string;
+  @Input() placeholder: string | null | undefined;
 
   /**
    * Name of the input.
