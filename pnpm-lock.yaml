@@ -60,7 +60,7 @@ catalogs:
 
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.6.4
+  protobufjs: 8.6.5
 
 packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
 
@@ -217,8 +217,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.1
       firebase-tools:
-        specifier: 15.22.0
-        version: 15.22.0(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
+        specifier: 15.22.3
+        version: 15.22.3(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.5
@@ -248,16 +248,16 @@ importers:
         version: 2.0.0
       karma:
         specifier: ^6.3.12
-        version: 6.4.4(bufferutil@4.1.0)
+        version: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       karma-browserstack-launcher:
         specifier: ^1.6.0
-        version: 1.6.0(karma@6.4.4(bufferutil@4.1.0))
+        version: 1.6.0(karma@6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6))(supports-color@10.2.2)
       karma-jasmine:
         specifier: ^5.0.0
         version: 5.1.0(karma@6.4.4(bufferutil@4.1.0))
       karma-parallel:
         specifier: ^0.3.1
-        version: 0.3.1(karma@6.4.4(bufferutil@4.1.0))
+        version: 0.3.1(karma@6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6))
       karma-sourcemap-loader:
         specifier: ^0.4.0
         version: 0.4.0
@@ -292,8 +292,8 @@ importers:
         specifier: 6.4.1
         version: 6.4.1(rollup@4.62.2)(typescript@6.0.2)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.7
-        version: 0.5.7(@types/node@22.20.0)(rollup@4.62.2)
+        specifier: 0.5.8
+        version: 0.5.8(@types/node@22.20.0)(rollup@4.62.2)
       sass:
         specifier: ^1.99.0
         version: 1.101.0
@@ -314,7 +314,7 @@ importers:
         version: 0.5.21
       stylelint:
         specifier: ^14.14.0
-        version: 14.16.1
+        version: 14.16.1(supports-color@10.2.2)
       ts-node:
         specifier: ^10.9.1
         version: 10.9.2(@types/node@22.20.0)(typescript@6.0.2)
@@ -414,7 +414,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 22.1.0-next.1(0bd4476ace0e369b7c31a56aab2c1d77)
+        version: 22.1.0-next.1(97bb9c07bd4f2097e1f179d9adee03e5)
       '@angular/cli':
         specifier: 'catalog:'
         version: 22.1.0-next.1(@types/node@22.20.0)(chokidar@5.0.0)
@@ -434,8 +434,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.22.0
-        version: 15.22.0(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
+        specifier: 15.22.3
+        version: 15.22.3(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -444,13 +444,13 @@ importers:
         version: 7.0.0
       karma:
         specifier: ~6.4.4
-        version: 6.4.4(bufferutil@4.1.0)
+        version: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       karma-chrome-launcher:
         specifier: ^3.1.1
         version: 3.2.0
       karma-coverage:
         specifier: ~2.2.0
-        version: 2.2.1
+        version: 2.2.1(supports-color@10.2.2)
       karma-firefox-launcher:
         specifier: ^2.1.0
         version: 2.1.3
@@ -462,7 +462,7 @@ importers:
         version: 2.9.1(bufferutil@4.1.0)
       lighthouse:
         specifier: ^13.0.0
-        version: 13.4.0(bufferutil@4.1.0)
+        version: 13.4.0(bufferutil@4.1.0)(supports-color@10.2.2)
       lighthouse-logger:
         specifier: ~2.0.0
         version: 2.0.2
@@ -3495,15 +3495,6 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/pluginutils@5.3.0':
-    resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
   '@rollup/pluginutils@5.4.0':
     resolution: {integrity: sha512-MfPp06CjRLfXQ3wY0R8vJDYBy/MvVcc9OulEfR0B8Iv9ko+GCNaRZ+EpJYFl27LhKsZK0o420sYCRHCjfCgeUg==}
     engines: {node: '>=14.0.0'}
@@ -5607,8 +5598,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.22.0:
-    resolution: {integrity: sha512-YWpL6qKnDZ6YHaZ3s9niBhDqJIuqVRubOhD6eDZZqRMMGgq7/FfN3cX4/xh8ND3Lfy2qGs1kAKZzV99TJJZJwA==}
+  firebase-tools@15.22.3:
+    resolution: {integrity: sha512-AsgQnlUMa/9kvGScHvJcizW1+jhZtQXA3aBfogMYDO8vepl74D3U5cRCCAhy5h+TFtbWdmLLIy6cEBzmnXXPwg==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8002,8 +7993,8 @@ packages:
     resolution: {integrity: sha512-E1sbAYg3aEbXrq0n1ojJkRHQJGE1kaE/O6GLA94y8rnJBfgvOPTOd1b9hOceQK1FFZI9qMh1vBERCyO2ifubcw==}
     engines: {node: '>=18'}
 
-  protobufjs@8.6.4:
-    resolution: {integrity: sha512-/+XMv9JalknuncEJSwsyEVlwcxVLKx2iaoSUXFZA86MJkdqyOdfrlB1sB7S6aKyUk9tl20YY+SgQe5J2sJHTcg==}
+  protobufjs@8.6.5:
+    resolution: {integrity: sha512-zeE5LPpencAGXvsxyOYmEgJhxzHY8IsmPAFzstZVhDSVT8QH03q6gMZwZRaQGApevZbAL6u28ugs4CC+YKB2jQ==}
     engines: {node: '>=12.0.0'}
 
   protractor@7.0.0:
@@ -8331,8 +8322,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 6.0.2
 
-  rollup-plugin-sourcemaps2@0.5.7:
-    resolution: {integrity: sha512-z2biw/Bs4cFgVn9LKEE5EK5PXvT0aUGuZoQkTU1OENf1PTl9WsbsVRR5FsKqY6qQohltsGTp1sIQrR8tsezztQ==}
+  rollup-plugin-sourcemaps2@0.5.8:
+    resolution: {integrity: sha512-c5BfiVbKAmaz+RoEhFF44Tg/X2QoLxEB8F7wS/eNWDJF/NKxi0SF7srN3Dg0RUnIcYLyCOwscket5Mr3BImMbg==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -9931,13 +9922,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.1.0-next.1(0bd4476ace0e369b7c31a56aab2c1d77)':
+  '@angular-devkit/build-angular@22.1.0-next.1(97bb9c07bd4f2097e1f179d9adee03e5)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.1(chokidar@5.0.0)
-      '@angular-devkit/build-webpack': 0.2201.0-next.1(chokidar@5.0.0)(webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
+      '@angular-devkit/build-webpack': 0.2201.0-next.1(chokidar@5.0.0)(webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
       '@angular-devkit/core': 22.1.0-next.1(chokidar@5.0.0)
-      '@angular/build': 22.1.0-next.1(23832f134212227ef44ce7321d994ea2)
+      '@angular/build': 22.1.0-next.1(06869934ca4e7a325f15ffa941c7fd23)
       '@angular/compiler-cli': 22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2)
       '@babel/core': 8.0.1
       '@babel/generator': 8.0.0
@@ -9957,7 +9948,7 @@ snapshots:
       copy-webpack-plugin: 14.0.0(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
       css-loader: 7.1.4(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
       esbuild-wasm: 0.28.1
-      http-proxy-middleware: 4.1.1
+      http-proxy-middleware: 4.1.1(supports-color@10.2.2)
       istanbul-lib-instrument: 6.0.3
       jsonc-parser: 3.3.1
       karma-source-map-support: 1.4.0
@@ -9985,7 +9976,7 @@ snapshots:
       typescript: 6.0.2
       webpack: 5.107.2(esbuild@0.28.1)(postcss@8.5.15)
       webpack-dev-middleware: 8.0.3(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
-      webpack-dev-server: 5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
+      webpack-dev-server: 5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
     optionalDependencies:
@@ -9995,7 +9986,7 @@ snapshots:
       '@angular/platform-server': 22.1.0-next.3(@angular/common@22.1.0-next.3(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/compiler@22.1.0-next.3)(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.3(@angular/common@22.1.0-next.3(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
       '@angular/ssr': 22.1.0-next.1(c38de2ec7313c053228f1ec6f8edbd04)
       esbuild: 0.28.1
-      karma: 6.4.4(bufferutil@4.1.0)
+      karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - '@angular/compiler'
       - '@minify-html/node'
@@ -10028,12 +10019,12 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-webpack@0.2201.0-next.1(chokidar@5.0.0)(webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))':
+  '@angular-devkit/build-webpack@0.2201.0-next.1(chokidar@5.0.0)(webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)))(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))':
     dependencies:
       '@angular-devkit/architect': 0.2201.0-next.1(chokidar@5.0.0)
       rxjs: 7.8.2
       webpack: 5.107.2(esbuild@0.28.1)(postcss@8.5.15)
-      webpack-dev-server: 5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
+      webpack-dev-server: 5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15))
     transitivePeerDependencies:
       - chokidar
 
@@ -10058,7 +10049,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.1.0-next.1(23832f134212227ef44ce7321d994ea2)':
+  '@angular/build@22.1.0-next.1(06869934ca4e7a325f15ffa941c7fd23)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.1(chokidar@5.0.0)
@@ -10072,7 +10063,7 @@ snapshots:
       beasties: 0.4.2
       browserslist: 4.28.4
       esbuild: 0.28.1
-      https-proxy-agent: 9.1.0
+      https-proxy-agent: 9.1.0(supports-color@10.2.2)
       jsonc-parser: 3.3.1
       listr2: 10.2.1
       magic-string: 0.30.21
@@ -10096,7 +10087,7 @@ snapshots:
       '@angular/platform-server': 22.1.0-next.3(@angular/common@22.1.0-next.3(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/compiler@22.1.0-next.3)(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.3(@angular/common@22.1.0-next.3(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(typescript@6.0.2))(@angular/core@22.1.0-next.3(@angular/compiler@22.1.0-next.3)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
       '@angular/ssr': 22.1.0-next.1(c38de2ec7313c053228f1ec6f8edbd04)
       istanbul-lib-instrument: 6.0.3
-      karma: 6.4.4(bufferutil@4.1.0)
+      karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       less: 4.6.6
       lmdb: 3.5.5
       postcss: 8.5.15
@@ -11612,7 +11603,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       merge-stream: 2.0.0
       p-queue: 6.6.2
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
       retry-request: 8.0.3(supports-color@10.2.2)
       split-array-stream: 2.0.0
       stack-trace: 0.0.10
@@ -11626,7 +11617,7 @@ snapshots:
     dependencies:
       google-auth-library: 10.9.0(supports-color@10.2.2)
       p-retry: 4.6.2
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
       ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.29.0
@@ -11655,14 +11646,14 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
       yargs: 17.7.3
 
   '@grpc/proto-loader@0.8.1':
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
       yargs: 17.7.3
 
   '@harperfast/extended-iterable@1.0.3':
@@ -12557,7 +12548,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12566,7 +12557,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
       '@types/connect': 3.4.38
     transitivePeerDependencies:
@@ -12575,7 +12566,7 @@ snapshots:
   '@opentelemetry/instrumentation-dataloader@0.16.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -12583,7 +12574,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12592,21 +12583,21 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
   '@opentelemetry/instrumentation-generic-pool@0.43.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
   '@opentelemetry/instrumentation-graphql@0.47.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -12614,7 +12605,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12623,7 +12614,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.28.0
       forwarded-parse: 2.1.2
       semver: 7.8.5
@@ -12633,7 +12624,7 @@ snapshots:
   '@opentelemetry/instrumentation-ioredis@0.47.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/redis-common': 0.36.2
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
@@ -12642,7 +12633,7 @@ snapshots:
   '@opentelemetry/instrumentation-kafkajs@0.7.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12650,7 +12641,7 @@ snapshots:
   '@opentelemetry/instrumentation-knex@0.44.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12659,7 +12650,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12667,14 +12658,14 @@ snapshots:
   '@opentelemetry/instrumentation-lru-memoizer@0.44.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
   '@opentelemetry/instrumentation-mongodb@0.52.0(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12683,7 +12674,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
       - supports-color
@@ -12691,7 +12682,7 @@ snapshots:
   '@opentelemetry/instrumentation-mysql2@0.45.2(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
       '@opentelemetry/sql-common': 0.40.1(@opentelemetry/api@1.9.1)
     transitivePeerDependencies:
@@ -12700,7 +12691,7 @@ snapshots:
   '@opentelemetry/instrumentation-mysql@0.45.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
       '@types/mysql': 2.15.26
     transitivePeerDependencies:
@@ -12710,7 +12701,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
       '@opentelemetry/sql-common': 0.40.1(@opentelemetry/api@1.9.1)
       '@types/pg': 8.6.1
@@ -12721,7 +12712,7 @@ snapshots:
   '@opentelemetry/instrumentation-redis-4@0.46.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/redis-common': 0.36.2
       '@opentelemetry/semantic-conventions': 1.41.1
     transitivePeerDependencies:
@@ -12730,7 +12721,7 @@ snapshots:
   '@opentelemetry/instrumentation-tedious@0.18.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/semantic-conventions': 1.41.1
       '@types/tedious': 4.0.14
     transitivePeerDependencies:
@@ -12740,17 +12731,17 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1)':
+  '@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/api-logs': 0.57.2
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
-      require-in-the-middle: 7.5.2
+      require-in-the-middle: 7.5.2(supports-color@10.2.2)
       semver: 7.8.5
       shimmer: 1.2.1
     transitivePeerDependencies:
@@ -12989,7 +12980,7 @@ snapshots:
   '@prisma/instrumentation@6.11.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -13120,14 +13111,6 @@ snapshots:
     optionalDependencies:
       rollup: 4.62.2
 
-  '@rollup/pluginutils@5.3.0(rollup@4.62.2)':
-    dependencies:
-      '@types/estree': 1.0.9
-      estree-walker: 2.0.2
-      picomatch: 4.0.4
-    optionalDependencies:
-      rollup: 4.62.2
-
   '@rollup/pluginutils@5.4.0(rollup@4.62.2)':
     dependencies:
       '@types/estree': 1.0.9
@@ -13222,12 +13205,12 @@ snapshots:
 
   '@sentry/core@9.47.1': {}
 
-  '@sentry/node-core@9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)':
+  '@sentry/node-core@9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/context-async-hooks': 1.30.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/semantic-conventions': 1.41.1
@@ -13235,12 +13218,12 @@ snapshots:
       '@sentry/opentelemetry': 9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)
       import-in-the-middle: 1.15.0
 
-  '@sentry/node@9.47.1':
+  '@sentry/node@9.47.1(supports-color@10.2.2)':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/context-async-hooks': 1.30.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2)
       '@opentelemetry/instrumentation-amqplib': 0.46.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/instrumentation-connect': 0.43.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/instrumentation-dataloader': 0.16.1(@opentelemetry/api@1.9.1)
@@ -13268,7 +13251,7 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.41.1
       '@prisma/instrumentation': 6.11.1(@opentelemetry/api@1.9.1)
       '@sentry/core': 9.47.1
-      '@sentry/node-core': 9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)
+      '@sentry/node-core': 9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)
       '@sentry/opentelemetry': 9.47.1(@opentelemetry/api@1.9.1)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.1))(@opentelemetry/semantic-conventions@1.41.1)
       import-in-the-middle: 1.15.0
       minimatch: 9.0.9
@@ -13681,7 +13664,7 @@ snapshots:
     dependencies:
       es6-promisify: 5.0.0
 
-  agent-base@6.0.2:
+  agent-base@6.0.2(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
@@ -14099,10 +14082,10 @@ snapshots:
       node-releases: 2.0.50
       update-browserslist-db: 1.2.3(browserslist@4.28.4)
 
-  browserstack-local@1.5.13:
+  browserstack-local@1.5.13(supports-color@10.2.2):
     dependencies:
-      agent-base: 6.0.2
-      https-proxy-agent: 5.0.1
+      agent-base: 6.0.2(supports-color@10.2.2)
+      https-proxy-agent: 5.0.1(supports-color@10.2.2)
       is-running: 2.1.0
       tree-kill: 1.2.2
     transitivePeerDependencies:
@@ -14941,7 +14924,7 @@ snapshots:
 
   engine.io-parser@5.2.3: {}
 
-  engine.io@6.6.9(bufferutil@4.1.0):
+  engine.io@6.6.9(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
     dependencies:
       '@types/cors': 2.8.19
       '@types/node': 22.20.0
@@ -15439,7 +15422,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.22.0(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13):
+  firebase-tools@15.22.3(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -15509,8 +15492,7 @@ snapshots:
       winston-transport: 4.9.0
       ws: 7.5.11(bufferutil@4.1.0)
       yaml: 2.9.0
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - '@types/node'
@@ -15701,7 +15683,7 @@ snapshots:
   gcp-metadata@8.1.2(supports-color@10.2.2):
     dependencies:
       gaxios: 7.1.5(supports-color@10.2.2)
-      google-logging-utils: 1.1.3
+      google-logging-utils: 1.1.4
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -15922,7 +15904,7 @@ snapshots:
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
       retry-request: 8.0.3(supports-color@10.2.2)
       rimraf: 5.0.10
     transitivePeerDependencies:
@@ -15961,7 +15943,7 @@ snapshots:
   grpc-gcp@1.0.1:
     dependencies:
       '@grpc/grpc-js': 1.14.4
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
 
   gtoken@7.1.0(encoding@0.1.13):
     dependencies:
@@ -16161,7 +16143,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  http-proxy-middleware@4.1.1:
+  http-proxy-middleware@4.1.1(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       httpxy: 0.5.3
@@ -16192,9 +16174,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1:
+  https-proxy-agent@5.0.1(supports-color@10.2.2):
     dependencies:
-      agent-base: 6.0.2
+      agent-base: 6.0.2(supports-color@10.2.2)
       debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
@@ -16206,7 +16188,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@9.1.0:
+  https-proxy-agent@9.1.0(supports-color@10.2.2):
     dependencies:
       agent-base: 9.0.0
       debug: 4.4.3(supports-color@10.2.2)
@@ -16608,7 +16590,7 @@ snapshots:
       make-dir: 4.0.0
       supports-color: 7.2.0
 
-  istanbul-lib-source-maps@4.0.1:
+  istanbul-lib-source-maps@4.0.1(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       istanbul-lib-coverage: 3.2.2
@@ -16798,11 +16780,11 @@ snapshots:
 
   kagekiri@2.0.0: {}
 
-  karma-browserstack-launcher@1.6.0(karma@6.4.4(bufferutil@4.1.0)):
+  karma-browserstack-launcher@1.6.0(karma@6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6))(supports-color@10.2.2):
     dependencies:
       browserstack: 1.5.3
-      browserstack-local: 1.5.13
-      karma: 6.4.4(bufferutil@4.1.0)
+      browserstack-local: 1.5.13(supports-color@10.2.2)
+      karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       q: 1.5.1
     transitivePeerDependencies:
       - supports-color
@@ -16811,12 +16793,12 @@ snapshots:
     dependencies:
       which: 1.3.1
 
-  karma-coverage@2.2.1:
+  karma-coverage@2.2.1(supports-color@10.2.2):
     dependencies:
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-instrument: 5.2.1
       istanbul-lib-report: 3.0.1
-      istanbul-lib-source-maps: 4.0.1
+      istanbul-lib-source-maps: 4.0.1(supports-color@10.2.2)
       istanbul-reports: 3.2.0
       minimatch: 3.1.5
     transitivePeerDependencies:
@@ -16830,12 +16812,12 @@ snapshots:
   karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)):
     dependencies:
       jasmine-core: 4.6.1
-      karma: 6.4.4(bufferutil@4.1.0)
+      karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
 
-  karma-parallel@0.3.1(karma@6.4.4(bufferutil@4.1.0)):
+  karma-parallel@0.3.1(karma@6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)):
     dependencies:
       istanbul: 0.4.5
-      karma: 6.4.4(bufferutil@4.1.0)
+      karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       lodash: 4.18.1
 
   karma-source-map-support@1.4.0:
@@ -16846,7 +16828,7 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
 
-  karma@6.4.4(bufferutil@4.1.0):
+  karma@6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
     dependencies:
       '@colors/colors': 1.5.0
       body-parser: 1.20.5
@@ -16860,14 +16842,14 @@ snapshots:
       http-proxy: 1.18.1
       isbinaryfile: 4.0.10
       lodash: 4.18.1
-      log4js: 6.9.1
+      log4js: 6.9.1(supports-color@10.2.2)
       mime: 2.6.0
       minimatch: 3.1.5
       mkdirp: 0.5.6
       qjobs: 1.2.0
       range-parser: 1.3.0
       rimraf: 3.0.2
-      socket.io: 4.8.3(bufferutil@4.1.0)
+      socket.io: 4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       source-map: 0.6.1
       tmp: 0.2.7
       ua-parser-js: 0.7.41
@@ -16973,10 +16955,10 @@ snapshots:
 
   lighthouse-stack-packs@1.12.3: {}
 
-  lighthouse@13.4.0(bufferutil@4.1.0):
+  lighthouse@13.4.0(bufferutil@4.1.0)(supports-color@10.2.2):
     dependencies:
       '@paulirish/trace_engine': 0.0.65
-      '@sentry/node': 9.47.1
+      '@sentry/node': 9.47.1(supports-color@10.2.2)
       axe-core: 4.12.1
       chrome-launcher: 1.2.1
       configstore: 7.1.0
@@ -17172,13 +17154,13 @@ snapshots:
       strip-ansi: 7.2.0
       wrap-ansi: 9.0.2
 
-  log4js@6.9.1:
+  log4js@6.9.1(supports-color@10.2.2):
     dependencies:
       date-format: 4.0.14
       debug: 4.4.3(supports-color@10.2.2)
       flatted: 3.4.2
       rfdc: 1.4.1
-      streamroller: 3.1.5
+      streamroller: 3.1.5(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -18095,9 +18077,9 @@ snapshots:
 
   proto3-json-serializer@3.0.4:
     dependencies:
-      protobufjs: 8.6.4
+      protobufjs: 8.6.5
 
-  protobufjs@8.6.4:
+  protobufjs@8.6.5:
     dependencies:
       long: 5.3.2
 
@@ -18403,7 +18385,7 @@ snapshots:
 
   require-from-string@2.0.2: {}
 
-  require-in-the-middle@7.5.2:
+  require-in-the-middle@7.5.2(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       module-details-from-path: 1.0.4
@@ -18528,9 +18510,9 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.7
 
-  rollup-plugin-sourcemaps2@0.5.7(@types/node@22.20.0)(rollup@4.62.2):
+  rollup-plugin-sourcemaps2@0.5.8(@types/node@22.20.0)(rollup@4.62.2):
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.62.2)
+      '@rollup/pluginutils': 5.4.0(rollup@4.62.2)
       rollup: 4.62.2
     optionalDependencies:
       '@types/node': 22.20.0
@@ -18915,7 +18897,7 @@ snapshots:
     dependencies:
       no-case: 2.3.2
 
-  socket.io-adapter@2.5.8(bufferutil@4.1.0):
+  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
@@ -18924,22 +18906,22 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socket.io-parser@4.2.6:
+  socket.io-parser@4.2.6(supports-color@10.2.2):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.3(bufferutil@4.1.0):
+  socket.io@4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
     dependencies:
       accepts: 1.3.8
       base64id: 2.0.0
       cors: 2.8.6
       debug: 4.4.3(supports-color@10.2.2)
-      engine.io: 6.6.9(bufferutil@4.1.0)
-      socket.io-adapter: 2.5.8(bufferutil@4.1.0)
-      socket.io-parser: 4.2.6
+      engine.io: 6.6.9(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+      socket.io-parser: 4.2.6(supports-color@10.2.2)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -19098,7 +19080,7 @@ snapshots:
 
   stream-shift@1.0.3: {}
 
-  streamroller@3.1.5:
+  streamroller@3.1.5(supports-color@10.2.2):
     dependencies:
       date-format: 4.0.14
       debug: 4.4.3(supports-color@10.2.2)
@@ -19221,7 +19203,7 @@ snapshots:
 
   style-search@0.1.0: {}
 
-  stylelint@14.16.1:
+  stylelint@14.16.1(supports-color@10.2.2):
     dependencies:
       '@csstools/selector-specificity': 2.2.0(postcss-selector-parser@6.1.4)
       balanced-match: 2.0.0
@@ -19911,7 +19893,7 @@ snapshots:
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)):
+  webpack-dev-server@5.2.5(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.107.2(esbuild@0.28.1)(postcss@8.5.15)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
@@ -20277,10 +20259,6 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.7.0
-
-  zod-to-json-schema@3.25.2(zod@3.25.76):
-    dependencies:
-      zod: 3.25.76
 
   zod-to-json-schema@3.25.2(zod@4.4.3):
     dependencies:

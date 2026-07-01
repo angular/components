@@ -49,7 +49,7 @@ minimumReleaseAgeExclude:
   - 'ng-packagr'
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.6.4
+  protobufjs: 8.6.5
 packageExtensions:
   dgeni-packages:
     dependencies:
