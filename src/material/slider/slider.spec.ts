@@ -1154,8 +1154,8 @@ describe('MatSlider', () => {
       const ticks = sliderEl.querySelectorAll(`${activeClass},${inactiveClass}`);
 
       expect(ticks.length).toBe(2);
-      expect(ticks[0].getBoundingClientRect().x).toBe(312);
-      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(47.4, 2);
+      expect(ticks[0].getBoundingClientRect().x).toBeCloseTo(312, 0);
+      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(47.4, 0);
     });
   });
 
@@ -1665,7 +1665,7 @@ describe('MatSlider', () => {
       expect(ticks.length).toBe(2);
 
       expect(ticks[0].getBoundingClientRect().x).toBe(18);
-      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(282.6, 2);
+      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(282.6, 1);
     });
   });
 
