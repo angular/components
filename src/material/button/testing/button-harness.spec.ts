@@ -21,7 +21,7 @@ describe('MatButtonHarness', () => {
 
   it('should load all button harnesses', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
-    expect(buttons.length).toBe(22);
+    expect(buttons.length).toBe(24);
   });
 
   it('should load button with exact text', async () => {
@@ -40,7 +40,7 @@ describe('MatButtonHarness', () => {
   it('should filter by whether a button is disabled', async () => {
     const enabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: false}));
     const disabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: true}));
-    expect(enabledButtons.length).toBe(20);
+    expect(enabledButtons.length).toBe(22);
     expect(disabledButtons.length).toBe(2);
   });
 
@@ -134,6 +134,8 @@ describe('MatButtonHarness', () => {
       'basic',
       'icon',
       'icon',
+      'icon',
+      'icon',
       'fab',
       'mini-fab',
       'basic',
@@ -164,6 +166,8 @@ describe('MatButtonHarness', () => {
       'tonal',
       null,
       null,
+      'filled',
+      'tonal',
       null,
       null,
       'text',
@@ -188,8 +192,10 @@ describe('MatButtonHarness', () => {
   });
 
   it('should be able to filter buttons based on their appearance', async () => {
-    const button = await loader.getHarness(MatButtonHarness.with({appearance: 'filled'}));
-    expect(await button.getText()).toBe('Filled button');
+    const buttons = await loader.getAllHarnesses(MatButtonHarness.with({appearance: 'filled'}));
+    const texts = await parallel(() => buttons.map(button => button.getText()));
+
+    expect(texts).toEqual(['Filled button', 'add', 'Filled anchor']);
   });
 
   it('should get the appearance of a button with a dynamic appearance', async () => {
@@ -242,6 +248,12 @@ describe('MatButtonHarness', () => {
     </button>
     <button id="favorite-icon" type="button" matIconButton>
       <mat-icon>favorite</mat-icon>
+    </button>
+    <button id="filled-icon" type="button" matIconButton="filled">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button id="tonal-icon" type="button" matIconButton="tonal">
+      <mat-icon>bookmark</mat-icon>
     </button>
     <button id="fab" type="button" matFab>Fab button</button>
     <button id="mini-fab" type="button" matMiniFab>Mini Fab button</button>
