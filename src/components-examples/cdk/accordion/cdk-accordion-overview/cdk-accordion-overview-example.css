@@ -5,7 +5,7 @@
 
 .example-accordion-item {
   display: block;
-  border: solid 1px #ccc;
+  border: 1px solid var(--mat-sys-outline-variant);
 }
 
 .example-accordion-item + .example-accordion-item {
@@ -21,12 +21,11 @@
   border: none;
   padding: 16px;
   text-align: left;
-
 }
 
 .example-accordion-item-description {
   font-size: 0.85em;
-  color: #999;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .example-accordion-item-body {
@@ -35,7 +34,7 @@
 
 .example-accordion-item-header:hover {
   cursor: pointer;
-  background-color: #eee;
+  background-color: var(--mat-sys-surface-container);
 }
 
 .example-accordion-item:first-child {
