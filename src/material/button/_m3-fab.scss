@@ -26,10 +26,6 @@
     color: (
       fab-container-color: map.get($system, primary-container),
       fab-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
-      fab-disabled-state-container-color:
-          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      fab-disabled-state-foreground-color:
-          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
       fab-extended-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
       fab-extended-focus-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level3)),
@@ -41,16 +37,19 @@
       fab-foreground-color: map.get($system, on-primary-container),
       fab-hover-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level4)),
       fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      fab-pressed-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
       fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-disabled-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      fab-disabled-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level0)),
+      fab-disabled-label-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      fab-disabled-state-layer-color: map.get($system, on-surface-variant),
+      fab-pressed-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
       fab-ripple-color: m3-utils.color-with-opacity(
           map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
       fab-small-container-color: map.get($system, primary-container),
       fab-small-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
-      fab-small-disabled-state-container-color:
-          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      fab-small-disabled-state-foreground-color:
-          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
       fab-small-focus-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level3)),
       fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
@@ -65,8 +64,6 @@
           map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
       fab-small-state-layer-color: map.get($system, on-primary-container),
       fab-state-layer-color: map.get($system, on-primary-container),
-      fab-disabled-state-layer-color: null,
-      fab-small-disabled-state-layer-color: null,
     ),
     typography: (
       fab-extended-label-text-font: map.get($system, label-large-font),
