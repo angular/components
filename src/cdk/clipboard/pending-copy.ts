@@ -59,7 +59,7 @@ export class PendingCopy {
         successful = this._document.execCommand('copy');
 
         if (currentFocus) {
-          currentFocus.focus();
+          currentFocus.focus({preventScroll: true});
         }
       }
     } catch {
