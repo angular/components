@@ -15,6 +15,7 @@ $prefix: (mat, expansion);
   @return (
     base: (
       expansion-container-shape: 12px,
+      expansion-container-outline-width: 0,
       expansion-header-indicator-display: inline-block,
       expansion-legacy-header-indicator-display: none,
       expansion-container-elevation-shadow: elevation.get-box-shadow(2),
@@ -22,6 +23,7 @@ $prefix: (mat, expansion);
     color: (
       expansion-actions-divider-color: map.get($system, outline),
       expansion-container-background-color: map.get($system, surface),
+      expansion-container-outline-color: transparent,
       expansion-container-text-color: map.get($system, on-surface),
       expansion-header-description-color: map.get($system, on-surface-variant),
       expansion-header-disabled-state-text-color:
