@@ -116,11 +116,14 @@ $fallbacks: m3-expansion.get-tokens();
 
 .mat-expansion-panel-header-title,
 .mat-expansion-panel-header-description {
-  display: flex;
+  display: block;
   flex-grow: 1;
   flex-basis: 0;
   margin-right: 16px;
-  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-basis: 5%;
 
   [dir='rtl'] & {
     margin-right: 0;
