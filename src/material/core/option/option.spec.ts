@@ -8,7 +8,12 @@ import {
   dispatchEvent,
 } from '@angular/cdk/testing/private';
 import {SPACE, ENTER} from '@angular/cdk/keycodes';
-import {MatOption, MatOptionModule, MAT_OPTION_PARENT_COMPONENT} from './index';
+import {
+  MatOption,
+  MatOptionModule,
+  MAT_OPTION_PARENT_COMPONENT,
+  MatOptionParentComponent,
+} from './index';
 
 describe('MatOption component', () => {
   it('should complete the `stateChanges` stream on destroy', () => {
@@ -190,6 +195,40 @@ describe('MatOption component', () => {
     });
   });
 
+  describe('multi-select selected state label color token', () => {
+    it('should apply option-multiple-selected-state-label-text-color to selected multi-select option labels', () => {
+      const fixture = TestBed.createComponent(MultipleOption);
+      fixture.detectChanges();
+
+      const host: HTMLElement = fixture.nativeElement;
+      host.style.setProperty(
+        '--mat-option-multiple-selected-state-label-text-color',
+        'rgb(255, 0, 0)',
+      );
+
+      const optionEl: HTMLElement = host.querySelector('mat-option')!;
+      optionEl.click();
+      fixture.detectChanges();
+
+      const primaryText: HTMLElement = optionEl.querySelector('.mdc-list-item__primary-text')!;
+      expect(getComputedStyle(primaryText).color).toBe('rgb(255, 0, 0)');
+    });
+
+    it('should not change label color of selected multi-select options when the token is not set', () => {
+      const fixture = TestBed.createComponent(MultipleOption);
+      fixture.detectChanges();
+
+      const optionEl: HTMLElement = fixture.nativeElement.querySelector('mat-option')!;
+      const primaryText: HTMLElement = optionEl.querySelector('.mdc-list-item__primary-text')!;
+      const colorBefore = getComputedStyle(primaryText).color;
+
+      optionEl.click();
+      fixture.detectChanges();
+
+      expect(getComputedStyle(primaryText).color).toBe(colorBefore);
+    });
+  });
+
   it('should have a focus indicator', () => {
     const fixture = TestBed.createComponent(BasicOption);
     const optionNativeElement = fixture.debugElement.query(By.directive(MatOption))!.nativeElement;
@@ -254,3 +293,16 @@ class BasicOption {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InsideGroup {}
+
+@Component({
+  template: `<mat-option>Option</mat-option>`,
+  imports: [MatOptionModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: MAT_OPTION_PARENT_COMPONENT,
+      useValue: {multiple: true} as MatOptionParentComponent,
+    },
+  ],
+})
+class MultipleOption {}
