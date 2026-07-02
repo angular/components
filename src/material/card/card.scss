@@ -19,7 +19,7 @@ $fallbacks: m3-card.get-tokens();
   background-color: token-utils.slot(card-elevated-container-color, $fallbacks);
   border-color: token-utils.slot(card-elevated-container-color, $fallbacks);
   border-radius: token-utils.slot(card-elevated-container-shape, $fallbacks);
-  box-shadow: token-utils.slot(card-elevated-container-elevation, $fallbacks);
+  box-shadow: token-utils.slot(card-elevated-container-elevation-shadow, $fallbacks);
 
   // Transparent card border for high-contrast mode.
   &::after {
@@ -42,7 +42,7 @@ $fallbacks: m3-card.get-tokens();
   border-radius: token-utils.slot(card-outlined-container-shape, $fallbacks);
   border-width: token-utils.slot(card-outlined-outline-width, $fallbacks);
   border-color: token-utils.slot(card-outlined-outline-color, $fallbacks);
-  box-shadow: token-utils.slot(card-outlined-container-elevation, $fallbacks);
+  box-shadow: token-utils.slot(card-outlined-container-elevation-shadow, $fallbacks);
 
   // Outlined card already displays border in high-contrast mode.
   // Overwriting styles set above to remove a duplicate border.
@@ -54,7 +54,7 @@ $fallbacks: m3-card.get-tokens();
 .mat-mdc-card-filled {
   background-color: token-utils.slot(card-filled-container-color, $fallbacks);
   border-radius: token-utils.slot(card-filled-container-shape, $fallbacks);
-  box-shadow: token-utils.slot(card-filled-container-elevation, $fallbacks);
+  box-shadow: token-utils.slot(card-filled-container-elevation-shadow, $fallbacks);
 }
 
 .mdc-card__media {
