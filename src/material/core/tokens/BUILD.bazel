@@ -92,3 +92,14 @@ sass_library(
     srcs = ["_classes.scss"],
     deps = ["//src/material/core/theming:typography"],
 )
+
+sass_library(
+    name = "token_registry",
+    srcs = ["_token-registry.scss"],
+    deps = [
+        # Individual component :m3 targets are provided transitively via :m3_tokens.
+        # When adding a new component to _token-registry.scss, also add its :m3 dep to :m3_tokens.
+        ":m3_tokens",
+        ":token_utils",
+    ],
+)
