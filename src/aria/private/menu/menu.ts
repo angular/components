@@ -520,7 +520,11 @@ export class MenuBarPattern<V> {
       .on('ArrowUp', () => this.inputs.activeItem()?.open({last: true}))
       .on('ArrowDown', () => this.inputs.activeItem()?.open({first: true}))
       .on(this.dynamicSpaceKey, () => this.inputs.activeItem()?.open({first: true}))
-      .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
+      .on(this.typeaheadRegexp, e => {
+        const prevItem = this.inputs.activeItem();
+        this.listBehavior.search(e.key);
+        this._switchExpandedItem(prevItem);
+      });
   });
 
   constructor(readonly inputs: MenuBarInputs<V>) {
@@ -591,11 +595,7 @@ export class MenuBarPattern<V> {
   goto(item: MenuItemPattern<V>, opts?: {focusElement?: boolean}) {
     const prevItem = this.inputs.activeItem();
     this.listBehavior.goto(item, opts);
-
-    if (prevItem?.expanded()) {
-      prevItem?.close();
-      this.inputs.activeItem()?.open();
-    }
+    this._switchExpandedItem(prevItem);
 
     if (item === prevItem) {
       if (item.expanded() && item.submenu()?.inputs.activeItem()) {
@@ -609,21 +609,24 @@ export class MenuBarPattern<V> {
   next() {
     const prevItem = this.inputs.activeItem();
     this.listBehavior.next();
-
-    if (prevItem?.expanded()) {
-      prevItem?.close();
-      this.inputs.activeItem()?.open({first: true});
-    }
+    this._switchExpandedItem(prevItem, {first: true});
   }
 
   /** Focuses the previous menu item. */
   prev() {
     const prevItem = this.inputs.activeItem();
     this.listBehavior.prev();
+    this._switchExpandedItem(prevItem, {first: true});
+  }
 
-    if (prevItem?.expanded()) {
-      prevItem?.close();
-      this.inputs.activeItem()?.open({first: true});
+  /**
+   * Moves an open submenu from the previously active item to the newly active item.
+   * Does nothing if the previous item had no open submenu or the active item did not change.
+   */
+  private _switchExpandedItem(prevItem: MenuItemPattern<V> | undefined, opts?: {first?: boolean}) {
+    if (prevItem?.expanded() && this.inputs.activeItem() !== prevItem) {
+      prevItem.close();
+      this.inputs.activeItem()?.open(opts);
     }
   }
 
