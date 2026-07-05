@@ -17,31 +17,42 @@ export type VisibleRange = {start: number; end: number};
   selector: '[visibleRange]',
   exportAs: 'visibleRange',
 })
-export class CdkVisibleRange {
+export class CdkVisibleRange implements OnDestroy {
   private readonly _viewport = inject(CdkVirtualScrollViewport, {self: true});
   private readonly _cdkFixedSizeVirtualScroll = inject(CdkFixedSizeVirtualScroll, {
     self: true,
   });
   private readonly _cdr = inject(ChangeDetectorRef);
 
+  private readonly _scrollStrategy = this._cdkFixedSizeVirtualScroll._scrollStrategy;
+  private readonly _originalOnDataLengthChanged = this._scrollStrategy.onDataLengthChanged;
+  private readonly _onDataLengthChanged = () => {
+    this._originalOnDataLengthChanged.call(this._scrollStrategy);
+    if (typeof this._lastVisibleIndex === 'number') {
+      this.onScroll(this._lastVisibleIndex);
+    }
+  };
+
   _range: VisibleRange = {start: 0, end: 0};
 
   private _lastVisibleIndex!: number;
+  private _scrolledIndexChangeSubscription = Subscription.EMPTY;
 
   constructor() {
-    this._viewport.scrolledIndexChange.subscribe((index: number) => {
-      this._lastVisibleIndex = index;
-      this.onScroll(index);
-    });
+    this._scrolledIndexChangeSubscription = this._viewport.scrolledIndexChange.subscribe(
+      (index: number) => {
+        this._lastVisibleIndex = index;
+        this.onScroll(index);
+      },
+    );
 
     // _range is not updated when we change table data, so we subscribe on callback to update the visible range
-    const original = this._cdkFixedSizeVirtualScroll._scrollStrategy.onDataLengthChanged;
-    this._cdkFixedSizeVirtualScroll._scrollStrategy.onDataLengthChanged = () => {
-      original.call(this._cdkFixedSizeVirtualScroll._scrollStrategy);
-      if (typeof this._lastVisibleIndex === 'number') {
-        this.onScroll(this._lastVisibleIndex);
-      }
-    };
+    this._scrollStrategy.onDataLengthChanged = this._onDataLengthChanged;
+  }
+
+  ngOnDestroy() {
+    this._scrolledIndexChangeSubscription.unsubscribe();
+    this._scrollStrategy.onDataLengthChanged = this._originalOnDataLengthChanged;
   }
 
   get range() {
