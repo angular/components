@@ -27,8 +27,8 @@ describe('ButtonHarnessExample', () => {
 
   it('should click a button', async () => {
     const button = await loader.getHarness(MatButtonHarness.with({text: 'Basic button'}));
-    expect(fixture.componentInstance.clicked).toBe(false);
+    expect(fixture.componentInstance.clicked()).toBe(false);
     await button.click();
-    expect(fixture.componentInstance.clicked).toBe(true);
+    expect(fixture.componentInstance.clicked()).toBe(true);
   });
 });

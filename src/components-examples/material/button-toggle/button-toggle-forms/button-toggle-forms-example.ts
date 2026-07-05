@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
@@ -12,5 +12,5 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 })
 export class ButtonToggleFormsExample {
   fontStyleControl = new FormControl('');
-  fontStyle?: string;
+  fontStyle = signal<string | undefined>(undefined);
 }
