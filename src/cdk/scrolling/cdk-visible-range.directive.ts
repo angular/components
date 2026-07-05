@@ -36,7 +36,7 @@ export class CdkVisibleRange implements OnDestroy {
   _range: VisibleRange = {start: 0, end: 0};
 
   private _lastVisibleIndex!: number;
-  private _scrolledIndexChangeSubscription = Subscription.EMPTY;
+  private _scrolledIndexChangeSubscription?: Subscription;
 
   constructor() {
     this._scrolledIndexChangeSubscription = this._viewport.scrolledIndexChange.subscribe(
@@ -51,7 +51,7 @@ export class CdkVisibleRange implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._scrolledIndexChangeSubscription.unsubscribe();
+    this._scrolledIndexChangeSubscription?.unsubscribe();
     this._scrollStrategy.onDataLengthChanged = this._originalOnDataLengthChanged;
   }
 
