@@ -20,7 +20,7 @@
       </mat-radio-group>
     </section>
 
-    @if (mode === 'determinate' || mode === 'buffer') {
+    @if (mode() === 'determinate' || mode() === 'buffer') {
       <section class="example-section">
         <label class="example-margin">Progress:</label>
         <mat-slider class="example-margin">
@@ -28,7 +28,7 @@
         </mat-slider>
       </section>
     }
-    @if (mode === 'buffer') {
+    @if (mode() === 'buffer') {
       <section class="example-section">
         <label class="example-margin">Buffer:</label>
         <mat-slider class="example-margin">
@@ -46,9 +46,9 @@
     <section class="example-section">
       <mat-progress-bar
           class="example-margin"
-          [mode]="mode"
-          [value]="value"
-          [bufferValue]="bufferValue">
+          [mode]="mode()"
+          [value]="value()"
+          [bufferValue]="bufferValue()">
       </mat-progress-bar>
     </section>
   </mat-card-content>

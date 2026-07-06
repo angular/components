@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {PageEvent, MatPaginatorModule} from '@angular/material/paginator';
 import {JsonPipe} from '@angular/common';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -23,28 +23,28 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   ],
 })
 export class PaginatorConfigurableExample {
-  length = 50;
-  pageSize = 10;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  length = signal(50);
+  pageSize = signal(10);
+  pageIndex = signal(0);
+  pageSizeOptions = signal([5, 10, 25]);
 
-  hidePageSize = false;
-  showPageSizeOptions = true;
-  showFirstLastButtons = true;
-  disabled = false;
+  hidePageSize = signal(false);
+  showPageSizeOptions = signal(true);
+  showFirstLastButtons = signal(true);
+  disabled = signal(false);
 
-  pageEvent: PageEvent | undefined;
+  pageEvent = signal<PageEvent | undefined>(undefined);
 
   handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
+    this.pageEvent.set(e);
+    this.length.set(e.length);
+    this.pageSize.set(e.pageSize);
+    this.pageIndex.set(e.pageIndex);
   }
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+      this.pageSizeOptions.set(setPageSizeOptionsInput.split(',').map(str => +str));
     }
   }
 }

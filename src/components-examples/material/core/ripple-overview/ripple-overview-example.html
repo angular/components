@@ -11,13 +11,12 @@
   <input matInput [(ngModel)]="color" type="text">
 </mat-form-field>
 
-
 <div class="example-ripple-container mat-shadow-2"
      matRipple
-     [matRippleCentered]="centered"
-     [matRippleDisabled]="disabled"
-     [matRippleUnbounded]="unbounded"
-     [matRippleRadius]="radius"
-     [matRippleColor]="color">
+     [matRippleCentered]="centered()"
+     [matRippleDisabled]="disabled()"
+     [matRippleUnbounded]="unbounded()"
+     [matRippleRadius]="radius()"
+     [matRippleColor]="color()">
   Click me
 </div>

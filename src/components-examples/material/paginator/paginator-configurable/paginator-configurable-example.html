@@ -16,7 +16,7 @@
 
   <mat-form-field>
     <mat-label>Page Size Options</mat-label>
-    <input matInput [ngModel]="pageSizeOptions" (ngModelChange)="setPageSizeOptions($event)"
+    <input matInput [ngModel]="pageSizeOptions()" (ngModelChange)="setPageSizeOptions($event)"
            [ngModelOptions]="{updateOn: 'blur'}" placeholder="Ex. 10,25,50">
   </mat-form-field>
 
@@ -31,17 +31,17 @@
 <mat-paginator #paginator
                class="demo-paginator"
                (page)="handlePageEvent($event)"
-               [length]="length"
-               [pageSize]="pageSize"
-               [disabled]="disabled"
-               [showFirstLastButtons]="showFirstLastButtons"
-               [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-               [hidePageSize]="hidePageSize"
-               [pageIndex]="pageIndex"
+               [length]="length()"
+               [pageSize]="pageSize()"
+               [disabled]="disabled()"
+               [showFirstLastButtons]="showFirstLastButtons()"
+               [pageSizeOptions]="showPageSizeOptions() ? pageSizeOptions() : []"
+               [hidePageSize]="hidePageSize()"
+               [pageIndex]="pageIndex()"
                aria-label="Select page">
 </mat-paginator>
 
 <div class="demo-data">
-  <div> Output event: {{(pageEvent | json) || 'No events dispatched yet'}} </div>
+  <div> Output event: {{(pageEvent() | json) || 'No events dispatched yet'}} </div>
   <div> getNumberOfPages: {{paginator.getNumberOfPages()}} </div>
 </div>

@@ -14,7 +14,7 @@
       </mat-radio-group>
     </section>
 
-    @if (mode === 'determinate') {
+    @if (mode() === 'determinate') {
       <section class="example-section">
         <label class="example-margin">Progress:</label>
         <mat-slider class="example-margin">
@@ -31,8 +31,8 @@
 
     <mat-progress-spinner
         class="example-margin"
-        [mode]="mode"
-        [value]="value">
+        [mode]="mode()"
+        [value]="value()">
     </mat-progress-spinner>
   </mat-card-content>
 </mat-card>

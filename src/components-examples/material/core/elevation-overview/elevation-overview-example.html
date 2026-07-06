@@ -1,5 +1,5 @@
-<div class="example-container" [class.mat-shadow-1]="!isActive" [class.mat-shadow-4]="isActive">
+<div class="example-container" [class.mat-shadow-1]="!isActive()" [class.mat-shadow-4]="isActive()">
   Example
 </div>
 
-<button matButton (click)="isActive = !isActive">Toggle Elevation</button>
+<button matButton (click)="isActive.set(!isActive())">Toggle Elevation</button>
