@@ -7,7 +7,7 @@
     <th mat-sort-header="protein">Protein (g)</th>
   </tr>
 
-  @for (dessert of sortedData; track dessert) {
+  @for (dessert of sortedData(); track dessert) {
     <tr>
       <td>{{dessert.name}}</td>
       <td>{{dessert.calories}}</td>

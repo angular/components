@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarAction,
@@ -23,11 +23,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 export class SnackBarAnnotatedComponentExample {
   private _snackBar = inject(MatSnackBar);
 
-  durationInSeconds = 5;
+  durationInSeconds = signal(5);
 
   openSnackBar() {
     this._snackBar.openFromComponent(PizzaPartyAnnotatedComponent, {
-      duration: this.durationInSeconds * 1000,
+      duration: this.durationInSeconds() * 1000,
     });
   }
 }

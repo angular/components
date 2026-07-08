@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
@@ -15,6 +15,6 @@ import {MatCardModule} from '@angular/material/card';
   imports: [MatCardModule, MatRadioModule, FormsModule, MatCheckboxModule, MatSlideToggleModule],
 })
 export class SlideToggleConfigurableExample {
-  checked = false;
-  disabled = false;
+  checked = signal(false);
+  disabled = signal(false);
 }

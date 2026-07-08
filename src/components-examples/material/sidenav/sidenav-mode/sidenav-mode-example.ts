@@ -12,6 +12,6 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatSidenavModule, MatButtonModule, MatRadioModule, FormsModule, ReactiveFormsModule],
 })
 export class SidenavModeExample {
-  mode = new FormControl('over' as MatDrawerMode);
+  mode = new FormControl<MatDrawerMode>('over');
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }
