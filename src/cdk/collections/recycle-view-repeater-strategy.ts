@@ -14,6 +14,7 @@ import {
   IterableChanges,
   ViewContainerRef,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
 import {
   _ViewRepeater,
   _ViewRepeaterItemChanged,
@@ -23,8 +24,10 @@ import {
   _ViewRepeaterItemValueResolver,
   _ViewRepeaterOperation,
 } from './view-repeater';
-import {RecycleViewElementsState} from './recycle-view-elements-state.service';
-
+import {
+  RecycleViewDetachEvent,
+  RecycleViewElementsState,
+} from './recycle-view-elements-state.service';
 /**
  * A repeater that caches views when they are removed from a
  * {@link ViewContainerRef}. When new items are inserted into the container,
@@ -39,6 +42,9 @@ import {RecycleViewElementsState} from './recycle-view-elements-state.service';
 export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemContext<T>>
   implements _ViewRepeater<T, R, C>
 {
+  /** The active view container that is currently applying rendered range changes. */
+  private _viewContainerRef: ViewContainerRef | null = null;
+
   /**
    * The size of the cache used to store unused views.
    * Setting the cache size to `0` will disable caching. Defaults to 20 views.
@@ -60,6 +66,9 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    */
   private _recycleViewElementsState: RecycleViewElementsState | null = null;
 
+  /** Subscription to detach lifecycle changes owned by the state service. */
+  private _detachChangesSubscription: Subscription | null = null;
+
   /**
    * TrackBy function to identify items uniquely.
    * Used for saving/restoring scroll positions.
@@ -67,15 +76,63 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   private _trackByFn?: (index: number, item: T) => any;
 
   /**
+   * The full dataset mapped to an array of trackById strings.
+   * Updated whenever the data source emits a new value.
+   */
+  private _itemsTrackByIds: string[] = [];
+
+  /**
+   * The currently rendered range within the full dataset.
+   * Used to convert local (rendered-window) indices to real (global) indices
+   * before passing them to the trackBy function.
+   */
+  private _renderedRange: {start: number; end: number} = {start: 0, end: 0};
+
+  /**
    * Whether to store and restore scroll positions for items.
    */
   private _storeScrollPosition: boolean = false;
 
   /**
-   * Sets the trackBy function used to identify items for scroll state persistence.
+   * A string label identifying the collect-detached mode, or `null` when disabled.
+   * When non-null, detached views are collected before an item is removed.
    */
-  setTrackByFunction(trackBy: (index: number, item: T) => any): void {
+  private _collectDetached: string | null = null;
+
+  /**
+   * An optional identifier for this repeater instance.
+   * Passed to `retainDetachedView` so the service can associate retained views with
+   * the repeater that owns them.
+   */
+  private _repeaterId: string | null = null;
+
+  /** Optional group identifier stored alongside retained detached views. */
+  private _groupId: string | null = null;
+
+  /**
+   * Sets the trackBy function used to identify items for keyed detached-view reuse
+   * and scroll state persistence.
+   */
+  setTrackByFunction(trackBy: ((index: number, item: T) => any) | undefined): void {
     this._trackByFn = trackBy;
+  }
+
+  /**
+   * Receives the full dataset mapped to an array of trackById strings.
+   * Allows the strategy to know which items exist in the full dataset,
+   * enabling smarter detached-view retention and cleanup.
+   */
+  setItemsTrackByIds(ids: string[]): void {
+    this._itemsTrackByIds = ids;
+  }
+
+  /**
+   * Informs the strategy of the currently rendered range within the full dataset.
+   * Must be called before `applyChanges` so that local (rendered-window) indices are
+   * correctly translated to real (global) indices when invoking the trackBy function.
+   */
+  setRenderedRange(range: {start: number; end: number}): void {
+    this._renderedRange = range;
   }
 
   /**
@@ -85,8 +142,36 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     this._storeScrollPosition = value;
   }
 
+  /**
+   * Sets the collect-detached mode. Pass a non-empty string label to enable
+   * (the label is used for debugging), or `null` to disable.
+   */
+  setCollectDetached(value: string | null): void {
+    this._collectDetached = value;
+  }
+
+  /**
+   * Sets the repeater identifier that will be stored alongside retained detached views.
+   */
+  setRepeaterId(value: string | null): void {
+    this._repeaterId = value;
+  }
+
+  /**
+   * Sets the group identifier that will be stored alongside retained detached views.
+   */
+  setGroupId(value: string | null): void {
+    this._groupId = value;
+  }
+
   constructor() {
     this._recycleViewElementsState = inject(RecycleViewElementsState, {optional: true});
+
+    if (this._recycleViewElementsState) {
+      this._detachChangesSubscription = this._recycleViewElementsState.detachChanges.subscribe(
+        change => this._handleDetachChange(change),
+      );
+    }
   }
 
   /** Apply changes to the DOM. */
@@ -97,6 +182,8 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
     itemViewChanged?: _ViewRepeaterItemChanged<R, C>,
   ) {
+    this._viewContainerRef = viewContainerRef;
+
     // Rearrange the views to put them in the right location.
     changes.forEachOperation(
       (
@@ -119,6 +206,11 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
           operation = view ? _ViewRepeaterOperation.INSERTED : _ViewRepeaterOperation.REPLACED;
         } else if (currentIndex == null) {
           // Item removed.
+          const trackById = this._getTrackById(itemValueResolver(record), record.previousIndex!);
+
+          if (this._collectDetached === null) {
+            this._recycleViewElementsState?.collectDetachedViews(trackById!);
+          }
           this._detachAndCacheView(adjustedPreviousIndex!, viewContainerRef);
           operation = _ViewRepeaterOperation.REMOVED;
         } else {
@@ -146,10 +238,11 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   detach() {
     // Save scroll positions before destroying cached views
     this._viewCache.forEach((view, i) => {
-      this._saveScrollPosition(view, i);
       view.destroy();
     });
     this._viewCache = [];
+    this._detachChangesSubscription?.unsubscribe();
+    this._detachChangesSubscription = null;
   }
 
   /**
@@ -162,6 +255,23 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     viewContainerRef: ViewContainerRef,
     value: T,
   ): EmbeddedViewRef<C> | undefined {
+    const trackById = this._getTrackById(value, currentIndex);
+
+    const detachedView = trackById
+      ? this._insertDetachedView(trackById, currentIndex, viewContainerRef)
+      : null;
+
+    if (detachedView) {
+      detachedView.context.$implicit = value;
+      this._restoreScrollPosition(detachedView, value, currentIndex);
+      // Notify other strategies (those not in collect-detached mode) that this item
+      // has been reattached so they can reinsert their own saved detached views.
+      if (this._collectDetached === null && trackById) {
+        this._recycleViewElementsState?.notifyInsert(trackById);
+      }
+      return undefined;
+    }
+
     const cachedView = this._insertViewFromCache(currentIndex!, viewContainerRef);
     if (cachedView) {
       cachedView.context.$implicit = value;
@@ -212,7 +322,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
     }
 
     viewContainerRef.detach(index);
-    this._maybeCacheView(detachedView, viewContainerRef);
+    this._maybeCacheView(detachedView, viewContainerRef, index);
   }
 
   /** Moves view at the previous index to the current index. */
@@ -234,22 +344,45 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
    * Cache the given detached view. If the cache is full, the view will be
    * destroyed.
    */
-  private _maybeCacheView(view: EmbeddedViewRef<C>, viewContainerRef: ViewContainerRef) {
+  private _maybeCacheView(
+    view: EmbeddedViewRef<C>,
+    viewContainerRef: ViewContainerRef,
+    index: number,
+  ) {
+    const trackById = this._getTrackByIdForView(view, index);
+
+    if (trackById && this._recycleViewElementsState?.isMarkedForDetach(trackById)) {
+      return;
+    }
+
     if (this._viewCache.length < this.viewCacheSize) {
       this._viewCache.push(view);
     } else {
-      const index = viewContainerRef.indexOf(view);
+      const viewIndex = viewContainerRef.indexOf(view);
 
       // The host component could remove views from the container outside of
       // the view repeater. It's unlikely this will occur, but just in case,
       // destroy the view on its own, otherwise destroy it through the
       // container to ensure that all the references are removed.
-      if (index === -1) {
+      if (viewIndex === -1) {
         view.destroy();
       } else {
-        viewContainerRef.remove(index);
+        viewContainerRef.remove(viewIndex);
       }
     }
+  }
+
+  /** Inserts a detached view for the provided `trackById`, if one was retained. */
+  private _insertDetachedView(
+    trackById: string,
+    index: number,
+    viewContainerRef: ViewContainerRef,
+  ): EmbeddedViewRef<C> | null {
+    const entry = this._recycleViewElementsState?.takeDetachedView<C>(trackById) ?? null;
+    if (!entry) return null;
+
+    viewContainerRef.insert(entry.view, index);
+    return entry.view;
   }
 
   /** Inserts a recycled view from the cache at the given index. */
@@ -266,13 +399,124 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
 
   /**
    * Gets a unique identifier for an item using the trackBy function.
+   * `index` is the local rendered-window index; it is translated to the real
+   * (global) dataset index by adding `_renderedRange.start` before the call.
    */
   private _getTrackById(value: T, index: number): string | null {
     if (!this._trackByFn) {
       return null;
     }
-    const trackByValue = this._trackByFn(index, value);
+    const trackByValue = this._trackByFn(this._renderedRange.start + index, value);
     return trackByValue !== null ? String(trackByValue) : null;
+  }
+
+  /** Gets the `trackById` for a detached view from its current context. */
+  private _getTrackByIdForView(view: EmbeddedViewRef<C>, index: number): string | null {
+    const value = view.context.$implicit;
+    if (value === undefined) {
+      return null;
+    }
+
+    return this._getTrackById(value, index);
+  }
+
+  /** Reacts to detach lifecycle changes emitted by the state service. */
+  private _handleDetachChange(change: RecycleViewDetachEvent): void {
+    if (
+      change.type === 'collect' &&
+      this._collectDetached !== null &&
+      change.collectDetached === this._collectDetached
+    ) {
+      this._collectDetachedViews();
+      return;
+    }
+
+    if (change.type === 'insert' && change.collectDetached === this._collectDetached) {
+      this._reattachDetachedViewsInRange();
+      return;
+    }
+
+    if (change.type === 'mark') {
+      this._retainDetachedView(change.id);
+    }
+  }
+
+  /** Retains the detached view for the given track-by id if it is currently rendered. */
+  private _retainDetachedView(id: string): void {
+    const localIndex = this._findRenderedViewIndexByTrackById(id);
+    if (localIndex === null) return;
+
+    const renderedView = this._viewContainerRef!.get(localIndex) as EmbeddedViewRef<C>;
+    this._recycleViewElementsState?.retainDetachedView(
+      id,
+      renderedView,
+      this._repeaterId,
+      this._groupId,
+    );
+  }
+
+  /**
+   * Reattaches all retained detached views whose real (global) index falls within the
+   * current rendered range. Called when another strategy notifies that an item was
+   * reattached (i.e. an `'insert'` event is received).
+   * The real (global) index is derived from `_itemsTrackByIds` — the source of truth.
+   */
+  private _reattachDetachedViewsInRange(): void {
+    if (!this._viewContainerRef || !this._recycleViewElementsState || !this._repeaterId) {
+      return;
+    }
+
+    this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
+      const entry = this._recycleViewElementsState!.takeDetachedView<C>(trackById);
+      if (!entry || entry.repeaterId !== this._repeaterId) {
+        return;
+      }
+
+      const localIndex = this._findRenderedViewIndexByTrackById(trackById);
+      // we shouldn't insert View what is already in the dom
+      if (localIndex) return;
+
+      const {view} = entry;
+      const realIndex = this._itemsTrackByIds.indexOf(trackById);
+      const {start, end} = this._renderedRange;
+
+      if (realIndex !== -1 && realIndex >= start && realIndex < end) {
+        // Convert the real (global) index to a local (rendered-window) index.
+        const localIndex = realIndex - start;
+        this._viewContainerRef!.insert(view, localIndex);
+      }
+    });
+  }
+
+  /** Detaches all currently rendered views that are marked for detached-view retention. */
+  private _collectDetachedViews(): void {
+    if (!this._viewContainerRef || !this._recycleViewElementsState) {
+      return;
+    }
+
+    this._recycleViewElementsState.getDetachedIds().forEach(trackById => {
+      const index = this._findRenderedViewIndexByTrackById(trackById);
+
+      if (index !== null) {
+        this._viewContainerRef!.detach(index);
+      }
+    });
+  }
+
+  /** Finds the index of a currently rendered view that matches a `trackBy` id. */
+  private _findRenderedViewIndexByTrackById(trackById: string): number | null {
+    if (!this._viewContainerRef || !this._trackByFn) {
+      return null;
+    }
+
+    for (let i = 0; i < this._viewContainerRef.length; i++) {
+      const view = this._viewContainerRef.get(i) as EmbeddedViewRef<C> | null;
+      if (view && this._getTrackByIdForView(view, i) === trackById) {
+        return i;
+      }
+    }
+
+    return null;
   }
 
   /**

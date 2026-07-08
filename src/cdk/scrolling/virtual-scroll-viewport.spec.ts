@@ -1,4 +1,5 @@
 import {ArrayDataSource} from '../collections';
+import {RecycleViewElementsState} from '../collections/recycle-view-elements-state.service';
 import {
   CdkScrollable,
   CdkVirtualForOf,
@@ -1247,6 +1248,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule],
+  providers: [RecycleViewElementsState],
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;

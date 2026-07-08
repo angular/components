@@ -188,10 +188,7 @@ export class CdkDynamicSizeVirtualScrollStrategy implements VirtualScrollStrateg
     const allOffset = scrollOffset + viewportSize;
     const endBuffer = this._getOffsetByItemIdx(newRange.end) - allOffset;
 
-    if (
-      (startBuffer < this._minBufferPx && newRange.start !== 0) ||
-      (endBuffer < this._minBufferPx && newRange.end !== dataLength)
-    ) {
+    if (startBuffer < this._minBufferPx || endBuffer < this._minBufferPx) {
       newRange.start = Math.max(0, this._getItemIdxByOffset(scrollOffset - this._maxBufferPx));
       newRange.end = Math.min(
         dataLength,

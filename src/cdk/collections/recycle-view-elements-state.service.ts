@@ -1,17 +1,42 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {EmbeddedViewRef, Injectable, OnDestroy} from '@angular/core';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+
+export type RecycleViewDetachEvent =
+  | {type: 'mark'; id: string}
+  | {type: 'clear'}
+  | {type: 'collect'; collectDetached: string}
+  | {type: 'insert'; collectDetached: string};
+
+interface RecycleViewDetachedViewEntry {
+  view: EmbeddedViewRef<unknown>;
+  repeaterId: string | null;
+  groupId: string | null;
+  sourceIds: Set<string>;
+}
 
 /**
  * Service that keeps state of virtual scroll destroyed/recycled views.
  * Provides state storage and observable subscriptions for state changes.
  */
 @Injectable()
-export class RecycleViewElementsState {
+export class RecycleViewElementsState implements OnDestroy {
   /** Map storing state data keyed by unique identifiers. */
   private _stateMap = new Map<string, Record<string, unknown>>();
 
   /** Map storing BehaviorSubjects for each state identifier to enable reactive subscriptions. */
   private _stateSubjects = new Map<string, BehaviorSubject<Record<string, unknown> | undefined>>();
+
+  /** TrackBy ids that should retain their detached views. */
+  private _detachedIds = new Set<string>();
+
+  /** Detached views owned by the service lifetime, keyed by trackBy id. */
+  private _detachedViews = new Map<string, RecycleViewDetachedViewEntry>();
+
+  /** Emits detach lifecycle changes so active strategies can update live candidates. */
+  private _detachChanges = new Subject<RecycleViewDetachEvent>();
+
+  /** Stream of detach lifecycle changes. */
+  readonly detachChanges: Observable<RecycleViewDetachEvent> = this._detachChanges.asObservable();
 
   /**
    * Adds or merges state for a given identifier.
@@ -45,7 +70,7 @@ export class RecycleViewElementsState {
    * @param id The unique identifier for the state to remove.
    * @returns Whether the state was successfully removed.
    */
-  remove(id: string): boolean {
+  remove(id: string, sourceId?: string): boolean {
     const removed = this._stateMap.delete(id);
 
     // Notify subscribers that the state has been removed, then clean up the subject.
@@ -55,6 +80,9 @@ export class RecycleViewElementsState {
       subject.complete();
       this._stateSubjects.delete(id);
     }
+
+    this.unmarkForDetach(id, sourceId);
+    this.removeDetachedViewsByRepeaterId(id);
 
     return removed;
   }
@@ -88,6 +116,10 @@ export class RecycleViewElementsState {
     });
     this._stateSubjects.clear();
     this._stateMap.clear();
+
+    this._detachedIds.clear();
+    this._destroyDetachedViews();
+    this._detachChanges.next({type: 'clear'});
   }
 
   /**
@@ -108,5 +140,152 @@ export class RecycleViewElementsState {
       this._stateSubjects.set(id, subject);
     }
     return subject.asObservable() as Observable<T | undefined>;
+  }
+
+  /** Marks an item so its next detached view will be retained. */
+  markForDetach(id: string, sourceId?: string): void {
+    if (sourceId !== undefined) {
+      const detachedView = this._detachedViews.get(id);
+      if (detachedView) {
+        if (!detachedView.sourceIds.has(sourceId)) {
+          detachedView.sourceIds.add(sourceId);
+        }
+        return;
+      }
+    }
+
+    if (this._detachedIds.has(id)) return;
+
+    this._detachedIds.add(id);
+    this._detachChanges.next({type: 'mark', id});
+
+    const detachedView = this._detachedViews.get(id);
+    if (detachedView && sourceId) {
+      detachedView.sourceIds.add(sourceId);
+    }
+  }
+
+  /** Cancels detached-view retention for an item and destroys any retained detached view. */
+  unmarkForDetach(id: string, sourceId?: string): void {
+    if (sourceId) {
+      const entry = this._detachedViews.get(id);
+      if (!entry) return;
+
+      entry.sourceIds.delete(sourceId);
+      if (entry.sourceIds.size) return;
+    }
+
+    this._detachedIds.delete(id);
+    this._detachedViews.delete(id);
+  }
+
+  /** Removes all detached-view retention entries owned by a group. */
+  removeDetachedViewsByGroupId(groupId: string | null = null): void {
+    this._removeDetachedViewsWhere((entry, id) => entry.groupId === groupId || id === groupId);
+  }
+
+  /** Removes all detached-view retention entries owned by a repeater. */
+  removeDetachedViewsByRepeaterId(repeaterId: string | null = null): void {
+    this._removeDetachedViewsWhere(entry => entry.repeaterId === repeaterId);
+  }
+
+  /** Removes all detached-view entries that satisfy the given predicate. */
+  private _removeDetachedViewsWhere(
+    predicate: (entry: RecycleViewDetachedViewEntry, id: string) => boolean,
+  ): void {
+    this._detachedViews.forEach((entry, id) => {
+      if (predicate(entry, id)) {
+        this._detachedIds.delete(id);
+        this._detachedViews.delete(id);
+      }
+    });
+  }
+
+  /** Whether an item is marked for detached-view retention. */
+  isMarkedForDetach(id: string): boolean {
+    return this._detachedIds.has(id);
+  }
+
+  /** Gets all ids currently marked for detached-view retention. */
+  getDetachedIds(): string[] {
+    return Array.from(this._detachedIds);
+  }
+
+  /** Requests active repeaters to detach and retain all currently marked views. */
+  collectDetachedViews(collectDetached: string): void {
+    this._detachChanges.next({type: 'collect', collectDetached});
+  }
+
+  /**
+   * Notifies strategies that are NOT in collect-detached mode that an item with the given
+   * trackBy id has been reattached (inserted from a detached view). Those strategies should
+   * reattach any saved detached views that fall within their rendered range.
+   * @param collectDetached The trackBy id of the item that was reattached.
+   */
+  notifyInsert(collectDetached: string): void {
+    this._detachChanges.next({type: 'insert', collectDetached});
+  }
+
+  /**
+   * Stores a detached view under a trackBy id until it is rendered again.
+   * @param id The trackBy identifier for the item.
+   * @param view The detached embedded view.
+   */
+  retainDetachedView(
+    id: string,
+    view: EmbeddedViewRef<unknown>,
+    repeaterId: string | null = null,
+    groupId: string | null = null,
+  ): void {
+    const existing = this._detachedViews.get(id);
+    if (existing && existing.view !== view) {
+      existing.view.destroy();
+    }
+
+    const sourceIds = new Set<string>(existing?.sourceIds);
+
+    this._detachedViews.set(id, {view, repeaterId, groupId, sourceIds});
+  }
+
+  /**
+   * Takes ownership of a retained detached view for reinsertion into the container.
+   * Returns the view or `null` if not found.
+   */
+  takeDetachedView<T>(id: string): {
+    view: EmbeddedViewRef<T>;
+    repeaterId: string | null;
+    groupId: string | null;
+  } | null {
+    const entry = this._detachedViews.get(id);
+    if (!entry) return null;
+
+    return {
+      view: entry.view as EmbeddedViewRef<T>,
+      repeaterId: entry.repeaterId,
+      groupId: entry.groupId,
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.clear();
+    this._detachChanges.complete();
+  }
+
+  /** Destroys the detached view retained for an id, if present. */
+  private _destroyDetachedView(id: string): boolean {
+    const entry = this._detachedViews.get(id);
+    if (!entry) {
+      return false;
+    }
+
+    this._detachedViews.delete(id);
+    entry.view.destroy();
+    return true;
+  }
+
+  /** Destroys all retained detached views. */
+  private _destroyDetachedViews(): void {
+    this._detachedViews.forEach(entry => entry.view.destroy());
+    this._detachedViews.clear();
   }
 }
