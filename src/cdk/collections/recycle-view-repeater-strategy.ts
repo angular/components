@@ -474,7 +474,7 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
 
       const localIndex = this._findRenderedViewIndexByTrackById(trackById);
       // we shouldn't insert View what is already in the dom
-      if (localIndex) return;
+      if (localIndex !== null) return;
 
       const {view} = entry;
       const realIndex = this._itemsTrackByIds.indexOf(trackById);
