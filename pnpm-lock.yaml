@@ -60,7 +60,7 @@ catalogs:
 
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.6.5
+  protobufjs: 8.7.0
 
 packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
 
@@ -218,7 +218,7 @@ importers:
         version: 0.28.1
       firebase-tools:
         specifier: 15.22.4
-        version: 15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
+        version: 15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.5
@@ -435,7 +435,7 @@ importers:
         version: 0.10.0
       firebase-tools:
         specifier: 15.22.4
-        version: 15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)
+        version: 15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -7882,8 +7882,8 @@ packages:
     resolution: {integrity: sha512-E1sbAYg3aEbXrq0n1ojJkRHQJGE1kaE/O6GLA94y8rnJBfgvOPTOd1b9hOceQK1FFZI9qMh1vBERCyO2ifubcw==}
     engines: {node: '>=18'}
 
-  protobufjs@8.6.5:
-    resolution: {integrity: sha512-zeE5LPpencAGXvsxyOYmEgJhxzHY8IsmPAFzstZVhDSVT8QH03q6gMZwZRaQGApevZbAL6u28ugs4CC+YKB2jQ==}
+  protobufjs@8.7.0:
+    resolution: {integrity: sha512-uu52JNxLh3vsL7tXU/h0gDaywufvuUCTbGSi0NKQKBZ2ZopkmrWQJSQO/EFqzu/5YhiwgVM8rq/a/iVpx4eZ0g==}
     engines: {node: '>=12.0.0'}
 
   protractor@7.0.0:
@@ -11466,7 +11466,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       merge-stream: 2.0.0
       p-queue: 6.6.2
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
       retry-request: 8.0.3(supports-color@10.2.2)
       split-array-stream: 2.0.0
       stack-trace: 0.0.10
@@ -11480,7 +11480,7 @@ snapshots:
     dependencies:
       google-auth-library: 10.9.0(supports-color@10.2.2)
       p-retry: 4.6.2
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
       ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.29.0
@@ -11509,14 +11509,14 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
       yargs: 17.7.3
 
   '@grpc/proto-loader@0.8.1':
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
       yargs: 17.7.3
 
   '@harperfast/extended-iterable@1.0.3':
@@ -15227,7 +15227,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13):
+  firebase-tools@15.22.4(@types/node@22.20.0)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -15278,9 +15278,9 @@ snapshots:
       pg: 8.22.0
       pg-gateway: 0.3.0-beta.4
       pglite-2: '@electric-sql/pglite@0.2.17'
-      portfinder: 1.0.38
+      portfinder: 1.0.38(supports-color@10.2.2)
       progress: 2.0.3
-      proxy-agent: 6.5.0
+      proxy-agent: 6.5.0(supports-color@10.2.2)
       retry: 0.13.1
       semver: 7.8.5
       sql-formatter: 15.8.2
@@ -15291,7 +15291,7 @@ snapshots:
       tcp-port-used: 1.0.3
       tmp: 0.2.7
       triple-beam: 1.4.1
-      universal-analytics: 0.5.4
+      universal-analytics: 0.5.4(supports-color@10.2.2)
       update-notifier-cjs: 5.1.7(encoding@0.1.13)
       winston: 3.19.0
       winston-transport: 4.9.0
@@ -15535,7 +15535,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
 
-  get-uri@6.0.5:
+  get-uri@6.0.5(supports-color@10.2.2):
     dependencies:
       basic-ftp: 5.3.1
       data-uri-to-buffer: 6.0.2
@@ -15709,7 +15709,7 @@ snapshots:
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
       retry-request: 8.0.3(supports-color@10.2.2)
       rimraf: 5.0.10
     transitivePeerDependencies:
@@ -15748,7 +15748,7 @@ snapshots:
   grpc-gcp@1.0.1:
     dependencies:
       '@grpc/grpc-js': 1.14.4
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
 
   gtoken@7.1.0(encoding@0.1.13):
     dependencies:
@@ -17579,12 +17579,12 @@ snapshots:
 
   p-try@2.2.0: {}
 
-  pac-proxy-agent@7.2.0:
+  pac-proxy-agent@7.2.0(supports-color@10.2.2):
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@10.2.2)
-      get-uri: 6.0.5
+      get-uri: 6.0.5(supports-color@10.2.2)
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
       pac-resolver: 7.0.1
@@ -17766,7 +17766,7 @@ snapshots:
       pvutils: 1.1.5
       tslib: 2.8.1
 
-  portfinder@1.0.38:
+  portfinder@1.0.38(supports-color@10.2.2):
     dependencies:
       async: 3.2.6
       debug: 4.4.3(supports-color@10.2.2)
@@ -17882,9 +17882,9 @@ snapshots:
 
   proto3-json-serializer@3.0.4:
     dependencies:
-      protobufjs: 8.6.5
+      protobufjs: 8.7.0
 
-  protobufjs@8.6.5:
+  protobufjs@8.7.0:
     dependencies:
       long: 5.3.2
 
@@ -17915,14 +17915,14 @@ snapshots:
 
   proxy-agent-negotiate@1.1.0: {}
 
-  proxy-agent@6.5.0:
+  proxy-agent@6.5.0(supports-color@10.2.2):
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@10.2.2)
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
       lru-cache: 7.18.3
-      pac-proxy-agent: 7.2.0
+      pac-proxy-agent: 7.2.0(supports-color@10.2.2)
       proxy-from-env: 1.1.0
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -19462,7 +19462,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  universal-analytics@0.5.4:
+  universal-analytics@0.5.4(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       uuid: 14.0.1
