@@ -1,3 +1,28 @@
+<a name="22.0.5"></a>
+# 22.0.5 "plastic bottle" (2026-07-15)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e74c69be33](https://github.com/angular/components/commit/e74c69be33ab44f883ac083d369903784e5cb253) | fix | **combobox:** closing immediately when opening programmatically with zone.js ([#33518](https://github.com/angular/components/pull/33518)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1059f80cef](https://github.com/angular/components/commit/1059f80cef9ad3348c7c859e6dba36a44bfe8abc) | fix | **overlay:** guard against null document.body before popover support check ([#33403](https://github.com/angular/components/pull/33403)) |
+| [adbf93559e](https://github.com/angular/components/commit/adbf93559e2c5ed517bf5867cd7b6cec267bfc92) | fix | **private:** guard createPolicy against DOM clobbering ([#33410](https://github.com/angular/components/pull/33410)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d26e892021](https://github.com/angular/components/commit/d26e8920219e4ea0b02814d362cb9f3b7ecf647f) | fix | **button:** match focus indicator shape to FAB ([#33527](https://github.com/angular/components/pull/33527)) |
+| [ea89b9c37f](https://github.com/angular/components/commit/ea89b9c37f6214efc7b2d59decc308246f1ce21a) | fix | **datepicker:** use rounded shape for calendar focus indicators ([#33524](https://github.com/angular/components/pull/33524)) |
+| [092b55aa67](https://github.com/angular/components/commit/092b55aa673edc872ea1bdbd3e120001597e975f) | fix | **sort:** double focus indicators when strong focus is enabled ([#33520](https://github.com/angular/components/pull/33520)) |
+| [e93bc9e5d6](https://github.com/angular/components/commit/e93bc9e5d6f1b511a9e845fc26c8c2df537260ab) | fix | **stepper:** add border radius to header hover state in m2 ([#33529](https://github.com/angular/components/pull/33529)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b2620abaa2](https://github.com/angular/components/commit/b2620abaa20fe494c77438d0df41a56effd577e9) | fix | pass form field to error state tracker ([#33509](https://github.com/angular/components/pull/33509)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.0-next.3"></a>
 # 22.1.0-next.3 "flerovium-fountain" (2026-07-08)
 ### aria
