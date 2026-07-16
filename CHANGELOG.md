@@ -1,3 +1,28 @@
+<a name="22.1.0-next.4"></a>
+# 22.1.0-next.4 "plastic box" (2026-07-15)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [def7bc2a69](https://github.com/angular/components/commit/def7bc2a69fb5722da681468e2638a2dceadb3ab) | fix | **combobox:** closing immediately when opening programmatically with zone.js ([#33518](https://github.com/angular/components/pull/33518)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [67a5031db7](https://github.com/angular/components/commit/67a5031db78e1e6e6e683b864a49e47c38ab81bd) | fix | **overlay:** guard against null document.body before popover support check ([#33403](https://github.com/angular/components/pull/33403)) |
+| [c069cab23c](https://github.com/angular/components/commit/c069cab23ca5d1e4faf277e755c543efcca2b45a) | fix | **private:** guard createPolicy against DOM clobbering ([#33410](https://github.com/angular/components/pull/33410)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d324696863](https://github.com/angular/components/commit/d324696863cfc4ee7f4475499d7f0dbed8496d74) | fix | **button:** match focus indicator shape to FAB ([#33527](https://github.com/angular/components/pull/33527)) |
+| [9a247a8da2](https://github.com/angular/components/commit/9a247a8da23f2c9d5ed03c68d21659f814ae29c6) | fix | **datepicker:** use rounded shape for calendar focus indicators ([#33524](https://github.com/angular/components/pull/33524)) |
+| [14d896a936](https://github.com/angular/components/commit/14d896a9366bca6df253af2aade8de4c09f98ba7) | fix | **sort:** double focus indicators when strong focus is enabled ([#33520](https://github.com/angular/components/pull/33520)) |
+| [c729db7972](https://github.com/angular/components/commit/c729db79725e819d0ecd3e08cdd0cd876ddae755) | fix | **stepper:** add border radius to header hover state in m2 ([#33529](https://github.com/angular/components/pull/33529)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ebd64a1bf8](https://github.com/angular/components/commit/ebd64a1bf8409feede16bef532acf8ffe903d6f0) | fix | pass form field to error state tracker ([#33509](https://github.com/angular/components/pull/33509)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.5"></a>
 # 22.0.5 "plastic bottle" (2026-07-15)
 ### aria
