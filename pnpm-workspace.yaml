@@ -49,7 +49,7 @@ minimumReleaseAgeExclude:
   - 'ng-packagr'
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.7.0
+  protobufjs: 8.7.1
   '@nginfra/angular-linking>@babel/core': 8.0.1
 packageExtensions:
   dgeni-packages:

@@ -60,7 +60,7 @@ catalogs:
 
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.7.0
+  protobufjs: 8.7.1
   '@nginfra/angular-linking>@babel/core': 8.0.1
 
 packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
@@ -218,8 +218,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.1
       firebase-tools:
-        specifier: 15.22.4
-        version: 15.22.4(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
+        specifier: 15.23.0
+        version: 15.23.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.6
@@ -415,7 +415,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 22.1.0-next.4(fafbc86359c504c68b2e092591fd525a)
+        version: 22.1.0-next.4(90b990e7a625b931aae2b459d21d83ef)
       '@angular/cli':
         specifier: 'catalog:'
         version: 22.1.0-next.4(@types/node@22.20.1)(chokidar@5.0.0)
@@ -435,8 +435,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.22.4
-        version: 15.22.4(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
+        specifier: 15.23.0
+        version: 15.23.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -5476,8 +5476,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.22.4:
-    resolution: {integrity: sha512-opTIWpf1S4+yT0cArSD0CBp3QrcOGSP4PEWif6Gts2Y0TYBjM6jkQMPGq8ALdjPC1aPbUZ8dLMchn10Q/EwHwQ==}
+  firebase-tools@15.23.0:
+    resolution: {integrity: sha512-YIu1w84GiJAoQfCDBvrK77Qnu19sh00YufGvrWLc9kus9p8j5NkFOGfSpIAiEHu5VliTZUqBhqDwA/i7fuN0GQ==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -7915,8 +7915,8 @@ packages:
     resolution: {integrity: sha512-E1sbAYg3aEbXrq0n1ojJkRHQJGE1kaE/O6GLA94y8rnJBfgvOPTOd1b9hOceQK1FFZI9qMh1vBERCyO2ifubcw==}
     engines: {node: '>=18'}
 
-  protobufjs@8.7.0:
-    resolution: {integrity: sha512-uu52JNxLh3vsL7tXU/h0gDaywufvuUCTbGSi0NKQKBZ2ZopkmrWQJSQO/EFqzu/5YhiwgVM8rq/a/iVpx4eZ0g==}
+  protobufjs@8.7.1:
+    resolution: {integrity: sha512-agdGHrXNTv0IrYscJPDou/PlEJk1c/hBZ9o/B5NH2i/nSPtPqacNxzgwf1CebXxFMjMrZH5sqv9uQuw96aGt/A==}
     engines: {node: '>=12.0.0'}
 
   protractor@7.0.0:
@@ -9800,13 +9800,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.1.0-next.4(fafbc86359c504c68b2e092591fd525a)':
+  '@angular-devkit/build-angular@22.1.0-next.4(90b990e7a625b931aae2b459d21d83ef)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.4(chokidar@5.0.0)
-      '@angular-devkit/build-webpack': 0.2201.0-next.4(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)))(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
+      '@angular-devkit/build-webpack': 0.2201.0-next.4(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)))(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
       '@angular-devkit/core': 22.1.0-next.4(chokidar@5.0.0)
-      '@angular/build': 22.1.0-next.4(2690224c4bd81b2a4f98cf5c95b18428)
+      '@angular/build': 22.1.0-next.4(20b91a196d1385716b48ee1b295284be)
       '@angular/compiler-cli': 22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2)
       '@babel/core': 8.0.1
       '@babel/generator': 8.0.0
@@ -9826,8 +9826,8 @@ snapshots:
       copy-webpack-plugin: 14.0.0(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
       css-loader: 7.1.4(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
       esbuild-wasm: 0.28.1
-      http-proxy-middleware: 4.2.0
-      istanbul-lib-instrument: 6.0.3
+      http-proxy-middleware: 4.2.0(supports-color@10.2.2)
+      istanbul-lib-instrument: 6.0.3(supports-color@10.2.2)
       jsonc-parser: 3.3.1
       karma-source-map-support: 1.4.0
       less: 4.6.7
@@ -9854,7 +9854,7 @@ snapshots:
       typescript: 6.0.2
       webpack: 5.108.4(esbuild@0.28.1)(postcss@8.5.16)
       webpack-dev-middleware: 8.0.3(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
-      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
+      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
     optionalDependencies:
@@ -9897,12 +9897,12 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-webpack@0.2201.0-next.4(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)))(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))':
+  '@angular-devkit/build-webpack@0.2201.0-next.4(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)))(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))':
     dependencies:
       '@angular-devkit/architect': 0.2201.0-next.4(chokidar@5.0.0)
       rxjs: 7.8.2
       webpack: 5.108.4(esbuild@0.28.1)(postcss@8.5.16)
-      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
+      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16))
     transitivePeerDependencies:
       - chokidar
 
@@ -9927,7 +9927,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.1.0-next.4(2690224c4bd81b2a4f98cf5c95b18428)':
+  '@angular/build@22.1.0-next.4(20b91a196d1385716b48ee1b295284be)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.4(chokidar@5.0.0)
@@ -9941,7 +9941,7 @@ snapshots:
       beasties: 0.4.2
       browserslist: 4.28.6
       esbuild: 0.28.1
-      https-proxy-agent: 9.1.0
+      https-proxy-agent: 9.1.0(supports-color@10.2.2)
       jsonc-parser: 3.3.1
       listr2: 10.2.2
       magic-string: 0.30.21
@@ -9964,7 +9964,7 @@ snapshots:
       '@angular/platform-browser': 22.1.0-next.6(@angular/common@22.1.0-next.6(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2))
       '@angular/platform-server': 22.1.0-next.6(@angular/common@22.1.0-next.6(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/compiler@22.1.0-next.6)(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.6(@angular/common@22.1.0-next.6(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(typescript@6.0.2))(@angular/core@22.1.0-next.6(@angular/compiler@22.1.0-next.6)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
       '@angular/ssr': 22.1.0-next.4(ae2ab38a56a690c5ea7806ad50928984)
-      istanbul-lib-instrument: 6.0.3
+      istanbul-lib-instrument: 6.0.3(supports-color@10.2.2)
       karma: 6.4.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       less: 4.6.7
       lmdb: 3.5.6
@@ -10198,7 +10198,7 @@ snapshots:
 
   '@babel/compat-data@8.0.0': {}
 
-  '@babel/core@7.29.7':
+  '@babel/core@7.29.7(supports-color@10.2.2)':
     dependencies:
       '@babel/code-frame': 7.29.7
       '@babel/generator': 7.29.7
@@ -10322,7 +10322,7 @@ snapshots:
 
   '@babel/helper-module-transforms@7.29.7(@babel/core@7.29.7)':
     dependencies:
-      '@babel/core': 7.29.7
+      '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/helper-module-imports': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
       '@babel/traverse': 7.29.7(supports-color@10.2.2)
@@ -11426,7 +11426,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       merge-stream: 2.0.0
       p-queue: 6.6.2
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
       retry-request: 8.0.3(supports-color@10.2.2)
       split-array-stream: 2.0.0
       stack-trace: 0.0.10
@@ -11440,7 +11440,7 @@ snapshots:
     dependencies:
       google-auth-library: 10.9.0(supports-color@10.2.2)
       p-retry: 4.6.2
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
       ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.29.0
@@ -11469,14 +11469,14 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
       yargs: 17.7.3
 
   '@grpc/proto-loader@0.8.1':
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
       yargs: 17.7.3
 
   '@harperfast/extended-iterable@1.0.3':
@@ -15182,7 +15182,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.22.4(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2):
+  firebase-tools@15.23.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -15233,9 +15233,9 @@ snapshots:
       pg: 8.22.0
       pg-gateway: 0.3.0-beta.4
       pglite-2: '@electric-sql/pglite@0.2.17'
-      portfinder: 1.0.38(supports-color@10.2.2)
+      portfinder: 1.0.38
       progress: 2.0.3
-      proxy-agent: 6.5.0(supports-color@10.2.2)
+      proxy-agent: 6.5.0
       retry: 0.13.1
       semver: 7.8.5
       sql-formatter: 15.8.2
@@ -15246,7 +15246,8 @@ snapshots:
       tcp-port-used: 1.0.3
       tmp: 0.2.7
       triple-beam: 1.4.1
-      universal-analytics: 0.5.4(supports-color@10.2.2)
+      undici: 6.27.0
+      universal-analytics: 0.5.4
       update-notifier-cjs: 5.1.7(encoding@0.1.13)
       winston: 3.19.0
       winston-transport: 4.9.0
@@ -15443,7 +15444,7 @@ snapshots:
   gcp-metadata@8.1.2(supports-color@10.2.2):
     dependencies:
       gaxios: 7.2.0(supports-color@10.2.2)
-      google-logging-utils: 1.1.3
+      google-logging-utils: 1.1.4
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -15490,7 +15491,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
 
-  get-uri@6.0.5(supports-color@10.2.2):
+  get-uri@6.0.5:
     dependencies:
       basic-ftp: 5.3.1
       data-uri-to-buffer: 6.0.2
@@ -15559,7 +15560,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -15662,7 +15663,7 @@ snapshots:
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
       retry-request: 8.0.3(supports-color@10.2.2)
       rimraf: 5.0.10
     transitivePeerDependencies:
@@ -15701,7 +15702,7 @@ snapshots:
   grpc-gcp@1.0.1:
     dependencies:
       '@grpc/grpc-js': 1.14.4
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
 
   gtoken@7.1.0(encoding@0.1.13):
     dependencies:
@@ -15901,7 +15902,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  http-proxy-middleware@4.2.0:
+  http-proxy-middleware@4.2.0(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       httpxy: 0.5.5
@@ -15946,7 +15947,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@9.1.0:
+  https-proxy-agent@9.1.0(supports-color@10.2.2):
     dependencies:
       agent-base: 9.0.0
       debug: 4.4.3(supports-color@10.2.2)
@@ -16324,7 +16325,7 @@ snapshots:
 
   istanbul-lib-instrument@5.2.1:
     dependencies:
-      '@babel/core': 7.29.7
+      '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/parser': 7.29.7
       '@istanbuljs/schema': 0.1.6
       istanbul-lib-coverage: 3.2.2
@@ -16332,9 +16333,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  istanbul-lib-instrument@6.0.3:
+  istanbul-lib-instrument@6.0.3(supports-color@10.2.2):
     dependencies:
-      '@babel/core': 7.29.7
+      '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/parser': 7.29.7
       '@istanbuljs/schema': 0.1.6
       istanbul-lib-coverage: 3.2.2
@@ -17544,12 +17545,12 @@ snapshots:
 
   p-try@2.2.0: {}
 
-  pac-proxy-agent@7.2.0(supports-color@10.2.2):
+  pac-proxy-agent@7.2.0:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@10.2.2)
-      get-uri: 6.0.5(supports-color@10.2.2)
+      get-uri: 6.0.5
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
       pac-resolver: 7.0.1
@@ -17731,7 +17732,7 @@ snapshots:
       pvutils: 1.1.5
       tslib: 2.8.1
 
-  portfinder@1.0.38(supports-color@10.2.2):
+  portfinder@1.0.38:
     dependencies:
       async: 3.2.6
       debug: 4.4.3(supports-color@10.2.2)
@@ -17853,9 +17854,9 @@ snapshots:
 
   proto3-json-serializer@3.0.4:
     dependencies:
-      protobufjs: 8.7.0
+      protobufjs: 8.7.1
 
-  protobufjs@8.7.0:
+  protobufjs@8.7.1:
     dependencies:
       long: 5.3.2
 
@@ -17886,14 +17887,14 @@ snapshots:
 
   proxy-agent-negotiate@1.1.0: {}
 
-  proxy-agent@6.5.0(supports-color@10.2.2):
+  proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@10.2.2)
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
       lru-cache: 7.18.3
-      pac-proxy-agent: 7.2.0(supports-color@10.2.2)
+      pac-proxy-agent: 7.2.0
       proxy-from-env: 1.1.0
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -19433,7 +19434,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  universal-analytics@0.5.4(supports-color@10.2.2):
+  universal-analytics@0.5.4:
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       uuid: 14.0.1
@@ -19646,7 +19647,7 @@ snapshots:
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)):
+  webpack-dev-server@5.2.6(bufferutil@4.1.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.108.4(esbuild@0.28.1)(postcss@8.5.16)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
