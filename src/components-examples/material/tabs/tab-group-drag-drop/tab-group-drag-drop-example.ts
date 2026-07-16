@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, signal, ViewEncapsulation} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from '@angular/material/tabs';
 
@@ -13,12 +13,12 @@ import {MatTabsModule} from '@angular/material/tabs';
   encapsulation: ViewEncapsulation.None,
 })
 export class TabGroupDragDropExample {
-  protected tabs = ['One', 'Two', 'Three', 'Four', 'Five'];
-  protected selectedTabIndex = 0;
+  protected tabs = signal(['One', 'Two', 'Three', 'Four', 'Five']);
+  protected selectedTabIndex = signal(0);
 
   drop(event: CdkDragDrop<string[]>) {
-    const prevActive = this.tabs[this.selectedTabIndex];
-    moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
-    this.selectedTabIndex = this.tabs.indexOf(prevActive);
+    const prevActive = this.tabs()[this.selectedTabIndex()];
+    moveItemInArray(this.tabs(), event.previousIndex, event.currentIndex);
+    this.selectedTabIndex.set(this.tabs().indexOf(prevActive));
   }
 }

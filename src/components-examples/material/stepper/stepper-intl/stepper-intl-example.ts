@@ -1,4 +1,4 @@
-import {Component, Service, inject} from '@angular/core';
+import {Component, Service, inject, signal} from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
@@ -34,7 +34,7 @@ export class StepperIntlExample {
   private _formBuilder = inject(FormBuilder);
   private _matStepperIntl = inject(MatStepperIntl);
 
-  optionalLabelText = '';
+  optionalLabelText = signal('');
   optionalLabelTextChoices: string[] = ['Option 1', 'Option 2', 'Option 3'];
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -44,7 +44,7 @@ export class StepperIntlExample {
   });
 
   updateOptionalLabel() {
-    this._matStepperIntl.optionalLabel = this.optionalLabelText;
+    this._matStepperIntl.optionalLabel = this.optionalLabelText();
     // Required for the optional label text to be updated
     // Notifies the MatStepperIntl service that a change has been made
     this._matStepperIntl.changes.next();
