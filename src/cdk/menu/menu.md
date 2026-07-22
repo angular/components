@@ -41,8 +41,8 @@ The available CSS classes are listed below, by directive.
 
 ### Getting started
 
-Import the `CdkMenuModule` into the `NgModule` in which you want to create menus. You can then apply
-menu directives to build your custom menu. A typical menu consists of the following directives:
+Import `CdkMenu`, `CdkMenuItem`, and `CdkMenuTrigger` in the component where you want to create
+menus. You can then apply menu directives to build your custom menu. A typical menu consists of the following directives:
 
 - `cdkMenuTriggerFor` - links a trigger element to an `ng-template` containing the menu to be opened
 - `cdkMenu` - creates the menu content opened by the trigger

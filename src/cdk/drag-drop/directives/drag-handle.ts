@@ -57,8 +57,6 @@ export class CdkDragHandle implements AfterViewInit, OnDestroy {
   }
   private _disabled = false;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       assertElementNode(this.element.nativeElement, 'cdkDragHandle');

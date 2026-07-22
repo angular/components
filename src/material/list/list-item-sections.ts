@@ -21,9 +21,6 @@ import {LIST_OPTION, ListOption} from './list-option-types';
 })
 export class MatListItemTitle {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }
 
 /**
@@ -38,9 +35,6 @@ export class MatListItemTitle {
 })
 export class MatListItemLine {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }
 
 /**
@@ -75,9 +69,6 @@ export class MatListItemMeta {}
 })
 export class _MatListItemGraphicBase {
   _listOption = inject<ListOption>(LIST_OPTION, {optional: true});
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   _isAlignedAtStart() {
     // By default, in all list items the graphic is aligned at start. In list options,

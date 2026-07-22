@@ -102,11 +102,11 @@ export class DocsMarkdownRenderer extends Renderer {
           file: string;
           region: string;
         };
-        replacement = `<div material-docs-example="${example}"
-                             ${file ? `file="${file}"` : ''}
-                             ${region ? `region="${region}"` : ''}></div>`;
+        replacement = `<div material-docs-example="${this._escapeHtml(example)}"
+                             ${file ? `file="${this._escapeHtml(file)}"` : ''}
+                             ${region ? `region="${this._escapeHtml(region)}"` : ''}></div>`;
       } else {
-        replacement = `<div material-docs-example="${content}"></div>`;
+        replacement = `<div material-docs-example="${this._escapeHtml(content)}"></div>`;
       }
 
       return `${exampleStartMarker}${replacement}${exampleEndMarker}`;
@@ -153,5 +153,18 @@ export class DocsMarkdownRenderer extends Renderer {
       .replace(new RegExp(exampleEndMarker, 'g'), markdownOpen);
 
     return `${markdownOpen}${output}</div>`;
+  }
+
+  private _escapeHtml(text: string): string {
+    if (!text) {
+      return text;
+    }
+
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }

@@ -36,6 +36,13 @@ easily accomplished with `display: flex`:
               "file":"toolbar-multirow-example.css", 
               "region":"toolbar-position-content-style"}) -->
 
+### Navigation bar
+
+A common use case for a toolbar is as a navigation bar containing links to
+different sections of an application.
+
+<!-- example(toolbar-navbar) -->
+
 ### Accessibility
 By default, the toolbar assumes that it will be used in a purely decorative fashion and thus sets
 no roles, ARIA attributes, or keyboard shortcuts. This is equivalent to having a sequence of `<div>`

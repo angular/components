@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'test-sub',
@@ -18,7 +18,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
         }
       </ul>`,
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestSubComponent {
   @Input() title = '';

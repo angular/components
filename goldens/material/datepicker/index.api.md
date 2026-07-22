@@ -16,6 +16,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -99,7 +100,7 @@ export const MAT_DATEPICKER_VALUE_ACCESSOR: any;
 
 // @public
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D);
     protected _activeDrag: MatCalendarUserEvent<D> | null;
@@ -130,7 +131,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     get selected(): DateRange<D> | D | null;
@@ -156,7 +157,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
 // @public
 export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
-    constructor(...args: unknown[]);
+    constructor();
     activeCell: number;
     // (undocumented)
     readonly activeDateChange: EventEmitter<MatCalendarUserEvent<number>>;
@@ -200,7 +201,7 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     numCols: number;
@@ -229,7 +230,7 @@ export class MatCalendarCell<D = any> {
     // (undocumented)
     compareValue: number;
     // (undocumented)
-    cssClasses: MatCalendarCellCssClasses;
+    readonly cssClasses: string | string[] | Record<string, any> | undefined;
     // (undocumented)
     displayValue: string;
     // (undocumented)
@@ -246,13 +247,11 @@ export class MatCalendarCell<D = any> {
 export type MatCalendarCellClassFunction<D> = (date: D, view: 'month' | 'year' | 'multi-year') => MatCalendarCellCssClasses;
 
 // @public
-export type MatCalendarCellCssClasses = string | string[] | Set<string> | {
-    [key: string]: any;
-};
+export type MatCalendarCellCssClasses = string | string[] | Set<string> | Record<string, any>;
 
 // @public
 export class MatCalendarHeader<D> {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     calendar: MatCalendar<D>;
     currentPeriodClicked(): void;
@@ -294,7 +293,6 @@ export class MatDatepicker<D> extends MatDatepickerBase<MatDatepickerControl<D>,
 
 // @public
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -309,7 +307,6 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
 
 // @public
 export class MatDatepickerApply {
-    constructor(...args: unknown[]);
     // (undocumented)
     _applySelection(): void;
     // (undocumented)
@@ -320,7 +317,6 @@ export class MatDatepickerApply {
 
 // @public
 export class MatDatepickerCancel {
-    constructor(...args: unknown[]);
     // (undocumented)
     _datepicker: MatDatepickerBase<MatDatepickerControl<any>, unknown, {}>;
     // (undocumented)
@@ -331,7 +327,7 @@ export class MatDatepickerCancel {
 
 // @public
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _actionsPortal: TemplatePortal | null;
     readonly _animationDone: Subject<void>;
     // (undocumented)
@@ -394,7 +390,7 @@ export interface MatDatepickerControl<D> {
 
 // @public
 export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> implements MatDatepickerControl<D | null>, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _ariaOwns: i0.WritableSignal<string | null>;
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
@@ -491,7 +487,7 @@ export interface MatDatepickerPanel<C extends MatDatepickerControl<D>, S, D = Ex
 
 // @public (undocumented)
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     ariaLabel: string;
     _button: MatButton;
     _customIcon: MatDatepickerToggleIcon;
@@ -506,7 +502,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -528,7 +524,7 @@ export class MatDatepickerToggleIcon {
 
 // @public (undocumented)
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     _ariaDescribedBy: string | null;
     _ariaOwns: i0.WritableSignal<string | null>;
     comparisonEnd: D | null;
@@ -571,7 +567,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     ngAfterContentInit(): void;
     ngControl: NgControl | null;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     onContainerClick(): void;
@@ -659,7 +655,7 @@ export class MatEndDate<D> extends MatDateRangeInputPartBase<D> {
 
 // @public
 export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;
@@ -695,10 +691,10 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
-    _previewChanged({ event, value: cell }: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
+    _previewChanged(input: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
     _previewEnd: i0.WritableSignal<number | null>;
     _previewStart: i0.WritableSignal<number | null>;
     _rangeEnd: i0.WritableSignal<number | null>;
@@ -724,7 +720,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
 
 // @public
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;
@@ -811,7 +807,7 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
 
 // @public
 export class MatYearView<D> implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;

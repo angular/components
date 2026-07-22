@@ -418,6 +418,22 @@ describe('LuxonDateAdapter', () => {
     expect(clone.toISO()).toEqual(date.toISO());
   });
 
+  it('should respect timezone on clone', () => {
+    const dateLocal = DateTime.local(2017, JAN, 1);
+    const dateInCet = dateLocal.setZone('Europe/Budapest');
+    const cloneInCet = adapter.clone(dateInCet);
+    const dateInPst = dateLocal.setZone('America/Los_Angeles');
+    const cloneInPst = adapter.clone(dateInPst);
+
+    expect(cloneInCet).not.toBe(dateInCet);
+    expect(cloneInCet.toISO()).toEqual(dateInCet.toISO());
+    expect(cloneInCet.zone).toEqual(dateInCet.zone);
+
+    expect(cloneInPst).not.toBe(dateInPst);
+    expect(cloneInPst.toISO()).toEqual(dateInPst.toISO());
+    expect(cloneInPst.zone).toEqual(dateInPst.zone);
+  });
+
   it('should compare dates', () => {
     expect(
       adapter.compareDate(DateTime.local(2017, JAN, 1), DateTime.local(2017, JAN, 2)),

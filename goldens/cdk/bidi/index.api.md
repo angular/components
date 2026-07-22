@@ -46,7 +46,7 @@ export type Direction = 'ltr' | 'rtl';
 
 // @public
 export class Directionality implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly change: EventEmitter<Direction>;
     // (undocumented)
     ngOnDestroy(): void;

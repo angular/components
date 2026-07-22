@@ -13,6 +13,13 @@ If you don't want the label to appear next to the slide-toggle, you can use
 [`aria-labelledby`](https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby) to
 specify an appropriate label.
 
+### Full-width slide-toggle
+The `fullWidth` input can be used to make the slide-toggle stretch to fill its container.
+When applied, the slide-toggle will distribute the switch and the label to opposite ends of the
+container.
+
+<!-- example(slide-toggle-full-width) -->
+
 ### Use with `@angular/forms`
 `<mat-slide-toggle>` is compatible with `@angular/forms` and supports both `FormsModule`
 and `ReactiveFormsModule`.

@@ -1,4 +1,4 @@
-import {ApplicationRef, Component, Injector} from '@angular/core';
+import {ApplicationRef, Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {filter, take} from 'rxjs/operators';
 import {ComponentPortal} from '../../portal';
@@ -17,7 +17,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     injector = TestBed.inject(Injector);
   });
 
-  it('should track overlays in order as they are attached and detached', () => {
+  it('should track outside click overlays in order as they are attached and detached', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -143,7 +143,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     );
   });
 
-  it('should not add the same overlay to the stack multiple times', () => {
+  it('should not add the same outside click overlay to the stack multiple times', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -407,7 +407,7 @@ describe('OverlayOutsideClickDispatcher', () => {
 
     it('should run change detection if the click was made outside the overlay and there are `outsidePointerEvents` observers', async () => {
       let renders = 0;
-      @Component({template: '{{increment()}}'})
+      @Component({template: '{{increment()}}', changeDetection: ChangeDetectionStrategy.Eager})
       class Counter {
         increment() {
           renders++;
@@ -448,5 +448,5 @@ describe('OverlayOutsideClickDispatcher', () => {
   });
 });
 
-@Component({template: 'Hello'})
+@Component({template: 'Hello', changeDetection: ChangeDetectionStrategy.Eager})
 class TestComponent {}

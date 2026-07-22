@@ -36,6 +36,21 @@ export class SelectionModel<T> {
   /** Event emitted when the value has changed. */
   readonly changed = new Subject<SelectionChange<T>>();
 
+  /**
+   * Exposes selection/deselection methods that work on array of values and don't expect a spread.
+   * This is useful in the cases where you may have a large collection of items that can't be
+   * easily spread into the existing methods without hitting browser limits.
+   */
+  readonly bulk: Readonly<{
+    select: (values: T[]) => boolean;
+    deselect: (values: T[]) => boolean;
+    setSelection: (values: T[]) => boolean;
+  }> = {
+    select: values => this._select(values),
+    deselect: values => this._deselect(values),
+    setSelection: values => this._setSelection(values),
+  };
+
   constructor(
     private _multiple = false,
     initiallySelectedValues?: T[],
@@ -60,11 +75,7 @@ export class SelectionModel<T> {
    * @return Whether the selection changed as a result of this call
    */
   select(...values: T[]): boolean {
-    this._verifyValueAssignment(values);
-    values.forEach(value => this._markSelected(value));
-    const changed = this._hasQueuedChanges();
-    this._emitChangeEvent();
-    return changed;
+    return this._select(values);
   }
 
   /**
@@ -73,11 +84,7 @@ export class SelectionModel<T> {
    * @return Whether the selection changed as a result of this call
    */
   deselect(...values: T[]): boolean {
-    this._verifyValueAssignment(values);
-    values.forEach(value => this._unmarkSelected(value));
-    const changed = this._hasQueuedChanges();
-    this._emitChangeEvent();
-    return changed;
+    return this._deselect(values);
   }
 
   /**
@@ -86,16 +93,7 @@ export class SelectionModel<T> {
    * @return Whether the selection changed as a result of this call
    */
   setSelection(...values: T[]): boolean {
-    this._verifyValueAssignment(values);
-    const oldValues = this.selected;
-    const newSelectedSet = new Set(values.map(value => this._getConcreteValue(value)));
-    values.forEach(value => this._markSelected(value));
-    oldValues
-      .filter(value => !newSelectedSet.has(this._getConcreteValue(value, newSelectedSet)))
-      .forEach(value => this._unmarkSelected(value));
-    const changed = this._hasQueuedChanges();
-    this._emitChangeEvent();
-    return changed;
+    return this._setSelection(values);
   }
 
   /**
@@ -157,6 +155,38 @@ export class SelectionModel<T> {
    */
   isMultipleSelection() {
     return this._multiple;
+  }
+
+  /** Selects an array of values. */
+  private _select(values: T[]) {
+    this._verifyValueAssignment(values);
+    values.forEach(value => this._markSelected(value));
+    const changed = this._hasQueuedChanges();
+    this._emitChangeEvent();
+    return changed;
+  }
+
+  /** Deselects an array of values. */
+  private _deselect(values: T[]) {
+    this._verifyValueAssignment(values);
+    values.forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
+    this._emitChangeEvent();
+    return changed;
+  }
+
+  /** Sets the current selection from an array of items. */
+  private _setSelection(values: T[]) {
+    this._verifyValueAssignment(values);
+    const oldValues = this.selected;
+    const newSelectedSet = new Set(values.map(value => this._getConcreteValue(value)));
+    values.forEach(value => this._markSelected(value));
+    oldValues
+      .filter(value => !newSelectedSet.has(this._getConcreteValue(value, newSelectedSet)))
+      .forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
+    this._emitChangeEvent();
+    return changed;
   }
 
   /** Emits a change event and clears the records of selected and deselected values. */

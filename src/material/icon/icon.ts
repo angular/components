@@ -9,7 +9,6 @@
 import {
   AfterViewChecked,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   ErrorHandler,
@@ -145,7 +144,6 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
     '[class.mat-icon-no-color]': 'color !== "primary" && color !== "accent" && color !== "warn"',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -238,8 +236,6 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
 
   /** Subscription to the current in-progress SVG icon request. */
   private _currentIconFetch = Subscription.EMPTY;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const ariaHidden = inject(new HostAttributeToken('aria-hidden'), {optional: true});

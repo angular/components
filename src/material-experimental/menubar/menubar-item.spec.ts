@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkMenuItem, CdkMenuModule, CdkMenu} from '@angular/cdk/menu';
 import {MatMenuBarItem} from './menubar-item';
@@ -57,6 +57,7 @@ describe('MatMenuBarItem', () => {
     </ng-template>
   `,
   imports: [MatMenuBarModule, CdkMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMenuBarItem {
   @ViewChild(CdkMenuItem) menubarItem!: MatMenuBarItem;

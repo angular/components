@@ -73,7 +73,7 @@ export class MatChipEdit extends MatChipAction {
     if (!this.disabled) {
       event.stopPropagation();
       event.preventDefault();
-      this._parentChip._edit();
+      this._parentChip._edit(event);
     }
   }
 
@@ -81,7 +81,7 @@ export class MatChipEdit extends MatChipAction {
     if ((event.keyCode === ENTER || event.keyCode === SPACE) && !this.disabled) {
       event.stopPropagation();
       event.preventDefault();
-      this._parentChip._edit();
+      this._parentChip._edit(event);
     }
   }
 }

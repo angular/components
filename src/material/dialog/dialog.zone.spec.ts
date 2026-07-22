@@ -10,13 +10,14 @@ import {
   ViewContainerRef,
   provideZoneChangeDetection,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '../dialog';
 import {Subject} from 'rxjs';
 import {MATERIAL_ANIMATIONS} from '../core';
 
-describe('MatDialog', () => {
+describe('MatDialog with Zone', () => {
   let dialog: MatDialog;
   let zone: NgZone;
   let scrolledSubject = new Subject();
@@ -24,7 +25,7 @@ describe('MatDialog', () => {
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideZoneChangeDetection(),
@@ -46,9 +47,9 @@ describe('MatDialog', () => {
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-  }));
+  });
 
-  it('should invoke the afterClosed callback inside the NgZone', fakeAsync(() => {
+  it('should invoke the afterClosed callback inside the NgZone', async () => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
     const afterCloseCallback = jasmine.createSpy('afterClose callback');
 
@@ -58,11 +59,11 @@ describe('MatDialog', () => {
     zone.run(() => {
       dialogRef.close();
       viewContainerFixture.detectChanges();
-      flush();
     });
+    await viewContainerFixture.whenStable();
 
     expect(afterCloseCallback).toHaveBeenCalledWith(true);
-  }));
+  });
 });
 
 @Directive({
@@ -76,6 +77,7 @@ class DirectiveWithViewContainer {
   selector: 'arbitrary-component',
   template: `@if (showChildView) {<dir-with-view-container></dir-with-view-container>}`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ComponentWithChildViewContainer {
   showChildView = true;
@@ -90,6 +92,7 @@ class ComponentWithChildViewContainer {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);

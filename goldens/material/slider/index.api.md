@@ -16,12 +16,13 @@ import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
 // @public
 export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     _cachedLeft: number;
     // (undocumented)
@@ -56,7 +57,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect): boolean;
     // (undocumented)
     _isRange: boolean;
-    _isRtl: boolean;
+    _isRtl: i0.Signal<boolean>;
     _knobRadius: number;
     get max(): number;
     set max(v: number);
@@ -151,7 +152,7 @@ export class MatSliderModule {
 
 // @public (undocumented)
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     // (undocumented)
@@ -196,7 +197,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
 // @public
 export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueAccessor {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -300,7 +301,6 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
 // @public
 export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly _cdr: ChangeDetectorRef;
     discrete: boolean;

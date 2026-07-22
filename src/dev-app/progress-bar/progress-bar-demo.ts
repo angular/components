@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -18,7 +18,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
   templateUrl: 'progress-bar-demo.html',
   styleUrl: 'progress-bar-demo.css',
   imports: [FormsModule, MatProgressBarModule, MatButtonModule, MatButtonToggleModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgressBarDemo {
   color: ThemePalette = 'primary';

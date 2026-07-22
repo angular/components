@@ -79,6 +79,7 @@ ng_project(
         ":youtube-player",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/youtube",
         "//:node_modules/rxjs",
     ],
 )

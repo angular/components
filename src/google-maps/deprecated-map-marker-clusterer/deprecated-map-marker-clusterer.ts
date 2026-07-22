@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -59,7 +58,6 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
 @Component({
   selector: 'deprecated-map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })
@@ -216,9 +214,6 @@ export class DeprecatedMapMarkerClusterer
   @Output() readonly markerClustererInitialized: EventEmitter<MarkerClustererInstance> =
     new EventEmitter<MarkerClustererInstance>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._canInitialize) {
       this._ngZone.runOutsideAngular(() => {
@@ -261,7 +256,7 @@ export class DeprecatedMapMarkerClusterer
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const {
       markerClusterer: clusterer,
       ariaLabelFn,

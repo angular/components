@@ -16,7 +16,6 @@ ng_project(
     ),
     assets = [":table.css"],
     deps = [
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
@@ -42,7 +41,6 @@ ng_project(
     ),
     deps = [
         ":table",
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",

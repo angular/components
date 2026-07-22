@@ -70,7 +70,7 @@ function ssrSafeIsElement(node: Node): node is Element {
 }
 
 /**
- * Determine if argument node is an HTMLInputElement based on `nodeName` property. This funciton is
+ * Determine if argument node is an HTMLInputElement based on `nodeName` property. This function is
  * safe to use with server-side rendering.
  */
 function ssrSafeIsHTMLInputElement(node: Node): node is HTMLInputElement {
@@ -79,7 +79,7 @@ function ssrSafeIsHTMLInputElement(node: Node): node is HTMLInputElement {
 
 /**
  * Determine if argument node is an HTMLTextAreaElement based on `nodeName` property. This
- * funciton is safe to use with server-side rendering.
+ * function is safe to use with server-side rendering.
  */
 function ssrSafeIsHTMLTextAreaElement(node: Node): node is HTMLTextAreaElement {
   return node.nodeName === 'TEXTAREA';

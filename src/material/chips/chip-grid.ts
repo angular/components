@@ -12,7 +12,6 @@ import {
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   DoCheck,
@@ -31,6 +30,7 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
 import {MatFormFieldControl} from '../form-field';
 import {merge, Observable, Subject} from 'rxjs';
@@ -76,7 +76,6 @@ export class MatChipGridChange {
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatChipGrid}],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipGrid
   extends MatChipSet
@@ -254,14 +253,13 @@ export class MatChipGrid
     this._errorStateTracker.errorState = value;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 
     const parentForm = inject(NgForm, {optional: true});
     const parentFormGroup = inject(FormGroupDirective, {optional: true});
     const defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    const formField = inject(FORM_FIELD, {optional: true, self: true});
 
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
@@ -269,7 +267,7 @@ export class MatChipGrid
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      this.ngControl,
+      formField || this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,
@@ -494,6 +492,20 @@ export class MatChipGrid
     }
 
     this.stateChanges.next();
+  }
+
+  protected override _redirectDestroyedChipFocus() {
+    if (this._lastDestroyedFocusedChipIndex === null) {
+      return;
+    }
+
+    super._redirectDestroyedChipFocus();
+
+    // If there are no chips left, or the set focuses the input,
+    // clear the active item silently to prevent stale references.
+    if (!this._chips.length || (this._chips.length === 1 && this._chips.first.disabled)) {
+      this._keyManager.updateActiveItem(-1);
+    }
   }
 
   _focusLastChip() {

@@ -6,14 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {filter, skip} from 'rxjs/operators';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class NavigationFocusService {
   private _router = inject(Router);
   private _navigationFocusRequests: HTMLElement[] = [];

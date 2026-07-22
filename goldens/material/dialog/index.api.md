@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
@@ -26,6 +27,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -60,7 +62,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatDialog implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly afterAllClosed: Observable<void>;
     get afterOpened(): Subject<MatDialogRef<any>>;
     closeAll(): void;
@@ -97,7 +99,6 @@ export class MatDialogActions extends MatDialogLayoutSection {
 
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
-    constructor(...args: unknown[]);
     ariaLabel: string;
     // (undocumented)
     dialogRef: MatDialogRef<any, any>;
@@ -105,7 +106,7 @@ export class MatDialogClose implements OnInit, OnChanges {
     // (undocumented)
     _matDialogClose: any;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
@@ -125,6 +126,7 @@ export class MatDialogConfig<D = any> {
     ariaModal?: boolean;
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
+    bindings?: Binding[];
     closeOnNavigation?: boolean;
     closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = MatDialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     data?: D | null;
@@ -143,7 +145,7 @@ export class MatDialogConfig<D = any> {
     minWidth?: number | string;
     panelClass?: string | string[];
     position?: DialogPosition;
-    restoreFocus?: boolean;
+    restoreFocus?: RestoreFocusValue;
     role?: DialogRole;
     scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;

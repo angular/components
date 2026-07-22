@@ -4,8 +4,8 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
+import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../core';
 import {
@@ -248,10 +248,9 @@ describe('Option Chips', () => {
           expect(primaryAction.getAttribute('aria-selected')).toBe('true');
         });
 
-        it('should have the correct aria-selected in multi-selection mode', fakeAsync(() => {
+        it('should have the correct aria-selected in multi-selection mode', () => {
           testComponent.chipList.multiple = true;
           fixture.changeDetectorRef.markForCheck();
-          flush();
           fixture.detectChanges();
           expect(primaryAction.getAttribute('aria-selected')).toBe('false');
 
@@ -260,18 +259,17 @@ describe('Option Chips', () => {
           fixture.detectChanges();
 
           expect(primaryAction.getAttribute('aria-selected')).toBe('true');
-        }));
+        });
 
-        it('should disable focus on the checkmark', fakeAsync(() => {
+        it('should disable focus on the checkmark', () => {
           // The checkmark is only shown in multi selection mode.
           testComponent.chipList.multiple = true;
           fixture.changeDetectorRef.markForCheck();
-          flush();
           fixture.detectChanges();
 
           const checkmark = chipNativeElement.querySelector('.mdc-evolution-chip__checkmark-svg')!;
           expect(checkmark.getAttribute('focusable')).toBe('false');
-        }));
+        });
       });
 
       describe('when selectable is false', () => {
@@ -403,6 +401,7 @@ describe('Option Chips', () => {
       }
     </mat-chip-listbox>`,
   imports: [MatChipListbox, MatChipOption, MatChipAvatar],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleChip {
   @ViewChild(MatChipListbox) chipList!: MatChipListbox;

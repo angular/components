@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatAnchor, MatButton} from '@angular/material/button';
 
 const STORAGE_KEY = 'docs-cookies';
@@ -15,7 +15,6 @@ const STORAGE_KEY = 'docs-cookies';
   selector: 'app-cookie-popup',
   templateUrl: './cookie-popup.html',
   styleUrls: ['./cookie-popup.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatAnchor],
 })
 export class CookiePopup {

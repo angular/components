@@ -5,14 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {
-  ElementRef,
-  NgZone,
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Injector,
-} from '@angular/core';
+import {ElementRef, NgZone, Component, ViewEncapsulation, Injector} from '@angular/core';
 import {Platform, normalizePassiveListenerOptions, _getEventTarget} from '@angular/cdk/platform';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {coerceElement} from '@angular/cdk/coercion';
@@ -68,7 +61,6 @@ const pointerUpEvents = ['mouseup', 'mouseleave', 'touchend', 'touchcancel'];
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrl: 'ripple-structure.css',
   host: {'mat-ripple-style-loader': ''},

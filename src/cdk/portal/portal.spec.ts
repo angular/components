@@ -7,6 +7,7 @@ import {
   ElementRef,
   EnvironmentInjector,
   Injector,
+  Input,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -15,6 +16,8 @@ import {
   createComponent,
   createEnvironmentInjector,
   inject,
+  inputBinding,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
@@ -143,7 +146,7 @@ describe('Portals', () => {
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(false);
     });
 
-    it('should throw when trying to load an element without a parent into a DOM portal', () => {
+    it('should throw when trying to load an element without a parent into a DOM portal via a CdkPortalOutlet', () => {
       const testAppComponent = fixture.componentInstance;
       const element = document.createElement('div');
       const domPortal = new DomPortal(element);
@@ -155,7 +158,7 @@ describe('Portals', () => {
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
 
-    it('should not throw when restoring if the outlet element was cleared', () => {
+    it('should not throw when restoring if the CdkPortalOutlet element was cleared', () => {
       const testAppComponent = fixture.componentInstance;
       const parent = fixture.nativeElement.querySelector('.dom-portal-parent');
       const domPortal = new DomPortal(testAppComponent.domPortalContent);
@@ -329,7 +332,7 @@ describe('Portals', () => {
       expect(hostContainer.textContent).toContain('Mangosteen');
     });
 
-    it('should change the attached portal', () => {
+    it('should change the attached portal in a CdkPortalOutlet', () => {
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -459,6 +462,39 @@ describe('Portals', () => {
 
       expect(fixture.nativeElement.textContent).toContain('Projectable node');
     });
+
+    it('should be able to pass bindings to the component via a CdkPortalOutlet', () => {
+      let flavor = 'pepperoni';
+      const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, [
+        inputBinding('flavor', () => flavor),
+      ]);
+
+      fixture.componentInstance.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const ref = fixture.componentInstance.portalOutlet.attachedRef as ComponentRef<PizzaMsg>;
+      expect(ref.instance.flavor).toBe('pepperoni');
+
+      flavor = 'cheese';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(ref.instance.flavor).toBe('cheese');
+    });
+
+    it('should be able to pass directives to the component via a CdkPortalOutlet', () => {
+      const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, undefined, [
+        HighlightDirective,
+      ]);
+
+      fixture.componentInstance.selectedPortal = componentPortal;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const ref = fixture.componentInstance.portalOutlet.attachedRef as ComponentRef<PizzaMsg>;
+      const hostElement = ref.location.nativeElement as HTMLElement;
+      expect(hostElement.style.background).toBe('yellow');
+    });
   });
 
   describe('DomPortalOutlet', () => {
@@ -576,7 +612,7 @@ describe('Portals', () => {
       expect(someDomElement.innerHTML).toBe('');
     });
 
-    it('should change the attached portal', () => {
+    it('should change the attached portal in a DomPortalOutlet', () => {
       let fixture = TestBed.createComponent(ArbitraryViewContainerRefComponent);
       someViewContainerRef = fixture.componentInstance.viewContainerRef;
 
@@ -629,7 +665,7 @@ describe('Portals', () => {
         'Child environment',
       );
 
-      @Component({template: ''})
+      @Component({template: '', changeDetection: ChangeDetectionStrategy.Eager})
       class ChildComponent {}
 
       const component = createComponent(ChildComponent, {
@@ -670,7 +706,7 @@ describe('Portals', () => {
       expect(someDomElement.textContent!.trim()).toBe('');
     });
 
-    it('should throw when trying to load an element without a parent into a DOM portal', () => {
+    it('should throw when trying to load an element without a parent into a DOM portal via a DomPortalOutlet', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
       const element = document.createElement('div');
@@ -682,7 +718,7 @@ describe('Portals', () => {
       }).toThrowError('DOM portal content must be attached to a parent node.');
     });
 
-    it('should not throw when restoring if the outlet element was cleared', () => {
+    it('should not throw when restoring if the DomPortalOutlet element was cleared', () => {
       const fixture = TestBed.createComponent(PortalTestApp);
       fixture.detectChanges();
       const portal = new DomPortal(fixture.componentInstance.domPortalContent);
@@ -717,6 +753,30 @@ describe('Portals', () => {
       host.attachDomPortal(new DomPortal(fixture.componentInstance.domPortalContent));
       expect(host.hasAttached()).toBe(true);
     });
+
+    it('should be able to pass bindings to the component via a DomPortalOutlet', () => {
+      const portal = new ComponentPortal(PizzaMsg, null, null, null, [
+        inputBinding('flavor', () => 'pepperoni'),
+      ]);
+
+      const componentInstance: PizzaMsg = portal.attach(host).instance;
+      someFixture.changeDetectorRef.markForCheck();
+      someFixture.detectChanges();
+      expect(componentInstance.flavor).toBe('pepperoni');
+    });
+
+    it('should be able to pass directives to the component via a DomPortalOutlet', () => {
+      const portal = new ComponentPortal(PizzaMsg, null, null, null, undefined, [
+        HighlightDirective,
+      ]);
+
+      const ref = portal.attach(host);
+      someFixture.changeDetectorRef.markForCheck();
+      someFixture.detectChanges();
+
+      const hostElement = ref.location.nativeElement as HTMLElement;
+      expect(hostElement.style.background).toBe('yellow');
+    });
   });
 });
 
@@ -736,14 +796,29 @@ class ChocolateInjector {
   }
 }
 
+/** Simple directive for testing directives support in ComponentPortal. */
+@Directive({
+  selector: 'pizza-msg',
+})
+class HighlightDirective {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    this._elementRef.nativeElement.style.background = 'yellow';
+  }
+}
+
 /** Simple component for testing ComponentPortal. */
 @Component({
   selector: 'pizza-msg',
   template: '<p>Pizza</p><p>{{snack}}</p><ng-content></ng-content>',
   imports: [PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PizzaMsg {
   snack = inject(Chocolate, {optional: true});
+
+  @Input() flavor = 'unknown';
 }
 
 /**
@@ -774,6 +849,7 @@ class SaveParentNodeOnInit implements AfterViewInit {
     </ng-template>
   `,
   imports: [SaveParentNodeOnInit],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ArbitraryViewContainerRefComponent {
   viewContainerRef = inject(ViewContainerRef);
@@ -815,6 +891,7 @@ class ArbitraryViewContainerRefComponent {
   </div>
   `,
   imports: [CdkPortal, CdkPortalOutlet, PizzaMsg],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PortalTestApp {
   viewContainerRef = inject(ViewContainerRef);
@@ -857,6 +934,7 @@ class PortalTestApp {
     </div>
   `,
   imports: [CdkPortalOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class UnboundPortalTestApp {
   @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;

@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '../../platform';
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 
 /**
  * Configuration for the isFocusable method.
@@ -27,12 +27,9 @@ export class IsFocusableConfig {
  * Utility for checking the interactivity of an element, such as whether it is focusable or
  * tabbable.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class InteractivityChecker {
   private _platform = inject(Platform);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   /**
    * Gets whether an element is disabled.

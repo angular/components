@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, forwardRef, inject, viewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  forwardRef,
+  inject,
+  viewChild,
+} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {MatListItem, MatNavList} from '@angular/material/list';
@@ -46,6 +53,7 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   templateUrl: './component-sidenav.html',
   styleUrls: ['./component-sidenav.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenav,
     MatSidenavContainer,
@@ -97,6 +105,7 @@ export class ComponentSidenav {
   selector: 'app-component-nav',
   templateUrl: './component-nav.html',
   imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ComponentNav {
   private _docItems = inject(DocumentationItems);

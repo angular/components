@@ -3,7 +3,7 @@ import {
   ScrollingModule,
   VIRTUAL_SCROLL_STRATEGY,
 } from '@angular/cdk/scrolling';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 
 export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
   constructor() {
@@ -16,7 +16,6 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
   selector: 'cdk-virtual-scroll-custom-strategy-example',
   styleUrl: 'cdk-virtual-scroll-custom-strategy-example.css',
   templateUrl: 'cdk-virtual-scroll-custom-strategy-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}],
   imports: [ScrollingModule],
 })

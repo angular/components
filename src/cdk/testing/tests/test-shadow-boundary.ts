@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'test-sub-shadow-boundary',
   template: '<div class="in-the-shadows">Shadow 2</div>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
 })
@@ -23,7 +22,6 @@ export class TestSubShadowBoundary {}
     <div class="in-the-shadows">Shadow 1</div>
     <test-sub-shadow-boundary></test-sub-shadow-boundary>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [TestSubShadowBoundary],

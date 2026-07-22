@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy, inject} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
@@ -28,7 +28,6 @@ import {MatCheckbox} from '@angular/material/checkbox';
   templateUrl: 'drag-drop-demo.html',
   styleUrl: 'drag-drop-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DragDropModule,
     FormsModule,

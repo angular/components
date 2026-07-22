@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 
 /**
  * A FocusTrap managed by FocusTrapManager.
@@ -19,7 +19,7 @@ export interface ManagedFocusTrap {
 }
 
 /** Injectable that ensures only the most recently enabled FocusTrap is active. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class FocusTrapManager {
   // A stack of the FocusTraps on the page. Only the FocusTrap at the
   // top of the stack is active.

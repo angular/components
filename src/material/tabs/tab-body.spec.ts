@@ -11,6 +11,7 @@ import {
   WritableSignal,
   inject,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -136,6 +137,7 @@ describe('MatTabBody', () => {
     <mat-tab-body [content]="content()!" [position]="position"></mat-tab-body>
   `,
   imports: [PortalModule, MatRippleModule, MatTabBody],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleTabBodyApp implements AfterViewInit {
   content = signal<TemplatePortal | undefined>(undefined);

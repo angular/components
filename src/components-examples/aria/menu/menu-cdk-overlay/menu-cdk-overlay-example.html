@@ -1,0 +1,43 @@
+<!-- Stamped out dynamically via *ngTemplateOutlet -->
+<ng-container *ngTemplateOutlet="menuTemplate"></ng-container>
+
+<ng-template #menuTemplate>
+  <div class="trigger-container">
+    <button
+      ngMenuTrigger
+      #menuTrigger="ngMenuTrigger"
+      [menu]="myMenu"
+      cdkOverlayOrigin
+      #origin="cdkOverlayOrigin"
+      aria-label="Open menu"
+      class="example-menu-trigger"
+    >
+      <span aria-hidden="true" class="material-symbols-outlined example-icon">menu</span>
+      <span style="margin-left: 8px; font-size: 0.875rem;">Open Menu</span>
+    </button>
+
+    <!-- Dynamic Popover Portal -->
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin"
+      [cdkConnectedOverlayOpen]="menuTrigger.expanded()"
+    >
+      <div ngMenu #myMenu="ngMenu" class="example-menu" [style.width]="'200px'">
+        <ng-template ngMenuContent>
+          <div ng-menu-item value="Item 1">
+            <span ng-menu-item-icon>star</span>
+            <span ng-menu-item-text>Item 1</span>
+          </div>
+          <div ng-menu-item value="Item 2">
+            <span ng-menu-item-icon>settings</span>
+            <span ng-menu-item-text>Item 2</span>
+          </div>
+          <div ng-menu-item value="Item 3">
+            <span ng-menu-item-icon>help</span>
+            <span ng-menu-item-text>Item 3</span>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>

@@ -10,7 +10,6 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/aria/combobox",
         "//src/aria/private",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -28,6 +27,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/aria/private/testing",
         "//src/cdk/testing/private",
     ],
 )

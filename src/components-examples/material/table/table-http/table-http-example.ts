@@ -1,9 +1,6 @@
-import {HttpClient} from '@angular/common/http';
-import {Component, ViewChild, AfterViewInit, inject} from '@angular/core';
+import {Component, viewChild, signal, computed, resource} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule, SortDirection} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {DatePipe} from '@angular/common';
@@ -17,54 +14,54 @@ import {DatePipe} from '@angular/common';
   templateUrl: 'table-http-example.html',
   imports: [MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe],
 })
-export class TableHttpExample implements AfterViewInit {
-  private _httpClient = inject(HttpClient);
+export class TableHttpExample {
+  readonly displayedColumns: string[] = ['created', 'state', 'number', 'title'];
+  readonly paginator = viewChild.required(MatPaginator);
+  readonly sort = viewChild.required(MatSort);
+  readonly sortActive = signal('created');
+  readonly sortDirection = signal<SortDirection>('desc');
+  readonly pageIndex = signal(0);
 
-  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  exampleDatabase: ExampleHttpDatabase | null = null;
-  data: GithubIssue[] = [];
+  readonly issueResource = resource({
+    params: () => ({
+      sort: this.sortActive(),
+      order: this.sortDirection(),
+      page: this.pageIndex(),
+    }),
+    loader: async ({params: {sort, order, page}, abortSignal}) => {
+      const base = 'https://api.github.com/search/issues';
+      const requestUrl = `${base}?q=repo:angular/components&sort=${sort}&order=${order}&page=${
+        page + 1
+      }`;
+      const response = await fetch(requestUrl, {signal: abortSignal});
+      if (!response.ok) {
+        throw new Error('Rate limit reached');
+      }
+      return (await response.json()) as GithubApi;
+    },
+  });
 
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
+  readonly isLoadingResults = this.issueResource.isLoading;
+  readonly isRateLimitReached = computed(() => this.issueResource.error() != null);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  readonly data = computed(() => {
+    if (this.isRateLimitReached()) {
+      return [];
+    }
+    return this.issueResource.value()?.items || [];
+  });
 
-  ngAfterViewInit() {
-    this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);
+  readonly resultsLength = computed(() => this.issueResource.value()?.total_count || 0);
 
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+  handleSort() {
+    this.paginator().pageIndex = 0;
+    this.pageIndex.set(0);
+    this.sortActive.set(this.sort().active);
+    this.sortDirection.set(this.sort().direction);
+  }
 
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.exampleDatabase!.getRepoIssues(
-            this.sort.active,
-            this.sort.direction,
-            this.paginator.pageIndex,
-          ).pipe(catchError(() => observableOf(null)));
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = data === null;
-
-          if (data === null) {
-            return [];
-          }
-
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
-          // would prevent users from re-triggering requests.
-          this.resultsLength = data.total_count;
-          return data.items;
-        }),
-      )
-      .subscribe(data => (this.data = data));
+  handlePage() {
+    this.pageIndex.set(this.paginator().pageIndex);
   }
 }
 
@@ -78,18 +75,4 @@ export interface GithubIssue {
   number: string;
   state: string;
   title: string;
-}
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
-  constructor(private _httpClient: HttpClient) {}
-
-  getRepoIssues(sort: string, order: SortDirection, page: number): Observable<GithubApi> {
-    const href = 'https://api.github.com/search/issues';
-    const requestUrl = `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${
-      page + 1
-    }`;
-
-    return this._httpClient.get<GithubApi>(requestUrl);
-  }
 }

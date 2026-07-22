@@ -6,7 +6,8 @@
   align-items: center;
   vertical-align: middle;
 
-  & > label {
+  & > label,
+  & > .mat-internal-form-field-label {
     margin-left: 0;
     margin-right: auto;
     padding-left: 4px;
@@ -14,7 +15,8 @@
     order: 0;
   }
 
-  [dir='rtl'] & > label {
+  [dir='rtl'] & > label,
+  [dir='rtl'] & > .mat-internal-form-field-label {
     margin-left: auto;
     margin-right: 0;
     padding-left: 0;
@@ -23,7 +25,8 @@
 }
 
 .mdc-form-field--align-end {
-  & > label {
+  & > label,
+  & > .mat-internal-form-field-label {
     margin-left: auto;
     margin-right: 0;
     padding-left: 0;
@@ -31,7 +34,8 @@
     order: -1;
   }
 
-  [dir='rtl'] .mdc-form-field--align-end & label {
+  [dir='rtl'] .mdc-form-field--align-end & label,
+  [dir='rtl'] .mdc-form-field--align-end & .mat-internal-form-field-label {
     margin-left: 0;
     margin-right: auto;
     padding-left: 4px;

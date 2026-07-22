@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
@@ -75,6 +75,7 @@ describe('MatTimepickerHarness', () => {
     <mat-timepicker #twoPicker [interval]="interval()"/>
   `,
   imports: [MatTimepickerInput, MatTimepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerHarnessTest {
   interval = signal('4h');

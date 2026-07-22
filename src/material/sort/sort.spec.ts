@@ -1,7 +1,7 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchMouseEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
-import {Component, ElementRef, ViewChild, inject} from '@angular/core';
+import {Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MatTableModule} from '../table';
 import {By} from '@angular/platform-browser';
@@ -476,6 +476,7 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatSortApp {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -534,6 +535,7 @@ class FakeDataSource extends DataSource<never> {
     </cdk-table>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTableMatSortApp {
   @ViewChild(MatSort) matSort!: MatSort;
@@ -565,6 +567,7 @@ class CdkTableMatSortApp {
     </mat-table>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableMatSortApp {
   @ViewChild(MatSort) matSort!: MatSort;
@@ -576,6 +579,7 @@ class MatTableMatSortApp {
 @Component({
   template: `<div mat-sort-header="a"> A </div>`,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortHeaderMissingMatSortApp {}
 
@@ -587,6 +591,7 @@ class MatSortHeaderMissingMatSortApp {}
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortDuplicateMatSortableIdsApp {}
 
@@ -597,6 +602,7 @@ class MatSortDuplicateMatSortableIdsApp {}
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortableMissingIdApp {}
 
@@ -607,6 +613,7 @@ class MatSortableMissingIdApp {}
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortableInvalidDirection {}
 
@@ -622,6 +629,7 @@ class MatSortableInvalidDirection {}
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortWithoutExplicitInputs {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -654,6 +662,7 @@ class MatSortWithoutExplicitInputs {
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortWithArrowPosition {
   arrowPosition!: 'before' | 'after';
@@ -674,6 +683,7 @@ class MatSortWithArrowPosition {
     </div>
   `,
   imports: [MatSortModule, MatTableModule, CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortWithoutInputs {
   @ViewChild(MatSort) matSort!: MatSort;

@@ -8,7 +8,7 @@
 
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -42,7 +42,6 @@ export interface DemoColor {
     MatIconModule,
     ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsDemo {
   visible = true;

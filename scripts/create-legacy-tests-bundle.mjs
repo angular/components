@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import babel from '@babel/core';
+import {transformAsync} from '@babel/core';
 import child_process from 'child_process';
 import esbuild from 'esbuild';
 import fs from 'fs';
@@ -173,7 +173,7 @@ function createLinkerEsbuildPlugin() {
       build.onLoad({filter: /fesm2022/}, async args => {
         const filePath = args.path;
         const content = await fs.promises.readFile(filePath, 'utf8');
-        const {code} = await babel.transformAsync(content, {
+        const {code} = await transformAsync(content, {
           filename: filePath,
           compact: false,
           plugins: [['@angular/compiler-cli/linker/babel', {linkerJitMode: true}]],

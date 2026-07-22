@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -107,6 +107,7 @@ describe('MatTabNavBarHarness', () => {
     </mat-tab-nav-panel>
   `,
   imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabNavBarHarnessTest {
   activeLink = 0;

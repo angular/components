@@ -6,17 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {APP_ID, inject, Injectable} from '@angular/core';
+import {APP_ID, inject, Service} from '@angular/core';
 
 /**
  * Keeps track of the ID count per prefix. This helps us make the IDs a bit more deterministic
  * like they were before the service was introduced. Note that ideally we wouldn't have to do
  * this, but there are some internal tests that rely on the IDs.
+ *
+ * Note: use a map to avoid conflicts with built-in properties.
  */
-const counters: Record<string, number> = {};
+const counters = new Map<string, number>();
 
 /** Service that generates unique IDs for DOM nodes. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class _IdGenerator {
   private _appId = inject(APP_ID);
   private static _infix = `a${Math.floor(Math.random() * 100000).toString()}`;
@@ -33,10 +35,15 @@ export class _IdGenerator {
       prefix += this._appId;
     }
 
-    if (!counters.hasOwnProperty(prefix)) {
-      counters[prefix] = 0;
+    let count = counters.get(prefix);
+
+    if (count === undefined) {
+      count = 0;
+    } else {
+      count++;
     }
 
-    return `${prefix}${randomize ? _IdGenerator._infix + '-' : ''}${counters[prefix]++}`;
+    counters.set(prefix, count);
+    return `${prefix}${randomize ? _IdGenerator._infix + '-' : ''}${count}`;
   }
 }

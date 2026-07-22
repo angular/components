@@ -1,9 +1,16 @@
 :host {
   display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.demo-row {
+  display: flex;
   flex-wrap: wrap;
-  gap: 10rem;
+  gap: 2rem;
 }
 
 .example-container {
-  width: 250px;
+  width: 300px;
 }

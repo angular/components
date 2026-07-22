@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -25,7 +25,7 @@ describe('MapInfoWindow', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Info Window', fakeAsync(() => {
+  it('initializes a Google Map Info Window', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     const infoWindowConstructorSpy = createInfoWindowConstructorSpy(infoWindowSpy);
 
@@ -36,9 +36,9 @@ describe('MapInfoWindow', () => {
       position: undefined,
       content: jasmine.any(Node),
     });
-  }));
+  });
 
-  it('sets position', fakeAsync(() => {
+  it('sets position', () => {
     const position: google.maps.LatLngLiteral = {lat: 5, lng: 7};
     const infoWindowSpy = createInfoWindowSpy({position});
     const infoWindowConstructorSpy = createInfoWindowConstructorSpy(infoWindowSpy);
@@ -46,15 +46,14 @@ describe('MapInfoWindow', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = position;
     fixture.detectChanges();
-    flush();
 
     expect(infoWindowConstructorSpy).toHaveBeenCalledWith({
       position,
       content: jasmine.any(Node),
     });
-  }));
+  });
 
-  it('sets options', fakeAsync(() => {
+  it('sets options', () => {
     const options: google.maps.InfoWindowOptions = {
       position: {lat: 3, lng: 5},
       maxWidth: 50,
@@ -66,15 +65,14 @@ describe('MapInfoWindow', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
     fixture.detectChanges();
-    flush();
 
     expect(infoWindowConstructorSpy).toHaveBeenCalledWith({
       ...options,
       content: jasmine.any(Node),
     });
-  }));
+  });
 
-  it('gives preference to position over options', fakeAsync(() => {
+  it('gives preference to position over options', () => {
     const position: google.maps.LatLngLiteral = {lat: 5, lng: 7};
     const options: google.maps.InfoWindowOptions = {
       position: {lat: 3, lng: 5},
@@ -88,16 +86,15 @@ describe('MapInfoWindow', () => {
     fixture.componentInstance.options = options;
     fixture.componentInstance.position = position;
     fixture.detectChanges();
-    flush();
 
     expect(infoWindowConstructorSpy).toHaveBeenCalledWith({
       ...options,
       position,
       content: jasmine.any(Node),
     });
-  }));
+  });
 
-  it('exposes methods that change the configuration of the info window', fakeAsync(() => {
+  it('exposes methods that change the configuration of the info window', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
     const fakeMarkerComponent = {
       marker: fakeMarker,
@@ -111,7 +108,6 @@ describe('MapInfoWindow', () => {
       .query(By.directive(MapInfoWindow))!
       .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
-    flush();
 
     infoWindowComponent.close();
     expect(infoWindowSpy.close).toHaveBeenCalled();
@@ -124,9 +120,9 @@ describe('MapInfoWindow', () => {
         shouldFocus: undefined,
       }),
     );
-  }));
+  });
 
-  it('should not try to reopen info window multiple times for the same marker', fakeAsync(() => {
+  it('should not try to reopen info window multiple times for the same marker', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
     const fakeMarkerComponent = {
       marker: fakeMarker,
@@ -140,7 +136,6 @@ describe('MapInfoWindow', () => {
       .query(By.directive(MapInfoWindow))!
       .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
-    flush();
 
     infoWindowComponent.open(fakeMarkerComponent);
     expect(infoWindowSpy.open).toHaveBeenCalledTimes(1);
@@ -151,9 +146,9 @@ describe('MapInfoWindow', () => {
     infoWindowComponent.close();
     infoWindowComponent.open(fakeMarkerComponent);
     expect(infoWindowSpy.open).toHaveBeenCalledTimes(2);
-  }));
+  });
 
-  it('exposes methods that provide information about the info window', fakeAsync(() => {
+  it('exposes methods that provide information about the info window', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy);
 
@@ -162,7 +157,6 @@ describe('MapInfoWindow', () => {
       .query(By.directive(MapInfoWindow))!
       .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
-    flush();
 
     infoWindowSpy.getContent.and.returnValue('test content');
     expect(infoWindowComponent.getContent()).toBe('test content');
@@ -172,32 +166,30 @@ describe('MapInfoWindow', () => {
 
     infoWindowSpy.getZIndex.and.returnValue(5);
     expect(infoWindowComponent.getZIndex()).toBe(5);
-  }));
+  });
 
-  it('initializes info window event handlers', fakeAsync(() => {
+  it('initializes info window event handlers', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy);
 
     const addSpy = infoWindowSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).toHaveBeenCalledWith('closeclick', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('content_changed', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('domready', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('position_changed', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('zindex_changed', jasmine.any(Function));
-  }));
+  });
 
-  it('should be able to add an event listener after init', fakeAsync(() => {
+  it('should be able to add an event listener after init', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy);
 
     const addSpy = infoWindowSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('zindex_changed', jasmine.any(Function));
 
@@ -207,9 +199,9 @@ describe('MapInfoWindow', () => {
 
     expect(addSpy).toHaveBeenCalledWith('zindex_changed', jasmine.any(Function));
     subscription.unsubscribe();
-  }));
+  });
 
-  it('should be able to open an info window without passing in an anchor', fakeAsync(() => {
+  it('should be able to open an info window without passing in an anchor', () => {
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy);
 
@@ -218,13 +210,12 @@ describe('MapInfoWindow', () => {
       .query(By.directive(MapInfoWindow))!
       .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
-    flush();
 
     infoWindowComponent.open();
     expect(infoWindowSpy.open).toHaveBeenCalledTimes(1);
-  }));
+  });
 
-  it('should allow for the focus behavior to be changed when opening the info window', fakeAsync(() => {
+  it('should allow for the focus behavior to be changed when opening the info window', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
     const fakeMarkerComponent = {
       marker: fakeMarker,
@@ -238,7 +229,6 @@ describe('MapInfoWindow', () => {
       .query(By.directive(MapInfoWindow))!
       .injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
-    flush();
 
     infoWindowComponent.open(fakeMarkerComponent, false);
     expect(infoWindowSpy.open).toHaveBeenCalledWith(
@@ -246,7 +236,7 @@ describe('MapInfoWindow', () => {
         shouldFocus: false,
       }),
     );
-  }));
+  });
 });
 
 @Component({
@@ -259,6 +249,7 @@ describe('MapInfoWindow', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapInfoWindow],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;

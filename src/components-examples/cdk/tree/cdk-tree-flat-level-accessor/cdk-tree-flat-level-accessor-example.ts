@@ -1,6 +1,6 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {CdkTree, CdkTreeModule} from '@angular/cdk/tree';
-import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
@@ -20,7 +20,6 @@ interface FlatFoodNode {
   templateUrl: 'cdk-tree-flat-level-accessor-example.html',
   styleUrls: ['cdk-tree-flat-level-accessor-example.css'],
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeFlatLevelAccessorExample {
   @ViewChild(CdkTree)

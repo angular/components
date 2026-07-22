@@ -24,9 +24,6 @@ export interface PreviewDeployment extends Deployment {
 /** Type describing a Firebase deployment. */
 export type DeploymentInfo = ProductionDeployment | PreviewDeployment;
 
-/** Path to a temporary file for the GCP service key credentials file. */
-const gcpServiceKeyTmpFile = path.join(os.tmpdir(), 'mat-docs-deploy-gcp-key.json');
-
 /**
  * Deploys the docs site at the specified directory to Firebase with respect
  * to the deployment information provided.
@@ -42,26 +39,38 @@ export async function deployToSite(
   const firebase = async (...cmd: string[]) =>
     $`pnpm --dir=${projectPath}/docs firebase --non-interactive ${cmd}`;
 
+  const gcpServiceKeyTmpFile = path.join(os.tmpdir(), 'mat-docs-deploy-gcp-key.json');
+
   // Setup GCP service key for the docs-app deployment.
   // https://firebase.google.com/docs/admin/setup.
   await fs.promises.writeFile(gcpServiceKeyTmpFile, firebaseServiceKey);
-  process.env['GOOGLE_APPLICATION_CREDENTIALS'] = gcpServiceKeyTmpFile;
 
-  await firebase('use', info.projectId, '--debug');
-  await firebase('target:clear', 'hosting', 'mat-aio');
-  await firebase('target:apply', 'hosting', 'mat-aio', info.site.firebaseSiteId);
+  try {
+    process.env['GOOGLE_APPLICATION_CREDENTIALS'] = gcpServiceKeyTmpFile;
 
-  if (isPreviewDeployment(info)) {
-    const channelId = info.channelId;
-    const expires = info.expires;
+    await firebase('use', info.projectId, '--debug');
+    await firebase('target:clear', 'hosting', 'mat-aio');
+    await firebase('target:apply', 'hosting', 'mat-aio', info.site.firebaseSiteId);
 
-    await firebase('hosting:channel:deploy', channelId, '--only', 'mat-aio', '--expires', expires);
-  } else {
-    await firebase('deploy', '--only', 'hosting:mat-aio', '--message', info.description);
+    if (isPreviewDeployment(info)) {
+      const channelId = info.channelId;
+      const expires = info.expires;
+
+      await firebase(
+        'hosting:channel:deploy',
+        channelId,
+        '--only',
+        'mat-aio',
+        '--expires',
+        expires,
+      );
+    } else {
+      await firebase('deploy', '--only', 'hosting:mat-aio', '--message', info.description);
+    }
+  } finally {
+    process.env['GOOGLE_APPLICATION_CREDENTIALS'] = undefined;
+    await fs.promises.rm(gcpServiceKeyTmpFile, {force: true});
   }
-
-  // Remove the temporary service key file (this is an optional step and just for sanity).
-  await fs.promises.rm(gcpServiceKeyTmpFile, {force: true});
 }
 
 /** Whether the given deployment info corresponds to a preview deployment. */

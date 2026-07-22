@@ -11,7 +11,7 @@ import {ContentObserver} from '../../observers';
 import {
   Directive,
   ElementRef,
-  Injectable,
+  Service,
   Input,
   NgZone,
   OnDestroy,
@@ -33,7 +33,7 @@ let uniqueIds = 0;
 /** Possible types for a message that can be announced by the `LiveAnnouncer`. */
 export type LiveAnnouncerMessage = string | SafeHtml;
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class LiveAnnouncer implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _defaultOptions = inject<LiveAnnouncerDefaultOptions>(LIVE_ANNOUNCER_DEFAULT_OPTIONS, {
@@ -46,8 +46,6 @@ export class LiveAnnouncer implements OnDestroy {
   private _previousTimeout: ReturnType<typeof setTimeout> | undefined;
   private _currentPromise: Promise<void> | undefined;
   private _currentResolve: (() => void) | undefined;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const elementToken = inject(LIVE_ANNOUNCER_ELEMENT_TOKEN, {optional: true});
@@ -275,8 +273,6 @@ export class CdkAriaLive implements OnDestroy {
 
   private _previousAnnouncedText?: string;
   private _subscription: Subscription | undefined;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);

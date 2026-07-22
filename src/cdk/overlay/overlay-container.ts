@@ -6,21 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Injectable,
-  OnDestroy,
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  inject,
-  DOCUMENT,
-} from '@angular/core';
+import {Service, OnDestroy, Component, ViewEncapsulation, inject, DOCUMENT} from '@angular/core';
 import {_CdkPrivateStyleLoader} from '../private';
 import {Platform, _isTestEnvironment} from '../platform';
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styleUrl: 'overlay-structure.css',
   host: {'cdk-overlay-style-loader': ''},
@@ -28,16 +19,13 @@ import {Platform, _isTestEnvironment} from '../platform';
 export class _CdkOverlayStyleLoader {}
 
 /** Container inside which all overlays will render. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class OverlayContainer implements OnDestroy {
   protected _platform = inject(Platform);
 
   protected _containerElement: HTMLElement | undefined;
   protected _document = inject(DOCUMENT);
   protected _styleLoader = inject(_CdkPrivateStyleLoader);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngOnDestroy() {
     this._containerElement?.remove();

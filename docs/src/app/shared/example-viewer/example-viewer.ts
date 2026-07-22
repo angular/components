@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
@@ -43,6 +44,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
   selector: 'example-viewer',
   templateUrl: './example-viewer.html',
   styleUrls: ['./example-viewer.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconButton,
     MatTooltip,

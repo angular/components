@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DateAdapter, provideNativeDateAdapter} from '../../core';
 import {MatTimepicker, MatTimepickerInput} from '../../timepicker';
@@ -166,6 +166,7 @@ describe('MatTimepickerInputHarness', () => {
     <mat-timepicker #basicPicker/>
   `,
   imports: [MatTimepickerInput, MatTimepicker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerInputHarnessTest {
   readonly value = signal<Date | null>(null);

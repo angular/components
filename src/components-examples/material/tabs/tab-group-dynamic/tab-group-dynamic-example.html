@@ -14,13 +14,13 @@
 
 <mat-tab-group [selectedIndex]="selected.value"
                (selectedIndexChange)="selected.setValue($event)">
-  @for (tab of tabs; track tab; let index = $index) {
+  @for (tab of tabs(); track $index; let index = $index) {
     <mat-tab [label]="tab">
       Contents for {{tab}} tab
 
       <button matButton="elevated"
               class="example-delete-tab-button"
-              [disabled]="tabs.length === 1"
+              [disabled]="tabs().length === 1"
               (click)="removeTab(index)">
         Delete Tab
       </button>

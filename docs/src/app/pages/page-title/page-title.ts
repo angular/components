@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, inject} from '@angular/core';
+import {Service, inject} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
 export const TITLE_SEPARATOR = ' • ';
@@ -14,7 +14,7 @@ export const TITLE_SEPARATOR = ' • ';
 /**
  * Service responsible for setting the title that appears above the components and guide pages.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ComponentPageTitle {
   private _bodyTitle = inject(Title);
 

@@ -12,21 +12,21 @@
   "private": true,
   "dependencies": {
     "@angular/cdk": "next",
-    "@angular/common": "20.0.0-rc.2",
-    "@angular/compiler": "20.0.0-rc.2",
-    "@angular/core": "20.0.0-rc.2",
-    "@angular/forms": "20.0.0-rc.2",
+    "@angular/common": "22.0.0-next.9",
+    "@angular/compiler": "22.0.0-next.9",
+    "@angular/core": "22.0.0-next.9",
+    "@angular/forms": "22.0.0-next.9",
     "@angular/material": "next",
-    "@angular/platform-browser": "20.0.0-rc.2",
-    "@angular/router": "20.0.0-rc.2",
+    "@angular/platform-browser": "22.0.0-next.9",
+    "@angular/router": "22.0.0-next.9",
     "rxjs": "^7.5.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "20.0.0-rc.3",
-    "@angular/cli": "20.0.0-rc.3",
-    "@angular/compiler-cli": "20.0.0-rc.2",
+    "@angular-devkit/build-angular": "22.0.0-next.6",
+    "@angular/cli": "22.0.0-next.6",
+    "@angular/compiler-cli": "22.0.0-next.9",
     "@types/jasmine": "~5.1.7",
     "@types/node": "22.15.33",
     "glob": "^7.2.0",
@@ -36,6 +36,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "5.8.3"
+    "typescript": "6.0.2"
   }
 }

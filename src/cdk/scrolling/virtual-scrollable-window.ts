@@ -18,8 +18,6 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
 })
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
     const document = inject(DOCUMENT);

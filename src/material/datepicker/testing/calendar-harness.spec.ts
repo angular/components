@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideNativeDateAdapter} from '../../core';
 import {
@@ -330,6 +330,7 @@ describe('MatCalendarHarness', () => {
       (selectedChange)="rangeChanged($event)"></mat-calendar>
   `,
   imports: [MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CalendarHarnessTest {
   // Start the datepickers off at a specific date so tests

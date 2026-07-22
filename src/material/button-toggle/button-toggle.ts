@@ -23,7 +23,6 @@ import {
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -278,8 +277,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._markButtonsForCheck();
   }
   private _hideMultipleSelectionIndicator: boolean;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultOptions = inject<MatButtonToggleDefaultOptions>(
@@ -554,7 +551,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   styleUrl: 'button-toggle.css',
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matButtonToggle',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
     '[class.mat-button-toggle-checked]': 'checked',
@@ -676,8 +672,6 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   /** Event emitted when the group value changes. */
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
     new EventEmitter<MatButtonToggleChange>();
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

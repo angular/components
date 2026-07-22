@@ -1,6 +1,6 @@
 import {Clipboard} from '@angular/cdk/clipboard';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ChangeDetectionStrategy, Component, provideZoneChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatIconButton} from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -216,6 +216,7 @@ describe('DocViewer', () => {
   selector: 'test',
   template: `<doc-viewer [document]="documentUrl" />`,
   imports: [DocViewer],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DocViewerTestComponent {
   documentUrl = 'http://material.angular.dev/simple-doc.html';
@@ -271,6 +272,7 @@ class TestComponent {}
   selector: 'test',
   template: `<doc-viewer [document]="component" />`,
   imports: [DocViewer, TestComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DocViewerWithCompTestComponent {
   component = TestComponent;

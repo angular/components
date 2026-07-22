@@ -301,8 +301,6 @@ export class DropListRef<T = any> {
    *    container when the item was dropped.
    * @param distance Distance the user has dragged since the start of the dragging sequence.
    * @param event Event that triggered the dropping sequence.
-   *
-   * @breaking-change 15.0.0 `previousIndex` and `event` parameters to become required.
    */
   drop(
     item: DragRef,
@@ -312,7 +310,7 @@ export class DropListRef<T = any> {
     isPointerOverContainer: boolean,
     distance: Point,
     dropPoint: Point,
-    event: MouseEvent | TouchEvent = {} as any,
+    event: MouseEvent | TouchEvent,
   ): void {
     this._reset();
     this.dropped.next({

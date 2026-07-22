@@ -81,9 +81,6 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   @Output() readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer> =
     new EventEmitter<google.maps.KmlLayer>();
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()
@@ -152,7 +149,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getStatus(): google.maps.KmlLayerStatus {
     this._assertInitialized();
-    return this.kmlLayer.getStatus();
+    return this.kmlLayer.getStatus() as google.maps.KmlLayerStatus;
   }
 
   /**

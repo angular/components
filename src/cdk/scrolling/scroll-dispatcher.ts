@@ -8,64 +8,69 @@
 
 import {coerceElement} from '../coercion';
 import {Platform} from '../platform';
-import {ElementRef, Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {ElementRef, Service, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
 import {of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
-import type {CdkScrollable} from './scrollable';
 
 /** Time in ms to throttle the scrolling events by default. */
 export const DEFAULT_SCROLL_TIME = 20;
 
+/** Scrollable instance that can be registered with the `ScrollDispatcher`. */
+export interface ScrollDispatcherTarget {
+  /** Observable that emits when the element is scrolled. */
+  elementScrolled(): Observable<Event>;
+
+  /** Gets the `ElementRef` representing the scrollable element. */
+  getElementRef(): ElementRef<HTMLElement>;
+}
+
 /**
- * Service contained all registered Scrollable references and emits an event when any one of the
- * Scrollable references emit a scrolled event.
+ * Service contained all registered scroll targets and emits
+ * an event when any one of them emits a scrolled event.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ScrollDispatcher implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _cleanupGlobalListener: (() => void) | undefined;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
-  /** Subject for notifying that a registered scrollable reference element has been scrolled. */
-  private readonly _scrolled = new Subject<CdkScrollable | void>();
+  /** Subject for notifying that a registered element has been scrolled. */
+  private readonly _scrolled = new Subject<ScrollDispatcherTarget | void>();
 
   /** Keeps track of the amount of subscriptions to `scrolled`. Used for cleaning up afterwards. */
   private _scrolledCount = 0;
 
   /**
-   * Map of all the scrollable references that are registered with the service and their
+   * Map of all the scrollable targets that are registered with the service and their
    * scroll event subscriptions.
    */
-  scrollContainers: Map<CdkScrollable, Subscription> = new Map();
+  readonly scrollContainers: Map<ScrollDispatcherTarget, Subscription> = new Map();
 
   /**
    * Registers a scrollable instance with the service and listens for its scrolled events. When the
    * scrollable is scrolled, the service emits the event to its scrolled observable.
-   * @param scrollable Scrollable instance to be registered.
+   * @param target Scrollable instance to be registered.
    */
-  register(scrollable: CdkScrollable): void {
-    if (!this.scrollContainers.has(scrollable)) {
+  register(target: ScrollDispatcherTarget): void {
+    if (!this.scrollContainers.has(target)) {
       this.scrollContainers.set(
-        scrollable,
-        scrollable.elementScrolled().subscribe(() => this._scrolled.next(scrollable)),
+        target,
+        target.elementScrolled().subscribe(() => this._scrolled.next(target)),
       );
     }
   }
 
   /**
    * De-registers a Scrollable reference and unsubscribes from its scroll event observable.
-   * @param scrollable Scrollable instance to be deregistered.
+   * @param target Scrollable instance to be deregistered.
    */
-  deregister(scrollable: CdkScrollable): void {
-    const scrollableReference = this.scrollContainers.get(scrollable);
+  deregister(target: ScrollDispatcherTarget): void {
+    const ref = this.scrollContainers.get(target);
 
-    if (scrollableReference) {
-      scrollableReference.unsubscribe();
-      this.scrollContainers.delete(scrollable);
+    if (ref) {
+      ref.unsubscribe();
+      this.scrollContainers.delete(target);
     }
   }
 
@@ -79,12 +84,12 @@ export class ScrollDispatcher implements OnDestroy {
    * If you need to update any data bindings as a result of a scroll event, you have
    * to run the callback using `NgZone.run`.
    */
-  scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME): Observable<CdkScrollable | void> {
+  scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME): Observable<ScrollDispatcherTarget | void> {
     if (!this._platform.isBrowser) {
       return observableOf<void>();
     }
 
-    return new Observable((observer: Observer<CdkScrollable | void>) => {
+    return new Observable((observer: Observer<ScrollDispatcherTarget | void>) => {
       if (!this._cleanupGlobalListener) {
         this._cleanupGlobalListener = this._ngZone.runOutsideAngular(() =>
           this._renderer.listen('document', 'scroll', () => this._scrolled.next()),
@@ -128,7 +133,7 @@ export class ScrollDispatcher implements OnDestroy {
   ancestorScrolled(
     elementOrElementRef: ElementRef | HTMLElement,
     auditTimeInMs?: number,
-  ): Observable<CdkScrollable | void> {
+  ): Observable<ScrollDispatcherTarget | void> {
     const ancestors = this.getAncestorScrollContainers(elementOrElementRef);
 
     return this.scrolled(auditTimeInMs).pipe(
@@ -136,13 +141,15 @@ export class ScrollDispatcher implements OnDestroy {
     );
   }
 
-  /** Returns all registered Scrollables that contain the provided element. */
-  getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[] {
-    const scrollingContainers: CdkScrollable[] = [];
+  /** Returns all registered containers that contain the provided element. */
+  getAncestorScrollContainers(
+    elementOrElementRef: ElementRef | HTMLElement,
+  ): ScrollDispatcherTarget[] {
+    const scrollingContainers: ScrollDispatcherTarget[] = [];
 
-    this.scrollContainers.forEach((_subscription: Subscription, scrollable: CdkScrollable) => {
-      if (this._scrollableContainsElement(scrollable, elementOrElementRef)) {
-        scrollingContainers.push(scrollable);
+    this.scrollContainers.forEach((_, target: ScrollDispatcherTarget) => {
+      if (this._targetContainsElement(target, elementOrElementRef)) {
+        scrollingContainers.push(target);
       }
     });
 
@@ -150,17 +157,17 @@ export class ScrollDispatcher implements OnDestroy {
   }
 
   /** Returns true if the element is contained within the provided Scrollable. */
-  private _scrollableContainsElement(
-    scrollable: CdkScrollable,
+  private _targetContainsElement(
+    scrollable: ScrollDispatcherTarget,
     elementOrElementRef: ElementRef | HTMLElement,
   ): boolean {
     let element: HTMLElement | null = coerceElement(elementOrElementRef);
-    let scrollableElement = scrollable.getElementRef().nativeElement;
+    let targetElement = scrollable.getElementRef().nativeElement;
 
     // Traverse through the element parents until we reach null, checking if any of the elements
     // are the scrollable's element.
     do {
-      if (element == scrollableElement) {
+      if (element == targetElement) {
         return true;
       }
     } while ((element = element!.parentElement));

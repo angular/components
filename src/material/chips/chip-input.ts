@@ -135,8 +135,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** The native input element to which this directive is attached. */
   readonly inputElement!: HTMLInputElement;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const defaultOptions = inject<MatChipsDefaultOptions>(MAT_CHIPS_DEFAULT_OPTIONS);
     const formField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});

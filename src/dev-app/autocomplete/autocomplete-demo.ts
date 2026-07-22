@@ -7,7 +7,7 @@
  */
 
 import {JsonPipe} from '@angular/common';
-import {ChangeDetectionStrategy, Component, inject, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
@@ -44,7 +44,6 @@ type DisableStateOption = 'none' | 'first-middle-last' | 'all';
     MatInputModule,
     ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemo {
   stateCtrl = new FormControl();
@@ -245,7 +244,6 @@ export class AutocompleteDemo {
     }
   `,
   imports: [FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemoExampleDialog {
   dialogRef = inject<MatDialogRef<AutocompleteDemoExampleDialog>>(MatDialogRef);

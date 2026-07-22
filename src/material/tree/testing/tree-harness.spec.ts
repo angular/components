@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
 import {
@@ -89,7 +89,7 @@ describe('MatTreeHarness', () => {
     expect(await firstGroup.isExpanded()).toBe(false);
   });
 
-  it('should correctly get tree structure', async () => {
+  it('should correctly get tree structure (flat tree)', async () => {
     const trees = await loader.getAllHarnesses(MatTreeHarness);
     const flatTree = trees[0];
 
@@ -127,7 +127,7 @@ describe('MatTreeHarness', () => {
     });
   });
 
-  it('should correctly get tree structure', async () => {
+  it('should correctly get tree structure (nested tree)', async () => {
     const trees = await loader.getAllHarnesses(MatTreeHarness);
     const nestedTree = trees[1];
     expect(await nestedTree.getTreeStructure()).toEqual({
@@ -247,6 +247,7 @@ interface ExampleFlatNode {
     </mat-tree>
   `,
   imports: [MatTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TreeHarnessTest {
   private _transformer = (node: Node, level: number) => {

@@ -9,9 +9,13 @@
 import {InjectionToken} from '@angular/core';
 import type {GridCell} from './grid-cell';
 import type {GridRow} from './grid-row';
+import type {Grid} from './grid';
 
 /** Token used to expose a `GridCell`. */
 export const GRID_CELL = new InjectionToken<GridCell>('GRID_CELL');
 
 /** Token used to expose a `GridRow`. */
 export const GRID_ROW = new InjectionToken<GridRow>('GRID_ROW');
+
+/** Token used to expose a `Grid`. */
+export const GRID = new InjectionToken<Grid>('GRID');

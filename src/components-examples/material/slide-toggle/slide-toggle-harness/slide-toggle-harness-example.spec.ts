@@ -40,8 +40,7 @@ describe('SlideToggleHarnessExample', () => {
   });
 
   it('should toggle slide-toggle', async () => {
-    fixture.componentInstance.disabled = false;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.componentInstance.disabled.set(false);
     const [checkedToggle, uncheckedToggle] = await loader.getAllHarnesses(MatSlideToggleHarness);
     await checkedToggle.toggle();
     await uncheckedToggle.toggle();

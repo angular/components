@@ -27,7 +27,7 @@ ts_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//:node_modules/axe-core",
+        "//src/aria/grid",
         "//src/aria/listbox",
         "//src/aria/tree",
         "//src/cdk/testing/private",

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
@@ -692,6 +692,7 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableApp {
   dataSource = new FakeDataSource();
@@ -727,6 +728,7 @@ class MatTableApp {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NativeHtmlTableApp {
   dataSource = new FakeDataSource();
@@ -781,6 +783,7 @@ class NativeHtmlTableApp {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedTableApp {
   dataSource = new FakeDataSource();
@@ -800,6 +803,7 @@ class NestedTableApp {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StickyTableApp {
   dataSource = new FakeDataSource();
@@ -828,6 +832,7 @@ class StickyTableApp {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableWithWhenRowApp {
   multiTemplateDataRows = false;
@@ -866,6 +871,7 @@ class MatTableWithWhenRowApp {
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ArrayDataSourceMatTableApp implements AfterViewInit {
   underlyingDataSource = new FakeDataSource();
@@ -919,6 +925,7 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableWithSortApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -971,6 +978,7 @@ class MatTableWithSortApp implements OnInit {
     <mat-paginator [pageSize]="5"></mat-paginator>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatTableWithPaginatorApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
@@ -1013,6 +1021,7 @@ class MatTableWithPaginatorApp implements OnInit {
     </table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TableWithNgContainerRow {
   dataSource = new FakeDataSource();
@@ -1051,6 +1060,7 @@ class TableWithNgContainerRow {
     </mat-table>
   `,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatFlexTableApp {
   dataSource = new FakeDataSource();

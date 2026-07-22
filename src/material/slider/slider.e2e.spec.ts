@@ -8,7 +8,7 @@
 
 import {$, browser, by, element, ElementFinder, logging} from 'protractor';
 
-describe('MatSlider', () => {
+describe('MatSlider E2E', () => {
   const getStandardSlider = () => element(by.id('standard-slider'));
   const getDisabledSlider = () => element(by.id('disabled-slider'));
   const getRangeSlider = () => element(by.id('range-slider'));

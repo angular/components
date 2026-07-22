@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {Service, NgZone, inject} from '@angular/core';
 import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
@@ -21,7 +21,7 @@ import {EditRef} from './edit-ref';
  * number of services injected into each CdkPopoverEdit, this saves about 0.023ms of cpu time
  * and 56 bytes of memory per instance.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class EditServices {
   readonly directionality = inject(Directionality);
   readonly editEventDispatcher = inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);

@@ -395,7 +395,7 @@ describe('Grid', () => {
       expect(grid.focusBehavior.activeCoords()).toEqual({row: 1, col: 1});
     });
 
-    it('should focus the first cell if active cell and coords are no longer valid', () => {
+    it('should focus the row above when the last row is deleted', () => {
       const cellsSignal = signal(createTestGrid(createGridA));
       const grid = setupGrid(cellsSignal);
       grid.gotoCell(cellsSignal()[2][2]);
@@ -416,8 +416,8 @@ describe('Grid', () => {
       expect(grid.focusBehavior.stateStale()).toBe(true);
       const result = grid.resetState();
       expect(result).toBe(true);
-      expect(grid.focusBehavior.activeCell()).toBe(newCells[0][0]);
-      expect(grid.focusBehavior.activeCoords()).toEqual({row: 0, col: 0});
+      expect(grid.focusBehavior.activeCell()).toBe(newCells[1][1]);
+      expect(grid.focusBehavior.activeCoords()).toEqual({row: 1, col: 1});
     });
   });
 });

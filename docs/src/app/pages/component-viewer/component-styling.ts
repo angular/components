@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, inject, Injectable} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Service} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
@@ -25,7 +25,7 @@ interface StyleOverridesData {
   }[];
 }
 
-@Injectable({providedIn: 'root'})
+@Service()
 class TokenService {
   private _http = inject(HttpClient);
 
@@ -52,6 +52,7 @@ class TokenService {
   selector: 'component-styling',
   templateUrl: './component-styling.html',
   imports: [AsyncPipe, TokenTable],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ComponentStyling {
   private _componentViewer = inject(ComponentViewer);

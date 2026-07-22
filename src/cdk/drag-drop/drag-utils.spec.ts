@@ -21,7 +21,7 @@ describe('dragging utilities', () => {
       expect(array).toEqual([1, 2, 3, 0]);
     });
 
-    it('should handle an index less than zero', () => {
+    it('should handle an index less than zero when moving', () => {
       moveItemInArray(array, 3, -1);
       expect(array).toEqual([3, 0, 1, 2]);
     });
@@ -37,7 +37,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([3, 4, 1, 5]);
     });
 
-    it('should handle an index greater than the target array length', () => {
+    it('should handle an index greater than the target array length when transferring', () => {
       const a = [0, 1, 2];
       const b = [3, 4, 5];
 
@@ -47,7 +47,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([3, 4, 5, 0]);
     });
 
-    it('should handle an index less than zero', () => {
+    it('should handle an index less than zero when transferring', () => {
       const a = [0, 1, 2];
       const b = [3, 4, 5];
 
@@ -56,7 +56,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([2, 3, 4, 5]);
     });
 
-    it('should not do anything if the source array is empty', () => {
+    it('should not do anything if the source array is empty when transferring', () => {
       const a: number[] = [];
       const b = [3, 4, 5];
 
@@ -76,7 +76,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([3, 4, 1, 5]);
     });
 
-    it('should handle an index greater than the target array length', () => {
+    it('should handle an index greater than the target array length when copying', () => {
       const a = [0, 1, 2];
       const b = [3, 4, 5];
 
@@ -86,7 +86,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([3, 4, 5, 0]);
     });
 
-    it('should handle an index less than zero', () => {
+    it('should handle an index less than zero when copying', () => {
       const a = [0, 1, 2];
       const b = [3, 4, 5];
 
@@ -95,7 +95,7 @@ describe('dragging utilities', () => {
       expect(b).toEqual([2, 3, 4, 5]);
     });
 
-    it('should not do anything if the source array is empty', () => {
+    it('should not do anything if the source array is empty when copying', () => {
       const a: number[] = [];
       const b = [3, 4, 5];
 

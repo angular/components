@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {MatIconModule} from '@angular/material/icon';
@@ -165,6 +165,7 @@ describe('MatMenuHarness', () => {
     </mat-menu>
   `,
   imports: [MatMenuModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuHarnessTest {}
 
@@ -191,6 +192,7 @@ class MenuHarnessTest {}
     </mat-menu>
   `,
   imports: [MatMenuModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedMenuHarnessTest {
   lastClickedLeaf = 0;

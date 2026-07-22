@@ -14,6 +14,7 @@ import {
   ViewChildren,
   WritableSignal,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
@@ -85,7 +86,7 @@ describe('CdkTree with TreeControl', () => {
   });
 
   describe('flat tree', () => {
-    describe('should initialize', () => {
+    describe('flat tree should initialize', () => {
       let fixture: ComponentFixture<SimpleCdkTreeApp>;
       let component: SimpleCdkTreeApp;
 
@@ -245,7 +246,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('flat tree with toggle', () => {
       let fixture: ComponentFixture<CdkTreeAppWithToggle>;
       let component: CdkTreeAppWithToggle;
 
@@ -391,7 +392,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with array data source', () => {
+    describe('flat tree with array data source', () => {
       let fixture: ComponentFixture<ArrayDataSourceCdkTreeApp>;
       let component: ArrayDataSourceCdkTreeApp;
 
@@ -437,7 +438,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with observable data source', () => {
+    describe('flat tree with observable data source', () => {
       let fixture: ComponentFixture<ObservableDataSourceCdkTreeApp>;
       let component: ObservableDataSourceCdkTreeApp;
 
@@ -483,7 +484,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with trackBy', () => {
+    describe('flat tree with trackBy', () => {
       let fixture: ComponentFixture<CdkTreeAppWithTrackBy>;
       let component: CdkTreeAppWithTrackBy;
 
@@ -585,7 +586,7 @@ describe('CdkTree with TreeControl', () => {
   });
 
   describe('nested tree', () => {
-    describe('should initialize', () => {
+    describe('nested tree should initialize', () => {
       let fixture: ComponentFixture<NestedCdkTreeApp>;
       let component: NestedCdkTreeApp;
 
@@ -766,7 +767,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('nested tree with toggle', () => {
       let fixture: ComponentFixture<NestedCdkTreeAppWithToggle>;
       let component: NestedCdkTreeAppWithToggle;
 
@@ -911,7 +912,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with array data source', () => {
+    describe('nested tree with array data source', () => {
       let fixture: ComponentFixture<ArrayDataSourceNestedCdkTreeApp>;
       let component: ArrayDataSourceNestedCdkTreeApp;
 
@@ -950,7 +951,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with observable data source', () => {
+    describe('nested tree with observable data source', () => {
       let fixture: ComponentFixture<ObservableDataSourceNestedCdkTreeApp>;
       let component: ObservableDataSourceNestedCdkTreeApp;
 
@@ -989,7 +990,7 @@ describe('CdkTree with TreeControl', () => {
       });
     });
 
-    describe('with trackBy', () => {
+    describe('nested tree with trackBy', () => {
       let fixture: ComponentFixture<NestedCdkTreeAppWithTrackBy>;
       let component: NestedCdkTreeAppWithTrackBy;
 
@@ -1442,6 +1443,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1468,6 +1470,7 @@ class SimpleCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
 
@@ -1481,6 +1484,7 @@ class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {}
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1505,6 +1509,7 @@ class NestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticNestedCdkTreeApp {
   getChildren = (node: TestData) => node.children;
@@ -1542,6 +1547,7 @@ class StaticNestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenNodeNestedCdkTreeApp {
   isSecondNode = (_: number, node: TestData) => node.pizzaBase.indexOf('2') > 0;
@@ -1566,6 +1572,7 @@ class WhenNodeNestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1593,6 +1600,7 @@ class CdkTreeAppWithToggle {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedCdkTreeAppWithToggle {
   toggleRecursively: boolean = true;
@@ -1623,6 +1631,7 @@ class NestedCdkTreeAppWithToggle {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class WhenNodeCdkTreeApp {
   isOddNode = (_: number, node: TestData) => node.level % 2 === 1;
@@ -1647,6 +1656,7 @@ class WhenNodeCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ArrayDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1674,6 +1684,7 @@ class ArrayDataSourceCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ObservableDataSourceCdkTreeApp {
   getLevel = (node: TestData) => node.level;
@@ -1700,6 +1711,7 @@ class ObservableDataSourceCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ArrayDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1725,6 +1737,7 @@ class ArrayDataSourceNestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ObservableDataSourceNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1751,6 +1764,7 @@ class ObservableDataSourceNestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DepthNestedCdkTreeApp {
   getChildren = (node: TestData) => node.observableChildren;
@@ -1775,6 +1789,7 @@ class DepthNestedCdkTreeApp {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CdkTreeAppWithTrackBy {
   trackByStrategy: 'reference' | 'property' | 'index' = 'reference';
@@ -1809,6 +1824,7 @@ class CdkTreeAppWithTrackBy {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedCdkTreeAppWithTrackBy {
   trackByStrategy: 'reference' | 'property' | 'index' = 'reference';

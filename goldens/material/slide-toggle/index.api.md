@@ -25,7 +25,7 @@ export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatSlideToggleDefa
 
 // @public (undocumented)
 export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator {
-    constructor(...args: unknown[]);
+    constructor();
     ariaDescribedby: string;
     ariaLabel: string | null;
     ariaLabelledby: string | null;
@@ -46,6 +46,7 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     _focused: boolean;
     // (undocumented)
     protected _focusMonitor: FocusMonitor;
+    fullWidth: boolean;
     // (undocumented)
     _getAriaLabelledBy(): string | null;
     _handleClick(): void;
@@ -64,6 +65,8 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
+    static ngAcceptInputType_fullWidth: unknown;
+    // (undocumented)
     static ngAcceptInputType_hideIcon: unknown;
     // (undocumented)
     static ngAcceptInputType_required: unknown;
@@ -72,7 +75,7 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     _noopAnimations: boolean;
@@ -88,7 +91,7 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     validate(control: AbstractControl<boolean>): ValidationErrors | null;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSlideToggle, "mat-slide-toggle", ["matSlideToggle"], { "name": { "alias": "name"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "hideIcon": { "alias": "hideIcon"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, { "change": "change"; "toggleChange": "toggleChange"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSlideToggle, "mat-slide-toggle", ["matSlideToggle"], { "name": { "alias": "name"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; }; "required": { "alias": "required"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "fullWidth": { "alias": "fullWidth"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "hideIcon": { "alias": "hideIcon"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; }, { "change": "change"; "toggleChange": "toggleChange"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSlideToggle, never>;
 }

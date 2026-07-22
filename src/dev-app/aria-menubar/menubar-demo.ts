@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {
   MenuBarExample,
   MenuBarRTLExample,
@@ -17,7 +17,6 @@ import {
   templateUrl: 'menubar-demo.html',
   styleUrl: 'menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MenuBarExample, MenuBarRTLExample, MenuBarDisabledExample],
 })
 export class MenubarDemo {}

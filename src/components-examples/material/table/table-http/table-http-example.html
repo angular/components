@@ -1,10 +1,10 @@
-<div class="example-container mat-elevation-z8">
-  @if (isLoadingResults || isRateLimitReached) {
+<div class="example-container mat-shadow-2">
+  @if (isLoadingResults() || isRateLimitReached()) {
     <div class="example-loading-shade">
-      @if (isLoadingResults) {
-        <mat-spinner></mat-spinner>
+      @if (isLoadingResults()) {
+        <mat-spinner/>
       }
-      @if (isRateLimitReached) {
+      @if (isRateLimitReached()) {
         <div class="example-rate-limit-reached">
           GitHub's API rate limit has been reached. It will be reset in one minute.
         </div>
@@ -13,9 +13,15 @@
   }
 
   <div class="example-table-container">
-
-    <table mat-table [dataSource]="data" class="example-table"
-           matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+    <table
+      mat-table
+      [dataSource]="data()"
+      class="example-table"
+      matSort
+      (matSortChange)="handleSort()"
+      matSortActive="created"
+      matSortDisableClear
+      matSortDirection="desc">
       <!-- Number Column -->
       <ng-container matColumnDef="number">
         <th mat-header-cell *matHeaderCellDef>#</th>
@@ -47,5 +53,9 @@
     </table>
   </div>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30" aria-label="Select page of GitHub search results"></mat-paginator>
+  <mat-paginator
+    [length]="resultsLength()"
+    [pageSize]="30"
+    (page)="handlePage()"
+    aria-label="Select page of GitHub search results"></mat-paginator>
 </div>

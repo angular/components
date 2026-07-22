@@ -72,9 +72,6 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   /** The underlying google.maps.DirectionsRenderer object. */
   directionsRenderer?: google.maps.DirectionsRenderer;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       if (google.maps.DirectionsRenderer && this._googleMap.googleMap) {
@@ -107,7 +104,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (this.directionsRenderer) {
       if (changes['options']) {
         this.directionsRenderer.setOptions(this._combineOptions());

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, ViewEncapsulation} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
@@ -31,7 +31,6 @@ type State = {
   templateUrl: 'virtual-scroll-demo.html',
   styleUrl: 'virtual-scroll-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     ExperimentalScrollingModule,

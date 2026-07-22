@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable} from '@angular/core';
+import {Service} from '@angular/core';
 
 /**
  * Class for managing stylesheets. Stylesheets are loaded into named slots so that they can be
  * removed or changed later.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class StyleManager {
   /**
    * Set the stylesheet with the specified key.

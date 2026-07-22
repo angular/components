@@ -1,4 +1,4 @@
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {Component, provideZoneChangeDetection, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -68,6 +68,7 @@ describe('MatTooltipHarness', () => {
     <button matTooltip='Disabled Tooltip' [matTooltipDisabled]='true' id='three'>Trigger 3</button>
   `,
   imports: [MatTooltipModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TooltipHarnessTest {
   message = 'Tooltip message';

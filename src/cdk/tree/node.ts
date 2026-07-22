@@ -47,7 +47,4 @@ export class CdkTreeNodeDef<T> {
    * default.
    */
   when!: (index: number, nodeData: T) => boolean;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

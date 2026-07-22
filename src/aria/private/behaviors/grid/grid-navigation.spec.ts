@@ -141,7 +141,7 @@ describe('GridNavigation', () => {
     });
 
     describe('up', () => {
-      it('should get the next coordinates without changing focus', () => {
+      it('should get the next coordinates without changing focus (#peek-up)', () => {
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Up, gridFocus.activeCoords());
@@ -150,7 +150,7 @@ describe('GridNavigation', () => {
         expect(gridFocus.activeCoords()).toEqual({row: 1, col: 0});
       });
 
-      it('should respect the wrap strategy', () => {
+      it('should respect the wrap strategy (#peek-up)', () => {
         const from = {row: 0, col: 0};
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Up, from, 'loop')).toEqual({row: 3, col: 0});
@@ -178,7 +178,7 @@ describe('GridNavigation', () => {
         expect(nextCoords).toBeUndefined();
       });
 
-      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+      it('should get disabled cells when allowDisabled is true and softDisabled is false (up)', () => {
         const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
           softDisabled: signal(false),
         });
@@ -193,7 +193,7 @@ describe('GridNavigation', () => {
     });
 
     describe('down', () => {
-      it('should get the next coordinates without changing focus', () => {
+      it('should get the next coordinates without changing focus (#peek-down)', () => {
         gridNav.gotoCoords({row: 1, col: 0});
 
         const nextCoords = gridNav.peek(direction.Down, gridFocus.activeCoords());
@@ -202,7 +202,7 @@ describe('GridNavigation', () => {
         expect(gridFocus.activeCoords()).toEqual({row: 1, col: 0});
       });
 
-      it('should respect the wrap strategy', () => {
+      it('should respect the wrap strategy (#peek-down)', () => {
         const from = {row: 3, col: 1};
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Down, from, 'loop')).toEqual({row: 0, col: 1});
@@ -210,7 +210,7 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Down, from, 'continuous')).toEqual({row: 0, col: 2});
       });
 
-      it('should return undefined if completely disabled', () => {
+      it('should return undefined if completely disabled (#peek-down)', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
@@ -219,7 +219,7 @@ describe('GridNavigation', () => {
         expect(nextCoords).toBeUndefined();
       });
 
-      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+      it('should get disabled cells when allowDisabled is true and softDisabled is false (down)', () => {
         const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
           softDisabled: signal(false),
         });
@@ -234,7 +234,7 @@ describe('GridNavigation', () => {
     });
 
     describe('left', () => {
-      it('should get the next coordinates without changing focus', () => {
+      it('should get the next coordinates without changing focus (#peek-left)', () => {
         gridNav.gotoCoords({row: 0, col: 1});
 
         const nextCoords = gridNav.peek(direction.Left, gridFocus.activeCoords());
@@ -243,7 +243,7 @@ describe('GridNavigation', () => {
         expect(gridFocus.activeCoords()).toEqual({row: 0, col: 1});
       });
 
-      it('should respect the wrap strategy', () => {
+      it('should respect the wrap strategy (#peek-left)', () => {
         const from = {row: 0, col: 0};
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Left, from, 'loop')).toEqual({row: 0, col: 2});
@@ -251,7 +251,7 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Left, from, 'continuous')).toBeUndefined();
       });
 
-      it('should return undefined if completely disabled', () => {
+      it('should return undefined if completely disabled (#peek-left)', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
@@ -260,7 +260,7 @@ describe('GridNavigation', () => {
         expect(nextCoords).toBeUndefined();
       });
 
-      it('should get disabled cells when allowDisabled is true when softDisabled is false', () => {
+      it('should get disabled cells when allowDisabled is true when softDisabled is false (left)', () => {
         const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
           softDisabled: signal(false),
         });
@@ -275,7 +275,7 @@ describe('GridNavigation', () => {
     });
 
     describe('right', () => {
-      it('should get the next coordinates without changing focus', () => {
+      it('should get the next coordinates without changing focus (#peek-right)', () => {
         gridNav.gotoCoords({row: 0, col: 1});
 
         const nextCoords = gridNav.peek(direction.Right, gridFocus.activeCoords());
@@ -284,7 +284,7 @@ describe('GridNavigation', () => {
         expect(gridFocus.activeCoords()).toEqual({row: 0, col: 1});
       });
 
-      it('should respect the wrap strategy', () => {
+      it('should respect the wrap strategy (#peek-right)', () => {
         const from = {row: 0, col: 2};
         gridNav.gotoCoords(from);
         expect(gridNav.peek(direction.Right, from, 'loop')).toEqual({row: 0, col: 0});
@@ -292,7 +292,7 @@ describe('GridNavigation', () => {
         expect(gridNav.peek(direction.Right, from, 'continuous')).toEqual({row: 1, col: 0});
       });
 
-      it('should return undefined if completely disabled', () => {
+      it('should return undefined if completely disabled (#peek-right)', () => {
         cells.flat().forEach(cell => cell.disabled.set(true));
         gridNav.gotoCoords({row: 1, col: 0});
 
@@ -301,7 +301,7 @@ describe('GridNavigation', () => {
         expect(nextCoords).toBeUndefined();
       });
 
-      it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+      it('should get disabled cells when allowDisabled is true and softDisabled is false (right)', () => {
         const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
           softDisabled: signal(false),
         });
@@ -319,8 +319,8 @@ describe('GridNavigation', () => {
   describe('advance', () => {
     describe('wrap=continuous', () => {
       describe('up', () => {
-        describe('case 1', () => {
-          it('from start', () => {
+        describe('case 1 (3x3 grid)', () => {
+          it('should advance from (0,0) (up, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -335,7 +335,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from (2,2) (up, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -365,8 +365,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 2', () => {
-          it('from start', () => {
+        describe('case 2 (4x3 grid with spans)', () => {
+          it('should advance from (0,0) (up, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -381,7 +381,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from (3,2) (up, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -411,8 +411,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 3', () => {
-          it('from start', () => {
+        describe('case 3 (3x4 grid with col spans)', () => {
+          it('should advance from (0,0) (up, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -427,7 +427,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from (2,3) (up, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -463,8 +463,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 4', () => {
-          it('from start', () => {
+        describe('case 4 (4x4 grid with complex span)', () => {
+          it('should advance from (0,0) (up, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -479,7 +479,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from (3,3) (up, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -515,8 +515,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 5', () => {
-          it('from start', () => {
+        describe('case 5 (jagged grid)', () => {
+          it('should advance from (0,0) (up, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -531,7 +531,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from (0,2) (up, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -555,8 +555,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 6', () => {
-          it('from start', () => {
+        describe('case 6 (grid with empty rows)', () => {
+          it('should advance from (0,0) (up, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -570,7 +570,7 @@ describe('GridNavigation', () => {
             gridNav.advance(direction.Up);
           });
 
-          it('from end', () => {
+          it('should advance from (2,2) (up, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -596,8 +596,8 @@ describe('GridNavigation', () => {
       });
 
       describe('down', () => {
-        describe('case 1', () => {
-          it('from start', () => {
+        describe('case 1 (3x3 grid)', () => {
+          it('should advance from (0,0) (down, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -616,7 +616,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
           });
 
-          it('from end', () => {
+          it('should advance from (2,2) (down, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -631,8 +631,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 2', () => {
-          it('from start', () => {
+        describe('case 2 (4x3 grid with spans)', () => {
+          it('should advance from (0,0) (down, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -663,7 +663,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
           });
 
-          it('from end', () => {
+          it('should advance from (3,2) (down, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -675,8 +675,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 3', () => {
-          it('from start', () => {
+        describe('case 3 (3x4 grid with col spans)', () => {
+          it('should advance from (0,0) (down, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -713,7 +713,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
           });
 
-          it('from end', () => {
+          it('should advance from (2,3) (down, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -725,8 +725,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 4', () => {
-          it('from start', () => {
+        describe('case 4 (4x4 grid with complex span)', () => {
+          it('should advance from (0,0) (down, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -763,7 +763,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
           });
 
-          it('from end', () => {
+          it('should advance from (3,3) (down, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -775,8 +775,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 5', () => {
-          it('from start', () => {
+        describe('case 5 (jagged grid)', () => {
+          it('should advance from (0,0) (down, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -801,7 +801,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (down, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -814,7 +814,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 6', () => {
-          it('from start', () => {
+          it('should advance from start (down, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -839,7 +839,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (down, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -854,7 +854,7 @@ describe('GridNavigation', () => {
 
       describe('left', () => {
         describe('case 1', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -870,7 +870,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -901,7 +901,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 2', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -916,7 +916,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -953,7 +953,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 3', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -968,7 +968,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -999,7 +999,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 4', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1014,7 +1014,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1051,7 +1051,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 5', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1066,7 +1066,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1093,7 +1093,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 6', () => {
-          it('from start', () => {
+          it('should advance from start (left, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1108,7 +1108,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
           });
 
-          it('from end', () => {
+          it('should advance from end (left, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1135,7 +1135,7 @@ describe('GridNavigation', () => {
 
       describe('right', () => {
         describe('case 1', () => {
-          it('from start', () => {
+          it('should advance from start (right, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1166,7 +1166,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (right, continuous, case 1)', () => {
             const cells = createTestGrid(createGridA);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1182,7 +1182,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 2', () => {
-          it('from start', () => {
+          it('should advance from start (right, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1219,7 +1219,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (right, continuous, case 2)', () => {
             const cells = createTestGrid(createGridB);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1235,7 +1235,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 3', () => {
-          it('from start', () => {
+          it('should advance from start (right, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1266,7 +1266,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (right, continuous, case 3)', () => {
             const cells = createTestGrid(createGridC);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1282,7 +1282,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 4', () => {
-          it('from start', () => {
+          it('should advance from start (right, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1319,7 +1319,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-3-2');
           });
 
-          it('from end', () => {
+          it('should advance from end (right, continuous, case 4)', () => {
             const cells = createTestGrid(createGridD);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1335,7 +1335,7 @@ describe('GridNavigation', () => {
         });
 
         describe('case 5', () => {
-          it('from start', () => {
+          it('should advance from start (right, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1362,7 +1362,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-1');
           });
 
-          it('from end', () => {
+          it('should advance from end (right, continuous, case 5)', () => {
             const cells = createTestGrid(createGridE);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1377,8 +1377,8 @@ describe('GridNavigation', () => {
           });
         });
 
-        describe('case 6', () => {
-          it('from start', () => {
+        describe('case 6 (empty rows)', () => {
+          it('should advance from (0,0) (right, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1403,7 +1403,7 @@ describe('GridNavigation', () => {
             expect(gridFocus.activeCell()!.id()).toBe('cell-2-2');
           });
 
-          it('from end', () => {
+          it('should advance from (2,2) (right, continuous, case 6)', () => {
             const cells = createTestGrid(createGridF);
             const setup = setupGridNavigation(signal(cells), {
               rowWrap: signal('continuous'),
@@ -1422,7 +1422,7 @@ describe('GridNavigation', () => {
 
     describe('wrap=loop', () => {
       describe('up', () => {
-        it('case 1', () => {
+        it('should advance (up, loop, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1439,7 +1439,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance (up, loop, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1456,7 +1456,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 3', () => {
+        it('should advance (up, loop, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1473,7 +1473,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance (up, loop, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1490,7 +1490,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance (up, loop, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1507,7 +1507,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance (up, loop, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1524,7 +1524,7 @@ describe('GridNavigation', () => {
       });
 
       describe('down', () => {
-        it('case 1', () => {
+        it('should advance (down, loop, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1541,7 +1541,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance (down, loop, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1558,7 +1558,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 3', () => {
+        it('should advance (down, loop, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1575,7 +1575,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance (down, loop, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1592,7 +1592,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance (down, loop, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1609,7 +1609,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance (down, loop, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1626,7 +1626,7 @@ describe('GridNavigation', () => {
       });
 
       describe('left', () => {
-        it('case 1', () => {
+        it('should advance (left, loop, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1643,7 +1643,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance (left, loop, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1660,7 +1660,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 3', () => {
+        it('should advance (left, loop, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1677,7 +1677,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance (left, loop, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1694,7 +1694,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance (left, loop, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1711,7 +1711,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance (left, loop, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1730,7 +1730,7 @@ describe('GridNavigation', () => {
       });
 
       describe('right', () => {
-        it('case 1', () => {
+        it('should advance (right, loop, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1747,7 +1747,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance (right, loop, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1764,7 +1764,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 3', () => {
+        it('should advance (right, loop, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1781,7 +1781,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance (right, loop, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1798,7 +1798,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance (right, loop, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1815,7 +1815,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance (right, loop, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('loop'),
@@ -1836,7 +1836,7 @@ describe('GridNavigation', () => {
 
     describe('wrap=nowrap', () => {
       describe('up', () => {
-        it('case 1', () => {
+        it('should advance from (2,0) (up, nowrap, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1853,7 +1853,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance from (3,1) (up, nowrap, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1870,7 +1870,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-1');
         });
 
-        it('case 3', () => {
+        it('should advance from (2,0) (up, nowrap, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1887,7 +1887,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance from (3,0) (up, nowrap, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1904,7 +1904,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance from (2,0) (up, nowrap, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1921,7 +1921,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance from (2,0) (up, nowrap, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1938,7 +1938,7 @@ describe('GridNavigation', () => {
       });
 
       describe('down', () => {
-        it('case 1', () => {
+        it('should advance from (0,0) (down, nowrap, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1955,7 +1955,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
         });
 
-        it('case 2', () => {
+        it('should advance from (0,1) (down, nowrap, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1972,7 +1972,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-3-1');
         });
 
-        it('case 3', () => {
+        it('should advance from (0,0) (down, nowrap, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -1989,7 +1989,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
         });
 
-        it('case 4', () => {
+        it('should advance from (0,0) (down, nowrap, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2006,7 +2006,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-3-0');
         });
 
-        it('case 5', () => {
+        it('should advance from (0,0) (down, nowrap, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2023,7 +2023,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-2-0');
         });
 
-        it('case 6', () => {
+        it('should advance from (0,0) (down, nowrap, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2040,7 +2040,7 @@ describe('GridNavigation', () => {
       });
 
       describe('left', () => {
-        it('case 1', () => {
+        it('should advance from (0,2) (left, nowrap, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2057,7 +2057,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 2', () => {
+        it('should advance from (0,2) (left, nowrap, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2074,7 +2074,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 3', () => {
+        it('should advance from (0,3) (left, nowrap, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2091,7 +2091,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 4', () => {
+        it('should advance from (0,3) (left, nowrap, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2108,7 +2108,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 5', () => {
+        it('should advance from (0,2) (left, nowrap, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2125,7 +2125,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-0');
         });
 
-        it('case 6', () => {
+        it('should advance from (0,2) (left, nowrap, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2144,7 +2144,7 @@ describe('GridNavigation', () => {
       });
 
       describe('right', () => {
-        it('case 1', () => {
+        it('should advance from (0,0) (right, nowrap, case 1)', () => {
           const cells = createTestGrid(createGridA);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2161,7 +2161,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
         });
 
-        it('case 2', () => {
+        it('should advance from (0,0) (right, nowrap, case 2)', () => {
           const cells = createTestGrid(createGridB);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2178,7 +2178,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
         });
 
-        it('case 3', () => {
+        it('should advance from (0,0) (right, nowrap, case 3)', () => {
           const cells = createTestGrid(createGridC);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2195,7 +2195,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
         });
 
-        it('case 4', () => {
+        it('should advance from (0,0) (right, nowrap, case 4)', () => {
           const cells = createTestGrid(createGridD);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2212,7 +2212,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-3');
         });
 
-        it('case 5', () => {
+        it('should advance from (0,0) (right, nowrap, case 5)', () => {
           const cells = createTestGrid(createGridE);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2229,7 +2229,7 @@ describe('GridNavigation', () => {
           expect(gridFocus.activeCell()!.id()).toBe('cell-0-2');
         });
 
-        it('case 6', () => {
+        it('should advance from (0,0) (right, nowrap, case 6)', () => {
           const cells = createTestGrid(createGridF);
           const {gridNav, gridFocus} = setupGridNavigation(signal(cells), {
             rowWrap: signal('nowrap'),
@@ -2332,7 +2332,7 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 0});
     });
 
-    it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+    it('should get disabled cells when allowDisabled is true and softDisabled is false (first)', () => {
       const cells = createTestGrid(createGridA);
       const {gridNav} = setupGridNavigation(signal(cells), {softDisabled: signal(false)});
       cells[0][0].disabled.set(true);
@@ -2421,7 +2421,7 @@ describe('GridNavigation', () => {
       expect(gridFocus.activeCoords()).toEqual({row: 1, col: 3});
     });
 
-    it('should get disabled cells when allowDisabled is true and softDisabled is false', () => {
+    it('should get disabled cells when allowDisabled is true and softDisabled is false (last)', () => {
       const cells = createTestGrid(createGridA);
       const {gridNav} = setupGridNavigation(signal(cells), {softDisabled: signal(false)});
       cells[2][2].disabled.set(true);

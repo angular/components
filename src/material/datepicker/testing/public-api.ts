@@ -12,3 +12,4 @@ export * from './datepicker-toggle-harness';
 export * from './date-range-input-harness';
 export * from './calendar-harness';
 export * from './calendar-cell-harness';
+export * from './datepicker-actions-harness';

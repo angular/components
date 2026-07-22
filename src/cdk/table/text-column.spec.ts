@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {
@@ -51,18 +51,6 @@ describe('CdkTextColumn', () => {
       ['PropertyA', 'column-b', 'PropertyC'],
       ['a_1', 'b_1', 'c_1'],
       ['a_2', 'b_2', 'c_2'],
-    ]);
-  });
-
-  it('should allow for custom data accessor', () => {
-    component.dataAccessorA = (data: TestData) => data.propertyA + '!';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-
-    expectTableToMatchContent(tableElement, [
-      ['PropertyA', 'PropertyB', 'PropertyC'],
-      ['a_1!', 'b_1', 'c_1'],
-      ['a_2!', 'b_2', 'c_2'],
     ]);
   });
 
@@ -161,6 +149,7 @@ interface TestData {
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicTextColumnApp {
   displayedColumns = ['propertyA', 'propertyB', 'propertyC'];
@@ -180,6 +169,7 @@ class BasicTextColumnApp {
     <cdk-text-column name="column-a"></cdk-text-column>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MissingTableApp {}
 
@@ -193,5 +183,6 @@ class MissingTableApp {}
     </cdk-table>
   `,
   imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TextColumnWithoutNameApp extends BasicTextColumnApp {}

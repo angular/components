@@ -40,7 +40,8 @@
     "@angular/cdk-experimental": "workspace:*",
     "@angular/material": "workspace:*",
     "@angular/material-experimental": "workspace:*",
-    "@angular/material-luxon-adapter": "workspace:*"
+    "@angular/material-luxon-adapter": "workspace:*",
+    "@angular/material-date-fns-adapter": "workspace:*"
   },
   "dependencies": {
     "tslib": "^2.3.0"

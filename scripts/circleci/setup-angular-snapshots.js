@@ -75,11 +75,11 @@ packagesToUpdate.forEach(({name, repoName}) => {
 
   // Since the resolutions only cover the version of all nested installs, we also need
   // to explicitly set the version for the package listed in the project "package.json".
-  packageJson.dependencies[name] = buildsUrl;
-
-  // In case this dependency was previously a dev dependency, just remove it because we
-  // re-added it as a normal dependency for simplicity.
-  delete packageJson.devDependencies[name];
+  if (packageJson.devDependencies && packageJson.devDependencies[name]) {
+    packageJson.devDependencies[name] = buildsUrl;
+  } else {
+    packageJson.dependencies[name] = buildsUrl;
+  }
 });
 
 // Write changes to the "packageJson", so that we can install the new versions afterwards.

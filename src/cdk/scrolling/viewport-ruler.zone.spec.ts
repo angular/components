@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
 import {ViewportRuler} from './viewport-ruler';
 
-describe('ViewportRuler', () => {
+describe('ViewportRuler zone behavior', () => {
   let viewportRuler: ViewportRuler;
   let ngZone: NgZone;
 

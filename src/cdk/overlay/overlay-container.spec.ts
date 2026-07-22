@@ -1,5 +1,12 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component, Injector, ViewChild, ViewContainerRef, inject} from '@angular/core';
+import {
+  Component,
+  Injector,
+  ViewChild,
+  ViewContainerRef,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {CdkPortal} from '../portal';
 import {createOverlayRef, OverlayContainer} from './index';
 
@@ -83,6 +90,7 @@ describe('OverlayContainer', () => {
 @Component({
   template: `<ng-template cdkPortal>Cake</ng-template>`,
   imports: [CdkPortal],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponentWithTemplatePortals {
   viewContainerRef = inject(ViewContainerRef);

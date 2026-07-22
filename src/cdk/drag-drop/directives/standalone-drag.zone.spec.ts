@@ -5,11 +5,13 @@ import {
   Type,
   ViewChild,
   provideZoneChangeDetection,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {Point} from '../drag-ref';
 import {CdkDrag} from './drag';
 import {createComponent as _createComponent, dragElementViaMouse} from './test-utils.spec';
 import {ComponentFixture} from '@angular/core/testing';
+import {DragStartDelay} from './config';
 
 describe('Standalone CdkDrag Zone.js integration', () => {
   function createComponent<T>(type: Type<T>): ComponentFixture<T> {
@@ -52,6 +54,7 @@ describe('Standalone CdkDrag Zone.js integration', () => {
     </div>
   `,
   imports: [CdkDrag],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneDraggable {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
@@ -59,8 +62,8 @@ class StandaloneDraggable {
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
-  boundary: string | HTMLElement | undefined;
-  dragStartDelay: number | string | {touch: number; mouse: number} | undefined;
-  constrainPosition: ((point: Point) => Point) | undefined;
-  freeDragPosition: {x: number; y: number} | undefined;
+  boundary!: string | HTMLElement;
+  dragStartDelay!: DragStartDelay;
+  constrainPosition!: (point: Point) => Point;
+  freeDragPosition!: {x: number; y: number};
 }

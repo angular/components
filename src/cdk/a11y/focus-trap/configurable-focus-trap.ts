@@ -41,7 +41,7 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     private _focusTrapManager: FocusTrapManager,
     private _inertStrategy: FocusTrapInertStrategy,
     config: ConfigurableFocusTrapConfig,
-    injector?: Injector,
+    injector: Injector,
   ) {
     super(_element, _checker, _ngZone, _document, config.defer, injector);
     this._focusTrapManager.register(this);

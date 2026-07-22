@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -11,7 +11,6 @@ import {MatInputModule} from '@angular/material/input';
   styleUrl: 'datepicker-events-example.css',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerEventsExample {
   events = signal<string[]>([]);

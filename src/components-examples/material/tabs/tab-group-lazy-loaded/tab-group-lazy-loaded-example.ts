@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {MatTabsModule} from '@angular/material/tabs';
 
@@ -11,13 +11,18 @@ import {MatTabsModule} from '@angular/material/tabs';
   imports: [MatTabsModule, DatePipe],
 })
 export class TabGroupLazyLoadedExample {
-  tabLoadTimes: Date[] = [];
+  protected tabLoadTimes = signal<Record<number, Date>>({
+    1: new Date(),
+  });
 
-  getTimeLoaded(index: number) {
-    if (!this.tabLoadTimes[index]) {
-      this.tabLoadTimes[index] = new Date();
-    }
-
-    return this.tabLoadTimes[index];
+  protected markTimeLoaded(index: number) {
+    this.tabLoadTimes.update(current =>
+      current[index]
+        ? current
+        : {
+            ...current,
+            [index]: new Date(),
+          },
+    );
   }
 }

@@ -1,10 +1,10 @@
-<button matButton="elevated" (click)="isEditable = !isEditable">
-  {{!isEditable ? 'Enable edit mode' : 'Disable edit mode'}}
+<button matButton="elevated" (click)="isEditable.set(!isEditable())">
+  {{!isEditable() ? 'Enable edit mode' : 'Disable edit mode'}}
 </button>
 
 <mat-stepper linear #stepper>
 <!-- #docregion editable -->
-  <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
+  <mat-step [stepControl]="firstFormGroup" [editable]="isEditable()">
 <!-- #enddocregion editable -->
     <form [formGroup]="firstFormGroup">
 <!-- #docregion step-label -->
@@ -19,7 +19,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
+  <mat-step [stepControl]="secondFormGroup" [editable]="isEditable()">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Fill out your address</ng-template>
       <mat-form-field>

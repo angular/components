@@ -9,7 +9,6 @@
 import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -50,7 +49,6 @@ import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datep
     // `aria-owns` for this, because it's only defined while the calendar is open.
     '[attr.data-mat-calendar]': 'rangePicker ? rangePicker.id : null',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MatFormFieldControl, useExisting: MatDateRangeInput}],
   imports: [CdkMonitorFocus],
@@ -263,8 +261,6 @@ export class MatDateRangeInput<D>
    */
   readonly disableAutomaticLabeling = true;
 
-  constructor(...args: unknown[]);
-
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw createMissingDateImplError('DateAdapter');
@@ -339,7 +335,7 @@ export class MatDateRangeInput<D>
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (dateInputsHaveChanged(changes, this._dateAdapter)) {
       this.stateChanges.next(undefined);
     }

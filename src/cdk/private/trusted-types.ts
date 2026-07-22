@@ -45,9 +45,17 @@ function getPolicy(): TrustedTypePolicy | null {
     if (typeof window !== 'undefined') {
       const ttWindow = window as unknown as {trustedTypes?: TrustedTypePolicyFactory};
       if (ttWindow.trustedTypes !== undefined) {
-        policy = ttWindow.trustedTypes.createPolicy('angular#components', {
-          createHTML: (s: string) => s,
-        });
+        try {
+          policy = ttWindow.trustedTypes.createPolicy('angular#components', {
+            createHTML: (s: string) => s,
+          });
+        } catch (error) {
+          // createPolicy can throw if the name is already registered, or if
+          // window.trustedTypes was DOM-clobbered with an HTML element before
+          // Angular bootstrapped. trustedHTMLFromString falls back to plain
+          // strings — sanitization in _setInnerHtml still runs.
+          console.error(error);
+        }
       }
     }
   }

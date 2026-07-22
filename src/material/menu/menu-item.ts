@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -43,7 +42,6 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '(click)': '_checkDisabled($event)',
     '(mouseenter)': '_handleMouseEnter()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
   imports: [MatRipple],
@@ -75,8 +73,6 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
 
   /** Whether the menu item acts as a trigger for a sub-menu. */
   _triggersSubmenu: boolean = false;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

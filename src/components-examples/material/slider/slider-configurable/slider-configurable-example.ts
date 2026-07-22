@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
@@ -23,11 +23,11 @@ import {MatCardModule} from '@angular/material/card';
   ],
 })
 export class SliderConfigurableExample {
-  disabled = false;
-  max = 100;
-  min = 0;
-  showTicks = false;
-  step = 1;
-  thumbLabel = false;
-  value = 0;
+  disabled = signal(false);
+  max = signal(100);
+  min = signal(0);
+  showTicks = signal(false);
+  step = signal(1);
+  thumbLabel = signal(false);
+  value = signal(0);
 }

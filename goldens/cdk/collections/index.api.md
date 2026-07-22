@@ -71,6 +71,11 @@ export interface SelectionChange<T> {
 // @public
 export class SelectionModel<T> {
     constructor(_multiple?: boolean, initiallySelectedValues?: T[], _emitChanges?: boolean, compareWith?: ((o1: T, o2: T) => boolean) | undefined);
+    readonly bulk: Readonly<{
+        select: (values: T[]) => boolean;
+        deselect: (values: T[]) => boolean;
+        setSelection: (values: T[]) => boolean;
+    }>;
     readonly changed: Subject<SelectionChange<T>>;
     clear(flushEvent?: boolean): boolean;
     // (undocumented)

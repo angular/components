@@ -11,6 +11,7 @@ $fallbacks: m3-expansion.get-tokens();
   align-items: center;
   padding: 0 24px;
   border-radius: inherit;
+  outline: 0;
 
   .mat-expansion-panel-animations-enabled & {
     transition: height expansion-variables.$header-transition;
@@ -58,11 +59,6 @@ $fallbacks: m3-expansion.get-tokens();
 
   &._mat-animation-noopable {
     transition: none;
-  }
-
-  &:focus,
-  &:hover {
-    outline: none;
   }
 
   &.mat-expanded:focus,

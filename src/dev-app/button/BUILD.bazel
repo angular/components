@@ -15,6 +15,7 @@ ng_project(
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/icon",
+        "//src/material/progress-spinner",
         "//src/material/tooltip",
     ],
 )

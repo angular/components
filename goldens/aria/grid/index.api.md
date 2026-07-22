@@ -7,31 +7,38 @@
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export class Grid {
+export class Grid implements OnDestroy {
     constructor();
+    readonly activeDescendant: Signal<string | undefined>;
+    readonly _collection: SortedCollection<GridRow>;
     readonly colWrap: _angular_core.InputSignal<"continuous" | "loop" | "nowrap">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly enableRangeSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly enableSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnDestroy(): void;
     readonly _pattern: GridPattern;
     readonly rowWrap: _angular_core.InputSignal<"continuous" | "loop" | "nowrap">;
+    scrollActiveCellIntoView(options?: ScrollIntoViewOptions): void;
     readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Grid, "[ngGrid]", ["ngGrid"], { "enableSelection": { "alias": "enableSelection"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "rowWrap": { "alias": "rowWrap"; "required": false; "isSignal": true; }; "colWrap": { "alias": "colWrap"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "enableRangeSelection": { "alias": "enableRangeSelection"; "required": false; "isSignal": true; }; }, {}, ["_rows"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Grid, "[ngGrid]", ["ngGrid"], { "enableSelection": { "alias": "enableSelection"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "focusMode": { "alias": "focusMode"; "required": false; "isSignal": true; }; "rowWrap": { "alias": "rowWrap"; "required": false; "isSignal": true; }; "colWrap": { "alias": "colWrap"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; "selectionMode": { "alias": "selectionMode"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Grid, never>;
 }
 
 // @public
-export class GridCell {
+export class GridCell implements OnInit, OnDestroy {
     constructor();
     readonly active: Signal<boolean>;
     readonly colIndex: _angular_core.InputSignal<number | undefined>;
@@ -39,7 +46,10 @@ export class GridCell {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly id: _angular_core.InputSignal<string>;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly _pattern: GridCellPattern;
     readonly role: _angular_core.InputSignal<"gridcell" | "columnheader" | "rowheader">;
     readonly rowIndex: _angular_core.InputSignal<number | undefined>;
@@ -49,9 +59,8 @@ export class GridCell {
     protected readonly _tabIndex: Signal<number>;
     readonly tabindex: _angular_core.InputSignal<number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
-    readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCell, "[ngGridCell]", ["ngGridCell"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "rowSpan": { "alias": "rowSpan"; "required": false; "isSignal": true; }; "colSpan": { "alias": "colSpan"; "required": false; "isSignal": true; }; "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; "colIndex": { "alias": "colIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "selected": "selectedChange"; }, ["_widgets"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCell, "[ngGridCell]", ["ngGridCell"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "rowSpan": { "alias": "rowSpan"; "required": false; "isSignal": true; }; "colSpan": { "alias": "colSpan"; "required": false; "isSignal": true; }; "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; "colIndex": { "alias": "colIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "selected": "selectedChange"; }, ["_widget"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<GridCell, never>;
 }
@@ -60,13 +69,13 @@ export class GridCell {
 export class GridCellWidget {
     constructor();
     activate(): void;
-    readonly activated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
+    readonly activated: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
     readonly active: Signal<boolean>;
     deactivate(): void;
-    readonly deactivated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
+    readonly deactivated: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly focusTarget: _angular_core.InputSignal<ElementRef<any> | HTMLElement | undefined>;
+    readonly focusTarget: _angular_core.InputSignal<ElementResolver<HTMLElement>>;
     readonly id: _angular_core.InputSignal<string>;
     get isActivated(): Signal<boolean>;
     readonly _pattern: GridCellWidgetPattern;
@@ -80,13 +89,19 @@ export class GridCellWidget {
 }
 
 // @public
-export class GridRow {
+export class GridRow implements OnInit, OnDestroy {
+    constructor();
+    readonly _collection: SortedCollection<GridCell>;
     readonly element: HTMLElement;
     readonly _gridPattern: Signal<GridPattern>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly _pattern: GridRowPattern;
     readonly rowIndex: _angular_core.InputSignal<number | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridRow, "[ngGridRow]", ["ngGridRow"], { "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; }, {}, ["_cells"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridRow, "[ngGridRow]", ["ngGridRow"], { "rowIndex": { "alias": "rowIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<GridRow, never>;
 }

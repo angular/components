@@ -12,7 +12,7 @@ import {
   createComponent,
   EnvironmentInjector,
   inject,
-  Injectable,
+  Service,
   Injector,
   Type,
 } from '@angular/core';
@@ -33,7 +33,7 @@ const appsWithLoaders = new WeakMap<
  * Service that loads structural styles dynamically
  * and ensures that they're only loaded once per app.
  */
-@Injectable({providedIn: 'root'})
+@Service()
 export class _CdkPrivateStyleLoader {
   private _appRef: ApplicationRef | undefined;
   private _injector = inject(Injector);

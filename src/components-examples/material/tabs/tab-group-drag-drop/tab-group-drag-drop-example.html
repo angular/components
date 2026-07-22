@@ -6,7 +6,7 @@
   class="example-drag-tabs"
   [(selectedIndex)]="selectedTabIndex"
   animationDuration="0">
-  @for (tab of tabs; track $index) {
+  @for (tab of tabs(); track $index) {
     <mat-tab>
       <ng-template mat-tab-label>
         <span

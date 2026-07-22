@@ -110,11 +110,10 @@
             },
             "excludeFiles": ["**/dev-app/**", "**/docs/**", "**/*.spec.ts"]
           },
-          // Enforce OnPush & standalone even in the dev-app.
           {
             "argument": 0,
             "properties": {
-              "changeDetection": "\\.OnPush$"
+              "!changeDetection": ".*"
             },
             "excludeFiles": ["**/docs/**", "**/*.spec.ts"]
           }

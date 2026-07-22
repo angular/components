@@ -9,7 +9,7 @@
 import {
   ComponentRef,
   EventEmitter,
-  Injectable,
+  Service,
   Injector,
   OnDestroy,
   StaticProvider,
@@ -52,7 +52,7 @@ function getDirectionality(value: Direction): Directionality {
   };
 }
 
-@Injectable({providedIn: 'root'})
+@Service()
 export class Dialog implements OnDestroy {
   private _injector = inject(Injector);
   private _defaultOptions = inject<DialogConfig>(DEFAULT_DIALOG_CONFIG, {optional: true});
@@ -85,10 +85,6 @@ export class Dialog implements OnDestroy {
       ? this._getAfterAllClosed()
       : this._getAfterAllClosed().pipe(startWith(undefined)),
   );
-
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   /**
    * Opens a modal dialog containing the given component.
@@ -306,7 +302,13 @@ export class Dialog implements OnDestroy {
     } else {
       const injector = this._createInjector(config, dialogRef, dialogContainer, this._injector);
       const contentRef = dialogContainer.attachComponentPortal<C>(
-        new ComponentPortal(componentOrTemplateRef, config.viewContainerRef, injector),
+        new ComponentPortal(
+          componentOrTemplateRef,
+          config.viewContainerRef,
+          injector,
+          null,
+          config.bindings,
+        ),
       );
       (dialogRef as {componentRef: ComponentRef<C>}).componentRef = contentRef;
       (dialogRef as {componentInstance: C}).componentInstance = contentRef.instance;

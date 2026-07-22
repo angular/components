@@ -24,7 +24,7 @@ import {MatTreeNodeOutlet} from './outlet';
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTree for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{provide: CdkTree, useExisting: MatTree}],
   imports: [MatTreeNodeOutlet],
 })

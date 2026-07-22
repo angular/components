@@ -1,0 +1,38 @@
+<button matButton="elevated" (click)="isLinear.set(!isLinear())">
+  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+</button>
+
+<mat-stepper [linear]="isLinear()" #stepper>
+  <mat-step [stepControl]="nameFormGroup">
+    <form (submit)="$event.preventDefault()">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Last name, First name" [formField]="nameFormGroup.name">
+      </mat-form-field>
+      <div>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="adddressFormGroup" label="Fill out your address">
+    <form (submit)="$event.preventDefault()">
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput [formField]="adddressFormGroup.address" placeholder="Ex. 1 Main St, New York, NY">
+      </mat-form-field>
+      <div>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button matButton matStepperPrevious>Back</button>
+      <button matButton (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>

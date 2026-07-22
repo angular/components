@@ -10,7 +10,6 @@ import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -36,7 +35,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   template: '<ng-content></ng-content>',
   host: {'class': 'demo-focus-trap-shadow-root'},
   encapsulation: ViewEncapsulation.ShadowDom,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapShadowDomDemo {}
 
@@ -45,7 +43,6 @@ export class FocusTrapShadowDomDemo {}
   templateUrl: 'focus-trap-demo.html',
   styleUrl: 'focus-trap-demo.css',
   imports: [A11yModule, MatButtonModule, MatCardModule, MatToolbarModule, FocusTrapShadowDomDemo],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDemo implements AfterViewInit {
   dialog = inject(MatDialog);
@@ -94,7 +91,6 @@ let dialogCount = 0;
   styleUrl: 'focus-trap-dialog-demo.css',
   templateUrl: 'focus-trap-dialog-demo.html',
   imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDialogDemo {
   dialog = inject(MatDialog);

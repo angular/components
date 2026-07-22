@@ -9,6 +9,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -21,7 +22,7 @@ import { TemplateRef } from '@angular/core';
 
 // @public (undocumented)
 export class CdkStep implements OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     ariaLabel: string;
     ariaLabelledby: string;
     protected _childForms: QueryList<Partial<NgForm | FormGroupDirective>> | undefined;
@@ -63,7 +64,7 @@ export class CdkStep implements OnChanges {
     _showError(): boolean;
     get state(): StepState;
     set state(value: StepState);
-    stepControl: AbstractControl;
+    stepControl: StepControl;
     stepLabel: CdkStepLabel;
     // (undocumented)
     _stepper: CdkStepper;
@@ -75,7 +76,6 @@ export class CdkStep implements OnChanges {
 
 // @public (undocumented)
 export class CdkStepHeader implements FocusableOption {
-    constructor(...args: unknown[]);
     // (undocumented)
     _elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -87,7 +87,6 @@ export class CdkStepHeader implements FocusableOption {
 
 // @public (undocumented)
 export class CdkStepLabel {
-    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -98,7 +97,6 @@ export class CdkStepLabel {
 
 // @public (undocumented)
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
@@ -106,7 +104,8 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     _getFocusIndex(): number | null;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
-    linear: boolean;
+    get linear(): boolean;
+    set linear(value: boolean);
     next(): void;
     // (undocumented)
     static ngAcceptInputType_linear: unknown;
@@ -152,7 +151,6 @@ export class CdkStepperModule {
 
 // @public
 export class CdkStepperNext {
-    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;
@@ -164,7 +162,6 @@ export class CdkStepperNext {
 
 // @public
 export class CdkStepperPrevious {
-    constructor(...args: unknown[]);
     // (undocumented)
     _stepper: CdkStepper;
     type: string;
@@ -184,6 +181,9 @@ export const STEP_STATE: {
 
 // @public
 export type StepContentPositionState = 'previous' | 'current' | 'next';
+
+// @public
+export type StepControl = AbstractControl | Field<unknown>;
 
 // @public
 export const STEPPER_GLOBAL_OPTIONS: InjectionToken<StepperOptions>;

@@ -1,6 +1,12 @@
 import {ComponentPortal, PortalModule} from '../../portal';
-import {Component, Injector, NgZone, provideZoneChangeDetection} from '@angular/core';
-import {TestBed, fakeAsync} from '@angular/core/testing';
+import {
+  Component,
+  Injector,
+  NgZone,
+  provideZoneChangeDetection,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {OverlayConfig} from '../overlay-config';
 import {OverlayContainer} from '../overlay-container';
@@ -21,7 +27,7 @@ describe('CloseScrollStrategy Zone.js integration', () => {
   let scrollPosition: number;
   let overlayContainer: OverlayContainer;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     scrollPosition = 0;
 
     TestBed.configureTestingModule({
@@ -47,7 +53,7 @@ describe('CloseScrollStrategy Zone.js integration', () => {
     overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
     overlayContainer = TestBed.inject(OverlayContainer);
-  }));
+  });
 
   afterEach(() => {
     overlayRef.dispose();
@@ -70,5 +76,6 @@ describe('CloseScrollStrategy Zone.js integration', () => {
 @Component({
   template: '<p>Mozarella</p>',
   imports: [OverlayModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MozarellaMsg {}

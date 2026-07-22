@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
@@ -15,5 +15,5 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
 })
 export class InputClearableExample {
-  value = 'Clear me';
+  value = signal('Clear me');
 }

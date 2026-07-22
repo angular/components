@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgModule, OnDestroy} from '@angular/core';
+import {Service, NgModule, OnDestroy} from '@angular/core';
 import {MatIconRegistry} from '../../icon';
 import {Observable, of as observableOf} from 'rxjs';
 
@@ -18,7 +18,7 @@ type PublicApi<T> = {
  * A null icon registry that must be imported to allow disabling of custom
  * icons.
  */
-@Injectable()
+@Service({autoProvided: false})
 export class FakeMatIconRegistry implements PublicApi<MatIconRegistry>, OnDestroy {
   addSvgIcon(): this {
     return this;

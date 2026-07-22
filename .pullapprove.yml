@@ -96,11 +96,8 @@ groups:
       author_value: 0 # The author of the PR cannot provide an approval for themself
     reviewers:
       users:
-        - adolgachev
         - crisbeto
-        - mmalerba
         - andrewseguin
-        - wagnermaciel
         - tjshiu
         - ok7sai
         - ~devversion

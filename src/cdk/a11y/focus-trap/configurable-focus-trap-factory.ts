@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Injector, NgZone, inject, DOCUMENT} from '@angular/core';
+import {Service, Injector, NgZone, inject, DOCUMENT} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
@@ -15,7 +15,7 @@ import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-in
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
-@Injectable({providedIn: 'root'})
+@Service()
 export class ConfigurableFocusTrapFactory {
   private _checker = inject(InteractivityChecker);
   private _ngZone = inject(NgZone);
@@ -25,8 +25,6 @@ export class ConfigurableFocusTrapFactory {
   private _inertStrategy: FocusTrapInertStrategy;
 
   private readonly _injector = inject(Injector);
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const inertStrategy = inject(FOCUS_TRAP_INERT_STRATEGY, {optional: true});
@@ -43,22 +41,10 @@ export class ConfigurableFocusTrapFactory {
    */
   create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): ConfigurableFocusTrap;
 
-  /**
-   * @deprecated Pass a config object instead of the `deferCaptureElements` flag.
-   * @breaking-change 11.0.0
-   */
-  create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
-
   create(
     element: HTMLElement,
-    config: ConfigurableFocusTrapConfig | boolean = {defer: false},
+    config: ConfigurableFocusTrapConfig = {defer: false},
   ): ConfigurableFocusTrap {
-    let configObject: ConfigurableFocusTrapConfig;
-    if (typeof config === 'boolean') {
-      configObject = {defer: config};
-    } else {
-      configObject = config;
-    }
     return new ConfigurableFocusTrap(
       element,
       this._checker,
@@ -66,7 +52,7 @@ export class ConfigurableFocusTrapFactory {
       this._document,
       this._focusTrapManager,
       this._inertStrategy,
-      configObject,
+      config,
       this._injector,
     );
   }

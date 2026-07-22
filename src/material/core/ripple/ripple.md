@@ -150,7 +150,7 @@ inject and update options at runtime, it's recommended to create a service that 
 the `RippleGlobalOptions` interface.
 
 ```ts
-@Injectable({providedIn: 'root'})
+@Service()
 export class AppGlobalRippleOptions implements RippleGlobalOptions {
   /** Whether ripples should be disabled globally. */
   disabled: boolean = false;

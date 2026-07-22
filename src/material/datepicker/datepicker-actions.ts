@@ -8,7 +8,6 @@
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   Directive,
   OnDestroy,
@@ -30,10 +29,6 @@ export class MatDatepickerApply {
   private _datepicker =
     inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
 
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   _applySelection() {
     this._datepicker._applyPendingSelection();
     this._datepicker.close();
@@ -47,9 +42,6 @@ export class MatDatepickerApply {
 })
 export class MatDatepickerCancel {
   _datepicker = inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }
 
 /**
@@ -66,7 +58,6 @@ export class MatDatepickerCancel {
       </div>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {
@@ -76,9 +67,6 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
 
   @ViewChild(TemplateRef) _template!: TemplateRef<unknown>;
   private _portal!: TemplatePortal;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._template, this._viewContainerRef);

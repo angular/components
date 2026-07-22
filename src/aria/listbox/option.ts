@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {booleanAttribute, computed, Directive, ElementRef, inject, input} from '@angular/core';
+import {
+  booleanAttribute,
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {OptionPattern} from '../private';
 import {LISTBOX} from './tokens';
@@ -23,8 +32,6 @@ import {LISTBOX} from './tokens';
  *   Item Name
  * </li>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Listbox](guide/aria/listbox)
  * @see [Autocomplete](guide/aria/autocomplete)
@@ -43,12 +50,12 @@ import {LISTBOX} from './tokens';
     '[attr.aria-disabled]': '_pattern.disabled()',
   },
 })
-export class Option<V> {
+export class Option<V> implements OnInit, OnDestroy {
   /** A reference to the host element. */
   readonly element = inject(ElementRef).nativeElement as HTMLElement;
 
   /** Whether the option is currently active (focused). */
-  active = computed(() => this._pattern.active());
+  readonly active = computed(() => this._pattern.active());
 
   /** The parent Listbox. */
   private readonly _listbox = inject(LISTBOX);
@@ -56,22 +63,17 @@ export class Option<V> {
   /** A unique identifier for the option. */
   readonly id = input(inject(_IdGenerator).getId('ng-option-', true));
 
-  // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
-  // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
-  /** The text used by the typeahead search. */
-  protected searchTerm = computed(() => this.label() ?? this.element.textContent);
-
   /** The parent Listbox UIPattern. */
   private readonly _listboxPattern = computed(() => this._listbox._pattern);
 
   /** The value of the option. */
-  value = input.required<V>();
+  readonly value = input.required<V>();
 
   /** Whether an item is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The text used by the typeahead search. */
-  label = input<string>();
+  readonly label = input<string>();
 
   /** Whether the option is selected. */
   readonly selected = computed(() => this._pattern.selected());
@@ -83,6 +85,14 @@ export class Option<V> {
     value: this.value,
     listbox: this._listboxPattern,
     element: () => this.element,
-    searchTerm: () => this.searchTerm() ?? '',
+    searchTerm: () => this.label() ?? '',
   });
+
+  ngOnInit() {
+    this._listbox._collection.register(this);
+  }
+
+  ngOnDestroy() {
+    this._listbox._collection.unregister(this);
+  }
 }

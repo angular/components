@@ -7,7 +7,7 @@
 
     <mat-sidenav-content>
       <p><button matButton (click)="sidenav.open()">Open</button></p>
-      <p>Closed due to: {{reason}}</p>
+      <p>Closed due to: {{reason()}}</p>
     </mat-sidenav-content>
   </mat-sidenav-container>
 } @else {

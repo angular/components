@@ -9,8 +9,10 @@ import { AfterViewChecked } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { FormField } from '@angular/forms/signals';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/bidi';
@@ -95,6 +97,8 @@ export class ErrorStateMatcher {
     // (undocumented)
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     // (undocumented)
+    isSignalErrorState?(field: Field<unknown> | null): boolean;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ErrorStateMatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
@@ -102,10 +106,10 @@ export class ErrorStateMatcher {
 
 // @public
 export class _ErrorStateTracker {
-    constructor(_defaultMatcher: ErrorStateMatcher_2 | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
+    constructor(_defaultMatcher: ErrorStateMatcher_2 | null, directive: NgControl | FormField<unknown> | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
     errorState: boolean;
+    formField: FormField<unknown> | null;
     matcher: ErrorStateMatcher_2;
-    // (undocumented)
     ngControl: NgControl | null;
     updateErrorState(): void;
 }
@@ -158,7 +162,7 @@ export const MATERIAL_ANIMATIONS: InjectionToken<AnimationsConfig>;
 export class _MatInternalFormField {
     labelPosition: 'before' | 'after';
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<_MatInternalFormField, "div[mat-internal-form-field]", never, { "labelPosition": { "alias": "labelPosition"; "required": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<_MatInternalFormField, "[mat-internal-form-field]", never, { "labelPosition": { "alias": "labelPosition"; "required": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatInternalFormField, never>;
 }
@@ -193,7 +197,7 @@ export class MatNativeDateModule {
 
 // @public
 export class MatOptgroup {
-    constructor(...args: unknown[]);
+    constructor();
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -208,7 +212,7 @@ export class MatOptgroup {
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
@@ -281,7 +285,6 @@ export class MatOptionSelectionChange<T = any> {
 
 // @public
 export class MatPseudoCheckbox {
-    constructor(...args: unknown[]);
     // (undocumented)
     _animationsDisabled: boolean;
     appearance: 'minimal' | 'full';
@@ -308,7 +311,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 // @public (undocumented)
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
-    constructor(...args: unknown[]);
+    constructor();
     animation: RippleAnimationConfig;
     centered: boolean;
     color: string;
@@ -366,7 +369,7 @@ export class MatRippleModule {
 
 // @public
 export class NativeDateAdapter extends DateAdapter<Date> {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     addCalendarDays(date: Date, days: number): Date;
     // (undocumented)
@@ -519,6 +522,8 @@ export function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElem
 export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    // (undocumented)
+    isSignalErrorState(field: Field<unknown> | null): boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnDirtyErrorStateMatcher, never>;
     // (undocumented)

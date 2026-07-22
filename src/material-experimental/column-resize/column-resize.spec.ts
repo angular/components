@@ -6,10 +6,10 @@ import {
   Component,
   Directive,
   ElementRef,
-  Injectable,
+  Service,
   ViewChild,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject, Observable, ReplaySubject} from 'rxjs';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
@@ -277,6 +277,8 @@ abstract class BaseTestComponentRtl extends BaseTestComponent {
 @Component({
   template: getTableTemplate(false),
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeTest extends BaseTestComponent {
   @ViewChild(MatColumnResize) columnResize!: AbstractMatColumnResize;
@@ -284,14 +286,16 @@ class MatResizeTest extends BaseTestComponent {
 
 @Component({
   template: getTableTemplate(false),
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+  jit: true, // Due to dynamic template
 })
 class MatResizeOnPushTest extends MatResizeTest {}
 
 @Component({
   template: getTableTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
@@ -300,6 +304,8 @@ class MatResizeDefaultTest extends BaseTestComponent {
 @Component({
   template: getTableTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize!: AbstractMatColumnResize;
@@ -308,6 +314,8 @@ class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
 @Component({
   template: getFlexTemplate(false),
   imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeFlexTest extends BaseTestComponent {
   @ViewChild(MatColumnResizeFlex) columnResize!: AbstractMatColumnResize;
@@ -316,6 +324,8 @@ class MatResizeFlexTest extends BaseTestComponent {
 @Component({
   template: getFlexTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultFlexTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
@@ -325,6 +335,8 @@ class MatResizeDefaultFlexTest extends BaseTestComponent {
 @Component({
   template: getFlexTemplate(true),
   imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  jit: true, // Due to dynamic template
 })
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
@@ -351,27 +363,12 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 }
 
 // There's 1px of variance between different browsers in terms of positioning.
-const approximateMatcher: jasmine.CustomMatcherFactories = {
-  isApproximately: () => ({
-    compare: (actual: number, expected: number) => {
-      const result = {
-        pass: false,
-        message: `Expected ${actual} to be within 1 of ${expected}`,
-      };
-
-      result.pass = actual === expected || actual === expected + 1 || actual === expected - 1;
-
-      return result;
-    },
-  }),
-};
-
-interface NumberMatchers extends jasmine.Matchers<number> {
-  isApproximately(expected: number): void;
-  not: NumberMatchers;
-}
-declare global {
-  function expect(actual: number): NumberMatchers;
+function expectApproximate(actual: number, expected: number, shouldBeApproximate = true) {
+  expect(actual === expected || actual === expected + 1 || actual === expected - 1)
+    .withContext(
+      `Expected ${actual}${shouldBeApproximate ? '' : ' not'} to be within 1 of ${expected}`,
+    )
+    .toBe(shouldBeApproximate);
 }
 
 const testCases = [
@@ -390,15 +387,16 @@ describe('Material Popover Edit', () => {
       let component: BaseTestComponent;
       let fixture: ComponentFixture<BaseTestComponent>;
 
-      beforeEach(fakeAsync(() => {
-        jasmine.addMatchers(approximateMatcher);
+      beforeEach(async () => {
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        flush();
-      }));
+        await fixture.whenStable();
+        await wait(50);
+        fixture.detectChanges();
+      });
 
-      it('shows resize handle overlays on header row hover and while a resize handle is in use', fakeAsync(() => {
+      it('shows resize handle overlays on header row hover and while a resize handle is in use', async () => {
         expect(component.getOverlayThumbElement(0)).toBeUndefined();
 
         const headerRowHeight = component.getHeaderRowHeight();
@@ -406,7 +404,8 @@ describe('Material Popover Edit', () => {
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
 
         expect(
           component.getOverlayThumbElement(0).classList.contains('mat-column-resize-overlay-thumb'),
@@ -415,10 +414,11 @@ describe('Material Popover Edit', () => {
           component.getOverlayThumbElement(2).classList.contains('mat-column-resize-overlay-thumb'),
         ).toBe(true);
 
-        expect(component.getOverlayThumbElement(0).offsetHeight).isApproximately(headerRowHeight);
-        expect(component.getOverlayThumbElement(2).offsetHeight).isApproximately(headerRowHeight);
+        expectApproximate(component.getOverlayThumbElement(0).offsetHeight, headerRowHeight);
+        expectApproximate(component.getOverlayThumbElement(2).offsetHeight, headerRowHeight);
 
         component.beginColumnResizeWithMouse(0);
+        fixture.detectChanges();
 
         expect(
           component.getOverlayThumbElement(0).classList.contains('mat-column-resize-overlay-thumb'),
@@ -427,22 +427,20 @@ describe('Material Popover Edit', () => {
           component.getOverlayThumbElement(2).classList.contains('mat-column-resize-overlay-thumb'),
         ).toBe(true);
 
-        expect(component.getOverlayThumbElement(0).offsetHeight).isApproximately(tableHeight);
-        expect(component.getOverlayThumbTopElement(0).offsetHeight).isApproximately(
-          headerRowHeight,
-        );
-        expect(component.getOverlayThumbElement(2).offsetHeight).isApproximately(headerRowHeight);
+        expectApproximate(component.getOverlayThumbElement(0).offsetHeight, tableHeight);
+        expectApproximate(component.getOverlayThumbTopElement(0).offsetHeight, headerRowHeight);
+        expectApproximate(component.getOverlayThumbElement(2).offsetHeight, headerRowHeight);
 
         component.completeResizeWithMouseInProgress(0);
         component.endHoverState();
         fixture.detectChanges();
-        tick(200);
-        flush();
+        await wait(250);
+        fixture.detectChanges();
 
         expect(component.getOverlayThumbElement(0)).toBeUndefined();
-      }));
+      });
 
-      it('resizes the target column via mouse input (live updates)', fakeAsync(() => {
+      it('resizes the target column via mouse input (live updates)', async () => {
         const initialTableWidth = component.getTableWidth();
         const initialColumnWidth = component.getColumnWidth(1);
         const initialColumnPosition = component.getColumnOriginPosition(1);
@@ -450,49 +448,52 @@ describe('Material Popover Edit', () => {
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
         component.beginColumnResizeWithMouse(1);
+        fixture.detectChanges();
 
         const initialThumbPosition = component.getOverlayThumbPosition(1);
         component.updateResizeWithMouseInProgress(5);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
         // let nextColumnPositionDelta =
         //   component.getColumnOriginPosition(2) - initialNextColumnPosition;
-        expect(thumbPositionDelta).isApproximately(columnPositionDelta);
+        expectApproximate(thumbPositionDelta, columnPositionDelta);
         // TODO: This was commented out after switching from the legacy table to the current
         // MDC-based table. This failed by being inaccurate by several pixels.
-        // expect(nextColumnPositionDelta).isApproximately(columnPositionDelta);
+        // expAppexpectApproximateect(nextColumnPositionDelta, columnPositionDelta);
 
         // TODO: This was commented out after switching from the legacy table to the current
         // MDC-based table. This failed by being inaccurate by several pixels.
-        // expect(component.getTableWidth()).isApproximately(initialTableWidth + 5);
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth + 5);
+        // expAppexpectApproximateect(component.getTableWidth(), initialTableWidth + 5);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth + 5);
 
         component.updateResizeWithMouseInProgress(1);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
-        expect(thumbPositionDelta).isApproximately(columnPositionDelta);
+        expectApproximate(thumbPositionDelta, columnPositionDelta);
 
-        expect(component.getTableWidth()).isApproximately(initialTableWidth + 1);
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth + 1);
+        expectApproximate(component.getTableWidth(), initialTableWidth + 1);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth + 1);
 
         component.completeResizeWithMouseInProgress(1);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth + 1);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth + 1);
 
         component.endHoverState();
         fixture.detectChanges();
-      }));
+      });
 
-      it('resizes the target column via mouse input (no live update)', fakeAsync(() => {
+      it('resizes the target column via mouse input (no live update)', async () => {
         const initialTableWidth = component.getTableWidth();
         const initialColumnWidth = component.getColumnWidth(1);
 
@@ -500,21 +501,23 @@ describe('Material Popover Edit', () => {
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
         component.beginColumnResizeWithMouse(1);
+        fixture.detectChanges();
 
         const initialThumbPosition = component.getOverlayThumbPosition(1);
         component.updateResizeWithMouseInProgress(5);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
-        expect(thumbPositionDelta).isApproximately(5);
+        expectApproximate(thumbPositionDelta, 5);
         expect(component.getColumnWidth(1)).toBe(initialColumnWidth);
 
         component.updateResizeWithMouseInProgress(1);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
 
@@ -522,67 +525,74 @@ describe('Material Popover Edit', () => {
         expect(component.getColumnWidth(1)).toBe(initialColumnWidth);
 
         component.completeResizeWithMouseInProgress(1);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(component.getTableWidth()).isApproximately(initialTableWidth + 1);
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth + 1);
+        expectApproximate(component.getTableWidth(), initialTableWidth + 1);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth + 1);
 
         component.endHoverState();
         fixture.detectChanges();
-      }));
+      });
 
-      it('should not start dragging using the right mouse button', fakeAsync(() => {
+      it('should not start dragging using the right mouse button', async () => {
         const initialColumnWidth = component.getColumnWidth(1);
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
         component.beginColumnResizeWithMouse(1, 2);
+        fixture.detectChanges();
 
         const initialPosition = component.getOverlayThumbPosition(1);
 
         component.updateResizeWithMouseInProgress(5);
+        fixture.detectChanges();
 
         expect(component.getOverlayThumbPosition(1)).toBe(initialPosition);
         expect(component.getColumnWidth(1)).toBe(initialColumnWidth);
-      }));
+      });
 
-      it('cancels an active mouse resize with the escape key', fakeAsync(() => {
+      it('cancels an active mouse resize with the escape key', async () => {
         const initialTableWidth = component.getTableWidth();
         const initialColumnWidth = component.getColumnWidth(1);
         const initialColumnPosition = component.getColumnOriginPosition(1);
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
         component.beginColumnResizeWithMouse(1);
+        fixture.detectChanges();
 
         const initialThumbPosition = component.getOverlayThumbPosition(1);
 
         component.updateResizeWithMouseInProgress(5);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         let thumbPositionDelta = component.getOverlayThumbPosition(1) - initialThumbPosition;
         let columnPositionDelta = component.getColumnOriginPosition(1) - initialColumnPosition;
-        expect(thumbPositionDelta).isApproximately(columnPositionDelta);
+        expectApproximate(thumbPositionDelta, columnPositionDelta);
 
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth + 5);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth + 5);
         // TODO: This was commented out after switching from the legacy table to the current
         // MDC-based table. This failed by being inaccurate by several pixels.
-        // expect(component.getTableWidth()).isApproximately(initialTableWidth + 5);
+        // expAppexpectApproximateect(component.getTableWidth(), initialTableWidth + 5);
 
         dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(component.getColumnWidth(1)).isApproximately(initialColumnWidth);
-        expect(component.getTableWidth()).isApproximately(initialTableWidth);
+        expectApproximate(component.getColumnWidth(1), initialColumnWidth);
+        expectApproximate(component.getTableWidth(), initialTableWidth);
 
         component.endHoverState();
         fixture.detectChanges();
-      }));
+      });
 
-      it('notifies subscribers of a completed resize via ColumnResizeNotifier', fakeAsync(() => {
+      it('notifies subscribers of a completed resize via ColumnResizeNotifier', async () => {
         const initialColumnWidth = component.getColumnWidth(1);
 
         let resize: ColumnSize | null = null as ColumnSize | null;
@@ -592,21 +602,22 @@ describe('Material Popover Edit', () => {
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
 
         expect(resize).toBe(null);
 
         component.resizeColumnWithMouse(1, 5);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(resize).toEqual({columnId: 'name', size: initialColumnWidth + 5});
 
         component.endHoverState();
         fixture.detectChanges();
-      }));
+      });
 
-      it('does not notify subscribers of a canceled resize', fakeAsync(() => {
+      it('does not notify subscribers of a canceled resize', async () => {
         let resize: ColumnSize | null = null;
         component.columnResize.columnResizeNotifier.resizeCompleted.subscribe(size => {
           resize = size;
@@ -614,30 +625,35 @@ describe('Material Popover Edit', () => {
 
         component.triggerHoverState();
         fixture.detectChanges();
-        tick(200);
+        await wait(250);
+        fixture.detectChanges();
         component.beginColumnResizeWithMouse(0);
+        fixture.detectChanges();
 
         component.updateResizeWithMouseInProgress(5);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
         dispatchKeyboardEvent(document, 'keyup', ESCAPE);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
         component.endHoverState();
         fixture.detectChanges();
 
         expect(resize).toBe(null);
-      }));
+      });
 
-      it('performs a column resize triggered via ColumnResizeNotifier', fakeAsync(() => {
+      it('performs a column resize triggered via ColumnResizeNotifier', async () => {
         // Pre-verify that we are not updating the size to the initial size.
-        expect(component.getColumnWidth(1)).not.isApproximately(173);
+        expectApproximate(component.getColumnWidth(1), 173, false);
 
         component.columnResize.columnResizeNotifier.resize('name', 173);
-        flush();
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(component.getColumnWidth(1)).isApproximately(173);
-      }));
+        expectApproximate(component.getColumnWidth(1), 173);
+      });
     });
   }
 
@@ -646,9 +662,7 @@ describe('Material Popover Edit', () => {
     let fixture: ComponentFixture<BaseTestComponent>;
     let columnSizeStore: FakeColumnSizeStore;
 
-    beforeEach(fakeAsync(() => {
-      jasmine.addMatchers(approximateMatcher);
-
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: [
           FakeColumnSizeStore,
@@ -659,32 +673,36 @@ describe('Material Popover Edit', () => {
       component = fixture.componentInstance;
       columnSizeStore = TestBed.inject(FakeColumnSizeStore);
       fixture.detectChanges();
-      flush();
-    }));
+      await fixture.whenStable();
+      await wait(50);
+      fixture.detectChanges();
+    });
 
-    it('applies the persisted size', fakeAsync(() => {
-      expect(component.getColumnWidth(1)).not.isApproximately(300);
+    it('applies the persisted size', async () => {
+      expectApproximate(component.getColumnWidth(1), 300, false);
 
       columnSizeStore.emitSize('theTable', 'name', 300);
+      fixture.detectChanges();
+      await fixture.whenStable();
 
-      flush();
+      expectApproximate(component.getColumnWidth(1), 300);
+    });
 
-      expect(component.getColumnWidth(1)).isApproximately(300);
-    }));
-
-    it('persists the user-triggered size update', fakeAsync(() => {
+    it('persists the user-triggered size update', async () => {
       const initialColumnWidth = component.getColumnWidth(1);
 
       component.triggerHoverState();
       fixture.detectChanges();
-      tick(200);
+      await wait(250);
+      fixture.detectChanges();
 
       component.resizeColumnWithMouse(1, 5);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       component.completeResizeWithMouseInProgress(1);
-      flush();
+      fixture.detectChanges();
+      await fixture.whenStable();
 
       component.endHoverState();
       fixture.detectChanges();
@@ -693,24 +711,26 @@ describe('Material Popover Edit', () => {
       const {tableId, columnId, sizePx} = columnSizeStore.setSizeCalls[0];
       expect(tableId).toBe('theTable');
       expect(columnId).toBe('name');
-      expect(sizePx).isApproximately(initialColumnWidth + 5);
-    }));
+      expectApproximate(sizePx, initialColumnWidth + 5);
+    });
 
-    it('persists the user-triggered size update (live updates off)', fakeAsync(() => {
+    it('persists the user-triggered size update (live updates off)', async () => {
       const initialColumnWidth = component.getColumnWidth(1);
 
       component.columnResize.liveResizeUpdates = false;
 
       component.triggerHoverState();
       fixture.detectChanges();
-      tick(200);
+      await wait(250);
+      fixture.detectChanges();
 
       component.resizeColumnWithMouse(1, 5);
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
 
       component.completeResizeWithMouseInProgress(1);
-      flush();
+      fixture.detectChanges();
+      await fixture.whenStable();
 
       component.endHoverState();
       fixture.detectChanges();
@@ -719,10 +739,14 @@ describe('Material Popover Edit', () => {
       const {tableId, columnId, sizePx} = columnSizeStore.setSizeCalls[0];
       expect(tableId).toBe('theTable');
       expect(columnId).toBe('name');
-      expect(sizePx).isApproximately(initialColumnWidth + 5);
-    }));
+      expectApproximate(sizePx, initialColumnWidth + 5);
+    });
   });
 });
+
+function wait(milliseconds: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 function createElementData() {
   return [
@@ -734,7 +758,7 @@ function createElementData() {
   ];
 }
 
-@Injectable()
+@Service({autoProvided: false})
 class FakeColumnSizeStore extends ColumnSizeStore {
   readonly emitStore = new Map<string, ReplaySubject<number>>();
   readonly setSizeCalls: {tableId: string; columnId: string; sizePx: number}[] = [];

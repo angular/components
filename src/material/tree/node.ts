@@ -105,8 +105,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     this.isDisabled = value;
   }
 
-  constructor(...args: unknown[]);
-
   constructor() {
     super();
 

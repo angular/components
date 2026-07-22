@@ -1,0 +1,52 @@
+<div class="example-combobox-container" ngCombobox #combobox="ngCombobox" [(expanded)]="popupExpanded">
+  <div #origin class="example-combobox-input-container">
+    <input class="example-combobox-input example-dialog-input" placeholder="Select countries..." [value]="value()"
+      [readonly]="true" [tabindex]="-1" />
+    <span class="material-symbols-outlined example-icon example-arrow-icon">arrow_drop_down</span>
+  </div>
+
+  <ng-template [cdkConnectedOverlay]="{origin: combobox.element, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="popupExpanded()" [cdkConnectedOverlayDisableClose]="false"
+    (overlayOutsideClick)="popupExpanded.set(false)">
+    <ng-template ngComboboxPopup [combobox]="combobox" popupType="dialog">
+
+      <div class="example-popover">
+        <div class="example-dialog" ngComboboxWidget>
+          <div class="example-combobox-container">
+            <div class="example-combobox-input-container">
+              <span class="material-symbols-outlined example-icon example-search-icon">search</span>
+              <input ngCombobox #innerCombobox="ngCombobox" #searchInput class="example-combobox-input"
+                placeholder="Search..." [(ngModel)]="searchString" [alwaysExpanded]="true"
+                (keydown.escape)="onSearchEscape($event)" />
+            </div>
+
+            <div aria-live="polite" class="cdk-visually-hidden">
+              {{countries().length === 0 ? 'No results found for ' + searchString() : ''}}
+            </div>
+
+            <ng-template ngComboboxPopup [combobox]="innerCombobox">
+              <div class="example-popup example-popup-no-margin">
+                @if (countries().length === 0) {
+                <div class="example-no-results">No results found</div>
+                }
+                <div #listbox="ngListbox" ngListbox [multi]="true" ngComboboxWidget class="example-listbox" focusMode="activedescendant"
+                  tabindex="-1" selectionMode="explicit" [(value)]="selectedOptions" (click)="onCommit()"
+                  (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()"
+                  [class.example-empty]="countries().length === 0">
+                  @for (country of countries(); track country) {
+                  <div class="example-option example-selectable example-stateful" ngOption [value]="country"
+                    [label]="country">
+                    <span>{{country}}</span>
+                    <span aria-hidden="true"
+                      class="material-symbols-outlined example-icon example-selected-icon">check</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

@@ -18,7 +18,4 @@ import {Directive, ElementRef, inject} from '@angular/core';
 })
 export class MatAutocompleteOrigin {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-  constructor(...args: unknown[]);
-  constructor() {}
 }

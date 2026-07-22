@@ -63,6 +63,7 @@
       button-filled-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
       button-filled-ripple-color: m3-utils.color-with-opacity(
           map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
+      button-filled-progress-active-indicator-color: map.get($system, on-primary),
       button-filled-state-layer-color: map.get($system, on-primary),
       button-outlined-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),

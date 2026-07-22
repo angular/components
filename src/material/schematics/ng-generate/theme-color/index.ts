@@ -16,6 +16,7 @@ import {
   DynamicScheme,
   DislikeAnalyzer,
   TemperatureCache,
+  Variant,
 } from '@material/material-color-utilities';
 
 // For each color tonal palettes are created using the following hue tones. The
@@ -90,8 +91,8 @@ export function getMaterialDynamicScheme(
   contrastLevel: number,
 ): DynamicScheme {
   return new DynamicScheme({
-    sourceColorArgb: primaryPalette.keyColor.toInt(),
-    variant: 6, // Variant.FIDELITY, used number representation since enum is not accessible outside of @material/material-color-utilities
+    sourceColorHct: primaryPalette.keyColor,
+    variant: Variant.FIDELITY,
     contrastLevel: contrastLevel,
     isDark: isDark,
     primaryPalette: primaryPalette,

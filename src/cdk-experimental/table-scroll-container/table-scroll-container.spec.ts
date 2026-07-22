@@ -1,7 +1,7 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Platform} from '@angular/cdk/platform';
 import {CdkTable, CdkTableModule} from '@angular/cdk/table';
-import {Component, Type, ViewChild} from '@angular/core';
+import {Component, Type, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -294,6 +294,7 @@ class FakeDataSource extends DataSource<TestData> {
       box-sizing: border-box;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StickyNativeLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();

@@ -6,9 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {SignalLike, computed, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  SignalLike,
+  computed,
+  WritableSignalLike,
+  signal,
+} from '../behaviors/signal-like/signal-like';
 import {Tree, TreeItem, TreeInputs as TreeBehaviorInputs} from '../behaviors/tree/tree';
-import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
+import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
 export interface TreeItemInputs<V> extends Omit<
@@ -96,7 +101,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().values().includes(this.value());
+    return this.tree().value().includes(this.value());
   });
 
   /** The current type of this item. */
@@ -107,7 +112,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     if (!this.selectable()) {
       return undefined;
     }
-    return this.tree().values().includes(this.value()) ? this.tree().currentType() : undefined;
+    return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
   });
 
   constructor(readonly inputs: TreeItemInputs<V>) {
@@ -146,6 +151,9 @@ export class TreePattern<V> implements TreeInputs<V> {
   /** The tree behavior for the tree. */
   readonly treeBehavior: Tree<TreeItemPattern<V>, V>;
 
+  /** Whether the tree has been interacted with. */
+  readonly hasBeenInteracted = signal(false);
+
   /** The root level is 0. */
   readonly level = () => 0;
 
@@ -170,7 +178,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** Whether the tree direction is RTL. */
-  readonly isRtl = computed(() => this.inputs.textDirection() === 'rtl');
+  readonly isRtl = computed(() => this.textDirection() === 'rtl');
 
   /** The key for navigating to the previous item. */
   readonly prevKey = computed(() => {
@@ -279,26 +287,26 @@ export class TreePattern<V> implements TreeInputs<V> {
     return manager;
   });
 
-  /** The pointerdown event manager for the tree. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
+  /** The click event manager for the tree. */
+  readonly clickManager = computed(() => {
+    const manager = new ClickEventManager<PointerEvent>();
 
     if (this.multi()) {
-      manager.on(Modifier.Shift, e => this.goto(e, {selectRange: true}));
+      manager.on(Modifier.Shift, (e: PointerEvent) => this.goto(e, {selectRange: true}));
     }
 
     if (!this.multi()) {
-      return manager.on(e => this.goto(e, {selectOne: true}));
+      return manager.on((e: PointerEvent) => this.goto(e, {selectOne: true}));
     }
 
     if (this.multi() && this.followFocus()) {
       return manager
-        .on(e => this.goto(e, {selectOne: true}))
-        .on(Modifier.Ctrl, e => this.goto(e, {toggle: true}));
+        .on((e: PointerEvent) => this.goto(e, {selectOne: true}))
+        .on(Modifier.Ctrl, (e: PointerEvent) => this.goto(e, {toggle: true}));
     }
 
     if (this.multi() && !this.followFocus()) {
-      return manager.on(e => this.goto(e, {toggle: true}));
+      return manager.on((e: PointerEvent) => this.goto(e, {toggle: true}));
     }
 
     return manager;
@@ -340,7 +348,7 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly orientation: SignalLike<'vertical' | 'horizontal'> = () => this.inputs.orientation();
 
   /** The text direction of the tree. */
-  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.textDirection();
+  readonly textDirection: SignalLike<'ltr' | 'rtl'> = () => this.inputs.textDirection();
 
   /** Whether multiple items can be selected at the same time. */
   readonly multi: SignalLike<boolean> = computed(() => (this.nav() ? false : this.inputs.multi()));
@@ -352,11 +360,11 @@ export class TreePattern<V> implements TreeInputs<V> {
   readonly typeaheadDelay: SignalLike<number> = () => this.inputs.typeaheadDelay();
 
   /** The current selected items of the tree. */
-  readonly values: WritableSignalLike<V[]>;
+  readonly value: WritableSignalLike<V[]>;
 
   constructor(readonly inputs: TreeInputs<V>) {
     this.activeItem = inputs.activeItem;
-    this.values = inputs.values;
+    this.value = inputs.value;
 
     this.treeBehavior = new Tree<TreeItemPattern<V>, V>({
       ...inputs,
@@ -369,10 +377,16 @@ export class TreePattern<V> implements TreeInputs<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.values().length > 1) {
+    if (!this.inputs.multi() && this.inputs.value().length > 1) {
       violations.push(
-        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
+        `A single-select tree should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
       );
+    }
+
+    const values = this.inputs.items().map(t => t.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate tree item value '${duplicates[0]}' detected inside ngTree.`);
     }
 
     return violations;
@@ -406,18 +420,32 @@ export class TreePattern<V> implements TreeInputs<V> {
     }
   }
 
+  /** Sets the default active state of the tree before receiving interaction for the first time. */
+  setDefaultStateEffect(): void {
+    if (this.hasBeenInteracted()) return;
+
+    this.setDefaultState();
+  }
+
   /** Handles keydown events on the tree. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
+      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
-  /** Handles pointerdown events on the tree. */
-  onPointerdown(event: PointerEvent) {
+  /** Handles click events on the tree. */
+  onClick(event: PointerEvent) {
     if (!this.disabled()) {
-      this.pointerdown().handle(event);
+      this.hasBeenInteracted.set(true);
+      this.clickManager().handle(event);
     }
+  }
+
+  /** Handles focusin events on the tree. */
+  onFocusIn() {
+    this.hasBeenInteracted.set(true);
   }
 
   /** Navigates to the given tree item in the tree. */

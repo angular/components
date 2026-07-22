@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {
@@ -22,30 +22,32 @@ describe('MapAdvancedMarker', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map advanced marker', fakeAsync(() => {
+  it('initializes a Google Map advanced marker', () => {
     const advancedMarkerSpy = createAdvancedMarkerSpy(DEFAULT_MARKER_OPTIONS);
     const advancedMarkerConstructorSpy = createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
+
     expect(advancedMarkerConstructorSpy).toHaveBeenCalledWith({
       ...DEFAULT_MARKER_OPTIONS,
       title: undefined,
       content: undefined,
       gmpDraggable: undefined,
+      gmpClickable: undefined,
       zIndex: undefined,
       map: mapSpy,
     });
-  }));
+  });
 
-  it('sets advanced marker inputs', fakeAsync(() => {
+  it('sets advanced marker inputs', () => {
     const options: google.maps.marker.AdvancedMarkerElementOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
       map: mapSpy,
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
     const advancedMarkerSpy = createAdvancedMarkerSpy(options);
@@ -56,20 +58,21 @@ describe('MapAdvancedMarker', () => {
     fixture.componentInstance.title = options.title!;
     fixture.componentInstance.content = options.content!;
     fixture.componentInstance.gmpDraggable = options.gmpDraggable!;
+    fixture.componentInstance.gmpClickable = options.gmpClickable!;
     fixture.componentInstance.zIndex = options.zIndex!;
 
     fixture.detectChanges();
-    flush();
 
     expect(advancedMarkerConstructorSpy).toHaveBeenCalledWith(options);
-  }));
+  });
 
-  it('sets marker options, ignoring map', fakeAsync(() => {
+  it('sets marker options, ignoring map', () => {
     const options: google.maps.marker.AdvancedMarkerElementOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
     const advancedMarkerSpy = createAdvancedMarkerSpy(options);
@@ -78,17 +81,17 @@ describe('MapAdvancedMarker', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
     fixture.detectChanges();
-    flush();
 
     expect(advancedMarkerConstructorSpy).toHaveBeenCalledWith({...options, map: mapSpy});
-  }));
+  });
 
-  it('gives precedence to specific inputs over options', fakeAsync(() => {
+  it('gives precedence to specific inputs over options', () => {
     const options: google.maps.marker.AdvancedMarkerElementOptions = {
       position: {lat: 3, lng: 5},
       title: 'marker title',
       content: undefined,
       gmpDraggable: true,
+      gmpClickable: true,
       zIndex: 1,
     };
 
@@ -97,6 +100,7 @@ describe('MapAdvancedMarker', () => {
       title: 'marker title 2',
       content: undefined,
       gmpDraggable: false,
+      gmpClickable: false,
       zIndex: 999,
       map: mapSpy,
     };
@@ -108,16 +112,16 @@ describe('MapAdvancedMarker', () => {
     fixture.componentInstance.title = expectedOptions.title!;
     fixture.componentInstance.content = expectedOptions.content!;
     fixture.componentInstance.gmpDraggable = expectedOptions.gmpDraggable!;
+    fixture.componentInstance.gmpClickable = expectedOptions.gmpClickable!;
     fixture.componentInstance.zIndex = expectedOptions.zIndex!;
     fixture.componentInstance.options = options!;
 
     fixture.detectChanges();
-    flush();
 
     expect(advancedMarkerConstructorSpy).toHaveBeenCalledWith(expectedOptions);
-  }));
+  });
 
-  it('initializes marker event handlers', fakeAsync(() => {
+  it('initializes marker event handlers', () => {
     const advancedMarkerSpy = createAdvancedMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
@@ -125,7 +129,6 @@ describe('MapAdvancedMarker', () => {
     const nativeSpy = advancedMarkerSpy.addEventListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(customSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
     expect(nativeSpy).toHaveBeenCalledWith('dblclick', jasmine.any(Function));
@@ -136,16 +139,16 @@ describe('MapAdvancedMarker', () => {
     expect(customSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
     expect(customSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
     expect(customSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
-  }));
+    expect(customSpy).not.toHaveBeenCalledWith('gmp-click', jasmine.any(Function));
+  });
 
-  it('should be able to add an event listener after init', fakeAsync(() => {
+  it('should be able to add an event listener after init', () => {
     const advancedMarkerSpy = createAdvancedMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createAdvancedMarkerConstructorSpy(advancedMarkerSpy);
 
     const addSpy = advancedMarkerSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
-    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
 
@@ -155,7 +158,7 @@ describe('MapAdvancedMarker', () => {
 
     expect(addSpy).toHaveBeenCalledWith('drag', jasmine.any(Function));
     subscription.unsubscribe();
-  }));
+  });
 });
 
 @Component({
@@ -167,6 +170,7 @@ describe('MapAdvancedMarker', () => {
         [position]="position"
         [content]="content"
         [gmpDraggable]="gmpDraggable"
+        [gmpClickable]="gmpClickable"
         [zIndex]="zIndex"
         (mapClick)="handleClick()"
         (mapDblclick)="handleDblclick()"
@@ -178,6 +182,7 @@ describe('MapAdvancedMarker', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapAdvancedMarker],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapAdvancedMarker) advancedMarker!: MapAdvancedMarker;
@@ -185,6 +190,7 @@ class TestApp {
   position!: google.maps.LatLng | google.maps.LatLngLiteral;
   content!: Node | google.maps.marker.PinElement;
   gmpDraggable!: boolean;
+  gmpClickable!: boolean;
   zIndex!: number;
   options!: google.maps.marker.AdvancedMarkerElementOptions;
 

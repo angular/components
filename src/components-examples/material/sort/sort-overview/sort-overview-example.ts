@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {Sort, MatSortModule} from '@angular/material/sort';
 
 export interface Dessert {
@@ -27,32 +27,34 @@ export class SortOverviewExample {
     {name: 'Gingerbread', calories: 356, fat: 16, carbs: 49, protein: 4},
   ];
 
-  sortedData = this.desserts.slice();
+  sortedData = signal(this.desserts.slice());
 
   sortData(sort: Sort) {
     const data = this.desserts.slice();
     if (!sort.active || sort.direction === '') {
-      this.sortedData = data;
+      this.sortedData.set(data);
       return;
     }
 
-    this.sortedData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'name':
-          return compare(a.name, b.name, isAsc);
-        case 'calories':
-          return compare(a.calories, b.calories, isAsc);
-        case 'fat':
-          return compare(a.fat, b.fat, isAsc);
-        case 'carbs':
-          return compare(a.carbs, b.carbs, isAsc);
-        case 'protein':
-          return compare(a.protein, b.protein, isAsc);
-        default:
-          return 0;
-      }
-    });
+    this.sortedData.set(
+      data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'name':
+            return compare(a.name, b.name, isAsc);
+          case 'calories':
+            return compare(a.calories, b.calories, isAsc);
+          case 'fat':
+            return compare(a.fat, b.fat, isAsc);
+          case 'carbs':
+            return compare(a.carbs, b.carbs, isAsc);
+          case 'protein':
+            return compare(a.protein, b.protein, isAsc);
+          default:
+            return 0;
+        }
+      }),
+    );
   }
 }
 

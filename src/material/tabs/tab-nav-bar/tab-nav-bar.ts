@@ -41,7 +41,11 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
-import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
+import {
+  MatPaginatedTabHeader,
+  MatPaginatedTabHeaderItem,
+  normalizeDuration,
+} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
@@ -64,11 +68,11 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_animationsDisabled',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
+    '[style.--mat-tab-header-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
@@ -89,17 +93,8 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   @Input({alias: 'mat-stretch-tabs', transform: booleanAttribute})
   stretchTabs: boolean = true;
 
-  @Input()
-  get animationDuration(): string {
-    return this._animationDuration;
-  }
-
-  set animationDuration(value: string | number) {
-    const stringValue = value + '';
-    this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
-  }
-
-  private _animationDuration!: string;
+  /** Duration for the header animation. Will be normalized to milliseconds if no units are set. */
+  @Input({transform: normalizeDuration}) animationDuration: string = '';
 
   /** Query list of all tab links of the tab navigation. */
   @ContentChildren(forwardRef(() => MatTabLink), {descendants: true})
@@ -162,8 +157,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   @ViewChild('nextPaginator') _nextPaginator!: ElementRef<HTMLElement>;
   @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
   _inkBar!: MatInkBar;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
@@ -248,7 +241,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 @Component({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'tab-link.html',
   styleUrl: 'tab-link.css',
@@ -340,8 +332,6 @@ export class MatTabLink
 
   /** Unique id for the tab. */
   @Input() id: string = inject(_IdGenerator).getId('mat-tab-link-');
-
-  constructor(...args: unknown[]);
 
   constructor() {
     super();
@@ -440,7 +430,6 @@ export class MatTabLink
     'role': 'tabpanel',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */

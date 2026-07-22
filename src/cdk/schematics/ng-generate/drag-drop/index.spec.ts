@@ -85,7 +85,7 @@ describe('CDK drag-drop schematic', () => {
   });
 
   describe('style option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the style option value', async () => {
       const tree = await runner.runSchematic(
         'drag-drop',
         {style: 'scss', ...baseOptions},
@@ -140,7 +140,7 @@ describe('CDK drag-drop schematic', () => {
         .toContain('/projects/material/src/app/foo/foo.component.styl');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component style option value', async () => {
       const tree = await runner.runSchematic(
         'drag-drop',
         baseOptions,
@@ -151,13 +151,13 @@ describe('CDK drag-drop schematic', () => {
   });
 
   describe('inlineStyle option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the inlineStyle option value', async () => {
       const app = await createTestApp(runner);
       const tree = await runner.runSchematic('drag-drop', {inlineStyle: true, ...baseOptions}, app);
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component inlineStyle option value', async () => {
       const tree = await runner.runSchematic(
         'drag-drop',
         baseOptions,
@@ -168,7 +168,7 @@ describe('CDK drag-drop schematic', () => {
   });
 
   describe('inlineTemplate option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the inlineTemplate option value', async () => {
       const app = await createTestApp(runner);
       const tree = await runner.runSchematic(
         'drag-drop',
@@ -178,7 +178,7 @@ describe('CDK drag-drop schematic', () => {
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component inlineTemplate option value', async () => {
       const app = await createTestApp(runner, {inlineTemplate: true});
       const tree = await runner.runSchematic('drag-drop', baseOptions, app);
 
@@ -187,7 +187,7 @@ describe('CDK drag-drop schematic', () => {
   });
 
   describe('skipTests option', () => {
-    it('should respect the option value', async () => {
+    it('should respect the skipTests option value', async () => {
       const tree = await runner.runSchematic(
         'drag-drop',
         {skipTests: true, ...baseOptions},
@@ -222,7 +222,7 @@ describe('CDK drag-drop schematic', () => {
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     });
 
-    it('should fall back to the @schematics/angular:component option value', async () => {
+    it('should fall back to the @schematics/angular:component skipTests option value', async () => {
       const tree = await runner.runSchematic(
         'drag-drop',
         baseOptions,

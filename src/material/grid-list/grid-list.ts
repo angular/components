@@ -15,7 +15,6 @@ import {
   ContentChildren,
   QueryList,
   ElementRef,
-  ChangeDetectionStrategy,
   inject,
 } from '@angular/core';
 import {MatGridTile} from './grid-tile';
@@ -54,7 +53,6 @@ const MAT_FIT_MODE = 'fit';
       useExisting: MatGridList,
     },
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
@@ -83,9 +81,6 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
 
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MatGridTile, {descendants: true}) _tiles!: QueryList<MatGridTile>;
-
-  constructor(...args: unknown[]);
-  constructor() {}
 
   /** Amount of columns in the grid list. */
   @Input()

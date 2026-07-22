@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation, inject} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {StyleManager} from '../style-manager';
 import {DocsSiteTheme, ThemeStorage} from './theme-storage/theme-storage';
 import {MatIconButton} from '@angular/material/button';
@@ -22,7 +22,6 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   selector: 'theme-picker',
   templateUrl: 'theme-picker.html',
   styleUrls: ['theme-picker.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatTooltip, MatMenu, MatMenuItem, MatMenuTrigger, MatIcon],
 })

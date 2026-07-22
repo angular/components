@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
@@ -304,6 +304,7 @@ describe('MatSelectHarness', () => {
     </mat-form-field>
   `,
   imports: [MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SelectHarnessTest {
   formControl = new FormControl(undefined as string | undefined, [Validators.required]);

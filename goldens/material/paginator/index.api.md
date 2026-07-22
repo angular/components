@@ -21,6 +21,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FlexibleOverlayPopoverLocation } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -55,7 +56,7 @@ export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOp
 
 // @public
 export class MatPaginator implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     protected _buttonClicked(targetIndex: number, isDisabled: boolean): void;
     _changePageSize(pageSize: number): void;
     color: ThemePalette;

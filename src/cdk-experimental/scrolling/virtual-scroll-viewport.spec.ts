@@ -1,5 +1,5 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
@@ -90,6 +90,7 @@ function finishInit(fixture: ComponentFixture<any>) {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ScrollingModule, ExperimentalScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AutoSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport!: CdkVirtualScrollViewport;

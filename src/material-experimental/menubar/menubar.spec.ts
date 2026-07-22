@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {Component, ViewChild, ElementRef, ChangeDetectionStrategy} from '@angular/core';
 import {RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {CdkMenuBar} from '@angular/cdk/menu';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -50,6 +50,7 @@ describe('MatMenuBar', () => {
     </mat-menubar>
   `,
   imports: [MatMenuBarModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleMatMenuBar {
   @ViewChild(CdkMenuBar) matMenubar!: MatMenuBar;

@@ -1,0 +1,7 @@
+/* Custom styles for the scrollable example */
+
+/* Ensure the example container doesn't expand infinitely */
+tabs-scrollable-example {
+  display: block;
+  max-width: 100%;
+}

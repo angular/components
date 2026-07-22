@@ -6,39 +6,74 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, inject, signal} from '@angular/core';
-import {ComboboxListboxControls, ComboboxTreeControls, ComboboxDialogPattern} from '../private';
+import {computed, Directive, inject, input, OnDestroy, OnInit, signal} from '@angular/core';
+import {DeferredContent, ComboboxPopupPattern} from '@angular/aria/private';
 import type {Combobox} from './combobox';
-import {COMBOBOX} from './combobox-tokens';
+import type {ComboboxWidget} from './combobox-widget';
+import {COMBOBOX_POPUP} from './combobox-tokens';
 
 /**
- * Identifies an element as a popup for an `ngCombobox`.
+ * A structural directive that marks the `ng-template` to be used as the popup
+ * for a combobox. This content is conditionally rendered.
  *
- * This directive acts as a bridge, allowing the `ngCombobox` to discover and interact
- * with the underlying control (e.g., `ngListbox`, `ngTree`, or `ngComboboxDialog`) that
- * manages the options. It's primarily used as a host directive and is responsible for
- * exposing the popup's control pattern to the parent combobox.
+ * The content of the popup can be any element with the `ngComboboxWidget` directive.
  *
- * @developerPreview 21.0
- *
- * @see [Combobox](guide/aria/combobox)
- * @see [Select](guide/aria/select)
- * @see [Multiselect](guide/aria/multiselect)
- * @see [Autocomplete](guide/aria/autocomplete)
+ * ```html
+ * <ng-template ngComboboxPopup>
+ *   <div ngComboboxWidget>
+ *     <!-- ... options ... -->
+ *   </div>
+ * </ng-template>
+ * ```
  */
 @Directive({
-  selector: '[ngComboboxPopup]',
+  selector: 'ng-template[ngComboboxPopup]',
   exportAs: 'ngComboboxPopup',
+  hostDirectives: [DeferredContent],
+  providers: [{provide: COMBOBOX_POPUP, useExisting: ComboboxPopup}],
 })
-export class ComboboxPopup<V> {
-  /** The combobox that the popup belongs to. */
-  readonly combobox = inject<Combobox<V>>(COMBOBOX, {optional: true});
+export class ComboboxPopup implements OnInit, OnDestroy {
+  private readonly _deferredContent = inject(DeferredContent);
 
-  /** The popup controls exposed to the combobox. */
-  readonly _controls = signal<
-    | ComboboxListboxControls<any, V>
-    | ComboboxTreeControls<any, V>
-    | ComboboxDialogPattern
-    | undefined
-  >(undefined);
+  /** The combobox that the popup belongs to. */
+  readonly combobox = input.required<Combobox>();
+
+  /** The widget contained within the popup. */
+  readonly _widget = signal<ComboboxWidget | undefined>(undefined);
+
+  /** The element that serves as the control target for the popup. */
+  readonly controlTarget = computed(() => this._widget()?.element);
+
+  /** The ID of the popup. */
+  readonly popupId = computed(() => this._widget()?.popupId());
+
+  /** The ID of the active descendant in the popup. */
+  readonly activeDescendant = computed(() => this._widget()?.activeDescendant());
+
+  /** The type of the popup (e.g., listbox, tree, grid, dialog). */
+  readonly popupType = input<'listbox' | 'tree' | 'grid' | 'dialog'>('listbox');
+
+  /** The popup pattern. */
+  readonly _pattern = new ComboboxPopupPattern({
+    ...this,
+  });
+
+  ngOnInit() {
+    this.combobox()._registerPopup(this);
+    this._deferredContent.deferredContentAware.set(this.combobox());
+  }
+
+  ngOnDestroy() {
+    this.combobox()._unregisterPopup();
+  }
+
+  /** Registers a widget with the popup. */
+  _registerWidget(widget: ComboboxWidget) {
+    this._widget.set(widget);
+  }
+
+  /** Unregisters the widget from the popup. */
+  _unregisterWidget() {
+    this._widget.set(undefined);
+  }
 }

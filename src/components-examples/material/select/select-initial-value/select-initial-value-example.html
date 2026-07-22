@@ -8,7 +8,7 @@
     }
   </mat-select>
 </mat-form-field>
-<p>You selected: {{selectedFood}}</p>
+<p>You selected: {{selectedFood()}}</p>
 
 <h4>Basic native select with initial value</h4>
 <mat-form-field>
@@ -17,8 +17,8 @@
     <option value=""></option>
     @for (option of cars; track option) {
       <option [value]="option.value"
-            [selected]="selectedCar === option.value">{{ option.viewValue }}</option>
+            [selected]="selectedCar() === option.value">{{ option.viewValue }}</option>
     }
   </select>
 </mat-form-field>
-<p>You selected: {{selectedCar}}</p>
+<p>You selected: {{selectedCar()}}</p>

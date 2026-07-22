@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -133,6 +133,7 @@ describe('MatSortHarness', () => {
     </table>
   `,
   imports: [MatSortModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SortHarnessTest {
   disableThirdHeader = signal(false);

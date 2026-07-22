@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Horizontal virtual scroll */
@@ -7,7 +7,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   styleUrl: 'cdk-virtual-scroll-horizontal-example.css',
   templateUrl: 'cdk-virtual-scroll-horizontal-example.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollHorizontalExample {

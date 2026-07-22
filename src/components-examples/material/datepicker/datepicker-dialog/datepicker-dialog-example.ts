@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, model, inject} from '@angular/core';
+import {Component, model, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {
@@ -20,7 +20,6 @@ export interface DialogData {
   selector: 'datepicker-dialog-example',
   templateUrl: 'datepicker-dialog-example.html',
   imports: [MatButtonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerDialogExample {
   dialog = inject(MatDialog);

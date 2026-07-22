@@ -282,9 +282,6 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
    */
   marker?: google.maps.Marker;
 
-  constructor(...args: unknown[]);
-  constructor() {}
-
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
       return;
@@ -316,7 +313,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     const {marker, _title, _position, _label, _clickable, _icon, _visible} = this;
 
     if (marker) {

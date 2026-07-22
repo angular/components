@@ -13,7 +13,6 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -91,7 +90,6 @@ export interface MatChipEvent {
     '(keydown)': '_handleKeydown($event)',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_CHIP, useExisting: MatChip}],
   imports: [MatChipContent],
 })
@@ -255,8 +253,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   protected _injector = inject(Injector);
 
-  constructor(...args: unknown[]);
-
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_StructuralStylesLoader);
@@ -302,12 +298,12 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._elementRef);
-    this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
-    this._actionChanges?.unsubscribe();
-    this.destroyed.emit({chip: this});
-    this.destroyed.complete();
-  }
+      this.destroyed.emit({chip: this});
+      this.destroyed.complete();
+      this._focusMonitor.stopMonitoring(this._elementRef);
+      this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
+      this._actionChanges?.unsubscribe();
+    }
 
   /**
    * Allows for programmatic removal of the chip.

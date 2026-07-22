@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject, ViewEncapsulation} from '@angular/core';
+import {Component, inject, ViewEncapsulation} from '@angular/core';
 import {MatDatepickerBase, MatDatepickerContent, MatDatepickerControl} from './datepicker-base';
 import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 import {
@@ -34,7 +34,6 @@ export interface MatDateRangePickerInput<D> extends MatDatepickerControl<D> {
   selector: 'mat-date-range-picker',
   template: '',
   exportAs: 'matDateRangePicker',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER,

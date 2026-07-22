@@ -18,7 +18,7 @@ The `ng add` command will install Angular Material, the [Component Dev Kit (CDK)
 
 1. Choose a prebuilt theme name, or "custom" for a custom theme:
 
-   You can choose from [prebuilt material design themes](https://material.angular.dev/guide/theming#pre-built-themes) or set up an extensible [custom theme](https://material.angular.dev/guide/theming#defining-a-theme).
+   You can choose from [prebuilt material design themes](https://material.angular.dev/guide/theming#prebuilt-themes) or set up an extensible [custom theme](https://material.angular.dev/guide/theming#getting-started).
 
 2. Set up global Angular Material typography styles:
 
@@ -40,16 +40,13 @@ You're done! Angular Material is now configured to be used in your application.
 
 Let's display a slide toggle component in your app and verify that everything works.
 
-You need to import the `MatSlideToggleModule` that you want to display by adding the following lines to
-your standalone component's imports, or otherwise your component's `NgModule`.
+You need to import the `MatSlideToggle` component by adding it to your component's `imports`:
 
 ```ts
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 
-@Component ({
-  imports: [
-    MatSlideToggleModule,
-  ]
+@Component({
+  imports: [MatSlideToggle],
 })
 class AppComponent {}
 ```

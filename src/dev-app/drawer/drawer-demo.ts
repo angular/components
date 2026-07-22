@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -16,7 +16,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   templateUrl: 'drawer-demo.html',
   styleUrl: 'drawer-demo.css',
   imports: [MatButtonModule, MatListModule, MatSidenavModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrawerDemo {
   invert = false;

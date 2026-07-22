@@ -14,6 +14,7 @@ import {
   computed,
   untracked,
   afterRenderEffect,
+  viewChildren,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
@@ -25,6 +26,7 @@ interface CalendarCell<D = any> {
   ariaLabel: string;
   date: D;
   selected: WritableSignal<boolean>;
+  dayNum: number;
 }
 
 /** @title Grid Calendar. */
@@ -35,6 +37,8 @@ interface CalendarCell<D = any> {
   imports: [Grid, GridRow, GridCell, GridCellWidget],
 })
 export class GridCalendarExample<D> {
+  private readonly _dayButtons = viewChildren(GridCellWidget);
+
   private readonly _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private readonly _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
   private readonly _firstWeekOffset: Signal<number> = computed(() => {
@@ -62,6 +66,9 @@ export class GridCalendarExample<D> {
       .format(this.viewMonth(), this._dateFormats.display.monthYearLabel)
       .toLocaleUpperCase(),
   );
+  readonly viewMonthNumDays: Signal<number> = computed(() =>
+    this._dateAdapter.getNumDaysInMonth(this.viewMonth()),
+  );
   readonly prevMonthNumDays: Signal<number> = computed(() =>
     this._dateAdapter.getNumDaysInMonth(this._dateAdapter.addCalendarMonths(this.viewMonth(), -1)),
   );
@@ -88,9 +95,6 @@ export class GridCalendarExample<D> {
     this._createWeekCells(this.viewMonth()),
   );
 
-  readonly scrolledUp = signal(false);
-  readonly scrolledDown = signal(false);
-
   constructor() {
     afterRenderEffect(() => {
       for (const day of this.weeks().flat()) {
@@ -110,8 +114,40 @@ export class GridCalendarExample<D> {
     this.viewMonth.set(this._dateAdapter.addCalendarMonths(this.viewMonth(), -1));
   }
 
+  scrollDown(): void {
+    this.nextMonth();
+    setTimeout(() => this._dayButtons()[0]?.element.focus());
+  }
+
+  scrollUp(): void {
+    this.prevMonth();
+    setTimeout(() => this._dayButtons()[this._dayButtons().length - 1]?.element.focus());
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    const day = Number((event.target as Element).getAttribute('data-day'));
+    if (!day) return;
+    if (day > 7 && day <= this.viewMonthNumDays() - 7) return;
+
+    const arrowLeft = event.key === 'ArrowLeft';
+    const arrowRight = event.key === 'ArrowRight';
+    const arrowUp = event.key === 'ArrowUp';
+    const arrowDown = event.key === 'ArrowDown';
+
+    if ((day === 1 && arrowLeft) || (day <= 7 && arrowUp)) {
+      this.scrollUp();
+    }
+
+    if (
+      (day === this.viewMonthNumDays() && arrowRight) ||
+      (day > this.viewMonthNumDays() - 7 && arrowDown)
+    ) {
+      this.scrollDown();
+    }
+  }
+
   private _createWeekCells(viewMonth: D): CalendarCell[][] {
-    const daysInMonth = this._dateAdapter.getNumDaysInMonth(viewMonth);
+    const daysInMonth = this.viewMonthNumDays();
     const dateNames = this._dateAdapter.getDateNames();
     const weeks: CalendarCell[][] = [[]];
     for (let i = 0, cell = this._firstWeekOffset(); i < daysInMonth; i++, cell++) {
@@ -136,6 +172,7 @@ export class GridCalendarExample<D> {
             untracked(() => this._activeDate()),
           ) === 0,
         ),
+        dayNum: i + 1,
       });
     }
     return weeks;

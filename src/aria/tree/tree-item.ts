@@ -19,13 +19,11 @@ import {
   Signal,
   OnInit,
   OnDestroy,
-  afterNextRender,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ComboboxTreePattern, TreeItemPattern, DeferredContentAware} from '../private';
+import {TreeItemPattern, DeferredContentAware, HasElement} from '../private';
 import {Tree} from './tree';
 import {TreeItemGroup} from './tree-item-group';
-import {HasElement} from './utils';
 
 /**
  * A selectable and expandable item in an `ngTree`.
@@ -39,8 +37,6 @@ import {HasElement} from './utils';
  *   Item Label
  * </li>
  * ```
- *
- * @developerPreview 21.0
  */
 @Directive({
   selector: '[ngTreeItem]',
@@ -123,22 +119,18 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   constructor() {
     super();
-    afterNextRender(() => {
-      if (this.tree()._pattern instanceof ComboboxTreePattern) {
-        this.preserveContent.set(true);
-      }
-    });
-    // Connect the group's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this.tree()._pattern instanceof ComboboxTreePattern
-        ? this.contentVisible.set(true)
-        : this.contentVisible.set(this._pattern.expanded());
+    afterRenderEffect({
+      write: () => {
+        this.contentVisible.set(this._pattern.expanded());
+      },
     });
   }
 
   ngOnInit() {
-    this.parent()._register(this);
-    this.tree()._register(this);
+    if (this.parent() instanceof TreeItemGroup) {
+      (this.parent() as TreeItemGroup<V>)._register(this);
+    }
+    this.tree()._collection.register(this);
 
     const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
@@ -159,8 +151,10 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnDestroy() {
-    this.parent()._unregister(this);
-    this.tree()._unregister(this);
+    if (this.parent() instanceof TreeItemGroup) {
+      (this.parent() as TreeItemGroup<V>)._unregister(this);
+    }
+    this.tree()._collection.unregister(this);
   }
 
   _register(group: TreeItemGroup<V>) {

@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Dir} from '@angular/cdk/bidi';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';
 import {
-  SimpleCombobox,
+  ToolbarCombobox,
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
   SimpleToolbarToggleButton,
@@ -18,7 +18,7 @@ import {
     Toolbar,
     ToolbarWidget,
     ToolbarWidgetGroup,
-    SimpleCombobox,
+    ToolbarCombobox,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
     SimpleToolbarToggleButton,

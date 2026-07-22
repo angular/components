@@ -52,7 +52,7 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
   // mean's the template in the table's view will not have the updated value (and in fact will cause
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCellDef, CdkCell],
 })
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
@@ -110,8 +110,6 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * @docs-private
    */
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell!: CdkHeaderCellDef;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     this._options = this._options || {};
