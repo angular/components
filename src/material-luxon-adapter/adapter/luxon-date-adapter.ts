@@ -134,7 +134,10 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   }
 
   clone(date: LuxonDateTime): LuxonDateTime {
-    return LuxonDateTime.fromObject(date.toObject(), this._getOptions());
+    return LuxonDateTime.fromObject(date.toObject(), {
+      ...this._getOptions(),
+      zone: date.zone,
+    });
   }
 
   createDate(year: number, month: number, date: number): LuxonDateTime {
